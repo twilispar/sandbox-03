@@ -1,0 +1,557 @@
+<HTML
+><HEAD
+><TITLE
+>Commands often used</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux PostgreSQL Database Server"
+HREF="datab-pSQL.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/rc.d/init.d/postgresql script file"
+HREF="chap27sec224.html"><LINK
+REL="NEXT"
+TITLE="Installed files"
+HREF="chap27sec226.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap27sec224.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 27. Linux PostgreSQL Database Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap27sec226.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN17370"
+>27.6. Commands often used</A
+></H1
+><P
+>&#13;               The commands listed below are some that we use often, but many more exist. Check the man page for more details and information.
+               To define a new user in your database, run the createuser utility program:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>su</B
+> postgres
+                 [postgres@deep /]$ <B
+CLASS="command"
+>createuser</B
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                 Enter name of user to add ---&#62; admin
+                 Enter user's postgres ID or RETURN to use unix user ID: 500 -&#62;
+                 Is user "admin" allowed to create databases (y/n) y
+                 Is user "admin" a superuser? (y/n) y
+                 createuser: admin was successfully added
+               </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               To remove a user in your database, run the destroyuser utility program:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>su</B
+> postgres
+                 [postgres@deep /]$ <B
+CLASS="command"
+>destroyuser</B
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                 Enter name of user to delete ---&#62; admin
+                 destroyuser: delete of user admin was successful.
+               </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               To create a new database, run the createdb utility program:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>su</B
+> postgres
+                 [postgres@deep /]$ <B
+CLASS="command"
+>createdb</B
+> dbname  <A
+NAME="psqldbn"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap27sec225.html#psqldbn"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;                 dbname is the name of the database.
+               </DD
+></DL
+></DIV
+>
+             </P
+><P
+>&#13;               or with the Postgres terminal monitor program (psql)
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>su</B
+> admin
+                 [admin@deep /]$ <B
+CLASS="command"
+>psql</B
+> template1
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                 Welcome to the POSTGRESQL interactive sql monitor:
+                 Please read the file COPYRIGHT for copyright terms of POSTGRESQL
+                 [PostgreSQL 6.5.3 on i686-pc-linux-gnu, compiled by egcs ]
+
+                 type \? for help on slash commands
+                 type \q to quit
+                 type \g or terminate with semicolon to execute query
+                 You are currently connected to the database: template1
+               </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 template1<B
+CLASS="command"
+>-&#62;</B
+> <B
+CLASS="command"
+>create</B
+> database foo;
+                 CREATEDB
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+               Client connections can be restricted by <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address and/or user name via the <TT
+CLASS="filename"
+>pg_hba.conf</TT
+> file in <TT
+CLASS="envar"
+>PG_DATA</TT
+>.
+             </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;               Other useful Postgres terminal monitor program commands (psql) are:
+
+               To connect to the new database, use the command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 template1<B
+CLASS="command"
+>-&#62;</B
+> \c foo
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               connecting to new database: foo
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 foo<B
+CLASS="command"
+>-&#62;</B
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               To create a table, use the command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 foo<B
+CLASS="command"
+>-&#62;</B
+> create table bar (i int4, c char(16));
+                 <TT
+CLASS="userinput"
+><B
+>CREATE</B
+></TT
+>
+                 foo<B
+CLASS="command"
+>-&#62;</B
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               To inspect the new table, use the command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 foo<B
+CLASS="command"
+>-&#62;</B
+> \d bar
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 foo<B
+CLASS="command"
+>-&#62;</B
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+>&#13;                 Table    = bar
+                 +----------------------------------+----------------------------------+------------+
+                 |              Field	|          Type	        |                          Length  |
+                 +----------------------------------+----------------------------------+------------+
+                 | I	                | int4	                |                                4 |
+                 | c	                | char()	        |                               16 |
+                 +----------------------------------+----------------------------------+------------+
+               </PRE
+></TD
+></TR
+></TABLE
+>
+
+             </P
+><P
+>&#13;               To drop a table, index, view, use the command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 foo<B
+CLASS="command"
+>-&#62;</B
+> drop table table_name;
+                 foo<B
+CLASS="command"
+>-&#62;</B
+> drop index index_name;
+                 foo<B
+CLASS="command"
+>-&#62;</B
+> drop view view_name;
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               To insert into: <EM
+>once a table is created, it can be filled using the command</EM
+>.
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 foo<B
+CLASS="command"
+>-&#62;</B
+> insert into table_name (name_of_attr1, name_of_attr2, name_of_attr3)
+                 foo<B
+CLASS="command"
+>-&#62;</B
+> values (value1, value2, value3);
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap27sec224.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap27sec226.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/postgresql</TT
+> script file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="datab-pSQL.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Installed files</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

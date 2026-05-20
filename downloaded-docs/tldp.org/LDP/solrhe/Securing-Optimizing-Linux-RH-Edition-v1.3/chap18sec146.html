@@ -1,0 +1,261 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/tw.config file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux Tripwire ASR 1.3.1"
+HREF="tripwireASR.html"><LINK
+REL="PREVIOUS"
+TITLE="Configurations"
+HREF="chap18sec145.html"><LINK
+REL="NEXT"
+TITLE="Configure the /etc/cron.daily/tripwire.verify script"
+HREF="chap18sec147.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap18sec145.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 18. Linux Tripwire ASR 1.3.1</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap18sec147.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN9824"
+>18.3. Configure the <TT
+CLASS="filename"
+>/etc/tw.config</TT
+> file</A
+></H1
+><P
+>&#13;          The <TT
+CLASS="filename"
+>/etc/tw.config</TT
+> file is the Tripwire configuration file where you decide and set which system files and directories that you want monitored. Note that extensive testing and experience 
+          are necessary when editing this file before you get working file reports. The following is a working example from where you can start you own customization.
+          </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;          
+          Create the <TT
+CLASS="filename"
+>tw.config</TT
+> file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/tw.config</TT
+> and add in this file all files and directories that you want monitored. The format of the configuration 
+          file is described in its header and in the man page <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>tw.config</SPAN
+>(5)</SPAN
+>:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          # Gerhard Mourani: gmourani@videotron.ca
+          # last updated: 1999/11/12 
+
+          #  First, root's "home"
+          /root	R
+          !/root/.bash_history
+          /	R
+
+          # OS itself
+          /boot/vmlinuz	R
+
+          # critical boot resources
+          /boot	R
+
+          # Critical directories and files
+          /chroot	R
+          /etc	R
+          /etc/inetd.conf	R
+          /etc/nsswitch.conf	R
+          /etc/rc.d	R
+          /etc/mtab	L
+          /etc/motd	L
+          /etc/group	R
+          /etc/passwd	L
+
+          # other popular filesystems
+          /usr	R
+          /usr/local	R
+          /dev	L-am
+          /usr/etc	R
+
+          # truncate home
+          =/home	R
+
+          # var tree
+          =/var/spool	L
+          /var/log	L
+          /var/lib	L
+          /var/spool/cron	L
+          !/var/lock
+
+          # unusual directories
+          =/proc	E
+          =/tmp
+          =/mnt/cdrom
+          =/mnt/floppy
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;          
+          Now, for security reasons, change the mode of this file to be <TT
+CLASS="literal"
+>0600</TT
+> with the following command:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>chmod</B
+> 600  /etc/tw.config
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap18sec145.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap18sec147.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configurations</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="tripwireASR.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/cron.daily/tripwire.verify</TT
+> script</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

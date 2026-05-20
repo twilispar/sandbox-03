@@ -1,0 +1,545 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/ssh/ssh_config file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities"
+HREF="soft-netsecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure and optimise Openssh"
+HREF="chap15sec120.html"><LINK
+REL="NEXT"
+TITLE="Configure the /etc/ssh/sshd_config file"
+HREF="chap15sec122.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap15sec120.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 15. Software -Securities</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap15sec122.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN8037"
+>15.3. Configure the <TT
+CLASS="filename"
+>/etc/ssh/ssh_config file</TT
+></A
+></H1
+><P
+>&#13;          The <TT
+CLASS="filename"
+>/etc/ssh/ssh_config</TT
+> file is the system-wide configuration file for OpenSSH which allows you to set options that modify the operation of the client programs. The file 
+          contains keyword-value pairs, one per line, with keywords being case insensitive. Here are the most important keywords to configure your ssh for top security; a complete listing and/or special 
+          requirements are available in the man page for <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh</SPAN
+>(1)</SPAN
+>.
+          </P
+><P
+>&#13;          Edit <TT
+CLASS="filename"
+>the ssh_config</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/ssh/ssh_config</TT
+> and add/or change, if necessary the following parameters:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          # Site-wide defaults for various options
+
+          Host *
+          ForwardAgent no
+          ForwardX11 no
+          RhostsAuthentication no
+          RhostsRSAAuthentication no
+          RSAAuthentication yes
+          PasswordAuthentication yes
+          FallBackToRsh no
+          UseRsh no
+          BatchMode no
+          CheckHostIP yes
+          StrictHostKeyChecking no
+          IdentityFile ~/.ssh/identity
+          Port 22
+          Cipher blowfish
+          EscapeChar ~
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          
+          This tells ssh_config file to set itself up for this particular configuration setup with:
+          </P
+><DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>Host *</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>Host</TT
+> restricts all forwarded declarations and options in the configuration file to be only for those hosts that match one of the patterns given after the keyword. The 
+          pattern <TT
+CLASS="literal"
+>*</TT
+> means for all hosts up to the next Host keyword. With this option you can set different declarations for different hosts in the same <TT
+CLASS="filename"
+>ssh_config</TT
+> file.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>ForwardAgent no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>ForwardAgent</TT
+> specifies which connection authentication agent <EM
+>if any</EM
+> should be forwarded to the remote machine.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>ForwardX11 no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>ForwardX11</TT
+> is for people that use the <TT
+CLASS="literal"
+>Xwindow</TT
+> <SPAN
+CLASS="acronym"
+>GUI</SPAN
+> and want to automatically redirect <TT
+CLASS="literal"
+>X11</TT
+> sessions to the remote machine. Since we setup a server 
+          and don't have <SPAN
+CLASS="acronym"
+>GUI</SPAN
+> installed on it, we can safely turn this option off.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>RhostsAuthentication no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>RhostsAuthentication</TT
+> specifies whether we can try to use rhosts based authentication. Because rhosts authentication is insecure you shouldn't use this option.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>RhostsRSAAuthentication no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>RhostsRSAAuthentication</TT
+> specifies whether or not to try rhosts authentication in concert with <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> host authentication.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>RSAAuthentication yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>RSAAuthentication</TT
+> specifies whether to try <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> authentication. This option must be set to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+> for better security on your sessions. <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> uses public and private keys pair created with 
+          the ssh-keygen1utility for authentication purposes.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>PasswordAuthentication yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>PasswordAuthentication</TT
+> specifies whether we should use password-based authentication. For strong security, this option must always be set to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+>.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>FallBackToRsh no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>FallBackToRsh</TT
+> specifies that if a connection with ssh daemon fails rsh should automatically be used instead. Recalling that rsh service is insecure, this option must always be set to <TT
+CLASS="userinput"
+><B
+>no</B
+></TT
+>.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>UseRsh no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>UseRsh</TT
+> specifies that rlogin/rsh services should be used on this host. As with the <TT
+CLASS="envar"
+>FallBackToRsh</TT
+> option, it must be set to <TT
+CLASS="userinput"
+><B
+>no</B
+></TT
+> for obvious reasons.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>BatchMode no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>BatchMode</TT
+> specifies whether a username and password querying on connect will be disabled. This option is useful when you create scripts and dont want to supply the password. <SPAN
+CLASS="abbrev"
+>e.g.</SPAN
+> Scripts 
+          that use the scp command to make backups over the network.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>CheckHostIP yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>CheckHostIP</TT
+> specifies whether or not ssh will additionally check the host <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address that connect to the server to detect <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> spoofing. It's recommended that you set this option 
+          to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+>.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>StrictHostKeyChecking no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>StrictHostKeyChecking</TT
+> specifies whether or not ssh will automatically add new host keys to the <TT
+CLASS="prompt"
+>$</TT
+><TT
+CLASS="filename"
+>HOME/.ssh/known_hosts</TT
+> file, or never automatically add new 
+          host keys to the host file. This option, when set to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+>, provides maximum protection against Trojan horse attacks. One interesting procedure with this option is to set it to <TT
+CLASS="userinput"
+><B
+>no</B
+></TT
+> 
+          at the beginning, allow ssh to add automatically all common hosts to the host file as they are connected to, and then return to set it to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+> to take advantage of this feature.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>IdentityFile ~/.ssh/identity</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>IdentityFile</TT
+> specifies an alternate <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> authentication identity file to read. Also,  multiple identity files may be specified in the configuration file <TT
+CLASS="filename"
+>ssh_config</TT
+>.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>Port 22</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>Port</TT
+> specifies on which port number ssh connects to on the remote host. The default port is 22.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>Cipher blowfish</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>Cipher</TT
+> specifies what cipher should be used for encrypting sessios. The blowfish use 64-bit blocks and keys of up to 448 bits.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>EscapeChar ~</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>EscapeChar</TT
+> specifies the session escape character for suspension.
+          </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap15sec120.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap15sec122.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure and optimise Openssh</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netsecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/ssh/sshd_config file</TT
+></TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

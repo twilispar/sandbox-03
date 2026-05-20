@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>UUCP-based Transports</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node216.html">SMTP-based Transports</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node214.html">Mailing Lists</A>
+<BR> <P>
+<H1><A NAME="SECTION0016900000">UUCP-based Transports</A></H1>
+<P>
+<A NAME="smailuucp"></A>
+<A NAME="7841"></A>
+<P>
+There are a number of transports compiled into smail that utilize
+the UUCP suite. In a UUCP environment, messages are usually passed on by
+invoking rmail on the next host, giving it the message on
+standard input and the envelope address on the command line. On your
+host, rmail should be a link to the smail command.
+<P>
+When handing a message to the UUCP transport, smail converts the
+target address to a UUCP bang path. For example, user@host will
+be transformed to host!user. Any occurrence of the `%'
+address operator is preserved, so user%host@gateway will become
+gateway!user%host. However, smail will never generate
+such addresses itself.
+<P>
+<A NAME="7842"></A>
+Alternatively, smail can send and receive BSMTP batches via UUCP.
+With BSMTP, one or more messages are wrapped up in a single batch that
+contains the commands the local mailer would issue if a real SMTP
+connection had be established.  BSMTP is frequently used in
+store-and-forward (e.g. UUCP-based) networks to save disk space.  The
+sample transports file in appendix-<A HREF="node285.html#appendixsmail"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> contains
+a transport dubbed bsmtp that generates partial BSMTP batches
+in a queue directory. They must be combined into the final batches
+later, using a shell script that adds the appropriate HELO and
+QUIT command.
+<P>
+To enable the bsmtp transport for specific UUCP links you
+have to use so-called <em>method</em> files (please refer to the
+smail(5) manual page for details).  If you have only one UUCP
+link, and use the smart host router, you enable sending SMTP batches by
+setting the smart_transport configuration variable to
+bsmtp instead of uux.
+<P>
+To receive SMTP batches over UUCP, you must make sure that you have the
+Un-batching command the remote site sends its batches to. If the remote
+site uses smail, too, you need to make rsmtp a link to
+smail. If the remote site runs sendmail, you should
+additionally install a shell script named /usr/bin/bsmtp that
+does a simple ``exec rsmtp'' (a symbolic link won't work).
+<P>
+<A NAME="7843"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node216.html">SMTP-based Transports</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node214.html">Mailing Lists</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

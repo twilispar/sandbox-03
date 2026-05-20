@@ -1,0 +1,345 @@
+<HTML
+><HEAD
+><TITLE
+>Configure sshd2 to use tcp-wrappers/inetd super server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securties(commercial)"
+HREF="softsec-com.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/ssh2/sshd2_config file"
+HREF="chap16sec130.html"><LINK
+REL="NEXT"
+TITLE="Configuration of the /etc/pam.d/ssh file"
+HREF="chap16sec132.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap16sec130.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 16. Software -Securties(commercial)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap16sec132.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN9020"
+>16.5. Configure sshd2 to use tcp-wrappers/inetd super server</A
+></H1
+><P
+>&#13;         Tcp-wrappers shoud be enabled to start and stop the sshd2 server. Upon execution, inetd reads its configuration information from a configuration file which, by default, is <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+>. There 
+         must be an entry for each field of the configuration file, with entries for each field separated by a tab or a space.
+         </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;         
+         Edit the <TT
+CLASS="filename"
+>inetd.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+> and add the line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         ssh	stream	tcp	nowait	root	/usr/sbin/tcpd	sshd -i
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+         The  -i parameter is important since it specifies that sshd is being run from inetd. Also, update your <TT
+CLASS="filename"
+>inetd.conf</TT
+> file by sending a SIGHUP signal, <B
+CLASS="command"
+>killall</B
+>  -HUP inetd 
+         after adding the above line into the file.
+         </P
+></BLOCKQUOTE
+></DIV
+>
+         To update your <TT
+CLASS="filename"
+>inetd.conf</TT
+> file, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>killall</B
+>  -HUP inetd
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         
+         Edit the <TT
+CLASS="filename"
+>hosts.allow file</TT
+>, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/hosts.allow</TT
+> and add the line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         sshd: 192.168.1.4 win.openna.com
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         Which means client <TT
+CLASS="literal"
+>192.168.1.4</TT
+> with host name <TT
+CLASS="literal"
+>win.openna.com</TT
+> is allowed to ssh on the server.
+         <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+>Note: </B
+>
+           These <TT
+CLASS="literal"
+>daemon</TT
+> strings for tcp-wrappers are in use by sshd2:
+         <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+>sshd, sshd2</DT
+><DD
+><P
+>&#13;         The name sshd2 was called with usually <I
+CLASS="wordasword"
+>sshd</I
+>.
+         </P
+></DD
+><DT
+>sshdfwd-X11</DT
+><DD
+><P
+>&#13;         if you want to allow/deny X11-forwarding.
+         </P
+></DD
+><DT
+>sshdfwd-&#60;port-number&#62;</DT
+><DD
+><P
+>&#13;         for tcp-forwarding.
+         </P
+></DD
+><DT
+>sshdfwd-&#60;port-name&#62;</DT
+><DD
+><P
+>&#13;         port-name defined in <TT
+CLASS="filename"
+>/etc/services</TT
+>. Used in tcp-forwarding.
+         </P
+></DD
+></DL
+></DIV
+>
+         </P
+></BLOCKQUOTE
+></DIV
+>
+         
+         </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+         If you do decide to switch to using ssh, make sure you install and use it on all your servers. Having ten secure servers and one insecure is a waste of time.
+         </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap16sec130.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap16sec132.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/ssh2/sshd2_config</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="softsec-com.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configuration of the <TT
+CLASS="filename"
+>/etc/pam.d/ssh</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

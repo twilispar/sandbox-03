@@ -1,0 +1,306 @@
+<HTML
+><HEAD
+><TITLE
+>Create the /usr/bin/sign.sh program file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking/Encryption"
+HREF="netencrypt.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/ssl/openssl.cnf file"
+HREF="chap24sec194.html"><LINK
+REL="NEXT"
+TITLE="Commands -often used"
+HREF="chap24sec196.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap24sec194.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 24. Software -Networking/Encryption</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap24sec196.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN13846"
+>24.5. Create the <TT
+CLASS="filename"
+>/usr/bin/sign.sh</TT
+> program file</A
+></H1
+><P
+>&#13;         The <B
+CLASS="command"
+>openssl ca</B
+> commands has some strange requirements and the default OpenSSL config doesn't allow one easily to use <B
+CLASS="command"
+>openssl ca</B
+> directly. Therefore, well create this <TT
+CLASS="filename"
+>sign.sh</TT
+> 
+         program to replace it.
+
+         Create the <TT
+CLASS="filename"
+>sign.sh</TT
+> program file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/usr/bin/sign.sh</TT
+> and add to this file:
+         </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         #!/bin/sh
+         ##
+         ##  sign.sh -- Sign a SSL Certificate Request (CSR)
+         ##  Copyright (c) 1998-1999 Ralf S. Engelschall, All Rights Reserved. 
+         ##
+
+         #   argument line handling
+         CSR=$1
+         if [ $# -ne 1 ]; then
+         echo "Usage: sign.sign &#60;whatever&#62;.csr"; exit 1
+         fi
+         if [ ! -f $CSR ]; then
+         echo "CSR not found: $CSR"; exit 1
+         fi
+         case $CSR in
+         *.csr ) CERT="`echo $CSR | sed -e 's/\.csr/.crt/'`" ;;
+         * ) CERT="$CSR.crt" ;;
+         esac
+
+         #   make sure environment exists
+         if [ ! -d ca.db.certs ]; then
+         mkdir ca.db.certs
+         fi
+         if [ ! -f ca.db.serial ]; then
+         echo '01' &#62;ca.db.serial
+         fi
+         if [ ! -f ca.db.index ]; then
+         cp /dev/null ca.db.index
+         fi
+
+         #   create an own SSLeay config
+         cat &#62;ca.config &#60;&#60;EOT
+         [ ca ]
+         default_ca	= CA_own
+         [ CA_own ]
+         dir	= /etc/ssl
+         certs	= /etc/ssl/certs
+         new_certs_dir	= /etc/ssl/ca.db.certs
+         database	= /etc/ssl/ca.db.index
+         serial	= /etc/ssl/ca.db.serial
+         RANDFILE	= /etc/ssl/ca.db.rand
+         certificate	= /etc/ssl/certs/ca.crt
+         private_key	= /etc/ssl/private/ca.key
+         default_days	= 365
+         default_crl_days	= 30
+         default_md	= md5
+         preserve	= no
+         policy	= policy_anything
+         [ policy_anything ]
+         countryName	= optional
+         stateOrProvinceName	= optional
+         localityName	= optional
+         organizationName	= optional
+         organizationalUnitName	= optional
+         commonName	= supplied
+         emailAddress	= optional
+         EOT
+
+         #  sign the certificate
+         echo "CA signing: $CSR -&#62; $CERT:"
+         openssl ca -config ca.config -out $CERT -infiles $CSR
+         echo "CA verifying: $CERT &#60;-&#62; CA cert"
+         openssl verify -CAfile /etc/ssl/certs/ca.crt $CERT
+
+         #  cleanup after SSLeay 
+         rm -f ca.config
+         rm -f ca.db.serial.old
+         rm -f ca.db.index.old
+
+         #  die gracefully
+         exit 0
+         </PRE
+></TD
+></TR
+></TABLE
+><P
+>&#13;         Now, make this program executable, and change its default permissions:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>chmod</B
+> 755 /usr/bin/sign.sh
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+         You can also find this program <TT
+CLASS="filename"
+>sign.sh</TT
+> in the mod_ssl distribution under the <TT
+CLASS="filename"
+>mod_ssl-version/pkg.contrib/</TT
+> subdirectory, or on our <TT
+CLASS="filename"
+>floppy.tgz</TT
+> 
+         archive file. Also note that the section <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+> CA_own </SPAN
+>]</TT
+> must be changed to refect your own environment and don't forget to change the  openssl <TT
+CLASS="literal"
+>verify -CAfile /etc/ssl/certs/ca.crt $CERT</TT
+> line too.
+         </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap24sec194.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap24sec196.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/ssl/openssl.cnf</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netencrypt.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Commands -often used</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

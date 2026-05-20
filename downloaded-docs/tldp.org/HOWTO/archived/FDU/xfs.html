@@ -1,0 +1,324 @@
+<HTML
+><HEAD
+><TITLE
+>Red Hat's xfs</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Appendix: Font Servers"
+HREF="appendix.html"><LINK
+REL="PREVIOUS"
+TITLE="xfstt"
+HREF="x985.html"><LINK
+REL="NEXT"
+TITLE="xfsft"
+HREF="x1086.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XFree86 Font De-uglification HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x985.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>A. Appendix: Font Servers</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1086.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="XFS">A.2. Red Hat's xfs</H1
+><P
+> As of Red Hat Linux 6.0, Red Hat based distributions (Mandrake, etc) have
+ included a specially patched version of xfs, the XFree86 Font Server, and
+ patched X servers as well. Red Hat's xfs includes the xfsft patch set which in
+ turn is built upon the FreeType Font library. Red Hat's xfs provides similar
+ functionality to xfstt. xfs is able to serve both TrueType and Type 1 fonts,
+ as well as legacy X fonts. </P
+><P
+> If you are using a Red Hat based distro, you should have xfs installed
+ already. If not, it is in the <TT
+CLASS="FILENAME"
+>XFree86-xfs*rpm</TT
+>. To make
+ sure it runs as one of the default services, either use
+ <B
+CLASS="COMMAND"
+>ntsysv</B
+> or:</P
+><P
+> <TT
+CLASS="LITERAL"
+> # chkconfig --add xfs
+ </TT
+></P
+><P
+> Now xfs will start every time you boot.</P
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN1043">A.2.1. Setting the xfs FontPath</H2
+><P
+> The default Red Hat installation of xfs serves fonts via a Unix Domain Socket.
+ We'll need to tell the X server where to look for xfs, and thus fonts. The
+ FontPath in <TT
+CLASS="FILENAME"
+>/etc/X11/XF86Config</TT
+> must include for Red Hat 
+ 6.x:</P
+><A
+NAME="AEN1047"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;FontPath&nbsp;&nbsp;&nbsp;"unix/:-1"&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> This is changed for Red Hat 7.x to:
+ </P
+><A
+NAME="AEN1053"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;FontPath&nbsp;&nbsp;&nbsp;"unix/:7100"&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> At least for a default configurations. This is a reference to the socket where
+ xfs is listening. You may include additional FontPaths, but these will be
+ handled by the X server, and not xfs.  A clean install of Red Hat 6/7 should
+ have this already set up, but if you are upgrading from an older version, you
+ may have to change this yourself!  &#13;</P
+><P
+> xfs then has its own, separate FontPath stored in
+ <TT
+CLASS="FILENAME"
+>/etc/X11/fs/config</TT
+>. This is where it will look to find
+ fonts. This is over and above the X server's FontPath in
+ <TT
+CLASS="FILENAME"
+>XF86Config</TT
+>. You can either add the new path(s) with a text
+ editor, or use the <B
+CLASS="COMMAND"
+>chkfontpath</B
+> command: &#13;</P
+><P
+> <TT
+CLASS="LITERAL"
+> # chkfontpath --add /new/font/path
+ </TT
+></P
+><P
+> The FontPath must exist before running <B
+CLASS="COMMAND"
+>chkfontpath</B
+>. The
+ relevant section of <TT
+CLASS="FILENAME"
+>/etc/X11/fs/config</TT
+> should now look
+ something like this:</P
+><A
+NAME="AEN1068"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+><br>
+catalogue&nbsp;=&nbsp;/usr/X11R6/lib/X11/fonts/misc:unscaled,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/usr/X11R6/lib/X11/fonts/100dpi:unscaled,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/usr/X11R6/lib/X11/fonts/75dpi:unscaled,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/usr/X11R6/lib/X11/fonts/Type1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/usr/X11R6/lib/X11/fonts/Speedo,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/usr/X11R6/lib/X11/fonts/misc,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/usr/X11R6/lib/X11/fonts/100dpi,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/usr/X11R6/lib/X11/fonts/75dpi,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/new/font/path<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> When adding a new FontPath for TrueType fonts, you will want to do this 
+ step after installing and preparing the fonts. See the next section.
+ </P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN1074">A.2.2. Getting the Fonts Ready</H2
+><P
+> Installation and configuration is the same as for other 
+ <SPAN
+CLASS="QUOTE"
+>"freetype"</SPAN
+> based font renderers (e.g. XFree86-4.x 
+ freetype module). See the above <A
+HREF="truetype.html#TTF-CONFIG"
+>Configuration</A
+> section for details.
+ Actually, you should just be able to install the fonts, include 
+ the new font directory to the <TT
+CLASS="LITERAL"
+>FontPath</TT
+> with 
+ the <B
+CLASS="COMMAND"
+>chkfontpath</B
+> utility, and then reload 
+ xfs:</P
+><A
+NAME="AEN1081"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;#&nbsp;service&nbsp;xfs&nbsp;reload<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x985.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1086.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>xfstt</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="appendix.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>xfsft</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

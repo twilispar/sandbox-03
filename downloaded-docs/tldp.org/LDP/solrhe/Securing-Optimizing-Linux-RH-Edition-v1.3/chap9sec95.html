@@ -1,0 +1,293 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/hosts file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Files -Networking Functionality"
+HREF="file-netfunc.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/sysctl.conf file"
+HREF="chap9sec94.html"><LINK
+REL="NEXT"
+TITLE="Config TCP/IP Networking manually -command line"
+HREF="chap9sec96.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap9sec94.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. Files -Networking Functionality</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap9sec96.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN6160"
+>9.7. The <TT
+CLASS="filename"
+>/etc/hosts</TT
+> file</A
+></H1
+><P
+>&#13;           As your machine gets started, it will need to know the mapping of some hostnames to <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses before <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> can be referenced. This mapping is kept in the <TT
+CLASS="filename"
+>/etc/hosts</TT
+> file. In the absence of a name server, any 
+           network program on your system consults this file to determine the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address that corresponds to a host name.
+           </P
+><P
+>&#13;           Following is a sample <TT
+CLASS="filename"
+>/etc/hosts</TT
+> file:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           <SPAN
+CLASS="acronym"
+>IP</SPAN
+>Address     Hostname    		 Alias
+           127.0.0.1			localhost	 	 deep.openna.com
+           208.164.186.1		deep.openna.com		 deep
+           208.164.186.2		mail.openna.com		 mail
+           208.164.186.3		web.openna.com		 web
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           The leftmost column is the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address to be resolved. The next column is that host's name. Any subsequent columns are alias for that host. In the second line, for example, the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address <TT
+CLASS="literal"
+>208.164.186.1</TT
+> is for 
+           the host <TT
+CLASS="literal"
+>deep.openna.com</TT
+>. Another name for <TT
+CLASS="literal"
+>deep.openna.com</TT
+> is deep.
+           </P
+><P
+>&#13;           After you are finished configuring your networking files, don't forget to restart your network for the changes to take effect.
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>           
+           [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+>&#13;             <TT
+CLASS="computeroutput"
+>&#13;           Setting network parameters		 [  OK  ]
+           Bringing up interface lo		 [  OK  ]
+           Bringing up interface eth0	         [  OK  ]
+           Bringing up interface eth1	         [  OK  ]
+           </TT
+>
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+           Time out problems for telnet or ftp connection are often caused by the server trying to resolve the client <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address to a <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> name. Either <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> isn't configured properly on your server or the client machines aren't known to <SPAN
+CLASS="acronym"
+>DNS</SPAN
+>. If you intend to run telnet or ftp services 
+           on your server, and aren't using <SPAN
+CLASS="acronym"
+>DNS</SPAN
+>, don't forget to add the client machine name and <SPAN
+CLASS="acronym"
+>IP</SPAN
+> in your <TT
+CLASS="filename"
+>/etc/hosts</TT
+> file on the server or you can expect to wait several minutes for the <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> lookup to time out, before you get a <TT
+CLASS="prompt"
+>login:</TT
+> prompt.
+           </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap9sec94.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap9sec96.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="file-netfunc.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Config <SPAN
+CLASS="acronym"
+>TCP/IP</SPAN
+> Networking manually -command line</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

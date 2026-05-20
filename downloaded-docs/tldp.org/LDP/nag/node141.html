@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<!-- updated  Wed Jul 17 14:47:19 MET DST 1996
+    Tony den Haan (tony@iaehv.nl)  ftp://ftp/IAEhv.nl/pub/users/tony-->
+ 
+<HTML>
+
+<HEAD>
+<TITLE>Preparing NFS</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node142.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A HREF="node140.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A HREF="node140.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node142.html">Mounting an NFS Volume</A>
+<B>Up:</B> <A HREF="node140.html">The Network File System</A>
+<B> Previous:</B> <A HREF="node140.html">The Network File System</A>
+<BR> <P>
+<H1><A NAME="SECTION0013100000">Preparing NFS</A></H1>
+<A NAME="nfsnfsd"></A>
+Before you can use NFS, be it as server or client, you must make sure
+your kernel has NFS support compiled in.  Newer kernels have a simple
+interface on the proc filesystem for this, the /proc/filesystems
+file,  which you can display using cat:
+<PRE>
+     $ cat /proc/filesystems
+     minix
+     ext2
+     msdos
+     nodev   proc
+     nodev   nfs
+</PRE>
+If nfs is missing from this list, then you have to compile
+your own kernel with NFS enabled.  Configuring the kernel network
+options is explained in section ``Kernel Configuration'' in
+chapter-<A HREF="node41.html#hardware"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+For older kernels prior to -1.1, the easiest way to find out
+whether your kernel has NFS support enabled is to actually try to
+mount an NFS file system. For this, you could create a directory below
+/tmp, and try to mount a local directory on it:
+<PRE>
+     # mkdir /tmp/test
+     # mount localhost:/etc /tmp/test
+</PRE>
+If this mount attempt fails with an error message saying ``fs
+type nfs no supported by kernel'', you must make a new kernel with
+NFS enabled.  Any other error messages are completely harmless, as
+you haven't configured the NFS daemons on your host yet.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

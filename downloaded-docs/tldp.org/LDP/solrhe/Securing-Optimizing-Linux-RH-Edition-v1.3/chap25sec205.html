@@ -1,0 +1,974 @@
+<HTML
+><HEAD
+><TITLE
+>Configure RSA private keys secrets</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FreeS/WAN VPN"
+HREF="fSWAn.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/ipsec.secrets file"
+HREF="chap25sec204.html"><LINK
+REL="NEXT"
+TITLE="Required network setup for IPSec"
+HREF="chap25sec206.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap25sec204.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 25. Linux FreeS/WAN VPN</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap25sec206.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN15018"
+>25.8. Configure <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private keys secrets</A
+></H1
+><P
+>&#13;Recall that currently with FreeSWAN software there are two kinds of secrets: 
+<P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;preshared secrets 
+</P
+></LI
+><LI
+><P
+>&#13;<SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private keys. 
+</P
+></LI
+></OL
+>
+The preshared secrets are what we have configured in our <TT
+CLASS="filename"
+>ipsec.conf</TT
+> and <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> example, above. Some people may prefer to use <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private keys for authentication 
+by the Pluto daemon of the other hosts. If you are in this situation, you will have to make some minor modifications to your <TT
+CLASS="filename"
+>ipsec.conf</TT
+> and <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> files as described in the following steps:
+</P
+><P
+>&#13;You need to create a separate <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> key for *each* gateway. Each one gets its private key in its own <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> file, and the public keys go in <TT
+CLASS="filename"
+>leftrsasigkey</TT
+> 
+and <TT
+CLASS="filename"
+>rightrsasigkey</TT
+> parameters in the conn description of <TT
+CLASS="filename"
+>ipsec.conf</TT
+> file, which goes to both.
+</P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;Create a separate <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> key for *each* gateway:
+</P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;On the first gateway i.e. <TT
+CLASS="literal"
+>deep</TT
+>, use the following commands:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>cd</B
+> /
+[root@deep] /# <B
+CLASS="command"
+>ipsec</B
+> rsasigkey --verbose 1024 &#62; deep-keys
+</PRE
+></TD
+></TR
+></TABLE
+>
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;computing primes and modulus...
+getting 64 random bytes from /dev/random
+looking for a prime starting there
+found it after 30 tries
+getting 64 random bytes from /dev/random
+looking for a prime starting there
+found it after 230 tries
+swapping primes so p is the larger
+computing (p-1)*(q-1)...
+computing d...
+computing exp1, exp1, coeff...
+output...
+</TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></LI
+><LI
+><P
+>&#13;On the second gateway i.e. <TT
+CLASS="literal"
+>mail</TT
+>, use the following commands:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@mail /]# <B
+CLASS="command"
+>cd</B
+> /
+[root@mail /]# <B
+CLASS="command"
+>ipsec</B
+> rsasigkey --verbose 1024 &#62; mail-keys
+</PRE
+></TD
+></TR
+></TABLE
+>
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;computing primes and modulus...
+getting 64 random bytes from /dev/random
+looking for a prime starting there
+found it after 30 tries
+getting 64 random bytes from /dev/random
+looking for a prime starting there
+found it after 230 tries
+swapping primes so p is the larger
+computing (p-1)*(q-1)...
+computing d...
+computing exp1, exp1, coeff...
+output...
+</TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+The rsasigkey utility generates an <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> public and private key pair of a 1024-bit signature, and puts it in the file <TT
+CLASS="filename"
+>deep-keys</TT
+>. <TT
+CLASS="filename"
+>mail-keys</TT
+> for the second command on the 
+second gateway. The private key can be inserted verbatim into the <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> file, and the public key into the <TT
+CLASS="filename"
+>ipsec.conf</TT
+> file.
+</P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;<DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+The rsasigkey utility may pause for a few seconds if not enough entropy is available immediately. You may want to give it some bogus activity such as random mouse movements. The temporary <SPAN
+CLASS="acronym"
+>RSA</SPAN
+>.
+<TT
+CLASS="filename"
+>deep-keys</TT
+> and <TT
+CLASS="filename"
+>mail-keys</TT
+> files should be deleted as soon as you are done with it. <EM
+>Don't forget to delete the <TT
+CLASS="filename"
+>deep-keys</TT
+> and <TT
+CLASS="filename"
+>mail-keys</TT
+> <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> files</EM
+>.
+</P
+></BLOCKQUOTE
+></DIV
+>
+</P
+></LI
+><LI
+><P
+>&#13;Modify your <TT
+CLASS="filename"
+>/etc/ipsec.conf</TT
+> files to use <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> public keys in *each* gateway:
+</P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;Edit you original <TT
+CLASS="filename"
+>ipsec.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/ipsec.conf</TT
+> and add the following parameters related to <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> in the conn desciption of your <TT
+CLASS="filename"
+>ipsec.conf</TT
+> file on both gateway:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;# sample connection
+conn deep-mail
+        left=208.164.186.1
+        leftsubnet=192.168.1.0/24
+        leftnexthop=205.151.222.250
+        right=208.164.186.2
+        rightsubnet=192.168.1.0/24
+        rightnexthop=205.151.222.251
+        keyingtries=0
+        auth=ah
+        authby=rsasig                              <A
+NAME="atfsw"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+        leftrsasigkey=&#60;Public key of deep&#62;   <A
+NAME="lskfsw"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+        rightrsasigkey=&#60;Public key of mail&#62;  <A
+NAME="rskfsw"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+>
+        auto=start
+</PRE
+></TD
+></TR
+></TABLE
+>
+<DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap25sec205.html#atfsw"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;This parameter specifies how the two security gateways should authenticate each other. The default value is secret for shared secrets. We must specify rsasig for <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> since we have decided to use <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> digital signatures.
+</DD
+><DT
+><A
+HREF="chap25sec205.html#lskfsw"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;This parameter specifies the left participant's public key for <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> signature authentication. In our example, left is 208.164.186.1, and represents deep.openna.com, so we must put the <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> public key for deep on this line.
+</DD
+><DT
+><A
+HREF="chap25sec205.html#rskfsw"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+></DT
+><DD
+>&#13;This parameter specifies the right participant's public key for <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> signature authentication. In our example, right is 208.164.186.2, and represents mail.openna.com, so we must put the <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> public key of mail on this line.
+</DD
+></DL
+></DIV
+>
+</P
+></LI
+><LI
+><P
+>&#13;You can retrieve the public key of deep in the <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> key file called <TT
+CLASS="filename"
+>deep-keys,</TT
+> and the public key of mail in the <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> key file named <TT
+CLASS="filename"
+>mail-keys,</TT
+> that 
+we have created in above step. These files will look like this:
+
+<SPAN
+CLASS="acronym"
+>RSA</SPAN
+> keys for gateway deep (deep-keys):
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>cd</B
+> /
+[root@deep] /# <B
+CLASS="command"
+>vi</B
+> deep-keys
+</PRE
+></TD
+></TR
+></TABLE
+>
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;	# 1024 bits, Fri Feb  4 05:05:19 2000
+	# for signatures only, UNSAFE FOR ENCRYPTION
+	#pubkey=0x010395daee1be05f3038ae529ef2668afd79f5ff1b16203c9ceaef801cea9cb74bcfb51a6ecc08890d3eb4b5470c0fc35465c8ba2ce9d1145ff07b5427e04cf4a38ef98a7f29edcb4d7689f2da7a69199e4318b4c8d0ea25d33e4f084186a2a54f4b4cec12cca1a5deac3b19d561c16a76bab772888f1fd71aa08f08502a141b611f
+	Modulus: 0x95daee1be05f3038ae529ef2668afd79f5ff1b16203c9ceaef801cea9cb74bcfb51a6ecc08890d3eb4b5470c0fc35465c8ba2ce9d1145ff07b5427e04cf4a38ef98a7f29edcb4d7689f2da7a69199e4318b4c8d0ea25d33e4f084186a2a54f4b4cec12cca1a5deac3b19d561c16a76bab772888f1fd71aa08f08502a141b611f
+	PublicExponent: 0x03
+	# everything after this point is secret
+	PrivateExponent: 0x63e74967eaea2025c98c69f6ef0753a6a3ff6764157dbdf1f50013471324dd352366f48805b0b37f232384b2b52ce2ee85d173468b62eaa052381a9588a317b3a1324d01a531a41fa7add6c5efbdd88f4718feed2bc0246be924e81bb90f03e49ceedf7af0dd48f06f265b519600bd082c6e6bd27eaa71cc0288df1ecc3b062b
+	Prime1: 0xc5b471a88b025dd09d4bd7b61840f20d182d9b75bb7c11eb4bd78312209e3aee7ebfe632304db6df5e211d21af7fee79c5d45546bea3ccc7b744254f6f0b847f
+	Prime2: 0xc20a99feeafe79767122409b693be75f15e1aef76d098ab12579624aec708e85e2c5dd62080c3a64363f2f45b0e96cb4aef8918ca333a326d3f6dc2c72b75361
+	Exponent1: 0x83cda11b0756e935be328fcebad5f6b36573bcf927a80bf2328facb6c0697c9eff2a9976cade79ea3ec0be1674fff4512e8d8e2f29c2888524d818df9f5d02ff
+	Exponent2: 0x815c66a9f1fefba44b6c2b124627ef94b9411f4f9e065c7618fb96dc9da05f03ec83e8ec055d7c42ced4ca2e75f0f3231f5061086ccd176f37f9e81da1cf8ceb
+	Coefficient: 0x10d954c9e2b8d11f4db1b233ef37ff0a3cecfffad89ba5d515449b007803f577e3bd7f0183ceddfd805466d62f767f3f5a5731a73875d30186520f1753a7e325
+</TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></LI
+><LI
+><P
+>&#13;<SPAN
+CLASS="acronym"
+>RSA</SPAN
+> keys for gateway mail -<TT
+CLASS="filename"
+>mail-keys</TT
+>:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@mail /]# <B
+CLASS="command"
+>cd</B
+> /
+[root@mail /]# <B
+CLASS="command"
+>vi</B
+> mail-keys
+</PRE
+></TD
+></TR
+></TABLE
+>
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;	# 1024 bits, Fri Feb  4 04:46:59 2000
+	# for signatures only, UNSAFE FOR ENCRYPTION
+	#pubkey=0x01037631b81f00d5e6f888c542d44dbb784cd3646f084ed96f942d341c7c4686cbd405b805dc728f8697475f11e8b1dd797550153a3f0d4ff0f2b274b70a2ebc88f073748d1c1c8821dc6be6a2f0064f3be7f8e4549f8ab9af64944f829b014788dd202cf7d2e320cab666f5e7a197e64efe0bfee94e92ce4dad82d5230c57b89edf
+	Modulus: 0x7631b81f00d5e6f888c542d44dbb784cd3646f084ed96f942d341c7c4686cbd405b805dc728f8697475f11e8b1dd797550153a3f0d4ff0f2b274b70a2ebc88f073748d1c1c8821dc6be6a2f0064f3be7f8e4549f8ab9af64944f829b014788dd202cf7d2e320cab666f5e7a197e64efe0bfee94e92ce4dad82d5230c57b89edf
+	PublicExponent: 0x03
+	# everything after this point is secret
+	PrivateExponent: 0x4ecbd014ab3944a5b08381e2de7cfadde242f4b03490f50d737812fd8459dd3803d003e84c5faf0f84ea0bf07693a64e35637c2a08dff5f721a324b1747db09f62c871d5e11711251b845ae76753d4ef967c494b0def4f5d0762f65da603bc04c41b4c6cab4c413a72c633b608267ae2889c162a3d5bc07ee083b1c6e038400b
+	Prime1: 0xc7f7cc8feaaac65039c39333b878bffd8f95b0dc22995c553402a5b287f341012253e9f25b83983c936f6ca512926bebee3d5403bf9f4557206c6bbfd9aac899
+	Prime2: 0x975015cb603ac1d488dc876132d8bc83079435d2d3395c03d5386b5c004eadd4d7b01b3d86aad0a2275d2d6b791a2abe50d7740b7725679811a32ca22db97637
+	Exponent1: 0x854fddb5471c84357bd7b777d0507ffe5fb92092c1bb92e37801c3cc5aa22b5616e29bf6e7ad1028624a486e0c619d47f428e2ad2a6a2e3a159d9d2a911c85bb
+	Exponent2: 0x64e00e87957c81385b3daf9621e5d302050d7937377b92ad38d04792aadf1e8de52012290471e06c1a3e1e47a61171d435e4f807a4c39a6561177316c9264ecf
+	Coefficient: 0x6f087591becddc210c2ee0480e30beeb25615a3615203cd3cef65e5a1d476fd9602ca0ef10d9b858edb22db42c975fb71883a470b43433a7be57df7ace4a0a3f
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></LI
+><LI
+><P
+>&#13;Extract and copy the public <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> key files of deep and mail to your <TT
+CLASS="filename"
+>ipsec.conf</TT
+> files as shown below. You can locate the line related to the public key by a sentence beginning with the commented-out: 
+<TT
+CLASS="envar"
+>#pubkey=</TT
+> line.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;# sample connection
+conn deep-mail
+left=208.164.186.1
+leftsubnet=192.168.1.0/24
+leftnexthop=205.151.222.250
+right=208.164.186.2
+rightsubnet=192.168.1.0/24
+rightnexthop=205.151.222.251
+keyingtries=0
+auth=ah
+authby=rsasig
+leftrsasigkey=0x010395daee1be05f3038ae529ef2668afd79f5ff1b16203c9ceaef801cea9cb74bcfb51a6ecc08890d3eb4b5470c0fc35465c8ba2ce9d1145ff07b5427e04cf4a38ef98a7f29edcb4d7689f2da7a69199e4318b4c8d0ea25d33e4f084186a2a54f4b4cec12cca1a5deac3b19d561c16a76bab772888f1fd71aa08f08502a141b611f
+rightrsasigkey=0x01037631b81f00d5e6f888c542d44dbb784cd3646f084ed96f942d341c7c4686cbd405b805dc728f8697475f11e8b1dd797550153a3f0d4ff0f2b274b70a2ebc88f073748d1c1c8821dc6be6a2f0064f3be7f8e4549f8ab9af64944f829b014788dd202cf7d2e320cab666f5e7a197e64efe0bfee94e92ce4dad82d5230c57b89edf
+auto=start
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;<DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+Don't forget that, in this example, 
+<P
+></P
+><UL
+><LI
+><P
+>&#13;The <TT
+CLASS="envar"
+>leftrsasigkey=</TT
+> parameter contains the public key of deep 
+</P
+></LI
+><LI
+><P
+>&#13;The <TT
+CLASS="envar"
+>rightrsasigkey=</TT
+> parameter contains the public key of mail.
+</P
+></LI
+></UL
+>
+</P
+></BLOCKQUOTE
+></DIV
+>
+</P
+></LI
+><LI
+><P
+>&#13;
+Modify your <TT
+CLASS="filename"
+>/etc/ipsec.secrets</TT
+> files to use <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private keys in *each* gateway:
+
+Edit your original <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/ipsec.secrets</TT
+> and add the <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private key for authentication on both gateways:
+
+The <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> file for gateway deep:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>vi</B
+> /etc/ipsec.secrets
+</PRE
+></TD
+></TR
+></TABLE
+>
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;208.164.186.1 208.164.186.2 "0x9748cc31_2e99194f_d230589b_cd846b57_dc070b01_74b66f34_19c40a1a_804906ed"
+</PRE
+></TD
+></TR
+></TABLE
+>
+You must change your original <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> file as shown above to look like the following on both gateways. It is important to note that the private keys are not the same on both gateways,  <TT
+CLASS="literal"
+>deep</TT
+> and <TT
+CLASS="literal"
+>mail</TT
+>. 
+The private key for <TT
+CLASS="literal"
+>deep</TT
+> comes from the <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> key file <TT
+CLASS="filename"
+>deep-keys,</TT
+> while the private key for <TT
+CLASS="literal"
+>mail</TT
+> comes from the <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> key file <TT
+CLASS="filename"
+>mail-keys:</TT
+>
+</P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;208.164.186.1 208.164.186.2: <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> {
+        Modulus: 0x95daee1be05f3038ae529ef2668afd79f5ff1b16203c9ceaef801cea9cb74bcfb51a6ecc08890d3eb4b5470c0fc35465c8ba2ce9d1145ff07b5427e04cf4a38ef98a7f29edcb4d7689f2da7a69199e4318b4c8d0ea25d33e4f084186a2a54f4b4cec12cca1a5deac3b19d561c16a76bab772888f1fd71aa08f08502a141b611f
+        PublicExponent: 0x03
+        # everything after this point is secret
+        PrivateExponent: 0x63e74967eaea2025c98c69f6ef0753a6a3ff6764157dbdf1f50013471324dd352366f48805b0b37f232384b2b52ce2ee85d173468b62eaa052381a9588a317b3a1324d01a531a41fa7add6c5efbdd88f4718feed2bc0246be924e81bb90f03e49ceedf7af0dd48f06f265b519600bd082c6e6bd27eaa71cc0288df1ecc3b062b
+        Prime1: 0xc5b471a88b025dd09d4bd7b61840f20d182d9b75bb7c11eb4bd78312209e3aee7ebfe632304db6df5e211d21af7fee79c5d45546bea3ccc7b744254f6f0b847f
+        Prime2: 0xc20a99feeafe79767122409b693be75f15e1aef76d098ab12579624aec708e85e2c5dd62080c3a64363f2f45b0e96cb4aef8918ca333a326d3f6dc2c72b75361
+        Exponent1: 0x83cda11b0756e935be328fcebad5f6b36573bcf927a80bf2328facb6c0697c9eff2a9976cade79ea3ec0be1674fff4512e8d8e2f29c2888524d818df9f5d02ff
+        Exponent2: 0x815c66a9f1fefba44b6c2b124627ef94b9411f4f9e065c7618fb96dc9da05f03ec83e8ec055d7c42ced4ca2e75f0f3231f5061086ccd176f37f9e81da1cf8ceb
+        Coefficient: 0x10d954c9e2b8d11f4db1b233ef37ff0a3cecfffad89ba5d515449b007803f577e3bd7f0183ceddfd805466d62f767f3f5a5731a73875d30186520f1753a7e325
+	}
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></LI
+><LI
+><P
+>&#13;  The <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> file for gateway mail:
+  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;    [root@mail ]/# <B
+CLASS="command"
+>vi</B
+> /etc/ipsec.secrets
+  </PRE
+></TD
+></TR
+></TABLE
+>
+  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;    208.164.186.1 208.164.186.2: RSA {
+    Modulus: 0x95daee1be05f3038ae529ef2668afd79f5ff1b16203c9ceaef801cea9cb74bcfb51a6ecc08890d3eb4b5470c0fc35465c8ba2ce9d1145ff07b5427e04cf4a38ef98a7f29edcb4d7689f2da7a69199e4318b4c8d0ea25d33e4f084186a2a54f4b4cec12cca1a5deac3b19d561c16a76bab772888f1fd71aa08f08502a141b611f
+    PublicExponent: 0x03
+    # everything after this point is secret
+    PrivateExponent: 0x63e74967eaea2025c98c69f6ef0753a6a3ff6764157dbdf1f50013471324dd352366f48805b0b37f232384b2b52ce2ee85d173468b62eaa052381a9588a317b3a1324d01a531a41fa7add6c5efbdd88f4718feed2bc0246be924e81bb90f03e49ceedf7af0dd48f06f265b519600bd082c6e6bd27eaa71cc0288df1ecc3b062b
+    Prime1: 0xc5b471a88b025dd09d4bd7b61840f20d182d9b75bb7c11eb4bd78312209e3aee7ebfe632304db6df5e211d21af7fee79c5d45546bea3ccc7b744254f6f0b847f
+    Prime2: 0xc20a99feeafe79767122409b693be75f15e1aef76d098ab12579624aec708e85e2c5dd62080c3a64363f2f45b0e96cb4aef8918ca333a326d3f6dc2c72b75361
+    Exponent1: 0x83cda11b0756e935be328fcebad5f6b36573bcf927a80bf2328facb6c0697c9eff2a9976cade79ea3ec0be1674fff4512e8d8e2f29c2888524d818df9f5d02ff
+    Exponent2: 0x815c66a9f1fefba44b6c2b124627ef94b9411f4f9e065c7618fb96dc9da05f03ec83e8ec055d7c42ced4ca2e75f0f3231f5061086ccd176f37f9e81da1cf8ceb
+    Coefficient: 0x10d954c9e2b8d11f4db1b233ef37ff0a3cecfffad89ba5d515449b007803f577e3bd7f0183ceddfd805466d62f767f3f5a5731a73875d30186520f1753a7e325
+    }
+  </PRE
+></TD
+></TR
+></TABLE
+>
+
+Authentication by <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> Signatures requires that each host have its own private key. The key part of an entry may start with a token indicating the kind of key. <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> signifies <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private key 
+and <SPAN
+CLASS="acronym"
+>PSK</SPAN
+> -<EM
+>which is the default</EM
+> signifies PreShared Key. Since <SPAN
+CLASS="acronym"
+>PSK</SPAN
+> is the default, we must specify <SPAN
+CLASS="acronym"
+>RSA,</SPAN
+> so that we'll be able to use <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private keys 
+in this file <TT
+CLASS="filename"
+>ipsec.secrets.</TT
+> The super-user <TT
+CLASS="literal"
+>root</TT
+> should own the file <TT
+CLASS="filename"
+>ipsec.secrets,</TT
+> and its permissions should be set to block all access by others.
+</P
+></LI
+></OL
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap25sec204.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap25sec206.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/ipsec.secrets</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="fSWAn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Required network setup for IPSec</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

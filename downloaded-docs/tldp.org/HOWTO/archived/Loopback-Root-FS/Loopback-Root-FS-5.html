@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Loopback Root Filesystem HOWTO: Other Loopback Root Device Possibilities</TITLE>
+ <LINK HREF="Loopback-Root-FS-4.html" REL=previous>
+ <LINK HREF="Loopback-Root-FS.html#toc5" REL=contents>
+</HEAD>
+<BODY>
+Next
+<A HREF="Loopback-Root-FS-4.html">Previous</A>
+<A HREF="Loopback-Root-FS.html#toc5">Contents</A>
+<HR>
+<H2><A NAME="s5">5. Other Loopback Root Device Possibilities</A></H2>
+
+<P>Once the principle of booting a filesystem in a file on a DOS partition has been
+established there are many other things that you can now do.
+<P>
+<P>
+<H2><A NAME="ss5.1">5.1 DOS Hard-disk Only Installation</A>
+</H2>
+
+<P>If it is possible to boot Linux from a file on a DOS harddisk by using a boot
+floppy then it is obviously also possible to do it using the harddisk itself.
+<P>A configuration boot menu can be used to give the option of running
+<CODE>LOADLIN</CODE> from within the <CODE>AUTOEXEC.BAT</CODE>.  This will give a much
+faster boot sequence, but is otherwise identical.
+<P>
+<P>
+<H2><A NAME="ss5.2">5.2 LILO Booted Installation</A>
+</H2>
+
+<P>Using <CODE>LOADLIN</CODE> is only one option for booting a Linux kernel.  There is
+also <CODE>LILO</CODE> that does much the same but without needing DOS.
+<P>In this case the DOS format floppy disk can be replaced by an ext2fs format one.
+Otherwise the details are very similar, with the kernel and the initial ramdisk
+being files on that disk.
+<P>The reason that I chose the <CODE>LOADLIN</CODE> method is that the arguments that
+need to be given to <CODE>LILO</CODE> are slightly more complex.  Also it is more
+obvious to a casual observer what the floppy disk is since it can be read under
+DOS.
+<P>
+<P>
+<H2><A NAME="ss5.3">5.3 VFAT / NTFS Installation</A>
+</H2>
+
+<P>I have tried the NTFS method, and have had no problems with it.  The NTFS
+filesystem driver is not a standard kernel option in version 2.0.x, but is
+available as a patch from 
+<A HREF="http://www.informatik.hu-berlin.de/~loewis/ntfs/">http://www.informatik.hu-berlin.de/~loewis/ntfs/</A>.  In version 2.2.x the
+NTFS driver is included as standard in the kernel.
+<P>The only changes for the VFAT or NTFS options are in the initial ramdisk, the
+file <CODE>/linuxrc</CODE> needs to mount a file system of type vfat or ntfs rather
+that msdos.
+<P>I know of no reason why this should not also work on a VFAT partition.
+<P>
+<P>
+<H2><A NAME="ss5.4">5.4 Installing Linux without Re-partitioning</A>
+</H2>
+
+<P>The process of installing Linux on a PC from a standard distribution requires
+booting from a floppy disk and re-partitioning the disk.  This stage could
+instead be accomplished by a boot floppy that creates an empty loopback device
+and swap file.  This would allow the installation to proceed as normal, but it
+would install into the loopback device rather than a partition.
+<P>This could be used as an alternative to a <CODE>UMSDOS</CODE> installation, it would
+be more efficient in disk usage since the minimum allocation unit in the ext2
+filesystem is 1kB instead of up to 32kB on a DOS partition.  It can also be used
+on VFAT and NTFS formatted disks which are otherwise a problem.
+<P>
+<P>
+<H2><A NAME="ss5.5">5.5 Booting From a Non-bootable device</A>
+</H2>
+
+<P>This method can also be used to boot a Linux system from a device that is not
+normally bootable.
+<P>
+<P>
+<UL>
+<LI>CD-Rom</LI>
+<LI>Zip Disks</LI>
+<LI>Parallel port disk drives</LI>
+</UL>
+<P>Obviously there are many other devices that could be used, NFS root filesystems
+are already included in the kernel as an option, but the method described here
+might also be used instead.
+<P>
+<HR>
+Next
+<A HREF="Loopback-Root-FS-4.html">Previous</A>
+<A HREF="Loopback-Root-FS.html#toc5">Contents</A>
+</BODY>
+</HTML>

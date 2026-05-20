@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Mail Routing on the Internet</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node192.html">Mail Routing in the </A>
+<B>Up:</B> <A HREF="node190.html">How does Mail Routing </A>
+<B> Previous:</B> <A HREF="node190.html">How does Mail Routing </A>
+<BR> <P>
+<H2><A NAME="SECTION0015410000">Mail Routing on the Internet</A></H2>
+<a name="mail.routing.internet">Mail Routing on the Internet</a>
+On the Internet, it depends entirely on the destination host whether any
+specific mail routing is performed at all. The default is to deliver the
+message to the destination host directly by looking up its IP address,
+and leave the actual routing of the data to the IP transport layer.
+<P>
+<A NAME="6948"></A>
+Most sites will usually want to direct all in-bound mail to a highly
+available mail server that is capable of handling all this traffic, and
+have it distribute this mail locally. To announce this service, the site
+publishes a so-called MX record for their local domain in the DNS
+database.  MX stands for <em>Mail Exchanger</em> and basically states
+that the server host is willing to act as a mail forwarder for all
+machines in this domain.  MX records may also be used to handle traffic
+for hosts that are not connected to the Internet themselves, like UUCP
+networks, or company networks with hosts carrying confidential
+information.
+<P>
+MX records also have a <em>preference</em> associated with them.  This is
+a positive integer. If several mail exchangers exist for one host, the
+mail transport agent will try to transfer the message to the exchanger
+with the lowest preference value, and only if this fails will it try a
+host with a higher value. If the local host is itself a mail exchanger
+for the destination address, it must not forward messages to any MX
+hosts with a higher preference than its own; this is a safe way of
+avoiding mail loops.
+<P>
+Suppose that an organization, say Foobar Inc., want all their mail
+handled by their machine called mailhub.  They will then have an
+MX record like this in the DNS database:
+<PRE>
+           foobar.com        IN   MX      5    mailhub.foobar.com
+</PRE>
+This announces mailhub.foobar.com as a mail exchanger for
+foobar.com with a preference value of 5. A host that wishes to
+deliver a message to joe@greenhouse.foobar.com will check DNS for
+foobar.com, and finds the MX record pointing at mailhub.
+If there's no MX with a preference smaller than 5, the message will be
+delivered to mailhub, which then dispatches it to
+greenhouse.
+<P>
+The above is really only a sketch of how MX records work.  For more
+information on the mail routing on the Internet, please refer to
+RFC-974.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node192.html">Mail Routing in the </A>
+<B>Up:</B> <A HREF="node190.html">How does Mail Routing </A>
+<B> Previous:</B> <A HREF="node190.html">How does Mail Routing </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

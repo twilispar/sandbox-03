@@ -1,0 +1,442 @@
+<HTML
+><HEAD
+><TITLE
+>Configure</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking"
+HREF="soft-netwrkng.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux DNS and BIND Server"
+HREF="chap21sec162.html"><LINK
+REL="NEXT"
+TITLE="Caching-only name Server"
+HREF="chap21sec164.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap21sec162.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 21. Software -Networking</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap21sec164.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN10608"
+>21.2. Configure</A
+></H1
+><P
+>&#13; Configuration files for different services are very specific depending on your needs and your network architecture. People can install <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Servers at home as a <TT
+CLASS="literal"
+>caching-only</TT
+> server, though companies may install it 
+ with <TT
+CLASS="literal"
+>primary</TT
+>, <TT
+CLASS="literal"
+>secondary</TT
+> and <TT
+CLASS="literal"
+>caching</TT
+> <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> servers.
+</P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>All the configuration files required for each software described in this book has been provided by us as a gzipped file, <TT
+CLASS="filename"
+>floppy.tgz</TT
+> for your convenience. This can be downloaded from this web address: <A
+HREF="appendixa.html#sc24obecfrs2"
+>http://www.openna.com/books/floppy.tgz</A
+>
+    You can unpack this to any location on your local machine, say for example <TT
+CLASS="filename"
+>/tmp</TT
+>, assuming you have done this your directory structure will be <TT
+CLASS="filename"
+>/tmp/floppy</TT
+>. Within this floppy directory each configuration file has its own directory 
+    for respective software. For example <I
+CLASS="wordasword"
+>BIND-DNS</I
+> configuration file are organised like this:
+    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;    total 24
+drwxr-xr-x    2 harrypotter    harrypotter        4096 Jun  8 13:00 Caching-Only-DNS/
+-rw-r--r--    1 harrypotter    harrypotter         484 Jun  8 13:00 Compile-BIND
+drwxr-xr-x    2 harrypotter    harrypotter        4096 Jun  8 13:00 Primary-Master-DNS/
+drwxr-xr-x    2 harrypotter    harrypotter        4096 Jun  8 13:00 Secondary-Slave-DNS/
+-rwx------    1 harrypotter    harrypotter         300 Jun  8 13:00 bind.sh*
+drwxr-xr-x    3 harrypotter    harrypotter        4096 Jun  8 13:00 init.d/
+    </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+    You can either cut and paste this directly if you are faithfully following our instructions from the begining or manually edit these to modify to your needs. This facility is there though as a convenience but please don't forget ultimately it will be your 
+    responsibility to check, verify, <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+> before you use them whether modified or as it is.
+  </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13; To run a <TT
+CLASS="literal"
+>caching-only</TT
+> name server, the following files are required and must be created or copied to the appropriate directories on your server.
+ <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>named.conf</TT
+> file to the <TT
+CLASS="filename"
+>/etc/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>db.127.0.0</TT
+> file to the <TT
+CLASS="filename"
+>/var/named/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>db.cache</TT
+> file to the <TT
+CLASS="filename"
+>/var/named/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>named</TT
+> script file to the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/</TT
+> directory.
+ </P
+></LI
+></OL
+>
+ </P
+><P
+>&#13; To run a <TT
+CLASS="literal"
+>master</TT
+> name server, the following files are required and must be created or copied to the appropriate directories on your server.
+<P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>named.conf</TT
+> file to the <TT
+CLASS="filename"
+>/etc/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>db.127.0.0</TT
+> file to the <TT
+CLASS="filename"
+>/var/named/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>db.cache</TT
+> file to the <TT
+CLASS="filename"
+>/var/named/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>db.208.164.186</TT
+> file to the <TT
+CLASS="filename"
+>/var/named/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>db.openna</TT
+> file to the <TT
+CLASS="filename"
+>/var/named/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>named</TT
+> script file to the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/</TT
+> directory.
+ </P
+></LI
+></OL
+>
+ </P
+><P
+>&#13; To run a slave name server, the following files are required and must be created or copied to the appropriate directories on your server.
+ <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>named.conf</TT
+> file to the <TT
+CLASS="filename"
+>/etc/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>db.127.0.0</TT
+> file to the <TT
+CLASS="filename"
+>/var/named/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>db.cache</TT
+> file to the <TT
+CLASS="filename"
+>/var/named/</TT
+> directory.
+ </P
+></LI
+><LI
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>named</TT
+> script file to the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/</TT
+> directory.
+ </P
+></LI
+></OL
+>
+ </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+ You can obtain the configuration files listed over the next few sections on the <TT
+CLASS="filename"
+>floppy.tgz</TT
+> archive. Copy the following files from the decompressed <TT
+CLASS="filename"
+>floppy.tgz</TT
+> archive to the 
+ appropriate places, or copy them directly from this book to the concerned file.
+ </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap21sec162.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap21sec164.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> and <SPAN
+CLASS="acronym"
+>BIND</SPAN
+> Server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netwrkng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><TT
+CLASS="literal"
+>Caching-only</TT
+> name Server</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

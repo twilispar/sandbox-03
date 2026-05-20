@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Routing Table</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node32.html">Metric Values</A>
+<B>Up:</B> <A HREF="node27.html">IP Routing</A>
+<B> Previous:</B> <A HREF="node30.html">Gateways</A>
+<BR> <P>
+<H2><A NAME="SECTION004440000">The Routing Table</A></H2>
+<A NAME="tcpiproutingtable"></A>
+We are now focusing our attention on how IP chooses a gateway to use
+when delivering a datagram to a remote network.
+<P>
+We have seen before that erdos, when given a datagram for
+quark, checks the destination address and finds it is not on the
+local network. It therefore sends it to the default gateway,
+sophus, which is now basically faced with the same task.
+sophus recognizes that quark is not on any of the networks
+it is connected to directly, so it has to find yet another gateway to
+forward it through. The correct choice would be niels, the
+gateway to the Physics Department. sophus therefore needs some
+information to associate a destination network with a suitable gateway.
+<P>
+The routing information IP uses for this is basically a table linking
+networks to gateways that reach them. A catch-all entry (the <em>default
+route</em>) must generally be supplied, too; this is the gateway associated
+with network 0.0.0.0. All packets to an unknown network are sent
+through the default route.  On sophus, this table might look like
+this:
+<pre>
+	-----------------------------------------
+	+-----------+-------------+------------+
+	|Network     | Gateway     | Interface  |
+	+------------+-------------+------------+
+	+------------+-------------+------------+
+	|149.76.1.0  | -           | fddi0      |
+	|149.76.2.0  | 149.76.1.2  | fddi0      |
+	|149.76.3.0  | 149.76.1.3  | fddi0      |
+	|149.76.4.0  | -           | eth0       |
+	|149.76.5.0  | 149.76.1.5  | fddi0      |
+	|...         | ...         | ...        |
+	|0.0.0.0     | 149.76.1.2  | fddi0      |
+	+------------+-------------+------------+
+	+------------+-------------+------------+
+</pre>
+Routes to a network that sophus is directly connected to don't
+require a gateway; therefore they show a gateway entry of ``-''.
+<P>
+<A NAME="1177"></A>
+<A NAME="1178"></A>
+<A NAME="1179"></A>
+<A NAME="1180"></A>
+Routing tables may be built by various means. For small LANs, it is
+usually most efficient to construct them by hand and feed them to IP
+using the route command at boot time (see chapter-<A HREF="node58.html#iface"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+For larger networks, they are built and adjusted at run-time by
+<em>routing daemons</em>; these run on central hosts of the network and
+exchange routing information to compute ``optimal'' routes between the
+member networks.
+<P>
+<A NAME="1184"></A>
+<A NAME="1185"></A>
+<A NAME="1186"></A>
+<A NAME="1302"></A>
+<A NAME="1303"></A>
+<A NAME="1304"></A>
+Depending on the size of the network, different routing protocols will
+be used.  For routing inside autonomous systems (such as Groucho Marx
+campus), the <em>internal routing protocols</em> are used.  The most
+prominent one is RIP, the Routing Information Protocol, which is
+implemented by the BSD routed daemon.  For routing between
+autonomous systems, <em>external routing protocols</em> like EGP
+(External Gateway Protocol), or BGP (Border Gateway Protocol) have to be
+used; these (as well as RIP) have been implemented in the University of
+Cornell's gated daemon.<A HREF="footnode.html#1305"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node32.html">Metric Values</A>
+<B>Up:</B> <A HREF="node27.html">IP Routing</A>
+<B> Previous:</B> <A HREF="node30.html">Gateways</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

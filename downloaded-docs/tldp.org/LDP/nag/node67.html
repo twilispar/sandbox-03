@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Ethernet Interfaces</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node68.html">Routing through a Gateway</A>
+<B>Up:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<B> Previous:</B> <A HREF="node66.html">The Loopback Interface</A>
+<BR> <P>
+<H2><A NAME="SECTION007720000">Ethernet Interfaces</A></H2>
+
+Configuring an Ethernet interface goes pretty much the same as
+with the loopback interface, it just requires a few more parameters
+when you are using sub-netting.
+<P>
+At the Virtual Brewery, we have sub netted the IP network, which was
+originally a class-B network, into class-C subnetworks. To make the
+interface recognize this, the ifconfig incantation would look
+like this:
+<Pre>
+           # ifconfig eth0 vstout netmask 255.255.255.0
+
+ 
+</Pre>
+This assigns the eth0 interface the IP-address of vstout
+(191.72.1.2). If we had omitted the netmask, ifconfig
+would have deduced the the netmask from the IP-network class, which
+would have resulted in a netmask of 255.255.0.0.
+Now a quick check shows:
+<Pre>
+           # ifconfig eth0
+           eth0      Link encap 10Mps Ethernet HWaddr  00:00:C0:90:B3:42
+                     inet addr 191.72.1.2 Bcast 191.72.1.255 Mask 255.255.255.0
+                     UP BROADCAST RUNNING  MTU 1500  Metric 1
+                     RX packets 0 errors 0 dropped 0 overrun 0
+                     TX packets 0 errors 0 dropped 0 overrun 0
+ 
+</Pre>
+You can see that ifconfig automatically set the broadcast
+address (the Bcast field above) to the usual value, which is
+the hosts network number with the host bits all set. Also, the message
+transfer unit (the maximum size of Ethernet frames the kernel will
+generate for this interface) has been set to the maximum value of 1500
+bytes. All these values can be overridden with special options that
+will be described later.
+<P>
+Quite similar to the loopback case, you now have to install a routing
+entry that informs the kernel about the network that can be reached
+through eth0.  For the Virtual Brewery, you would invoke
+route as
+
+<Pre>
+           # route add -net 191.72.1.0
+ 
+</Pre>
+At first, this looks a little like magic, because it's not really
+clear how route detects which interface to route through.
+However, the trick is rather simple: the kernel checks all interfaces
+that have been configured so far and compares the destination address
+(191.72.1.0 in this case) to the network part of the interface
+address (that is, the bitwise and of the interface address and the
+netmask). The only interface that matches is eth0.
+<P>
+Now, what's that -net option for? This is used because
+route can handle both routes to networks and routes to single
+hosts (as you have seen above with localhost). When being given an
+address in dotted quad notation, it attempts to guess whether it is a
+network or a hostname by looking at the host part bits. If the address'
+host part is zero, route assumes it denotes a network, otherwise
+it takes it as a host address. Therefore, route would think that
+191.72.1.0 is a host address rather than a network number,
+because it cannot know that we use sub-netting. We therefore have to tell
+it explicitly that it denotes a network, giving it the -net
+flag.
+<P>
+Of course, the above route command is a little tedious to type,
+and it's prone to spelling mistakes. A more convenient approach is to
+use the network names we have defined in /etc/networks above.
+This makes the command much more readable; even the -net flag
+can now be omitted, because route now knows that
+191.72.1.0 denotes a network.
+<Pre>
+           # route add brew-net
+</Pre>
+
+Now that you've finished the basic configuration steps, we want to
+make sure your Ethernet interface is indeed running happily. Choose a
+host from your Ethernet, for instance vlager, and type
+<Pre>
+           # ping vlager
+           PING vlager: 64 byte packets
+           64 bytes from 191.72.1.1: icmp seq=0. time=11. ms
+           64 bytes from 191.72.1.1: icmp seq=1. time=7. ms
+           64 bytes from 191.72.1.1: icmp seq=2. time=12. ms
+           64 bytes from 191.72.1.1: icmp seq=3. time=3. ms
+           ^C
+
+           ----vstout.vbrew.com PING Statistics----
+           4 packets transmitted, 4 packets received, 0% packet loss
+           round-trip (ms)  min/avg/max = 3/8/12
+ 
+</Pre>
+If you don't see any output similar to this, then something is broken,
+obviously.  If you encounter unusual packet loss rates, this hints at
+a hardware problem, like bad or missing terminators, etc.  If you
+don't receive any packets at all, you should check the interface
+configuration with netstat. The packet statistics displayed by
+ifconfig should tell you whether any packets have been sent out
+on the interface at all. If you have access to the remote host, too,
+you should go over to that machine and check the interface statistics,
+too. In this way, you can determine exactly where the packets got
+dropped.  In addition, you should display the routing information with
+route to see if both hosts have the correct routing entry. 
+route prints out the complete kernel routing table when invoked
+without any arguments (the -n option only makes it print
+addresses as dotted quad instead of using the hostname):
+<pre>
+           # route -n
+           Kernel routing table
+           Destination     Gateway         Genmask         Flags Metric Ref Use
+           127.0.0.1       *               255.255.255.255 UH    1      0
+           191.72.1.0      *               255.255.255.0   U     1      0
+
+</pre>
+The detailed meaning of these fields is explained below in
+section-<A HREF="#ifacenetstat"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>. The Flag column contains a list of
+flags set for each interface. U is always set for active
+interfaces, and H says the destination address denotes a host.
+If the H flag is set for a route that you meant to be a network
+route, then you have to specify the -net option with the
+route command. To check whether a route you have entered is used
+at all, check if the Use field in the second to last column
+increases between two invocations of ping.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node68.html">Routing through a Gateway</A>
+<B>Up:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<B> Previous:</B> <A HREF="node66.html">The Loopback Interface</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

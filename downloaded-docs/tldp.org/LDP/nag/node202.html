@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Running smail</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node203.html">If You Don't Get </A>
+<B>Up:</B> <A HREF="node200.html">Setup for a LAN</A>
+<B> Previous:</B> <A HREF="node201.html">Writing the Configuration Files</A>
+<BR> <P>
+<H2><A NAME="SECTION0016220000">Running smail</A></H2>
+First, you have to decide whether to run smail as a separate
+daemon, or whether to have inetd manage the SMTP port and invoke
+smail only whenever an SMTP connection is requested from some
+client. Usually, you will prefer daemon operation on the mail server,
+because this loads the machine far less than spawning smail over
+and over again for each single connection. As the mail server also
+delivers most incoming mail directly to the users, you will choose
+inetd operation on most other hosts.
+<P>
+Whatever mode of operation you choose for each individual host,
+you have to make sure you have the following entry in your
+/etc/services file:
+<PRE>
+           smtp            25/tcp          # Simple Mail Transfer Protocol
+</PRE>
+This defines the TCP port number that smail should use for SMTP
+conversations. 25 is the standard defined by the Assigned Numbers RFC.
+<P>
+When run in daemon mode, smail will put itself in the background,
+and wait for a connection to occur on the SMTP port. When a connection
+occurs, it forks and conducts an SMTP conversation with the peer
+process.  The smail daemon is usually started by invoking it from
+the rc.inet2 script using the following command:
+<PRE>
+           /usr/local/bin/smail -bd -q15m
+</PRE>
+The -bd flag turns on daemon mode, and -q15m makes
+it process whatever messages have accumulated in the message queue every
+15 minutes.
+<P>
+If you want to use inetd instead, your /etc/inetd.conf
+file should contain a line like this:
+<PRE>
+           smtp    stream  tcp nowait  root  /usr/sbin/smtpd smtpd
+ 
+</PRE>
+smtpd should be a symbolic link to the smail binary.
+Remember you have to make inetd re-read inetd.conf by
+sending it a HUP signal after making these changes.
+<P>
+Daemon mode and inetd mode are mutually exclusive. If you run
+smail in daemon mode, you should make sure to comment out any
+line in inetd.conf for the smtp service. Equivalently,
+when having inetd manage smail, make sure that
+rc.inet2 does not start the smail daemon.
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node203.html">If You Don't Get </A>
+<B>Up:</B> <A HREF="node200.html">Setup for a LAN</A>
+<B> Previous:</B> <A HREF="node201.html">Writing the Configuration Files</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,436 @@
+<HTML
+><HEAD
+><TITLE
+>edquota </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Set Limits using Qouta"
+HREF="quota.html"><LINK
+REL="PREVIOUS"
+TITLE="Create of the quota.user and quota.group "
+HREF="chap20sec157.html"><LINK
+REL="NEXT"
+TITLE="Assign quota for a particular group"
+HREF="chap20sec159.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap20sec157.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 20. Set Limits using Qouta</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap20sec159.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN10348"
+>20.3. edquota</A
+></H1
+><P
+>&#13;              The edquota program is a quota editor that creates a temporary file of the current disk quotas used by the super-user root to set quotas for users or group of users in the system. The example below shows 
+              you how to setup quotas for users or groups on your system.
+            </P
+><P
+>&#13;              Consider, for example, that you have a user with the login id <I
+CLASS="wordasword"
+>wahib</I
+> on your system. The following command opens the editor vi to edit and set quotas for user wahib on each partition that has quotas enabled:
+            </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;                  To edit and modify quota for user <I
+CLASS="wordasword"
+>wahib</I
+>, use the following command:
+                  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                    [root@deep] /# <B
+CLASS="command"
+>edquota</B
+> -u wahib
+                  </PRE
+></TD
+></TR
+></TABLE
+>
+                  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                    Quotas for user wahib:
+                    /dev/sda6: blocks in use: 6, limits (soft = 0, hard = 0)
+                    inodes in use: 5, limits (soft = 0, hard = 0)
+                  </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+                  After the execution of the above command, you will see the following lines related to the user <I
+CLASS="wordasword"
+>wahib</I
+> appear on the screen. 
+                  <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+>The blocks in use:</DT
+><DD
+><P
+>&#13;                      display the total number of blocks in kilobytes the user has consumed on a partition. 
+                    </P
+></DD
+><DT
+>The inodes in use:</DT
+><DD
+><P
+>&#13;                      display the total number of files the user has on a partition. 
+                    </P
+></DD
+></DL
+></DIV
+>
+                  These parameters <TT
+CLASS="literal"
+>blocks in use</TT
+>, and <TT
+CLASS="literal"
+>inodes in use</TT
+> are controlled and set automatically by the system and you don't need to set or change them.
+                </P
+></LI
+><LI
+><P
+>&#13;                  To assign 5<SPAN
+CLASS="acronym"
+>MB</SPAN
+> of quota for user <I
+CLASS="wordasword"
+>wahib</I
+>, change the following parameters in the vi editor:
+                  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                    Quotas for user wahib:
+                    /dev/sda6: blocks in use: 6, limits (soft = 0, hard = 0)
+                    inodes in use: 5, limits (soft = 0, hard = 0)
+                  </PRE
+></TD
+></TR
+></TABLE
+>
+                  To read:
+                  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                    Quotas for user wahib:
+                    /dev/sda6: blocks in use: 6, limits (soft = 5000, hard = 0)
+                    inodes in use: 5, limits (soft = 0, hard = 0)
+                  </PRE
+></TD
+></TR
+></TABLE
+>
+                </P
+></LI
+></OL
+></DIV
+><P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;                The soft limit (soft =) specifies the maximum amount of disk usage a quota user is allowed to have.
+              </TD
+></TR
+><TR
+><TD
+>&#13;              The hard limit (hard =) specifies the absolute limit on the disk usage a quota user can't go beyond it. 
+              </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+                Take a note that the hard limit value works only when the grace period parameter is set.
+              </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN10390"
+>20.3.1. The <TT
+CLASS="literal"
+>grace period</TT
+> parameter</A
+></H2
+><P
+>&#13;              The <TT
+CLASS="literal"
+>grace period</TT
+> parameter allow you to set a time limit before the soft limit value is enforced on a file system with quota enabled, <EM
+>see the soft limit above for more information</EM
+>. For example 
+              this parameter can be used to warn your users about a new policy that will set a quota of 5<SPAN
+CLASS="acronym"
+>MB</SPAN
+> of disk space in their home directory in 7 days. You can set the 0 days default part of this parameter to any length of 
+              time you feel reasonable.
+            </P
+><P
+>&#13;              The changes of this setting require two steps as follows, in my example I assume 7 days.
+              </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;                  Edit the default grace period parameter, by using the following command:
+                  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                    [root@deep] /# <B
+CLASS="command"
+>edquota</B
+> -t
+                  </PRE
+></TD
+></TR
+></TABLE
+>
+                  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                    Time units may be: days, hours, minutes, or seconds
+                    Grace period before enforcing soft limits for users:
+                    /dev/sda6: block grace period: 0 days, file grace period: 0 days
+                  </TT
+>
+                  </PRE
+></TD
+></TR
+></TABLE
+>
+                </P
+></LI
+><LI
+><P
+>&#13;                  Modify the grace period to 7 days. Change or set the following parameters in the vi editor:
+                  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                    Time units may be: days, hours, minutes, or seconds
+                    Grace period before enforcing soft limits for users:
+                    /dev/sda6: block grace period: 0 days, file grace period: 0 days
+                  </PRE
+></TD
+></TR
+></TABLE
+>
+                  To read:
+                  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                    Time units may be: days, hours, minutes, or seconds
+                    Grace period before enforcing soft limits for users:
+                    /dev/sda6: block grace period: 7 days, file grace period: 7 days
+                  </PRE
+></TD
+></TR
+></TABLE
+>
+                </P
+></LI
+></OL
+></DIV
+><P
+>&#13;              The command <B
+CLASS="command"
+>edquota</B
+> -t edits the soft time limits for each file system with quotas enabled.
+            </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap20sec157.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap20sec159.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Create of the <TT
+CLASS="filename"
+>quota.user</TT
+> and <TT
+CLASS="filename"
+>quota.group</TT
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="quota.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Assign quota for a particular group</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

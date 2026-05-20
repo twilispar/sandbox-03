@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Internet Protocol</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node12.html">IP over Serial Lines</A>
+<B>Up:</B> <A HREF="node7.html">TCP/IP Networks</A>
+<B> Previous:</B> <A HREF="node10.html">Other Types of Hardware</A>
+<BR> <P>
+<H2><A NAME="SECTION003340000">The Internet Protocol</A></H2>
+<A NAME="introtcpipip"></A>
+Of course, you wouldn't want your networking to be limited to one
+Ethernet. Ideally, you would want to be able to use a network regardless
+of what hardware it runs on and how many subunits it is made up of. For
+example, in larger installations such as Groucho Marx University, you
+usually have a number of separate Ethernets that have to be connected in
+some way. At GMU, the maths department runs two Ethernets: one network
+of fast machines for professors and graduates, and another one with slow
+machines for students. Both are linked to the FDDI campus backbone.
+<P>
+This connection is handled by a dedicated host, a so-called <em>gateway</em>,
+which handles incoming and outgoing packets by copying them between the two
+Ethernets and the fiber optics cable.  For example, if you are at the Maths
+Department, and want to access quark on the Physics Department's LAN
+from your  box, the networking software cannot send packets to
+quark directly, because it is not on the same Ethernet. Therefore,
+it has to rely on the gateway to act as a forwarder. The gateway (name it
+sophus) then forwards these packets to its peer gateway niels
+at the Physics Department, using the backbone, with niels delivering
+it to the destination machine. Data flow between erdos and
+quark is shown in figure-<A HREF="node11.html#introfigipflow"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> (With apologies to
+Guy L. Steele).
+<P>
+<P><A NAME="732"></A><BR>
+<STRONG>Figure:</STRONG> 
+  <A NAME="introfigipflow"></A>
+  The three steps of sending a datagram from erdos
+  to quark.
+ <BR>
+	sorry, working on it (tony :()
+<P>
+<P>
+<A NAME="481"></A>
+This scheme of directing data to a remote host is called <em>routing</em>,
+and packets are often referred to as <em>datagrams</em> in this context.
+To facilitate things, datagram exchange is governed by a single protocol
+that is independent of the hardware used: IP, or <em>Internet
+Protocol</em>.  In chapter-<A HREF="node23.html#tcpip"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>, we will cover IP and the issues of
+routing in greater detail.
+<P>
+<A NAME="486"></A>
+<A NAME="733"></A>
+<A NAME="488"></A>
+The main benefit of IP is that it turns physically dissimilar
+networks into one apparently homogeneous network. This is called
+internetworking, and the resulting ``meta-network'' is called
+an <em>internet</em>. Note the subtle difference between <em>an</em>
+internet and <em>the</em> Internet here. The latter is the official
+name of one particular global internet.
+<P>
+<A NAME="492"></A>
+<A NAME="493"></A>
+<A NAME="494"></A>
+Of course, IP also requires a hardware-independent addressing scheme.  This
+is achieved by assigning each host a unique 32-bit number, called the
+<em>IP-address</em>. An IP-address is usually written as four decimal numbers,
+one for each 8-bit portion, separated by dots. For example, quark
+might have an IP-address of 0x954C0C04, which would be written as
+149.76.12.4.  This format is also called <em>dotted quad</em> notation.
+<P>
+<A NAME="500"></A>
+<A NAME="501"></A>
+You will notice that we now have three different types of addresses: first
+there is the host's name, like quark, then there are IP-addresses,
+and finally, there are hardware addresses, like the 6-byte Ethernet
+address. All these somehow have to match, so that when you type
+rlogin quark, the networking software can be given quark's
+IP-address; and when IP delivers any data to the Physics Department's
+Ethernet, it somehow has to find out what Ethernet address corresponds to
+the IP-address.  Which is rather confusing.
+<P>
+We will not go into this here, and deal with it in chapter-<A HREF="node23.html#tcpip"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>
+instead. For now, it's enough to remember that these steps of finding
+addresses are called <em>hostname resolution</em>, for mapping host names onto
+IP-addresses, and <em>address resolution</em>, for mapping the latter to
+hardware addresses.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node12.html">IP over Serial Lines</A>
+<B>Up:</B> <A HREF="node7.html">TCP/IP Networks</A>
+<B> Previous:</B> <A HREF="node10.html">Other Types of Hardware</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

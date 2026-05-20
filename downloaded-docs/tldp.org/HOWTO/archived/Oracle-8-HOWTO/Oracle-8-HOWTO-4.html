@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>Oracle 8i for Linux Installation HOWTO: Creating a database</TITLE>
+ <LINK HREF="Oracle-8-HOWTO-5.html" REL=next>
+ <LINK HREF="Oracle-8-HOWTO-3.html" REL=previous>
+ <LINK HREF="Oracle-8-HOWTO.html#toc4" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Oracle-8-HOWTO-5.html">Next</A>
+<A HREF="Oracle-8-HOWTO-3.html">Previous</A>
+<A HREF="Oracle-8-HOWTO.html#toc4">Contents</A>
+<HR>
+<H2><A NAME="s4">4. Creating a database</A></H2>
+
+<H2><A NAME="ss4.1">4.1 Overview</A>
+</H2>
+
+<P>Hopefully you followed the advice from the previous section and didn't
+create a database.
+<P>For most people, I can probably outline the process in a couple of
+words: "Run 'dbassist'." Unless this is the first time you've ever run
+Oracle, none of the questions should really phase you.
+<P>For completeness, I'll document what I did but I'd best say what I was
+aiming for first. Bottom line: this is neither a production system nor
+a 'serious' (i.e., several people, full time) development box. I
+installed 8i to play around and see what was new or different from 8
+and older versions.
+<P>This means that when 'dbassist' offered an easy option I took it. And
+when it suggested using a different disk, or at least a different
+partition, I declined. My <CODE>$ORACLE_HOME</CODE> is
+<CODE>/home/oracle</CODE>. All the data files and software are in there,
+all on one partition.
+<P>
+<H2><A NAME="ss4.2">4.2 Step-by-step guide</A>
+</H2>
+
+<P>
+<OL>
+<LI>Bring up a command prompt and type: 
+<PRE>
+dbassist
+</PRE>
+
+</LI>
+<LI>My machine tells me that "JNLS Exception:
+oracle.ntpg.jnls.JNLSException. Unable to find any National Character
+Sets." According to Oracles 8i Patch FAQ, this is a known problem
+(884001) and can safely be ignored.
+</LI>
+<LI>Select the "Create a database" radio button and press "Next"
+</LI>
+<LI>There are two options: Typical and Custom. If you knew exactly
+what you were doing you probably wouldn't be reading this and could
+comfortably select Custom. I'm not going to cover that. Instead I'll
+assume you select "Typical" and press "Next"
+</LI>
+<LI>Next it asks whether you want to copy the database from your CD
+or to create the data files. Whenever I tried the first option, Oracle
+couldn't find my CD player (you just installed from it!). So I
+recommend choosing the second option. It's not difficult, it probably
+just takes longer
+</LI>
+<LI>It's probably safe to select 'Hybrid' when it asks you what
+environment the database will operate in
+</LI>
+<LI>Now it asks you how many users will be using your database at
+any given time. I put five.
+</LI>
+<LI>Next it asks you what products you want to install in your new
+database. Again, you know what you want better than me!
+</LI>
+<LI>Oracle needs a "Global Database Name" and a "SID" now. The
+database name is like a fully qualified domain name (but
+different). If you're the Oracle guru you'll know what to put, if not
+your organisation might have some conventions. I called mine 'dev1'
+(both the SID and database name).
+</LI>
+<LI>Now, do you want to create the database 'now' or should you let
+it save the information to a shell script? With 128Mb of RAM I found
+the former option painful.
+
+I created the shell script, quit out of X and anything else using a
+lot of memory and then ran the script. Much more snappy.
+</LI>
+<LI>I didn't notice this in any of the documentation, but your
+database won't work properly without it! The database that 'dbassist'
+creates is fine, but by default the user rollback segments are left
+off-line. (Read: non-system users can't perform any operation that
+requires transactions.)
+
+Type: 
+<PRE>
+cd $ORACLE_HOME/dbs
+</PRE>
+
+
+You now need to edit a file called "init&lt;SID&gt;.ora"
+("initdev1.ora" in my case).
+
+About half-way down the file is a commented out line looking something
+like this:
+
+<PRE>
+# rollback_segments = (r01, r02, r03, r04)
+</PRE>
+
+
+Uncomment this line (remove the hash), save the file and you're done.
+</LI>
+<LI>This is a kind of meta-step. You have a database and you should
+be able to start it up, but you probably don't know what any of the
+system passwords are!
+
+There are two that you need to know. The first is the SYSTEM
+password. This defaults to '<CODE>MANAGER</CODE>'. (It seems to be
+conventional to put Oracle passwords in uppercase. In fact passwords
+are not case sensitive.) I recommend you change it straight away by
+typing <CODE>password</CODE> at the SQL*Plus prompt. (For people expecting an
+<CODE>ALTER USER</CODE> command, this is new to the version of SQL*Plus
+supplied with 8i.)
+
+The other password that you need to know is the one for SYS. It
+defaults to '<CODE>CHANGE_ON_INSTALL</CODE>' and you should do exactly what it
+says!
+</LI>
+<LI>Final step. This one gets rid of the annoying 'no profile'
+warnings you get when you log into SQL*Plus.
+
+Log into SQL*Plus as user 'system' (<CODE>sqlplus
+system/&lt;password&gt;</CODE>).  Then type:
+
+<PRE>
+@?/sqlplus/admin/pupbld.sql
+</PRE>
+
+
+The question-mark is an alias for the <CODE>$ORACLE_HOME</CODE> directory.
+</LI>
+<LI>This is an optional step used to define the default editor for
+SQL*Plus (it defaults to <CODE>ed</CODE> so you do!). Open
+<CODE>$ORACLE_HOME/sqlplus/admin/glogin.sql</CODE> in your favourite
+editor and add <CODE>define_editor=&lt;editor name&gt;</CODE> to the end.
+</LI>
+</OL>
+<P>And that's it. You should now have an operational database that you
+can log into using SQL*Plus.
+<P>
+<H2><A NAME="ss4.3">4.3 Questions and answers</A>
+</H2>
+
+<H3>Is it really that easy?</H3>
+
+<P>Yes and no. If you're just playing around, building a database for
+yourself to learn the new features of 8i, then 'yes.' The database the
+above instructions will build is complete and will work fine.
+<P>However, if you know anything about Oracle, you will quickly realise
+that the default configuration is appallingly bad. If you're making a
+serious, production system I recommend you use the "Custom" option.
+<P>Even for my toy system I did some tweaking. I increased the sizes of
+most of the table-spaces and changed them so that they didn't grow
+automatically (I hate software when it tries to be too clever).
+<P>
+<H3>Is it really necessary to put all the files on different disks?</H3>
+
+<P>No and it will work fine if you don't, but I don't recommend putting
+all your files on the same disk nevertheless.
+<P>Spreading the files over a number of disks, even it's just the data
+files on one and the rollback segments on another, will have a
+significant performance advantage. Read an Oracle DBA book if you need
+further information.
+<P>
+<H3>I can't start dbassist</H3>
+
+<P>Caused by several zero-length files in the initial
+installation. Following the patch procedure will fix this problem.
+<P>
+<H3>I get "ORA-01034: ORACLE not available"</H3>
+
+<P>To cut a long story short, your <CODE>$ORACLE_SID</CODE> is probably set
+incorrectly or not at all. Make sure it's set to the same value you
+gave 'dbassist' and that it's value is exported (i.e., <CODE>export
+ORACLE_SID</CODE> in any Bourne compatible shell).
+<P>
+<H3>I get "ORA-01012: Not logged in"</H3>
+
+<P>This is a very common error, and there are a number of different
+things that cause it.
+<P>Firstly you'll want to make sure that you're not creating a Shared
+Server configuration (sometimes known as MTS). Create a database using
+Dedicated Server and convert it later.
+<P>If that's not it, check your <CODE>NLS_LANG</CODE> environment variable. The
+easiest option is to unset it. If you really want to use it, make sure
+that you have it exactly right. Make sure you don't transpose any '1's
+(one's) for 'l's (the twelfth letter of the alphabet)!
+<P>
+<H3>Can data-files only be 1Gb in size?</H3>
+
+<P>'dbassist' won't let you create a datafile bigger than 1Gb. I believe
+this to be a bug as Linux has no problem with files up to 2Gb.
+<P>Note that does not limit the size of your database to 1Gb or less. A
+database is made up of many table-spaces which can be made up of many
+data-files. Talk to your friendly DBA for more information.
+<P>
+<H3>Can I use raw files?</H3>
+
+<P>Recent versions of the Linux kernel allow applications to directly
+access the disks. Oracle is able to use this facility and can
+(sometimes) increase its performance.
+<P>Technically the answer is 'yes,' you can use raw files. But
+realistically the answer is 'no.' The performance improvement you'll
+get probably isn't worth the administrative overhead.
+<P>
+<HR>
+<A HREF="Oracle-8-HOWTO-5.html">Next</A>
+<A HREF="Oracle-8-HOWTO-3.html">Previous</A>
+<A HREF="Oracle-8-HOWTO.html#toc4">Contents</A>
+</BODY>
+</HTML>

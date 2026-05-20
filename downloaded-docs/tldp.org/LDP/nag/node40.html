@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Reverse Lookups</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node41.html">Configuring the Networking Hardware</A>
+<B>Up:</B> <A HREF="node34.html">The Domain Name System</A>
+<B> Previous:</B> <A HREF="node39.html">The DNS Database</A>
+<BR> <P>
+<H2><A NAME="SECTION004660000">Reverse Lookups</A></H2>
+<A NAME="1752"></A>
+<a name="introfighosts"></a>
+<pre>
+      Figure 5.   An excerpt  from  the  named.hosts  file  for  the
+                 Physics Department.
+ 
+            ;
+            ; Authoritative Information on physics.groucho.edu
+            @                     IN    SOA          {
+                                 niels.physics.groucho.edu.
+                                 hostmaster.niels.physics.groucho.edu.
+                                 1034             ; serial no
+                                 360000           ; refresh
+                                 3600             ; retry
+                                 3600000          ; expire
+                                 3600             ; default ttl
+                               }
+            ;
+            ; Name servers
+                                  IN    NS       niels
+                                  IN    NS       gauss.maths.groucho.edu.
+            gauss.maths.groucho.edu. IN A        149.76.4.23
+            ;
+            ; Theoretical Physics (subnet 12)
+            niels                 IN    A        149.76.12.1
+                                  IN    A        149.76.1.12
+            nameserver            IN    CNAME    niels
+            otto                  IN    A        149.76.12.2
+            quark                 IN    A        149.76.12.4
+            down                  IN    A        149.76.12.5
+            strange               IN    A        149.76.12.6
+            ...
+            ; Collider Lab. (subnet 14)
+            boson                 IN    A        149.76.14.1
+            muon                  IN    A        149.76.14.7
+            bogon                 IN    A        149.76.14.12
+            ...
+
+
+</pre><p>
+Beside looking up the IP-address belonging to a host, it is sometimes
+desirable to find out the canonical host name corresponding to an
+address.  This is called <em>reverse mapping</em> and is used by several
+network services to verify a client's identity. When using a single
+hosts file, reverse lookups simply involve searching the file for
+a host that owns the IP-address in question. With DNS, an exhaustive
+search of the name space is out of the question, of course.  Instead, a
+special domain, in-addr.arpa, has been created which contains the
+IP-addresses of all hosts in a reverted dotted-quad notation. For
+instance, an IP-address of 149.76.12.4 corresponds to the name
+4.12.76.149.in-addr.arpa. The resource record type linking these
+names to their canonical host names is PTR.
+<a name="introfignsptr"></a>
+<pre>
+              Figure 6.   An excerpt from the named.hosts file for GMU.
+            ;
+            ; Zone data for the groucho.edu zone.
+            @                   IN       SOA          {
+                                 vax12.gcc.groucho.edu.
+                                 hostmaster.vax12.gcc.groucho.edu.
+                                 233              ; serial no
+                                 360000           ; refresh
+                                 3600             ; retry
+                                 3600000          ; expire
+                                 3600             ; default ttl
+                               }
+            ....
+            ;
+            ; Glue records for the physics.groucho.edu zone
+            physics             IN     NS        niels.physics.groucho.edu.
+                                IN     NS        gauss.maths.groucho.edu.
+            niels.physics       IN     A         149.76.12.1
+            gauss.maths         IN     A         149.76.4.23
+            ...
+</pre><p>
+Creating a zone of authority usually means that its administrators are
+given full control over how they assign addresses to names.  Since they
+usually have one or more IP-networks or subnets at their hands, there's
+a one-to-many mapping between DNS zones and IP-networks. The Physics
+Department, for instance, comprises the subnets 149.76.8.0,
+149.76.12.0, and 149.76.14.0.
+<P>
+As a consequence, new zones in the in-addr.arpa domain have to be
+created along with the physics zone and delegated to the network
+administrators at the department: 8.76.149.in-addr.arpa,
+12.76.149.in-addr.arpa,  and 14.76.149.in-addr.arpa.
+Otherwise, installing a new host at the Collider Lab would require them
+to contact their parent domain to have the new address entered into
+their in-addr.arpa zone file.
+<P>
+The zone database for subnet 12 is shown in figure-<A HREF="node40.html#introfigsubnet12"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+the corresponding glue records in the database of their parent zone is
+shown in figure-<A HREF="node40.html#introfiggrouchorev"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+  <A NAME="introfigsubnet12"></A>
+<pre>            
+        Figure 7.   An excerpt from the named.rev file for subnet  12.
+ 
+            ;
+            ; the 12.76.149.in-addr.arpa domain.
+            @                IN     SOA   {
+                                 niels.physics.groucho.edu.
+                                 hostmaster.niels.physics.groucho.edu.
+                                 233 360000 3600 3600000 3600
+                               }
+            2                IN     PTR       otto.physics.groucho.edu.
+            4                IN     PTR       quark.physics.groucho.edu.
+            5                IN     PTR       down.physics.groucho.edu.
+            6                IN     PTR       strange.physics.groucho.edu.
+</pre>
+<p>
+  <A NAME="introfiggrouchorev"></A>
+ <pre>
+      Figure 8.    An  excerpt  from  the named.rev file for network
+                 149.76.
+
+           ;
+            ; the 76.149.in-addr.arpa domain.
+            @                   IN       SOA          {
+                                 vax12.gcc.groucho.edu.
+                                 hostmaster.vax12.gcc.groucho.edu.
+                                 233 360000 3600 3600000 3600
+                               }
+            ...
+            ; subnet 4: Mathematics Dept.
+            1.4              IN     PTR      sophus.maths.groucho.edu.
+            17.4             IN     PTR      erdos.maths.groucho.edu.
+            23.4             IN     PTR      gauss.maths.groucho.edu.
+            ...
+            ; subnet 12: Physics Dept, separate zone
+            12               IN     NS       niels.physics.groucho.edu.
+                             IN     NS       gauss.maths.groucho.edu.
+            niels.physics.groucho.edu. IN  A 149.76.12.1
+            gauss.maths.groucho.edu. IN  A   149.76.4.23
+            ...
+ </pre>
+One important consequence of this is that zones can only be created as
+supersets of IP-networks, and, even more severe, that these network's
+netmasks have to be on byte boundaries. All subnets at Groucho Marx
+University have a netmask of 255.255.255.0, whence an
+in-addr.arpa zone could be created for each subnet. However, if
+the netmask was 255.255.255.128 instead, creating zones for the
+subnet 149.76.12.128 would be impossible, because there's no
+way to tell DNS that the 12.76.149.in-addr.arpa domain has been
+split in two zones of authority, with host names ranging from 1
+through 127, and 128 through 255, respectively.
+
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node41.html">Configuring the Networking Hardware</A>
+<B>Up:</B> <A HREF="node34.html">The Domain Name System</A>
+<B> Previous:</B> <A HREF="node39.html">The DNS Database</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

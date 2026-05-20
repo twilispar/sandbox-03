@@ -1,0 +1,279 @@
+<HTML
+><HEAD
+><TITLE
+>xfstt</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Appendix: Font Servers"
+HREF="appendix.html"><LINK
+REL="PREVIOUS"
+TITLE="Appendix: Font Servers"
+HREF="appendix.html"><LINK
+REL="NEXT"
+TITLE="Red Hat's xfs"
+HREF="xfs.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XFree86 Font De-uglification HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="appendix.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>A. Appendix: Font Servers</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="xfs.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="AEN985">A.1. xfstt</H1
+><P
+> One such font server is xfstt. xfstt was designed specifically with TrueType
+ fonts in mind. </P
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN988">A.1.1. Installation</H2
+><P
+> xfstt is <EM
+>very</EM
+> easy to install and configure.  If it isn't
+ already installed, you'll want to download the tarball, or check your CD.  The
+ most current version can be found at <A
+HREF="http://metalab.unc.edu/pub/Linux/X11/fonts/"
+TARGET="_top"
+>http://metalab.unc.edu/pub/Linux/X11/fonts/</A
+>&#13;</P
+><P
+> Once you have the tarball, unpack it:</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;$&nbsp;tar&nbsp;-zxvf&nbsp;xfstt-*tgz<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> Then build and install it.  Read the <TT
+CLASS="FILENAME"
+>INSTALL</TT
+> file for
+ quick instructions, but it's a no brainer.  &#13;</P
+><P
+> From the xfstt directory is all you have to do.</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;#&nbsp;make<br>
+&nbsp;#&nbsp;make&nbsp;install<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+> </P
+><P
+> Then start xfstt with:</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;#&nbsp;xfstt&nbsp;--sync&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;updates&nbsp;xfstt's&nbsp;font&nbsp;database<br>
+&nbsp;#&nbsp;xfstt&nbsp;&#38;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;runs&nbsp;xfstt&nbsp;in&nbsp;the&nbsp;background.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> xfstt should be started before the X server starts. Once you have this working
+ correctly, you can add the above lines to
+ <TT
+CLASS="FILENAME"
+>/etc/rc.d/rc.local</TT
+>, or other suitable start up file.  Then
+ type:</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;$&nbsp;xset&nbsp;+fp&nbsp;unix/:7101&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;tells&nbsp;X&nbsp;about&nbsp;xfstt,&nbsp;and&nbsp;where&nbsp;to&nbsp;look&nbsp;for&nbsp;fonts.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> or add:</P
+><A
+NAME="AEN1017"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>FontPath "unix/:7101"
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> to your <TT
+CLASS="FILENAME"
+>XF86Config</TT
+> to tell X about the font
+ server. Rerun <B
+CLASS="COMMAND"
+>xfstt --sync</B
+> any time the FontPath, or
+ contents, change.</P
+></DIV
+><DIV
+CLASS="SECTION"
+><H2
+CLASS="SECTION"
+><A
+NAME="AEN1023">A.1.2. Adjusting the Default Font Size</H2
+><P
+> If your TrueType fonts appear to be very tiny, the following commands
+ may help.</P
+><P
+> Add the <TT
+CLASS="LITERAL"
+>-dpi</TT
+> switch to your X server command
+ line (see above to do this.)</P
+><P
+> Use the <TT
+CLASS="LITERAL"
+>--res</TT
+> switch to tell xfstt to increase
+ the default resolution.  Use the following command line.</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;#&nbsp;xfstt&nbsp;--res&nbsp;120<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="appendix.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="xfs.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Appendix: Font Servers</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="appendix.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Red Hat's xfs</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

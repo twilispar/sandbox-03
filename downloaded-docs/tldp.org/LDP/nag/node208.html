@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Routing Messages</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node209.html">The paths database</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node207.html">Message Routing and Delivery</A>
+<BR> <P>
+<H1><A NAME="SECTION0016700000">Routing Messages</A></H1>
+<P>
+<A NAME="smailrouting"></A>
+<A NAME="7816"></A>
+<P>
+When given a message, smail first checks if the destination is
+the local host, or a remote site.  If the target host address is one of
+the local hostnames configured in config, the message is handed
+to the director module. Otherwise, smail hands the destination
+address to a number of router drivers to find out which host to forward
+a message to.  They can be described in the routers file; if this
+file does not exist, a set of default routers are used.
+<P>
+The destination host is passed to all routers in turn, and the one
+finding the most specific route is selected. Consider a message
+addressed to joe@foo.bar.com. Then, one router might know a
+default route for all hosts in the bar.com domain, while another
+one has information for foo.bar.com itself. Since the latter is
+more specific, it is chosen over the former. If there are two routers
+that provide a ``best match'', the one coming first in the
+routers file is chosen.
+<P>
+This router now specifies the transport to be used, for instance UUCP,
+and generates a new destination address. The new address is passed to
+the transport along with the host to forward the message to.  In the
+above example, smail might find out that foo.bar.com is to
+be reached via UUCP using the path ernie!bert.  It will then
+generate a new target of bert!foo.bar.com!user, and have the
+UUCP transport use this as the envelope address to be passed to
+ernie.
+<P>
+When using the default setup, the following routers are available:
+<P>
+<UL><LI>
+        If the destination host address can be resolved using the
+        gethostbyname(3) or gethostbyaddr(3) library call,
+        the message will be delivered via SMTP. The only exception is if
+        the address is found to refer to the local host, it is handed to
+        the director module, too.
+<P>
+        smail also recognizes IP-addresses written as dotted quad
+        as a legal hostname, as long as they can be resolved through a
+        gethostbyaddr(3) call.  For example,
+        scrooge@[149.76.12.4] would be a valid although highly
+        unusual mail address for scrooge on
+        quark.physics.groucho.edu.
+<P>
+        If your machine is on the Internet, these routers are not what
+        you are looking for, because they do not support MX records. See
+        below for what to do in this case.<LI>
+        <A NAME="7817"></A>
+        <A NAME="7818"></A>
+        If /usr/lib/smail/paths, the pathalias database, exists,
+        smail will try to look up the target host (minus
+        any trailing .uucp) in this file.
+        Mail to an address matched by this router will be
+        delivered using UUCP, using the path found in the database.<LI>
+        <A NAME="7819"></A>
+        The host address (minus any trailing .uucp) will be
+        compared to the output of the uuname command to check if
+        the target host is in fact a UUCP neighbor. If this is the case,
+        the message will be delivered using the UUCP transport.<LI>
+        If the address has not been matched by any of the above
+        routers, it will be delivered to the smart host. The path
+        to the smart host as well as the transport to be used are
+        set in the config file.
+<P>
+</UL>
+<P>
+These defaults work for many simple setups, but fail if routing
+requirements get a little more complicated. If you are faced with any
+of the problems discussed below, you will have to install your own
+routers file to override the defaults. A sample routers
+file you might start with is given in appendix-<A HREF="node285.html#appendixsmail"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+Some  distributions also come with a set of configuration
+files that are tailored to work around these difficulties.
+<P>
+<A NAME="7820"></A>
+<A NAME="7821"></A>
+<A NAME="7822"></A>
+Probably the worst problems arise when your host lives in a dual
+universe with both dial-up IP and UUCP links. You will then have
+hostnames in your hosts file that you only talk occasionally to
+through your SLIP link, so smail will attempt to deliver any mail
+for these hosts via SMTP. This is usually not what you want, because even
+if the SLIP link is activated regularly, SMTP is much slower than sending
+the mail over UUCP. With the default setup, there's no way escaping
+smail.
+<P>
+You can avoid this problem by having smail check the paths
+file before querying the resolver, and put all hosts you want to force
+UUCP delivery to into the paths file. If you don't want to send
+any messages over SMTP <em>ever</em>, you can also comment out the
+resolver-based routers altogether.
+<P>
+<A NAME="7823"></A>
+Another problem is that the default setup doesn't provide for true
+Internet mail routing, because the resolver-based router does not
+evaluate MX records. To enable full support for Internet mail routing,
+comment out this router, and uncomment the one that used BIND instead.
+There are, however, smail binaries included in some 
+distributions that don't have BIND support compiled in. If you enable
+BIND, but get a message in the paniclog file saying
+``router inet_hosts: driver bind not found'', then you have to
+get the sources and recompile smail (see section-<A HREF="node200.html#smaillan"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>
+above).
+<P>
+Finally, it is not generally a good idea to use the uuname
+driver.  For one, it will generate a configuration error when you don't
+have UUCP installed, because no uuname command will be found. The
+second is when you have more sites listed in your UUCP Systems
+file than you actually have mail links with. These may be sites you only
+exchange news with, or sites you occasionally download files from via
+anonymous UUCP, but have no traffic with otherwise.
+<P>
+To work around the first problem, you can substitute a shell script for
+uuname which does a simple exit 0.  The more general
+solution is, however, to edit the routers file and remove
+this driver altogether.
+<P>
+<BR> <HR>
+<UL> 
+<LI> <A HREF="node209.html#SECTION0016710000">The paths database</A>
+</UL>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node209.html">The paths database</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node207.html">Message Routing and Delivery</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

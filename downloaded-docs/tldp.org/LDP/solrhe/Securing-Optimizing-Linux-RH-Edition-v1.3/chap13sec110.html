@@ -1,0 +1,314 @@
+<HTML
+><HEAD
+><TITLE
+>Why choose tarballs?</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux -The Compiler functionality"
+HREF="lin-compiler.html"><LINK
+REL="PREVIOUS"
+TITLE="The necessary packages"
+HREF="chap13sec109.html"><LINK
+REL="NEXT"
+TITLE="Build, Install software on your system"
+HREF="chap13sec111.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap13sec109.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 13. Linux -The Compiler functionality</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap13sec111.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN7103"
+>13.2. Why choose <TT
+CLASS="literal"
+>tarballs</TT
+>?</A
+></H1
+><P
+>&#13;         All the programs in Red Hat distributions of Linux are provided as <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> files. An <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> file, also known, as a package, is a way of distributing software so that it can be easily installed, upgraded, queried, and deleted. 
+         However, in Unix world, the defacto-standard for package distribution continues to be by way of so-called <TT
+CLASS="literal"
+>tarballs</TT
+>. Tarballs are simply compressed files that can be readable and uncompressed with the tar utility. Installing 
+         from tar is usually significantly more tedious than using <SPAN
+CLASS="acronym"
+>RPM</SPAN
+>. So why would we choose to do so?
+         </P
+><P
+></P
+><OL
+COMPACT="COMPACT"
+TYPE="1"
+><LI
+><P
+>&#13;         Unfortunately, it takes a few weeks for developers and coders to get the latest version of a package converted to <SPAN
+CLASS="acronym"
+>RPM</SPAN
+>s because many developers first release them as <TT
+CLASS="literal"
+>tarballs</TT
+>.
+         </P
+></LI
+><LI
+><P
+>&#13;         When developers and vendors release a new <SPAN
+CLASS="acronym"
+>RPM</SPAN
+>, they include a lot of options that often are not necessary. Those organization and companies don't know what options you will need and what you will not, so they include the most used to fit the needs of everyone.
+         </P
+></LI
+><LI
+><P
+>&#13;         Often <SPAN
+CLASS="acronym"
+>RPM</SPAN
+>s are not optimized for your specific processors; companies like Red Hat Linux build <SPAN
+CLASS="acronym"
+>RPM</SPAN
+>s based on a standard PC. This permit their <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> packages to be installed on all sorts of computers since compiling programs for an i386 machine can fit on all systems.
+         </P
+></LI
+><LI
+><P
+>&#13;         Sometimes you download and install <SPAN
+CLASS="acronym"
+>RPM</SPAN
+>, which other people around the world are building and make available for your purposes. This can pose conflicts in certain cases depending how this individual built the package, such as errors, security and all the other problems described above.
+         </P
+></LI
+></OL
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN7127"
+>13.2.1. Compiling software on your system</A
+></H2
+><P
+>&#13;         A program is something a computer can execute. Originally, somebody wrote the source code in a programming language he/she could understand <SPAN
+CLASS="abbrev"
+>e.g.</SPAN
+>, C, C++. The program source code also makes sense to a compiler that converts the instructions into a binary file suited to whatever processor is 
+         wanted <SPAN
+CLASS="abbrev"
+>e.g.</SPAN
+> a 386 or similar. A modern file format for these executable programs is Elf. The programmer compiles his source using the compiler and gets a result of some sort. It's not at all uncommon that early attempts fail to compile, or having compiled, fail to act as expected. Half of programming 
+         is tracking down and fixing these problems debugging.
+         </P
+><P
+>&#13;         For the beginners there are more aspect and new words relating to compilation of a source code that you must know, these includes but are not limited to:
+         <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>&#13;         The Multiple Files
+         </B
+></DT
+><DD
+><P
+>&#13;         One-file programs are quite rare. Usually there are a number of files say <TT
+CLASS="literal"
+>*.c</TT
+>, <TT
+CLASS="literal"
+>*.cpp</TT
+>, <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+> that are each compiled into object files <TT
+CLASS="literal"
+>*.o</TT
+> and then linked into an executable. The compiler is usually used to perform the linking and calls the ld program behind the scenes.
+         </P
+></DD
+><DT
+><B
+>&#13;         The Makefiles
+         </B
+></DT
+><DD
+><P
+>&#13;         The Makefiles are intended to aid you in building your program the same way each time. They also often help with speed. The make program uses dependencies in the Makefile to decide what parts of the program need to be recompiled. If you change one source file out of fifty 
+         you hope to get away with one compile and one link step, instead of starting from scratch.
+         </P
+></DD
+><DT
+><B
+>&#13;         The Libraries
+         </B
+></DT
+><DD
+><P
+>&#13;         Programs can be linked not only to object files <TT
+CLASS="literal"
+>*.o</TT
+> but also to libraries that are collections of object files. There are two forms of linking to libraries: 
+         static, where the code goes in the executable file, and dynamic, where the code is collected when the program starts to run.
+         </P
+></DD
+><DT
+><B
+>&#13;         The Patches
+         </B
+></DT
+><DD
+><P
+>&#13;         It was common before for executable files to be given corrections without recompiling them. Now this practice has died out; in modern days, people changes a small proportion of the whole source code, putting a change into a file called a patch. Where different versions of a 
+         program are required, small changes to code can be released this way, saving the trouble of having two large distributions.
+         </P
+></DD
+><DT
+><B
+>&#13;         The Errors in Compilation and Linking
+         </B
+></DT
+><DD
+><P
+>&#13;         Errors in compilation and linking are often typos, omissions, and misuse of the language. Check that the right includes files are used for the functions you are calling. Unreferenced symbols are the sign of an incomplete link step. Also checks if the necessary development 
+         libraries GLIBC or tools GCC, DEV86, AUTOMAKE, <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+> are installed on your system.
+         </P
+></DD
+><DT
+><B
+>&#13;         The Debugging
+         </B
+></DT
+><DD
+><P
+>&#13;         Debugging is a large topic. It usually helps to have statements in the code that inform you of what is happening. To avoid drowning in output you might sometimes get them to print out only the first 3 passes in a loop. Checking that variables have passed correctly between 
+         modules often helps. Get familiar with your debugging tools.
+         </P
+></DD
+></DL
+></DIV
+>
+         </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap13sec109.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap13sec111.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The necessary packages</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="lin-compiler.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Build, Install software on your system</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

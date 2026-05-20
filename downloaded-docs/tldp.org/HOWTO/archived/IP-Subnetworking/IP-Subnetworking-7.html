@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>IP Sub-Networking Mini-Howto: Routing</TITLE>
+ <LINK HREF="IP-Subnetworking-6.html" REL=previous>
+ <LINK HREF="IP-Subnetworking.html#toc7" REL=contents>
+</HEAD>
+<BODY>
+Next
+<A HREF="IP-Subnetworking-6.html">Previous</A>
+<A HREF="IP-Subnetworking.html#toc7">Contents</A>
+<HR>
+<H2><A NAME="s7">7. Routing</A></H2>
+
+<P>If you are using a Linux PC with two network interfaces to route between
+two (or more) subnets, you need to have IP Forwarding enabled in your
+kernel. Do a 
+<P>
+<HR>
+<PRE>
+        cat /proc/ksyms | grep ip_forward
+</PRE>
+<HR>
+<P>
+<P>You should get back something like...
+<HR>
+<PRE>
+00141364 ip_forward_Rf71ac834
+</PRE>
+<HR>
+<P>
+<P>If you do not, then you do not have IP-Forwarding enabled in your kernel
+and you need to recompile and install a new kernel.
+<P>
+<P>For the sake of this example, let us assume that you have decided to
+subnetwork you C class IP network number 192.168.1.0 into 4 subnets
+(each of 62 usable interface/host IP numbers). However, two of these
+subnets are being combined into a larger single network, giving three
+physical networks.
+<P>
+<P>These are :-
+<HR>
+<PRE>
+Network         Broadcast       Netmask                 Hosts
+192.168.1.0     192.168.1.63    255.255.255.192         62
+192.168.1.64    192.168.1.127   255.255.255.192         62
+192.168.1.128   192.168.1.255   255.255.255.128         124 (see note)
+</PRE>
+<HR>
+<P>
+<P>Note: the reason the last network has only 124 usable network addresses
+(not 126 as would be expected from the network mask) is that it is
+really a 'super net' of two subnetworks. Hosts on the other two networks
+will interpret 192.168.1.192 as the <EM>network</EM> address of the 'non-existent' 
+subnetwork. Similarly, they will interpret 192.168.1.191
+as the broadcast address of the 'non-existent' subnetwork.
+<P>
+<P>So, if you use 192.168.1.191 or 192 as host addresses on the third
+network, then machines on the two smaller networks will not be able to
+communicate with them.
+<P>
+<P>This illustrates an important point with subnetworks - the usable
+addresses are determined by the <B>SMALLEST</B> subnetwork in that address
+space.
+<P>
+<H2><A NAME="ss7.1">7.1 The routing tables</A>
+</H2>
+
+<P>Let us assume that a computer running Linux is acting as a router for
+this network. It will have three network interfaces to the local LANs
+and possibly a fourth interface to the Internet (which would be its
+default route.
+<P>
+<P>Let us assume that the Linux computer uses the lowest available IP
+address in each subnetwork on its interface to that network. It would
+configure its network interfaces as
+<P>
+<HR>
+<PRE>
+Interface       IP Address      Netmask
+eth0            192.168.1.1     255.255.255.192
+eth1            192.168.1.65    255.255.255.192
+eth2            192.168.1.129   255.255.255.128
+</PRE>
+<HR>
+<P>
+<P>The routing it would establish would be
+<P>
+<HR>
+<PRE>
+Destination     Gateway         Genmask         Iface
+192.168.1.0     0.0.0.0         255.255.255.192 eth0
+192.168.1.64    0.0.0.0         255.255.255.192 eth1
+192.168.1.128   0.0.0.0         255.255.255.128 eth2
+</PRE>
+<HR>
+<P>
+<P>On each of the subnetworks, the hosts would be configured with their own
+IP number and net mask (appropriate for the particular network). Each host
+would declare the Linux PC as its gateway/router, specifying the Linux
+PCs IP address for its interface on to that particular network.
+<P>
+<P>
+<P>Robert Hart
+Melbourne, Australia March 1997.
+<P>
+<HR>
+Next
+<A HREF="IP-Subnetworking-6.html">Previous</A>
+<A HREF="IP-Subnetworking.html#toc7">Contents</A>
+</BODY>
+</HTML>

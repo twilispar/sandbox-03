@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Forwarding</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node174.html">Setting up your System </A>
+<B>Up:</B> <A HREF="node170.html">The Do's and Dont's </A>
+<B> Previous:</B> <A HREF="node172.html">File Transfers</A>
+<BR> <P>
+<H2><A NAME="SECTION0014430000">Forwarding</A></H2>
+<P>
+<A NAME="6283"></A>
+<A NAME="6284"></A>
+<P>
+UUCP provides a mechanism to have other systems execute file transfers
+on your behalf.  For instance, this allows you to make seci
+retrieve a file from uchile for you, and send it to your
+system.  The following command would achieve this:
+<P>
+<P><P>
+<P>
+This technique of passing a job through several systems is called
+<em>forwarding</em>.   In the above example, the reason to use forwarding
+may be that seci has UUCP access to uchile, but your
+host doesn't.  However, if you run a UUCP system, you would want to
+limit the forwarding service to a few hosts you trust not to run up
+a horrendous phone bill by making you download the latest X11R6 source
+release for them.
+<P>
+By default, Taylor UUCP disallows forwarding altogether. To enable
+forwarding for a particular system, you can use the forward
+command.  This command specifies a list of sites the system may
+request you to forward jobs to and from. For instance, the UUCP
+administrator of seci would have to add the following lines to
+the sys file to allow pablo to request files from
+uchile:
+<P>
+<P><P>
+<P>
+The forward-to entry for uchile is necessary so that
+any files returned by it are actually passed on to pablo.
+Otherwise UUCP would drop them. This entry uses a variation of the
+forward command that permits uchile only to send
+files to pablo through seci; not the other way round.
+<P>
+To permit forwarding to any system, use the special keyword ANY
+(capital letters required).
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

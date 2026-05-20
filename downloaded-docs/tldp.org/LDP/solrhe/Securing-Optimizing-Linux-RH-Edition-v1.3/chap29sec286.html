@@ -1,0 +1,422 @@
+<HTML
+><HEAD
+><TITLE
+>Encrypted Samba password file for clients</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/lmhosts file"
+HREF="chap29sec285.html"><LINK
+REL="NEXT"
+TITLE="Optimizing Samba"
+HREF="chap29sec287.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec285.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 31. Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec287.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN22302"
+>31.7. Encrypted Samba password file for clients</A
+></H1
+><P
+>&#13;      The <TT
+CLASS="filename"
+>/etc/smbpasswd</TT
+> file is the Samba encrypted password file. It contains the username; Unix UID and SMB hashed passwords of the allowed users to your Samba server, as well as account flag information and the time the 
+      password was last changed. It's important to create this password file and include all allowed users to it before your clients try to connect to your Samba server. Without this step, no one will be able to connect to your Samba server.
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        To create a Samba account you must first have a valid Linux account for them, so create in your <TT
+CLASS="filename"
+>etc/passwd</TT
+> file all the users you want to connect to your Samba server first before generating the <TT
+CLASS="filename"
+>smbpasswd</TT
+> 
+        file of Samba.</P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;            To add a new users to your <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file, use the following commands:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep ] /# <B
+CLASS="command"
+>useradd</B
+> smbclient
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;            To add password for users in your <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file, use the following commands:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep ] /# passwd smbclient
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;              Changing password for user smbclient
+              New UNIX password:
+              Retype new UNIX password:
+              passwd: all authentication tokens updated successfully
+            </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;        Once we have added all Samba clients in our <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file on the Linux server, we can now generate the <TT
+CLASS="filename"
+>smbpasswd</TT
+> file from the <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file.
+        To generate <TT
+CLASS="filename"
+>smbpasswd</TT
+> file from the <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file, use the following commands:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# <B
+CLASS="command"
+>cat</B
+> /etc/passwd | mksmbpasswd.sh &#62; /etc/smbpasswd
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        Finally, the last step we must perform is to create the Samba user account in our <TT
+CLASS="filename"
+>/etc/smbpasswd</TT
+> file before we are able to use it.
+        To create the <TT
+CLASS="literal"
+>Samba</TT
+> user account, use the following commands:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# smbpasswd -a smbclient  <A
+NAME="smbpswd"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec286.html#smbpswd"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;          Remember that <TT
+CLASS="literal"
+>smbclient</TT
+> must be a valid Linux account.
+        </DD
+></DL
+></DIV
+>
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          New SMB password:
+          Retype new SMB password:
+          Added user smbclient.
+          Password changed for user smbclient.
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        Don't forget to change the permission of your new <TT
+CLASS="filename"
+>smbpasswd</TT
+> file to be readable and writable only by the super-user <TT
+CLASS="literal"
+>root</TT
+>, and nothing for group and other <TT
+CLASS="literal"
+>0600/-rw-------</TT
+> This 
+        is a security measure.
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 600 /etc/smbpasswd
+          [root@deep ] /# <B
+CLASS="command"
+>testparm</B
+>    <A
+NAME="smbtsp"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec286.html#smbtsp"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;          This will verify the <TT
+CLASS="filename"
+>smb.conf</TT
+> file for error.
+        </DD
+></DL
+></DIV
+>
+        See <TT
+CLASS="filename"
+>ENCRYPTION.txt</TT
+> in <TT
+CLASS="filename"
+>samba/doc/texts/</TT
+> for more information.
+      </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec285.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec287.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/lmhosts</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Optimizing Samba</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

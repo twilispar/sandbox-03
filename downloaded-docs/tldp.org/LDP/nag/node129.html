@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Configuring the r Commands</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node130.html">The Network Information System</A>
+<B>Up:</B> <A HREF="node124.html">Various Network Applications</A>
+<B> Previous:</B> <A HREF="node128.html">Remote Procedure Call</A>
+<BR> <P>
+<H1><A NAME="SECTION0011500000">Configuring the r Commands</A></H1>
+
+There are a number of commands for executing commands on remote
+hosts. These are rlogin, rsh, rcp and rcmd.
+They all spawn a shell on the remote host and allow the user
+to execute commands. Of course, the client needs to have an account
+on the host where the command is to be executed. Thus all these commands
+perform an authorization procedure. Usually, the client will tell
+the user's login name to the server, which in turn requests a password
+that is validated in the usual way.
+<P>
+<pre>
+                #
+                # /etc/rpc - miscellaneous RPC-based services
+                #
+                portmapper      100000  portmap sunrpc
+                rstatd          100001  rstat rstat svc rup perfmeter
+                rusersd         100002  rusers
+                nfs             100003  nfsprog
+                ypserv          100004  ypprog
+                mountd          100005  mount showmount
+                ypbind          100007
+                walld           100008  rwall shutdown
+                yppasswdd       100009  yppasswd
+                bootparam       100026
+                ypupdated       100028  ypupdate
+
+</pre>
+Sometimes, however, it is desirable to relax authorization checks for
+certain users.  For instance, if you frequently have to log into other
+machines on your LAN, you might want to be admitted without having to
+type your password every time.
+<P>
+Disabling authorization is advisable only on a small number of hosts
+whose password databases are synchronized, or for a small number of
+privileged users who need to access many machines for administrative
+reasons. Whenever you want to allow people to log into your host without
+having to specify a login id or password, make sure that you don't
+accidentally grant access to anybody else.
+<P>
+
+There are two ways to disable authorization checks for the r
+commands. One is for the super user to allow certain or all
+users on certain or all hosts (the latter definitely being a bad
+idea) to log in without being asked for a password. This access
+is controlled by a file called /etc/hosts.equiv. It contains
+a list of host and user names that are considered equivalent to users
+on the local host.  An alternative option is for a user to grant other
+users on certain hosts access to her account. These may be listed in the
+file .rhosts in the user's home directory. For security reasons,
+this file must be owned by the user or the super user, and must not be a
+symbolic link, otherwise it will be ignored.<A HREF="footnode.html#4806"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+When a client requests an r service, her host and user name are
+searched in the /etc/hosts.equiv file, and then in the
+.rhosts file of the user she wants to log in as. As am example,
+assume janet is working on gauss and tries to log into
+joe's account on euler. Throughout the following, we will
+refer to Janet as the <em>client</em> user, and to Joe as the <em>local</em>
+user.  Now, when Janet types
+<pre>
+           $ rlogin -l joe euler
+ 
+</pre>
+on gauss, the server will first check hosts.equiv<A HREF="footnode.html#4898"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> if Janet should be granted free access, and if this fails,
+it will try to look her up in .rhosts in joe's home directory.
+<P>
+The hosts.equiv file on euler looks like this:
+<pre>
+           gauss
+           euler
+           -public
+           quark.physics.groucho.edu     andres
+
+ 
+</pre>
+An entry consists of a host name, optionally followed by a user name.
+If a host name appears all by itself, all users from that host will be
+admitted to their local accounts without any checks. In the above
+example, Janet would be allowed to log into her account janet
+when coming from gauss, and the same applies to any other user
+except root. However, if Janet wants to log in as joe,
+she will be prompted for a password as usual.
+<P>
+If a host name is followed by a user name, as in the last line of the
+above sample file, this user is given password-free access to <em>all</em>
+accounts except the root account.
+<P>
+The host name may also be preceded by a minus sign, as in the entry
+``-public''. This requires authorization for all accounts on
+public, regardless of what rights individual users grant in their
+.rhosts file.
+<P>
+The format of the .rhosts file is identical to that of
+hosts.equiv, but its meaning is  a little different. Consider
+Joe's .rhosts file on euler:
+<pre>
+           chomp.cs.groucho.edu
+           gauss      janet
+</pre>
+The first entry grants joe free access when logging in from
+chomp.cs.groucho.edu, but does not affect the rights of any other
+account on euler or chomp. The second entry is a slight
+variation of this, in that it grants janet free access to Joe's
+account when logging in from gauss.
+<P>
+Note that the client's host name is obtained by reverse mapping the
+caller's address to a name, so that this feature will fail with hosts
+unknown to the resolver. The client's host name is considered to match
+the name in the hosts files in one of the following cases:
+<P>
+<UL><LI>   The client's canonical host name (not an alias) literally
+        matches the host name in the file.<LI>   If the client's host name is a fully qualified domain name (such
+        as returned by the resolver when you have DNS running), and it
+        doesn't literally match the host name in the hosts file, it is
+        compared to that host name expanded with the local domain name.
+<P>
+</UL>
+
+
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node130.html">The Network Information System</A>
+<B>Up:</B> <A HREF="node124.html">Various Network Applications</A>
+<B> Previous:</B> <A HREF="node128.html">Remote Procedure Call</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,406 @@
+<HTML
+><HEAD
+><TITLE
+>Connecting to the PC</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="Palm OS Desktop HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Introduction"
+HREF="introduction.html"><LINK
+REL="NEXT"
+TITLE="The pilot-link suite"
+HREF="pilotlink.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Palm OS Desktop HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="introduction.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="pilotlink.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="PC-CONNECT">2. Connecting to the PC</H1
+><P
+>The first step to getting your PDA running under Linux is to connect it
+to your PC. Until recently, all PalmOS devices connected via a serial
+cable. The latest devices use USB, and some can also connect via infrared.</P
+><P
+>Another development allows the PDA to physically connect to one
+machine on the network and synchronise remotely with another machine.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PC-CONNECT-SERIAL">2.1. Serial Connection</H2
+><P
+>The serial connection is currently the easiest way to connect
+your PDA to your PC. Simply connect the cradle to a serial port,
+then refer to that port when using coldsync or the pilot-link
+suite. The serial connection is slow, but has the advantage of
+being tried and tested. It should work with any Palm OS device for
+which a serial cable is available. Serial cradles and cables are
+available as accessories for the Palm PDAs, including those which
+come with USB cradles as standard.</P
+><P
+>For convenience, you may wish
+to create a device called <TT
+CLASS="LITERAL"
+>/dev/pilot</TT
+>
+as a link to the serial port. The pilot-link suite uses this device
+by default, so if the link exists it will save you having to specify
+it each time you call one of the programs. </P
+><P
+>To create the link, log on as root and enter the following command: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>ln -s /dev/ttyS0 /dev/pilot</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>Replace <TT
+CLASS="LITERAL"
+>/dev/ttyS0</TT
+> with
+the serial port to which you have connected the your PDA. The device
+name <TT
+CLASS="LITERAL"
+>/dev/ttyS0</TT
+> corresponds to COM1 in
+DOS/Windows terminology, <TT
+CLASS="LITERAL"
+>/dev/ttyS1</TT
+> is
+COM2, and so on.  </P
+><P
+>You also need to ensure that you have
+permission to write to the serial port. On a standalone workstation you
+can change the permissions to allow global access to the port. As root,
+enter the following command: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>chmod a+rw /dev/ttyS0</PRE
+></FONT
+></TD
+></TR
+></TABLE
+> </P
+><P
+>Greater security can be achieved using the group permissions. Set
+the permissions to read/write for the group and add the required
+users to the user list for the group (see <TT
+CLASS="LITERAL"
+>man
+group</TT
+>). (TODO: More detail).  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="DEVFS">2.2. Devfs device naming</H2
+><P
+>Recent Linux distributions may use devfs for device naming. In
+this case <TT
+CLASS="LITERAL"
+>/dev/ttyS0</TT
+> may not exist, or may
+be a symbolic link to <TT
+CLASS="LITERAL"
+>/dev/tts/0</TT
+>. This is
+a new naming scheme brought in with the 2.4 kernel. Simply replace all
+references to <TT
+CLASS="LITERAL"
+>/dev/ttyS0</TT
+> with <TT
+CLASS="LITERAL"
+>/dev/tts/0</TT
+>.  </P
+><P
+>If you use symbolic links with devfs, you may find that the links do not persist 
+correctly after you reboot. The <TT
+CLASS="COMPUTEROUTPUT"
+>/etc/devfsd.conf</TT
+>
+ file controls the creation of symbolic links to dynamically created devices.</P
+><P
+>As always, the operation seems to be set up differently under different
+ distributions.</P
+><P
+></P
+><UL
+><LI
+><P
+>Manrake 8.1 creates a link from /dev/usb/tts/1 to /dev/pilot when the hotsync 
+button is pressed on the cradle.</P
+></LI
+><LI
+><P
+>RedHat 7.2 requires the link to be created manually. The link is then persistent 
+across boots (thanks to Jim Mueller for this information).</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PC-CONNECT-USB">2.3. USB Connection</H2
+><P
+>USB access to Palm devices is relatively new. The Handspring
+Visor seems to be well supported, and works with the pilot-link
+suite. Currently, the Palm m500 series only works with coldsync, although
+pilot-link support is in active development. <EM
+>Update:</EM
+> 
+the current development version of pilot-link, 0.10.x, has support for 
+USB devices. See the pilot-link section for more about this release. </P
+><P
+>To use any
+USB device under Linux, you need to have USB support in your kernel. You
+will also need the relevant modules available. Most (TODO: Check which
+distros work out of the box) recent Linux distributions have USB support
+enabled by default. To check your system, try the following command as
+root: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>modprobe visor</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>If you get no output from this command, then the module is available and
+you do not need to recompile your kernel. If this does not work, try the
+alternative usbserial module: </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>modprobe usbserial</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>This is used by some distributions, such as
+Redhat 7.0.</P
+><P
+>If you need to set up USB support in your kernel, the
+<A
+HREF="http://www.linuxpda.com/visor/howto/current/"
+TARGET="_top"
+>Handspring
+Visor with Linux mini-HOWTO</A
+> provides instructions. (TODO:
+Incorporate into this HOWTO?)  </P
+><P
+>Once USB support is set
+up, you should use device <TT
+CLASS="COMPUTEROUTPUT"
+>/dev/ttyUSB1</TT
+>
+to communicate with your PDA. Note that this device name only exists
+<EM
+>after</EM
+> you have pressed the hotsync button on the
+cradle. You must press the button before running the connection software.</P
+><P
+>If you have problems synchronising via USB, try an updated kernel. There 
+may be some timing issues with the USB driver. For example, I found that 
+stock Mandrake 8.1 did not work on one PC, but worked first time on a faster
+ PC. Upgrading to a stock 2.4.17 kernel solved the problem and worked fine on
+ both PCs.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PC-CONNECT-INFRARED">2.4. IR Connection</H2
+><P
+>The latest Palm devices have infrared (IrDA) ports. If
+you have one of these, and a PC with an infrared port, you can
+synchronise over IrDA and do away with the cables altogether.&#13;</P
+><P
+>David A. Desrosiers has written a comprehensive <A
+HREF="http://www.pilot-link.org/howto/irhsync/"
+TARGET="_top"
+>HOWTO</A
+> on the
+subject. (TODO: Include this inline?)  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PC-CONNECT-NETWORK">2.5. Network Connection</H2
+><P
+>It is possible to physically connect your PDA to one PC,
+and synchronise it with another PC elsewhere on the network. This
+might be a useful feature if you need to synchronise with a PC to
+which you cannot physically connect your PDA.  </P
+><P
+>Once again David A. Desrosiers has written a (less comprehensive) <A
+HREF="http://www.pilot-link.org/howto/nhsync"
+TARGET="_top"
+>HOWTO</A
+> on the
+subject. (TODO: Include this inline? Not convinced of the value of this
+method - anyone care to comment?)  </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="introduction.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pilotlink.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Introduction</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The pilot-link suite</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

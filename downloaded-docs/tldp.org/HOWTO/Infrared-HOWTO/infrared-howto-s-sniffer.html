@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Sniffer by Gerd Knorr</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Serial Infrared Port Sniffers"
+HREF="infrared-howto-a-serial-infrared-port-sniffers.html"><LINK
+REL="PREVIOUS"
+TITLE="Serial Infrared Port Sniffers"
+HREF="infrared-howto-a-serial-infrared-port-sniffers.html"><LINK
+REL="NEXT"
+TITLE="sersniff"
+HREF="infrared-howto-s-snersniff.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-a-serial-infrared-port-sniffers.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Appendix C. Serial Infrared Port Sniffers</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-snersniff.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-sniffer"
+></A
+>C.1. Sniffer by Gerd Knorr</H1
+><P
+>&#13;   This program by courtesy of Gerd Knorr. You may use it to sniff the traffic 
+   which is going trough your IrDA port for details of the protocol 
+   (change the default ttyS1 in the source if necessary):
+</P
+><P
+>&#13;
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;#include &#60;stdio.h&#62;
+#include &#60;stdlib.h&#62;
+#include &#60;unistd.h&#62;
+#include &#60;string.h&#62;
+#include &#60;fcntl.h&#62;
+#include &#60;termios.h&#62;
+#include &#60;ctype.h&#62;
+#include &#60;sys/types.h&#62;
+#include &#60;sys/time.h&#62;
+#include &#60;sys/ioctl.h&#62;
+
+#define BUFSIZE 1024
+
+int
+read_and_print(int fd, int sec, int usec)
+{
+    int         rc,l,i;
+    char        buf[BUFSIZE+1];
+    fd_set      set;
+    struct timeval  tv;
+    
+    if (sec || usec) {
+    FD_ZERO(&#38;set);
+    FD_SET(fd,&#38;set);
+    tv.tv_sec  = sec;
+
+    tv.tv_usec = usec;
+    if (0 == select(fd+1,&#38;set,NULL,NULL,&#38;tv))
+        return -1;
+    }
+    
+    switch (rc = read(fd,buf,BUFSIZE)) {
+    case 0:
+    printf("EOF");
+    exit(0);
+    break;
+    case -1:
+    perror("read");
+    exit(1);
+    default:
+    for (l = 0; l &#60; rc; l+= 16) {
+        printf("%04x  ",l);
+        for (i = l; i &#60; l+16; i++) {
+        if (i &#60; rc)
+            printf("%02x ",buf[i]);
+        else
+            printf("-- ");
+        if ((i%4) == 3)
+            printf(" ");
+        }
+        for (i = l; i &#60; l+16; i++) {
+
+        if (i &#60; rc)
+            printf("%c",isalnum(buf[i]) ? buf[i] : '.');
+        }
+        printf("\n");
+    }
+    break;
+    }
+    return rc;
+}
+
+void
+setlines(int fd, int rts, int dtr)
+{
+    int lines = 0;
+
+    if (rts) lines |= TIOCM_RTS;
+    if (dtr) lines |= TIOCM_DTR;
+    
+    ioctl(fd,TIOCMSET,&#38;lines);
+}
+
+int main(int argc, char *argv[])
+{
+    int         ser,i;
+    struct termios      saved_attributes,tattr;
+    struct winsize      win;
+    char        buf[16];
+    
+    if (-1 == (ser = open("/dev/ttyS1",O_RDWR))) {
+
+    perror("open /dev/ttyS1");
+    exit(1);
+    }
+    
+    /* Set the terminal mode */
+    tcgetattr (ser, &#38;tattr);
+    cfmakeraw (&#38;tattr);
+    cfsetospeed (&#38;tattr,B9600);
+    cfsetispeed (&#38;tattr,B9600);
+    tcsetattr (ser, 0, &#38;tattr);
+    
+    setlines(ser,0,0);
+#if 0
+    tcsendbreak(ser,0);
+#endif
+
+    /* main loop */
+    fprintf(stderr,"setup done\n");
+    while (-1 != read_and_print(ser,30,0)) {
+    usleep(100000);
+    }
+    
+    return 0;
+}
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-a-serial-infrared-port-sniffers.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-snersniff.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Serial Infrared Port Sniffers</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-a-serial-infrared-port-sniffers.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>sersniff</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

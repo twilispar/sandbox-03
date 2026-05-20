@@ -1,0 +1,551 @@
+<HTML
+><HEAD
+><TITLE
+>Compile and Optimize</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux PostgreSQL Database Server"
+HREF="datab-pSQL.html"><LINK
+REL="PREVIOUS"
+TITLE="Install PostgreSQL"
+HREF="chap27sec220.html"><LINK
+REL="NEXT"
+TITLE="Database installation using superuser account"
+HREF="chap27sec222.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap27sec220.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 27. Linux PostgreSQL Database Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap27sec222.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN17174"
+>27.2. Compile and Optimize</A
+></H1
+><P
+>                             
+               First of all, to avoid security risks, we'll create an unprivileged user account named <TT
+CLASS="literal"
+>postgres</TT
+> to be the owner of the Postgres files.
+             </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;                 To create the Postgres account, use the following command:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                   [root@deep] /# <B
+CLASS="command"
+>useradd</B
+> -M -o -r -d /var/lib/pgsql -s /bin/bash -c "PostgreSQL Server" -u 40 postgres &#62;/dev/null 2&#62;&#38;1 || :
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;
+                 Move into the new PosgreSQL directory we have untarred earlier, and then move to its subdirectory named <TT
+CLASS="filename"
+>src</TT
+>. Type the following commands on your terminal:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                   [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp/postgresql-6.5.3
+                   [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>cd</B
+> src
+                   CC="egcs" \
+                   ./configure \
+                   --prefix=/usr \
+                   --enable-locale
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 This tells PostgreSQL to set itself up for this particular hardware setup with:
+                 <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;                   - Enable locale support.
+                 </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+               </P
+></LI
+><LI
+><P
+>&#13;                 Edit the <TT
+CLASS="filename"
+>Makefile.global</TT
+> file, <B
+CLASS="command"
+>vi</B
+>  +210 <TT
+CLASS="filename"
+>Makefile.global</TT
+> and change the line:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   CFLAGS= -I$(SRCDIR)/include -I$(SRCDIR)/backend
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   CFLAGS= -I$(SRCDIR)/include -I$(SRCDIR)/backend -O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 These are our optimization flags for the PostgreSQL Server. Of course, you must tailor them to fit your system and CPU architecture.
+               </P
+></LI
+></OL
+></DIV
+><P
+>&#13;               Now, we must compile and install PosgreSQL on to the server:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep ]/src# <B
+CLASS="command"
+>make all</B
+>
+                 [root@deep ]/src# <B
+CLASS="command"
+>cd</B
+> ..
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>make</B
+> -C src install
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>make</B
+> -C src/man install
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mkdir</B
+> -p /usr/include/pgsql
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/access  /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/commands  /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/executor  /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/lib  /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/libpq  /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/libpq++  /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/port  /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/utils  /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/fmgr.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/os.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/config.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/c.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/postgres.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/postgres_ext.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/libpq-fe.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/libpq-int.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/ecpgerrno.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/ecpglib.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/ecpgtype.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/sqlca.h /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/include/libpq++.H /usr/include/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mkdir</B
+> -p /usr/lib/pgsql
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/lib/*source /usr/lib/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mv</B
+> /usr/lib/*sample /usr/lib/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>mkdir</B
+> -p /var/lib/pgsql
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>chown</B
+> -R postgres.postgres /var/lib/pgsql/
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>chmod</B
+> 755 /usr/lib/libpq.so.2.0
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>chmod</B
+> 755 /usr/lib/libecpg.so.3.0.0
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>chmod</B
+> 755 /usr/lib/libpq++.so.3.0
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>strip</B
+> /usr/bin/postgres
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>strip</B
+> /usr/bin/postmaster
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>strip</B
+> /usr/bin/ecpg
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>strip</B
+> /usr/bin/pg_id
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>strip</B
+> /usr/bin/pg_version
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>strip</B
+> /usr/bin/pg_dump
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>strip</B
+> /usr/bin/pg_passwd
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>strip</B
+> /usr/bin/psql
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>rm</B
+> -f  /usr/lib/global1.description
+                 [root@deep ]/postgresql-6.5.3# <B
+CLASS="command"
+>rm</B
+> -f  /usr/lib/local1_template1.description
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               <P
+></P
+><UL
+><LI
+><P
+>&#13;                   The <B
+CLASS="command"
+>make</B
+> command compiles all source files into executable binaries.
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>make install</B
+> command installs the binaries and any supporting files into the appropriate locations. 
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>mkdir</B
+> will create a new directory named <TT
+CLASS="filename"
+>pgsql</TT
+> under the <TT
+CLASS="filename"
+>/usr/include</TT
+> and <TT
+CLASS="filename"
+>/usr/lib</TT
+> directories, 
+                 </P
+></LI
+><LI
+><P
+>&#13;                 and then we move all subdirectories and files related to PostgreSQL under <TT
+CLASS="filename"
+>/usr/include</TT
+> and <TT
+CLASS="filename"
+>/usr/lib</TT
+> directories to the <TT
+CLASS="filename"
+>/usr/include/pgsql</TT
+> 
+                 and <TT
+CLASS="filename"
+>/usr/lib/pgsql</TT
+> directories respectively with the command <B
+CLASS="command"
+>mv.</B
+>
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>chown</B
+> command will set the correct owner and group permission for the <TT
+CLASS="filename"
+>/var/lib/pgsql</TT
+> directory. 
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>strip</B
+> command will discard all symbols from the object files. This means that our binary file will be smaller in size. This will improve the performance hit to the program since there will be fewer lines 
+                 to read by the system when it executes the binary.
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>rm</B
+> command will remove the <TT
+CLASS="filename"
+>global1.description</TT
+> and <TT
+CLASS="filename"
+>local1_template1.description</TT
+> files that are not needed by our PosgreSQL program.
+                 </P
+></LI
+></UL
+>
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap27sec220.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap27sec222.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Install PostgreSQL</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="datab-pSQL.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Database installation using superuser account</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

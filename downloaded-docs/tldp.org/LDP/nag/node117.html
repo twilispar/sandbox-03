@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Link Control Options</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node118.html">General Security Considerations</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node116.html">Routing Through a PPP </A>
+<BR> <P>
+<H1><A NAME="SECTION0010800000">Link Control Options</A></H1>
+<A NAME="4355"></A>
+Above, we already encountered LCP, the Link Control Protocol, which is
+used to negotiate link characteristics, and to test the link.
+<P>
+The two most important options that may be negotiated by LCP are the
+maximum receive unit, and the Asynchronous Control Character Map.  There
+are a number of other LCP configuration options, but they are far too
+specialized to discuss here. Please refer to RFC-1548 for a description
+of those.
+<P>
+<A NAME="4356"></A>
+<A NAME="4357"></A>
+<A NAME="4358"></A>
+The Asynchronous Control Character Map, colloquially called the async map,
+is used on asynchronous links such as telephone lines to identify control
+characters that must be escaped (replaced by a specific two-character
+sequence). For instance, you may want to avoid the XON and XOFF characters
+used for software handshake, because some misconfigured modem might choke
+upon receipt of an XOFF.  Other candidates include Ctrl-] (the
+telnet escape character).  PPP allows you to escape any of the
+characters with ASCII codes 0 through 31 by specifying them in the async
+map.
+<P>
+The async map is a bitmap 32-bits wide, with the least significant bit
+corresponding to the ASCII NUL character, and the most significant bit
+corresponding to ASCII 31.  If a bit is set, it signals that the
+corresponding character must be escaped before sending it across the
+link.  Initially, the async map is set to 0xffffffff, that is,
+all control characters will be esaped.
+<P>
+To tell your peer that it doesn't have to escape all control characters
+but only a few of them, you can specify a new asyncmap to pppd
+using the asyncmap option. For instance, if only <code>^S</code> and
+<code>^Q</code> (ASCII 17 and 19, commonly used for XON and XOFF) must be
+escaped, use the following option:
+<Pre>
+           asyncmap 0x000A0000
+
+ 
+</Pre>
+<A NAME="4551"></A>
+<A NAME="4367"></A>
+<A NAME="4368"></A>
+<A NAME="4369"></A>
+The Maximum Receive Unit, or MRU, signals to the peer the maximum size
+of HDLC frames we want to receive.  Although this may remind you of the
+MTU value (Maximum Transfer Unit), these two have little in common. The
+MTU is a parameter of the kernel networking device, and describes the
+maximum frame size the interface is able to handle. The MRU is more of
+an advice to the remote end not to generate any frames larger than the
+MRU; the interface must nevertheless be able to receive frames of up to
+1500-bytes.
+<P>
+<A NAME="4370"></A>
+Choosing an MRU is therefore not so much a question of what the link is
+capable of transferring, but of what gives you the best throughput.  If you
+intend to run interactive applications over the link, setting the MRU to
+values as low as 296 is a good idea, so that an occasional larger packet
+(say, from an FTP session) doesn't make your cursor ``jump''.  To tell
+pppd to request an MRU of 296, you would give it the option
+mru 296.  Small MRUs, however, only make sense if you don't have
+VJ header compression disabled (it is enabled by default).
+<P>
+pppd understands also a couple of LCP options that configure
+the overall behavior of the negotiation process, such as the maximum
+number of configuration requests that may be exchanged before the
+link is terminated.  Unless you know exactly what you are doing, you
+should leave these alone.
+<P>
+Finally, there are two options that apply to LCP echo messages. PPP
+defines two messages, Echo Request and Echo Response. pppd uses
+this feature to check if a link is still operating.  You can enable this
+by using the lcp-echo-interval option together with a time in
+seconds.  If no frames are received from the remote host within this
+interval, pppd generates an Echo Request, and expects the peer to
+return an Echo Response.  If the peer does not produce a response, the
+link is terminated after a certain number of requests sent.  This number
+can be set using the lcp-echo-failure option.  By default, this
+feature is disabled altogether.
+<P>
+<A NAME="4378"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node118.html">General Security Considerations</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node116.html">Routing Through a PPP </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

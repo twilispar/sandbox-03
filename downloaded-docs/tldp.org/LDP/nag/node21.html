@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>System Security</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node22.html">Outlook on the Following </A>
+<B>Up:</B> <A HREF="node20.html">Maintaining Your System</A>
+<B> Previous:</B> <A HREF="node20.html">Maintaining Your System</A>
+<BR> <P>
+<H2><A NAME="SECTION003510000">System Security</A></H2>
+<P>
+<A NAME="667"></A>
+<A NAME="668"></A>
+Another very important aspect of system administration in a network
+environment is protecting your system and users from intruders.
+Carelessly managed systems offer malicious people many targets:  attacks
+range from password guessing to Ethernet snooping, and the damage caused
+may range from faked mail messages to data loss or violation of your
+users' privacy. We will mention some particular problems when discussing
+the context they may occur in, and some common defenses against them.
+<P>
+This section will discuss a few examples and basic techniques in dealing
+with system security.  Of course, the topics covered can not treat all
+security issues you may be faced with exhaustively; they merely serve to
+illustrate the problems that may arise.  Therefore, reading a good book
+on security is an absolute must, especially in a networked system.
+Simon Garfinkel's ``Practical UNIX Security'' (see [<A HREF="#security"></A>]) is
+highly recommendable.
+<P>
+System security starts with good system administration. This includes
+checking the ownership and permissions of all vital files and directories,
+monitoring use of privileged accounts, etc. The COPS program, for instance,
+will check your file system and common configuration files for unusual
+permissions or other anomalies. It is also wise to use a password suite
+that enforces certain rules on the users' passwords that make them hard to
+guess. The shadow password suite, for instance, requires a password to have
+at least five letters, and contain both upper and lower case numbers and
+digits.
+<P>
+<A NAME="670"></A>
+When making a service accessible to the network, make sure to give it
+``least privilege,'' meaning that you don't permit it to do things that
+aren't required for it to work as designed. For example, you should make
+programs setuid to root or some other privileged account only
+when they really need this. Also, if you want to use a service for only
+a very limited application, don't hesitate to configure it as
+restrictively as your special application allows. For instance, if you
+want to allow diskless hosts to boot from your machine, you must provide
+the TFTP (trivial file transfer service) so that they can download basic
+configuration files from the /boot directory. However, when used
+unrestricted, TFTP allows any user anywhere in the world to download any
+world-readable file from your system. If this is not what you want,
+why not restrict TFTP service to the /boot directory?<A HREF="footnode.html#747"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="675"></A>
+Along the same line of thought, you might want to restrict certain
+services to users from certain hosts, say from your local network. 
+In chapter-<A HREF="node124.html#appl"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>, we introduce tcpd which does this for
+a variety of network applications.
+<P>
+Another important point is to avoid ``dangerous'' software. Of course,
+any software you use can be dangerous, because software may have bugs
+that clever people might exploit to gain access to your system. Things
+like these happen, and there's no complete protection against this.
+This problem affects free software and commercial products
+alike.<A HREF="footnode.html#748"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> However, programs that require special privilege are inherently more
+dangerous than others, because any loophole can have drastic
+consequences.<A HREF="footnode.html#749"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> If you install a setuid program for network purposes be doubly careful
+that you don't miss anything from the documentation, so that you don't
+create a security breach by accident.
+<P>
+<A NAME="750"></A>
+You can never rule out that your precautions might fail, regardless how
+careful you have been. You should therefore make sure you detect
+intruders early. Checking the system log files is a good starting point,
+but the intruder is probably as clever, and will delete any obvious
+traces he or she left. However, there are tools like
+tripwire<A HREF="footnode.html#684"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> that allow you to check vital system files to see if their contents or
+permissions have been changed.  tripwire computes various strong
+checksums over these files and stores them in a database.  During
+subsequent runs, the checksums are re-computed and compared to the stored
+ones to detect any modifications.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node22.html">Outlook on the Following </A>
+<B>Up:</B> <A HREF="node20.html">Maintaining Your System</A>
+<B> Previous:</B> <A HREF="node20.html">Maintaining Your System</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

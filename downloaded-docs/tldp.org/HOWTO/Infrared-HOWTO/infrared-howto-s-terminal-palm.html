@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Linux Terminal on Palm (Handspring Visor) via IR</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Specific Connections and IrDA - Protocols"
+HREF="infrared-howto-c-specific-connections.html"><LINK
+REL="PREVIOUS"
+TITLE="Palm III Connection - IrCOMM"
+HREF="infrared-howto-s-palm-connection.html"><LINK
+REL="NEXT"
+TITLE="Psion 5 Connection"
+HREF="infrared-howto-s-psion5-connection.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-palm-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Specific Connections and IrDA - Protocols</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-psion5-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-terminal-palm"
+></A
+>3.6. Linux Terminal on Palm (Handspring Visor) via IR</H1
+><P
+>&#13;   by Chris Morris on Linux/IrDA list: In
+   addition to using IrDA to hotsync my Handspring Visor I got my
+   Handspring visor to work as a Linux text terminal via infrared last
+   night. My computer is a Dell Inspiron 3800 (BTW I wracked my brains
+   for weeks trying to get IR to work. The whole
+   problem was caused by Linux looking at the wrong IRQ for ttyS3 .
+   ). I am using Beam Sync for Visor V1.0b2 by 
+
+   <A
+HREF="http://muchy.com/index.html"
+TARGET="_top"
+>Hacker Dude-san</A
+> 
+   (in Japanese)
+   and 
+   <A
+HREF="http://pamupamu.tripod.co.jp/soft/mterm/mterm_E.htm"
+TARGET="_top"
+>MiniTerm</A
+>
+   (a former version of this HOWTO referred to it as MTerm)
+   by Shigeyuki Seko 
+   
+   . On the laptop I have IrDA set to SIR mode and COM 3 via
+   BIOS. I have to set <TT
+CLASS="filename"
+>/dev/ttyS3</TT
+> to IRQ3 via 
+   <B
+CLASS="command"
+>setserial /dev/ttyS3 irq 3</B
+>
+   on boot up. After boot up I do a:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;/sbin/modprobe irda
+/sbin/modprobe irtty
+/sbin/modprobe ircomm
+/sbin/ircomm-tty
+/usr/sbin/irattach /dev/ttyS3 -s
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   <B
+CLASS="command"
+>cat /proc/net/irda/discovery</B
+> shows the visor as IrComm Now
+   /etc/mgetty+fax/mgetty.conf has to have these options: port ttyS3
+   direct y speed 9600 , faster maybe possible but only 9600 worked for
+   me so far toggle-dtr n Then in /etc/inittab: palm:235:respawn:
+   /sbin/mgetty ircomm0 After all of this I can start MiniTerm, issue a
+   '/sbin/init q' then send a few &#60;CR&#62; from the Visor and I get a text
+   termianl login. While composing this email I found a previously
+   undiscovered website that seems most helpful:
+   <A
+HREF="http://abgruen.de/palm/palm-ppp-mini.txt"
+TARGET="_top"
+>palm-ppp-mini</A
+>
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-palm-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-psion5-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Palm III Connection - IrCOMM</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-specific-connections.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Psion 5 Connection</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

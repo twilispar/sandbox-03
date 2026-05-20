@@ -1,0 +1,365 @@
+<HTML
+><HEAD
+><TITLE
+>Apache to use shared libraries</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Apache in a chroot jail"
+HREF="chap29sec254.html"><LINK
+REL="NEXT"
+TITLE="The /chroot/etc directory"
+HREF="chap29sec256.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec254.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec256.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19800"
+>29.18. Apache to use shared libraries</A
+></H1
+><P
+>&#13;      Since we have compiled apache to use shared libraries, we need to install them into the chroot directory structure. Use <B
+CLASS="command"
+>ldd</B
+> <TT
+CLASS="filename"
+>/chroot/httpd/usr/sbin/httpd</TT
+> to find out which libraries are needed. 
+      The output, depending on what you've compiled with Apache will be something similar to:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        libpam.so.0 =&#62;/lib/libpam.so.0 (0x40016000)
+        libm.so.6 =&#62;/lib/libm.so.6 (0x4001f000)
+        libdl.so.2 =&#62;/lib/libdl.so.2 (0x4003b000)
+        libcrypt.so.1 =&#62;/lib/libcrypt.so.1 (0x4003e000)
+        libnsl.so.1 =&#62;/lib/libnsl.so.1 (0x4006b000)
+        libresolv.so.2 =&#62;/lib/libresolv.so.2 (0x40081000)
+        libdb.so.3 =&#62;/lib/libdb.so.3 (0x40090000)
+        libc.so.6 =&#62;/lib/libc.so.6 (0x400cb000)
+        /lib/ld-linux.so.2 =&#62;/lib/ld-linux.so.2 (0x40000000)
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      Copy the shared libraries identified above:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libpam.so.0 /chroot/httpd/lib/
+        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libm.so.6 /chroot/httpd/lib/
+        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libdl.so.2 /chroot/httpd/lib/
+        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libcrypt.so.1 /chroot/httpd/lib/
+        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libnsl* /chroot/httpd/lib/
+        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libresolv* /chroot/httpd/lib/
+        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libdb.so.3 /chroot/httpd/lib/
+        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libc.so.6 /chroot/httpd/lib/
+        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/ld-linux.so.2 /chroot/httpd/lib/
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      You'll also need the following extra libraries for some network functions, like resolving:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libnss_compat* /chroot/httpd/lib/
+        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libnss_dns* /chroot/httpd/lib/
+        [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /lib/libnss_files* /chroot/httpd/lib/
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        We now need to copy the passwd and group files inside the <TT
+CLASS="filename"
+>/chroot/httpd/etc</TT
+> chrooted directory. The concept here is the same as how ftpd uses passwd and group files. Next, we'll remove 
+        all entries except for the user that apache runs as in both files <TT
+CLASS="literal"
+>passwd</TT
+> and <TT
+CLASS="literal"
+>group</TT
+>.
+        </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /etc/passwd /chroot/httpd/etc/
+              [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /etc/group /chroot/httpd/etc/
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;            Edit the <TT
+CLASS="filename"
+>passwd</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/chroot/httpd/etc/passwd</TT
+> and delete all entries except for the user apache run as in our configuration, it's <TT
+CLASS="literal"
+>www</TT
+>:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              www:x:80:80::/home/www:/bin/bash
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;            Edit the <TT
+CLASS="literal"
+>group</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/chroot/httpd/etc/group</TT
+> and delete all entries except the group apache run as, in our configuration it,s <TT
+CLASS="literal"
+>www</TT
+>:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              www:x:80:
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+></OL
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec254.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec256.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Apache in a chroot jail</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/chroot/etc</TT
+> directory</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

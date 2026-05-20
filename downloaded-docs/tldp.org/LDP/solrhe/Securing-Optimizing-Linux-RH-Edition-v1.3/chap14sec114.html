@@ -1,0 +1,638 @@
+<HTML
+><HEAD
+><TITLE
+>Logcheck</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Security/Monitoring"
+HREF="soft-secmonitor.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure and Optimize sXid"
+HREF="chap14sec113.html"><LINK
+REL="NEXT"
+TITLE="Configure and Optimize Logcheck"
+HREF="chap14sec115.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap14sec113.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 14. Software -Security/Monitoring</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap14sec115.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr5ch2sc3lc"
+>14.3. Logcheck</A
+></H1
+><P
+>&#13;           One important task in the security world is to regularly check the log files. Often the daily activities of an administrator don't allow him the time to do this task and this can bring about  problems.
+           </P
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN7473"
+></A
+><P
+><B
+>Extracted from [<SPAN
+CLASS="citation"
+>Logcheck abstract</SPAN
+>]:</B
+></P
+><P
+>&#13;           Auditing and logging system events is important! What is more important is that system administrators be aware of these events so they can prevent problems that will inevitably occur if you have a system 
+           connected to the Internet. Unfortunately for most Unices it doesn't matter how much you log activity if nobody ever checks the logs, which is often the case. This is where logcheck will help. Logcheck automates 
+           the auditing process and weeds out <EM
+>normal</EM
+> log information to give you a condensed look at problems and potential troublemakers mailed to wherever you please. Logcheck is a software package 
+           that is designed to automatically run and check system log files for security violations and unusual activity. Logcheck utilizes a program called logtail that remembers the last position it read from in a log 
+           file and uses this position on subsequent runs to process new information.
+           </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;           These installation instructions assume
+           <P
+></P
+><UL
+><LI
+><P
+>&#13;           Commands are Unix-compatible.
+           </P
+></LI
+><LI
+><P
+>&#13;           The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+> <EM
+>other paths are possible</EM
+>.
+           </P
+></LI
+><LI
+><P
+>&#13;           Installations were tested on Red Hat Linux 6.1 and 6.2.
+           </P
+></LI
+><LI
+><P
+>&#13;           All steps in the installation will happen in super-user account root.
+           </P
+></LI
+><LI
+><P
+>&#13;           Logcheck version number is <TT
+CLASS="literal"
+>1.1.1</TT
+>
+           </P
+></LI
+></UL
+>
+           </P
+><P
+>&#13;           These are the packages available at Logcheck Homepage Site: <A
+HREF="appendixa.html#prtinxfp8"
+>http://www.psionic.com/abacus/logcheck/</A
+>,
+           and you must be sure to download: logcheck-1.1.1.tar.gz available as of this writing.
+           </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+           Please do not forget to read the <TT
+CLASS="filename"
+>README</TT
+> and/or <TT
+CLASS="filename"
+>INSTALL</TT
+> with in the tarball you have downloaded if the version number is not the same as we have suggested and follow the instructions
+           since there are chances of some changes either bythe way of additions or deletions are likely to be there.
+           </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;           Before you uncompress and install from the tarballs it is a good idea to make a list of files on the system before you install Logcheck, and one afterwards, and then compare them using diff to find out what files 
+           were placed where. Simply run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Logcheck1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Logcheck2</B
+></TT
+> after you install the software, and 
+           use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>Logcheck1 Logcheck2 &#62; Logcheck-Installed</B
+></TT
+> to get a list of what changed.
+           </P
+><P
+>&#13;           To compile, you need to decompress the tarball (tar.gz).
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>cp</B
+> logcheck-version.tar.gz /var/tmp/
+           [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /var/tmp
+           [root@deep ]/tmp#<B
+CLASS="command"
+>tar</B
+> xzpf logcheck-version.tar.gz
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><P
+>&#13;           To Compile and Optimize you must modify the <TT
+CLASS="filename"
+>Makefile</TT
+> file of Logcheck to specify installation paths, compilation flags, and optimizations for your system. We must modify this file to be compliant with Red Hat's file 
+           system structure and install Logcheck script files under our <TT
+CLASS="envar"
+>PATH</TT
+> Environment variable.
+           </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;           Move into the new Logcheck directory and edit the <TT
+CLASS="filename"
+>Makefile</TT
+>, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>Makefile</TT
+> and change the following lines by type the following commands on your terminal:
+           </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           CC = cc
+           </PRE
+></TD
+></TR
+></TABLE
+>
+            To read:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           CC = egcs
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           CFLAGS = -O
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           To read:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>             
+           CFLAGS = -O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           INSTALLDIR = /usr/local/etc
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           To read:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           INSTALLDIR = /etc/logcheck
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           INSTALLDIR_BIN = /usr/local/bin
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           To read:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           INSTALLDIR_BIN = /usr/bin
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           INSTALLDIR_SH = /usr/local/etc
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           To read:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           INSTALLDIR_SH = /usr/bin
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           TMPDIR = /usr/local/etc/tmp
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           To read:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           TMPDIR = /etc/logcheck/tmp
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           The above changes will configure the software to use <SPAN
+CLASS="application"
+>egcs</SPAN
+> compiler, optimization flags specific to our system, and locate all files related to Logcheck software to 
+           the destination target directories we have chosen to be compliant with the Red Hat file system structure.
+           </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;           
+           Edit the Makefile file <B
+CLASS="command"
+>vi</B
+> +67 <TT
+CLASS="filename"
+>Makefile</TT
+> and change the following line:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           @if [ ! -d $(TMPDIR) ]; then /bin/mkdir $(TMPDIR); fi
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           To read:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           @if [ ! -d $(TMPDIR) ]; then /bin/mkdir -p $(TMPDIR); fi
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           The above change  -p will allow the installation program to create parent directories as needed.
+           </P
+></LI
+><LI
+><P
+>&#13;           
+           Install Logcheck on your system.
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep ]/logcheck-1.1.1#<B
+CLASS="command"
+>make</B
+> linux
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           The above command will configure the software for the Linux operating system, compile all source files into executable binaries, and then install the binaries and any supporting 
+           files into the appropriate locations. Please don't forget to cleanup later:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /var/tmp
+           [root@deep ]/tmp#<B
+CLASS="command"
+>rm</B
+> -rf logcheck-version/ logcheck-version_tar.gz
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           The <B
+CLASS="command"
+>rm</B
+> command as used above will remove all the source files we have used to compile and install Logcheck. It will also remove the Logcheck compressed archive from 
+           the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+           </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap14sec113.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap14sec115.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure and Optimize sXid</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-secmonitor.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure and Optimize Logcheck</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

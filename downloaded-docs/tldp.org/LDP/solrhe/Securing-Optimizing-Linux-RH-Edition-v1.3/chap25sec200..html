@@ -1,0 +1,915 @@
+<HTML
+><HEAD
+><TITLE
+>Compile, insert FreeS/WAN into the kernel</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FreeS/WAN VPN"
+HREF="fSWAn.html"><LINK
+REL="PREVIOUS"
+TITLE="IPSEC/VPN -FreeS/WAN"
+HREF="chap25sec199.html"><LINK
+REL="NEXT"
+TITLE="Reconfigure and install the kernel with FreeS/WAN VPN support"
+HREF="chap25sec201.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap25sec199.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 25. Linux FreeS/WAN VPN</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap25sec201.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN14485"
+>25.2. Compile, insert FreeS/WAN into the kernel</A
+></H1
+><P
+>&#13;           You must modify the <TT
+CLASS="filename"
+>Makefile</TT
+> under the FreeS/WAN source directory and subdirectories named <TT
+CLASS="filename"
+>utils</TT
+>, <TT
+CLASS="filename"
+>klips/utils</TT
+>, <TT
+CLASS="filename"
+>Pluto</TT
+>, 
+           and <TT
+CLASS="filename"
+>lib</TT
+> to specify installation paths. We must modify these files to be compliant with Red Hat's file system structure and install FreeS/WAN files under our <TT
+CLASS="envar"
+>PATH</TT
+> environment variable.
+           </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;               Move to the top-level directory of the new FreeS/WAN distribution and type the following commands on your terminal:
+               Edit the <TT
+CLASS="filename"
+>Makefile</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>Makefile</TT
+> and change the following lines:
+               </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     PUBDIR=/usr/local/sbin
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   To read:
+                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     PUBDIR=/usr/sbin
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+><LI
+><P
+>&#13;                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   PRIVDIR=/usr/local/lib/ipsec
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   PRIVDIR=/usr/lib/ipsec
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+><LI
+><P
+>&#13;                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   FINALPRIVDIR=/usr/local/lib/ipsec
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   FINALPRIVDIR=/usr/lib/ipsec
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+><LI
+><P
+>&#13;                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   MANTREE=/usr/local/man
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   MANTREE=/usr/man
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;               Edit the <TT
+CLASS="filename"
+>Makefile</TT
+> file of the subdirectory <TT
+CLASS="filename"
+>utils</TT
+>, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>utils/Makefile</TT
+> and change the following lines:
+               </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   PUBDIR=/usr/local/sbin
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   PUBDIR=/usr/sbin
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 PRIVDIR=/usr/local/lib/ipsec
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               To read:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 PRIVDIR=/usr/lib/ipsec
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 FINALPRIVDIR=/usr/local/lib/ipsec
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               To read:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 FINALPRIVDIR=/usr/lib/ipsec
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 MANTREE=/usr/local/man
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               To read:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 MANTREE=/usr/man
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;               Edit the <TT
+CLASS="filename"
+>Makefile</TT
+> file of the subdirectory <TT
+CLASS="filename"
+>klips/utils</TT
+>, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>klips/utils/Makefile</TT
+> and change the following lines:
+               </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     BINDIR=/usr/local/lib/ipsec
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   To read:
+                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     BINDIR=/usr/lib/ipsec
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+><LI
+><P
+>&#13;                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   MANTREE=/usr/local/man
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   MANTREE=/usr/man
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;               Edit the <TT
+CLASS="filename"
+>Makefile</TT
+> file of the subdirectory <TT
+CLASS="filename"
+>pluto</TT
+>, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>pluto/Makefile</TT
+> and change the following lines:
+               </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     BINDIR=/usr/local/lib/ipsec
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   To read:
+                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     BINDIR=/usr/lib/ipsec
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+><LI
+><P
+>&#13;                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   MANTREE=/usr/local/man
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   MANTREE=/usr/man
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;               Edit the <TT
+CLASS="filename"
+>Makefile</TT
+> file of the subdirectory <TT
+CLASS="filename"
+>lib</TT
+>, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>lib/Makefile</TT
+> and change the following lines:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 MANTREE=/usr/local/man
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               To read:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 MANTREE=/usr/man
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></LI
+><LI
+><P
+>&#13;               Edit the <TT
+CLASS="filename"
+>Makefile</TT
+> file of the subdirectory <TT
+CLASS="filename"
+>libdes</TT
+>, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>libdes/Makefile</TT
+> and change the following lines:
+               </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     LIBDIR=/usr/local/lib
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   To read:
+                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     LIBDIR=/usr/lib
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+><LI
+><P
+>&#13;                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   BINDIR=/usr/local/bin
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   BINDIR=/usr/bin
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+><LI
+><P
+>&#13;                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   INCDIR=/usr/local/include
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   INCDIR=/usr/include
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+></LI
+><LI
+><P
+>&#13;                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   MANDIR=/usr/local/man
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   MANDIR=/usr/man
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 The above changes, from step1 to step 6, will locate all files related to the FreeS/WAN software to the destination target directories we have chosen in order to be compliant with the Red Hat file system structure.
+                 </P
+></LI
+></OL
+></LI
+></OL
+></DIV
+><P
+>&#13;             Now, we must compile and install FreeSWAN on the server:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep ]/freeswan-1.3#  <B
+CLASS="command"
+>make insert</B
+>
+               [root@deep ]/freeswan-1.3#  <B
+CLASS="command"
+>make programs</B
+>
+               [root@deep ]/freeswan-1.3#  <B
+CLASS="command"
+>make install</B
+>
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <P
+></P
+><UL
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>make insert</B
+> command creates a symbolic link <TT
+CLASS="filename"
+>/usr/src/linux/net/ipsec</TT
+>, pointing to the <SPAN
+CLASS="acronym"
+>KLIPS</SPAN
+> source directory. It patches some kernel files, where 
+                 necessary, to know about <SPAN
+CLASS="acronym"
+>KLIPS</SPAN
+> and/or to fix bugs. It also adds its default configuration to the kernel configuration file, and finally, it makes the <SPAN
+CLASS="acronym"
+>KLIPS</SPAN
+> communication file, <TT
+CLASS="filename"
+>/dev/ipsec</TT
+>, 
+                 if it's not already there.
+               </P
+></LI
+><LI
+><P
+>&#13;               The <B
+CLASS="command"
+>make programs</B
+> command builds the libraries, Pluto, and various user-level utilities. 
+               </P
+></LI
+><LI
+><P
+>&#13;               The <B
+CLASS="command"
+>make install</B
+> will install the Pluto daemon and user-level utilities, and set things up for boot-time startup.
+               </P
+></LI
+></UL
+>
+           </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap25sec199.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap25sec201.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>IPSEC/VPN -FreeS/WAN</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="fSWAn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Reconfigure and install the kernel with FreeS/WAN VPN support</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

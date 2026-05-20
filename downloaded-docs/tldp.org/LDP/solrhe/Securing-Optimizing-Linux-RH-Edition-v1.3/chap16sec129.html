@@ -1,0 +1,468 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/ssh2/ssh2_config file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securties(commercial)"
+HREF="softsec-com.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure and Optimise SSH2"
+HREF="chap16sec128.html"><LINK
+REL="NEXT"
+TITLE="Configure the /etc/ssh2/sshd2_config file"
+HREF="chap16sec130.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap16sec128.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 16. Software -Securties(commercial)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap16sec130.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN8707"
+>16.3. Configure the <TT
+CLASS="filename"
+>/etc/ssh2/ssh2_config</TT
+> file</A
+></H1
+><P
+>&#13;         The configuration file for ssh2 <TT
+CLASS="filename"
+>/etc/ssh2/ssh2_config</TT
+> allows you to set options that modify the operation of the client programs. The files contain keyword-value pairs, one per line, with keywords 
+         being case insensitive. Here are the more important keywords; a complete listing is available in the man page for <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh2</SPAN
+>(1)</SPAN
+>.
+         </P
+><P
+>&#13;         Edit the <TT
+CLASS="filename"
+>ssh2_config</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/ssh2/ssh2_config</TT
+> and add or change, if necessary:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         # ssh2_config
+         # SSH 2.0 Client Configuration File
+
+         *:Port                            	22
+         Ciphers                         	blowfish 
+         Compression                     	yes
+         IdentityFile                    	identification
+         AuthorizationFile               	authorization
+         RandomSeedFile		                random_seed
+         VerboseMode                     	no
+         ForwardAgent                    	no
+         ForwardX11                      	no
+         PasswordPrompt		                "%U's password: "
+         Ssh1Compatibility               	no
+         Ssh1AgentCompatibility	                none
+         NoDelay                         	yes
+         KeepAlive                       	yes
+         QuietMode                       	no
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         This tells ssh2_config file to set itself up for this particular configuration setup with:
+         </P
+><DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>Port 22</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>Port</TT
+> specifies on which port number ssh connects to on the remote host. The default port is 22.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>Ciphers blowfish</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>Ciphers</TT
+> specifies what cipher should be used for encrypting sessions. The blowfish uses 64-bit blocks and keys of up to 448 bits.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>Compression yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>Compression</TT
+> specifies whether to use compression during sessions. Compression will improve communication speed and files transfers.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>IdentityFile identification</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>IdentityFile</TT
+> specifies an alternate name for the user's identification file.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>AuthorizationFile authorization</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>AuthorizationFile</TT
+> specifies an alternate name for the user's authorization file.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>RandomSeedFile random_seed</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>RandomSeedFile</TT
+> specifies an alternate name for the user's random seed file.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>VerboseMode no</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>VerboseMode</TT
+> instructs ssh2 to print debugging messages about its progress. This option is helpful in debugging connection, authentication, and configuration problems.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>ForwardAgent no</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>ForwardAgent</TT
+> specifies which connection authentication agent <EM
+>if any</EM
+> should be forwarded to the remote machine.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>ForwardX11 no</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>ForwardX11</TT
+> is for people that use the <TT
+CLASS="literal"
+>Xwindow</TT
+> <SPAN
+CLASS="acronym"
+>GUI</SPAN
+> and want to automatically redirect <TT
+CLASS="literal"
+>X11</TT
+> sessions to the remote machine. Since 
+         we've set up a server and do not have a <SPAN
+CLASS="acronym"
+>GUI</SPAN
+> installed on it, we can safely turn this option off.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>PasswordPrompt "%U's password: "</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>PasswordPrompt</TT
+> specifies the password prompt that will be displayed for the user when connecting to a host. Variables <TT
+CLASS="prompt"
+>%</TT
+>U and <TT
+CLASS="prompt"
+>%</TT
+>H give the user's login name and host, respectively.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>Ssh1Compatibility no</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>Ssh1Compatibility</TT
+> specifies whether or not to use SSH1 compatibility code with SSH2 for ssh1 users.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>Ssh1AgentCompatibility none</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>Ssh1AgentCompatibility</TT
+> specifies whether or not to also forward SSH1 agent connections with SSH2 for ssh1 users.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>NoDelay yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>NoDelay</TT
+> specifies if the socket option <TT
+CLASS="envar"
+>TCP_NODELAY</TT
+> should be enabled. It is recommended that you set this option to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+> to improve network performance.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>KeepAlive yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>KeepAlive</TT
+> specifies whether the system should send keep alive messages to the remote server. If set to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+> then the death of the connection or crash of remote machines will be properly noticed.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>QuietMode no</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>QuietMode</TT
+> specifies whether the system runs in quiet mode. This option must be set to <TT
+CLASS="userinput"
+><B
+>no</B
+></TT
+> because in quiet mode, nothing is logged in the system log except for fatal errors. Since we 
+         want to have information about users sessions it is preferable to disable this option.
+         </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap16sec128.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap16sec130.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure and Optimise SSH2</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="softsec-com.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/ssh2/sshd2_config</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

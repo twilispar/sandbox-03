@@ -1,0 +1,411 @@
+<HTML
+><HEAD
+><TITLE
+>The atime and noatime attribute</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux General Optimization"
+HREF="gen-optim.html"><LINK
+REL="PREVIOUS"
+TITLE="The ulimit parameter"
+HREF="x4733.html"><LINK
+REL="NEXT"
+TITLE="Tuning IDE Hard Disk Performance"
+HREF="chap6sec74.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x4733.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. Linux General Optimization</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap6sec74.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr2ch6scntm"
+>6.11. The atime and noatime attribute</A
+></H1
+><P
+>&#13;           Linux records information about when files were created and last modified as well as when it was last accessed. There is a cost associated with recording the last access 
+           time. The ext2 file system of Linux has an attribute that allows the super-user to mark individual files such that their last access time is not recorded. This may lead 
+           to significant performance improvements on often accessed frequently changing files such as the contents of the <TT
+CLASS="filename"
+>/var/spool/news</TT
+> directory.
+           </P
+><P
+>&#13;           To set the attribute to a file, use:
+           
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>chattr</B
+> +A filename	 <A
+NAME="sctult1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap6sec73.html#sctult1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;           <EM
+>For a specific file</EM
+>
+           </DD
+></DL
+></DIV
+>
+           
+           </P
+><P
+>&#13;           For a whole directory tree, do something like:
+
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep /root]#<B
+CLASS="command"
+>chattr</B
+> -R +A  /var/spool/	  <A
+NAME="sctult2"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+           [root@deep /root]#<B
+CLASS="command"
+>chattr</B
+> -R +A  /cache/		  <A
+NAME="sctult3"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+           [root@deep /root]#<B
+CLASS="command"
+>chattr</B
+> -R +A /home/httpd/ona/   <A
+NAME="sctult4"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+>
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap6sec73.html#sctult2"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;             <EM
+>For a news and mail</EM
+>
+           </DD
+><DT
+><A
+HREF="chap6sec73.html#sctult3"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;           <EM
+>For a proxy caches</EM
+>
+           </DD
+><DT
+><A
+HREF="chap6sec73.html#sctult4"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+></DT
+><DD
+>&#13;           <EM
+>For a web pages</EM
+>
+           </DD
+></DL
+></DIV
+>
+
+           </P
+><P
+>&#13;           Linux has a special mount option for file systems called <EM
+>noatime</EM
+> that can be added to each line that addresses one file system in the <TT
+CLASS="filename"
+>/etc/fstab</TT
+> file. If 
+           a file system has been mounted with this option, reading accesses to the file system will no longer result in an update to the atime information associated with the file like 
+           we have explained above. The importance of the noatime setting is that it eliminates the need by the system to make writes to the file system for files which are simply 
+           being read. Since writes can be somewhat expensive, this can result in measurable performance gains. Note that the write time information to a file will continue to be updated 
+           anytime the file is written to. In our example below, we will set the noatime option to our <TT
+CLASS="filename"
+>/chroot</TT
+> file system.
+           </P
+><P
+>&#13;           Edit the <TT
+CLASS="filename"
+>fstab</TT
+> file vi <TT
+CLASS="filename"
+>/etc/fstab</TT
+> and add in the line that refer to <TT
+CLASS="filename"
+>/chroot</TT
+>file system the noatime option after the 
+           defaults option as show below:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            /dev/sda7          /chroot          ext2          defaults,noatime          1  2
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><P
+>&#13;           You need not reboot your system for the change to take effect, just make the Linux system aware about the modification you have made to the <TT
+CLASS="filename"
+>/etc/fstab</TT
+> file. This can be accomplished 
+           with the following commands:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>mount</B
+> -oremount /chroot/
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><P
+>&#13;           Then test your results with the flowing command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep]# <B
+CLASS="command"
+>cat</B
+> /proc/mounts
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;           /dev/root /             ext2         rw 0 0
+           /proc      /proc        proc         rw 0 0
+           /dev/sda1  /boot        ext2         rw 0 0
+           /dev/sda8  /cache       ext2         rw 0 0
+           /dev/sda7  /chroot      ext2 rw,noatime 0 0
+           /dev/sda6  /home        ext2         rw 0 0
+           /dev/sda11 /tmp         ext2         rw 0 0
+           /dev/sda5  /usr         ext2         rw 0 0
+           /dev/sda9  /var         ext2         rw 0 0
+           none       /dev/pts   devpts         rw 0 0
+           </TT
+></P
+>
+           If you see something like:<TT
+CLASS="computeroutput"
+> /dev/sda7 /chroot ext2 rw,noatime 0 0</TT
+>, congratulations!
+           </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x4733.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap6sec74.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The ulimit parameter</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-optim.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Tuning <SPAN
+CLASS="acronym"
+>IDE</SPAN
+> Hard Disk Performance</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

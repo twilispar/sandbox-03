@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>CHAP versus PAP</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node121.html">The CHAP Secrets File</A>
+<B>Up:</B> <A HREF="node119.html">Authentication with PPP</A>
+<B> Previous:</B> <A HREF="node119.html">Authentication with PPP</A>
+<BR> <P>
+<H2><A NAME="SECTION00101010000">CHAP versus PAP</A></H2>
+<P>
+<A NAME="4393"></A>
+<A NAME="4394"></A>
+<A NAME="4395"></A>
+<A NAME="4396"></A>
+<A NAME="4397"></A>
+<P>
+With PPP, each system may require its peer to authenticate itself
+using one of two authentication protocols.  These are the Password
+Authentication Protocol (PAP), and the Challenge Handshake
+Authentication Protocol (CHAP).  When a connection is established,
+each end can request the other to authenticate itself, regardless of
+whether it is the caller or the callee.  Below I will loosely talk of
+`client' and `server' when I want to distinguish between the
+authenticating system and the authenticator.  A PPP daemon can ask its
+peer for authentication by sending yet another LCP configuration
+request identifying the desired authentication protocol.
+<P>
+PAP works basically the same way as the normal login procedure. The
+client authenticates itself by sending a user name and an (optionally
+encrypted) password to the server, which the server compares to its
+secrets database.  This technique is vulnerable to eavesdroppers who may
+try to obtain the password by listening in on the serial line, and to
+repeated trial and error attacks.
+<P>
+CHAP does not have these deficiencies. With CHAP, the authenticator
+(i.e. the server) sends a randomly generated ``challenge'' string to
+the client, along with its hostname. The client uses the hostname to
+look up the appropriate secret, combines it with the challenge, and
+encrypts the string using a one-way hashing function.  The result is
+returned to the server along with the client's hostname. The server
+now performs the same computation, and acknowledges the client if it
+arrives at the same result.
+<P>
+Another feature of CHAP is that it doesn't only require the client to
+authenticate itself at startup time, but sends challenges at regular
+intervals to make sure the client hasn't been replaced by an intruder,
+for instance by just switching phone lines.
+<P>
+pppd keeps the secret keys for CHAP and PAP in two separate
+files, called /etc/ppp/chap-secrets and pap-secrets,
+respectively.  By entering a remote host in one or the other file, you
+have a fine control over whether CHAP or PAP is used to authenticate
+ourselves with our peer, and vice versa.
+<P>
+By default, pppd doesn't require authentication from the
+remote, but will agree to authenticate itself when requested by the
+remote.  As CHAP is so much stronger than PAP, pppd tries to
+use the former whenever possible.  If the peer does not support it, or
+if pppd can't find a CHAP secret for the remote system in its
+chap-secrets file, it reverts to PAP. If it doesn't have a PAP
+secret for its peer either, it will refuse to authenticate altogether.
+As a consequence, the connection is closed down.
+<P>
+This behavior can be modified in several ways. For instance, when
+given the auth keyword, pppd will require the peer to
+authenticate itself. pppd will agree to use either CHAP or PAP
+for this, as long as it has a secret for the peer in its CHAP or PAP
+database, respectively. There are other options to turn a particular
+authentication protocol on or off, but I won't describe them here.
+Please refer to the pppd(8) manual page for details.
+<P>
+If all systems you talk PPP with agree to authenticate themselves with
+you, you should put the auth option in the global
+/etc/ppp/options file and define passwords for each system in the
+chap-secrets file. If a system doesn't support CHAP, add an entry
+for it to the pap-secrets file. In this way, you can make sure no
+unauthenticated system connects to your host.
+<P>
+The next two sections discuss the two PPP secrets files, pap-secrets
+and chap-secrets. They are located in /etc/ppp and contain
+triples of clients, servers and passwords, optionally followed by a list of
+IP-addresses.  The interpretation of the client and server fields is
+different for CHAP and PAP, and also depends on whether we authenticate
+ourselves with the peer, or whether we require the server to authenticate
+itself with us.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node121.html">The CHAP Secrets File</A>
+<B>Up:</B> <A HREF="node119.html">Authentication with PPP</A>
+<B> Previous:</B> <A HREF="node119.html">Authentication with PPP</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

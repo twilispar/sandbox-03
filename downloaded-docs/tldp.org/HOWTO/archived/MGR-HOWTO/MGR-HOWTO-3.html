@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The MGR Window System HOWTO: Installing MGR</TITLE>
+ <LINK HREF="MGR-HOWTO-4.html" REL=next>
+ <LINK HREF="MGR-HOWTO-2.html" REL=previous>
+ <LINK HREF="MGR-HOWTO.html#toc3" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="MGR-HOWTO-4.html">Next</A>
+<A HREF="MGR-HOWTO-2.html">Previous</A>
+<A HREF="MGR-HOWTO.html#toc3">Contents</A>
+<HR>
+<H2><A NAME="s3">3. Installing MGR</A></H2>
+
+<P>The latest source distribution can be FTPed from the directory
+<CODE>ftp://archimedes.nosc.mil/pub/Mgr/69</CODE>
+or Mosaiced from <CODE>http://archimedes.nosc.mil/Mgr/69</CODE>.
+The same should be found at
+<CODE>ftp://sunsite.unc.edu/pub/Linux/apps/MGR</CODE> and its mirrors.
+Older versions of this distribution
+from Haardt can be found on <CODE>tsx-11.mit.edu</CODE> and perhaps elsewhere.
+Pre-Linux versions of <B>MGR</B> from Uhler and others have been found at
+<CODE>ftp://bellcore.com/pub/mgr</CODE>, but I think they are gone now.
+I have saved a copy of everything about <B>MGR</B> seen on the Internet,
+but I am not aware of anything weighty
+that is missing from this Linux/Sun distribution.
+<B>MGR</B> has been through a lot of versions and releases,
+but the current *Linux* version number is 0.69.  This version number
+could jump to 1.0 when stable 256-color VGA code for Linux appears
+(for more than one video card type).
+RCS version numbers have increased from Bellcore's 4.3 up to our 4.13 now.
+<P>Required tools to build this distribution of <B>MGR</B> are m4 (GNU, or
+perhaps another supporting the -D option), make (GNU, or perhaps
+another supporting include) and *roff for the docs.  Also sh,
+awk, and POSIX install.  Binary distributions are not assembled often
+so you need an ANSI C compiler environment, e.g. gcc.
+<P>A Linux installation requires Linux 0.99.10 or better
+(1.2.13 is what I actually test on now),
+an HGC, EGA, VGA, or SVGA graphics card, and a mouse.  Mouses supported
+are: serial Microsoft mouse, serial MouseSystems 3 and 5 byte
+mouse, serial MMSeries mouse, serial Logitech mouse, PS/2 mouse,
+or a bus mouse.
+With Buckey (Meta) hot keys enabled, even a mouseless system could
+do a certain amount of useful work under <B>MGR</B>.
+The VGA 640x480 monochrome graphics mode is
+supported out of the box, as is 640x350 and 640x200.  To run
+800x600, or other modes that your BIOS can initialize and which
+do not require bank-switching, you need to run a small program
+(supplied as <CODE>src/vgamisc/regs.exe</CODE>)
+under DOS or an emulator to read the VGA registers
+and write a header file which you place in the
+directory <CODE>src/libbitblit/linux</CODE>,
+so that it can be <CODE>#include</CODE>'d
+by the <CODE>vga.c</CODE> file there.
+Samples of these files are supplied, but please create your own.
+Some VGA cards can use 128k
+windows, and these might run higher monochrome resolutions.
+<P>The Linux-colorport code also runs in the standard
+320x200x256 color VGA mode without difficulty, because no bank switching
+is required.  If you think of how few 64000 pixels is, you would
+realize this color mode is quite limited.
+Non-fast, but simple, bank-switching code has
+been added in version 0.65, and it works with a Tseng ET4000 card
+in 640x480x256 and 800x600x256 modes.  The S3 code does not
+work in super VGA resolutions, yet.  Supporting new super VGA cards
+requires writing one function to switch banks and then making sure that
+the desired screen mode can be initialized from a register dump,
+possibly with hand-tweaking.  The Linux color servers generally
+mangle the screen fonts, necessitating use of restorefont as in runx.
+If someone were to extract the VGA initialization code out of X,
+this might make MGR work on a lot more color systems.
+<P>Suns with SunOS 4.1.2+ and <CODE>bwtwo</CODE>, <CODE>cgthree</CODE>, or
+<CODE>cgsix</CODE> frame buffers are supported.
+Their speed handling color is good.
+Coherent installations should refer to the
+<CODE>Versions/README.Coh</CODE> file in the source distribution.
+Porting the
+latest-and-greatest <B>MGR</B> to another POSIX-like system which
+provides <CODE>select()</CODE> and pty's and direct access to a bitmapped
+frame-buffer ought to be straightforward, just implementing the
+<CODE>libbitblit</CODE> library based on the <CODE>sunmono</CODE> or
+<CODE>colorport</CODE> code, say.
+<P>If you want to install everything, you need 7 MB disk space for
+binaries, fonts, manual pages etc.  The sources are about 4.5 MB,
+plus object files during compilation.
+<P>Normally, <CODE>/usr/mgr</CODE> should be either the directory or a link to the
+directory where you install <B>MGR</B> stuff for runtime use.  Typing
+<BLOCKQUOTE><CODE>
+<PRE>
+cd /usr/mgr; tar xvfz whereveryouputit/mgrusr-0.69.tgz
+</PRE>
+</CODE></BLOCKQUOTE>
+
+and optionally
+<BLOCKQUOTE><CODE>
+<PRE>
+cd /usr/mgr; tar xvfz wherever/morefonts-0.69.tgz
+</PRE>
+</CODE></BLOCKQUOTE>
+
+will unpack these.  The source can be put anywhere, e.g. typing
+<BLOCKQUOTE><CODE>
+<PRE>
+cd /usr/src/local/mgr; tar xvfz wherever/mgrsrc-0.69.tgz
+</PRE>
+</CODE></BLOCKQUOTE>
+
+to unpack the sources from <CODE>archimedes.nosc.mil</CODE>.
+<P>The source tree can be compiled from one top-level Makefile which
+invokes lower-level Makefiles, all of which &quot;include&quot;
+a <CODE>&quot;Configfile&quot;</CODE>
+at the top level.  The <CODE>Configfile</CODE> is created by an interactive sh
+script named <CODE>Configure</CODE>, which asks you questions,
+then runs m4 on a <CODE>Configfile.m4</CODE>.
+So you type something like this:
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+chdir /usr/src/local/mgr
+sh ./Configure
+make first
+make depend
+make install
+make clean
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>It might be wise, before running make, to eyeball the <CODE>Configfile</CODE>
+generated by the <CODE>Configure</CODE> script, checking that it looks reasonable.
+(At least one m4 poops out (Sun <CODE>/usr/bin/m4</CODE>),
+creating a very short <CODE>Configfile</CODE>.
+If this happens, try hand editing a copy of <CODE>Configfile.sun</CODE> or
+<CODE>Configfile.lx</CODE>)
+One can also <CODE>make all</CODE> in any directory with a Makefile
+as soon as the libraries have been compiled and installed.
+The server, libraries, and some clients have been linted, but several
+clients are K&amp;R C code that generates many compiler warnings.
+<P>Several flags in MGRFLAGS can be added/omitted in the Configfile
+to change some
+optional features in the server, viz:
+<DL>
+<DT><B>-DWHO</B><DD><P>muck utmp file so &quot;who&quot; works
+<DT><B>-DVI</B><DD><P>code for clicking the mouse in vi moving the cursor
+<DT><B>-DDEBUG</B><DD><P>enable debugging output selectable with -d options.
+<DT><B>-DFASTMOUSE</B><DD><P>XOR the mouse track
+<DT><B>-DBUCKEY</B><DD><P>for hot-key server commands without mousing
+<DT><B>-DPRIORITY</B><DD><P>for priority window scheduling instead of 
+round-robin; the active window gets higher priority
+<DT><B>-DCUT</B><DD><P>for cut/paste between windows and a global snarf buffer
+<DT><B>-DMGR_ALIGN</B><DD><P>forces window alignment for fast scrolling (monochrome)
+<DT><B>-DKILL</B><DD><P>kills windows upon tty i/o errors
+<DT><B>-DSHRINK</B><DD><P>use only some of the screen ($MGRSIZE in environment)
+<DT><B>-DNOSTACK</B><DD><P>don't permit event stacking 
+<DT><B>-DBELL</B><DD><P>audibly ring the bell
+<DT><B>-DKBD</B><DD><P>read <CODE>mgr</CODE> input from the sun kbd, instead of stdin.
+This permits redirection of console msgs to a window.
+<DT><B>-DFRACCHAR</B><DD><P>fractional character movement for proportional fonts
+<DT><B>-DXMENU</B><DD><P>extended menu stuff (experimental)
+<DT><B>-DMOVIE</B><DD><P>movie making extension which logs all operations to a
+file for later replay -- not quite working under Linux
+<DT><B>-DEMUMIDMSBUT</B><DD><P>Emulate a missing middle mouse button by chording
+</DL>
+
+Not all combinations of these options have been tested on all systems.
+<P>The BITBLITFLAGS macro should contain <CODE>-DBANKED</CODE> if you're trying
+out the super VGA color.
+<P>C code for the static variables in the server containing icons and fonts
+is generated by a translator from icon and font files.
+<P>Not all the clients are compiled and installed by the Makefiles.
+Clients found under <CODE>src/clients</CODE> having capitalized names or
+not compiled by the supplied Makefiles may have problems compiling
+and/or running, but they may be interesting to hack on.
+Most of the screen drivers found under the <CODE>libbitblit</CODE> directory are
+of mainly archeological interest. Grave robbing can be profitable.
+<P>At some point check that your <CODE>/etc/termcap</CODE> and/or
+<CODE>terminfo</CODE> file
+contain entries for <B>MGR</B> terminals such as found in the <CODE>misc</CODE>
+directory.  If all your software checks $TERMCAP in the environment,
+this is not needed, as long as you run <CODE>eval `set_termcap`</CODE>
+in each window.
+<P><B>MGR</B> works better if run setuid root, because it wants to chown
+ptys and write in the utmp file.  This helps the ify iconifier
+client work better and the event passing mechanism be more secure.
+On Linux, root permissions are <EM>required</EM> in order to do in/out on the
+screen device.  Otherwise, you decide whether to trust it.
+<P>In versions around 0.62 there are troubles on the Sun with using
+the csh as the default shell.  Programs seem to run in a different
+process group than the foreground process group of the window's pty,
+in contradiction to man pages and posix specs.
+There is no trouble with bash, sh, or rc.  Ideas why?
+<P>
+<HR>
+<A HREF="MGR-HOWTO-4.html">Next</A>
+<A HREF="MGR-HOWTO-2.html">Previous</A>
+<A HREF="MGR-HOWTO.html#toc3">Contents</A>
+</BODY>
+</HTML>

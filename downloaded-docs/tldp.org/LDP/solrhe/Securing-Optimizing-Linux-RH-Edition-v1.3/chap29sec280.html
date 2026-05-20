@@ -1,0 +1,329 @@
+<HTML
+><HEAD
+><TITLE
+>Linux Samba Server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="PREVIOUS"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="NEXT"
+TITLE="Configure Samba"
+HREF="chap29sec281.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="soft-fileshrng.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 31. Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec281.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch31slss"
+>31.1. Linux Samba Server</A
+></H1
+><P
+>&#13;      Samba is a strong network service for file and print sharing that works on the majority of operating systems available today. When well implemented by the administrator, it's faster and more secure than the native file sharing services available on Microsoft Windows machines.
+    </P
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN21790"
+></A
+><P
+><B
+>As per the [<SPAN
+CLASS="citation"
+>README file of Samba</SPAN
+>]:</B
+></P
+><P
+>&#13;        Samba is the protocol by which a lot of PC-related machines share files and printers, and other information, such as lists of available files and printers. Operating systems that support this natively include Windows 95/98/NT, OS/2, 
+        and Linux, and add on packages that achieve the similar thing are available for DOS, Windows, VMS, Unix of all kinds, MVS, and more.
+      </P
+><P
+>&#13;        Apple Macs and some Web Browsers can speak this protocol as well.  Alternatives to <SPAN
+CLASS="acronym"
+>SMB</SPAN
+> include Netware, <SPAN
+CLASS="acronym"
+>NFS</SPAN
+>, AppleTalk, Banyan Vines, Decnet etc. Many of these have advantages but none are public 
+        specifications and widely implemented in desktop machines by default. Samba software includes an <SPAN
+CLASS="acronym"
+>SMB</SPAN
+> server, to provide Windows NT and LAN Manager-style file and print services to <SPAN
+CLASS="acronym"
+>SMB</SPAN
+> clients 
+        such as Windows 95, Warp Server, smbfs and others, a NetBIOS, <I
+CLASS="wordasword"
+>rfc1001/1002</I
+> name server, which amongst other things gives browsing support, an ftp-like <SPAN
+CLASS="acronym"
+>SMB</SPAN
+> client so that you can access 
+        PC resources; disks and printers from Unix, Netware and other operating systems, and finally, a tar extension to the client for backing up PCs.
+      </P
+></DIV
+></TD
+></TR
+></TABLE
+><DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Samba-Schema.gif"
+ALT="Samba"
+></IMG
+></P
+></DIV
+><P
+>&#13;      These installation instructions assume
+      <P
+></P
+><UL
+><LI
+><P
+>&#13;        Commands are Unix-compatible.
+      </P
+></LI
+><LI
+><P
+>&#13;      The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>, <EM
+>other paths are possible</EM
+>.
+      </P
+></LI
+><LI
+><P
+>&#13;      Installations were tested on Red Hat Linux 6.1 and 6.2.
+      </P
+></LI
+><LI
+><P
+>&#13;      All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+      </P
+></LI
+><LI
+><P
+>&#13;      Samba version number is 2.0.7
+      </P
+></LI
+></UL
+>
+    </P
+><P
+>&#13;      These are the Package(s) required:
+      <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;          Samba Homepage: <A
+HREF="appendixa.html#prtinxfp31er"
+>http://us1.samba.org/samba/samba.html</A
+>
+        </TD
+></TR
+><TR
+><TD
+>&#13;        Samba FTP Site: <A
+HREF="appendixa.html#prtinxfp31er"
+>63.238.153.11</A
+>
+        </TD
+></TR
+><TR
+><TD
+>&#13;        You must be sure to download: samba-2.0.7.tar.gz
+        </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+    </P
+><P
+>&#13;      Before you decompress the tarballs, It is a good idea to make a list of files on the system before you install Samba, and one afterwards, and then compare them using diff to find out what file it placed where. Simply run 
+      <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Samba1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Samba2</B
+></TT
+> after you install the software, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>Samba1 Samba2 &#62; Samba-Installed</B
+></TT
+> 
+      to get a list of what changed.
+    </P
+><P
+>&#13;      To compile, decompress the tarball (tar.gz):
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> samba-version.tar.gz /var/tmp
+        [root@deep ] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+        [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf samba-version.tar.gz
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec281.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure Samba</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

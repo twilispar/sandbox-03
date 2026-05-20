@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>MMBase Mini-HOWTO: Installation on Debian Woody: Getting MMBase and setting up some things</TITLE>
+ <LINK HREF="MMBase-5.html" REL=next>
+ <LINK HREF="MMBase-3.html" REL=previous>
+ <LINK HREF="MMBase.html#toc4" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="MMBase-5.html">Next</A>
+<A HREF="MMBase-3.html">Previous</A>
+<A HREF="MMBase.html#toc4">Contents</A>
+<HR>
+<H2><A NAME="s4">4. Getting MMBase and setting up some things</A></H2>
+
+<P>
+<H2><A NAME="ss4.1">4.1 Getting MMBase</A>
+</H2>
+
+<P>Now that you have all supporting packages up and running (you <EM>did</EM> 
+follow the instructions in the previous section, didn't you?) get yourself a copy of MMBase. 
+As said before, this document describes the works for MMbase version 1.4.
+<P>
+<P>Download MMBase from 
+<A HREF="http://www.mmbase.org/releases/mmbase-1.5.zip">http://www.mmbase.org/releases/mmbase-1.5.zip</A> with a browser, or even easier:
+<BLOCKQUOTE><CODE>
+<PRE>
+  wget http://www.mmbase.org/releases/mmbase-1.5.zip  
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>From version 1.5 MMBase can be used as an webapp within Tomcat. So I
+recommend unpacking the distribution in a temporary directory and copying
+the mmbase-webapp/ tree to /var/lib/tomcat4/webapps/.
+If MMBase is your only (or main) application on Tomcat, you can also install
+it as ROOT, by copying everything from mmbase-webapp/ to /var/lib/tomcat4/webapps/ROOT/. 
+<P>In this document I will assume that MMBase is unpacked in
+/var/lib/tomcat4/webapps/mmbase-webapp/
+<P>
+<P>
+<P>
+<H2><A NAME="ss4.2">4.2 Getting mm.mysql</A>
+</H2>
+
+<P>
+<P>You will also need mysql.jar (JDBC driver for MySQL) which can be downloaded from 
+<A HREF="http://mmmysql.sourceforge.net/">http://mmmysql.sourceforge.net/</A>. <BR>
+Make sure you get the binary jar, which means you may have to unjar the
+complete distribution first and locate the file mm.mysql-2.0.14-bin.jar
+(2.0.14 was the latest release when writing this HOWTO)
+Put the file in /var/lib/tomcat4/webapps/mmbase-webapp/WEB-INF/lib/.
+<P>
+<P>
+<P>
+<H2><A NAME="ss4.3">4.3 Creating a database for MMBase</A>
+</H2>
+
+<P>MMbase needs a database and a user that has full rights on that database.
+The user seems to needs rights via localhost and the real hostname. 
+This was not entirely clear to me.
+<P>
+<P>Issue the following commands on the MySQL prompt. I chose a database called MMBase, a user named mmbaseuser and 
+the password secret.
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+CREATE DATABASE MMBase
+USE MMBase
+GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON MMBase.* TO mmbaseuser@'%' IDENTIFIED BY 'secret';
+GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON MMBase.* TO mmbaseuser@localhost IDENTIFIED BY 'secret'
+GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON MMBase.* TO mmbaseuser@realhostname IDENTIFIED BY 'secret'
+flush privileges;
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>
+<H2><A NAME="ss4.4">4.4 Tomcat security manager</A>
+</H2>
+
+<P>The Tomcat java security manager somehow interferes with MMBase. I haven't
+found out what settings are needed to run MMBase with the security manager
+active. Please let me know. For now I disabled the security manager, which
+you should never not do. (Big Disclaimer!)
+<P>In /etc/default/tomcat4 change the security line to:<BR>
+TOMCAT4_SECURITY="no"
+<P>
+<H2><A NAME="ss4.5">4.5 Copying xml-apis</A>
+</H2>
+
+<P>For some odd reason, Tomcat wants to find the file WEB-INF/lib/xml-apis.jar also in
+/usr/share/tomcat/common/lib/xml-apis.jar, so you have to copy it.
+<P>
+<P>
+<HR>
+<A HREF="MMBase-5.html">Next</A>
+<A HREF="MMBase-3.html">Previous</A>
+<A HREF="MMBase.html#toc4">Contents</A>
+</BODY>
+</HTML>

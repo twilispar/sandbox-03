@@ -1,0 +1,290 @@
+<HTML
+><HEAD
+><TITLE
+>Optimizing Squid</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Proxy Network"
+HREF="netproxy-squid.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/logrotate.d/squid file"
+HREF="chap28sec234.html"><LINK
+REL="NEXT"
+TITLE="Netscape Proxies Configuration"
+HREF="chap28sec236.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap28sec234.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 28. Software -Server/Proxy Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap28sec236.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN18456"
+>28.10. Optimizing Squid</A
+></H1
+><P
+>&#13;               The <TT
+CLASS="envar"
+>atime</TT
+> and <TT
+CLASS="envar"
+>noatime</TT
+> attributes can be used to get a measurable performance gain in the Squid cache directory. See  <A
+HREF="gen-syssecured.html"
+>General System Optimization</A
+>  in this book, for more information on the subject.
+             </P
+><P
+>&#13;               The most important resource for Squid is physical memory. Your processor does not need to be ultra-fast. Your disk system will be the major bottleneck, so fast disks are important for high-volume caches. 
+               Do not use <SPAN
+CLASS="acronym"
+>IDE</SPAN
+> disks if you can help it.
+             </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN18464"
+>28.10.1. The cachemgr.cgi</A
+></H2
+><P
+>&#13;                 The cachemgr.cgi utility program, which is available by default when you compile and install Squid into your system, is designed to run through a web interface, and outputs various statistics about Squid configuration and performance.
+                 This program is located under the <TT
+CLASS="filename"
+>/usr/lib/squid</TT
+> directory, and you must put it in your <TT
+CLASS="filename"
+>cgi-bin</TT
+> directory (eg, /home/httpd/cgi-bin) to be able to use it. Follow the simple steps below to use this program.
+                 </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;                     Move the <B
+CLASS="command"
+>cachemgr.cgi</B
+> program to your <TT
+CLASS="literal"
+>cgi-bin</TT
+> directory:
+                     <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                       [root@deep /]# <B
+CLASS="command"
+>mv</B
+> /usr/lib/squid/cachemgr.cgi /home/httpd/cgi-bin
+                     </PRE
+></TD
+></TR
+></TABLE
+>
+                     I assume your <TT
+CLASS="filename"
+>cgi-bin</TT
+> directory is located under <TT
+CLASS="filename"
+>/home/httpd/cgi-bin</TT
+>, other paths are possible. Also, this <B
+CLASS="command"
+>cgi-bin</B
+> will exist only if you've 
+                     installed the Apache Web Server on your system.
+                   </P
+></LI
+><LI
+><P
+>&#13;
+                     Once you've put the <B
+CLASS="command"
+>cachemgr.cgi</B
+> program in your <TT
+CLASS="filename"
+>cgi-bin</TT
+> directory, you can point your web browser to the following address <TT
+CLASS="literal"
+>http://my-web-server/cgi-bin/cachemgr.cgi</TT
+> 
+                     to be able to use the various features of this program.
+
+                     The <TT
+CLASS="literal"
+>my-web-server</TT
+> is the address where your Apache web server lives, and <B
+CLASS="command"
+>cachemgr.cgi</B
+> is the utility program we have just placed in our <TT
+CLASS="filename"
+>cgi-bin</TT
+> directory to display 
+                     information and the configuration of our Squid Linux server.
+                   </P
+></LI
+></OL
+></DIV
+><P
+>&#13;                 <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Squid-CachePass.gif"
+ALT="Squid cache password"
+></IMG
+></P
+></DIV
+>
+
+                 If you have configured the <TT
+CLASS="filename"
+>squid.conf</TT
+> file to use password authentication for <B
+CLASS="command"
+>cachemgr.cgi</B
+>, you'll be asked to enter the Cache Host, Cache Port, Manager name, and Password information before you are 
+                 able to access the <B
+CLASS="command"
+>cachemgr.cgi</B
+> program. See the configuration of the <A
+HREF="chap28sec231.html"
+>/etc/squid/squid.conf</A
+> file above for more information.
+               </P
+><P
+>&#13;                 
+<DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Squid-CacheMGR.gif"
+ALT="Squid cache Manager"
+></IMG
+></P
+></DIV
+>
+Once you have been authenticated by the server, you'll see in your web browser interface the Cache Manager menu where you can examine and analyze the different options related to your Squid Proxy server.
+               </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap28sec234.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap28sec236.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/logrotate.d/squid</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netproxy-squid.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Netscape Proxies Configuration</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

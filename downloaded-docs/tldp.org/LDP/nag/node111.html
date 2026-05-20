@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Using Options Files</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node112.html">Dialing out with chat</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node110.html">Running pppd</A>
+<BR> <P>
+<H1><A NAME="SECTION0010400000">Using Options Files</A></H1>
+<P>
+<A NAME="4155"></A>
+<P>
+Before pppd parses its command line arguments, it scans several
+files for default options.  These files may contain any valid command
+line arguments, spread out across an arbitrary number of lines.
+comments are introduced by has signs.
+<P>
+The first options file is /etc/ppp/options, which is always scanned
+when pppd starts up.  Using it to set some global defaults is a good
+idea, because it allows you to keep your users from doing several things
+that may compromise security.  For instance, to make pppd require
+some kind of authentication (either PAP or CHAP) from the peer, you would
+add the auth option to this file.  This option cannot be
+overridden by the user, so that it becomes impossible to establish a PPP
+connection with any system that is not in our authentication databases.
+<P>
+<A NAME="4543"></A>
+The other option file, which is read after /etc/ppp/options, is
+.ppprc in the user's home directory. It allows each user to
+specify her own set of default options.
+<P>
+A sample /etc/ppp/options file might look like this:
+<Pre>
+           # Global options for pppd running on vlager.vbrew.com
+           auth                 # require authentication
+           usehostname          # use local hostname for CHAP
+           lock                 # use UUCP-style device locking
+           domain vbrew.com     # our domain name
+
+ 
+</pre>
+<A NAME="4167"></A>
+<A NAME="4168"></A>
+The first two of these options apply to authentication and will be
+explained below.  The lock keyword makes pppd comply
+to the standard UUCP method of device locking.  With this convention,
+each process that accesses a serial device, say /dev/cua3,
+creates a lock file named LCK..cua3 in the UUCP spool directory
+to signal that the device is in use. This is necessary to prevent any
+other programs such as minicom or uucico to open the
+serial device while used by PPP.
+<P>
+The reason to provide these options in the global configuration file
+is that options such as those shown above cannot be overridden, and so
+provide for a reasonable level of security. Note however, that some
+options can be overridden later; one such an example is the
+connect string.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node112.html">Dialing out with chat</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node110.html">Running pppd</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

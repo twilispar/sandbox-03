@@ -1,0 +1,413 @@
+<HTML
+><HEAD
+><TITLE
+>Compile and Optimize</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Proxy Network"
+HREF="netproxy-squid.html"><LINK
+REL="PREVIOUS"
+TITLE="Improve performance Using GNU malloc library "
+HREF="gnumaloc.html"><LINK
+REL="NEXT"
+TITLE="Configurations"
+HREF="chap28sec230.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="gnumaloc.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 28. Software -Server/Proxy Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap28sec230.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN18048"
+>28.4. Compile and Optimize</A
+></H1
+><P
+>&#13;               Return into the new Squid directory and type the following commands on your terminal:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 CC="egcs" \
+                 CFLAGS="-O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions" \
+                 ./configure \
+                 --prefix=/usr \
+                 --exec-prefix=/usr \
+                 --bindir=/usr/sbin \
+                 --libexecdir=/usr/lib/squid \
+                 --localstatedir=/var \
+                 --sysconfdir=/etc/squid \
+                 --enable-delay-pools \
+                 --enable-cache-digests \
+                 --enable-poll \
+                 --disable-ident-lookups \
+                 --enable-truncate \
+                 --enable-heap-replacement
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               This tells Squid to set itself up for this particular hardware setup with these options:
+               <P
+></P
+><UL
+><LI
+><P
+>&#13;                   Use the delay pools feature of Squid to limit and control bandwidth usage for users.
+                 </P
+></LI
+><LI
+><P
+>&#13;                 Use Cache Digests to improve client response time and network utilization.
+             </P
+></LI
+><LI
+><P
+>&#13;             Enable poll() instead of select() since its preferred over select.
+             </P
+></LI
+><LI
+><P
+>&#13;             Disable ident-lookups to remove code that performs Ident, <TT
+CLASS="literal"
+>RFC 931</TT
+>, lookups and reduce possible denial-of-service.
+             </P
+></LI
+><LI
+><P
+>&#13;             Enable truncate to glean some performance improvements when removing cached files.
+             </P
+></LI
+><LI
+><P
+>&#13;             Use the heap-replacement feature of Squid to have the choice of various cache replacement algorithms, instead of the standard LRU algorithm for better performance. See below for a more detailed explanation.
+             </P
+></LI
+></UL
+>
+             </P
+><P
+>&#13;               Now, we must compile and install Squid on the server:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>make</B
+> -f  makefile
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>make install</B
+>
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>mkdir</B
+> -p /var/log/squid
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>rm</B
+> -rf /var/logs/
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>chown</B
+> squid.squid /var/log/squid/
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>chmod</B
+> 750 /var/log/squid/
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>chmod</B
+> 750 /cache/
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>rm</B
+> -f  /usr/sbin/RunCache
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>rm</B
+> -f  /usr/sbin/RunAccel
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>strip</B
+> /usr/sbin/squid
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>strip</B
+> /usr/sbin/client
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>strip</B
+> /usr/lib/squid/dnsserver
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>strip</B
+> /usr/lib/squid/unlinkd
+                 [root@deep ]/squid-2.3.STABLE2# <B
+CLASS="command"
+>strip</B
+> /usr/lib/squid/cachemgr.cgi
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <P
+></P
+><UL
+><LI
+><P
+>&#13;                   The <B
+CLASS="command"
+>make</B
+> -f  command will compile all source files into executable binaries
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>make install</B
+> will install the binaries and any supporting files into the appropriate locations. 
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>mkdir</B
+> command will create a new directory named <TT
+CLASS="filename"
+>squid</TT
+> under <TT
+CLASS="filename"
+>/var/log.</TT
+> 
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>rm</B
+> -rf command will remove the <TT
+CLASS="filename"
+>/var/logs</TT
+> directory since this directory has been created to handle the log files related to Squid that we have moved to the <TT
+CLASS="filename"
+>/var/log/squid</TT
+> location. 
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>chown</B
+> will change the owner of <TT
+CLASS="filename"
+>/var/log/squid</TT
+> to be the user squid
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>chmod</B
+> command will make the mode of <TT
+CLASS="filename"
+>squid</TT
+> and <TT
+CLASS="filename"
+>cache</TT
+> directories; <TT
+CLASS="literal"
+>0750/drwxr-x---</TT
+>, for security reasons.
+                 </P
+></LI
+></UL
+>
+               Take note that we remove the small scripts named <TT
+CLASS="filename"
+>RunCache</TT
+> and <TT
+CLASS="filename"
+>RunAccel</TT
+> which start Squid in either caching mode or accelerator mode, since we use a better script named <TT
+CLASS="filename"
+>squid</TT
+> located 
+               under the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/</TT
+> directory that takes advantage of Linux <TT
+CLASS="literal"
+>system V</TT
+>. 
+               The <B
+CLASS="command"
+>strip</B
+> command will reduce the size of binaries for optimum performance.
+             </P
+><P
+>&#13;               Please do cleanup later:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+                 [root@deep ]/tmp# <B
+CLASS="command"
+>rm</B
+> -rf squid-version/ squid-version.STABLEz-src.tar.gz
+                 [root@deep ]/tmp# <B
+CLASS="command"
+>rm</B
+> -rf malloc/ malloc.tar.gz (if you used the GNU malloc external library)
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               The <B
+CLASS="command"
+>rm</B
+> command will remove all the source files we have used to compile and install Squid and GNU malloc. It will also remove the Squid and GNU malloc compressed archive from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> 
+               directory.
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="gnumaloc.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap28sec230.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Improve performance Using GNU malloc library</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netproxy-squid.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configurations</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

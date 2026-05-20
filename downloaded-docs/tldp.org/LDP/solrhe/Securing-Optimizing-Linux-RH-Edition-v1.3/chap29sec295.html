@@ -1,0 +1,436 @@
+<HTML
+><HEAD
+><TITLE
+>Setup an FTP user account minus shells</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FTP Server"
+HREF="ftpd.html"><LINK
+REL="PREVIOUS"
+TITLE="chroot'd Guest FTP access"
+HREF="chap29sec294.html"><LINK
+REL="NEXT"
+TITLE="Setup a chroot user environment"
+HREF="chap29sec296.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec294.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 32. Linux <TT
+CLASS="literal"
+>FTP</TT
+> Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec296.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN22819"
+>32.2. Setup an <TT
+CLASS="literal"
+>FTP</TT
+> user account minus shells</A
+></H1
+><P
+>&#13;      It's important to give to your strictly <TT
+CLASS="literal"
+>FTP</TT
+> users no real shell account on the Linux system. In this manner, if for any reasons someone could successfully get out of the <TT
+CLASS="literal"
+>FTP</TT
+> chrooted environment, it would 
+      not have the possibility of executing any user tasks since it doesn't have a bash shell. First, create new users for this purpose; 
+      <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;        These users will be the users allowed to connect to your <TT
+CLASS="literal"
+>FTP</TT
+> server. 
+      </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+      This has to be separate from a regular user account with unlimited access because of how the <TT
+CLASS="literal"
+>chroot</TT
+> environment works. Chroot makes it appear from the user's perspective as if the level of the file system you've placed them 
+      in is the top level of the file system.
+    </P
+><P
+>&#13;      Use the following command to create users in the <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file. This step must be done for each additional new user you allow to access your <TT
+CLASS="literal"
+>FTP</TT
+> server.
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>mkdir</B
+> /home/ftp
+        [root@deep ] /# <B
+CLASS="command"
+>useradd</B
+> -d /home/ftp/ftpadmin/ -s /dev/null ftpadmin &#62; /dev/null 2&#62;&#38;1
+        [root@deep ] /# <B
+CLASS="command"
+>passwd</B
+> ftpadmin
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        Changing password for user ftpadmin
+        New UNIX password:
+        Retype new UNIX password:
+        passwd: all authentication tokens updated successfully
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      <P
+></P
+><UL
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>mkdir</B
+> command will create the <TT
+CLASS="filename"
+>ftp</TT
+> directory under the <TT
+CLASS="filename"
+>/home</TT
+> directory to handle all <TT
+CLASS="literal"
+>FTP</TT
+> users' 
+        home directories we'll have on the server. 
+      </P
+></LI
+><LI
+><P
+>&#13;      The <B
+CLASS="command"
+>useradd</B
+> command will add the new user named <TT
+CLASS="literal"
+>ftpadmin</TT
+> to our Linux server. 
+      </P
+></LI
+><LI
+><P
+>&#13;      Finally, the <B
+CLASS="command"
+>passwd</B
+> command will set the password for this user <TT
+CLASS="literal"
+>ftpadmin</TT
+>. 
+      </P
+></LI
+></UL
+>
+      Once the <TT
+CLASS="filename"
+>home/ftp/</TT
+> directory has been created you don't have to use this command again for additional <TT
+CLASS="literal"
+>FTP</TT
+> users.
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        Edit the <TT
+CLASS="filename"
+>/etc/shells</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/shells</TT
+> and add a non-existent shell name like <TT
+CLASS="literal"
+>null</TT
+>, for example. This fake shell will limit access on 
+        the system for <TT
+CLASS="literal"
+>FTP</TT
+> users.
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# <B
+CLASS="command"
+>vi</B
+> /etc/shells
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          /bin/bash
+          /bin/sh
+          /bin/ash
+          /bin/bsh
+          /bin/tcsh
+          /bin/csh
+          /dev/null  
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+        <TT
+CLASS="literal"
+>/dev/null</TT
+>, This is our added no-existent shell. With Red Hat Linux, a special device name <TT
+CLASS="filename"
+>/dev/null</TT
+> exists for purposes such as these.
+      </P
+></LI
+><LI
+><P
+>&#13;        Now, edit your <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file and add manually the <TT
+CLASS="literal"
+>/./</TT
+> line to divide the <TT
+CLASS="filename"
+>/home/ftp</TT
+> directory with the <TT
+CLASS="filename"
+>/ftpadmin</TT
+> 
+        directory where the user <TT
+CLASS="literal"
+>ftpadmin</TT
+> should be automatically chdir'd to. This step must be done for each <TT
+CLASS="literal"
+>FTP</TT
+> user you add to your <TT
+CLASS="filename"
+>passwd</TT
+> file.
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          ftpadmin:x:502:502::/home/ftp/ftpadmin/:/dev/null
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        To read:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          ftpadmin:x:502:502::/home/ftp/./ftpadmin/:/dev/null
+          ^^
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        The account is <TT
+CLASS="literal"
+>ftpadmin</TT
+>, but you'll notice the path to the home directory is a bit odd. The first part <TT
+CLASS="filename"
+>/home/ftp/</TT
+> indicates the filesystem that should be considered their new root directory. 
+        The dot <TT
+CLASS="literal"
+>.</TT
+> divides that from the directory they should be automatically chdir'd. <EM
+>change directory'd</EM
+> into, <TT
+CLASS="filename"
+>/ftpadmin/.</TT
+>
+      </P
+></LI
+></OL
+></DIV
+><P
+>&#13;      Once again, the <TT
+CLASS="filename"
+>/dev/null</TT
+> part disables their login as a regular user. With this modification, the user <TT
+CLASS="literal"
+>ftpadmin</TT
+> now has a fake shell instead of a real shell resulting in properly limited access on the system.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec294.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec296.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>chroot'd Guest FTP access</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ftpd.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Setup a chroot user environment</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

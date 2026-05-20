@@ -1,0 +1,431 @@
+<HTML
+><HEAD
+><TITLE
+>Reconfigure and install the kernel with FreeS/WAN VPN support</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FreeS/WAN VPN"
+HREF="fSWAn.html"><LINK
+REL="PREVIOUS"
+TITLE="Compile, insert FreeS/WAN into the kernel"
+HREF="chap25sec200..html"><LINK
+REL="NEXT"
+TITLE="Configure to optimise"
+HREF="chap25sec202.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap25sec200..html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 25. Linux FreeS/WAN VPN</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap25sec202.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN14621"
+>25.3. Reconfigure and install the kernel with FreeS/WAN VPN support</A
+></H1
+><P
+>&#13;Now, we must return to the <TT
+CLASS="filename"
+>/usr/src/linux</TT
+> directory and execute the following commands to reconfigure the kernel with FreeS/WAN support enable:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep ]/freeswan-1.3#  <B
+CLASS="command"
+>cd</B
+> /usr/src/linux
+[root@deep ]/linux#  <B
+CLASS="command"
+>make config</B
+>
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+The difference with the <B
+CLASS="command"
+>make config</B
+> command we used before is that now a new section related to FreeS/WAN has been included in our kernel configuration, and for this reason we must reconfigure the kernel to customize 
+the IPSec options to be part of your kernel.
+</P
+></BLOCKQUOTE
+></DIV
+><P
+>  
+The first thing you need to do is ensure that your kernel has been built with FreeS/WAN support enabled. In the 2.2.14 kernel version, a new section related to frees/WAN VPN support named <TT
+CLASS="envar"
+>IPSec options (FreeS/WAN)</TT
+> 
+should appear in your kernel configuration after you have patched the kernel with the FreeS/WAN program as descibed above. You need ensure that you have answered <TT
+CLASS="userinput"
+><B
+>Y</B
+></TT
+> to the following questions under the 
+new section: <TT
+CLASS="envar"
+>IPSec options (FreeS/WAN).</TT
+>
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;IPSec options (FreeS/WAN)
+IP Security Protocol (FreeS/WAN IPSEC) (CONFIG_IPSEC) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+IPSEC: IP-in-IP encapsulation (CONFIG_IPSEC_IPIP) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+IPSEC: PF_KEYv2 kernel/user interface (CONFIG_IPSEC_PFKEYv2) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+IPSEC: Enable ICMP PMTU messages (CONFIG_IPSEC_ICMP) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+IPSEC: Authentication Header (CONFIG_IPSEC_AH) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+HMAC-MD5 authentication algorithm (CONFIG_IPSEC_AUTH_HMAC_MD5) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+HMAC-SHA1 authentication algorithm (CONFIG_IPSEC_AUTH_HMAC_SHA1) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+IPSEC: Encapsulating Security Payload (CONFIG_IPSEC_ESP) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+3DES encryption algorithm (CONFIG_IPSEC_ENC_3DES) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+IPSEC Debugging Option (DEBUG_IPSEC) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+All the customizations you made to your kernel the first time you ran the <B
+CLASS="command"
+>make config</B
+>, <B
+CLASS="command"
+>make dep</B
+>, and <B
+CLASS="command"
+>make clean</B
+> commands will be preserved, so you don't need to 
+reconfigure every part of your kernel; Just the new section added by FreeS/WAN named <TT
+CLASS="envar"
+>IPSec options (FreeS/WAN)</TT
+> is required, as shown above.
+</P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;Some networking options will get turned on automatically, even if you previously turned them off, this is because IPSEC needs them. Whichever configuration program you are using, you should pay careful attention to a few issues. 
+In particular, <EM
+>do not disable any of the following under the</EM
+> <TT
+CLASS="envar"
+>Networking Options</TT
+> <EM
+>of your kernel configuration</EM
+>:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;Kernel/User netlink socket (CONFIG_NETLINK) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+Netlink device emulation (CONFIG_NETLINK_DEV) <TT
+CLASS="literal"
+>[<SPAN
+CLASS="optional"
+>Y/n/?</SPAN
+>]</TT
+>
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><P
+>&#13;You need to Compile and install the new kernel with FreeS/WAN, now that we have included in the kernel the support for FreeS/WAN VPN, 
+Return to the <TT
+CLASS="filename"
+>/usr/src/linux</TT
+> directory and run the following commands again:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep ]/linux#  <B
+CLASS="command"
+>make dep</B
+>; <B
+CLASS="command"
+>make clean</B
+>; <B
+CLASS="command"
+>make bzImage</B
+>
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><P
+>&#13;After execution of the commands above, follow the rest of the instructions in the Linux Kernel section of this book  <A
+HREF="secopt-kernel.html"
+>Configuring and Building a secure, optimized Kernel</A
+> as normal to install the kernel. At 
+this point, after you have copied and installed your new kernel image, system.map, or modules, if necessary and set the lilo.conf file to load the new kernel, you must edit and customize the configuration files related to 
+FreeS/WAN <TT
+CLASS="filename"
+>ipsec.conf</TT
+> and <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> before rebooting your system.
+</P
+><P
+>&#13;Please don't forget to cleanup later:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>cd</B
+> /usr/src
+[root@deep ]/src# <B
+CLASS="command"
+>rm</B
+> -rf freeswan-version/ freeswan-version.tar.gz
+</PRE
+></TD
+></TR
+></TABLE
+>
+The <B
+CLASS="command"
+>rm</B
+> command will remove all the source files we have used to compile and install FreeS/WAN. It will also remove the FreeS/WAN compressed archive from the <TT
+CLASS="filename"
+>/usr/src</TT
+> directory.
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap25sec200..html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap25sec202.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Compile, insert FreeS/WAN into the kernel</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="fSWAn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure to optimise</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

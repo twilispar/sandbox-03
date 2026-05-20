@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>IP Sub-Networking Mini-Howto: The Anatomy of IP numbers</TITLE>
+ <LINK HREF="IP-Subnetworking-4.html" REL=next>
+ <LINK HREF="IP-Subnetworking-2.html" REL=previous>
+ <LINK HREF="IP-Subnetworking.html#toc3" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="IP-Subnetworking-4.html">Next</A>
+<A HREF="IP-Subnetworking-2.html">Previous</A>
+<A HREF="IP-Subnetworking.html#toc3">Contents</A>
+<HR>
+<H2><A NAME="s3">3. The Anatomy of IP numbers</A></H2>
+
+<P>Before diving into the delight of sub-networking, we need to establish
+some IP number basics.
+<P>
+<H2><A NAME="ss3.1">3.1 IP numbers belong to Interfaces - <B>NOT</B> hosts!</A>
+</H2>
+
+<P>First of all, let's clear up a basic cause of misunderstanding - IP
+numbers are <B>not</B> assigned to hosts. IP numbers are assigned to
+network interfaces on hosts.
+<P>
+<P>Eh - what's that?
+<P>
+<P>Whilst many (if not most) computers on an IP network will possess a
+single network interface (and have a single IP number as a consequence),
+this is not the only way things happen. Computers and other devices can
+have several (if not many) network interfaces - and each interface has
+its own IP number.
+<P>
+<P>So a device with 6 active interfaces (such as a router) will have 6 IP
+numbers - one for each interface to each network to which it is connected. The
+reason for this becomes clear when we look at an IP network!
+<P>
+<P>Despite this, most people refer to <EM>host addresses</EM> when referring to an
+IP number. Just remember, this is simply shorthand for <EM>the IP number
+of this particular interface on this host</EM>. Many (if not the majority)
+of devices on the Internet have only a single interface and thus a
+single IP number.
+<P>
+<H2><A NAME="ss3.2">3.2 IP Numbers as &quot;Dotted Quads&quot;</A>
+</H2>
+
+<P>In the current (IPv4) implementation of IP numbers, IP numbers consist
+of 4 (8 bit) bytes - giving a total of 32 bits of available information.
+This results in numbers that are rather large (even when written in
+decimal notation). So for readability (and organisational reasons) IP
+numbers are usually written in the 'dotted quad' format. The IP number
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+        192.168.1.24
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>is an example of this - 4 (decimal) numbers separated by (.) dots.
+<P>
+<P>As each one of the four numbers is the decimal representation of an 8
+bit byte, each of the 4 numbers can range from 0 to 255 (that is take on
+256 unique values - remember, zero is a value too).
+<P>
+<P>In addition, part of the IP number of a host identifies the network on
+which the host resides, the remaining 'bits' of the IP number identify
+the host (oops - network interface) itself. Exactly how many bits are
+used by the network ID and how many are available to identify hosts
+(interfaces) on that network is determined by the network 'class'.
+<P>
+<H2><A NAME="ss3.3">3.3 Classes of IP Networks</A>
+</H2>
+
+<P>There are three classes of IP numbers
+<P>
+<UL>
+<LI>Class A IP network numbers use the leftmost 8 bits (the leftmost
+of the dotted quads) to identify the network, leaving 24 bits (the
+remaining three dotted quads) to identify host interfaces on that
+network.<BR>
+Class A addresses <B>always</B> have the leftmost bit of the leftmost
+byte a zero - that is a decimal value of 0 to 127 for the first dotted
+quad. So there are a maximum of 128 class A network numbers
+available, with each one containing up to 33,554,430 possible
+interfaces.
+<BR><BR>
+
+However, the networks 0.0.0.0 (known as the default route) and 127.0.0.0
+(the loop back network) have special meanings and are not available for
+use to identify networks. So there are only 126 <EM>available</EM> A class
+network numbers.
+</LI>
+<LI>Class B IP network numbers use the leftmost 16 bits (the leftmost two
+dotted quads) to identify the network, leaving 16 bits (the last two
+dotted quads) to identify host interfaces. Class B addresses always have
+the leftmost 2 bits of the leftmost byte set to 1 0. This leaves 14 bits
+left to specify the network address giving 32767 available B class
+networks. B Class networks thus have a range of 128 to 191 for the first
+of the dotted quads, with each network containing up to 32,766 possible
+interfaces. 
+</LI>
+<LI>Class C IP network numbers use the leftmost 24 bits (the leftmost
+three bytes) to identify the network, leaving 8 bits (the rightmost
+byte) to identify host interfaces. Class C addresses always start with
+the leftmost 3 bits set to 1 1 0 or a range of 192 to 255 for the
+leftmost dotted quad. There are thus 4,194,303 available C class network
+numbers, each containing 254 interfaces. (C Class networks with the
+first byte greater than 223 are however reserved and unavailable for use).</LI>
+</UL>
+<P>In summary:
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+        Network class   Usable range of first byte values (decimal)
+                A                 1 to 126
+                B               128 to 191
+                C               192 to 254
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>There are also special addresses that are reserved for 'unconnected'
+networks - that is networks that use IP but are not connected to the
+Internet, These addresses are:-
+<P>
+<UL>
+<LI>One A Class Network<BR>
+10.0.0.0</LI>
+<LI>16 B Class Networks<BR>
+172.16.0.0 - 172.31.0.0</LI>
+<LI>256 C Class Networks
+192.168.0.0 - 192.168.255.0 </LI>
+</UL>
+<P>
+<P>You will note that this document uses these sequences throughout to avoid
+confusion with 'real' networks and hosts.
+<P>
+<H2><A NAME="ss3.4">3.4 Network numbers, interface addresses and broadcast addresses</A>
+</H2>
+
+<P>IP numbers can have three possible meanings:-
+<P>
+<UL>
+<LI>the address of an IP network (a group of IP devices sharing common
+access to a transmission medium - such as all being on the same Ethernet
+segment). A network number will always have the interface (host) bits of
+the address space set to 0 (unless the network is sub-networked - as we
+shall see);
+</LI>
+<LI>the broadcast address of an IP network (the address used to 'talk', 
+simultaneously, to all devices in an IP network). Broadcast
+addresses for a network always have the interface (host) bits of the the
+address space set to 1 (unless the network is sub-networked - again, as
+we shall see).
+</LI>
+<LI>the address of an interface (such as an Ethernet card or PPP interface
+on a host, router, print server etc). These addresses can have any value
+in the host bits <B>except</B> all zero or all 1 - because with the host bits all
+0, the address is a network address and with the host bits all 1 the
+address is the broadcast address.
+</LI>
+</UL>
+<P>
+<P>In summary and to clarify things
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+For an A class network...
+(one byte of network address space followed by three bytes of host
+address space)
+
+        10.0.0.0 is an A Class  network number  because all the host
+                bits of the address space are 0
+        10.0.1.0 is a host address on this network
+        10.255.255.255.255 is the broadcast address of this network
+                because all the host bits of the address space are 1
+
+For a B class network...
+(two bytes of network address space followed by two bytes of host
+address space)
+
+        172.17.0.0 is a B Class network number
+        172.17.0.1 is a host address on this network
+        172.17.255.255 is the network broadcast address
+
+For a C Class network...
+(three bytes of network address space followed by one byte of host
+address space)
+
+        192.168.3.0 is a C Class network number
+        192.168.3.42 is a host address on this network
+        192.168.3.255 is the network broadcast address
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>Almost all IP network numbers remaining available for allocation at
+present are C Class addresses.
+<P>
+<H2><A NAME="ss3.5">3.5 The network mask</A>
+</H2>
+
+<P>The network mask is more properly called the subnetwork mask. However,
+it is generally referred to as the network mask.
+<P>
+<P>It is the network mask and its implications on how IP addresses are
+interpreted <EM>locally</EM> on an IP network segment that concerns us most
+here, as this determines what (if any) sub-networking occurs.
+<P>
+<P>The standard (sub-) network mask is all the network bits in an address
+set to '1' and all the host bits set to '0'. This means that the
+standard network masks for the three classes of networks are:-
+<P>
+<UL>
+<LI>A Class network mask: 255.0.0.0</LI>
+<LI>B Class network mask: 255.255.0.0</LI>
+<LI>C Class network mask: 255.255.255.0</LI>
+</UL>
+<P>
+<P>There are two important things to remember about the network mask:-
+<UL>
+<LI>The network mask affects only the <B>local</B> interpretation of
+<B>local</B> IP numbers (where local means on this particular network segment);</LI>
+<LI>The network mask is <B>not</B> an IP number - it is used to modify
+how local IP numbers are interpreted locally.</LI>
+</UL>
+<P>
+<HR>
+<A HREF="IP-Subnetworking-4.html">Next</A>
+<A HREF="IP-Subnetworking-2.html">Previous</A>
+<A HREF="IP-Subnetworking.html#toc3">Contents</A>
+</BODY>
+</HTML>

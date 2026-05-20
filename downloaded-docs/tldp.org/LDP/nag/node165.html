@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Restricting Call Times</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node166.html">What Devices there are-- </A>
+<B>Up:</B> <A HREF="node159.html">How to Tell UUCP </A>
+<B> Previous:</B> <A HREF="node164.html">Alternates</A>
+<BR> <P>
+<H3><A NAME="SECTION0014366000">Restricting Call Times</A></H3>
+<P>
+<A NAME="6090"></A>
+<A NAME="6091"></A>
+<P>
+Taylor UUCP provides a number of ways you may restrict the times when
+calls can be placed to a remote system.  You might do this either
+because of limitations the remote host places on its services during
+business hours, or simply to avoid times with high call rates. Note
+that it is always possible to override call time restrictions by
+giving uucico the -S or -f option.
+<P>
+By default, Taylor UUCP will disallow connections at any time, so you
+<em>have</em> to use some sort of time specification in the sys
+file.  If you don't care about call time restrictions, you can specify
+the time option with a value of Any in your
+sys file.
+<P>
+The simplest way to restrict call time is the time entry,
+which is followed by a string made up of a day and a time subfield.
+Day may be any of Mo, Tu, We, Th, Fr, Sa, Su combined, or
+Any, Never, or Wk for weekdays. The time
+consists of two 24-hour clock values, separated by a dash. They
+specify the range during which calls may be placed. The combination of
+these tokens is written without white space in between.  Any number of
+day and time specifications may be grouped together with commas.  For
+example,
+<P>
+<P><P>
+<P>
+allows calls on Monday and Wednesdays from 3-a.m. to 7.30, and on
+Fridays between 18.05 and 20.00.  When a time field spans midnight, say
+Mo1830-0600, it actually means Monday, between midnight and
+6-a.m., and between 6.30-p.m. and midnight.
+<P>
+The special time strings Any and Never mean what
+they say: Calls may be placed at any or no time, respectively.
+<P>
+<A NAME="6110"></A>
+The time command takes an optional second argument that
+describes a retry time in minutes. When an attempt to establish a
+connection fails, uucico will not allow another attempt to dial
+up the remote host within a certain interval. By default,
+uucico uses an exponential backoff scheme, where the retry
+interval increases with each repeated failure.  For instance, when you
+specify a retry time of 5 minutes, uucico will refuse to call
+the remote system within 5 minutes after the last failure.
+<P>
+<A NAME="6115"></A>
+<A NAME="6116"></A>
+The timegrade command allows you to attach a maximum spool
+grade to a schedule. For instance, assume you have the following
+timegrade commands in a system entry:
+<P>
+<P><P>
+<P>
+This allows jobs with a spoolgrade of C or higher (usually, mail is
+queued with grade B or C) to be transferred whenever a call is
+established, while news (usually queued with grade N) will be
+transferred only during the night and at weekends.
+<P>
+Just like time, the timegrade command takes
+a retry interval in minutes as an optional third argument.
+<P>
+However, a caveat about spool grades is in order here: First, the
+timegrade option applies only to what <em>your</em> systems
+sends; the remote system may still transfer anything it likes.  You can
+use the call-timegrade option to explicitly request it to send
+only jobs above some given spool grade; but there's no guarantee it will
+obey this request.<A HREF="footnode.html#6127"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+Similarly, the timegrade field is not checked when a remote
+system calls in, so any jobs queued for the calling system will be sent.
+However, the remote system can explicitly request your uucico to
+restrict itself to a certain spool grade.
+<P>
+<A NAME="6130"></A>
+<A NAME="6131"></A>
+<A NAME="6132"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node166.html">What Devices there are-- </A>
+<B>Up:</B> <A HREF="node159.html">How to Tell UUCP </A>
+<B> Previous:</B> <A HREF="node164.html">Alternates</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

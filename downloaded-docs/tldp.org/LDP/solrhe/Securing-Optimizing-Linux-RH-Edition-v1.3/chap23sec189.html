@@ -1,0 +1,386 @@
+<HTML
+><HEAD
+><TITLE
+>Configure to tweak</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux IMAP & POP Server"
+HREF="imapop.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure and Compile"
+HREF="chap23sec188.html"><LINK
+REL="NEXT"
+TITLE="Enable IMAP or POP via the tcp-wrappers inetd super server"
+HREF="chap23sec190.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap23sec188.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 23. Linux <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> &#38; <SPAN
+CLASS="acronym"
+>POP</SPAN
+> Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap23sec190.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN13186"
+>23.2. Configure to tweak</A
+></H1
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>All the configuration files required for each software described in this book has been provided by us as a gzipped file, <TT
+CLASS="filename"
+>floppy.tgz</TT
+> for your convenience. This can be downloaded from this web address: <A
+HREF="appendixa.html#sc24obecfrs2"
+>http://www.openna.com/books/floppy.tgz</A
+>
+             You can unpack this to any location on your local machine, say for example <TT
+CLASS="filename"
+>/tmp</TT
+>, assuming you have done this your directory structure will be <TT
+CLASS="filename"
+>/tmp/floppy</TT
+>. Within this floppy directory each configuration file has its own directory 
+             for respective software. For example <I
+CLASS="wordasword"
+>IMAP/POP</I
+> configuration file are organised like this:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;total 8
+-rwx------    1 harrypotter    harrypotter         685 Jun  8 13:00 imap.sh*
+drwxr-xr-x    2 harrypotter    harrypotter        4096 Jun  8 13:00 pam.d/
+             </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+             You can either cut and paste this directly if you are faithfully following our instructions from the begining or manually edit these to modify to your needs. This facility is there though as a convenience but please don't forget ultimately it will be your 
+             responsibility to check, verify, <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+> before you use them whether modified or as it is.
+           </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         To run the <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> server, the following files are required and must be created or copied to the appropriate directories on your server.
+         <P
+></P
+><UL
+><LI
+><P
+>&#13;         Copy the imap file to the <TT
+CLASS="filename"
+>/etc/pam.d/</TT
+> directory if you intend to use imapd service.
+         </P
+></LI
+><LI
+><P
+>&#13;         Copy the pop file to the <TT
+CLASS="filename"
+>/etc/pam.d/</TT
+> directory if you intend to use popd service.
+         </P
+></LI
+></UL
+>         
+         </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+         You can obtain the configuration files listed below on our <TT
+CLASS="literal"
+>floppy.tgz</TT
+> archive. Copy the following files from the decompressed <TT
+CLASS="literal"
+>floppy.tgz</TT
+> archive to the appropriate places or copy and paste them 
+         directly from this book to the concerned file.
+         </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN13224"
+>23.2.1. The <TT
+CLASS="filename"
+>/etc/pam.d/imap</TT
+> file</A
+></H2
+><P
+>&#13;         Configure your <TT
+CLASS="filename"
+>/etc/pam.d/imap</TT
+> file to use pam authentication, create the imap file <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/pam.d/imap</TT
+> and add:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         #%PAM-1.0
+         auth       	required     /lib/security/pam_pwdb.so shadow nullok
+         account    	required     /lib/security/pam_pwdb.so
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         This file is only required if you intend to use <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> services.
+         </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="section"
+><H3
+CLASS="section"
+><A
+NAME="AEN13241"
+>23.2.1.1. The <TT
+CLASS="filename"
+>/etc/pam.d/pop</TT
+> file</A
+></H3
+><P
+>&#13;         Configure your <TT
+CLASS="filename"
+>/etc/pam.d/pop</TT
+> file to use pam authentication, create the pop file <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/pam.d/pop</TT
+> and add:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         #%PAM-1.0
+         auth       		required     /lib/security/pam_pwdb.so shadow nullok
+         account    		required     /lib/security/pam_pwdb.so
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         This file is only required if you intend to use <SPAN
+CLASS="acronym"
+>POP</SPAN
+> services.
+         </P
+></BLOCKQUOTE
+></DIV
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap23sec188.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap23sec190.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure and Compile</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="imapop.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Enable <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> or <SPAN
+CLASS="acronym"
+>POP</SPAN
+> via the tcp-wrappers inetd super server</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

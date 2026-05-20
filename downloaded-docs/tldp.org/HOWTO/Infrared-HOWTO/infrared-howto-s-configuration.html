@@ -1,0 +1,513 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Configuration</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Getting Started"
+HREF="infrared-howto-c-getting-started.html"><LINK
+REL="PREVIOUS"
+TITLE="Kernel Module Options"
+HREF="infrared-howto-s-kernel-module-options.html"><LINK
+REL="NEXT"
+TITLE="Specific Connections and IrDA - Protocols"
+HREF="infrared-howto-c-specific-connections.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-kernel-module-options.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 2. Getting Started</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-c-specific-connections.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-configuration"
+></A
+>2.4. Configuration</H1
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN367"
+></A
+>2.4.1. Device Numbers</H2
+><P
+>&#13;
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;mknod /dev/ircomm0 c 161 0
+mknod /dev/ircomm1 c 161 1
+mknod /dev/irlpt0 c 161 16
+mknod /dev/irlpt1 c 161 17
+mknod /dev/irnet c 10 187
+chmod 666 /dev/ir*
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   There might be some other device number necessary if you want to use
+   the <B
+CLASS="command"
+>irkbd</B
+> features. You may find 
+   the latest device numbers in
+   <TT
+CLASS="filename"
+>../src/linux/Documentation/devices.txt</TT
+>.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN373"
+></A
+>2.4.2. Device Arrangement</H2
+><P
+>&#13;   First you should put your IrDA devices in range. Though it might be
+   possible that the Linux/IrDA service detects every new device
+   automagically I only have good experience with the devices in range
+   during the configuration process.
+</P
+><P
+>&#13;   Keep your infrared devices together in a range below one meter and an
+   angle of 30 degree. There has to be a direct line of sight between
+   them. If this is not possible, you may use a mirror (an unused M$ CD
+   should work quite good).
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN377"
+></A
+>2.4.3. /etc/modules.conf</H2
+><P
+>&#13;   Add the following lines to your
+   <TT
+CLASS="filename"
+>/etc/modprobe.conf</TT
+>
+   (for kernel 2.4 <TT
+CLASS="filename"
+>/etc/modules.conf</TT
+>) file
+   (attention: the actual filename may depend on your Linux distribution):
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;# IrDA over a normal serial port, or a serial port compatible IrDA port (SIR)
+alias tty-ldisc-11 irtty
+
+# IrCOMM (for printing, PPP, Minicom etc)
+alias char-major-161 ircomm-tty     # if you want IrCOMM support
+
+# IRLAN
+# But currently the IrLAN protocol is no longer maintained
+# by the Linux/IrDA core team.
+alias irlan0 irlan
+
+# To be able to attach some serial dongles
+# These values are hard-coded in irattach (not instance order)
+alias irda-dongle-0  tekram             # Tekram IrMate IR-210B
+alias irda-dongle-1  esi                # ESI JetEye
+alias irda-dongle-2  actisys            # Actisys IR-220L
+alias irda-dongle-3  actisys            # Actisys IR-220L+
+alias irda-dongle-4  girbil             # Greenwich GIrBIL
+alias irda-dongle-5  litelink           # Parallax LiteLink/ESI JetEye
+alias irda-dongle-6  airport            # Adaptec Airport 1000 and 2000
+alias irda-dongle-7  old_belkin         # Belkin (old) SmartBeam dongle
+alias irda-dongle-8  ep7211_ir          # Cirrus Logic EP7211 Processor (ARM)
+alias irda-dongle-9  mcp2120            # MCP2120 (Microchip) based
+alias irda-dongle-10 act200l            # ACTiSYS Ir-200L
+alias irda-dongle-11 ma600              # Mobile Action ma600
+
+# To use the FIR driver. This applies only to the specific device!!!
+
+#options nsc-ircc dongle_id=0x09	# NSC driver on a IBM Thinkpad laptop
+#options nsc-ircc dongle_id=0x08	# HP Omnibook 6000
+#alias irda0 nsc-ircc
+
+# options smc-ircc ircc_irq= ircc_dma=
+# alias irda0 smc-ircc
+
+# options toshoboe max_baud=
+# alias irda0 toshoboe
+
+# options w83977af_ir io= io2= irq= qos_mtt_bits=
+# alias irda0 w83977af_ir
+
+# IrNET module...
+alias char-major-10-187 irnet       # Official allocation of IrNET
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   Then do a <B
+CLASS="command"
+>depmod -a</B
+> to update, 
+   and then all IrDA modules should be
+   automagically loaded when you need them. Note for testing reasons you
+   may load them manually, but please make sure not to load them twice.
+   There might be some other entries necessary, if you want to use the
+   <B
+CLASS="command"
+>irkbd</B
+> features or an USB dongle. 
+   A template file is included in the irda-utils package.
+</P
+><P
+>&#13;   Note: With Debian GNU/Linux however you shouldn't edit 
+   <TT
+CLASS="filename"
+>/etc/modules.conf</TT
+> directly, instead
+   place the lines inside 
+   <TT
+CLASS="filename"
+>/etc/modutils/irda-utils</TT
+> and run 
+   <B
+CLASS="command"
+>update-modules</B
+> afterwards. 
+   Running <B
+CLASS="command"
+>update-modules</B
+> seems obsolete
+   for 2.6 kernels.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN390"
+></A
+>2.4.4. /etc/irda</H2
+><P
+>&#13;   Have a look into the files in <TT
+CLASS="filename"
+>/etc/irda</TT
+>. 
+   Edit them to reflect your setup.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN394"
+></A
+>2.4.5. BIOS Configuration</H2
+><P
+>&#13;   Make sure your infrared port is enabled in the BIOS and check what
+   interrupt and port address it uses. With some laptops it seems
+   necessary to have Microsoft-Windows installed to be able to set BIOS
+   parameters.
+</P
+><P
+>&#13;   I have got reports, that on some laptops, when connected to a docking
+   station, the infrared port was disabled .
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN398"
+></A
+>2.4.6. Serial Port</H2
+><P
+>&#13;   Please decide first whether you want to set up Irda either in SIR or
+   in FIR mode. It is recommended to start with SIR.
+</P
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN401"
+></A
+>2.4.6.1. SIR</H3
+><P
+>&#13;   Choose the ttySx according to your SIR port.
+   Hint: <B
+CLASS="command"
+>dmesg | grep tty</B
+> (for details see the
+   chapter Starting the IrDA Stack below).
+</P
+><P
+>&#13;   To get the SIR "serial" device
+   have a look into the BIOS. Then run <B
+CLASS="command"
+>dmesg | grep tty</B
+>
+   to get a survey of tty devices supported by your machine. Now try to
+   choose the one, which is probably the IrDA device.
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN407"
+></A
+>2.4.6.2. FIR</H3
+><P
+>&#13;   If you don't succeed with SIR (which seems a rare case) you may
+   try FIR. First look up the BIOS. To avoid some conflicts 
+   with serial devices you should do 
+   <B
+CLASS="command"
+>setserial /dev/ttySx uart none</B
+>. 
+   Note: never use <B
+CLASS="command"
+>setserial /dev/ttySx uart none</B
+>,
+   when setting up IrDA in SIR mode. 
+</P
+><P
+>&#13;From Florian Lohoff 
+You should also set "port 0x0 irq 0" otherwise you will see interesting
+effects if there is suddenly a different S1 e.g. by inserting
+a modem PCMCIA card. The serial driver will then touch
+the OLD ports without having acquired those which will cause
+the irda stuff to die/hang. This is a bug i havent been able
+to find in the serial driver but it definitly
+exists (Put a printk into the serial_out serial_in stuff).
+</P
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN413"
+></A
+>2.4.7. Resource Conflicts: IRQ, IO</H2
+><P
+>&#13;   Is some cases IRQ conflicts may occur, especially conflicts with
+   sound, PCMCIA or the hotplug system have been reported.
+   Check <B
+CLASS="command"
+>cat /proc/interrupts</B
+> to get some
+   information about IRQ usage on your machine.
+
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN417"
+></A
+>2.4.8. Starting IrDA</H2
+><P
+>&#13;   Most important, you must sync your disks!!! Maybe you have to reboot
+   your machine. Have you read the disclaimer?
+</P
+><P
+>&#13;   There are three sorts of low level drivers: SIR, FIR and dongle for
+   machines without an in-built InfraRed port. To
+   start with Linux/IrDA I recommend to use the SIR method.
+</P
+><P
+>&#13;   Load the modules <B
+CLASS="command"
+>modprobe irda irtty</B
+>. 
+   <B
+CLASS="command"
+>irattach /dev/ttyS1 -s</B
+> to
+   attach the IrDA device to the IrDA services. 
+   Check <B
+CLASS="command"
+>lsmod</B
+> and <B
+CLASS="command"
+>dmesg</B
+>.
+</P
+><P
+>&#13;   <B
+CLASS="command"
+>irdadump</B
+> should show all available 
+   IrDA devices in range now. Hint: If
+   you are connecting different Linux boxes, you may use 
+   <B
+CLASS="command"
+>hostname YOUR_HOSTNAME</B
+>
+   to set a unique hostname for each computer.
+</P
+><P
+>&#13;   On the "server" side do pppd /dev/ircomm0 LOCAL_IP:REMOTE_IP On the
+   "client" side do pppd /dev/ircomm0 .
+</P
+><P
+>&#13;   You may now test the connection with <B
+CLASS="command"
+>ping</B
+>. And use 
+   all sorts of networking connections (ssh, NFS, ...) now.
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-kernel-module-options.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-specific-connections.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Kernel Module Options</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-getting-started.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Specific Connections and IrDA - Protocols</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

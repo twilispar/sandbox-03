@@ -1,0 +1,444 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /var/tmp/install.cfg file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities/System Integrity"
+HREF="sysintegrity.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux Tripwire 2.2.1"
+HREF="chap17sec136.html"><LINK
+REL="NEXT"
+TITLE="Configuration files"
+HREF="chap17sec138.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap17sec136.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 17. Software -Securities/System Integrity</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap17sec138.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN9368"
+>17.2. Configure the <TT
+CLASS="filename"
+>/var/tmp/install.cfg</TT
+> file</A
+></H1
+><P
+>&#13;           Recall that Tripwire version <TT
+CLASS="literal"
+>2.2.1</TT
+> is not open source, so you cannot compile and install it like other archives source files, instead you must modify the <TT
+CLASS="filename"
+>install.cfg</TT
+> file of tripwire that will install 
+           automatically Tripwire software for you to specify installation paths for your system. We must modify this file to be compliant with Red Hats file system structure and install Tripwire binaries under 
+           our <TT
+CLASS="envar"
+>PATH</TT
+> Environment Variable.
+           </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;           Edit the <TT
+CLASS="filename"
+>install.cfg</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>install.cfg</TT
+> and change this file to look like:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           #
+           # install.cfg
+           #
+           # default install.cfg for:
+           # Tripwire(R) 2.2.1 for Unix
+           #
+           # NOTE:  This is a Bourne shell script that stores installation
+           #        parameters for your installation.  The installer will
+           #        execute this file to generate your config file and also to
+           #        locate any special configuration needs for your install.
+           #        Protect this file, because it is possible for
+           #        malicious code to be inserted here
+           #
+           # To set your Root directory for install, set TWROOT= to something
+           # other than /usr/TSS as necessary.
+           #
+           #=======================================================
+
+           # If CLOBBER is true, then existing files are overwritten.
+           # If CLOBBER is false, existing files are not overwritten.
+           CLOBBER=false
+
+           # The root of the TSS directory tree.
+           TWROOT="/usr"
+
+           # Tripwire binaries are stored in TWBIN.
+           TWBIN="${TWROOT}/bin"
+
+           # Tripwire policy files are stored in TWPOLICY.
+           TWPOLICY="${TWROOT}/TSS/policy"
+
+           # Tripwire manual pages are stored in TWMAN.
+           TWMAN="${TWROOT}/man"
+
+           # Tripwire database files are stored in TWDB.
+           TWDB="${TWROOT}/TSS/db"
+
+           # The Tripwire site key files are stored in TWSITEKEYDIR.
+           TWSITEKEYDIR="${TWROOT}/TSS/key"
+
+           # The Tripwire local key files are stored in TWLOCALKEYDIR.
+           TWLOCALKEYDIR="${TWROOT}/TSS/key"
+
+           # Tripwire report files are stored in TWREPORT.
+           TWREPORT="${TWROOT}/TSS/report"
+
+           # This sets the default text editor for Tripwire.
+           TWEDITOR="/bin/vi"
+
+           # TWLATEPROMTING controls the point when tripwire asks for a password.
+           TWLATEPROMPTING=false
+
+           # TWLOOSEDIRCHK selects whether the directory should be monitored for 
+           # properties that change when files in the directory are monitored.
+           TWLOOSEDIRCHK=false
+
+           # TWMAILNOVIOLATIONS determines whether Tripwire sends a no violation 
+           # report when integrity check is run with --email-report but no rule
+           # violations are found.  This lets the admin know that the integrity 
+           # was run, as opposed to having failed for some reason.
+           TWMAILNOVIOLATIONS=true
+
+           # TWEMAILREPORTLEVEL determines the verbosity of e-mail reports.
+           TWEMAILREPORTLEVEL=3
+
+           # TWREPORTLEVEL determines the verbosity of report printouts.
+           TWREPORTLEVEL=3
+
+           # TWSYSLOG determines whether Tripwire will log events to the system log
+           TWSYSLOG=false
+
+           #####################################
+           # Mail Options - Choose the appropriate
+           # method and comment the other section
+           #####################################
+
+           #####################################
+           # SENDMAIL options - DEFAULT
+           #
+           # Either SENDMAIL or SMTP can be used to send reports via TWMAILMETHOD.
+           # Specifies which sendmail program to use.
+           #####################################
+
+           TWMAILMETHOD=SENDMAIL
+           TWMAILPROGRAM="/usr/lib/sendmail -oi -t"
+
+           #####################################
+           # SMTP options
+           #
+           # TWSMTPHOST selects the SMTP host to be used to send reports.
+           # SMTPPORT selects the SMTP port for the SMTP mail program to use.
+           #####################################
+
+           # TWMAILMETHOD=SMTP
+           # TWSMTPHOST="mail.domain.com"
+           # TWSMTPPORT=25
+
+           ################################################################################
+           # Copyright (C) 1998-2000 Tripwire (R) Security Systems, Inc. Tripwire (R) is a
+           # registered trademark of the Purdue Research Foundation and is licensed
+           # exclusively to Tripwire (R) Security Systems, Inc.
+           ################################################################################
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+           The file <TT
+CLASS="filename"
+>install.cfg</TT
+> is a Bourne shell script used by the installer to set configuration variables. These variables specify the target directories where the installer will copy files and what the 
+           installer should do if the installation process would overwrite existing Tripwire software files.
+           </P
+></BLOCKQUOTE
+></DIV
+>
+           </P
+></LI
+><LI
+><P
+>           
+           Now we must run the installation script to install Tripwire binaries and related files on to our system according to whether you are using default or custom configuration values. To run the installation 
+           script and install Tripwire, use the following command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep ]/tmp#<B
+CLASS="command"
+>./install.sh</B
+>
+           </PRE
+></TD
+></TR
+></TABLE
+>
+
+           <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+           The install.sh file is the installation script which you run to begin installation of Tripwire. During the installation procedure, you will:
+           <P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;           Answer some questions related to the installation.
+           </P
+></LI
+><LI
+><P
+>&#13;           Specify two pass phrases to be assigned for your site and local keys.
+           </P
+></LI
+></OL
+>
+           </P
+></BLOCKQUOTE
+></DIV
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           When Tripwire is installed in our system it will copy <TT
+CLASS="filename"
+>License.txt</TT
+>, <TT
+CLASS="filename"
+>README</TT
+>, and <TT
+CLASS="filename"
+>Release_Notes</TT
+> files under <TT
+CLASS="filename"
+>/usr</TT
+> directory. Of 
+           course after finishing reading those files you can safely remove them from your <TT
+CLASS="filename"
+>/usr</TT
+> directory with the following command:
+
+           To remove these files from your system, use the following command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep ]/usr# <B
+CLASS="command"
+>rm</B
+> -f  /usr/License.txt README Release_Notes
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+></OL
+></DIV
+><P
+>&#13;           Dont forget to clean up later:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /var/tmp
+           [root@deep ]/tmp# <B
+CLASS="command"
+>rm</B
+> -rf License.txt README Release-Notes install.cfg install.sh pkg/ Tripwire_version_for_Linux_x86_tar.gz
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           The <B
+CLASS="command"
+>rm</B
+> command as used above will remove all related files and directories we have used to install Tripwire for Linux. It will also remove the Tripwire for Linux compressed archive 
+           from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+           </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap17sec136.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap17sec138.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux Tripwire 2.2.1</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="sysintegrity.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configuration files</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

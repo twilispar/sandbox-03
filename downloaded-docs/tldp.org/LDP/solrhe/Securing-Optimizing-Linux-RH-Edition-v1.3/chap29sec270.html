@@ -1,0 +1,248 @@
+<HTML
+><HEAD
+><TITLE
+>Make Apache aware Faq-O-Matic file's location</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Compile and install FAQ-O-Matic"
+HREF="chap29sec269.html"><LINK
+REL="NEXT"
+TITLE="Configure your FAQ-O-Matic"
+HREF="chap29sec271.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec269.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 30. Optional component to install with Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec271.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN21263"
+>30.8. Make Apache aware Faq-O-Matic file's location</A
+></H1
+><P
+>&#13;        Once Faq-O-Matic has been installed in the system, we must add the following lines to the <TT
+CLASS="filename"
+>httpd.conf</TT
+> file of Apache to be able to locate and use it's features.
+      </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;          Edit the <TT
+CLASS="filename"
+>httpd.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/httpd/conf/httpd.conf</TT
+> and add the following lines between the section tags &#60;IfModule mod_alias.c&#62; and &#60;/IfModule&#62;:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            Alias /faqomatic/ "/home/httpd/faqomatic/"
+            &#60;Directory "/home/httpd/faqomatic"&#62;
+            Options None
+            AllowOverride None
+            Order allow,deny
+            Allow from all
+            &#60;/Directory&#62;
+
+            Alias /bags/ "/home/httpd/faqomatic/bags/"
+            &#60;Directory "/home/httpd/faqomatic/bags"&#62;
+            Options None
+            AllowOverride None
+            Order allow,deny
+            Allow from all
+            &#60;/Directory&#62;
+
+            Alias /cache/ "/home/httpd/faqomatic/cache/"
+            &#60;Directory "/home/httpd/faqomatic/cache"&#62;
+            Options None
+            AllowOverride None
+            Order allow,deny
+            Allow from all
+            &#60;/Directory&#62;
+
+            Alias /item/ "/home/httpd/faqomatic/item/"
+            &#60;Directory "/home/httpd/faqomatic/item"&#62;
+            Options None
+            AllowOverride None
+            Order allow,deny
+            Allow from all
+            &#60;/Directory&#62;
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+><LI
+><P
+>&#13;          Don't forget to restart your Apache web server once you have added the above lines to its <TT
+CLASS="filename"
+>httpd.conf</TT
+> file:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# /etc/rc.d/init.d/httpd <B
+CLASS="command"
+>restart</B
+>
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;            Shutting down http:                                        	[  OK  ]
+            Starting httpd:                                            	[  OK  ]
+          </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec269.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec271.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Compile and install FAQ-O-Matic</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure your FAQ-O-Matic</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

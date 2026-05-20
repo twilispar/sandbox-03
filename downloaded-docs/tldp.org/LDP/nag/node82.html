@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+!-- Updated Thu Jul 11 22:25:23 MET DST 1996 by tony@iaehv.iaehv.nl
+<HTML>
+<HEAD>
+<TITLE>The host.conf File</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node83.html">Resolver Environment Variables</A>
+<B>Up:</B> <A HREF="node81.html">The Resolver Library</A>
+<B> Previous:</B> <A HREF="node81.html">The Resolver Library</A>
+<BR> <P>
+<H2><A NAME="SECTION008110000">The host.conf File</A></H2>
+The central file that controls your resolver setup is host.conf.
+It resides in /etc and tells the resolver which services
+to use, and in what order.
+<P>
+Options in host.conf must occur on separate lines. Fields may be
+separated by white space (spaces or tabs). A hash sign (#)
+introduces a comment that extends to the next newline.
+<P>
+The following options are available:
+<dl>
+<dt><b>          order </b><dd> This determines the order in which the resolving services are tried. Valid options are :
+<ul><li><b>bind</b> for querying  the  name  server
+                <li><b>hosts</b> for lookups in /etc/hosts
+		<li><b>nis</b> for NIS lookups.  
+	</ul>
+<dd>	Any or all of them may be  specified.  The  order  in  which  they
+                appear on the line determines the order in which the respective
+                services are tried.
+<dt><b>multi</b><dd> Takes on or off as  options.  This  determines  if  a  host  in
+                /etc/hosts  is  allowed to have several IP addresses, which is
+                usually referred to as being ``multi-homed''. This flag has no
+                effect on DNS or NIS queries.
+
+
+<dt><b>        nospoof</b><dd>   As explained in the previous chapter, DNS allows you to find
+                the hostname belonging to an  IP  address  by  using  the  in-
+                addr.arpa  domain.  Attempts by name servers to supply a false
+                hostname are called ``spoofing''. To guard against  this,  the
+                resolver may be configured to check if the original IP address
+                is in fact associated with the hostname obtained. If not,  the
+                name  is  rejected  and  an  error  returned. This behavior is
+                turned on by setting nospoof on.
+
+
+<dt><b>          alert </b><dd>This option takes on or off as arguments.  If it is turned on,
+                any  spoof attempts (see above) will cause the resolver to log
+                a message to the syslog facility.
+
+
+<dt><b>           trim</b><dd> This option takes a domain name as an argument, which will  be
+                removed from hostnames before lookup. This is useful for hosts
+                entries, where you might only want to specify hostnames  with-
+                out  local  domain.   A lookup of a host with the local domain
+                name appended will have this removed, thus allowing the lookup
+                in /etc/hosts to succeed.
+
+
+              	trim  options  accumulate, making it possible to consider
+                your host as being local to several domains.
+
+</dl>
+A sample file for vlager is shown below:
+<pre>
+           # /etc/host.conf
+           # We have named running, but no NIS (yet)
+           order   bind hosts
+           # Allow multiple addrs
+           multi   on
+           # Guard against spoof attempts
+           nospoof on
+           # Trim local domain (not really necessary).
+           trim    vbrew.com.
+
+</pre>
+<hr>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

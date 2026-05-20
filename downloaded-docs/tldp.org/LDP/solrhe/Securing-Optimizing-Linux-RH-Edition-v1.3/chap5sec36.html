@@ -1,0 +1,423 @@
+<HTML
+><HEAD
+><TITLE
+>The inetd - /etc/inetd.conf file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Disable all console access"
+HREF="chap5sec35.html"><LINK
+REL="NEXT"
+TITLE="TCP_WRAPPERS"
+HREF="chap5sec37.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec35.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec37.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3345"
+>5.8. The inetd - <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+> file</A
+></H1
+><P
+>&#13;             inetd, called also the <EM
+>super server</EM
+>, will load a network program based upon a request from the network. The <TT
+CLASS="filename"
+>inetd.conf</TT
+> file tells inetd which ports to listen to and what server to start for each port. 
+             </P
+><P
+>&#13;             The first thing to look at as soon as you put your Linux system on ANY network is what services you need to offer. Services that you do not need to offer should be disabled and uninstalled so that you have one less thing to worry about, and 
+             attackers have one less place to look for a hole. Look at your <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+> file to see what services are being offered by your inetd program. Disable what you do not need by commenting them out by adding a <TT
+CLASS="prompt"
+>#</TT
+> at 
+             the beginning of the line, and then sending your inetd process a <B
+CLASS="command"
+>SIGHUP</B
+> command to update it to the current <TT
+CLASS="filename"
+>inetd.conf</TT
+> file.
+               </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;             Change the permissions on this file to 600.
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>chmod</B
+> 600  /etc/inetd.conf
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             Ensure that the owner is root.
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /# <B
+CLASS="command"
+>stat</B
+> /etc/inetd.conf
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;             File: "/etc/inetd.conf"
+             Size: 2869         Filetype: Regular File
+             Mode: (0600/-rw-------)         Uid: (    0/    root)  Gid: (    0/    root)
+             Device:  8,6   Inode: 18219     Links: 1    
+             Access:	Wed	Sep	22	16:24:16	1999(00000.00:10:44)
+             Modify:	Mon	Sep	20	10:22:44	1999(00002.06:12:16)
+             Change:	Mon	Sep	20	10:22:44	1999(00002.06:12:16)
+             </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             Edit the <TT
+CLASS="filename"
+>inetd.conf</TT
+> file vi <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+> and disable services like: ftp, telnet, shell, login, exec, talk, ntalk, imap, pop-2, pop-3, finger, 
+             auth, etc. unless you plan to use it. If it's turned off, it's much less of a risk.
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;             # To re-read this file after changes, just do a 'killall -HUP inetd'
+             #
+             #echo	stream	tcp	nowait	root	internal
+             #echo	dgram	udp	wait	root	internal
+             #discard	stream	tcp	nowait	root	internal
+             #discard	dgram	udp	wait	root	internal
+             #daytime	stream	tcp	nowait	root	internal
+             #daytime	dgram	udp	wait	root	internal
+             #chargen	stream	tcp	nowait	root	internal
+             #chargen	dgram	udp	wait	root	internal
+             #time	stream	tcp	nowait	root	internal
+             #time	dgram	udp	wait	root	internal
+             #
+             # These are standard services.
+             #
+             #ftp	stream	tcp	nowait	root	/usr/sbin/tcpd	in.ftpd -l -a
+             #telnet 	stream	tcp	nowait	root	/usr/sbin/tcpd	in.telnetd
+             #
+             # Shell, login, exec, comsat and talk are BSD protocols.
+             #
+             #shell	stream	tcp	nowait	root	/usr/sbin/tcpd	in.rshd
+             #login	stream	tcp	nowait	root	/usr/sbin/tcpd	in.rlogind
+             #exec	stream	tcp	nowait	root	/usr/sbin/tcpd	in.rexecd
+             #comsat	dgram	udp	wait	root	/usr/sbin/tcpd	in.comsat
+             #talk	dgram	udp	wait	root	/usr/sbin/tcpd	in.talkd
+             #ntalk	dgram	udp	wait	root	/usr/sbin/tcpd	in.ntalkd
+             #dtalk 	stream	tcp	wait	nobody	/usr/sbin/tcpd	in.dtalkd
+             #
+             # Pop and imap mail services et al
+             #
+             #pop-2	stream	tcp	nowait	root	/usr/sbin/tcpd	ipop2d
+             #pop-3	stream	tcp	nowait	root	/usr/sbin/tcpd	ipop3d
+             #imap	stream	tcp	nowait	root	/usr/sbin/tcpd	imapd
+             #
+             # The Internet UUCP service.
+             #
+             #uucp	stream	tcp	nowait	uucp	/usr/sbin/tcpd  /usr/lib/uucp/uucico    -l
+             #
+             # Tftp service is provided primarily for booting.  Most sites
+             # run this only on machines acting as "boot servers." Do not uncomment
+             # this unless you *need* it.  
+             #
+             #tftp	dgram	udp	wait	root	/usr/sbin/tcpd	in.tftpd
+             #bootps	dgram	udp	wait	root	/usr/sbin/tcpd	bootpd
+             #
+             # Finger, systat and netstat give out user information which may be
+             # valuable to potential "system crackers."  Many sites choose to disable 
+             # some or all of these services to improve security.
+             #
+             #finger	stream	tcp	nowait	root	/usr/sbin/tcpd	in.fingerd
+             #cfinger	stream	tcp	nowait	root	/usr/sbin/tcpd	in.cfingerd
+             #systat	stream	tcp	nowait	guest	/usr/sbin/tcpd	/bin/ps -auwwx
+             #netstat	stream	tcp	nowait	guest	/usr/sbin/tcpd	/bin/netstat    -f inet
+             #
+             # Authentication
+             #
+             #auth	stream	tcp	nowait	nobody	/usr/sbin/in.identd    in.identd -l -e -o
+             #
+             # End of inetd.conf
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /# <B
+CLASS="command"
+>killall</B
+>  -HUP inetd
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+><LI
+><P
+>&#13;             One more security measure you can take to secure the <TT
+CLASS="filename"
+>inetd.conf</TT
+> file is to set it immutable, using the chattr command.
+             To set the file immutable simply, execute the following command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /# <B
+CLASS="command"
+>chattr</B
+>  +i /etc/inetd.conf
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             This will prevent any changes accidental or otherwise to the <TT
+CLASS="filename"
+>inetd.conf</TT
+> file. A file with the immutable attribute set i cannot be modified, 
+             deleted or renamed, no link can be created to this file and no data can be written to it. The only person that can set or clear this attribute 
+             is the super-user root. If you wish later to modify the inetd.conf file you will need to unset the immutable flag:
+             To unset the immutable flag, simply execute the following command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /# <B
+CLASS="command"
+>chattr</B
+> -i /etc/inetd.conf
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+             Don't forget to send your inetd process a <B
+CLASS="command"
+>SIGHUP</B
+> signal <TT
+CLASS="userinput"
+><B
+>killall -HUP inetd</B
+></TT
+> after making change to your <TT
+CLASS="filename"
+>inetd.conf</TT
+> file. The services you enable on a selected 
+             host depend on the functions you want the host to provide. Functions could support the selected network service, other services hosted on this computer, or development and maintenance 
+             of the operating system and applications.
+             </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec35.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec37.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Disable all console access</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>TCP_WRAPPERS</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

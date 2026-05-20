@@ -1,0 +1,711 @@
+<HTML
+><HEAD
+><TITLE
+>The Linux Kernel Module Programming Guide</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="NEXT"
+TITLE="Foreword"
+HREF="f23.htm"></HEAD
+><BODY
+CLASS="BOOK"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="BOOK"
+><A
+NAME="AEN1"
+></A
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+><A
+NAME="AEN2"
+></A
+>The Linux Kernel Module Programming Guide</H1
+><SPAN
+CLASS="COLLAB"
+><SPAN
+CLASS="COLLABNAME"
+>Peter Jay Salzman</SPAN
+><BR></SPAN
+><SPAN
+CLASS="COLLAB"
+><SPAN
+CLASS="COLLABNAME"
+>Ori Pomerantz</SPAN
+><BR></SPAN
+><P
+CLASS="COPYRIGHT"
+>Copyright &copy; 2001 Peter Jay Salzman</P
+><DIV
+CLASS="LEGALNOTICE"
+><A
+NAME="AEN14"
+></A
+><P
+></P
+><P
+>The Linux Kernel Module Programming Guide is a free book; you may
+			reproduce and/or modify it under the terms of the Open Software
+			License, version 1.1.  You can obtain a copy of this license at <A
+HREF="http://opensource.org/licenses/osl.php"
+TARGET="_top"
+>http://opensource.org/licenses/osl.php</A
+>.</P
+><P
+>This book is distributed in the hope it will be useful, but
+			without any warranty, without even the implied warranty of
+			merchantability or fitness for a particular purpose.</P
+><P
+>The author encourages wide distribution of this book for personal
+			or commercial use, provided the above copyright notice remains intact
+			and the method adheres to the provisions of the Open Software License.
+			In summary, you may copy and distribute this book free of charge or for
+			a profit.  No explicit permission is required from the author for
+			reproduction of this book in any medium, physical or electronic.</P
+><P
+>Derivative works and translations of this document must be placed
+			under the Open Software License, and the original copyright notice
+			must remain intact.  If you have contributed new material to this book,
+			you must make the material and source code available for your
+			revisions.  Please make revisions and updates available directly to the
+			document maintainer, Peter Jay Salzman <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:p@dirac.org"
+>p@dirac.org</A
+>&#62;</TT
+>.
+			This will allow for the merging of updates and provide consistent
+			revisions to the Linux community.</P
+><P
+>If you publish or distribute this book commercially, donations,
+			royalties, and/or printed copies are greatly appreciated by the author
+			and the <A
+HREF="http://www.tldp.org"
+TARGET="_top"
+>Linux Documentation
+			Project</A
+> (LDP).  Contributing in this way shows your support for
+			free software and the LDP.  If you have questions or comments, please
+			contact the address above.</P
+><P
+></P
+></DIV
+><HR></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+><A
+HREF="f23.htm"
+>Foreword</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="f23.htm#AEN25"
+>Acknowledgements</A
+></DT
+><DT
+><A
+HREF="x34.htm"
+>Authorship And Copyright</A
+></DT
+><DT
+><A
+HREF="x37.htm"
+>Nota Bene</A
+></DT
+></DL
+></DD
+><DT
+>1. <A
+HREF="c43.htm"
+>Introduction</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c43.htm#AEN45"
+>What Is A Kernel Module?</A
+></DT
+><DT
+><A
+HREF="x49.htm"
+>How Do Modules Get Into The Kernel?</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="x49.htm#AEN127"
+>Before We Begin</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>2. <A
+HREF="c147.htm"
+>Hello World</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c147.htm#AEN149"
+>Hello, World (part 1): The Simplest Module</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c147.htm#INTRODUCINGPRINTK"
+>Introducing <TT
+CLASS="FUNCTION"
+>printk()</TT
+></A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="x208.htm"
+>Compiling Kernel Modules</A
+></DT
+><DT
+><A
+HREF="x257.htm"
+>Hello World (part 2)</A
+></DT
+><DT
+><A
+HREF="x281.htm"
+>Hello World (part 3): The <TT
+CLASS="LITERAL"
+>__init</TT
+> and <TT
+CLASS="LITERAL"
+>__exit</TT
+> Macros</A
+></DT
+><DT
+><A
+HREF="x321.htm"
+>Hello World (part 4): Licensing and Module Documentation</A
+></DT
+><DT
+><A
+HREF="x354.htm"
+>Passing Command Line Arguments to a Module</A
+></DT
+><DT
+><A
+HREF="x385.htm"
+>Modules Spanning Multiple Files</A
+></DT
+></DL
+></DD
+><DT
+>3. <A
+HREF="c435.htm"
+>Preliminaries</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c435.htm#AEN437"
+>Modules vs Programs</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c435.htm#AEN439"
+>How modules begin and end</A
+></DT
+><DT
+><A
+HREF="c435.htm#AEN451"
+>Functions available to modules</A
+></DT
+><DT
+><A
+HREF="c435.htm#AEN488"
+>User Space vs Kernel Space</A
+></DT
+><DT
+><A
+HREF="c435.htm#AEN493"
+>Name Space</A
+></DT
+><DT
+><A
+HREF="c435.htm#AEN510"
+>Code space</A
+></DT
+><DT
+><A
+HREF="c435.htm#AEN532"
+>Device Drivers</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>4. <A
+HREF="c577.htm"
+>Character Device Files</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c577.htm#AEN579"
+>Character Device Drivers</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c577.htm#AEN584"
+>The <SPAN
+CLASS="TYPE"
+>file_operations</SPAN
+> Structure</A
+></DT
+><DT
+><A
+HREF="c577.htm#AEN609"
+>The <SPAN
+CLASS="TYPE"
+>file</SPAN
+> structure</A
+></DT
+><DT
+><A
+HREF="c577.htm#AEN631"
+>Registering A Device</A
+></DT
+><DT
+><A
+HREF="c577.htm#AEN661"
+>Unregistering A Device</A
+></DT
+><DT
+><A
+HREF="c577.htm#AEN693"
+>chardev.c</A
+></DT
+><DT
+><A
+HREF="c577.htm#AEN703"
+>Writing Modules for Multiple Kernel Versions</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>5. <A
+HREF="c722.htm"
+>The /proc File System</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c722.htm#AEN724"
+>The /proc File System</A
+></DT
+></DL
+></DD
+><DT
+>6. <A
+HREF="c768.htm"
+>Using /proc For Input</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c768.htm#AEN770"
+>Using /proc For Input</A
+></DT
+></DL
+></DD
+><DT
+>7. <A
+HREF="c854.htm"
+>Talking To Device Files</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c854.htm#AEN856"
+>Talking to Device Files (writes and IOCTLs)}</A
+></DT
+></DL
+></DD
+><DT
+>8. <A
+HREF="c937.htm"
+>System Calls</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c937.htm#AEN939"
+>System Calls</A
+></DT
+></DL
+></DD
+><DT
+>9. <A
+HREF="c1012.htm"
+>Blocking Processes</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c1012.htm#AEN1014"
+>Blocking Processes</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c1012.htm#AEN1021"
+>Replacing <TT
+CLASS="FUNCTION"
+>printk</TT
+></A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>10. <A
+HREF="c1115.htm"
+>Replacing Printks</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c1115.htm#AEN1117"
+>Replacing <TT
+CLASS="FUNCTION"
+>printk</TT
+></A
+></DT
+></DL
+></DD
+><DT
+>11. <A
+HREF="c1149.htm"
+>Scheduling Tasks</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c1149.htm#AEN1151"
+>Scheduling Tasks</A
+></DT
+></DL
+></DD
+><DT
+>12. <A
+HREF="c1208.htm"
+>Interrupt Handlers</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c1208.htm#AEN1210"
+>Interrupt Handlers</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c1208.htm#AEN1217"
+>Interrupt Handlers</A
+></DT
+><DT
+><A
+HREF="c1208.htm#KEYBOARD"
+>Keyboards on the Intel Architecture</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>13. <A
+HREF="c1294.htm"
+>Symmetric Multi Processing</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c1294.htm#AEN1296"
+>Symmetrical Multi-Processing</A
+></DT
+></DL
+></DD
+><DT
+>14. <A
+HREF="c1320.htm"
+>Common Pitfalls</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="c1320.htm#AEN1322"
+>Common Pitfalls</A
+></DT
+></DL
+></DD
+><DT
+>A. <A
+HREF="a1357.htm"
+>Changes: 2.0 To 2.2</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="a1357.htm#AEN1359"
+>Changes between 2.0 and 2.2</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="a1357.htm#AEN1366"
+>Changes between 2.0 and 2.2</A
+></DT
+></DL
+></DD
+></DL
+></DD
+><DT
+>B. <A
+HREF="a1486.htm"
+>Where To Go From Here</A
+></DT
+><DD
+><DL
+><DT
+><A
+HREF="a1486.htm#AEN1488"
+>Where From Here?</A
+></DT
+></DL
+></DD
+><DT
+><A
+HREF="i1495.htm"
+>Index</A
+></DT
+></DL
+></DIV
+><DIV
+CLASS="LOT"
+><DL
+CLASS="LOT"
+><DT
+><B
+>List of Examples</B
+></DT
+><DT
+>2-1. <A
+HREF="c147.htm#AEN156"
+>hello-1.c</A
+></DT
+><DT
+>2-2. <A
+HREF="x208.htm#AEN246"
+>Makefile for a basic kernel module</A
+></DT
+><DT
+>2-3. <A
+HREF="x257.htm#AEN272"
+>hello-2.c</A
+></DT
+><DT
+>2-4. <A
+HREF="x257.htm#AEN276"
+>Makefile for both our modules</A
+></DT
+><DT
+>2-5. <A
+HREF="x281.htm#AEN311"
+>hello-3.c</A
+></DT
+><DT
+>2-6. <A
+HREF="x321.htm#AEN351"
+>hello-4.c</A
+></DT
+><DT
+>2-7. <A
+HREF="x354.htm#AEN380"
+>hello-5.c</A
+></DT
+><DT
+>2-8. <A
+HREF="x385.htm#AEN421"
+>start.c</A
+></DT
+><DT
+>2-9. <A
+HREF="x385.htm#AEN428"
+>stop.c</A
+></DT
+><DT
+>2-10. <A
+HREF="x385.htm#AEN432"
+>Makefile for a multi-filed module</A
+></DT
+><DT
+>4-1. <A
+HREF="c577.htm#AEN700"
+>chardev.c</A
+></DT
+><DT
+>4-2. <A
+HREF="c577.htm#AEN717"
+>some title</A
+></DT
+><DT
+>5-1. <A
+HREF="c722.htm#AEN765"
+>procfs.c</A
+></DT
+><DT
+>6-1. <A
+HREF="c768.htm#AEN851"
+>procfs.c</A
+></DT
+><DT
+>7-1. <A
+HREF="c854.htm#AEN915"
+>chardev.c</A
+></DT
+><DT
+>7-2. <A
+HREF="c854.htm#AEN922"
+>chardev.h</A
+></DT
+><DT
+>7-3. <A
+HREF="c854.htm#AEN934"
+>ioctl.c</A
+></DT
+><DT
+>8-1. <A
+HREF="c937.htm#AEN1009"
+>syscall.c</A
+></DT
+><DT
+>9-1. <A
+HREF="c1012.htm#AEN1112"
+>sleep.c</A
+></DT
+><DT
+>10-1. <A
+HREF="c1115.htm#AEN1146"
+>print_string.c</A
+></DT
+><DT
+>11-1. <A
+HREF="c1149.htm#AEN1205"
+>sched.c</A
+></DT
+><DT
+>12-1. <A
+HREF="c1208.htm#AEN1291"
+>intrpt.c</A
+></DT
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="f23.htm"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Foreword</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Ethernet Autoprobing</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node51.html">The PLIP Driver</A>
+<B>Up:</B> <A HREF="node47.html">Ethernet Installation</A>
+<B> Previous:</B> <A HREF="node49.html">Supported Boards</A>
+<BR> <P>
+<H2><A NAME="SECTION005430000">Ethernet Autoprobing</A></H2>
+
+At boot time, the Ethernet code will try to locate your board and
+determine its type. Cards are probed for at the following addresses and
+in the following order:
+<pre>
+      ------------------------------------------------------
+      +--------------+-------------------------------------+
+      |Board         | Addresses probed for                |
+      +--------------+-------------------------------------+
+      |WD/SMC        | 0x300, 0x280, 0x380, 0x240          |
+      |SMC 16 Ultra  | 0x300, 0x280                        |
+      |3c501         | 0x280                               |
+      |3c503         | 0x300, 0x310, 0x330, 0x350, 0x250,  |
+      |              | 0x280, 0x2a0, 0x2e0                 |
+      |NEx000        | 0x300, 0x280, 0x320, 0x340, 0x360   |
+      |HP            | 0x300, 0x320, 0x340, 0x280, 0x2C0,  |
+      |              | 0x200, 0x240                        |
+      |DEPCA         | 0x300, 0x320, 0x340, 0x360          |
+      +--------------+-------------------------------------+
+      +--------------+-------------------------------------+
+
+</pre>
+There are two limitations to the autoprobing code. For one, it may not
+recognize all boards properly. This is especially true for some of the
+cheaper clones of common boards, but also for some WD80x3 boards. The
+second problem is that the kernel will not auto-probe for more than one
+board at the moment. This is a feature, because it is assumed you want
+to have control about which board is assigned which interface.
+<P>
+If you are using more than one board, or if the autoprobe should fail to
+detect your board, you have to tell the kernel explicitly about the
+card's base address and name.
+<P>
+In Net-3, you have can use two different schemes to accomplish this.
+One way is to change or add information in the
+drivers/net/Space.c file in the kernel source code that
+contains all information about drivers. This is recommended only if
+you are familiar with the networking code. A much better way is to
+provide the kernel with this information at boot time.  If you use
+lilo to boot your system, you can pass parameters to the kernel
+by specifying them through the append option in
+lilo.conf. To inform the kernel about an Ethernet device, you
+can pass the following parameter:
+<pre>
+           ether=irq,base addr,param1,param2,name
+</pre>
+The first four parameters are numerical, while the last is the device
+name. All numerical values are optional; if they are omitted or set
+to zero, the kernel will try to detect the value by probing for it, or
+use a default value.
+<P>
+The first parameter sets the IRQ assigned to the device. By default,
+the kernel will try to auto-detect the device's IRQ channel. The
+3c503 driver has a special feature that selects a free IRQ from the
+list 5, 9, 3, 4, and configures the board to use this line.
+<P>
+The base_addr parameter gives the I/O base address of the board;
+a value of zero tells the kernel to probe the addresses listed above.
+<P>
+The remaining two parameters may be used differently by different
+drivers. For shared-memory boards such as the WD80x3, they specify
+start and end addresses of the shared memory area. Other cards commonly
+use param1 to set the level of debugging information that is
+being displayed. Values of 1 through 7 denote increasing levels of
+verbosity, while 8 turns them off altogether; 0 denotes the default.
+The 3c503 driver uses param2 to select the internal transceiver
+(default) or an external transceiver (a value of 1). The former uses
+the board's BNC connector; the latter uses its AUI port.
+<P>
+If you have two Ethernet boards, you can have  auto-detect one
+board, and pass the second board's parameters with lilo.
+However, you must make sure the driver doesn't accidentally find the
+second board first, else the other one won't be registered at all. You
+do this by passing lilo a reserve option, which
+explicitly tells the kernel to avoid probing the I/O space taken up by
+the second board.
+<P>
+For instance, to make  install a second Ethernet board at
+0x300 as eth1, you would pass the following parameters
+to the kernel:
+<pre>
+           reserve=0x300,32 ether=0,0x300,eth1
+ </pre>
+
+The reserve option makes sure no driver accesses the board's
+I/O space when probing for some device. You may also use the kernel
+parameters to override autoprobing for eth0:
+<pre>
+           reserve=0x340,32 ether=0,0x340,eth0
+</pre>
+
+To turn off autoprobing altogether, you can specify a base_addr
+argument of -1:
+<pre>
+           ether=0,-1,eth0
+ </pre>
+
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node51.html">The PLIP Driver</A>
+<B>Up:</B> <A HREF="node47.html">Ethernet Installation</A>
+<B> Previous:</B> <A HREF="node49.html">Supported Boards</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

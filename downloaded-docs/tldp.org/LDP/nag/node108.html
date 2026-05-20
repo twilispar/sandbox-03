@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Untangling the P's</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node109.html">PPP on </A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<BR> <P>
+<H1><A NAME="SECTION0010100000">Untangling the P's</A></H1>
+<P>
+<A NAME="4060"></A>
+<A NAME="4061"></A>
+<A NAME="4062"></A>
+<A NAME="4063"></A>
+<A NAME="4064"></A>
+<A NAME="4065"></A>
+<A NAME="4066"></A>
+<A NAME="4067"></A>
+<P>
+Just like SLIP, PPP is a protocol to send datagrams across a serial
+connection, but addresses a couple of deficiencies of the former.  It
+lets the communicating sides negotiate options such as the IP address
+and the maximum datagram size at startup time, and provides for client
+authorization.  For each of these capabilities, PPP has a separate
+protocol.  Below, we will briefly cover these basic building blocks of
+PPP. This discussion is far from complete; if you want to know more
+about PPP, you are urged to read its specification in RFC-1548, as well
+as the dozen or so companion RFCs.<A HREF="footnode.html#4068"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="4069"></A>
+At the very bottom of PPP is the <em>High-Level Data Link Control</em>
+Protocol, abbreviated HDLC,<A HREF="footnode.html#4071"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> which defines the boundaries around the individual PPP frames, and
+provides a 16-bit checksum.  As opposed to the more primitive SLIP
+encapsulation, a PPP frame is capable of holding packets from other
+protocols than IP, such as Novell's IPX, or Appletalk. PPP achieves
+this by adding a protocol field to the basic HDLC frame that
+identifies the type of packet is carried by the frame.
+<P>
+<A NAME="4533"></A>
+<A NAME="4073"></A>
+<A NAME="4074"></A>
+<A NAME="4075"></A>
+LCP, the Link Control Protocol, is used on top of HDLC to negotiate
+options pertaining to the data link, such as the Maximum Receive Unit
+(MRU) that states the maximum datagram size one side of the link agrees
+to receive.
+<P>
+<A NAME="4076"></A>
+<A NAME="4534"></A>
+<A NAME="4078"></A>
+<A NAME="4535"></A>
+<A NAME="4080"></A>
+An important step at the configuration stage of a PPP link is client
+authorization. Although it is not mandatory, it is really a must for
+dial-up lines.  Usually, the called host (the server) asks the client to
+authorize itself by proving it knows some secret key.  If the caller fails
+to produce the correct secret, the connection is terminated.  With PPP,
+authorization works both ways; that is, the caller may also ask the server
+to authenticate itself.  These authentication procedures are totally
+independent of each other.  There are two protocols for different types of
+authorization, which we will discuss further below.  They are named
+Password Authentication Protocol, or PAP, and Challenge Handshake
+Authentication Protocol, or CHAP.
+<P>
+<A NAME="4081"></A>
+<A NAME="4536"></A>
+<A NAME="4083"></A>
+<A NAME="4084"></A>
+<A NAME="4537"></A>
+Each network protocol that is routed across the data link, like IP,
+AppleTalk, etc, is configured dynamically using a corresponding Network
+Control Protocol (NCP).  For instance, to send IP datagrams across the
+link, both PPPs must first negotiate which IP-address each of them uses.
+The control protocol used for this is IPCP, the Internet Protocol Control
+Protocol.
+<P>
+<A NAME="4086"></A>
+<A NAME="4087"></A>
+<A NAME="4088"></A>
+<A NAME="4089"></A>
+Beside sending standard IP-datagrams across the link, PPP also supports
+Van-Jacobson header compression of IP-datagrams. This is a technique to
+shrink the headers of TCP packets to as little as three bytes. It is
+also used in CSLIP, and is more colloquially referred to as VJ-header
+compression.  The use of compression may be negotiated at startup time
+through IPCP as well.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node109.html">PPP on </A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

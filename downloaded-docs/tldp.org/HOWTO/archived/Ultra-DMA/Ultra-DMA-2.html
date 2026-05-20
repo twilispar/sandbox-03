@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Linux Ultra-DMA Mini-Howto: What is Ultra-DMA and why do I want it?</TITLE>
+ <LINK HREF="Ultra-DMA-3.html" REL=next>
+ <LINK HREF="Ultra-DMA-1.html" REL=previous>
+ <LINK HREF="Ultra-DMA.html#toc2" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Ultra-DMA-3.html">Next</A>
+<A HREF="Ultra-DMA-1.html">Previous</A>
+<A HREF="Ultra-DMA.html#toc2">Contents</A>
+<HR>
+<H2><A NAME="udma-intro"></A> <A NAME="s2">2. What is Ultra-DMA and why do I want it?</A></H2>
+
+<P>
+<P>Here's a brief overview of IDE-based drive technologies:
+<P>
+<H2><A NAME="classic"></A> <A NAME="ss2.1">2.1 IDE, EIDE, &amp; ATAPI</A>
+</H2>
+
+<P>
+<P>These are older drive technologies. Most non-SCSI hard drives and drive 
+interfaces that you can buy today or are likely to be using are EIDE,
+although many of the larger drives now available are UDMA.
+<P>
+<H2><A NAME="bm"></A> <A NAME="ss2.2">2.2 Bus Master DMA</A>
+</H2>
+
+<P>
+<P>Bus Master DMA is a technology for increasing the speed of hard disk data 
+transfers which requires support from the motherboard and the BIOS, and at 
+least some support from the drive.
+<P>You can learn more at 
+<A HREF="http://developer.intel.com/design/pcisets/busmastr/FAQs.htm">http://developer.intel.com/design/pcisets/busmastr/FAQs.htm</A>.
+<P>
+<H2><A NAME="udma"></A> <A NAME="ss2.3">2.3 Ultra-DMA aka Ultra-ATA aka Ultra33 aka...</A>
+</H2>
+
+<P>Ultra-DMA has many names, but we'll just call it UDMA in here.
+<P>UDMA is a more advanced technology which provides for even faster 
+throughput, up to 33.3 MB/s in UDMA mode 2 and 66.7 MB/s in UDMA mode 4,
+twice to four times that of EIDE, for much lower prices
+than SCSI. Many new computers come with large UDMA drives and UDMA 
+interfaces, and it's possible to add a UDMA interface card (such as 
+the Promise Ultra33 or Ultra66) to an existing system to boost speed, even on older 
+non-UDMA drives.
+<P>You can learn great details about UDMA at
+<A HREF="http://www.quantum.com/src/whitepapers/ultraata/">http://www.quantum.com/src/whitepapers/ultraata/</A><P>Note that cable length should be kept shorter for UDMA, compared to plain DMA,
+preferably less than 30 cm (12&quot;) maximum length though 18 inches will
+usually be fine. 66 MB/s requires a special 80-conductor cable and should
+definately not be longer. If you get a lot of CRC errors, try using a shorter
+cable.
+<P>
+<P>
+<H2><A NAME="speed"></A> <A NAME="ss2.4">2.4 Just how ``Ultra'' is it anyway?</A>
+</H2>
+
+<P>
+<P>Before we get any farther, let's clear up a misconception. That 33 or 66 MB/sec
+figure is the <B>burst transfer rate</B>, and it's not something you're going to
+see very often. To explain, here is a clip from udma­generic's UDMA.txt:
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Burst (instantaneous) transfer rates are supposed to go from 16.6MB/s (PIO
+mode 4) to 16.6MB/s (DMA mode 2) up to 33MB/s (UDMA). In his patch against
+kernel 2.1.55, Kim-Hoe Pang actually checked the UDMA burst transfer rate
+with a logic analiser: 60ns/word, which translates into 33MB/s.
+
+Note that burst transfer rates only affect data transfers to/from the EIDE
+drive cache (476kB for the IBM 6.4GB drive), and IMHO are not particularly
+relevant for most Linux users.
+
+The Linux kernel uses as much RAM as possible to cache hard disk data
+accesses, and so if data is not in the kernel cache there is little chance
+that it will be in the (much smaller) hard disk cache.
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>Much more relevant is the <B>sustained transfer rate</B>, the speed at
+which data can be transferred from the drive to main memory where it
+can be used. An easy way to measure the sustained transfer rate is to
+use <CODE>hdparm</CODE>, for instance ``<CODE>hdparm ­Tt /dev/hda</CODE>'' to measure
+the rate of the first IDE device.
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Here is some data gathered after extensive testing, using the hdparm utility
+(also written by Mark Lord):
+
+PIO mode 4 transfer rates under Linux:   +/- 5.2MB/s
+
+DMA mode 2 transfer rates under Linux:   +/- 7.2MB/s
+
+UDMA mode 2 transfer rates under Linux:  +/- 9.8MB/s
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>As you can see, UDMA is still almost twice as fast as plain EIDE and
+significantly faster than plain bus mastering DMA. Most current UDMA drives
+will give you between 10 and 15 MB/s using UDMA mode 2 (33 MB/s) or 4 (66 MB/s)
+enabled.
+<P>Also, using DMA vastly reduces CPU usage during disk I/O vs PIO.
+<P>
+<H2><A NAME="udma-vs-scsi"></A> <A NAME="ss2.5">2.5 How does UDMA compare to SCSI?</A>
+</H2>
+
+<P>
+<P>I don't have any hard numbers to give you, but the general consensus is that
+high-end SCSI can give better performance than UDMA. However if you've looked
+at the price tags on any hard drives lately you'll notice that UDMA drives
+tend to be much less expensive. The performance/price ratio favors UDMA in
+most cases.
+<P>
+<HR>
+<A HREF="Ultra-DMA-3.html">Next</A>
+<A HREF="Ultra-DMA-1.html">Previous</A>
+<A HREF="Ultra-DMA.html#toc2">Contents</A>
+</BODY>
+</HTML>

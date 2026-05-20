@@ -1,0 +1,390 @@
+<HTML
+><HEAD
+><TITLE
+>The LILO and lilo.conf file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Shell logging"
+HREF="chap5sec47.html"><LINK
+REL="NEXT"
+TITLE="Disable Ctrl-Alt-Delete keyboard shutdown command"
+HREF="chap5sec49.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec47.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec49.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3778"
+>5.19. The LILO and <TT
+CLASS="filename"
+>lilo.conf</TT
+> file</A
+></H1
+><P
+>&#13;              LILO is the most commonly used boot loader for Linux. It manages the boot process and can boot Linux kernel images from floppy disks, hard disks or can even act as a boot manager for other operating systems. LILO is very important in the Linux system and 
+              for this reason, we must protect it the best we can. The most important configuration file of LILO is the <TT
+CLASS="filename"
+>lilo.conf</TT
+> file, which resides under the <TT
+CLASS="filename"
+>/etc</TT
+> directory. It is with this file that we can 
+              configure and improve the security of our LILO program and Linux system. Following are three important options that will improve the security of our valuable LILO program.
+              <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+><TT
+CLASS="envar"
+>Adding: timeout=00</TT
+></B
+></DT
+><DD
+><P
+>&#13;              This option controls how long in seconds LILO waits for user input before booting to the default selection. One of the requirements of C2 security is that this interval be set to 0 unless the system dual boots something else.
+              </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>Adding: restricted</TT
+></B
+></DT
+><DD
+><P
+>&#13;              This option asks for a password only, if parameters are specified on the command line (e.g. linux single). The option restricted can only be used together with the password option. Make sure you use this one on each image.
+              </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>Adding: password=&#60;password&#62;</TT
+></B
+></DT
+><DD
+><P
+>&#13;              This option asks the user for a password when trying to load the Linux system in single mode. Passwords are always case-sensitive, also make sure the <TT
+CLASS="filename"
+>/etc/lilo.conf</TT
+> file is no longer world readable, or any user will be able 
+              to read the password. 
+              </P
+></DD
+></DL
+></DIV
+>
+              </P
+><DIV
+CLASS="procedure"
+><P
+><B
+>An example of protected <TT
+CLASS="filename"
+>lilo.conf</TT
+> file.</B
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>              
+              Edit the lilo.conf file vi <TT
+CLASS="filename"
+>/etc/lilo.conf</TT
+> and add or change the above three options as show:
+              
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              boot=/dev/sda
+              map=/boot/map
+              install=/boot/boot.b
+              prompt
+              timeout=00 ß change this line to 00.
+              Default=linux
+              restricted ß add this line.
+              password=&#60;password&#62;  <A
+NAME="llcnf1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+              image=/boot/vmlinuz-2.2.12-20
+              label=linux
+              initrd=/boot/initrd-2.2.12-10.img
+              root=/dev/sda6
+              read-only
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap5sec48.html#llcnf1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+><EM
+>add this line and put your password.</EM
+></DD
+></DL
+></DIV
+>
+              
+                  </P
+></LI
+><LI
+><P
+>&#13;              
+              Because the configuration file <TT
+CLASS="filename"
+>/etc/lilo.conf</TT
+> now contains unencrypted passwords, it should only be readable for the super-user root.
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /# <B
+CLASS="command"
+>chmod</B
+> 600  /etc/lilo.conf <EM
+>will be no longer world readable.</EM
+>
+              </PRE
+></TD
+></TR
+></TABLE
+>
+                  </P
+></LI
+><LI
+><P
+>&#13;              Now we must update our configuration file <TT
+CLASS="filename"
+>/etc/lilo.conf</TT
+> for the change to take effect.
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /# <B
+CLASS="command"
+>/sbin/lilo</B
+> -v <EM
+>to update the lilo.conf file.</EM
+>
+              </PRE
+></TD
+></TR
+></TABLE
+>
+                  </P
+></LI
+><LI
+><P
+>&#13;              One more security measure you can take to secure the <TT
+CLASS="filename"
+>lilo.conf</TT
+> file is to set it immutable, using the chattr command.
+              To set the file immutable simply, use the command:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /# <B
+CLASS="command"
+>chattr</B
+> +i <TT
+CLASS="filename"
+>/etc/lilo.conf</TT
+>
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              And this will prevent any changes accidental or otherwise to the <TT
+CLASS="filename"
+>lilo.conf</TT
+> file. If you wish to modify the <TT
+CLASS="filename"
+>lilo.conf</TT
+> file you 
+              will need to unset the immutable flag:
+              To unset the immutable flag, use the command:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /# <B
+CLASS="command"
+>chattr</B
+> -i <TT
+CLASS="filename"
+>/etc/lilo.conf</TT
+>
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec47.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec49.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Shell logging</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Disable <B
+CLASS="keycap"
+>Ctrl-Alt-Delete</B
+> keyboard shutdown command</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

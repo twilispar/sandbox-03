@@ -1,0 +1,494 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Troubleshooting</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Advanced Topics"
+HREF="infrared-howto-c-advanced-topics.html"><LINK
+REL="PREVIOUS"
+TITLE="Advanced Topics"
+HREF="infrared-howto-c-advanced-topics.html"><LINK
+REL="NEXT"
+TITLE="Mailing List"
+HREF="infrared-howto-s-mailing-list.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-c-advanced-topics.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. Advanced Topics</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-mailing-list.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-troubleshooting"
+></A
+>5.1. Troubleshooting</H1
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1361"
+></A
+>5.1.1. General Information</H2
+><P
+>&#13;   If you encounter problems. Try the following:
+</P
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>&#13;   Read the FAQ section below.
+</P
+></LI
+><LI
+><P
+>&#13;   Look at /var/log/messages and/or /var/log/kern.
+</P
+></LI
+><LI
+><P
+>&#13;   Do a <B
+CLASS="command"
+>dmesg</B
+>.
+</P
+></LI
+><LI
+><P
+>&#13;   Look at the different files in <TT
+CLASS="filename"
+>/proc/irda</TT
+>.
+</P
+></LI
+></UL
+>
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1376"
+></A
+>5.1.2. Known Bugs</H2
+><P
+>&#13;   If you find a bug, please send a bug report to the mailing list,
+   including <B
+CLASS="command"
+>dmesg</B
+> output, and which Linux version, and hardware you are
+   using. Thank you!
+</P
+><P
+>&#13;   Sometimes IrCOMM fails to connect, especially when both devices
+   discover each other. You can disable discovering with 
+   <B
+CLASS="command"
+>echo 0 &#62;/proc/sys/net/irda/discovery</B
+>.
+</P
+><P
+>&#13;   A CR (carriage return) character cannot be transfered between two
+   linux boxes via IrCOMM with <B
+CLASS="command"
+>cat file &#62;/dev/ircomm0</B
+>
+   and <B
+CLASS="command"
+>cat /dev/ircomm0</B
+>.
+   It causes a strange thing and freezes your Linux box.
+</P
+><P
+>&#13;   IrOBEX may eat some data on receive. The bug is most probably in the
+   user-space side of IrOBEX.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1386"
+></A
+>5.1.3. Troubleshooting Techniques</H2
+><P
+>&#13;   Although I'm not much of a hacker I collected some tricks to track
+   errors or bugs in the Linux/IrDA software.
+</P
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>&#13;   You may set the debug level in <TT
+CLASS="filename"
+>/proc/sys/net/irda/debug</TT
+>
+   to 1, 2, 3, 4.
+</P
+></LI
+><LI
+><P
+>&#13;   Use the files in <TT
+CLASS="filename"
+>/proc/sys/net/irda</TT
+> to try different parameters
+   like 
+   <B
+CLASS="command"
+>echo 0 &#62; /proc/sys/net/irda/discovery</B
+>. The 
+   <TT
+CLASS="filename"
+>/proc/*/irda</TT
+> files are:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;root@duckman:~# ls /proc/sys/net/irda/* /proc/net/irda/*
+/proc/net/irda/discovery
+/proc/net/irda/irlmp
+/proc/net/irda/irda_device
+/proc/net/irda/irttp
+/proc/net/irda/irias
+/proc/net/irda/irlap
+/proc/sys/net/irda/devname
+/proc/sys/net/irda/discovery
+/proc/sys/net/irda/compression
+/proc/sys/net/irda/debug
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></LI
+><LI
+><P
+>&#13;   It is also possible to debug the code. But I don't know how to do
+   this. If you want to use SKB debug code, you may edit irda.h and
+   change /include/linux/skbuff.h (see revision history of snapshot
+   10-2-98).
+</P
+></LI
+><LI
+><P
+>&#13;   For problems with the irda module a utility from the modules
+   package kdstat might be helpful. But I was not able to try this.
+</P
+></LI
+><LI
+><P
+>&#13;   "You can now alter the number of discovery packets used (1, 6, 8
+   or 16) and the timeout between sending them (2-8 * 10 ms) in
+   /proc/sys/net/irda. Please experiment if you have problems
+   discovering your device. My Palm III seems to like 16
+   discovery_slots and 8 (*10 ms) for slot_timeout. " ... "The
+   absolute minimum for reliable discovery of the IR-610 seems to be
+   9."
+   Another statement: ... the Palm III does not like 8 discovery
+   frames in a row, but 6 is OK. With 8 it will answer 1 out of 6-10
+   times, with 6 it answers every time. I really don't know if this
+   is a problem with Linux-IrDA or the Palm III. One solution to this
+   problem, is to cycle though some different discovery methods for
+   each discovery like this:
+   Disocvery 1: send 8 xid frames with 80 ms separation
+   If answer, keep the same config, if no answer, try next config
+   Discovery 2: send 6 xid frames with 80 ms separation
+   Discovery 3: send 8 xid frames with 90 ms separation
+   Discovery 4: send 6 xid frames with 90 ms separation
+   Discovery 5. Go back to 1.
+   or some other pattern and maybe more combinations.
+   Maybe this is sometimes implemented, so it would be enabled if
+   /proc/sys/net/irda/discovery_slots is set to 0 .
+</P
+></LI
+><LI
+><P
+>&#13;If anybody gets a kernel Oops, then please feed it to the
+   <TT
+CLASS="filename"
+>../linux/scripts/ksymoops/ksymoops</TT
+>
+   program, so that we can find
+   out where it went wrong. Just cut out the Oops lines from the
+   syslog, save them to a file, and then run 
+   <B
+CLASS="command"
+>ksymoops &#60;file&#62;</B
+>.
+</P
+></LI
+><LI
+><P
+>&#13;   Dag Brattli wrote: I found out that the cs4232 sound card was
+   giving me several hundred interrupts per second! I removed the
+   sound stuff from my kernel, and the machine is now generally about
+   4 times faster! Linux/IrDA may get problems if you are running the
+   esound server (esd) on your machine. Both my machines, a 166Mhz
+   Pentium laptop and a 200Mhz Pentium Pro cannot run Linux/IrDA when
+   esd is running. The reason is that esd makes the soundcard give
+   interrups over 300 times/second which makes the serial driver
+   overrun when receiving. This is because the serial driver now uses
+   slow interrupts in Linux-2.2 (everything is slow interrupts in
+   2.2), so the interrupt-handler schedules on its way out. The good
+   thing about slow interrupts is that packets are delivered much
+   faster, since you don't need to wait for the next timer-tick. The
+   only exception for this is the pc87108 driver which works fine
+   since it uses DMA and will only give a couple of interrupts per
+   packet.
+</P
+></LI
+><LI
+><P
+>&#13;   There are also some userspace tools <B
+CLASS="command"
+>irdaping</B
+>
+   and <B
+CLASS="command"
+>irdadump</B
+> to check Linux/IrDA connections.
+</P
+></LI
+><LI
+><P
+>&#13;   AFAIK it is possible to use IrCOMM either with an infrared device
+   or via serial cable. Maybe this give some debugging possibilities,
+   too.
+</P
+></LI
+><LI
+><P
+>&#13;   1) You may edit /etc/conf.modules, adding the following lines:
+      option irda irda_debug=3
+   2) Make sure the irda modules have been totally removed.
+   3) Edit /etc/syslog.conf, adding the following lines:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;*/*         -/var/log/all
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   4) Do killall -1 syslogd .
+   5) Print, or do whatever causes problems with irlpt .
+   6) Check all the files in /var/log/ .
+</P
+></LI
+></UL
+>
+
+</P
+><P
+>&#13;   For some ThinkPad models you have to reboot to the preinstalled M$ OS
+   and activate the IrDA port using the Thinkpad tools. There is
+   currently no Linux tool to achieve that. This will disable your
+   internal serial port (ttyS0)!. The DOS tool is <B
+CLASS="command"
+>PS2.EXE</B
+>, as far as I
+   know <B
+CLASS="command"
+>tpctl</B
+> doesn't achieve this. It is really important to use this
+   DOS program to enable IrDA. Using the Microsoft-Windows tools does not
+   work. Without that the driver loads correctly and everythings seems
+   OK, but the LED does not light bright enough.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1424"
+></A
+>5.1.4. PCI Device Numbers</H2
+><P
+>&#13;   Daniel R. Risacher magnus_at_alum.mit.edu wrote: To syncronize my Palm
+   III with my Tecra 8100 running 2.2.17, I needed to edit
+   /usr/src/linux/include/net/irda/toshoboe.h I changed "#define
+   PCI_DEVICE_ID_FIR701 0x0701" to "#define PCI_DEVICE_ID_FIR701 0x0D01"
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1427"
+></A
+>5.1.5. scanport</H2
+><P
+>&#13;   <B
+CLASS="command"
+>scanport</B
+> can be used to get the 
+   correct device ID for a chip. It's
+   part of the hwtools package (on Debian, probably same elsewhere). You
+   just type it in and it scans the I/O ports from 0x100 to 0x400 - the
+   usual ISA range. Above 0x400 there are shadows of below 0x400 devices,
+   and beyond that there are PCI devices, so the default is not to scan
+   above 0x400. "Anyway, I had to manually scan using inb to find my
+   chip's I/O. Fortunately I didn't have to go far to find it. (Newer
+   sound cards often sit at 0x530ish, with 0x220 reserved for legacy
+   compatibility modes) Normally, if you know where some device is
+   located you just point the driver at it and the driver probes to see
+   if it's the device the driver is expecting. Not entirely safe, but
+   much safer than every driver probing every I/O port looking for
+   something it thinks it can understand. scanport only does reads, which
+   are usually safe."
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-advanced-topics.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-mailing-list.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Advanced Topics</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-advanced-topics.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Mailing List</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

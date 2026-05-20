@@ -1,0 +1,557 @@
+<HTML
+><HEAD
+><TITLE
+>Half-Life</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Game Server HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Quake III Arena"
+HREF="quake3.html"><LINK
+REL="NEXT"
+TITLE="Unreal Tournament"
+HREF="ut.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Game Server HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="quake3.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="ut.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="HALFLIFE"
+></A
+>6. Half-Life</H1
+><P
+>Half-Life is the most popular multiplayer first-person shooter on the Internet as of this version of the HOWTO - mainly thanks to the modification <A
+HREF="http://www.counter-strike.net"
+TARGET="_top"
+>Counter-Strike</A
+>, hereafter referred to as CS.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="HLSYSREQ"
+></A
+>6.1. System requirements</H2
+><P
+> The system requirements vary depending on how many players you have on your server.
+ </P
+><P
+><P
+></P
+><UL
+><LI
+><P
+>CPU - Depends on the number of clients. At least P2 266 for hosting a full game, the more the better. 400MHz recommended.</P
+></LI
+><LI
+><P
+>RAM - Minimum 64 MB, 128 MB recommended.</P
+></LI
+><LI
+><P
+>Bandwidth - Also depends on the number of clients. At least 512kbps upstream recommended.</P
+></LI
+></UL
+></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="HLINSTALLING"
+></A
+>6.2. Installing</H2
+><P
+>You need the HLDS (dedicated server) package to run a Half-Life server:</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+><A
+HREF="ftp://3dgamers.in-span.net/pub/3dgamers2/games/halflife/hlds_l_3110_full.bin"
+TARGET="_top"
+>ftp://3dgamers.in-span.net/pub/3dgamers2/games/halflife/hlds_l_3110_full.bin</A
+></P
+></LI
+></UL
+></P
+><P
+>When you've downloaded the above file, create a directory for HLDS and run the downloaded file (specify $HOME/hlds as the directory to install to, if that's what you want): </P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>mkdir hlds</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>sh hlds_l_3110_full.bin</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Now we want hlds to see its dynamically linked libraries (*.so files). If you're running bash, which you most probably are, run:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>export LD_LIBRARY_PATH=$HOME/hlds:$LD_LIBRARY_PATH</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>This adds <TT
+CLASS="LITERAL"
+>$HOME/hlds</TT
+> to the directories ld checks for libraries in.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="HLCONFIGURING"
+></A
+>6.3. Configuring</H2
+><P
+>Now you can start hlds; <TT
+CLASS="LITERAL"
+>./hlds_l</TT
+> to start a dedicated Half-Life server. It should work with the default settings, so try it:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>hlds_l +maxplayers 12 +map crossfire</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>At the end you should see something like this:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>WON Auth Server
+ . . .
+ </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>If the 'Auth' is missing it's probably because your server is using an incorrect IP address. Type status in the server console and it will spit out some info.
+If your IP isn't what it should be, quit the server with the exit command and start it again with this command:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>./hlds_l +ip xx.xx.xx.xx +maxplayers 12 +map crossfire</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>If it doesn't work now, you might be behind a firewall. If that's the case, let's just hope the network admin is friendly - make him open the port(s) you need. 27015 is the default port.</P
+><P
+>If you want to run a modification instead of regular DM or teamplay, pass the -game modname argument to hlds. Example: <TT
+CLASS="LITERAL"
+>./hlds_l -game tfc +maxplayers 12 +map 2fort</TT
+>.</P
+><P
+>The server reads autoexec.cfg, server.cfg, motd.txt and mapcycle.txt. Edit these to your liking. Autoexec.cfg is only executed when you start the server. Server.cfg is executed at every map change. Motd.txt contains the text that players will see when they join your server; a good idea is to put your server name, homepage (server stats page?) and contact info in it. Mapcycle.txt contains the list of maps you want rotated on your server. Type in all the maps you want there, each on its own line, without the ".bsp" extension.</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>sv_aim</TT
+> - Setting this to 1 causes the crosshairs to turn red when placed over a player.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>pausable</TT
+> - Clients are allowed to pause the server.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>mp_timelimit</TT
+> - Server changes map when timelimit (in minutes) is reached.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>mp_fraglimit</TT
+> - Server changes map when fraglimit is reached.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>mp_footsteps</TT
+> - Setting this to 0 turns off footsteps.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>mp_flashlight</TT
+> - Clients can use flashlights (useful on dark maps).</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>mp_falldamage</TT
+> - Realistic fall damage.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>mp_friendlyfire</TT
+> - Allows players to kill people on the same team. More realistic, but this can be very problematic without active admins playing on the server, so on public servers it might be a good idea to set this to 0 to avoid lamers killing their own team members.</P
+></LI
+></UL
+></P
+><P
+>Min/max rates - The commands <TT
+CLASS="LITERAL"
+>sv_maxrate xxxx</TT
+> and <TT
+CLASS="LITERAL"
+>sv_minrate xxxx</TT
+> force clients to use the specified rate.
+This is useful if you, for example, don't want LPB's stealing bandwidth (which makes HPW's annoyed) - type <TT
+CLASS="LITERAL"
+>sv_maxrate 6000</TT
+> to do this. If you on the other hand want to run a server for LPB's,
+set the minimum rate to something around 9000 with <TT
+CLASS="LITERAL"
+>sv_minrate 9000</TT
+>.</P
+><P
+>Kicking/Banning - Each player is assigned an userid by the server. Type <TT
+CLASS="LITERAL"
+>users</TT
+> in the server console to see the players id's. Usually you can kick people simply by typing <TT
+CLASS="LITERAL"
+>kick nick</TT
+>, but this can be difficult if a client has a long nick or is using strange characters.
+If this is the case, you can kick clients by their id with <TT
+CLASS="LITERAL"
+>kick # </TT
+>.
+If you want to ban a client, preventing them from coming back to the server, find their uniqueid with the <TT
+CLASS="LITERAL"
+>users</TT
+> command and then ban with <TT
+CLASS="LITERAL"
+>banid minutes uniqueid</TT
+>, where minutes is the number of minutes you want to ban the player (0 makes the ban permanent), and uniqueid the player's uniqueid.
+To keep players banned even after restarting the server, type <TT
+CLASS="LITERAL"
+>writeid</TT
+> before you quit the server, and add <TT
+CLASS="LITERAL"
+>exec banned.cfg</TT
+> to your server.cfg so that the next time you start your server, it will read the uniqueid's in banned.cfg.
+You can also kick and ban a client at the same time with <TT
+CLASS="LITERAL"
+>banid uniqueid kick</TT
+>.
+Remove a ban with <TT
+CLASS="LITERAL"
+>removeid id</TT
+>, and don't forget to remove it from server.cfg if it's there too.</P
+><P
+>RCON - RCON lets clients on your server execute server commands remotely. Add the line <TT
+CLASS="LITERAL"
+>rcon_password "password"</TT
+> to server.cfg. Clients type rcon_password password in the console and can then execute server commands, like rcon kick, rcon mapchange, etc. This is good if you want to deal with abusive players directly when you're playing on the server, or maybe let a few other trustworthy persons do it.
+To use rcon when playing on your server, type <TT
+CLASS="LITERAL"
+>rcon_password password</TT
+> in the in-game console. You can now execute several commands if the password was correct, but remember that you must add rcon before every command, for example <TT
+CLASS="LITERAL"
+>rcon kick player</TT
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="HLCSTRIKE"
+></A
+>6.4. Counter-Strike</H2
+><P
+>First you need, of course, a working Half-Life server. Download the latest CS package. As of this revision of the HOWTO it's 1.5, but that may have changed when you read this.</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+><A
+HREF="ftp://ftp.gamesdomain.co.uk:21/pub/games/halflife/mods/counterstrike/linux/cs_15_full.tar.gz"
+TARGET="_top"
+>ftp://ftp.gamesdomain.co.uk:21/pub/games/halflife/mods/counterstrike/linux/cs_15_full.tar.gz</A
+></P
+></LI
+></UL
+></P
+><P
+>Extract it to your HLDS directory:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>tar zxvf cs_15_full.tar.gz -C $HOME/hlds</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Now run the CS server:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>hlds_l -game cstrike +maxplayers 12 +map de_dust</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Edit the <TT
+CLASS="LITERAL"
+>/usr/local/games/hlds/cstrike/server.cfg</TT
+> file to change it to your liking and optimize the server. The file <TT
+CLASS="LITERAL"
+>mapcycle.txt</TT
+> contains the list of maps to be included in the map cycle, and <TT
+CLASS="LITERAL"
+>motd.txt</TT
+> contains the MOTD - Message Of The Day.</P
+><P
+>Maps - By typing mp_timelimit 1 in the console, the server will go to the next map in the cycle. The command changelevel followed by the mapname makes the server change to the specified map.
+The maps must be in your cstrike/maps directory.</P
+><P
+>For more information on CS servers, see <A
+HREF="http://server.counter-strike.net"
+TARGET="_top"
+>http://server.counter-strike.net</A
+>.</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="quake3.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="ut.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Quake III Arena</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Unreal Tournament</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

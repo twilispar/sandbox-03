@@ -1,0 +1,255 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/host.conf file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="TCP_WRAPPERS"
+HREF="chap5sec37.html"><LINK
+REL="NEXT"
+TITLE="The /etc/services file"
+HREF="chap5sec40.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec37.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec40.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3460"
+>5.10. The <TT
+CLASS="filename"
+>/etc/host.conf</TT
+> file</A
+></H1
+><P
+>&#13;           Linux uses a resolver library to obtain the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address corresponding to a host name. The <TT
+CLASS="filename"
+>/etc/host.conf</TT
+> file specifies how names are resolved. The entries in the <TT
+CLASS="filename"
+>etc/host.conf</TT
+> 
+           file tell the resolver library what services to use, and in what order, to resolve names. Edit the <TT
+CLASS="filename"
+>host.conf</TT
+> file vi <TT
+CLASS="filename"
+>/etc/host.conf</TT
+> and add the following lines:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           # Lookup names via DNS first then fall back to /etc/hosts.
+           order bind,hosts
+           # We have machines with multiple <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses.
+           multi on
+           # Check for <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address spoofing.
+           nospoof on
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><P
+>&#13;           The <TT
+CLASS="parameter"
+><I
+>order</I
+></TT
+> option indicates the order of services. The sample entry specifies that the resolver library should first consult the name server to resolve a name and then check the <TT
+CLASS="filename"
+>/etc/hosts</TT
+> file. It is 
+           recommended to set the resolver library to first check the name server, <TT
+CLASS="literal"
+>bind</TT
+> and then the hosts file (hosts) for better performance and security on all your servers. Of course you must have the <SPAN
+CLASS="acronym"
+>DNS/BIND</SPAN
+> software installed 
+           or this configuration will not work.
+           </P
+><P
+>&#13;           The <TT
+CLASS="parameter"
+><I
+>multi</I
+></TT
+> option determines whether a host in the <TT
+CLASS="filename"
+>/etc/hosts</TT
+> file can have multiple <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+>multiple interface <TT
+CLASS="literal"
+>ethN</TT
+>. Hosts that have more than one <SPAN
+CLASS="acronym"
+>IP</SPAN
+> 
+           address are said to be multiomed, because the presence of multiple <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses implies that host has several network interfaces. As an example, a Gateway Server will always have multiple <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address and must have this 
+           option set to <TT
+CLASS="userinput"
+><B
+>ON</B
+></TT
+>.
+           </P
+><P
+>&#13;           The <TT
+CLASS="parameter"
+><I
+>nospoof</I
+></TT
+> option indicates to take care of not permitting spoofing on this machine. <SPAN
+CLASS="acronym"
+>IP</SPAN
+>-Spoofing is a security exploit that works by tricking computers in a trust relationship that you are someone that you really 
+           aren't. In this type of attack, a machine is set up to look like a legitimate server and then issue connections and other types of network activities to legitimate end systems, other servers or large data repository 
+           systems. This option must be set <TT
+CLASS="userinput"
+><B
+>ON</B
+></TT
+> for all types of servers.
+           </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec37.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec40.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>TCP_WRAPPERS</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The /etc/services file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

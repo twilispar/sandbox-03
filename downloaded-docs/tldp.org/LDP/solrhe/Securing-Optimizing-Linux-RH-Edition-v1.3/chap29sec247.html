@@ -1,0 +1,309 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/rc.d/init.d/httpd script file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/logrotate.d/apache file"
+HREF="chap29sec246.html"><LINK
+REL="NEXT"
+TITLE="PHP4 server-side scripting"
+HREF="chap29sec248.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec246.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec248.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19414"
+>29.11. Configure the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/httpd</TT
+> script file</A
+></H1
+><P
+>&#13;      Configure your <TT
+CLASS="filename"
+>/etc/rc.d/init.d/httpd</TT
+> script file to start and stop Apache Web Server.
+      Create the <TT
+CLASS="filename"
+>httpd</TT
+> script file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/rc.d/init.d/httpd</TT
+> and add:
+    </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;      #!/bin/sh
+      #
+      # Startup script for the Apache Web Server
+      #
+      # chkconfig: 345 85 15
+      # description: Apache is a World Wide Web server.  It is used to serve \
+      #	       HTML files and CGI.
+      # processname: httpd
+      # pidfile: /var/run/httpd.pid
+      # config: /etc/httpd/conf/httpd.conf
+
+
+      # Source function library.
+      . /etc/rc.d/init.d/functions
+
+      # See how we were called.
+      case "$1" in
+      start)
+      echo -n "Starting httpd: "
+      daemon httpd -DSSL
+      echo
+      touch /var/lock/subsys/httpd
+      ;;
+      stop)
+      echo -n "Shutting down http: "
+      killproc httpd
+      echo
+      rm -f /var/lock/subsys/httpd
+      rm -f /var/run/httpd.pid
+      ;;
+      status)
+      status httpd
+      ;;
+      restart)
+      $0 stop
+      $0 start
+      ;;
+      reload)
+      echo -n "Reloading httpd: "
+      killproc httpd -HUP
+      echo
+      ;;
+      *)
+      echo "Usage: $0 {start|stop|restart|reload|status}"
+      exit 1
+      esac
+
+      exit 0
+    </PRE
+></TD
+></TR
+></TABLE
+><P
+>&#13;      Now, make this script executable and change its default permissions:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 700  /etc/rc.d/init.d/httpd
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      Create the symbolic rc.d links for Apache with the command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# <B
+CLASS="command"
+>chkconfig</B
+> --add httpd
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      Start your new Apache server manually with the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# /etc/rc.d/init.d/httpd <B
+CLASS="command"
+>start</B
+>
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        Starting httpd:                                            	[  OK  ]
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+    
+    The  <TT
+CLASS="literal"
+>-DSSL</TT
+> option will start Apache in <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> mode. If you want to start Apache in regular mode, remove the  <TT
+CLASS="literal"
+>-DSSL</TT
+> option near the line that 
+    reads <TT
+CLASS="envar"
+>daemon httpd</TT
+>.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec246.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec248.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/logrotate.d/apache</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><SPAN
+CLASS="acronym"
+>PHP4</SPAN
+> server-side scripting</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

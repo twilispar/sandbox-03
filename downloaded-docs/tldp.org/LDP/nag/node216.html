@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>SMTP-based Transports</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node217.html">Hostname Qualification</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node215.html">UUCP-based Transports</A>
+<BR> <P>
+<H1><A NAME="SECTION00161000000">SMTP-based Transports</A></H1>
+<A NAME="smailsmtp"></A>
+<A NAME="7844"></A>
+smail currently supports an SMTP driver to deliver mail over
+TCP connections.<A HREF="footnode.html#7845"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> It is capable of delivering a message to any number of addresses on
+one single host, with the hostname being specified as either a fully
+qualified domain name that can be resolved by the networking software,
+or in dotted quad notation enclosed in square brackets.  Generally,
+addresses resolved by any of the BIND, gethostbyname(3), or
+gethostbyaddr(3) router drivers will be delivered to the SMTP
+transport.
+<P>
+The SMTP driver will attempt to connect to the remote host immediately
+through the smtp port as listed in /etc/services.  If
+it cannot be reached, or the connection times out, delivery will be
+re-attempted at a later time.
+<P>
+Delivery on the Internet requires that routes to the destination host be
+specified in the <em>route-addr</em> format described in
+chapter-<A HREF="node186.html#mail"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>, rather than as a bang path.<A HREF="footnode.html#7744"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> smail will therefore transform user%host@gateway,
+where gateway is reached via host1!host2!host3, into the
+source-route address &lt;@host2,@host3:user%host@gateway&gt; which
+will be sent as the message's envelope address to host1.  To
+enable these transformation (along with the built-in BIND driver), you
+have to edit the entry for the smtp driver in the
+transports file.  A sample transports file is given in
+Appendix-<A HREF="node285.html#appendixsmail"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

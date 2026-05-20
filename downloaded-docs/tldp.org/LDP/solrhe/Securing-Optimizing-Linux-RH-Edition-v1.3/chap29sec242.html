@@ -1,0 +1,585 @@
+<HTML
+><HEAD
+><TITLE
+>Apply mod_perl to Apache source tree </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure and apply PHP4 to Apache source"
+HREF="chap29sec241.html"><LINK
+REL="NEXT"
+TITLE="Install Apache"
+HREF="chap29sec243.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec241.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec243.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19032"
+>29.6. Apply mod_perl to Apache source tree</A
+></H1
+><P
+>&#13;      You need to build/install the Perl-side of mod_perl, if you want to use and include Perl programming language support in your Apache web server. Move into the new mod_perl source directory <B
+CLASS="command"
+>cd</B
+> <TT
+CLASS="filename"
+>../mod_perl-1.24/</TT
+> 
+      and type the following commands on your terminal:
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          perl Makefile.PL \
+          EVERYTHING=1 \
+          APACHE_SRC=../apache_1.3.12/src \
+          USE_APACI=1 \
+          PREP_HTTPD=1 \
+          DO_HTTPD=1
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/mod_perl-1.24# <B
+CLASS="command"
+>make</B
+> 
+          [root@deep ]/mod_perl-1.24# <B
+CLASS="command"
+>make install</B
+> 
+        </PRE
+></TD
+></TR
+></TABLE
+>
+
+      </P
+></LI
+><LI
+><P
+>&#13;
+        Once you have included in your Apache source the third party modules that you want to support and use, it is time to compile and install it into your Linux system. The last step is to move into the new Apache source directory 
+        <B
+CLASS="command"
+>cd</B
+> <TT
+CLASS="filename"
+>../apache_1.3.12/</TT
+> and type the following commands on your terminal depending on what you want to install with Apache for example it could you want to Build/Install Apache with/without 
+        mod_ssl +- PHP4 and/or mod_perl etc.
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          SSL_BASE=SYSTEM \                                             <A
+NAME="apchmdssl"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+          EAPI_MM=SYSTEM \                                              <A
+NAME="apchmmshrd"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+          CC="egcs" \
+          OPTIM="-O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions" \
+          CFLAGS="-DDYNAMIC_MODULE_LIMIT=0" \
+          ./configure \
+          --prefix=/home/httpd \
+          --bindir=/usr/bin \
+          --sbindir=/usr/sbin \
+          --libexecdir=/usr/lib/apache \
+          --includedir=/usr/include/apache \
+          --sysconfdir=/etc/httpd/conf \
+          --localstatedir=/var \
+          --runtimedir=/var/run \
+          --logfiledir=/var/log/httpd \
+          --datadir=/home/httpd \
+          --proxycachedir=/var/cache/httpd \
+          --mandir=/usr/man \
+          --add-module=src/modules/experimental/mod_mmap_static.c \        <A
+NAME="apchmm"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+>
+          --add-module=src/modules/standard/mod_auth_db.c \                <A
+NAME="apchdb"
+><IMG
+SRC="../images/callouts/4.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(4)"></A
+>
+          --enable-module=ssl \                                            <A
+NAME="apchssl"
+><IMG
+SRC="../images/callouts/5.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(5)"></A
+>
+          --enable-rule=SSL_SDBM \                                         <A
+NAME="apchssldbe"
+><IMG
+SRC="../images/callouts/6.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(6)"></A
+>
+          --disable-rule=SSL_COMPAT \                                      <A
+NAME="apchssldbe1"
+><IMG
+SRC="../images/callouts/7.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(7)"></A
+>
+          --activate-module=src/modules/php4/libphp4.a \                   <A
+NAME="apchph4"
+><IMG
+SRC="../images/callouts/8.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(8)"></A
+>
+          --enable-module=php4 \                                           <A
+NAME="apchph41"
+><IMG
+SRC="../images/callouts/9.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(9)"></A
+>
+          --activate-module=src/modules/perl/libperl.a \                   <A
+NAME="apchprl"
+><IMG
+SRC="../images/callouts/10.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(10)"></A
+>
+          --enable-module=perl \                                           <A
+NAME="apchprl1"
+><B
+>(11)</B
+></A
+>
+          --disable-module=status \
+          --disable-module=userdir \
+          --disable-module=negotiation \
+          --disable-module=autoindex \
+          --disable-module=asis \
+          --disable-module=imap \
+          --disable-module=env \
+          --disable-module=actions
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec242.html#apchmdssl"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;require only if you have included support for mod_ssl to your Apache source.
+</DD
+><DT
+><A
+HREF="chap29sec242.html#apchmmshrd"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;require only if you use the mm Shared Memory Library for Apache.
+</DD
+><DT
+><A
+HREF="chap29sec242.html#apchmm"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+></DT
+><DD
+>&#13;            required only if you have the intention to use mod_mmap, see the section <A
+HREF="chap29sec259.html"
+>Optimizing Apache</A
+> in this chapter for more information.
+          </DD
+><DT
+><A
+HREF="chap29sec242.html#apchdb"
+><IMG
+SRC="../images/callouts/4.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(4)"></A
+></DT
+><DD
+>&#13;            required only if you have the intention to use mod_auth_db, see the section <A
+HREF="chap29sec251.html"
+>Securing Apache</A
+> in this chapter for more information.
+          </DD
+><DT
+><A
+HREF="chap29sec242.html#apchssl"
+><IMG
+SRC="../images/callouts/5.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(5)"></A
+></DT
+><DD
+>&#13;            required only if you have included support for mod_ssl data encryption to your Apache source.
+          </DD
+><DT
+><A
+HREF="chap29sec242.html#apchssldbe"
+><IMG
+SRC="../images/callouts/6.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(6)"></A
+><A
+HREF="chap29sec242.html#apchssldbe1"
+><IMG
+SRC="../images/callouts/7.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(7)"></A
+></DT
+><DD
+>&#13;            require only if you have included support for mod_ssl data encryption to your Apache source.
+          </DD
+><DT
+><A
+HREF="chap29sec242.html#apchph4"
+><IMG
+SRC="../images/callouts/8.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(8)"></A
+><A
+HREF="chap29sec242.html#apchph41"
+><IMG
+SRC="../images/callouts/9.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(9)"></A
+></DT
+><DD
+>&#13;            require only if you have included support for PHP4 server-side scripting language to your Apache source.
+          </DD
+><DT
+><A
+HREF="chap29sec242.html#apchprl"
+><IMG
+SRC="../images/callouts/10.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(10)"></A
+><A
+HREF="chap29sec242.html#apchprl1"
+><B
+>(11)</B
+></A
+></DT
+><DD
+>&#13;            require only if you have included support for mod_perl programming language to your Apache source.
+          </DD
+></DL
+></DIV
+>
+        
+      </P
+></LI
+></OL
+></DIV
+><P
+>&#13;      This tells Apache to set itself up for this particular hardware setup with:
+      <P
+></P
+><UL
+><LI
+><P
+>&#13;          module mod_mmap to improve performance.
+        </P
+></LI
+><LI
+><P
+>&#13;        module mod_auth_db for users password authentication security.
+        </P
+></LI
+><LI
+><P
+>&#13;        module mod_ssl for data encryptions and secure communication.
+        </P
+></LI
+><LI
+><P
+>&#13;        module mod_php4 for php server-side scripting language and improve the load of web pages build in <SPAN
+CLASS="acronym"
+>PHP</SPAN
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;        module mod_perl for better security and performance than the default cgi scripts.
+        </P
+></LI
+><LI
+><P
+>&#13;        disable module status
+        </P
+></LI
+><LI
+><P
+>&#13;          disable module userdir
+        </P
+></LI
+><LI
+><P
+>&#13;        disable module negotiation
+        </P
+></LI
+><LI
+><P
+>&#13;        disable module autoindex
+        </P
+></LI
+><LI
+><P
+>&#13;        disable module asis
+        </P
+></LI
+><LI
+><P
+>&#13;        disable module imap
+        </P
+></LI
+><LI
+><P
+>&#13;        disable module env
+        </P
+></LI
+><LI
+><P
+>&#13;        disable module actions
+        </P
+></LI
+></UL
+>
+    </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+      It's important to note that removing all unrequired modules during the configure time will improve the performance of your Apache Web Server. In our configuration above, we've removed the most unused modules both to lower the load 
+      operation, and limit the security risks in our Apache web server. See your Apache documentation for information on each one.
+</P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec241.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec243.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure and apply <SPAN
+CLASS="acronym"
+>PHP4</SPAN
+> to Apache source</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Install Apache</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

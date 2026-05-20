@@ -1,0 +1,396 @@
+<HTML
+><HEAD
+><TITLE
+>users authentication with .dbmpasswd password file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Securing Apache"
+HREF="chap29sec251.html"><LINK
+REL="NEXT"
+TITLE="Apache in a chroot jail"
+HREF="chap29sec254.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec251.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec254.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19622"
+>29.16. users authentication with <TT
+CLASS="filename"
+>.dbmpasswd</TT
+> password file</A
+></H1
+><P
+>&#13;      This step is necessary only if you think that you'll use an access file authentication system for your web site. Access file authentication is used when you have the need to protect some part of your web site with a user password. With 
+      Apache, a lot of options exist to protect your site with usernames and passwords.
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>dbmmanage</B
+> program utility of Apache can be used to create and update usernames and passwords of <SPAN
+CLASS="acronym"
+>HTTP</SPAN
+> users. This method use a <SPAN
+CLASS="acronym"
+>DBM</SPAN
+> format files that is the fastest mechanism when you have 
+        thousands users to manage in your password file. First of all, it's important to change the permission of this program to be <TT
+CLASS="literal"
+>0750/-rwxr-x---</TT
+>, writable only by the super-user <TT
+CLASS="literal"
+>root</TT
+>, readable and executable by group 
+        and nothing for the others.</P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;            To change the permissions on the <B
+CLASS="command"
+>dbmmanage</B
+> program, use the following command:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 750 /usr/bin/dbmmanage
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;            To create a username and password, use the following command:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep ]/# /usr/bin/dbmmanage  /etc/httpd/.dbmpasswd adduser username
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;              New password:
+              Re-type new password:
+              User username added with password encrypted to l4jrdAL9MH0K.
+            </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+            Where &#60;/etc/httpd&#62; is the location of the password file, &#60;.dbmpasswd&#62; is the name of the password file, and &#60;username&#62; is the name of the user you want to add in your <TT
+CLASS="filename"
+>.dbmpasswd</TT
+> file.
+          </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;        If you use the <B
+CLASS="command"
+>dbmmanage</B
+> utility with your Apache web server to create passwords and usernames, don't forget to include in your <TT
+CLASS="filename"
+>/etc/httpd/conf/httpd.conf</TT
+> configuration file the part of your web site 
+        you need to protect with user password authentication:
+        Edit the <TT
+CLASS="filename"
+>httpd.conf</TT
+> file <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/httpd/conf/httpd.conf</TT
+> and add the following lines to protect the <TT
+CLASS="literal"
+>private</TT
+> directory of your web site <TT
+CLASS="literal"
+>ona</TT
+> with 
+        user password authentication:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          &#60;Directory "/home/httpd/ona/private"&#62;
+          Options None
+          AllowOverride AuthConfig
+          AuthName "restricted stuff"
+          AuthType Basic
+          AuthDBUserFile /etc/httpd/.dbmpasswd
+          require valid-user
+          &#60;/Directory&#62;
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        The path &#60;/home/httpd/ona/private&#62; specifies the directory we want to protect with a password and username, the &#60;/etc/httpd/.dbmpasswd&#62; specifies the location of the password file.
+
+        To add the DB password authentication module to your Apache Web Server, you must be sure to include it during the configuration time of Apache with the following parameter <TT
+CLASS="envar"
+>--add-module=src/modules/standard/mod_auth_db.c</TT
+>. See 
+        your Apache documentation for more information.
+      </P
+></LI
+><LI
+><P
+>&#13;        You must restart Apache web server for the changes to take effect:
+        To restart Apache, use the following commands:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/# /etc/rc.d/init.d/httpd <B
+CLASS="command"
+>restart</B
+>
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          Shutting down http:                                        	[  OK  ]
+          Starting httpd:                                            	[  OK  ]
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        Finally, we must test the new protected directory named <TT
+CLASS="literal"
+>private</TT
+>.
+        To verify that it works, point your web browser to the following address: <TT
+CLASS="literal"
+>http://my-web-server/private/</TT
+>. The &#60;my-web-server&#62; is the address where your Apache web server lives. The &#60;/private/&#62; is the directory 
+        we want to protect with user password authentication.
+      </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Apache-Passwd.gif"
+ALT="Apache password"
+></IMG
+></P
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN19672"
+>29.16.1. Immunize configuration files like <TT
+CLASS="filename"
+>httpd.conf</TT
+></A
+></H2
+><P
+>&#13;        As we already know, the immutable bit can be used to prevent deletion, overwriting or creation of a symbolic link to a file. Once your <TT
+CLASS="filename"
+>httpd.conf</TT
+> file has been configured, it's a good idea to immunize it with 
+        the following command:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/# <B
+CLASS="command"
+>chattr</B
+>  +i /etc/httpd/conf/httpd.conf
+        </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec251.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec254.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Securing Apache</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Apache in a chroot jail</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

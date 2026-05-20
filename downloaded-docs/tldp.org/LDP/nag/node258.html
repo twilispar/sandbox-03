@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>How Does Usenet Handle News?</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node259.html">C-News</A>
+<B>Up:</B> <A HREF="node255.html">Netnews</A>
+<B> Previous:</B> <A HREF="node257.html">What is Usenet Anyway?</A>
+<BR> <P>
+<H1><A NAME="SECTION0018300000">How Does Usenet Handle News?</A></H1>
+<A NAME="newsalgorithm"></A>
+Today, Usenet has grown to enormous proportions. Sites that carry
+the whole of netnews usually transfer something like a paltry 
+sixty megabytes a day.<A HREF="footnode.html#8634"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> Of course this requires much more than pushing around files.  So let's
+take a look at the way most  systems handle Usenet news.
+<P>
+News is distributed through the net by various transports. The
+historical medium used to be UUCP, but today the main traffic is carried
+by Internet sites. The routing algorithm used is called <em>flooding</em>:
+Each site maintains a number of links (<em>news feeds</em>) to other sites.
+Any article generated or received by the local news system is forwarded
+to them, unless it has already been seen at that site, in which case it
+is discarded. A site may find out about all other sites the article has
+already traversed by looking at the Path: header field. This
+header contains a list of all systems the article has been forwarded by
+in bang path notation.
+<P>
+
+To distinguish articles and recognize duplicates, Usenet articles have
+to carry a message id (specified in the Message-Id: header
+field), which combines the posting site's name and a serial number into
+``&lt;serial@site&gt;''. For each article processed, the
+news system logs this id into a <em>history</em> file against which all
+newly arrived articles are checked.
+<P>
+
+The flow between any two sites may be limited by two criteria: for one,
+an article is assigned a distribution (in the Distribution:
+header field) which may be used to confine it to a certain group of
+sites.  On the other hand, the newsgroups exchanged may be limited by
+both the sending or receiving system.  The set of newsgroups and
+distributions allowed for transmission to a site are usually kept in the
+sys file.
+<P>
+<A NAME="8650"></A>
+<A NAME="8651"></A>
+<A NAME="8652"></A>
+The sheer number of articles usually requires that improvements be made
+to the above scheme. On UUCP networks, the natural thing to do is to
+collect articles over a period of time, and combine them into a single
+file, which is compressed and sent to the remote site. This is called
+<em>batching</em>.<A HREF="footnode.html#8654"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="8655"></A>
+An alternative technique is the <em>ihave/sendme</em> protocol that
+prevents duplicate articles from being transferred in the first place,
+thus saving net bandwidth. Instead of putting all articles in batch
+files and sending them along, only the message ids of articles are
+combined into a giant ``ihave'' message and sent to the remote site.  It
+reads this message, compares it to its history file, and returns the
+list of articles it wants in a ``sendme'' message. Only these articles
+are then sent.
+<P>
+Of course, ihave/sendme only makes sense if it involves two big sites
+that receive news from several independent feeds each, and who poll each
+other often enough for an efficient flow of news.
+<P>
+<A NAME="8657"></A>
+Sites that are on the Internet generally rely on TCP/IP-based software
+that uses the Network News Transfer Protocol, NNTP.<A HREF="footnode.html#8658"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> It transfers news between feeds and provides Usenet access to single
+users on remote hosts.
+<P>
+<A NAME="8659"></A>
+<A NAME="8660"></A>
+NNTP knows three different ways to transfer news. One is a real-time
+version of ihave/sendme, also referred to as <em>pushing</em> news. The
+second technique is called <em>pulling</em> news, in which the client
+requests a list of articles in a given newsgroup or hierarchy that have
+arrived at the server's site after a specified date, and chooses those
+it cannot find in its history file.  The third mode is for interactive
+newsreading, and allows you or your newsreader to retrieve articles from
+specified newsgroups, as well as post articles with incomplete header
+information.
+<P>
+<A NAME="8663"></A>
+<A NAME="8664"></A>
+<A NAME="8665"></A>
+<P>
+<A NAME="8666"></A>
+<A NAME="8699"></A>
+At each site, news are kept in a directory hierarchy below /var/spool/news,
+each article in a separate file, and each newsgroup in a separate
+directory.  The directory name is made up of the newsgroup name, with
+the components being the path components. Thus,
+comp.os.linux.misc articles are kept in
+/var/spool/news/comp/os/linux/misc. The articles in a newsgroup are
+assigned numbers in the order they arrive. This number serves as the
+file's name.  The range of numbers of articles currently online is kept
+in a file called active, which at the same time serves as a list
+of newsgroups known at your site.
+<P>
+<A NAME="8671"></A>
+<A NAME="8672"></A>
+Since disk space is a finite resource,<A HREF="footnode.html#8673"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> one has to start throwing away articles after some time. This is
+called <em>expiring</em>. Usually, articles from certain groups and
+hierarchies are expired at a fixed number of days after they arrive.
+This may be overridden by the poster by specifying a date of expiration
+in the Expires: field of the article header.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node259.html">C-News</A>
+<B>Up:</B> <A HREF="node255.html">Netnews</A>
+<B> Previous:</B> <A HREF="node257.html">What is Usenet Anyway?</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

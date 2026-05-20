@@ -1,0 +1,299 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/lmhosts file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="PREVIOUS"
+TITLE="Configuration of the /etc/smb.conf file"
+HREF="chap29sec284.html"><LINK
+REL="NEXT"
+TITLE="Encrypted Samba password file for clients"
+HREF="chap29sec286.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec284.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 31. Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec286.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN22266"
+>31.6. Configure the <TT
+CLASS="filename"
+>/etc/lmhosts</TT
+> file</A
+></H1
+><P
+>&#13;      Configure your <TT
+CLASS="filename"
+>/etc/lmhosts</TT
+> file. The <TT
+CLASS="filename"
+>lmhosts</TT
+> file is the Samba Net BIOS name to <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address mapping file. It is very similar to the <TT
+CLASS="filename"
+>/etc/hosts</TT
+> file format, except 
+      that the hostname component must correspond to the Net BIOS naming format.
+    </P
+><P
+>&#13;      Create the <TT
+CLASS="filename"
+>lmhosts</TT
+> file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/lmhosts</TT
+> and add your client hosts:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        # Sample Samba lmhosts file.
+        #
+        127.0.0.1	localhost
+        192.168.1.1	deep
+        192.168.1.4	win
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      In our example, this file contains three <SPAN
+CLASS="acronym"
+>IP</SPAN
+> to Net BIOS name mappings. The localhost, <TT
+CLASS="literal"
+>127.0.0.1</TT
+>, client named deep, <TT
+CLASS="literal"
+>192.168.1.1</TT
+> and client named win, <TT
+CLASS="literal"
+>192.168.1.4.</TT
+>
+    </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN22283"
+>31.6.1. Configure the <TT
+CLASS="filename"
+>/etc/pam.d/samba</TT
+> file</A
+></H2
+><P
+>&#13;        Configure your <TT
+CLASS="filename"
+>/etc/pam.d/samba</TT
+> file to use pam authentication by creating the <TT
+CLASS="filename"
+>samba</TT
+> file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/pam.d/samba</TT
+> and add the following lines:
+      </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        Auth	required        /lib/security/pam_pwdb.so nullok shadow
+        Account	required        /lib/security/pam_pwdb.so
+      </PRE
+></TD
+></TR
+></TABLE
+><DIV
+CLASS="section"
+><H3
+CLASS="section"
+><A
+NAME="AEN22292"
+>31.6.1.1. Configure the <TT
+CLASS="filename"
+>/etc/logrotate.d/samba</TT
+> file</A
+></H3
+><P
+>&#13;          Configure your <TT
+CLASS="filename"
+>/etc/logrotate.d/samba</TT
+> file to rotate each week your log files automatically.
+        </P
+><P
+>&#13;          Create the <TT
+CLASS="filename"
+>samba</TT
+> file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/logrotate.d/samba</TT
+> and add the following lines:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            /var/log/samba/log.nmb {
+            notifempty
+            missingok
+            postrotate
+            /usr/bin/killall -HUP nmbd
+            endrotate
+            }
+
+            /var/log/samba/log.smb {
+            notifempty
+            missingok
+            postrotate
+            /usr/bin/killall -HUP smbd
+            endrotate
+            }
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec284.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec286.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configuration of the <TT
+CLASS="filename"
+>/etc/smb.conf</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Encrypted Samba password file for clients</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

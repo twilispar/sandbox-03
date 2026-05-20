@@ -1,0 +1,239 @@
+<HTML
+><HEAD
+><TITLE
+>/etc/printcap Tips</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="The Linux Print2Win mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Client (Linux)"
+HREF="x32.html"><LINK
+REL="NEXT"
+TITLE="License"
+HREF="x95.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>The Linux Print2Win mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x32.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x95.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN75">4. <TT
+CLASS="filename"
+>/etc/printcap</TT
+> Tips</H1
+>
+    
+    <P
+>&#13;      I have used the entry below in the first example, but this is not a
+      particularly good idea:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+>...
+:lp=/dev/null:\</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+    </P
+>
+    <P
+>&#13;      Because lpr does an <SPAN
+CLASS="QUOTE"
+>"exclusive"</SPAN
+> open on the file you specify as lp=.
+      It does this in order to prevent multiple processes from trying to
+      print to the same printer at the same time.
+    </P
+>
+    <P
+>&#13;      The side effect of this is that in your case, <TT
+CLASS="literal"
+>eng</TT
+>
+      and <TT
+CLASS="literal"
+>colour</TT
+> can't print at the same time, (usually more
+      or less transparent since they probably print quickly and since they queue
+      you probably don't notice) but any other process that tries to write to
+      <TT
+CLASS="filename"
+>/dev/null</TT
+> will break!
+    </P
+>
+    <P
+>&#13;      On a single user system, probably not a big problem. I have a system with
+      over 50 printers. It would be a problem there.
+    </P
+>
+    <P
+>&#13;      The solution is to create a dummy printer for each. Eg:
+      <TT
+CLASS="userinput"
+><B
+>touch /dev/eng</B
+></TT
+>.
+    </P
+>
+    <P
+>&#13;<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+><TT
+CLASS="prompt"
+>[localhost]$</TT
+> <TT
+CLASS="userinput"
+><B
+>touch /dev/eng</B
+></TT
+>
+<TT
+CLASS="prompt"
+>[localhost]$</TT
+> <TT
+CLASS="userinput"
+><B
+>touch /dev/colour</B
+></TT
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+    </P
+>
+  </DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x32.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x95.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Client (Linux)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>License</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

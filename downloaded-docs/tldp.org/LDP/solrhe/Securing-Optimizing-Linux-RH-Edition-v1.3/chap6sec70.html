@@ -1,0 +1,260 @@
+<HTML
+><HEAD
+><TITLE
+>The ip_local_port_range parameters</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux General Optimization"
+HREF="gen-optim.html"><LINK
+REL="PREVIOUS"
+TITLE="The buffermem parameters"
+HREF="chap6sec69.html"><LINK
+REL="NEXT"
+TITLE="The /etc/nsswitch.conf file"
+HREF="chap6sec71.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap6sec69.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. Linux General Optimization</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap6sec71.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4644"
+>6.7. The ip_local_port_range parameters</A
+></H1
+><P
+>&#13;            The <TT
+CLASS="filename"
+>/proc/sys/net/ipv4/ip_local_port_range</TT
+> defines the local port range that is used by <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> and <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> traffic to choose the local 
+            port. You will see in the parameters of this file two numbers: The first number is the first local port allowed for <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> and <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> traffic on the server, the 
+            second is the last local port number. For high-usage systems you may change its default parameters to 32768-61000 -first-last.
+            </P
+><P
+>&#13;            The default setup for the ip_local_port_range parameters under Red Hat Linux is:
+            <TT
+CLASS="computeroutput"
+>"1024 4999"</TT
+>
+            <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.1.gif"
+ALT="Version 6.1 only"
+></IMG
+></P
+></DIV
+>
+            To change the values of ip_local_port_range, type the following command on your terminal:
+
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep] /# <B
+CLASS="command"
+>echo</B
+> "32768 61000" &#62;/proc/sys/net/ipv4/ip_local_port_range
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            Add the above commands to the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> script file and you'll not have to type it again the next time you reboot your system.
+            </P
+><P
+>&#13;            <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+            
+            Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following line:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            # Allowed local port range
+            net.ipv4.ip_local_port_range = 32768 61000
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            You must restart your network for the change to take effect. The command to manually restart the network is the following:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;            Setting network parameters	    [  OK  ]
+            Bringing up interface lo	    [  OK  ]
+            Bringing up interface eth0	    [  OK  ]
+            Bringing up interface eth1	    [  OK  ]
+           </TT
+>&nbsp;</P
+>
+            
+            </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap6sec69.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap6sec71.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The buffermem parameters</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-optim.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/nsswitch.conf</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

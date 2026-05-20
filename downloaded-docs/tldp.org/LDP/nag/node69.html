@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Configuring a Gateway</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node70.html">The PLIP Interface</A>
+<B>Up:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<B> Previous:</B> <A HREF="node68.html">Routing through a Gateway</A>
+<BR> <P>
+<H2><A NAME="SECTION007740000">Configuring a Gateway</A></H2>
+Configuring a machine to switch packets between two Ethernets is
+pretty straightforward. Assume we're back at vlager, which
+is equipped with two Ethernet boards, each being connected to one
+of the two networks. All you have to do is configure both interfaces
+separately, giving them their respective IP-address, and that's it.
+<P>
+It is quite useful to add information on the two interfaces to
+the hosts file in the way shown below, so we have handy
+names for them, too:
+<pre>
+           191.72.1.1      vlager      vlager.vbrew.com
+           191.72.1.1      vlager-if1
+           191.72.2.1      vlager-if2
+
+ 
+</pre>
+The sequence of commands to set up the two interfaces is then:
+<Pre>
+           # ifconfig eth0 vlager-if1
+           # ifconfig eth1 vlager-if2
+           # route add brew-net
+           # route add wine-net
+ 
+</Pre>
+<ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

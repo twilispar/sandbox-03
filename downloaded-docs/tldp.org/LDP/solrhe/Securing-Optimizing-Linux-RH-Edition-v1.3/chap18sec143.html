@@ -1,0 +1,791 @@
+<HTML
+><HEAD
+><TITLE
+>Install, Compile and Optimize</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux Tripwire ASR 1.3.1"
+HREF="tripwireASR.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux Tripwire ASR 1.3.1"
+HREF="tripwireASR.html"><LINK
+REL="NEXT"
+TITLE="Configurations"
+HREF="chap18sec145.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="tripwireASR.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 18. Linux Tripwire ASR 1.3.1</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap18sec145.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN9682"
+>18.1. Install, Compile and Optimize</A
+></H1
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN9684"
+></A
+><P
+><B
+>As explained in the [<SPAN
+CLASS="citation"
+>Tripwire ASR goals</SPAN
+>]:</B
+></P
+><P
+>&#13;          With the advent of increasingly sophisticated and subtle account break-ins on Unix systems, the need for tools to aid in the detection of unauthorized modification of files becomes clear. Tripwire is a tool that 
+          aids system administrators and users in monitoring a designated set of files for any changes. Used with system files on a regular (e.g., daily) basis, Tripwire can notify system administrators of corrupted or 
+          tampered files, so damage control measures can be taken in a timely manner.
+          </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;          Tripwire is a file and directory integrity checker, a utility that compares a designated set of files and directories against information stored in a previously generated database.  Any differences are flagged 
+          and logged, including added or deleted entries.  When run against system files on a regular basis, any changes in critical system files will be spotted -- and appropriate damage control measures can be taken 
+          immediately. With Tripwire, system administrators can conclude with a high degree of certainty that a given set of files remain free of unauthorized modifications if Tripwire reports no changes.
+          </P
+><P
+>&#13;          These installation instructions assume:
+          <P
+></P
+><UL
+><LI
+><P
+>&#13;          Commands are Unix-compatible.
+          </P
+></LI
+><LI
+><P
+>&#13;          The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+> <EM
+>-other paths are possible</EM
+>.
+          </P
+></LI
+><LI
+><P
+>&#13;          Installations were tested on Red Hat Linux 6.1 and 6.2.
+          </P
+></LI
+><LI
+><P
+>&#13;          All steps in the installation will happen in super-user account root.
+          </P
+></LI
+><LI
+><P
+>&#13;          Tripwire version number is <TT
+CLASS="literal"
+>1.3.1-1</TT
+>
+          </P
+></LI
+></UL
+>
+          </P
+><P
+>&#13;          These are the package(s) required and Tripwire Homepage: 
+          <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;          <A
+HREF="appendixa.html#prtinxfp16"
+>http://www.tripwiresecurity.com/</A
+>
+          </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+          You must be sure to download: Tripwire-1.3.1-1.tar.gz
+          </P
+><P
+>&#13;          You need to decompress the Tarballs, It is a good idea to make a list of files on the system before you install it, and one afterwards, and then compare them using diff to find out what file it placed where. Simply 
+          run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Tripwire1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Tripwire2</B
+></TT
+> after you install the tarball, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>Tripwire1 Tripwire2 &#62; Tripwire-Installed</B
+></TT
+> 
+          to get a list of what changed.
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>cp</B
+> Tripwire-version.tar.gz /var/tmp
+          [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+          [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf Tripwire-version.tar.gz
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;          Move into the new Tripwire directory and  Edit the utils.c file (vi +462 src/utils.c) and change the line:
+                    
+          </P
+><P
+>&#13;          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          else if (iscntrl(*pcin)) {
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          else if (!(*pcin &#38; 0x80) &#38;&#38; iscntrl(*pcin)) {
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;          Edit the <TT
+CLASS="filename"
+>config.parse.c</TT
+> file, <B
+CLASS="command"
+>vi</B
+> +356 <TT
+CLASS="filename"
+>src/config.parse.c</TT
+> and change the line:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          rewind(fpout);
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          else {
+          rewind(fpin);
+          }
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;          Edit the <TT
+CLASS="filename"
+>config.h</TT
+> file, <B
+CLASS="command"
+>vi</B
+> +106 <TT
+CLASS="filename"
+>include/config.h</TT
+> and change the line:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          #define CONFIG_PATH     "/usr/local/bin/tw"
+          #define DATABASE_PATH   "/var/tripwire"
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read: 
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          #define CONFIG_PATH     "/etc"
+          #define DATABASE_PATH   "/var/spool/tripwire"
+          </PRE
+></TD
+></TR
+></TABLE
+>
+
+          </P
+><P
+>&#13;         Edit the <TT
+CLASS="filename"
+>config.h</TT
+> file, <B
+CLASS="command"
+>vi</B
+> +165 <TT
+CLASS="filename"
+>include/config.h</TT
+> and change the line:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          #define TEMPFILE_TEMPLATE "/tmp/twzXXXXXX"
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          #define TEMPFILE_TEMPLATE "/var/tmp/.twzXXXXXX"
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;          Edit the <TT
+CLASS="filename"
+>config.pre.y</TT
+> file <B
+CLASS="command"
+>vi</B
+> +66 <TT
+CLASS="filename"
+>src/config.pre.y</TT
+> and change the line:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          #ifdef TW_LINUX
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          #ifdef TW_LINUX_UNDEF
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;          Edit the <TT
+CLASS="filename"
+>Makefile</TT
+>, <B
+CLASS="command"
+>vi</B
+> +13 <TT
+CLASS="filename"
+>Makefile</TT
+> and change the line:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          DESTDIR = /usr/local/bin/tw
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          DESTDIR = /usr/sbin
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          DATADIR = /var/tripwire
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          DATADIR = /var/spool/tripwire
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          LEX     = lex
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          LEX     = flex
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          CC=gcc
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          CC=egcs
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          CFLAGS = -O
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          CFLAGS = -O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/tw_ASR_1.3.1_src# <B
+CLASS="command"
+>make</B
+>
+          [root@deep ]/tw_ASR_1.3.1_src# <B
+CLASS="command"
+>make install</B
+>
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/tw_ASR_1.3.1_src# <B
+CLASS="command"
+>chmod</B
+> 700  /var/spool/tripwire/
+          [root@deep ]/tw_ASR_1.3.1_src# <B
+CLASS="command"
+>chmod</B
+> 500 /usr/sbin/tripwire
+          [root@deep ]/tw_ASR_1.3.1_src# <B
+CLASS="command"
+>chmod</B
+> 500 /usr/sbin/siggen
+          [root@deep ]/tw_ASR_1.3.1_src# <B
+CLASS="command"
+>rm</B
+> -f  /usr/sbin/tw.config
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;            <P
+></P
+><UL
+><LI
+><P
+>&#13;          The above commands <B
+CLASS="command"
+>make</B
+> and <B
+CLASS="command"
+>make install</B
+> will configure the software to ensure your system has the necessary functionality and libraries to successfully compile the package, compile all source files into 
+          executable binaries, and then install the binaries and any supporting files into the appropriate locations.
+          </P
+></LI
+><LI
+><P
+>&#13;          The <B
+CLASS="command"
+>chmod</B
+> command will change the default mode of <TT
+CLASS="filename"
+>tripwire</TT
+> directory to be <TT
+CLASS="literal"
+>700 drwx------</TT
+> only readable, writable, and executable by the super-user root. It will make 
+          the binary <TT
+CLASS="filename"
+>/usr/sbin/tripwire</TT
+> only readable, and executable by the super-user <TT
+CLASS="literal"
+>root -r-x------</TT
+> and finally make the siggen program under <TT
+CLASS="filename"
+>/usr/sbin</TT
+> directory only executable 
+          and readable by root.
+          </P
+></LI
+><LI
+><P
+>&#13;          The <B
+CLASS="command"
+>rm</B
+> command as used above will remove the file <TT
+CLASS="filename"
+>tw.config</TT
+> under <TT
+CLASS="filename"
+>/usr/sbin</TT
+>. We don't need this file since we will create a new one under <TT
+CLASS="filename"
+>/etc</TT
+> 
+          directory later.
+          </P
+></LI
+></UL
+>
+          </P
+><P
+>&#13;          Do Cleanup later:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+          [root@deep ]/tmp# <B
+CLASS="command"
+>rm</B
+> -rf tw_ASR_version/ Tripwire-version.tar.gz
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          The <B
+CLASS="command"
+>rm</B
+> command as used above will remove all the source files we have used to compile and install Tripwire. It will also remove the Tripwire compressed archive from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="tripwireASR.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap18sec145.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux Tripwire ASR 1.3.1</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="tripwireASR.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configurations</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

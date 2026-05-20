@@ -1,0 +1,351 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/mail/access and access.db files </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Mail Network"
+HREF="soser-mailn.html"><LINK
+REL="PREVIOUS"
+TITLE="Build and Tweak Sendmail"
+HREF="chap22sec177.html"><LINK
+REL="NEXT"
+TITLE="The /etc/mail/aliases and aliases.db files"
+HREF="chap22sec179.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap22sec177.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 22. Software -Server/Mail Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap22sec179.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN12262"
+>22.6. The <TT
+CLASS="filename"
+>/etc/mail/access</TT
+> and <TT
+CLASS="filename"
+>access.db</TT
+> files</A
+></H1
+><P
+>&#13;           The <TT
+CLASS="filename"
+>access</TT
+> database file can be created to accept or reject mail from selected domains. For example, you may choose to reject all mail originating from known spammers, or to accept to 
+           relay all mail from your local network since now relaying is denied by default with Sendmail -<EM
+>this is an Anti-Spam feature</EM
+>. In the <TT
+CLASS="filename"
+>access</TT
+> file example below, we'll 
+           allow relaying from localhost and all local network addresses beginning with the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address <TT
+CLASS="literal"
+>192.168.1</TT
+>. 
+           </P
+><P
+>&#13;           The files <TT
+CLASS="filename"
+>access</TT
+> and <TT
+CLASS="filename"
+>access.db</TT
+> are not required for Local or Neighbor Client setups. It is required only if you decide to set up a Central Mail Hub to handle all your mail. Also note 
+           that the use of a Central Mail Hub will improve the security and the management of other servers and clients on your network that run Sendmail.
+            </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;               Create the access file <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/mail/access</TT
+> and add the following lines:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           # Description showing bellow for the format of this file comes from
+           # the Sendmail source distribution under "cf/README" file.
+           #
+           # The table itself uses e-mail addresses, domain names, and network
+           # numbers as keys. For example,
+           #
+           #        spammer@aol.com         	REJECT
+           #        cyberspammer.com        	REJECT
+           #        192.168.212             		REJECT
+           #
+           # would refuse mail from spammer@aol.com, any user from cyberspammer.com
+           # (or any host within the cyberspammer.com domain), and any host on the
+           # 192.168.212.* network.
+           #
+           # The value part of the map can contain:
+           #
+           #        OK           Accept mail even if other rules in the
+           #                        running ruleset would reject it, for example,
+           #                        if the domain name is unresolvable.
+           #        RELAY   Accept mail addressed to the indicated domain or
+           #                        received from the indicated domain for relaying
+           #                        through your SMTP server.  RELAY also serves as
+           #                        an implicit OK for the other checks.
+           #        REJECT  Reject the sender or recipient with a general
+           #                        purpose message.
+           #        DISCARD    Discard the message completely using the
+           #                        $#discard mailer.  This only works for sender
+           #                        addresses (i.e., it indicates that you should
+           #                        discard anything received from the indicated
+           #                        domain).
+           #        ### any text    where ### is an RFC 821 compliant error code
+           #                        and "any text" is a message to return for
+           #                        the command.
+           #
+           # For example:
+           #
+           #        cyberspammer.com        550 We don't accept mail from spammers
+           #        okay.cyberspammer.com   	OK
+           #        sendmail.org            		OK
+           #        128.32                  		RELAY
+           #
+           # would accept mail from okay.cyberspammer.com, but would reject mail
+           # from all other hosts at cyberspammer.com with the indicated message.
+           # It would allow accept mail from any hosts in the sendmail.org domain,
+           # and allow relaying for the 128.32.*.* network.
+           #
+           # You can also use the access database to block sender addresses based on
+           # the username portion of the address. For example:
+           #
+           #        FREE.STEALTH.MAILER@    550 Spam not accepted
+           #
+           # Note that you must include the @ after the username to signify that
+           # this database entry is for checking only the username portion of the
+           # sender address.
+           #
+           # If you use like we do in our "sendmail.mc macro configuration:
+           #
+           #        FEATURE(`blacklist_recipients')
+           #
+           # then you can add entries to the map for local users, hosts in your
+           # domains, or addresses in your domain which should not receive mail:
+           #
+           #        badlocaluser            550 Mailbox disabled for this username
+           #        host.mydomain.com       550 That host does not accept mail
+           #        user@otherhost.mydomain.com     550 Mailbox disabled for this recipient
+           #
+           # This would prevent a recipient of badlocaluser@mydomain.com, any
+           # user at host.mydomain.com, and the single address
+           # user@otherhost.mydomain.com from receiving mail. Enabling this
+           # feature will keep you from sending mails to all addresses that
+           # have an error message or REJECT as value part in the access map.
+           # Taking the example from above:
+           #
+           #        spammer@aol.com        	REJECT
+           #        cyberspammer.com        	REJECT
+           #
+           # Mail can't be sent to spammer@aol.com or anyone at cyberspammer.com.
+           #
+           # Now our configuration of access file,
+           # by default we allow relaying from localhost...
+           localhost.localdomain   	RELAY
+           localhost               		RELAY
+           127.0.0.1               		RELAY
+           192.168.1				RELAY
+           </PRE
+></TD
+></TR
+></TABLE
+>
+          
+           <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+            Don't forget to specify in this file <TT
+CLASS="literal"
+>access</TT
+> your private <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address range you want to relay or you'll be unable to send mail from your internal network.
+           </P
+></BLOCKQUOTE
+></DIV
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           Create the access.db file, remember, since <TT
+CLASS="filename"
+>/etc/mail/access</TT
+> is a database, after creating the text file as described above, you must use the <B
+CLASS="command"
+>makemap</B
+> utility 
+           program to create the database map.
+
+           To create the <TT
+CLASS="filename"
+>access database map</TT
+>, use the following command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /# <B
+CLASS="command"
+>makemap</B
+> hash /etc/mail/access.db &#60; /etc/mail/access
+            </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap22sec177.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap22sec179.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Build and Tweak Sendmail</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soser-mailn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/mail/aliases</TT
+> and <TT
+CLASS="filename"
+>aliases.db</TT
+> files</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

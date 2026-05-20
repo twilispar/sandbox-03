@@ -1,0 +1,246 @@
+<HTML
+><HEAD
+><TITLE
+>Refuse responding to broadcasts request</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="
+            The kernel tunable parameters"
+HREF="chap5sec53.html"><LINK
+REL="NEXT"
+TITLE="Routing Protocols"
+HREF="chap5sec55.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec53.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec55.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4050"
+>5.25. Refuse responding to broadcasts request</A
+></H1
+><P
+>&#13;              As for the ping request, it's also important to disable broadcast request. When a packet is sent to an <SPAN
+CLASS="acronym"
+>IP</SPAN
+> broadcast address (i.e. 192.168.1.255) from a machine on the 
+              local network, that packet is delivered to all machines on that network. Then all the machines on a network respond to this ICMP echo request and the result can be 
+              severe network congestion or outages <EM
+>-denial-of-service</EM
+> attacks. See the <SPAN
+CLASS="acronym"
+>RFC</SPAN
+> 2644 for more information.
+
+              <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.1.gif"
+ALT="Version 6.1 only"
+></IMG
+></P
+></DIV
+>
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /# <B
+CLASS="command"
+>echo</B
+> 1 &#62; /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              You can add this line in your <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> file so the command will be automatically set 
+              if your system reboots.
+              </P
+><P
+>&#13;               <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+              Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following line:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              # Enable ignoring broadcasts request
+              net.ipv4.icmp_echo_ignore_broadcasts = 1
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              
+              You must restart your network for the change to take effect. The command to restart the network is the following:
+              </P
+><P
+>&#13;              To restart all networks devices manually on your system, use the following command:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;              Setting network parameters	  [  OK  ]
+              Bringing up interface lo		  [  OK  ]
+              Bringing up interface eth0	  [  OK  ]
+              Bringing up interface eth1	  [  OK  ]
+              </TT
+></P
+>
+              </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec53.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec55.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The kernel tunable parameters</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Routing Protocols</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,348 @@
+<HTML
+><HEAD
+><TITLE
+>Ssh2 Per-User Configuration</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securties(commercial)"
+HREF="softsec-com.html"><LINK
+REL="PREVIOUS"
+TITLE="Configuration of the /etc/pam.d/ssh file"
+HREF="chap16sec132.html"><LINK
+REL="NEXT"
+TITLE="SSH2 Users Tools"
+HREF="chap16sec134.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap16sec132.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 16. Software -Securties(commercial)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap16sec134.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN9130"
+>16.7. Ssh2 Per-User Configuration</A
+></H1
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>         
+         Create your private &#38; public keys of local, by executing:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>su</B
+> admin
+         [admin@deep /]$ ssh-keygen2
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         Generating 1024-bit dsa key pair
+         6 Oo..oOo.oOo.
+         Key generated.
+         1024-bit dsa, admin@deep.openna.com, Sun Feb 13 2000 05:33:38 -0500
+         Passphrase :
+         Again      :
+         Private key saved to /home/admin/.ssh2/id_dsa_1024_a
+         Public key saved to /home/admin/.ssh2/id_dsa_1024_a.pub
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         
+         Create an <TT
+CLASS="filename"
+>identification</TT
+> file in your <TT
+CLASS="filename"
+>~/.ssh2</TT
+> home directory on local:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [admin@deep]$<B
+CLASS="command"
+>cd</B
+> ~/.ssh2
+         [admin@deep ]/.ssh2$<B
+CLASS="command"
+>echo</B
+> "IdKey id_dsa_1024_a" &#62; identification
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         It's optional to create an identification file on Remote. The identification file contains the name of the private key that is to be used in authentication.
+         </P
+></BLOCKQUOTE
+></DIV
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Copy your public key of Local <I
+CLASS="wordasword"
+>id_dsa_1024_a.pub</I
+> to <TT
+CLASS="filename"
+>~/.ssh2</TT
+> home directory of remote under the name, say, <TT
+CLASS="filename"
+>Local.pub</TT
+>.
+         </P
+></LI
+><LI
+><P
+>         
+         Create an <TT
+CLASS="filename"
+>authorization file</TT
+> in your <TT
+CLASS="filename"
+>~/.ssh2</TT
+> home directory on remote:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [admin@remote ]/.ssh2$<B
+CLASS="command"
+>touch</B
+> authorization
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         The <TT
+CLASS="filename"
+>~/</TT
+> means the user home directory.
+         </P
+></BLOCKQUOTE
+></DIV
+>
+         </P
+></LI
+><LI
+><P
+>         
+         Add the following one line to the <TT
+CLASS="filename"
+>authorization</TT
+> file on the remote host:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [admin@remote ]/.ssh2$<B
+CLASS="command"
+>vi</B
+> authorization
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         key                     Local.pub
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap16sec132.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap16sec134.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configuration of the <TT
+CLASS="filename"
+>/etc/pam.d/ssh</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="softsec-com.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>SSH2 Users Tools</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

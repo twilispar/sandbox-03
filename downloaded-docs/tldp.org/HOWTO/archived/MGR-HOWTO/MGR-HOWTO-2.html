@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The MGR Window System HOWTO: What is the MGR window system?</TITLE>
+ <LINK HREF="MGR-HOWTO-3.html" REL=next>
+ <LINK HREF="MGR-HOWTO-1.html" REL=previous>
+ <LINK HREF="MGR-HOWTO.html#toc2" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="MGR-HOWTO-3.html">Next</A>
+<A HREF="MGR-HOWTO-1.html">Previous</A>
+<A HREF="MGR-HOWTO.html#toc2">Contents</A>
+<HR>
+<H2><A NAME="s2">2. What is the MGR window system?</A></H2>
+
+<P>
+<H2><A NAME="ss2.1">2.1 Function</A>
+</H2>
+
+<P><B>MGR</B> (ManaGeR) is a graphical window system.
+The <B>MGR</B> server
+provides a builtin window manager and windowed graphics terminal
+emulation on color and monochrome bitmap displays.  <B>MGR</B> is
+controlled by mousing pop-up menus, by keyboard interaction, and by
+escape sequences written on pseudo-terminals by client software.
+<P><B>MGR</B> provides each client window with: termcap-style terminal
+control functions, graphics primitives such as line and circle
+drawing; facilities for manipulating bitmaps, fonts, icons, and
+pop-up menus; commands to reshape and position windows; and a
+message passing facility enabling client programs to rendezvous
+and exchange messages.  Client programs may ask to be informed
+when a change in the window system occurs, such as a reshaped
+window, a pushed mouse button, or a message sent from another
+client program.  These changes are called events.
+<B>MGR</B> notifies a
+client program of an event by sending it an ASCII character string
+in a format specified by the client program.  Existing
+applications can be integrated into the windowing environment
+without modification by having <B>MGR</B> imitate keystrokes in response
+to user defined menu selections or other events.
+<P>
+<H2><A NAME="ss2.2">2.2 Requirements</A>
+</H2>
+
+<P><B>MGR</B> currently runs on Linux, FreeBSD,
+Sun 3/4 workstations with SunOS, and
+Coherent.  Various older versions of <B>MGR</B> run on the Macintosh,
+Atari ST MiNT, Xenix, 386-Minix, DEC 3100, and the 3b1 Unix-pc.
+Many small, industrial, real-time systems under OS9 or Lynx in Europe
+use (another variant of) Mgr for their user interface.
+The programming interface is implemented in C and in ELisp,
+although supporting clients written in other languages is quite
+easy.
+<P>Running <B>MGR</B> requires much less in resources than X, or even gcc.
+It does not have the user-base, software repertory, or high-level
+libraries of X or MS-Windows, say, but it is quite elegant
+and approachable.
+<P>It has been said that <B>MGR</B> is to X as Unix was to Multics.
+<P>
+<H2><A NAME="ss2.3">2.3 How do MGR, X11, and 8.5 compare?</A>
+</H2>
+
+<P><B>MGR</B> consists of a server with builtin window manager and terminal
+emulator, and clients which run in this terminal emulator and use it
+to communicate with the server.  No resource multiplexing is done.
+<P>X11 consists of a server and clients, which usually connect to the
+server using a socket.  All user visible things like terminal
+emulators, window managers etc are done using clients.  No resource
+multiplexing is done.
+<P>8.5, the Plan 9 window system, is a resource multiplexer, as each
+process running in a window can access <CODE>/dev/bitblt</CODE>,
+<CODE>/dev/mouse</CODE> and
+<CODE>/dev/kbd</CODE> in its own namespace.  These are multiplexed to the
+<CODE>/dev/bitblit</CODE>, <CODE>/dev/mouse</CODE> and <CODE>/dev/kbd</CODE>
+in the namespace of 8.5.
+This approach allows one to run 8.5 in an 8.5 window,
+a very clean design.  8.5 further has an integrated window manager
+and terminal emulator.
+<P>
+<HR>
+<A HREF="MGR-HOWTO-3.html">Next</A>
+<A HREF="MGR-HOWTO-1.html">Previous</A>
+<A HREF="MGR-HOWTO.html#toc2">Contents</A>
+</BODY>
+</HTML>

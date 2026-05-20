@@ -1,0 +1,301 @@
+<HTML
+><HEAD
+><TITLE
+>Troubleshooting or PANIC!</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="USB Digital Camera HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="DON'T PANIC"
+HREF="x239.html"><LINK
+REL="NEXT"
+TITLE="Last Things Last"
+HREF="c282.html"></HEAD
+><BODY
+CLASS="chapter"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>USB Digital Camera HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x239.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c282.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="chapter"
+><H1
+><A
+NAME="AEN249">Chapter 6. Troubleshooting or PANIC!</H1
+><P
+>If nothing has gone right, let's do some troubleshooting. Use your camera and 
+see if you still have pictures on it. If you do, skip the rest of this 
+paragraph. If you don't, they should be someplace, check again. If not, and you 
+can not find them, go take some more. Turn your camera off and plug it in and 
+boot up again.</P
+><P
+>Check to see if the mount point unlinked by <B
+CLASS="command"
+>mv</B
+>,<TT
+CLASS="filename"
+>/mnt/camera</TT
+> is there. If it's gone create it again. Sometimes the mount point disappears in modified 
+mode. Also, I have notice on my system that sometimes the SCSI device in <TT
+CLASS="filename"
+>/dev</TT
+> 
+(<SPAN
+CLASS="systemitem"
+>sda1</SPAN
+>) gets removed. Check that also and replace if needed.</P
+><P
+>Clean up all the extra directories you got from the script you ran that 
+produced the errors and run your new script with the directories and see if it 
+works. To make it easier to clean up all the directories and files you may have 
+to <TT
+CLASS="envar"
+>su -</TT
+> if you're in user mode. Be sure to change back when you get through. 
+See <A
+HREF="appendix_c.html"
+>Appendix C</A
+> at the end of this document.</P
+><P
+>Type:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+>&#13;[bash]$ dmesg
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>and you should see this somewhere:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+>&#13;hub.c: USB new device connect on bus1/1, assigned device number 2
+usb.c: USB device 2 (vend/prod 0x54c/0x10) is not claimed by any active driver. (The 
+0x54c/0x10 will be different for different vendors.)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>If you see this, your USB mass storage device in recognized.</P
+><P
+>Now turn your camera on and run the script file (the modified one) and you 
+should see something like this when you run dmesg again:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+>&#13;[bash]$ dmesg
+
+SCSI subsystem driver Revision: 1.00
+Initializing USB Mass Storage driver...
+usb.c: registered new driver usb-storage
+scsi0 : SCSI emulation for USB Mass Storage devices
+Vendor: Sony Model: Sony DSC Rev: 3.22
+Type: Direct-Access ANSI SCSI revision: 02
+WARNING: USB Mass Storage data integrity not assured
+USB Mass Storage device found at 2
+USB Mass Storage support registered.
+Attached scsi removable disk sda at scsi0, channel 0, id 0, lun 0
+SCSI device sda: 126848 512-byte hdwr sectors (65 MB)
+sda: Write Protect is off
+/dev/scsi/host0/bus0/target0/lun0: p1
+usb-uhci.c: interrupt, status 3, frame# 1628
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Now run this command and read <A
+HREF="appendix_b.html"
+>Appendix B</A
+>.</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+>&#13;[bash]$ lsmod
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>If the information from running <B
+CLASS="command"
+>lsmod</B
+> appears as in <A
+HREF="appendix_b.html"
+>Appendix B</A
+>,and your <B
+CLASS="command"
+>dmesg</B
+> shows the information listed above, and there are no pictures, I don't 
+know what is wrong. Unfortunately, the only thing I know to do is go thru the 
+whole process again. Only this time use the re-direction option <TT
+CLASS="userinput"
+><B
+>&#62;filename</B
+></TT
+>
+to capture the results. Post this to one of these 2 newsgroups:</P
+><P
+></P
+><UL
+><LI
+><P
+>alt.OS.Linux.mandrake</P
+></LI
+><LI
+><P
+>comp.OS.Linux.hardware</P
+></LI
+></UL
+><P
+>telling what you've done and ask for help. Include everything you can think of, the more 
+information the better, and e-mail me at the same time. My address is: <A
+HREF="mailto:daveekelly@earthlink.net"
+TARGET="_top"
+>daveekelly@earthlink.net</A
+>.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x239.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c282.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>DON'T PANIC</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Last Things Last</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

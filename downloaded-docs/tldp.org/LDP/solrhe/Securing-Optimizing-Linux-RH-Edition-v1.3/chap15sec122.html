@@ -1,0 +1,573 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/ssh/sshd_config file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities"
+HREF="soft-netsecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/ssh/ssh_config file"
+HREF="chap15sec121.html"><LINK
+REL="NEXT"
+TITLE="Configure OpenSSH to use TCP-Wrappers/inetd super server"
+HREF="chap15sec123.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap15sec121.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 15. Software -Securities</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap15sec123.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN8173"
+>15.4. Configure the <TT
+CLASS="filename"
+>/etc/ssh/sshd_config file</TT
+></A
+></H1
+><P
+>&#13;          The <TT
+CLASS="filename"
+>/etc/ssh/sshd_config</TT
+> file is the system-wide configuration file for OpenSSH which allows you to set options that modify the operation of the daemon. This file contains keyword-value pairs, one 
+          per line, with keywords being case insensitive. Here are the most important keywords to configure your sshd for top security; a complete listing and/or special requirements are available in the man page 
+          for <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>sshd</SPAN
+>(8)</SPAN
+>.
+          </P
+><P
+>&#13;          Edit the <TT
+CLASS="filename"
+>sshd_config</TT
+> file, vi <TT
+CLASS="filename"
+>/etc/ssh/sshd_config</TT
+> and add/or change, if necessary, the following parameters:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          # This is ssh server systemwide configuration file.
+
+          Port 22
+          ListenAddress 192.168.1.1
+          HostKey /etc/ssh/ssh_host_key
+          ServerKeyBits 1024
+          LoginGraceTime 600
+          KeyRegenerationInterval 3600
+          PermitRootLogin no
+          IgnoreRhosts yes
+          IgnoreUserKnownHosts yes
+          StrictModes yes
+          X11Forwarding no
+          PrintMotd yes
+          SyslogFacility AUTH
+          LogLevel INFO
+          RhostsAuthentication no
+          RhostsRSAAuthentication no
+          RSAAuthentication yes
+          PasswordAuthentication yes
+          PermitEmptyPasswords no
+          AllowUsers admin
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;          This tells sshd_config file to set itself up for this particular configuration setup with:
+          <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>Port 22</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>Port</TT
+> specifies on which port number ssh daemon listens for incoming connections. The default port is 22.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>ListenAddress 192.168.1.1</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>ListenAddress</TT
+> specifies the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address of the interface network on which the ssh daemon server socket is bind. The default is <TT
+CLASS="literal"
+>0.0.0.0</TT
+>; to improve security you may specify only the required ones to limit possible addresses.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>HostKey /etc/ssh/ssh_host_key</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>HostKey</TT
+> specifies the location containing the private host key.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>ServerKeyBits 1024</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>ServerKeyBits</TT
+> specifies how many bits to use in the server key. These bits are used when the daemon starts to generate its <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> key.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>LoginGraceTime 600</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>LoginGraceTime</TT
+> specifies how long in seconds after a connection request the server will wait before disconnecting if the user has not successfully logged in.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>KeyRegenerationInterval 3600</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>KeyRegenerationInterval</TT
+> specifies how long in seconds the server should wait before automatically regenerated its key. This is a security feature to prevent decrypting captured sessions.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>PermitRootLogin no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>PermitRootLogin</TT
+> specifies whether root can log in using ssh. Never say <TT
+CLASS="filename"
+>yes</TT
+> to this option.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>IgnoreRhosts yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>IgnoreRhosts</TT
+> specifies whether rhosts or shosts files should not be used in authentication. For security reasons it is <EM
+>recommended to no use rhosts or shosts files for authentication</EM
+>.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>IgnoreUserKnownHosts yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>IgnoreUserKnownHosts</TT
+> specifies whether the ssh daemon should ignore the user's <TT
+CLASS="prompt"
+>$</TT
+><TT
+CLASS="filename"
+>HOME/.ssh/known_hosts</TT
+> during RhostsRSAAuthentication.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>StrictModes yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>StrictModes</TT
+> specifies whether ssh should check user's permissions in their home directory and rhosts files before accepting login. This option must always be set to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+> because sometimes users may accidentally leave their directory or files world-writable.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>X11Forwarding no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>X11Forwarding</TT
+> specifies whether <TT
+CLASS="literal"
+>X11</TT
+> forwarding should be enabled or not on this server. Since we setup a server without <SPAN
+CLASS="acronym"
+>GUI</SPAN
+> installed on it, we can safely turn this option off.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>PrintMotd yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>PrintMotd</TT
+> specifies whether the ssh daemon should print the contents of the <TT
+CLASS="filename"
+>/etc/motd</TT
+> file when a user logs in interactively. The <TT
+CLASS="filename"
+>/etc/motd</TT
+> file is also known as the <I
+CLASS="wordasword"
+>message of the day</I
+>.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>SyslogFacility AUTH</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>SyslogFacility</TT
+> specifies the facility code used when logging messages from sshd. The facility specifies the subsystem that produced the message--in our case, AUTH.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>LogLevel INFO</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>LogLevel</TT
+> specifies the level that is used when logging messages from sshd. INFO is a good choice. See the man page for sshd for more information on other possibilities.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>RhostsAuthentication no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>RhostsAuthentication</TT
+> specifies whether sshd can try to use rhosts based authentication. Because rhosts authentication is insecure you shouldn't use this option.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>RhostsRSAAuthentication no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>RhostsRSAAuthentication</TT
+> specifies whether to try rhosts authentication in concert with <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> host authentication.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>RSAAuthentication yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>RSAAuthentication</TT
+> specifies whether to try <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> authentication. This option must be set to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+> for better security in your sessions. <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> use 
+          public and private key pairs created with the ssh-keygen1utility for authentication purposes.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>PasswordAuthentication yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>PasswordAuthentication</TT
+> specifies whether we should use password-based authentication. For strong security, this option must always be set to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+>.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>PermitEmptyPasswords no</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>PermitEmptyPasswords</TT
+> specifies whether the server allows logging in to accounts with a null password. If you intend to use the scp utility to make automatic backups over the network, you must set this option to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+>.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="envar"
+>AllowUsers admin</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The option <TT
+CLASS="envar"
+>AllowUsers</TT
+> specifies and controls which users can access ssh services. Multiple users can be specified, separated by spaces.
+          </P
+></DD
+></DL
+></DIV
+>
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap15sec121.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap15sec123.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/ssh/ssh_config file</TT
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netsecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure OpenSSH to use TCP-Wrappers/inetd super server</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

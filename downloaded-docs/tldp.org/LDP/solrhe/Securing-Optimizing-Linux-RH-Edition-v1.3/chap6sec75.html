@@ -1,0 +1,324 @@
+<HTML
+><HEAD
+><TITLE
+>Better manage your TCP/IP resources</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux General Optimization"
+HREF="gen-optim.html"><LINK
+REL="PREVIOUS"
+TITLE="Tuning IDE Hard Disk Performance"
+HREF="chap6sec74.html"><LINK
+REL="NEXT"
+TITLE="Configuring and Building a Secure, Optimized Kernel"
+HREF="secopt-kernel.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap6sec74.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. Linux General Optimization</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="secopt-kernel.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4895"
+>6.13. Better manage your <SPAN
+CLASS="acronym"
+>TCP/IP</SPAN
+> resources</A
+></H1
+><P
+>&#13;             This hack just make the time default values for <SPAN
+CLASS="acronym"
+>TCP/IP</SPAN
+> connection lower so that more connections can be handled by time on your TCP/IP protocol. The following 
+             will decrease the amount of time your Linux box will try take to finish closing a connection and the amount of time before it will kill a stale connection. 
+             This will also turn off some <SPAN
+CLASS="acronym"
+>IP</SPAN
+> extensions that aren't needed.             
+             The default setup for the <SPAN
+CLASS="acronym"
+>TCP/IP</SPAN
+> parameters we'll change under Red Hat Linux are:
+             <P
+></P
+><UL
+><LI
+><P
+>&#13;             For the tcp_fin_timeout <TT
+CLASS="literal"
+>180</TT
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             For the tcp_keepalive_time <TT
+CLASS="literal"
+>7200</TT
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             For the tcp_window_scaling <TT
+CLASS="literal"
+>1</TT
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             For the tcp_sack <TT
+CLASS="literal"
+>1</TT
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             For the tcp_timestamps <TT
+CLASS="literal"
+>1</TT
+>
+             </P
+></LI
+></UL
+>
+             </P
+><P
+>&#13;             To adjust the new <SPAN
+CLASS="acronym"
+>TCP/IP</SPAN
+> values, type the following commands on your terminal:
+             <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.1.gif"
+ALT=""
+></IMG
+></P
+></DIV
+>
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>echo</B
+> 30 &#62;/proc/sys/net/ipv4/tcp_fin_timeout 
+             [root@deep] /#<B
+CLASS="command"
+>echo</B
+> 1800 &#62;/proc/sys/net/ipv4/tcp_keepalive_time 
+             [root@deep] /#<B
+CLASS="command"
+>echo</B
+> 0  &#62;/proc/sys/net/ipv4/tcp_window_scaling 
+             [root@deep] /#<B
+CLASS="command"
+>echo</B
+> 0  &#62;/proc/sys/net/ipv4/tcp_sack 
+             [root@deep] /#<B
+CLASS="command"
+>echo</B
+> 0  &#62;/proc/sys/net/ipv4/tcp_timestamps
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             Execute the above commands and put them in your <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> file so you don't need to type them again each time your system reboots.
+             </P
+><P
+>&#13;              <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+             Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following lines:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;             # Decrease the time default value for tcp_fin_timeout connection
+             net.ipv4.tcp_fin_timeout = 30
+             # Decrease the time default value for tcp_keepalive_time connection
+             net.ipv4.tcp_keepalive_time = 1800
+             # Turn off the tcp_window_scaling
+             net.ipv4.tcp_window_scaling = 0
+             # Turn off the tcp_sack
+             net.ipv4.tcp_sack = 0
+             # Turn off the tcp_timestamps
+             net.ipv4.tcp_timestamps = 0
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             
+             You must restart your network for the change to take effect. The command to manually restart the network is the following:
+                          
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;             Setting network parameters	    [  OK  ]
+             Bringing up interface lo	    [  OK  ]
+             Bringing up interface eth0	    [  OK  ]
+             Bringing up interface eth1	    [  OK  ]
+             </TT
+></P
+>
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap6sec74.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="secopt-kernel.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Tuning <SPAN
+CLASS="acronym"
+>IDE</SPAN
+> Hard Disk Performance</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-optim.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configuring and Building a Secure, Optimized Kernel</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,608 @@
+<HTML
+><HEAD
+><TITLE
+>Build a kernel with Firewall Masquerading and Forwarding support</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Networking Firewall -Masquerading and Forwarding"
+HREF="Masq-forward.html"><LINK
+REL="PREVIOUS"
+TITLE="Networking Firewall -Masquerading and Forwarding"
+HREF="Masq-forward.html"><LINK
+REL="NEXT"
+TITLE="Config /etc/rc.d/init.d/firewall script file -Gateway Server"
+HREF="chap12sec105.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="Masq-forward.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 12. Networking Firewall -Masquerading and Forwarding</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap12sec105.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN6691"
+>12.1. Build a kernel with Firewall Masquerading and Forwarding support</A
+></H1
+><P
+>&#13;         Once again, the first thing you need to do is ensuring that your kernel has been built with Network Firewall support enabled and Firewalling. In the 2.2.14 kernel version you need to ensure that you have answered <TT
+CLASS="userinput"
+><B
+>Y</B
+></TT
+> to the following questions:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         <TT
+CLASS="userinput"
+><B
+>Networking options:</B
+></TT
+>
+         
+         Network firewalls (CONFIG_FIREFALL) [N] Y
+         <SPAN
+CLASS="acronym"
+>IP</SPAN
+>:Firewalling (CONFIG_IP_FIREWALL) [N] Y
+         <SPAN
+CLASS="acronym"
+>IP</SPAN
+>:<SPAN
+CLASS="acronym"
+>TCP</SPAN
+> syncookie support (CONFIG_SYN_COOKIES) [N] Y
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         If you followed the Linux Kernel section and have recompiled your kernel, the options Network firewalls, <SPAN
+CLASS="acronym"
+>IP</SPAN
+>:Firewalling, and <SPAN
+CLASS="acronym"
+>IP</SPAN
+>:<SPAN
+CLASS="acronym"
+>TCP</SPAN
+> syncookies supports shown above are already set.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         <SPAN
+CLASS="acronym"
+>IP</SPAN
+> Masquerading and <SPAN
+CLASS="acronym"
+>IP</SPAN
+> <SPAN
+CLASS="acronym"
+>ICMP</SPAN
+> Masquerading are requiring only for a Gateway Server.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         <SPAN
+CLASS="acronym"
+>IP</SPAN
+>:Masquerading (CONFIG_IP_MASQUERADE) [N] Y
+         <SPAN
+CLASS="acronym"
+>IP</SPAN
+>:<SPAN
+CLASS="acronym"
+>ICMP</SPAN
+> Masquerading (CONFIG_IP_MASQUERADE_ICMP) [N] Y
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+         Only your Gateway Server needs to have <SPAN
+CLASS="acronym"
+>IP</SPAN
+>:Masquerading and <SPAN
+CLASS="acronym"
+>IP</SPAN
+>:<SPAN
+CLASS="acronym"
+>ICMP</SPAN
+> Masquerading kernel options enabled. This is required to masquerade your Internal Network to the outside.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         Masquerade means that if one of the computers on your local network for which your Linux box (or gateway) acts as a firewall wants to send something to the outside, your box can <TT
+CLASS="literal"
+>masquerade</TT
+> as that 
+         computer. In other words it forwards the traffic to the intended outside destination, but makes it look like it came from the firewall box itself. 
+         </P
+><P
+>&#13;         It works both ways: if the outside host replies, the Linux firewall will silently forward the traffic to the corresponding local computer. This way, the computers on your local net are completely invisible to the outside world, even 
+         though they can reach the outside and can receive replies. This makes it possible to have the computers on the local network participate on the Internet even if they don't have officially registered <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses.
+         </P
+><P
+>&#13;         The <SPAN
+CLASS="acronym"
+>IP</SPAN
+> masquerading code will only work if <SPAN
+CLASS="acronym"
+>IP</SPAN
+> forwarding is enabled on your system. This feature is by default disabled and you can enable it with the following command:
+         </P
+><P
+>&#13;         Under <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Version6.1.gif"
+ALT="Version 6.1 only"
+></IMG
+></P
+></DIV
+>
+         To enable <SPAN
+CLASS="acronym"
+>IP</SPAN
+> forwarding feature on your server, execute the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>echo</B
+> 1 &#62; /proc/sys/net/ipv4/ip_forward
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         You can add the above line in your <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> script file so <SPAN
+CLASS="acronym"
+>IP</SPAN
+> forwarding is enabled automatically for you even if your server is rebooted. In Red Hat Linux 6.1 this can also be 
+         accomplished by changing the line in <TT
+CLASS="filename"
+>/etc/sysconfig/network</TT
+> file from:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         FORWARD_IPV4="false"
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         FORWARD_IPV4="yes"
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         You must restart your network for the change to take effect:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Bringing up interface lo	        [  OK  ]
+         Bringing up interface eth0	        [  OK  ]
+         Bringing up interface eth1	        [  OK  ]
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         So you can either add the echo 1 &#62; /proc/sys/net/ipv4/ip_forward command line to your <TT
+CLASS="filename"
+>rc.local</TT
+> script file or you change the value of the line <TT
+CLASS="envar"
+>FORWARD_IPV4=false</TT
+> to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+> in the network file to set this 
+         feature to <TT
+CLASS="literal"
+>ON</TT
+>. Personally I prefer the second choice.
+        </P
+><P
+>&#13;         Under <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+         To enable IPv4 forwarding on your RH 6.2 system, Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         # Enable packet forwarding
+         net.ipv4.ip_forward = 1
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         You must restart your network for the change to take effect. The command to restart the network is the following:
+         </P
+><P
+>&#13;         To restart all network devices manually on your system, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Setting network parameters	       [  OK  ]
+         Bringing up interface lo	       [  OK  ]
+         Bringing up interface eth0	       [  OK  ]
+         Bringing up interface eth1	       [  OK  ]
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+         The <SPAN
+CLASS="acronym"
+>IP</SPAN
+> forwarding line above is only required if you answered <TT
+CLASS="userinput"
+><B
+>Yes</B
+></TT
+> to the kernel option IP:Masquerading (CONFIG_IP_MASQUERADE) and choose to have a server act as 
+         a Gateway and masquerade for your inside network.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         If you enabled <SPAN
+CLASS="acronym"
+>IP</SPAN
+> Masquerading, then the modules <TT
+CLASS="filename"
+>ip_masq_ftp.o</TT
+> for ftp file transfers, <TT
+CLASS="filename"
+>ip_masq_irc.o</TT
+> for irc chats, <TT
+CLASS="filename"
+>ip_masq_quake.o</TT
+> 
+         <EM
+>you guessed it!</EM
+>, <TT
+CLASS="filename"
+>ip_masq_vdolive.o</TT
+> for VDOLive video connections, <TT
+CLASS="filename"
+>ip_masq_cuseeme.o</TT
+> for CU-SeeMe broadcasts and <TT
+CLASS="filename"
+>ip_masq_raudio.o</TT
+> for RealAudio downloads 
+         will automatically be compiled. They are needed to make masquerading for these protocols work. 
+         </P
+><P
+>&#13;         Also, don't forget that you'll need to build a modularized kernel and answer <TT
+CLASS="userinput"
+><B
+>Yes</B
+></TT
+> to the Enable loadable module support (CONFIG_MODULES) 
+         option instead of a monolithic kernel to be able to use masquerading functions and modules like <TT
+CLASS="filename"
+>ip_masq_ftp.o</TT
+> on your Gateway server <EM
+>see the <A
+HREF="chap7sec80.html"
+>Linux Kernel section</A
+> above in this book for more information</EM
+>.
+         </P
+><P
+>&#13;         The basic masquerade code described for <SPAN
+CLASS="acronym"
+>IP</SPAN
+>: masquerading above only handles <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> or <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> packets and <SPAN
+CLASS="acronym"
+>ICMP</SPAN
+> errors for existing 
+         connections. The <SPAN
+CLASS="acronym"
+>IP</SPAN
+>:<SPAN
+CLASS="acronym"
+>ICMP</SPAN
+> Masquerading option adds additional support for masquerading <SPAN
+CLASS="acronym"
+>ICMP</SPAN
+> packets, such as ping or the probes used by the 
+         <SPAN
+CLASS="trademark"
+>Windows 95</SPAN
+>&trade; tracer program.
+         </P
+><P
+>&#13;         Remember that other servers like the <A
+HREF="chap11sec102.html"
+>Web Server</A
+>  and <A
+HREF="chap11sec103.html"
+>Mail Server</A
+> examples don't need to have these options enabled since they either have a real <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address assigned or don't act as a Gateway 
+         for the inside network.
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="Masq-forward.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap12sec105.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Networking Firewall -Masquerading and Forwarding</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="Masq-forward.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Config <TT
+CLASS="filename"
+>/etc/rc.d/init.d/firewall</TT
+> script file -Gateway Server</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

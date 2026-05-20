@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Running a NIS Server</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node135.html">Setting up a NIS </A>
+<B>Up:</B> <A HREF="node130.html">The Network Information System</A>
+<B> Previous:</B> <A HREF="node133.html">The Client Side of </A>
+<BR> <P>
+<H1><A NAME="SECTION0012400000">Running a NIS Server</A></H1>
+<P>
+<A NAME="nisserver"></A>
+<A NAME="5065"></A>
+<A NAME="5066"></A>
+<P>
+After so much theoretical techno-babble, it's time to get our hands
+dirty with actual configuration work. In this section, we will cover the
+configuration of a NIS server. If there's already a NIS server running
+on your network, you won't have to set up your own server; in this case,
+you may safely skip this section.
+<P>
+<BLOCKQUOTE> 
+ Note that if you are just going to experiment with the server, make
+ sure you don't set it up for a NIS domain name that is already in use
+ on your network. This may disrupt the entire network service and make a
+ lot of people very unhappy, and very angry.
+</BLOCKQUOTE>
+<P>
+There are currently two NIS servers freely available for , one
+contained in Tobias Reber's yps package, and the other in Peter
+Eriksson's ypserv package. It shouldn't matter which one you run,
+regardless of whether you use NYS or the standard NIS client code that
+is in libc currently. At the time of this writing, the code for
+the handling of NIS slave servers seems to be more complete in
+yps. So if you have to deal with slave servers, yps might
+be a better choice.
+<P>
+After installing the server program (ypserv) in /usr/sbin,
+you should create the directory that is going to hold the map files your
+server is to distribute. When setting up a NIS domain for the
+brewery domain, the maps would go to /var/yp/brewery.  The
+server determines if it is serving a particular NIS domain by checking
+if the map directory is present. If you are disabling service for some
+NIS domain, make sure to remove the directory as well.
+<P>
+<A NAME="5079"></A>
+<A NAME="5080"></A>
+Maps are usually stored in DBM files to speed up lookups. They are
+created from the master files using a program called makedbm (for
+Tobias' server) or dbmload (for Peter's server). These may not be
+interchangeable. Transforming a master file into a form parseable by
+dbmload usually requires some awk or sed magic,
+which tend to be a little tedious to type and hard to remember.
+Therefore, Peter Eriksson's ypserv package contains a Makefile
+(called ypMakefile) that does all these jobs for you. You should
+install it as Makefile in your map directory, and edit it to
+reflect the maps you want to distribute. Towards the top of the file,
+you find the all target that lists the services ypserv
+is to offer.  By default, the line looks something like this:
+<P>
+<P><P>
+<P>
+<A NAME="5093"></A>
+If you don't want to produce the ethers.byname and
+ethers.byaddr maps, for example, simply remove the
+ethers prerequisite from this rule. To test your setup, it may
+suffice to start with just one or two maps, like the services.*
+maps.
+<P>
+After editing the Makefile, while in the map directory, type
+``make''. This will automatically generate and install the maps.
+You have to make sure to update the maps whenever you change the master
+files, otherwise the changes will remain invisible to the network.
+<P>
+<A NAME="5100"></A>
+The next section explains how to configure the NIS client code.  If your
+setup doesn't work, you should try to find out whether any requests
+arrive at your server or not. If you specify the -D command
+line flag to the NYS server, it prints debugging messages to the console
+about all incoming NIS queries, and the results returned. These should
+give you a hint as to where the problem lies. Tobias' server has no such
+option.
+<P>
+<A NAME="5102"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node135.html">Setting up a NIS </A>
+<B>Up:</B> <A HREF="node130.html">The Network Information System</A>
+<B> Previous:</B> <A HREF="node133.html">The Client Side of </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

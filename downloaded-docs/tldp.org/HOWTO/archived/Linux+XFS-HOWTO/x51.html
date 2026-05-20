@@ -1,0 +1,502 @@
+<HTML
+><HEAD
+><TITLE
+> Preparation for XFS Installation </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="Linux + XFS HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Introduction"
+HREF="x30.html"><LINK
+REL="NEXT"
+TITLE=" Kernel Configuration and Installation "
+HREF="x106.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux + XFS HOWTO: Linux on Steroids</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x30.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x106.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN51">2. Preparation for XFS Installation</H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN53">2.1. Downloading the Linux 2.4.x-XFS Kernel Source</H2
+><P
+>Currently the only place to get the source code for the XFS enabled
+ Linux kernel is straight from SGI's Open Source Development site
+ via CVS.     
+  </P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TH
+ALIGN="LEFT"
+VALIGN="CENTER"
+><B
+>Note</B
+></TH
+></TR
+><TR
+><TD
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>two distinct trees are available:
+   <P
+></P
+><UL
+><LI
+><P
+>linux-2.5-xfs: development tree</P
+></LI
+><LI
+><P
+>linux-2.4-xfs: stable bug fix only tree</P
+></LI
+></UL
+>
+  </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>  My experience has been with the 2.4 tree, but I imagine everything
+will work the same with the development tree.  Both trees are kept 
+in sync with their respective mainline kernel tree at least to the 
+point of major release numbers.
+  </P
+><P
+>Here are the steps to download the kernel source tree:
+ 
+  </P
+><P
+>A. Normally the linux kernel source is installed in the /usr/src
+ directory, so you should start off by switching to that directory.
+  </P
+><P
+>   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ cd /usr/src   
+   </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>	
+  </P
+><P
+>B. Next, you should set the CVSROOT environment variable so that
+ it points to the proper cvs server.     
+  </P
+><P
+></P
+><UL
+><LI
+><P
+>If you are running sh, bash, ksh, etc...:   
+   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ export CVSROOT=':pserver:cvs@oss.sgi.com:/cvs'    
+   </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+></LI
+><LI
+><P
+>If you are running csh or tcsh:     
+   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ setenv CVSROOT  :pserver:cvs@oss.sgi.com:/cvs   
+   </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+></LI
+></UL
+><P
+>If you plan on updating your kernel often (to keep up with the
+ latest changes) you might want to put this in your login script.
+ 
+  </P
+><P
+>C. Then log in to the cvs server.    
+  </P
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ cvs login  (the password is "cvs")   
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+  </P
+><P
+>This needs to be done only ONCE, not everytime you access CVS.
+ 
+  </P
+><P
+>D. Now grab linux-2.4-xfs. The first time you will want to do
+ something like:   
+  </P
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ cvs -z3 co linux-2.4-xfs    
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+  </P
+><P
+>After you have checked the code out, you can use:    
+  </P
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ cvs -z3 update linux-2.4-xfs   
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+  </P
+><P
+>to update your copy to the latest version from the CVS server.
+ 
+  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN89">2.2. XFS Support as Modules or Compiled Into the Kernel?</H2
+><P
+>The option to build XFS support for the Linux kernel as modules
+ is available and will work (or so I am told) with the help of an
+ initial RAM disk and a couple of additions to the lilo configuration.
+ I have not tried this (yet), so I will not include documentation
+ on how this is done other than just to qoute from a message to the
+ development mailing list from Russell Cattelan:   
+  </P
+><A
+NAME="AEN92"><TABLE
+BORDER="0"
+WIDTH="100%"
+CELLSPACING="0"
+CELLPADDING="0"
+CLASS="BLOCKQUOTE"
+><TR
+><TD
+WIDTH="10%"
+VALIGN="TOP"
+>&nbsp;</TD
+><TD
+WIDTH="80%"
+VALIGN="TOP"
+><P
+>Actually running xfs as a module isn't very hard.  in the
+ directory cmd/xfs/misc there is a modified mkinitrd the will always
+ generate a ram disk with pagebuf xfs_support and xfs.   
+  </P
+><P
+>Once that is done just add the initrd line in lilo.conf AND 
+  </P
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>append = "ramdisk_size=25000"   
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+  </P
+><P
+>The default size is 4096 which isn't nearly large enough to hold
+ xfs.   
+  </P
+><P
+>This is from my laptop.   
+  </P
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>punch[12:57am]-=&#62;mount
+/dev/ide/host0/bus0/target0/lun0/part8 on / type xfs (rw,noatime) 
+none on /proc type proc (rw) 
+/dev/ide/host0/bus0/target0/lun0/part6 on /boot type ext2 (rw,noatime) 
+none on /dev/pts type devpts (rw,mode=0620)
+/dev/ide/host0/bus0/target0/lun0/part1 on /mnt/windows type vfat (rw,nosuid,nodev,umask=0) 
+/dev/ide/host0/bus0/target0/lun0/part9 on /blam type xfs (rw)   
+
+punch[12:57am]-=&#62;lsmod 
+Module                  Size Used by 
+autofs                 13180   1 (autoclean) 
+usb-uhci               24918   0 (unused) 
+usbcore                35339   0 [usb-uhci]
+3c59x                  25149   1 (autoclean) 
+maestro                29757   0 (unused) 
+soundcore               6085   2 [maestro]
+vfat                   13075   1 (autoclean) 
+fat                    37733   0 (autoclean) [vfat] 
+xfs                   447888   2 
+xfs_support            13954   0 [xfs] 
+pagebuf                39935   2 [xfs]   
+
+
+image=/boot/vmlinuz-2.4.0-XFS-test13-pre4 
+label=t13p4  
+root=/dev/hda8
+initrd=/boot/initrd-2.4.0-XFS-test13p4.img 
+append="ramdisk_size=25000"
+read-only   
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+  </P
+></TD
+><TD
+WIDTH="10%"
+VALIGN="TOP"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+COLSPAN="2"
+ALIGN="RIGHT"
+VALIGN="TOP"
+>--<SPAN
+CLASS="ATTRIBUTION"
+>  Russell Cattelan
+  </SPAN
+></TD
+><TD
+WIDTH="10%"
+>&nbsp;</TD
+></TR
+></TABLE
+><P
+>It seems to me that compiling the support into the kernel would
+ be much simpler, so that is how I am doing it at this point.  I will
+ try it as a module at a later time and add more detailed instructions
+ then.  If anyone has time to document this method before I get around
+ to it please email it to me and I will include it with credit given
+ where credit is due.  :-)   
+  </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x30.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x106.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Introduction</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Kernel Configuration and Installation</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,408 @@
+<HTML
+><HEAD
+><TITLE
+>Configure Samba</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux Samba Server"
+HREF="chap29sec280.html"><LINK
+REL="NEXT"
+TITLE="Compile and optimize"
+HREF="chap29sec282.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec280.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 31. Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec282.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN21840"
+>31.2. Configure Samba</A
+></H1
+><P
+>&#13;      Move into the new Samba directory, and move into its <TT
+CLASS="filename"
+>source</TT
+> subdirectory.
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        Edit the <TT
+CLASS="filename"
+>smbsh.in</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>smbwrapper/smbsh.in</TT
+> and change the line:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          SMBW_LIBDIR=${SMBW_LIBDIR-@builddir@/smbwrapper}
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        To read:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          SMBW_LIBDIR=${SMBW_LIBDIR-/usr/bin}
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        This change will relocate the <TT
+CLASS="filename"
+>lib</TT
+> directory of Samba to be under the <TT
+CLASS="filename"
+>/usr/bin</TT
+> directory.
+      </P
+></LI
+><LI
+><P
+>&#13;        Edit the <TT
+CLASS="filename"
+>Makefile.in</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>Makefile.in</TT
+> and change the line:
+      </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            SBINDIR  =  @bindir@
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            SBINDIR  =  @sbindir@
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+><LI
+><P
+>&#13;          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            VARDIR  =  @localstadir@
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            VARDIR  =  /var/log/samba
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          This will specify that our <TT
+CLASS="filename"
+>sbin</TT
+> directory for the Samba binaries files will be located in the <TT
+CLASS="filename"
+>/usr/sbin</TT
+> directory, and that the <TT
+CLASS="filename"
+>/var</TT
+> 
+          directory for Samba log files will be under the <TT
+CLASS="filename"
+>/var/log/samba</TT
+> subdirectory.
+
+        </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;        Edit the <TT
+CLASS="filename"
+>convert_smbpasswd</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>script/convert_smbpasswd</TT
+> and change the line:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          nawk 'BEGIN {FS=":"}
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        To:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          gawk 'BEGIN {FS=":"}
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        This will specify to use the <SPAN
+CLASS="acronym"
+>GNU</SPAN
+> Linux version of the awk text processing utility instated of the Bell Labs research version of awk program for the <TT
+CLASS="filename"
+>smbpasswd</TT
+> file.
+      </P
+></LI
+><LI
+><P
+>&#13;        Edit the <TT
+CLASS="filename"
+>smbmount.c</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>client/smbmount.c</TT
+> and change the lines:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          static void close_our_files(int client_fd)
+          {
+          int i;
+          for (i = 0; i &#60; 256; i++) {
+          if (i == client_fd) continue;
+          close(i);
+          }
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        To read:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          static void close_our_files(int client_fd)
+          {
+          struct rlimit limits;
+          int i;
+
+          getrlimit(RLIMIT_NOFILE,&#38;limits);
+          for (i = 0; i &#60; limits.rlim_max; i++) {
+          if (i == client_fd) continue;
+          close(i);
+          }
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        This step will make the <TT
+CLASS="filename"
+>smbmount.c</TT
+> file compatible with Red Hat's glibc 2.1 library.
+      </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec280.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec282.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux Samba Server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile and optimize</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

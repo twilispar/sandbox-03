@@ -1,0 +1,767 @@
+<HTML
+><HEAD
+><TITLE
+>Run ISC  BIND/DNS in a chroot jail</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking"
+HREF="soft-netwrkng.html"><LINK
+REL="PREVIOUS"
+TITLE="Secondary slave name Server"
+HREF="chap21sec166.html"><LINK
+REL="NEXT"
+TITLE="The syslog daemon"
+HREF="chap21sec168.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap21sec166.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 21. Software -Networking</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap21sec168.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN10999"
+>21.6. Run <SPAN
+CLASS="acronym"
+>ISC</SPAN
+>  <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> in a chroot jail</A
+></H1
+><DIV
+CLASS="highlights"
+><A
+NAME="AEN11004"
+></A
+><P
+>&#13; The main benefit of a chroot jail is that the jail will limit the portion of the file system the <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> daemon program can see to the root directory of the jail. Additionally, since the jail only needs to support <SPAN
+CLASS="acronym"
+>DNS</SPAN
+>, the programs related 
+ to <SPAN
+CLASS="acronym"
+>ISC</SPAN
+>  <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> available in the jail can be extremely limited. Most importantly, there is no need for setuid-root programs, which can be used to gain root access and break out of the jail.
+ </P
+></DIV
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN11011"
+></A
+><P
+><B
+>Securing <SPAN
+CLASS="acronym"
+>ISC</SPAN
+>  <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+></B
+></P
+><P
+>&#13; This part focuses on preventing <SPAN
+CLASS="acronym"
+>ISC</SPAN
+>  <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> from being used as a point of break-in to the system hosting it. Since <SPAN
+CLASS="acronym"
+>ISC</SPAN
+>  <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> 
+ performs a relatively large and complex function, the potential for bugs that affect security is rather high with this software. In fact, there have been exploitable bugs in the past that allowed a remote attacker to obtain root access to hosts 
+ running <SPAN
+CLASS="acronym"
+>ISC</SPAN
+>  <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+>. To minimize this risk, <SPAN
+CLASS="acronym"
+>ISC</SPAN
+>  <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> can be run as a non-root user, which will limit any damage to what can 
+ be done as a normal user with a local shell. Of course, this is not enough for the security requirements of most <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> servers, so an additional step can be taken - that is, running <SPAN
+CLASS="acronym"
+>ISC</SPAN
+>  <SPAN
+CLASS="acronym"
+>BIND</SPAN
+> 
+ in a chroot jail.
+ <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/DNS-Chroot.gif"
+ALT="DNS in chroot"
+></IMG
+></P
+></DIV
+>
+ </P
+></DIV
+></TD
+></TR
+></TABLE
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+ The named binary program must be in a directory listed within your <TT
+CLASS="envar"
+>PATH</TT
+> environment variable for this to work. For the rest of the documentation, I'll assume the path of your original named program 
+ is <TT
+CLASS="filename"
+>/usr/sbin/named</TT
+>.
+ </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13; The following are the necessary steps to run <SPAN
+CLASS="acronym"
+>ISC</SPAN
+> <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> software in a chroot jail:
+ </P
+><P
+>&#13; We must find the shared library dependencies of named, <EM
+>named is the <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> daemon</EM
+>. These will need to be copied into the chroot jail later.
+ </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13; To find the shared library dependencies of named, execute the following command:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>ldd</B
+> /usr/sbin/named
+ libc.so.6 =&#62; /lib/libc.so.6 (0x40017000)
+ /lib/ld-linux.so.2 =&#62; /lib/ld-linux.so.2 (0x40000000) 
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+></LI
+><LI
+><P
+>&#13; Make a note of the files listed above; you will need these later in our steps.
+ </P
+></LI
+></OL
+></DIV
+><P
+> 
+ Now we must set up the chroot environment, and create the root directory of the jail. We've chosen <TT
+CLASS="filename"
+>/chroot/named</TT
+> because we want to put this on its own separate file system to prevent file system attacks. Early 
+ in our Linux installation procedure we created a special partition <TT
+CLASS="filename"
+>/chroot</TT
+> for this purpose.
+ </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;     [root@deep] /# /etc/rc.d/init.d/named stop <A
+NAME="nmd1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+> 
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap21sec167.html#nmd1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13; Require only if an existing named daemon is running.
+ </DD
+></DL
+></DIV
+>
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13; Shutting down named:                              [  OK  ]
+ </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>mkdir</B
+> -p /chroot/named
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+></LI
+><LI
+><P
+>&#13; Next, create the rest of directories as follows:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>mkdir</B
+> /chroot/named/dev
+ [root@deep] /# <B
+CLASS="command"
+>mkdir</B
+> /chroot/named/lib
+ [root@deep] /# <B
+CLASS="command"
+>mkdir</B
+> /chroot/named/etc
+ [root@deep] /# <B
+CLASS="command"
+>mkdir</B
+> -p /chroot/named/usr/sbin
+ [root@deep] /# <B
+CLASS="command"
+>mkdir</B
+> -p /chroot/named/var/run
+ [root@deep] /# <B
+CLASS="command"
+>mkdir</B
+> /chroot/named/var/named
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+></LI
+><LI
+><P
+>&#13; Now copy the main configuration file, the zone files, the <SPAN
+CLASS="symbol"
+>named</SPAN
+> and the named-xfer programs into the appropriate places in the chroot jail directory:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>cp</B
+> /etc/named.conf /chroot/named/etc/
+ [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/named ; cp -a . /chroot/named/var/named/
+ [root@deep] /# <B
+CLASS="command"
+>mknod</B
+> /chroot/named/dev/null c 1 3
+ [root@deep] /# <B
+CLASS="command"
+>chmod</B
+> 666 /chroot/named/dev/null
+ [root@deep] /# <B
+CLASS="command"
+>cp</B
+> /usr/sbin/named /chroot/named/usr/sbin/
+ [root@deep] /# <B
+CLASS="command"
+>cp</B
+> /usr/sbin/named-xfer /chroot/named/usr/sbin/
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+ The owner of the <TT
+CLASS="filename"
+>/chroot/named/var/named</TT
+> directory and all files in this directory must be the process name <SPAN
+CLASS="symbol"
+>named</SPAN
+> under the <TT
+CLASS="literal"
+>slave</TT
+> server and only 
+ the <TT
+CLASS="literal"
+>slave</TT
+> server or you wouldn't be able to make a <TT
+CLASS="literal"
+>zone</TT
+> transfer.
+ </P
+></BLOCKQUOTE
+></DIV
+>
+ </P
+></LI
+><LI
+><P
+>&#13; To make the <TT
+CLASS="filename"
+>named</TT
+> directory and all its files own by the <SPAN
+CLASS="symbol"
+>named</SPAN
+> process name under the <TT
+CLASS="literal"
+>slave</TT
+> server, use the command:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>chown</B
+> -R named.named /chroot/named/var/named/
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+></LI
+></OL
+></DIV
+><P
+>&#13; Copy the shared libraries identified above to the chrooted lib directory:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>cp</B
+> /lib/libc.so.6 /chroot/named/lib/
+ [root@deep] /# <B
+CLASS="command"
+>cp</B
+> /lib/ld-linux.so.2 /chroot/named/lib/
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+><P
+>&#13; Copy the <TT
+CLASS="filename"
+>localtime</TT
+> and <TT
+CLASS="filename"
+>nsswitch.conf</TT
+> files to the chrooted <TT
+CLASS="filename"
+>etc</TT
+> directory so that log entries are adjusted for your local 
+ timezone properly:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>cp</B
+> /etc/localtime /chroot/named/etc/
+ [root@deep] /# <B
+CLASS="command"
+>cp</B
+> /etc/nsswitch.conf /chroot/named/etc/
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+><P
+>&#13; We must set some files under the <TT
+CLASS="filename"
+>/chroot/named/etc</TT
+> directory with the immutable bit enabled for better security:
+ </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13; Set the immutable bit on <TT
+CLASS="filename"
+>nsswitch.conf</TT
+> file:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /chroot/named/etc/
+ [root@deep etc]# <B
+CLASS="command"
+>chattr</B
+>  +i nsswitch.conf
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+></LI
+><LI
+><P
+>&#13; Set the immutable bit on <TT
+CLASS="filename"
+>named.conf</TT
+> file:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /chroot/named/etc/
+ [root@deep etc]# <B
+CLASS="command"
+>chattr</B
+>  +i named.conf
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ A file with the   +i attribute cannot be modified, deleted or renamed; no link can be created to this file and no data can be written to it. Only the superuser can set or clear this attribute.
+ </P
+></LI
+></OL
+></DIV
+><P
+>&#13; Add a new <SPAN
+CLASS="symbol"
+>UID</SPAN
+> and a new <SPAN
+CLASS="symbol"
+>GID</SPAN
+> for running the daemon <TT
+CLASS="literal"
+>named</TT
+> if this is not already set. This is important because running it as root defeats 
+ the purpose of the jail, and using a different user id that already exists on the system can allow your services to access each others' resources.
+
+ Check the <TT
+CLASS="filename"
+>/etc/passwd</TT
+> and <TT
+CLASS="filename"
+>/etc/group</TT
+> files for a free UID/GID number available. In our example we'll use the number <SPAN
+CLASS="symbol"
+>53</SPAN
+> and the name <SPAN
+CLASS="symbol"
+>named</SPAN
+>.
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /#<B
+CLASS="command"
+>useradd</B
+> -c DNS Server -u 53 -s /bin/false -r -d /chroot/named named 2&#62;/dev/null || :
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap21sec166.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap21sec168.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><TT
+CLASS="literal"
+>Secondary</TT
+> slave name Server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netwrkng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The syslog daemon</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

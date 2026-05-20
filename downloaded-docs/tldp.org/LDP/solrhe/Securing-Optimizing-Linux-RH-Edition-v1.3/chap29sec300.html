@@ -1,0 +1,280 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/logrotate.d/ftpd file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FTP Server"
+HREF="ftpd.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/ftpconversions file"
+HREF="chap29sec299.html"><LINK
+REL="NEXT"
+TITLE="FTP Administrative Tools"
+HREF="chap29sec301.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec299.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 32. Linux <TT
+CLASS="literal"
+>FTP</TT
+> Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec301.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN23199"
+>32.7. Configure the <TT
+CLASS="filename"
+>/etc/logrotate.d/ftpd</TT
+> file</A
+></H1
+><P
+>&#13;        Configure your <TT
+CLASS="filename"
+>/etc/logrotate.d/ftpd</TT
+> file to automatically rotate your log files each week by creating the <TT
+CLASS="filename"
+>/etc/logrotate.d/ftpd</TT
+> file and add the following lines:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          /var/log/xferlog {
+          # ftpd doesn't handle SIGHUP properly
+          nocompress
+          }
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN23206"
+>32.7.1. Configure ftpd to use tcp-wrappers inetd</A
+></H2
+><P
+>&#13;      Tcp-wrappers should be enabled to start and stop the ftpd server. Upon execution, inetd reads its configuration information from a configuration file which, by default, is <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+>. There 
+      must be an entry for each field of the configuration file, with entries for each field separated by a tab or a space.
+    </P
+><P
+>&#13;      Edit the <TT
+CLASS="filename"
+>inetd.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+> and add or verify the existence of the following line:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        ftp     stream  tcp     nowait  root    /usr/sbin/tcpd  in.ftpd -l -a
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      Update your <TT
+CLASS="filename"
+>inetd.conf</TT
+> file by sending a SIGHUP signal, <B
+CLASS="command"
+>killall</B
+> <TT
+CLASS="parameter"
+><I
+>-HUP</I
+></TT
+> inetd, after adding the above line in the file.
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# killall -HUP inetd
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      Edit the <TT
+CLASS="filename"
+>hosts.allow</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/hosts.allow</TT
+> and add, for example, the following line:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        in.ftpd: 192.168.1.4 win.openna.com
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      Which means client <SPAN
+CLASS="acronym"
+>IP</SPAN
+> <TT
+CLASS="literal"
+>192.168.1.4</TT
+> with host name <TT
+CLASS="literal"
+>win.openna.com</TT
+> is allowed to <TT
+CLASS="literal"
+>FTP</TT
+> on to the server.
+    </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec299.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec301.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/ftpconversions</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ftpd.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><SPAN
+CLASS="acronym"
+>FTP</SPAN
+> Administrative Tools</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

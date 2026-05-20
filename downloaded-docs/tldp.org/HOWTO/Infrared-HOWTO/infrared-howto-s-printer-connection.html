@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Printer Connection</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Specific Connections and IrDA - Protocols"
+HREF="infrared-howto-c-specific-connections.html"><LINK
+REL="PREVIOUS"
+TITLE="Starting the IrDA Stack"
+HREF="infrared-howto-s-low-level-drivers.html"><LINK
+REL="NEXT"
+TITLE="LAN Connection - IrLAN"
+HREF="infrared-howto-s-lan-connection.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-low-level-drivers.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Specific Connections and IrDA - Protocols</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-lan-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-printer-connection"
+></A
+>3.2. Printer Connection</H1
+><P
+>&#13;   Prepare Linux/IrDA as described above. Especially  check for the
+   existence of <TT
+CLASS="filename"
+>/dev/irlpt*</TT
+>
+   (if it doesn't exists do as root <B
+CLASS="command"
+>mknod /dev/irlpt0 c 161 16</B
+>). 
+   Now you may perform a first and simple test.
+   Try to write a small file to <TT
+CLASS="filename"
+>/dev/irlpt0</TT
+> by 
+   <B
+CLASS="command"
+>cat FILE &#62;/dev/irlpt0</B
+>.
+   Do not wonder about a bad format (the lines form sort of steps)
+   this is just a first check.
+   If this doesn't work please check the permissions of
+   <TT
+CLASS="filename"
+>/dev/irlpt0</TT
+>.
+   Watch whether the connection indicator of your printer shows
+   activity, e.g. the green light above the InfraRed port of a HP 6P/MP
+   comes on (lower left hand corner, near the paper tray).
+</P
+><P
+>&#13;   The <B
+CLASS="command"
+>cat</B
+> command will not produce formatted
+   output, but is useful for testing. If it works, you may set up 
+   an IrDA capable printer depending on your printer system.
+   See the documentation, e.g. the Printing-HOWTO from
+   <A
+HREF="http://www.linuxprinting.org"
+TARGET="_top"
+>LinuxPrinting.org</A
+>
+   for detailed information.
+</P
+><P
+>&#13;   With the
+   <A
+HREF="http://www.cups.org"
+TARGET="_top"
+>Common Unix Printing System - CUPS</A
+>
+   use for example with a HP LaserJet 2100:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;lpadmin -p IRDA_PRINTER_NAME -v parallel:/dev/irlpt0 -E -m de/hp2100_6.ppd.gz
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   To get a list of paths to your ppd files use <B
+CLASS="command"
+>lpinfo -m</B
+>.
+</P
+><P
+>&#13;   Of course other printing systems will also work, e.g. you 
+   may edit <TT
+CLASS="filename"
+>/etc/printcap</TT
+> and include
+   <TT
+CLASS="filename"
+>irlpt0</TT
+> as the printer device.
+</P
+><P
+>&#13;   The better way is to change your <TT
+CLASS="filename"
+>/etc/printcap</TT
+>
+   to use <TT
+CLASS="filename"
+>/dev/irlpt0</TT
+>
+   in addition or instead of <TT
+CLASS="filename"
+>/dev/lp1</TT
+>. 
+</P
+><P
+>&#13;   For easy printer setup you may use a printing software like
+   APSFILTER, MagicFilter EZ-Magic (with RedHat there should also be
+   a GUI for this purpose). Make a copy of <TT
+CLASS="filename"
+>/etc/printcap</TT
+> before.
+</P
+><P
+>&#13;   Example for APSFILTER with a HP 6P (non-postscript, HP 6MP is with
+   postscript). The two relevant questions are:
+   "Do you have a (s)serial or a (p)arallel printer interface?"
+   Answer "p"
+   "What's the device name for your parallel printer interface?"
+   Answer "/dev/irlpt0"
+</P
+><P
+>&#13;   Restart the print daemon with 
+   <B
+CLASS="command"
+>kill -HUP &#60;PID of lpd&#62;</B
+>. If you use
+   another print daemon choose the according command.
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-low-level-drivers.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-lan-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Starting the IrDA Stack</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-specific-connections.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>LAN Connection - IrLAN</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

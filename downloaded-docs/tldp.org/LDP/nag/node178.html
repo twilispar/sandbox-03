@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Be Paranoid-- Call Sequence Checks</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node179.html">Anonymous UUCP</A>
+<B>Up:</B> <A HREF="node174.html">Setting up your System </A>
+<B> Previous:</B> <A HREF="node177.html">Protecting Yourself Against Swindlers</A>
+<BR> <P>
+<H2><A NAME="SECTION0014540000">Be Paranoid-- Call Sequence Checks</A></H2>
+<P>
+<A NAME="6406"></A>
+<P>
+Another way to fend off and detect impostors is to use call sequence
+checks.  Call sequence checks help you protect against intruders that
+somehow managed to find out the password you log into your UUCP system
+with.
+<P>
+When using call sequence checks, both machines keep track of the number
+of connections established so far. It is incremented with each
+connection.  After logging in, the caller sends its call sequence
+number, and the callee checks it against its own number. If they don't
+match, the connection attempt will be rejected. If the initial number is
+chosen at random, attackers will have a hard time guessing the correct
+call sequence number.
+<P>
+But call sequence checks do more for you than this: even if some very
+clever person should detect your call sequence number as well as your
+password, you will find this out. When the attacker call your UUCP feed
+and steals your mail, this will increase the feeds call sequence number
+by one.  The next time <em>you</em> call your feed and try to log in, the
+remote uucico will refuse you, because the numbers don't match
+anymore!
+<P>
+If you have enabled call sequence checks, you should check your log
+files regularly for error messages that hint at possible attacks.
+If your system rejects the call sequence number the calling system offers
+it, uucico will put a message into the log file saying something
+like ``Out of sequence call rejected''. If your system is rejected by its
+feed because the sequence numbers are out of sync, it will put a message
+in the log file saying ``Handshake failed (RBADSEQ)''.
+<P>
+To enable call sequence checks, you have to add following command to the
+system entry:
+<P>
+<P><P>
+<P>
+Beside this, you have to create the file containing the sequence number
+itself.  Taylor UUCP keeps the sequence number is in a file called
+.Sequence in the remote site's spool directory. It <em>must</em>
+be owned by uucp, and must be mode 600 (i.e. readable and
+writable only by uucp).  It is best to initialize this file with
+an arbitrary, agreed-upon start value.  Otherwise, an attacker might
+manage to guess the number by trying out all values smaller than, say,
+60.
+<P>
+<P><P>
+<P>
+Of course, the remote site has to enable call sequence checks as well,
+and start by using exactly the same sequence number as you.
+<P>
+<A NAME="6418"></A>
+<P>
+<A NAME="6419"></A>
+<A NAME="6420"></A>
+<P>
+<A NAME="6421"></A>
+<A NAME="6422"></A>
+<A NAME="6423"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node179.html">Anonymous UUCP</A>
+<B>Up:</B> <A HREF="node174.html">Setting up your System </A>
+<B> Previous:</B> <A HREF="node177.html">Protecting Yourself Against Swindlers</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

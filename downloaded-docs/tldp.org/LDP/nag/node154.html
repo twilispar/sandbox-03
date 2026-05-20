@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>A Gentle Introduction to Taylor UUCP</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node155.html">What UUCP Needs to </A>
+<B>Up:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<B> Previous:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<BR> <P>
+<H2><A NAME="SECTION0014310000">A Gentle Introduction to Taylor UUCP</A></H2>
+<P>
+<A NAME="5744"></A>
+<P>
+To say that UUCP configuration is hard would be an understatement. It
+is really a hairy subject, and the sometimes terse format of the
+configuration files doesn't make things easier (although the Taylor
+format is almost easy reading compared to the older formats in HDB or
+Version-2).
+<P>
+To give you a feel how all these files interact, we will introduce you
+to the most important ones, and have a look at sample entries of these
+files. We won't explain everything in detail now; a more accurate
+account is given in separate sections below. If you want to set up your
+machine for UUCP, you had best start with some sample files, and adapt
+them gradually.  You can pick either those shown below, or those
+included in your favorite  distribution.
+<P>
+All files described in this section are kept in /usr/lib/uucp or a
+subdirectory thereof. Some  distributions contain UUCP
+binaries that have support for both HDB and Taylor configuration
+enabled, and use different subdirectories for each configuration file
+set. There will usually be a README file in /usr/lib/uucp.
+<P>
+For UUCP to work properly, these files must be owned by the
+uucp user.  Some of them contain passwords and telephone
+numbers, and therefore should have permissions of 600.<A HREF="footnode.html#5806"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+The central UUCP configuration file is /usr/lib/uucp/config, and is
+used to set general parameters. The most important of them (and for
+now, the only one), is your host's UUCP name. At the Virtual Brewery,
+they use vstout as their UUCP gateway:
+<P>
+<P><P>
+<P>
+The next important configuration file is the sys file. It
+contains all system-specific information of sites you are linked to.
+This includes the site's name, and information on the link itself, such
+as the telephone number when using a modem link.  A typical entry for a
+modem-connected site called pablo would be
+<P>
+<P><P>
+<P>
+The port names a port to be used, and time
+ specifies the times at which it may be called.  chat
+describes the login chat scripts-- the sequence of strings that must
+be exchanged between to allow uucico to log into pablo.
+We will get back to chat scripts later.  The port command
+does not name a device special file such as /dev/cua1, but
+rather names an entry in the port file.  You can assign these
+names as you like as long as they refer to a valid entry in
+port.
+<P>
+The port file holds information specific to the link itself.  For
+modem links, it describes the device special file to be used, the range
+of speeds supported, and the type of dialing equipment connected to the
+port. The entry below describes /dev/cua1 (a.k.a. COM 2), to
+which a NakWell modem is connected that is capable of running at
+speeds up to 38400bps.  The entry's name way chosen to match the port
+name given in the sys file.
+<P>
+<P><P>
+<P>
+The information pertaining to the dialers itself is kept in yet another
+file, called-- you guessed it: dial. For each dialer type, it
+basically contains the sequence of commands to be issued to dial up a
+remote site, given the telephone number. Again, this is specified as a
+chat script. For example, the entry for the above NakWell might look
+like this:
+<P>
+<P><P>
+<P>
+The line starting with chat specifies the modem chat, which is
+the sequence of commands sent to and received from the modem to
+initialize it and make it dial the desired number. The ``T''
+sequence will be replaced with the phone number by uucico.
+<P>
+<P><A NAME="6603"></A><BR>
+<STRONG>Figure:</STRONG> 
+ <A NAME="uucpfigfiles"></A>
+ Interaction of Taylor UUCP Configuration Files.
+<BR>
+<P>
+<P>
+To give you a rough idea how uucico deals with these
+configuration files, assume you issued the command
+<P>
+<P><P>
+<P>
+on the command line. The first thing uucico does is look up
+pablo in the sys file. From the sys file entry
+for pablo it sees that it should use the serial1 port
+to establish the connection.  The port file tells it that this is
+a modem port, and that it has a NakWell modem attached.
+<P>
+uucico now searches dial for the entry describing
+the NakWell modem, and having found one, opens the serial port 
+/dev/cua1 and executes the dialer chat. That is, it sends
+``ATZ'', waits for the ``OK'' response, etc. When
+encountering the string ``T'', it substitutes the phone
+number (123-456) extracted from the sys file.
+<P>
+After the modem returns CONNECT, the connection has been
+established, and the modem chat is complete. uucico now returns
+to the sys file and executes the login chat. In our example, it
+would wait for the ``login:'' prompt, then send its user name
+(neruda), wait for the ``password:'' prompt, and send its
+password, ``lorca''.
+<P>
+After completing authorization, the remote end is assumed to fire up
+its own uucico. The two will then enter the handshake phase
+described in the previous section.
+<P>
+The way the configuration files depend on each other is also shown in
+figure-<A HREF="node154.html#uucpfigfiles"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+<A NAME="5933"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node155.html">What UUCP Needs to </A>
+<B>Up:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<B> Previous:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

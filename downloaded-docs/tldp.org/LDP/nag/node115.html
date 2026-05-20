@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Choosing IP Addresses</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node116.html">Routing Through a PPP </A>
+<B>Up:</B> <A HREF="node114.html">IP Configuration Options</A>
+<B> Previous:</B> <A HREF="node114.html">IP Configuration Options</A>
+<BR> <P>
+<H2><A NAME="SECTION0010710000">Choosing IP Addresses</A></H2>
+<A NAME="4267"></A>
+<A NAME="4268"></A>
+<A NAME="4269"></A>
+In the example above, we had pppd dial up c3po and establish
+an IP link.  No provisions were taken to choose a particular IP-address on
+either end of the link.  Instead, we picked vlager's address as the
+local IP-address, and let c3po provide its own.  Sometimes, however,
+it is useful to have control over what address is used on one or the other
+end of the link.  pppd supports several variations of this.
+<P>
+To ask for particular addresses, you generally provide pppd with
+the following option:
+<Pre>
+           local addr:remote addr
+
+
+</Pre>
+where local_addr and remote_addr may be specified
+either in dotted quad notation, or as hostnames.<A HREF="footnode.html#4282"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> This makes pppd attempt to use the first address as its own
+IP-address, and the second as the peer's. If the peer rejects either of
+them during IPCP negotiation, no IP-link will be established.<A HREF="footnode.html#4549"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+If you want to set only the local address, but accept any address the
+peer uses, you simply leave out the remote_addr part. For
+instance, to make vlager use the IP-address 130.83.4.27
+instead of its own, you would give it 130.83.4.27: on the
+command line.  Similarly, to set the remote address only, you would
+leave the local_addr field blank. By default, pppd
+will then use the address associated with your hostname.
+<P>
+<A NAME="4293"></A>
+Some PPP servers that handle a lot of client sites assign addresses
+dynamically: addresses are assigned to systems only when calling in, and
+are claimed after they have logged off again. When dialing up such a
+server, you must make sure that pppd doesn't request any particular
+IP-address from the server, but rather accept the address the server asks
+you to use. This means that you mustn't specify a local_addr
+argument. In addition, you have to use the noipdefault option,
+which makes pppd wait for the peer to provide the IP-address instead
+of using the local host's address.
+<P>
+<A NAME="4298"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node116.html">Routing Through a PPP </A>
+<B>Up:</B> <A HREF="node114.html">IP Configuration Options</A>
+<B> Previous:</B> <A HREF="node114.html">IP Configuration Options</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

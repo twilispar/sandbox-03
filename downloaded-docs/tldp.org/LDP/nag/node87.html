@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The named.boot File</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node88.html">The DNS Database Files</A>
+<B>Up:</B> <A HREF="node86.html">Running named</A>
+<B> Previous:</B> <A HREF="node86.html">Running named</A>
+<BR> <P>
+<H2><A NAME="SECTION008210000">The named.boot File</A></H2>
+<P>
+The named.boot file is generally very small and contains little
+else but pointers to master files containing zone information, and
+pointers to other name servers.  Comments in the boot file start with a
+semicolon and extend to the next newline.
+Before we discuss the format of named.boot in more detail, we
+will take a look at the sample file for vlager given in
+figure-<A HREF="node87.html#resolvfignamedboot"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.<A HREF="footnode.html#3691"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<P><A NAME="3692"></A><BR>
+<STRONG>Figure:</STRONG> 
+  <A NAME="resolvfignamedboot"></A>
+  The named.boot file for vlager.
+<pre>
+                ;
+                ; /etc/named.boot file for vlager.vbrew.com
+                ;
+                directory     /var/named
+                ;
+                ;             domain                   file
+                ;---------------------------------------------------
+                cache         .                        named.ca
+                primary       vbrew.com                named.hosts
+                primary       0.0.127.in-addr.arpa     named.local
+                primary       72.191.in-addr.arpa      named.rev
+</pre>
+<P>
+The cache and primary commands shown in this
+example load information into named. This information is taken
+from the master files specified in the second argument. They contain
+textual representations of DNS resource records, which we will look at
+below.
+<P>
+In this example, we configured named as the primary name server
+for three domains, as indicated by the primary statements
+at the end of the file. The first of these lines, for instance, instructs
+named to act as a primary server for vbrew.com, taking the
+zone data from the file named.hosts. The directory
+keyword tells it that all zone files are located in /var/named.
+<P>
+The cache entry is very special and should be present on
+virtually all machines running a name server. Its function is
+two-fold: it instructs named to enable its cache, and to load
+the <em>root name server hints</em> from the cache file specified
+(named.ca in our example). We will come back to the name server
+hints below.
+<P>
+Here's a list of the most important options you can use in
+named.boot:
+<dl>
+<dt>      directory <dd>This specifies a directory in which zone files reside. Names
+                of  files  may  be  given relative to this directory.  Several
+                directories may be specified by  repeatedly  using  directory.
+                According  to  the  Linux  filesystem standard, this should be
+                /var/named.
+
+
+<dt>        primary  <dd>This takes a domain name and a  file  name  as  an  argument,
+                declaring the local server authoritative for the named domain.
+                As a primary server, named loads the zone information from the
+                given master file.
+                     Generally,  there  will  always  be  at least one primary
+                entry in every boot file, namely for reverse mapping  of  net-
+                work 127.0.0.0, which is the local loopback network.
+
+
+<dt>      secondary <dd>  This  statement  takes a domain name, an address list, and a
+                file name as an argument. It declares the local server a  sec-
+                ondary master server for the domain specified.
+
+
+                     A  secondary  server  holds  authoritative  data  on  the
+                domain, too, but it doesn't gather it from files, but tries to
+                download  it  from  the  primary  server. The IP address of at
+                least one primary server must thus be given to  named  in  the
+                address  list.  The  local server will contact each of them in
+                turn until it successfully transfers the zone database,  which
+                is then stored in the backup file given as the third argument.
+                If none of the primary servers  responds,  the  zone  data  is
+                retrieved from the backup file instead.
+
+
+                     named will then attempt to refresh the zone data at regu-
+                lar intervals. This is explained  below  along  in  connection
+                with the SOA resource record type.
+
+
+          <dt>cache   <dd>This takes a domain and a file name as arguments.  This file
+                contains the root server hints, that  is  a  list  of  records
+                pointing  to the root name servers. Only NS and A records will
+                be recognized. The  domain  argument  is  generally  the  root
+                domain name ``.''.
+
+
+                     This  information  is absolutely crucial to named: if the
+                cache statement does not occur in the boot  file,  named  will
+                not  develop  a local cache at all. This will severely degrade
+                performance and increase  network  load  if  the  next  server
+                queried  is  not on the local net. Moreover, named will not be
+                able to reach any root name servers, and thus it won't resolve
+                any  addresses except those it is authoritative for. An excep-
+                tion from this rule is when using forwarding servers (cf.  the
+                forwarders option below).
+
+
+      <dt>forwarders <dd>This  statement takes an address list as an argument.  The IP
+                addresses in this list specify a list  of  name  servers  that
+                named  may query if it fails to resolve a query from its local
+                cache. They are tried in order until one of them  responds  to
+                the query.
+
+
+<dt>          slave  <dd>This statement makes the name server a slave server. That is,
+                it will never perform recursive queries itself, but only  for-
+                wards them to servers specified with the forwarders statement.
+
+</dl>
+There are two options which we will not describe here, being
+sortlist and domain.  Additionally, there are two
+directives that may be used inside the zone database files. These are
+$INCLUDE and $ORIGIN.  Since they are rarely
+needed, we will not describe them here, either.
+
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node88.html">The DNS Database Files</A>
+<B>Up:</B> <A HREF="node86.html">Running named</A>
+<B> Previous:</B> <A HREF="node86.html">Running named</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

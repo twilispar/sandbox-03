@@ -1,0 +1,284 @@
+<HTML
+><HEAD
+><TITLE
+>Put limits on resource</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Blocking; su to root, by one and sundry"
+HREF="chap5sec43.html"><LINK
+REL="NEXT"
+TITLE="Control mounting a file system"
+HREF="chap5sec45.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec43.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec45.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3636"
+>5.15. Put limits on resource</A
+></H1
+><P
+>&#13;               The <TT
+CLASS="filename"
+>limits.conf</TT
+> file located under the <TT
+CLASS="filename"
+>/etc/security</TT
+> directory can be used to control and limit resources for the users on your system. It is important to set resource limits on all your 
+               users so they can't perform denial of service attacks number of processes, amount of memory, etc). These limits will have to be set up for the user when he or she logs in. For example, limits 
+               for all users on your system might look like this.
+               </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;               Edit the <TT
+CLASS="filename"
+>limits.conf</TT
+> file vi <TT
+CLASS="filename"
+>/etc/security/limits.conf</TT
+> and add or change the lines to read:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;               *	hard	core		0
+               *	hard	rss		5000
+               *	hard	nproc	20
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               This says to prohibit the creation of core files - <EM
+>core 0</EM
+>, restrict the number of processes to 20 - <EM
+>nproc 20</EM
+>, and restrict memory usage to 5M - <EM
+>rss 5000</EM
+> for everyone except the 
+               super user root. All of the above only concern users who have entered through the login prompt on your system. With this kind of quota, you have more control on the processes, core files, and memory usage that users 
+               may have on your system. The asterisk   * mean: all users that logs in on the server.
+               </P
+></LI
+><LI
+><P
+>&#13;               You must also edit the <TT
+CLASS="filename"
+>/etc/pam.d/login</TT
+> file and add the following line to the bottom of the file:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               session  required  /lib/security/pam_limits.so
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               After adding the line above, the <TT
+CLASS="filename"
+>/etc/pam.d/login</TT
+> file should look like this:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;               #%PAM-1.0
+               auth	required     	/lib/security/pam_securetty.so
+               auth	required     	/lib/security/pam_pwdb.so shadow nullok
+               auth	required     	/lib/security/pam_nologin.so
+               account	required     	/lib/security/pam_pwdb.so
+               password	required     	/lib/security/pam_cracklib.so
+               password	required     	/lib/security/pam_pwdb.so nullok use_authtok md5 shadow
+               session	required     	/lib/security/pam_pwdb.so
+               session	required     	/lib/security/pam_limits.so
+               #session	optional    	/lib/security/pam_console.so
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               Finally edit the <TT
+CLASS="filename"
+>/etc/profile</TT
+> file and change the following line:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;               ulimit -c 1000000
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               to read:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;               ulimit -S -c 1000000 &#62; /dev/null 2&#60;&#38;1
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               This modification is required so as to avoid getting error messages like this <TT
+CLASS="computeroutput"
+>Unable to reach limit</TT
+> during <TT
+CLASS="prompt"
+>login:</TT
+>.
+               </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec43.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec45.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Blocking; <B
+CLASS="command"
+>su</B
+> to root, by one and sundry</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Control mounting a file system</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

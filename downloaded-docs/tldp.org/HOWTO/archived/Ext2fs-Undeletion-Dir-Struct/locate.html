@@ -1,0 +1,216 @@
+<HTML
+><HEAD
+><TITLE
+>Locating deleted inodes</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.57"><LINK
+REL="HOME"
+TITLE="Ext2fs Undeletion of Directory Structures mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Analyse of directory dump"
+HREF="analyse.html"><LINK
+REL="NEXT"
+TITLE="Activating inodes"
+HREF="activate.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Ext2fs Undeletion of Directory Structures mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="analyse.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="activate.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="LOCATE"
+>6. Locating deleted inodes</A
+></H1
+><P
+>      Get a list of all deleted inodes.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # echo lsdel | debugfs /dev/hdy1 &#62; lsdel.out</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      One problem here is that <I
+CLASS="EMPHASIS"
+>debugfs</I
+> will not give the
+      inode numbers to files that are zero in size (you probably have some in
+      your /etc directory for instance). I will tell how to solve this problem
+      in <A
+HREF="recalc.html"
+>Section 9</A
+> and <A
+HREF="final.html"
+>Section 11</A
+>.
+    </P
+><P
+>      Load "lsdel.out" into a texteditor. The list of inodes should be sorted in
+      time. Try to remember exactly what time you did that
+      <I
+CLASS="EMPHASIS"
+>rm -rf</I
+>. Probably it was the the last items you
+      deleted and then they will be located at the bottom of the list, because it
+      is sorted in time. Delete all lines that has nothing of interest. Save as
+      "lsdel.out-selected".
+    </P
+><P
+>      Now we will cut away everything except the inodes.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # cut -b 1-8 lsdel.out-selected | tr -d " " &#62; inodes</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      To be sure, check that the deleted directories found above have their
+      inodes in the list.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # grep ^inode$ inodes</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Where <I
+CLASS="EMPHASIS"
+>inode</I
+> is the corresponding inode number.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="analyse.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="activate.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Analyse of directory dump</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Activating inodes</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

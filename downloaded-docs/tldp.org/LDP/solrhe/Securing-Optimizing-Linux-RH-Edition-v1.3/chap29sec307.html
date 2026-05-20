@@ -1,0 +1,367 @@
+<HTML
+><HEAD
+><TITLE
+>Restore files with tar</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Why's and When's of Backup and Restore"
+HREF="whywhen.html"><LINK
+REL="PREVIOUS"
+TITLE="Automating backups with tar"
+HREF="chap29sec306.html"><LINK
+REL="NEXT"
+TITLE="The dump backup program"
+HREF="back-dump.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec306.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 33. Why's and When's of Backup and Restore</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="back-dump.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN23684"
+>33.4. Restore files with <B
+CLASS="command"
+>tar</B
+></A
+></H1
+><P
+>&#13;More important than performing regular backups is having them available when we need to recover important files! In this section, we will discuss methods for restoring files, which have been backed up with <B
+CLASS="command"
+>tar</B
+> command.
+</P
+><P
+>&#13;The following command will restore all files from the <TT
+CLASS="literal"
+>full-backup-Day-Month-Year.tar</TT
+> archive, which is an example backup of our <TT
+CLASS="filename"
+>home</TT
+> directory created from the 
+example <B
+CLASS="command"
+>tar</B
+> commands shown above.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>cd</B
+> /
+[root@deep] /# <B
+CLASS="command"
+>tar</B
+> xpf /dev/st0/full-backup-Day-Month-Year.<B
+CLASS="command"
+>tar</B
+>
+</PRE
+></TD
+></TR
+></TABLE
+>
+The above command extracts all files contained in the compressed archive, preserving original file ownership and permissions.
+<P
+></P
+><UL
+><LI
+><P
+>&#13;The   x option stands for extract.
+</P
+></LI
+><LI
+><P
+>&#13;The <TT
+CLASS="literal"
+>p</TT
+> option preserve permissions; file protection information will be <EM
+>remembered.</EM
+>
+</P
+></LI
+><LI
+><P
+>&#13;The <TT
+CLASS="literal"
+>f</TT
+> option states that the very next argument will be the name of the archive file or device.
+</P
+></LI
+></UL
+>
+</P
+><P
+>&#13;If you do not need to restore all the files contained in the archive, you can specify one or more files that you wish to restore:
+
+To specify one or more files that you wish to restore, use the following command:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep]# <B
+CLASS="command"
+>cd</B
+> /
+[root@deep]# <B
+CLASS="command"
+>tar</B
+> xpf /dev/st0/full-backup-Day-Month-Year.<B
+CLASS="command"
+>tar</B
+> \
+ home/wahib/Personal/Contents.doc home/quota.user
+ </PRE
+></TD
+></TR
+></TABLE
+>
+
+The above command restores the <TT
+CLASS="filename"
+>/home/wahib/Personal/Contents.doc</TT
+> and <TT
+CLASS="filename"
+>/home/quota.user</TT
+> files from the archive.
+
+</P
+><P
+>&#13;If you just want to see what files are in the backup volume, Use the <TT
+CLASS="literal"
+>--list</TT
+> or <TT
+CLASS="literal"
+>-t</TT
+> option:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>tar</B
+> tf /dev/st0
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><DIV
+CLASS="caution"
+><P
+></P
+><TABLE
+CLASS="caution"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Caution.gif"
+ALT="Caution"
+></IMG
+></SPAN
+></B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>&#13;If you have files on your system set with the immutable bit, using the <B
+CLASS="command"
+>chattr</B
+> command, these files will not be remembered with the immutable bit from your restored backup. You must reset it immutable with the 
+command <B
+CLASS="command"
+>chattr</B
+>  +i after the backup is completed.
+</P
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></P
+></DIV
+><P
+><B
+>Test the ability to recover: </B
+>
+Dont forget to test the ability to recover from backups, for many system administrators, recovering a file from a backup is an uncommon activity. This step assures that if you need to recover a file, the tools and processes will work. Performing 
+this test periodically will help you to discover problems with the backup procedures so you can correct them before losing data. Some backup restoration software does not accurately recover the correct file protection and file ownership controls. 
+Check the attributes of restored files to ensure they are being set correctly. Periodically test to ensure that you can perform a full system recovery from your backups.
+</P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;Further documentation, for more details, there is man page you can read:
+<P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>tar</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;- The GNU version of the <B
+CLASS="command"
+>tar</B
+> archiving utility
+</P
+></DD
+></DL
+></DIV
+>
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec306.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="back-dump.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Automating backups with <B
+CLASS="command"
+>tar</B
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="whywhen.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The dump backup program</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,266 @@
+<HTML
+><HEAD
+><TITLE
+>Preparation</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.57"><LINK
+REL="HOME"
+TITLE="Ext2fs Undeletion of Directory Structures mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Preconditions"
+HREF="precond.html"><LINK
+REL="NEXT"
+TITLE="Finding inodes for deleted directories"
+HREF="find.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Ext2fs Undeletion of Directory Structures mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="precond.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="find.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="PREP"
+>3. Preparation</A
+></H1
+><P
+>      Unmount the partition where you got your deleted files at. I will denote
+      that partition with /dev/hdx1.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # umount /dev/hdx1</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Check the size in blocks of /dev/hdx1.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # fdisk -l /dev/hdx</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Now you need to have an extra partition of the same size as
+      /dev/hdx1, to be able to act safely. Suppose that you
+      have an empty harddrive located at /dev/hdy.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # fdisk /dev/hdy</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Create a partition with the same size as /dev/hdx1.
+      Here <I
+CLASS="EMPHASIS"
+>size</I
+> is the size in blocks (each block is
+      1024 kB) of /dev/hdx1 taken from above.
+    </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>        I am using <I
+CLASS="EMPHASIS"
+>fdisk</I
+> version 2.10f
+        and if you have another version the <I
+CLASS="EMPHASIS"
+>fdisk</I
+>
+        interaction below may not be the same.
+      </P
+></BLOCKQUOTE
+></DIV
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        fdisk: n      &#60;- Add a new partition.
+        fdisk: p      &#60;- Primary partition.
+        fdisk:        &#60;- Just press return to chose the default first cylinder.
+        fdisk: +sizeK &#60;- Make a partition of the same size as /dev/hdx1.
+        fdisk: w      &#60;- Write table to disk and exit.</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Now copy the content of the original partition to that extra one.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # dd if=/dev/hdx1 of=/dev/hdy1 bs=1k</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      This process may take quite a long time dependent of how big the partition
+      is. You can get the job done faster by increasing the blocksize,
+      <I
+CLASS="EMPHASIS"
+>bs</I
+>, but then you need to get the division of the
+      partition by <I
+CLASS="EMPHASIS"
+>bs</I
+> to have a remainder of zero.
+    </P
+><P
+>      From now on we will only work with that copy of the source partition to
+      be able to step back if something goes wrong.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="precond.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="find.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Preconditions</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Finding inodes for deleted directories</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,540 @@
+<HTML
+><HEAD
+><TITLE
+>Enable IMAP or POP via the tcp-wrappers inetd super server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux IMAP & POP Server"
+HREF="imapop.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure to tweak"
+HREF="chap23sec189.html"><LINK
+REL="NEXT"
+TITLE="Installed files"
+HREF="chap23sec191.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap23sec189.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 23. Linux <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> &#38; <SPAN
+CLASS="acronym"
+>POP</SPAN
+> Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap23sec191.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN13258"
+>23.3. Enable <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> or <SPAN
+CLASS="acronym"
+>POP</SPAN
+> via the tcp-wrappers inetd super server</A
+></H1
+><P
+>&#13;         Tcp-wrappers take cares to start and stop <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> or <SPAN
+CLASS="acronym"
+>POP</SPAN
+> server. Upon execution, inetd reads its configuration information from a configuration file which, by 
+         default, is <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+>. There must be an entry for each field of the configuration file, with entries for each field separated by a <B
+CLASS="keycap"
+>tab</B
+> or a <B
+CLASS="keycap"
+>space</B
+>.
+         </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;         Edit the <TT
+CLASS="filename"
+>inetd.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+> and add or uncomment the line related to the service you want to enable. If you want to use <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> then 
+         uncomment the line related to it, if is <SPAN
+CLASS="acronym"
+>POP</SPAN
+> that you want to use in your server, then uncomment it instead of <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>. In our example below we'll use <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> service.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         #pop-2   stream  tcp     nowait  root    /usr/sbin/tcpd ipop2d
+         #pop-3   stream  tcp     nowait  root    /usr/sbin/tcpd ipop3d
+         imap    stream  tcp     nowait  root    /usr/sbin/tcpd  imapd
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Don't forget to update your <TT
+CLASS="filename"
+>inetd.conf</TT
+> file by sending a <TT
+CLASS="envar"
+>SIGHUP</TT
+> signal <B
+CLASS="command"
+>killall</B
+>  -HUP inetd after adding or uncommenting the corresponding 
+         line.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep /root]# <B
+CLASS="command"
+>killall</B
+>  -HUP inetd
+         </PRE
+></TD
+></TR
+></TABLE
+>         
+         </P
+></LI
+><LI
+><P
+>         
+         If the <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> server you want to install is a private and limited server for wheel knows real <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address clients, you can use the security feature of tcp-wrappers 
+         to control, which can connect, to your server and from where. If you intended to offer mail service to a dial-up clients or a Webmail service for example, then you cannot use this feature.
+         Edit the <TT
+CLASS="filename"
+>hosts.deny</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/hosts.deny</TT
+> and add the line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         ALL: ALL@ALL, PARANOID
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         Which means all services, all locations, so any service not explicitly allowed is then blocked, unless they are permitted access by entries in the <TT
+CLASS="filename"
+>hosts.allow</TT
+> file.
+         </P
+></LI
+><LI
+><P
+>&#13;         Edit the <TT
+CLASS="filename"
+>hosts.allow</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/hosts.allow</TT
+> and add the line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         imapd: 216.209.228.34 my.domain.com
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         Which mean only client <SPAN
+CLASS="acronym"
+>IP</SPAN
+> <TT
+CLASS="literal"
+>216.209.228.34</TT
+> with host name <TT
+CLASS="literal"
+>my.domain.com</TT
+> is allowed to connect and use <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> service on the server.
+         </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN13306"
+>23.3.1. Securing <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+></A
+></H2
+><DIV
+CLASS="qandaset"
+><DL
+><DT
+> <A
+HREF="chap23sec190.html#AEN13312"
+>&#13;         Do you really need <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> service?
+         </A
+></DT
+></DL
+><DIV
+CLASS="qandaentry"
+><DIV
+CLASS="question"
+><P
+><A
+NAME="AEN13312"
+></A
+><B
+> </B
+>
+         Do you really need <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> service?
+         </P
+></DIV
+><DIV
+CLASS="answer"
+><P
+><B
+> </B
+>
+         Be aware that <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> programs use plain text passwords by default. Anyone running a sniffer program along your network path can grab your username/password and use them 
+         to log in as you. It's not because you use an <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> mail reader on your LINUX system that you need to run an <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> server locally. 
+         Check your configuration, and if you use a remote/external <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> server then uninstall <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> on your system.
+         
+         <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/IMAP-Sniffer-Schema.gif"
+ALT="Sniffer attack?"
+></IMG
+></P
+></DIV
+>
+         </P
+></DIV
+></DIV
+></DIV
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN13333"
+></A
+><P
+><B
+>Using <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> capabilities over <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+></B
+></P
+><P
+>&#13;         Unfortunately, due to US government export restrictions, the <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> toolkit with <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> capability is 
+         currently not available. There are packages available from third parties that allow <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> and POP3 sessions through SSL. One of these packages is WebMail IMP, a web interface that permits you to read your mail via 
+         the Internet with a web browser. WebMail IMP uses the <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> protocol to encrypt the communication with the <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> server. See part IV,  Software's-Related Reference, in Chapter 19, 
+         Servers Software (Web Network Services) for more information on the topic.
+
+         <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Webmail-IMP.gif"
+ALT="Webmail-IMP web browser interface"
+></IMG
+></P
+></DIV
+>
+         </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;         With WebMail IMP, communications from the mail server through to the client machine are encrypted with the SSL protocol using a web browser.
+         </P
+><P
+>&#13;         Further documentation, for more details, there are several man pages you can read:
+         <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>imapd</SPAN
+>(8C)</SPAN
+></DT
+><DD
+><P
+>&#13;         - Internet Message Access Protocol server
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ipopd</SPAN
+>(8C)</SPAN
+></DT
+><DD
+><P
+>&#13;         - Post Office Protocol server
+         </P
+></DD
+></DL
+></DIV
+>
+         </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap23sec189.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap23sec191.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure to tweak</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="imapop.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Installed files</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

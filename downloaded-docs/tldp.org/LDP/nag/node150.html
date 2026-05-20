@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Layout of UUCP Transfers and Remote Execution</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node151.html">The Inner Workings of </A>
+<B>Up:</B> <A HREF="node149.html">Introduction</A>
+<B> Previous:</B> <A HREF="node149.html">Introduction</A>
+<BR> <P>
+<H2><A NAME="SECTION0014210000">Layout of UUCP Transfers and Remote Execution</A></H2>
+<P>
+<A NAME="uucpintrogrades"></A>
+<P>
+<A NAME="5642"></A>
+Vital to the understanding of UUCP is the concept of <em>jobs</em>.
+Every transfer a user initiates with uucp or uux is
+called a job. It is made up of a <em>command</em> to be executed on
+a remote system, and a collection of <em>files</em> to be transferred
+between sites. One of these parts may be missing.
+<P>
+As an example, assume you issued the following command on your host, which
+makes UUCP copy the file netguide.ps to host pablo, and
+makes it execute the lpr command to print the file.
+<P>
+<P><P>
+<P>
+<A NAME="5653"></A>
+UUCP does not generally call the remote system immediately to execute
+a job (else you could make do with kermit). Instead, it
+temporarily stores the job description away. This is called
+<em>spooling</em>.  The directory tree under which jobs are stored is
+therefore called the <em>spool directory</em> and is generally located
+in /var/spool/uucp.  In our example, the job description would contain
+information about the remote command to be executed (lpr), the
+user who requested the execution, and a couple of other items.  In
+addition to the job description, UUCP has to store the input file,
+netguide.ps.
+<P>
+The exact location and naming of spool files may vary, depending on
+some compile-time options. HDB-compatible UUCP's generally store spool
+files in a directory named /var/spool/uucp/site, where
+site is the name of the remote site. When compiled for Taylor
+configuration, UUCP will create subdirectories below the site-specific
+spool directory for different types of spool files.
+<P>
+At regular intervals, UUCP dials up the remote system.  When a
+connection to the remote machine is established, UUCP transfers the
+files describing the job, plus any input files.  The incoming jobs
+will not be executed immediately, but only after the connection
+terminates. This is done by uuxqt, which also takes care of
+forwarding any jobs if they are designated for another site.
+<P>
+<A NAME="5662"></A>
+<A NAME="5663"></A>
+<A NAME="5664"></A>
+To distinguish between important and less important jobs, UUCP
+associates a <em>grade</em> with each job. This is a single letter,
+ranging from 0 through 9, A though Z, and a through z, in decreasing
+precedence.  Mail is customarily spooled with grade B or C, while news
+is spooled with grade N.  Jobs with higher grade are transferred
+earlier. Grades may be assigned using the -g flag when
+invoking uucp or uux.
+<P>
+You can also disallow the transfer of jobs below a given grade at
+certain times.  This is also called the <em>maximum spool grade</em>
+allowed during a conversation and defaults to-z. Note the
+terminological ambiguity here: a file is transferred only if it is
+<em>equal or above</em> the maximum spool grade.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node151.html">The Inner Workings of </A>
+<B>Up:</B> <A HREF="node149.html">Introduction</A>
+<B> Previous:</B> <A HREF="node149.html">Introduction</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

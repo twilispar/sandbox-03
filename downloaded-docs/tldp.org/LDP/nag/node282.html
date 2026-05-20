@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>trn Configuration</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node283.html">nn Configuration</A>
+<B>Up:</B> <A HREF="node280.html">Newsreader Configuration</A>
+<B> Previous:</B> <A HREF="node281.html">tin Configuration</A>
+<BR> <P>
+<H1><A NAME="SECTION0021200000">trn Configuration</A></H1>
+<A NAME="newsreaderstrn"></A>
+trn is the successor to an older newsreader, too, namely
+rn (which means <em>read news</em>). The ``t'' in its name stands
+for ``threaded''.  It was written by Wayne Davidson.
+<P>
+<A NAME="9838"></A>
+Unlike tin, trn has no provision for generating its
+threading database at run-time. Instead, it uses those prepared by a
+program called mthreads that has to be invoked regularly from
+cron to update the index files.
+<P>
+<A NAME="9935"></A>
+Not running mthreads, however, doesn't mean you cannot access new
+articles, it only means you will have all those ``Novell buys out
+Linix!!'' articles scattered across your article selection menu,
+instead of a single thread you may easily skip.
+<P>
+To turn on threading for particular newsgroups, mthreads is
+invoked with the list of newsgroups on the command line.  The list is
+made up in exactly the same fashion as the one in the sys file:
+<PRE>
+           mthreads comp,rec,!rec.games.go
+</PRE>
+will enable threading for all of comp and rec, except for
+rec.games.go (people who play Go don't need fancy threads). After
+that, you simply invoke it without any option at all to make it thread
+any newly arrived articles.  Threading of all groups found in your
+active file can be turned on by invoking mthreads with a
+group list of all.
+<P>
+If you're receiving news during the night, you will customarily run
+mthreads once in the morning, but you can also to do so more
+frequently if needed.  Sites that have very heavy traffic may want to
+run mthreads in daemon mode.  When it is started at boot time using
+the -d option, it puts itself in the background, and wakes up
+every 10-minutes to check if there are any newly-arrived articles, and
+threads them. To run mthreads in daemon mode, put the following
+line in your rc.news script:
+<PRE>
+           /usr/local/bin/rn/mthreads -deav
+</PRE>
+The -a option makes mthread automatically turn on threading
+for new groups as they are created; -v enables verbose log
+messages to mthreads' log file, mt.log in the directory
+where you have trn installed.
+<P>
+
+Old articles no longer available must be removed from the index files
+regularly.  By default, only articles whose number is below the low
+water mark will be removed.<A HREF="footnode.html#9936"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> Articles above this number who have been expired nevertheless (because
+the oldest article has been assigned an long expiry date by an
+Expires: header field) may be removed by giving mthreads
+the -e option to force an ``enhanced'' expiry run. When
+mthreads is running in daemon mode, the -e option makes
+it put in such an enhanced expiry run once a day, shortly after
+midnight.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node283.html">nn Configuration</A>
+<B>Up:</B> <A HREF="node280.html">Newsreader Configuration</A>
+<B> Previous:</B> <A HREF="node281.html">tin Configuration</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,376 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/rc.d/init.d/smb script file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="PREVIOUS"
+TITLE="Samba Administrative Tools"
+HREF="chap29sec291.html"><LINK
+REL="NEXT"
+TITLE="Installed files"
+HREF="chap29sec293.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec291.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 31. Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec293.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN22563"
+>31.12. The <TT
+CLASS="filename"
+>/etc/rc.d/init.d/smb</TT
+> script file</A
+></H1
+><P
+>&#13;      Configure your <TT
+CLASS="filename"
+>/etc/rc.d/init.d/smb</TT
+> script file to start and stop Samba <TT
+CLASS="literal"
+>smbd</TT
+> and <TT
+CLASS="literal"
+>nmbd</TT
+> daemons Server automaticaly.
+      Create the <TT
+CLASS="filename"
+>smb</TT
+> script file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/rc.d/init.d/smb</TT
+> and add the following lines:
+    </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;      #!/bin/sh
+      #
+      # chkconfig: - 91 35
+      # description: Starts and stops the Samba smbd and nmbd daemons \
+      #	       used to provide SMB network services.
+
+      # Source function library.
+      . /etc/rc.d/init.d/functions
+
+      # Source networking configuration.
+      . /etc/sysconfig/network
+
+      # Check that networking is up.
+      [ ${NETWORKING} = "no" ] &#38;&#38; exit 0
+
+      # Check that smb.conf exists.
+      [ -f /etc/smb.conf ] || exit 0
+
+      RETVAL=0
+
+      # See how we were called.
+      case "$1" in
+      start)
+      echo -n "Starting SMB services: "
+      daemon smbd -D 	
+      RETVAL=$?
+      echo
+      echo -n "Starting NMB services: "
+      daemon nmbd -D 
+      RETVAL2=$?
+      echo
+      [ $RETVAL -eq 0 -a $RETVAL2 -eq 0 ] &#38;&#38; touch /var/lock/subsys/smb || \
+      RETVAL=1
+      ;;
+      stop)
+      echo -n "Shutting down SMB services: "
+      killproc smbd
+      RETVAL=$?
+      echo
+      echo -n "Shutting down NMB services: "
+      killproc nmbd
+      RETVAL2=$?
+      [ $RETVAL -eq 0 -a $RETVAL2 -eq 0 ] &#38;&#38; rm -f /var/lock/subsys/smb
+      echo ""
+      ;;
+      restart)
+      $0 stop
+      $0 start
+      RETVAL=$?
+      ;;
+      reload)
+      echo -n "Reloading smb.conf file: "
+      killproc -HUP smbd
+      RETVAL=$?
+      echo
+      ;;
+      status)
+      status smbd
+      status nmbd
+      RETVAL=$?
+      ;;
+      *)
+      echo "Usage: $0 {start|stop|restart|status}"
+      exit 1
+      esac
+
+      exit $RETVAL
+    </PRE
+></TD
+></TR
+></TABLE
+><P
+>&#13;      Now, make this script executable and change its default permissions:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 700 /etc/rc.d/init.d/smb
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      Create the symbolic <TT
+CLASS="filename"
+>rc.d</TT
+> links for Samba with the command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>chkconfig</B
+> --add smb
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      Samba script will not automatically start the smbd and nmbd daemon when you reboot the server. You can change it to do this by default by executing the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>chkconfig</B
+> --level 345 smb on
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      Start your Samba Server manually with the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# /etc/rc.d/init.d/smb <B
+CLASS="command"
+>start</B
+>
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        Starting SMB services:                     	[  OK  ]
+        Starting NMB services:                   	[  OK  ]
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="pr6ch31ssmb"
+>31.12.1. Securing Samba</A
+></H2
+><P
+>&#13;        Immunize important configuration files, the immutable bit can be used to prevent accidentally deleting or overwriting a file that must be protected. It also prevents someone from creating a symbolic link to this file. Once your <TT
+CLASS="filename"
+>smb.conf</TT
+> 
+        and <TT
+CLASS="filename"
+>lmhosts</TT
+> files have been configured, it's a good idea to immunize them with a  command like:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# <B
+CLASS="command"
+>chattr</B
+> +i /etc/smb.conf
+          [root@deep ] /# <B
+CLASS="command"
+>chattr</B
+> +i /etc/lmhosts
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec291.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec293.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Samba Administrative Tools</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Installed files</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

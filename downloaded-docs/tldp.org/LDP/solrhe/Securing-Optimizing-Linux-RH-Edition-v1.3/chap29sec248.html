@@ -1,0 +1,311 @@
+<HTML
+><HEAD
+><TITLE
+>PHP4 server-side scripting</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/rc.d/init.d/httpd script file"
+HREF="chap29sec247.html"><LINK
+REL="NEXT"
+TITLE="Perl module Devel::Symdump"
+HREF="chap29sec249.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec247.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec249.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19437"
+>29.12. <SPAN
+CLASS="acronym"
+>PHP4</SPAN
+> server-side scripting</A
+></H1
+><P
+>&#13;      If you intend to use <SPAN
+CLASS="acronym"
+>PHP4</SPAN
+> server-side scripting language support with your Apache web server don't forget to include in your <TT
+CLASS="filename"
+>/etc/httpd/conf/httpd.conf</TT
+> file the following lines to enable this feature:
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        Edit the <TT
+CLASS="filename"
+>httpd.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/httpd/conf/httpd.conf</TT
+>, and add the following lines between the section tags &#60;IfModule mod_mime.c&#62; and &#60;/IfModule&#62;:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          AddType application/x-httpd-php .php
+          AddType application/x-httpd-php .php3
+          AddType application/x-httpd-php-source .phps
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        You must restart the Apache web server for the changes to take effect, using the following commands:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/# /etc/rc.d/init.d/httpd <B
+CLASS="command"
+>restart</B
+>
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          Shutting down http:                                        	[  OK  ]
+          Starting httpd:                                            	[  OK  ]
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        Once the above lines have been included in our <TT
+CLASS="filename"
+>httpd.conf</TT
+> file, we must test the new <SPAN
+CLASS="acronym"
+>PHP4</SPAN
+> feature to be sure it's working. We'll create a small <SPAN
+CLASS="acronym"
+>PHP</SPAN
+> file named 
+        <TT
+CLASS="filename"
+>php.php</TT
+> in our DocumentRoot, and then point our web broswer to this <SPAN
+CLASS="acronym"
+>PHP</SPAN
+> document to see if <SPAN
+CLASS="acronym"
+>PHP</SPAN
+>4 work on the server.
+        Create the <TT
+CLASS="filename"
+>php.php</TT
+> file in your DocumentRoot, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/home/httpd/ona/php.php</TT
+> and add the following lines in the <SPAN
+CLASS="acronym"
+>PHP</SPAN
+> file:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          &#60;body bgcolor="#FFFFFF"&#62;
+          &#60;?php phpinfo()?&#62;
+          &#60;/body&#62;
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        These lines will inform <SPAN
+CLASS="acronym"
+>PHP</SPAN
+>4 program to display various pieces of information about the  configuration of our Linux server.
+      </P
+></LI
+><LI
+><P
+>&#13;        Now, point your web browser to the following address:<TT
+CLASS="literal"
+>http://my-web-server/php.php</TT
+>
+
+        The &#60;my-web-server&#62; is the address where your Apache web server resides, and &#60;php.php&#62; is the <SPAN
+CLASS="acronym"
+>PHP</SPAN
+> document we have created above to display the information and configuration of our Linux server.
+      </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/PHP-Info.gif"
+ALT="PHP info"
+></IMG
+></P
+></DIV
+><P
+>&#13;      If you see something like the above page appearing in your web browser congratulations! Your <SPAN
+CLASS="acronym"
+>PHP</SPAN
+> module is working.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec247.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec249.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/httpd</TT
+> script file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Perl module Devel::Symdump</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

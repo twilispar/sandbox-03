@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>tin Configuration</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node282.html">trn Configuration</A>
+<B>Up:</B> <A HREF="node280.html">Newsreader Configuration</A>
+<B> Previous:</B> <A HREF="node280.html">Newsreader Configuration</A>
+<BR> <P>
+<H1><A NAME="SECTION0021100000">tin Configuration</A></H1>
+<A NAME="newsreaderstin"></A>
+The most versatile newsreader with respect to threading is tin.
+It was written by Iain Lea and is loosely modeled on an older newsreader
+named tass.<A HREF="footnode.html#9802"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> It does its threading when the user enters the newsgroup, and it is
+pretty fast at this unless you're doing this via NNTP.
+<P>
+
+On an 486DX50, it takes roughly 30 seconds to thread 1000 articles when
+reading directly from disk.  Over NNTP to a loaded news server, this
+would be somewhere above 5 minutes.<A HREF="footnode.html#9805"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> You may improve this by regularly updating your index file with the
+-u option, or by invoking tin with the -U
+option.
+<P>
+Usually, tin dumps its threading databases in the user's
+home directory below .tin/index. This may however be costly
+in terms of resources, so that you should want to keep a single copy
+of them in a central location. This may be achieved by making tin
+setuid to news, for example, or some entirely unprivileged
+account.<A HREF="footnode.html#9930"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> tin will then keep all thread databases below
+/var/spool/news/.index.
+For any file access or shell escape, it will reset its effective uid to
+the real uid of the user who invoked it.<A HREF="footnode.html#9931"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="9818"></A>
+A better solution is to install the tind indexing daemon that
+runs as a daemon and regularly updates the index files.  This daemon is
+however not included in any release of , so you would have to
+compile it yourself. If you are running a LAN with a central news
+server, you may even run tind on the server and have all clients
+retrieve the index files via NNTP. This, of course, requires an
+extension to NNTP. Patches for nntpd that implement this
+extension are included in the tin source.
+<P>
+The version of tin included in some  distributions has no
+NNTP support compiled in, but most do have it now.  When invoked as
+rtin or with the -r option, tin tries to connect
+to the NNTP server specified in the file /etc/nntpserver or in
+the NNTPSERVER environment variable.  The nntpserver
+file simply contains the server's name on a single line.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node282.html">trn Configuration</A>
+<B>Up:</B> <A HREF="node280.html">Newsreader Configuration</A>
+<B> Previous:</B> <A HREF="node280.html">Newsreader Configuration</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

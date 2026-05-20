@@ -1,0 +1,416 @@
+<HTML
+><HEAD
+><TITLE
+>IPSEC/VPN -FreeS/WAN</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FreeS/WAN VPN"
+HREF="fSWAn.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux FreeS/WAN VPN"
+HREF="fSWAn.html"><LINK
+REL="NEXT"
+TITLE="Compile, insert FreeS/WAN into the kernel"
+HREF="chap25sec200..html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="fSWAn.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 25. Linux FreeS/WAN VPN</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap25sec200..html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch25sc1fsw"
+>25.1. IPSEC/VPN -FreeS/WAN</A
+></H1
+><P
+>&#13;           <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> is Internet Protocol SECurity. It uses strong cryptography to provide both authentication and encryption services. Authentication ensures that packets are from the right sender and have 
+           not been altered in transit. Encryption prevents unauthorized reading of packet contents. <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> can protect any protocol running above <SPAN
+CLASS="acronym"
+>IP</SPAN
+> and any medium used below 
+           <SPAN
+CLASS="acronym"
+>IP</SPAN
+>. 
+           </P
+><P
+>&#13;           <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> can also provide some security services <EM
+>in the background</EM
+>, with no visible impact on users. More to the point, it can protect a mixture of protocols running over 
+           a complex combination of media i.e. <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>/<SPAN
+CLASS="acronym"
+>POP</SPAN
+> etc. without having to change them in any ways, since the encryption occurs at the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> level.
+           </P
+><P
+>&#13;           <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> services allow you to build secure tunnels through untrusted networks. Everything passing through the untrusted net is encrypted by the <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> gateway machine and decrypted 
+           by the gateway at the other end. The result is Virtual Private Network or <SPAN
+CLASS="acronym"
+>VPN</SPAN
+>. This is a network, which is effectively private even though it includes machines at several different sites connected 
+           by the insecure Internet.
+           <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/FreeSWAN-Schema.gif"
+ALT="FreeSWAN VPN"
+></IMG
+></P
+></DIV
+>
+           </P
+><P
+>&#13;           These installation instructions assume
+           <P
+></P
+><UL
+><LI
+><P
+>&#13;           Commands are Unix-compatible.
+           </P
+></LI
+><LI
+><P
+>&#13;           The source path is <TT
+CLASS="filename"
+>/usr/src</TT
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           Installations were tested on Red Hat Linux 6.1 and 6.2.
+           </P
+></LI
+><LI
+><P
+>&#13;           All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           Kernel version number is 2.2.14
+           </P
+></LI
+><LI
+><P
+>&#13;           FreeS/WAN <SPAN
+CLASS="acronym"
+>VPN</SPAN
+> version number is 1.3
+           </P
+></LI
+></UL
+>
+           </P
+><P
+>&#13;           These are the Package(s) and available here
+           <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;           Kernel Homepage: <A
+HREF="appendixa.html#prtinxfp23"
+>http://www.kernelnotes.org/</A
+>
+           </TD
+></TR
+><TR
+><TD
+>&#13;           You must be sure to download: linux-2_2_14_tar.gz
+           </TD
+></TR
+><TR
+><TD
+>&#13;           FreeS/WAN VPN Homepage Site: <A
+HREF="appendixa.html#prtinxfp23"
+>http://www.freeswan.org/</A
+>
+           </TD
+></TR
+><TR
+><TD
+>&#13;           FreeS/WAN VPN FTP Site: <A
+HREF="appendixa.html#prtinxfp23"
+>194.109.6.26</A
+>
+           </TD
+></TR
+><TR
+><TD
+>&#13;           You must be sure to download: freeswan-1.3.tar.gz
+           </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+           </P
+><P
+>&#13;           Before you decompress the tarballs, it is a good idea to make a list of files on the system before you install FreeS/WAN, and one afterwards, and then compare them using diff to find out what file it placed where. Simply 
+           run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Freeswan1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Freeswan2</B
+></TT
+> after you install the software, and use 
+           <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>Freeswan1 Freeswan2 &#62; Freeswan-Installed</B
+></TT
+> to get a list of what changed.
+           </P
+><P
+>&#13;           Some of the Prerequisites; the installation of <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> FreeS/WAN Virtual Private Network software requires some modification of your original kernel since FreeS/WAN must be included and incorporated in 
+           your kernel before you can use it. For this reason the first step in installing FreeS/WAN software is to go to the <A
+HREF="secopt-kernel.html"
+>Linux Kernel</A
+> section in this book and follow the instructions on how to 
+           install the Linux Kernel on your system, <EM
+>even if you have already done this before</EM
+> and come back to Linux FreeS/WAN VPN (this section) after you have executed the <B
+CLASS="command"
+>make dep</B
+>; <B
+CLASS="command"
+>make clean</B
+> 
+           commands, but before the <B
+CLASS="command"
+>make bzImage</B
+> command in the Linux Kernel section.
+           </P
+><DIV
+CLASS="caution"
+><P
+></P
+><TABLE
+CLASS="caution"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Caution.gif"
+ALT="Caution"
+></IMG
+></SPAN
+></B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>&#13;           It is highly recommended that you not compile anything in the kernel with optimization flags if you intend to install the FreeSWAN software on your system. Any optimization flags added to the Linux kernel will produce errors messages in 
+           the FreeSWAN <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> software when it tries to run; this is an important warning you must note, or else nothing will work with  FreeSWAN. The optimization flags documented in <A
+HREF="secopt-kernel.html"
+>Configuring and Building a Secure, Optimized kernel </A
+>
+           apply without any problems to all sections and chapters of this book with the single exception of the FreeSWAN <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> software. Once again, I repeat, don't use or add any optimization options or flags into your Linux kernel when compiling 
+           and patching it to support FreeSWAN.
+           </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>&#13;           To Compile FreeS/WAN you need to decompress the tarball (tar.gz).
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /# <B
+CLASS="command"
+>cp</B
+> freeswan-version.tar.gz /usr/src/
+           [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /usr/src
+           [root@deep ]/src# <B
+CLASS="command"
+>tar</B
+> xzpf freeswan-version.tar.gz
+           [root@deep ]src# <B
+CLASS="command"
+>chown</B
+> -R 0.0 /usr/src/freeswan-version
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="fSWAn.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap25sec200..html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux FreeS/WAN VPN</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="fSWAn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile, insert FreeS/WAN into the kernel</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,601 @@
+<HTML
+><HEAD
+><TITLE
+>OpenSSH</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities"
+HREF="soft-netsecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Software -Securities"
+HREF="soft-netsecured.html"><LINK
+REL="NEXT"
+TITLE="Configure and optimise Openssh"
+HREF="chap15sec120.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="soft-netsecured.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 15. Software -Securities</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap15sec120.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="prt6ch1sc1ossh"
+>15.1. OpenSSH</A
+></H1
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN7886"
+></A
+><P
+><B
+>The official [<SPAN
+CLASS="citation"
+>OpenSSH README</SPAN
+>] file says:</B
+></P
+><P
+>         
+         Ssh <I
+CLASS="wordasword"
+>Secure Shell</I
+> is a program to log into another computer over a network, to execute commands in a remote machine, and to move files from one machine to another. It provides strong authentication and 
+         secure communications over insecure channels. It is intended as a replacement for rlogin, rsh, rcp, and rdist.
+         </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;         In our configuration we have configured OpenSSH to support tcp-wrappers; the inetd super server, to improve the security of this already secure program and to avoid always running its daemon in the background of the server. This 
+         way, the program will run only when client connections arrive and will redirect them through the <SPAN
+CLASS="acronym"
+>TCP</SPAN
+>-WRAPPERS daemon for authentication and authorization before allowing the connection in the server. 
+         </P
+><P
+>&#13;         OpenSSH is a free replacement and improvement of SSH1 with all patent-encumbered algorithms removed to external libraries, all known security bugs fixed, new features reintroduced and many other clean-ups. It 
+         is recommended that you use OpenSSH <EM
+>free and security bug fixed</EM
+> instead of SSH1 <EM
+>free, buggy, and old</EM
+> or SSH2 that was originally free but now under a commercial 
+         license. For peoples that use SSH2 from Datafellows Company, we'll provide in this book both versions, beginning with OpenSSH, since it is the new SSH program which everyone, we suggest, must move to in the future.
+         </P
+><P
+>&#13;         These installation instructions assume:
+         <P
+></P
+><UL
+><LI
+><P
+>&#13;         Commands are Unix-compatible.
+         </P
+></LI
+><LI
+><P
+>&#13;         The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+> -<EM
+>other paths are possible</EM
+>.
+                  </P
+></LI
+><LI
+><P
+>&#13;         Installations were tested on Red Hat Linux 6.1 and 6.2.
+                  </P
+></LI
+><LI
+><P
+>&#13;         All steps in the installation will happen in super-user account root.
+                  </P
+></LI
+><LI
+><P
+>&#13;         OpenSSH version number is 1.2.3
+                  </P
+></LI
+></UL
+>
+         </P
+><P
+>&#13;         These are the Packages you can download from OpenSSH Homepage:<A
+HREF="appendixa.html#prtinxfp11"
+>http://www.openssh.com</A
+> and be sure to download: openssh-1.2.3.tar.gz <EM
+>as of this writing</EM
+>
+         </P
+><P
+>&#13;         There are some Prerequisites you need to take care of before installing OpenSSH since it requires that the zlib-devel package, which contains the header files and libraries needed to 
+         develop programs that use the zlib compression and decompression library, be already installed on your system. If this is not the case, you must install it from your Red Hat Linux 6.1 
+         or 6.2 CD-ROM.
+
+         To verify that the zlib-devel package is installed on your Linux system, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>rpm</B
+> -qi zlib-devel
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         package zlib-devel is not installed
+         </TT
+></P
+>
+         </P
+><P
+>&#13;         To install the zlib-devel package on your Linux system, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>mount</B
+> /dev/cdrom /mnt/cdrom/
+         [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /mnt/cdrom/RedHat/RPMS/
+         [root@deep ]/RPMS#<B
+CLASS="command"
+>rpm</B
+> -Uvh zlib-devel-version.i386.rpm
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         gd                          ##################################################
+         </TT
+></P
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/RPMS#<B
+CLASS="command"
+>rpm</B
+> -Uvh gd-devel-version.i386.rpm
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         zlib-devel                  ##################################################
+         </TT
+></P
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/RPMS# cd /; umount /mnt/cdrom/
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+         OpenSSL, which enables support for SSL functionality, must already be installed on your system to be able to use the OpenSSH software.For more information on OpenSSL server, see its related chapter in this book. Even if you don't 
+         need to use OpenSSL software to create or hold encrypted key files, it's important to note that OpenSSH program require its libraries files to be able to work properly on your system.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         you need to decompress and unpack the Tarballs but it is a good idea to make a list of files on the system before you install OpenSSH, and one afterwards, and then compare them using diff to find out what files it placed where. Simply 
+         run <B
+CLASS="command"
+>find</B
+><TT
+CLASS="userinput"
+><B
+>/* &#62; OpenSSH1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+><TT
+CLASS="userinput"
+><B
+>/* &#62; OpenSSH2</B
+></TT
+> after you install the software, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>OpenSSH1 OpenSSH2 &#62; OpenSSH-Installed</B
+></TT
+> 
+         to get a list of what changed.
+         </P
+><P
+>&#13;         To Compile,Decompress the tarball <TT
+CLASS="literal"
+>tar.gz</TT
+> and:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>cp</B
+> openssh-version.tar.gz /var/tmp
+         [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /var/tmp
+         [root@deep ]/tmp#<B
+CLASS="command"
+>tar</B
+> <TT
+CLASS="userinput"
+><B
+>xzpf</B
+></TT
+> openssh-version.tar.gz
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         You need to Compile and Optimize:
+         </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;         Move into the new OpenSSH directory and type the following commands on your terminal:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         CC="egcs" \
+         CFLAGS="-O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions" \
+         ./configure \
+         --prefix=/usr \
+         --sysconfdir=/etc/ssh \
+         --with-tcp-wrappers \
+         --with-ipv4-default \
+         --with-ssl-dir=/usr/include/openssl
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         This tells OpenSSH to set itself up for this particular hardware setup with:
+         <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;         - Compiled-in libwrap and enabled <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> Wrappers <TT
+CLASS="filename"
+>/etc/hosts.allow|deny</TT
+> support.
+         </TD
+></TR
+><TR
+><TD
+>&#13;         - Disabled long delays in name resolution under Linux/glibc-2.1.2 to improve connection time.
+         </TD
+></TR
+><TR
+><TD
+>&#13;         - Specified locations of OpenSSL libraries required by OpenSSH program to work.
+         </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Now, we must compile and install OpenSSH on the Server:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/openssh-1.2.3#<B
+CLASS="command"
+>make</B
+>
+         [root@deep ]/openssh-1.2.3#<B
+CLASS="command"
+>make install</B
+>
+         [root@deep ]/openssh-1.2.3#<B
+CLASS="command"
+>make</B
+> host-key
+         [root@deep ]/openssh-1.2.3#<B
+CLASS="command"
+>install</B
+> -m644 contrib/redhat/sshd.pam /etc/pam.d/sshd
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><B
+CLASS="command"
+>make</B
+></DT
+><DD
+><P
+>&#13;         command will compile all source files into executable binaries, 
+         </P
+></DD
+><DT
+><B
+CLASS="command"
+>make install</B
+></DT
+><DD
+><P
+>&#13;           will install the binaries and any supporting files into the appropriate locations. 
+           </P
+></DD
+><DT
+><B
+CLASS="command"
+>make</B
+> host-key</DT
+><DD
+><P
+>&#13;         command will generate a host key.
+         </P
+></DD
+><DT
+><B
+CLASS="command"
+>install</B
+></DT
+><DD
+><P
+>&#13;         command will install the PAM support for Red Hat Linux, which is now more functional than the popular packages of commercial ssh-1.2.x.
+         </P
+></DD
+></DL
+></DIV
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         please do a Cleanup later:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /var/tmp
+         [root@deep ]/tmp#<B
+CLASS="command"
+>rm</B
+> -rf openssh-version/ openssh-version.tar.gz
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The <B
+CLASS="command"
+>rm</B
+> command as used above will remove all the source files we have used to compile and install OpenSSH. It will also remove the OpenSSH compressed archive from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+         </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="soft-netsecured.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap15sec120.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software -Securities</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netsecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure and optimise Openssh</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,469 @@
+<HTML
+><HEAD
+><TITLE
+>Odds and Ends</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Adjusting Fonts in Specific Applications"
+HREF="apps.html"><LINK
+REL="NEXT"
+TITLE="Appendix: Font Servers"
+HREF="appendix.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XFree86 Font De-uglification HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="apps.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="appendix.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="END">6. Odds and Ends</H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="NOTES">6.1. Notes</H2
+><P
+></P
+><UL
+><LI
+><P
+>   Unfortunately there is no unified font handling system for Linux. You will have
+   to configure each individual program so you can use TrueType, Type 1 or fonts 
+   that pique your fancy. And each program may well have its own way of doing
+   this so you will have to RTFM. Desktop Environments like GNOME and KDE may 
+   provide much of this functionality however for apps that are under their
+   control.
+  </P
+></LI
+><LI
+><P
+>   Most GUI apps should be able to use TrueType, and Type 1 fonts too. 
+   Wordperfect for Linux, however, cannot use TrueType. (See the 
+   links section below for more on Wordperfect.) Text editors, terminal programs
+   and the like need fixed width fonts, and do not play well with TrueType or
+   other proportional fonts.
+
+  </P
+></LI
+><LI
+><P
+>   Though not discussed here, Type 1 fonts provide many of the same benefits
+   as TrueType and are historically better supported in the Unix world, 
+   especially for printing. XFree86 still seems to render TrueType somewhat
+   better than Type 1. You likely have many of these installed already.
+   Unfortunately however, Type 1 are not a web standard like TrueType. But
+   they are suitable for many other purposes. They are where it's at for
+   printing. See <A
+HREF="http://www.ghostscript.com/"
+TARGET="_top"
+>ghostscript</A
+>
+   for more on this.
+  </P
+></LI
+><LI
+><P
+>   While it is possible to specify a default point size for the xfs font
+   server, very few applications will actually use this value.
+  </P
+></LI
+><LI
+><P
+>  
+    Abiword comes with a suite of fonts, called 'Abisuite'. Apparently, 
+    some of these fonts have the same names as some of the well known MS
+    TrueType fonts: Arial, etc. And apparently, these are not as good
+    quality. And because of the way X searches for fonts, it may find these
+    first and use these, even if the 'real' ones are installed and may be the
+    preferred choice. The solution is to either make sure your preferred fonts 
+    come first in the FontPath or maybe to uninstall 'Abisuite' if it's not 
+    needed.
+  </P
+></LI
+><LI
+><P
+>   The new Xft rendering extensions of XFree86 4.x will mostly supplant
+   similar features as provided by xfs, and older XFree86 extensions. For
+   instance, font aliasing should be done in <TT
+CLASS="FILENAME"
+>XftConfig</TT
+> 
+   if the new extensions are being used. This would only be true where 
+   the application is built against a toolkit (like QT or GTK) that supports 
+   the new extensions. This is still not universally supported.
+  </P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="LINKS">6.2. Links</H2
+><P
+></P
+><UL
+><LI
+><P
+>    <A
+HREF="http://www.xfree86.org"
+TARGET="_top"
+>XFree86 Project</A
+>, the guys and gals
+    who do an incredible amount of work to give us a killer GUI environment. An
+    overview of XFree86 fonts: 
+    <A
+HREF="http://www.xfree86.org/current/fonts.html"
+TARGET="_top"
+>XFree86 4.x</A
+>.
+    And an explanation of Xft: 
+    <A
+HREF="http://www.keithp.com/~keithp/render/Xft.tutorial"
+TARGET="_top"
+>http://www.keithp.com/~keithp/render/Xft.tutorial</A
+>.
+   </P
+></LI
+><LI
+><P
+>    The Fontconfig home page is <A
+HREF="http://fontconfig.org"
+TARGET="_top"
+>http://fontconfig.org</A
+>, for all the 
+    latest news on Xft and fontconfig (the future of X font handling).
+  </P
+></LI
+><LI
+><P
+>    The 
+    <A
+HREF="http://linuxdoc.org/HOWTO/XFree86-Video-Timings-HOWTO.html"
+TARGET="_top"
+>Video
+    Timings HOWTO</A
+>, the ins and outs of getting the most from your monitor.
+    (Applicable only to XFree86 v.3.x for the most part.)
+   </P
+></LI
+><LI
+><P
+>    <A
+HREF="http://www.linuxdoc.org/HOWTO/Font-HOWTO.html"
+TARGET="_top"
+>Font HOWTO</A
+>
+    Many good tips for installing fonts and for applications such as StarOffice,
+    Applixware, Wordperfect, Ghostscript, TeX/LaTeX.
+   </P
+></LI
+><LI
+><P
+>    A <A
+HREF="http://www.moisty.org/~brion/linux/TrueType-HOWTO.html"
+TARGET="_top"
+>TrueType HOWTO</A
+>, good tips for printing, and a few application specific tips.
+  </P
+></LI
+><LI
+><P
+>    <A
+HREF="http://www.dcs.ed.ac.uk/home/jec/programs/xfsft/"
+TARGET="_top"
+>xfsft Homepage</A
+>, 
+    TrueType font support for X. This is the origin of the "freetype" font module
+    for XFree86 4.x, and Red Hat's xfs. Good site, and good links to other
+    information related to fonts and TrueType.
+   </P
+></LI
+><LI
+><P
+>    <A
+HREF="http://home.c2i.net/dark/linux.html"
+TARGET="_top"
+>Some Linux for Beginners</A
+>. Great font site, and other Linux topics. Covers many of the topics 
+    discussed here in more detail. Some font and other tips for 
+    Mozilla: <A
+HREF="http://home.c2i.net/dark/My_Mozilla_FAQ.html"
+TARGET="_top"
+>http://home.c2i.net/dark/My_Mozilla_FAQ.html</A
+>.
+    
+   </P
+></LI
+><LI
+><P
+>    Two guides specifically for Debian from Paul D. Smith: 
+    <A
+HREF="http://www.paulandlesley.org/linux/xfree4_tt.html"
+TARGET="_top"
+>http://www.paulandlesley.org/linux/xfree4_tt.html</A
+> and for 3.3.x: 
+    <A
+HREF="http://www.paulandlesley.org/linux/debian_tt.html"
+TARGET="_top"
+>http://www.paulandlesley.org/linux/debian_tt.html</A
+>.
+  </P
+></LI
+><LI
+><P
+>    <A
+HREF="http://X-TT.dsl.gr.jp/"
+TARGET="_top"
+>X-TrueType Homepage</A
+>, and yet
+    another TrueType Font server, especially good for Japanese, Chinese and Korean
+    character sets. [Note: link is bad 08/18/02.]
+   </P
+></LI
+><LI
+><P
+>    Tips on font size problems from 
+    <A
+HREF="http://help.netscape.com/kb/consumer/19960513-54.html"
+TARGET="_top"
+>Netscape</A
+>.
+   </P
+></LI
+><LI
+><P
+>    <A
+HREF="http://www.rodsbooks.com/wpfonts/"
+TARGET="_top"
+>Wordperfect for Linux -- Fonts
+    and Printers</A
+> by Rod Smith, the author of 
+    <I
+CLASS="CITETITLE"
+>Using Corel Wordperfect 8 for Linux</I
+> 
+    from Que. Excellent information on Wordperfect and where TrueType fits in.
+   </P
+></LI
+><LI
+><P
+>    <A
+HREF="http://sourceforge.net/projects/font-tool/"
+TARGET="_top"
+>http://sourceforge.net/projects/font-tool/</A
+>, 
+     contains the core MS TrueTyep fonts suitable for web browsing. 
+     <A
+HREF="http://packages.debian.org/unstable/graphics/msttcorefonts.html"
+TARGET="_top"
+>http://packages.debian.org/unstable/graphics/msttcorefonts.html</A
+> is a similar package for Debian.
+   </P
+></LI
+><LI
+><P
+>    Sebastiano Vigna's <A
+HREF="http://gongolo.usr.dsi.unimi.it/~vigna/webFonts4Linux/"
+TARGET="_top"
+>    http://gongolo.usr.dsi.unimi.it/~vigna/webFonts4Linux/</A
+> automates the downloading,
+    extracting and installation of the Microsoft fonts all in one neat
+    package.
+   </P
+></LI
+><LI
+><P
+>    <A
+HREF="http://www.freewareconnection.com/fonts.html"
+TARGET="_top"
+>Freeware Connection
+    -- Free Fonts Sites</A
+> lots of links to lots of sites.
+   </P
+></LI
+><LI
+><P
+>    <A
+HREF="http://www.will-harris.com/fonts/freefonts.htm"
+TARGET="_top"
+>Bitstream's
+    Geometric Slabserif</A
+> TrueType Font.
+   </P
+></LI
+><LI
+><P
+>    Two converters for converting a Mac Font <SPAN
+CLASS="QUOTE"
+>"suitcase"</SPAN
+> to a *nix
+    compatible font: <A
+HREF="http://www.macinsearch.com/infomac2/font/util/tt-converter-15.html"
+TARGET="_top"
+>http://www.macinsearch.com/infomac2/font/util/tt-converter-15.html</A
+>
+    and 
+    <A
+HREF="http://www.netmagic.net/~evan/shareware/#TTFontConvert"
+TARGET="_top"
+>http://www.netmagic.net/~evan/shareware/#TTFontConvert</A
+>
+   </P
+></LI
+><LI
+><P
+>     The Unicode HOWTO: <A
+HREF="http://linuxdoc.org/HOWTO/Unicode-HOWTO.html"
+TARGET="_top"
+>http://linuxdoc.org/HOWTO/Unicode-HOWTO.html</A
+>
+     
+     </P
+></LI
+><LI
+><P
+>&#13;    Two sources of 'free' TrueType fonts with large Unicode support are
+    Bitstream Cyberbit, which covers Roman, Cyrillic, Greek, Hebrew, Arabic,
+    combining diacritical marks, Chinese, Korean, Japanese, and more, and is
+    available from <A
+HREF="ftp://ftp.netscape.com/pub/communicator/extras/fonts/windows/Cyberbit.ZIP"
+TARGET="_top"
+>ftp://ftp.netscape.com/pub/communicator/extras/fonts/windows/Cyberbit.ZIP</A
+>.
+    And Lucida Sans Unicode, which is included in IBM's JDK 1.3.0beta for
+    Linux, and covers Roman, Cyrillic, Greek, Hebrew, combining diacritical
+    marks. This can be downloaded from <A
+HREF="ftp://ftp.maths.tcd.ie/Linux/opt/IBMJava2-13/jre/lib/fonts/"
+TARGET="_top"
+>ftp://ftp.maths.tcd.ie/Linux/opt/IBMJava2-13/jre/lib/fonts/</A
+>
+    as LucidaSansRegular.ttf and LucidaSansOblique.ttf. Thanks to Tzafrir Cohen 
+    for these references. He also has a nice page on Hebrew fonts and related
+    topics at <A
+HREF="http://www.iglu.org.il/faq/?file=133"
+TARGET="_top"
+>http://www.iglu.org.il/faq/?file=133</A
+>.
+   </P
+></LI
+></UL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="apps.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="appendix.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Adjusting Fonts in Specific Applications</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Appendix: Font Servers</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

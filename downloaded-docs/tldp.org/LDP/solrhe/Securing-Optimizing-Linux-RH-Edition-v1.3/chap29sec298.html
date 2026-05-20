@@ -1,0 +1,332 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/ftphosts file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FTP Server"
+HREF="ftpd.html"><LINK
+REL="PREVIOUS"
+TITLE="Configurations"
+HREF="chap29sec297.html"><LINK
+REL="NEXT"
+TITLE="Configure the /etc/ftpconversions file"
+HREF="chap29sec299.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec297.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 32. Linux <TT
+CLASS="literal"
+>FTP</TT
+> Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec299.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN23132"
+>32.5. Configure the <TT
+CLASS="filename"
+>/etc/ftphosts</TT
+> file</A
+></H1
+><P
+>&#13;      The <TT
+CLASS="filename"
+>/etc/ftphosts</TT
+> file is used to define whether users are allowed to log in from certain hosts or whether there are denied access.
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        Create the <TT
+CLASS="filename"
+>ftphosts</TT
+> file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/ftphosts</TT
+> and add for example in this file the following lines:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          # Example host access file
+          #
+          # Everything after a '#' is treated as comment,
+          # empty lines are ignored
+          allow ftpadmin 208.164.186.1 208.164.186.2 208.164.186.4
+          deny ftpadmin 208.164.186.5
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        In the example below, we allow the user <TT
+CLASS="literal"
+>ftpadmin</TT
+> to connect via <TT
+CLASS="literal"
+>FTP</TT
+> from the explicitly listed addresses <TT
+CLASS="literal"
+>208.164.186.1</TT
+> <TT
+CLASS="literal"
+>208.164.186.2 </TT
+><TT
+CLASS="literal"
+>208.164.186.4,</TT
+> and 
+        deny the specified <TT
+CLASS="literal"
+>ftpadmin</TT
+> user to connect from the site <TT
+CLASS="literal"
+>208.164.186.5.</TT
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        Now, change its default permission to be <TT
+CLASS="literal"
+>600</TT
+>:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 600 /etc/ftphosts
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN23156"
+>32.5.1. Configure the <TT
+CLASS="filename"
+>/etc/ftpusers</TT
+> file</A
+></H2
+><P
+>&#13;        The <TT
+CLASS="filename"
+>/etc/ftpusers/</TT
+> file specifies those users that are <EM
+>NOT</EM
+> allowed to connect to your <TT
+CLASS="literal"
+>FTP</TT
+> server.
+      </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;          Create the <TT
+CLASS="filename"
+>ftpusers</TT
+> file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/ftpusers</TT
+> and add in this file the following users for security reasons:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            root
+            bin
+            daemon
+            adm
+            lp
+            sync
+            shutdown
+            halt
+            mail
+            news
+            uucp
+            operator
+            games
+            nobody
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+><LI
+><P
+>&#13;          Now, change its default permission to be <TT
+CLASS="literal"
+>600</TT
+>:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 600 /etc/ftpusers
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+></OL
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec297.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec299.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configurations</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ftpd.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/ftpconversions</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

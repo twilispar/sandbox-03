@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Introduction to TCP/IP-Networks</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node9.html">Ethernets</A>
+<B>Up:</B> <A HREF="node7.html">TCP/IP Networks</A>
+<B> Previous:</B> <A HREF="node7.html">TCP/IP Networks</A>
+<BR> <P>
+<H2><A NAME="SECTION003310000">Introduction to TCP/IP-Networks</A></H2>
+TCP/IP traces its origins to a research project funded by the United
+States DARPA (Defense Advanced Research Projects Agency) in 1969. This
+was an experimental network, the ARPANET, which was converted into an
+operational one in 1975, after it had proven to be a success.
+<p>
+In 1983, the new protocol suite TCP/IP was adopted as a standard, and
+all hosts on the network were required to use it.  When ARPANET finally
+grew into the Internet (with ARPANET itself passing out of existence in
+1990), the use of TCP/IP had spread to networks beyond the Internet
+itself. Most notable are  local area networks, but in the advent
+of fast digital telephone equipment, such as ISDN, it also has a
+promising future as a transport for dial-up networks.
+<P>
+<A NAME="331"></A>
+<A NAME="332"></A>
+<A NAME="333"></A>
+For something concrete to look at as we discuss TCP/IP throughout the
+following sections, we will consider Groucho Marx University (GMU),
+situated somewhere in Fredland, as an example.  Most departments run
+their own local area networks, while some share one, and others run
+several of them. They are all interconnected, and are hooked to the
+Internet through a single high-speed link.
+<P>
+<A NAME="334"></A>
+Suppose your  box is connected to a LAN of  hosts at the
+Mathematics Department, and its name is erdos. To access a host at
+the Physics Department, say quark, you enter the following
+command:
+<pre>
+           $ rlogin quark.physics
+           Welcome to the Physics Department at GMU
+           (ttyq2) login:
+</pre>
+At the prompt, you enter your login name, say andres, and
+your password. You are then given a shell on quark, to which
+you can type as if you were sitting at the system's console. After
+you exit the shell, you are returned to your own machine's prompt.
+You have just used one of the instantaneous, interactive applications
+that TCP/IP provides: remote login.
+<P>
+<A NAME="343"></A>
+While being logged into quark, you might also want to run an
+X11-based application, like a function plotting program, or a PostScript
+previewer. To tell this application that you want to have its windows
+displayed on your host's screen, you have to set the DISPLAY
+environment variable:
+<pre>
+           $ export DISPLAY=erdos.maths:0.0
+</pre>
+If you now start your application, it will contact your X server
+instead of quark's, and display all its windows on your screen.
+Of course, this requires that you have X11 running on erdos.
+The point here is that TCP/IP allows quark and erdos
+to send X11 packets back and forth to give you the illusion that
+you're on a single system. The network is almost transparent here.
+<P>
+Another very important application in TCP/IP networks is NFS, which
+stands for <em>Network File System</em>. It is another form of making the
+network transparent, because it basically allows you to mount directory
+hierarchies from other hosts, so that they appear like local file
+systems. For example, all users' home directories can be on a central
+server machine, from which all other hosts on the LAN mount the
+directory. The effect of this is that users can log into any machine,
+and find themselves in the same home directory.  Similarly, it is
+possible to install applications that require large amounts of disk
+space (such as TeX) on only one machine, and export these directories
+to other machines.  We will come back to NFS in chapter-<A HREF="node140.html#nfs"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+Of course, these are only examples of what you can do over TCP/IP
+networks. The possibilities are almost limitless.
+<P>
+We will now have a closer look at the way TCP/IP works. You will need
+this to understand how and why you have to configure your machine.  We
+will start by examining the hardware, and slowly work our way up.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node9.html">Ethernets</A>
+<B>Up:</B> <A HREF="node7.html">TCP/IP Networks</A>
+<B> Previous:</B> <A HREF="node7.html">TCP/IP Networks</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,294 @@
+<HTML
+><HEAD
+><TITLE
+>Linux MM Shared Memory Library </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="NEXT"
+TITLE="Compile"
+HREF="chap29sec238.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="netweb-Apache.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec238.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="prt6ch29scmm"
+>29.1. Linux MM Shared Memory Library</A
+></H1
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN18728"
+></A
+><P
+><B
+>As per the [<SPAN
+CLASS="citation"
+>MM Shared Memory Library web site</SPAN
+>]:</B
+></P
+><P
+>&#13;        The MM library is a 2-layer abstraction library, which simplifies the usage of shared memory between forked and, in this example, strongly related processes under Unix platforms. On the first layer it hides all platform dependent 
+        implementation details; allocation and locking, when dealing with shared memory segments, and on the second layer it provides a high-level malloc(3)-style API for a convenient and well known way to work with data-structures inside 
+        those shared memory segments.
+      </P
+><P
+>&#13;        The library is released under the term of an open-source, BSD-style license, because it was originally written as a proposal for use inside the next version of the Apache web server as a base library for providing shared memory pools 
+        to Apache modules,  Currently Apache modules can only use heap-allocated memory, which isn't shared across the pre-forked server processes. The requirement actually comes from comprehensive modules like mod_ssl, mod_perl and mod_php, 
+        which would benefit a lot from easy to use shared memory pools.
+      </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;      These installation instructions assume
+      <P
+></P
+><UL
+><LI
+><P
+>&#13;          Commands are Unix-compatible.
+        </P
+></LI
+><LI
+><P
+>&#13;        The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>, <EM
+>other paths are possible</EM
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;        Installations were tested on Red Hat Linux 6.1 and 6.2.
+        </P
+></LI
+><LI
+><P
+>&#13;        All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;        Mm version number is 1.1.2
+        </P
+></LI
+></UL
+>
+    </P
+><P
+>&#13;      These are the package(s):
+      <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;          MM Homepage:<A
+HREF="appendixa.html#prtinxfp29"
+>http://www.engelschall.com/sw/mm/</A
+>
+        </TD
+></TR
+><TR
+><TD
+>&#13;        You must be sure to download: <TT
+CLASS="filename"
+>mm-1.1.2.tar.gz</TT
+>
+        </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+    </P
+><P
+>&#13;      Before you decompress the tarballs, it is a good idea to make a list of files on the system before you install MM, and one afterwards, and then compare them using diff to find out what file it placed where. Simply run 
+      <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; MM1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; MM2</B
+></TT
+> after you install the software, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>MM1 MM2 &#62; MM-Installed</B
+></TT
+> 
+      to get a list of what changed.
+    </P
+><P
+>&#13;      To compile you need to decompress the tarball (tar.gz) first.
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep /]# <B
+CLASS="command"
+>cp</B
+> mm-version.tar.gz /var/tmp
+        [root@deep /]# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+        [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf mm-version.tar.gz
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec238.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software -Network Server, web/Apache</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

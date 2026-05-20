@@ -1,0 +1,382 @@
+<HTML
+><HEAD
+><TITLE
+>X Server Configuration</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Introduction"
+HREF="intro.html"><LINK
+REL="NEXT"
+TITLE="TrueType Fonts"
+HREF="truetype.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XFree86 Font De-uglification HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="intro.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="truetype.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="X-CONFIG">2. X Server Configuration</H1
+><P
+> There are a few simple configuration tweaks that will help X do its job
+ better.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN150">2.1. Setting The FontPath</H2
+><P
+> The first place to look for curing font problems is the
+ <TT
+CLASS="FILENAME"
+>XF86Config</TT
+> file.
+ <TT
+CLASS="FILENAME"
+>/usr/X11/lib/X11/XF86Config</TT
+> or
+ <TT
+CLASS="FILENAME"
+>/etc/X11/XF86Config</TT
+> are the common locations. (This may
+ be <TT
+CLASS="FILENAME"
+>XF86Config-4</TT
+> for XFree86 4.x.) If you haven't
+ guessed already, the most important part of this file relating to fonts is
+ the <TT
+CLASS="LITERAL"
+>FontPath.</TT
+> Before we get into that, this would be a
+ good time to check the other parts of your X configuration. Bad monitor
+ settings can be even more of a headache than bad fonts, so make sure your
+ refresh rate is as high as your monitor can handle (85 Hz is great, 75 Hz is
+ OK, 60 Hz is painful.)                                      &#13;</P
+><P
+> Use your favorite text editor and edit 
+ <TT
+CLASS="FILENAME"
+>XF86Config</TT
+>.  Near the top of the file in the
+ "Files" section, you should see something vaguely like this:                 
+ </P
+><A
+NAME="AEN160"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/misc/"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/Type1/"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/Speedo/"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/75dpi/"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/100dpi/"<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+></BLOCKQUOTE
+><P
+> This much should be the same, or at least similar, for both XFree86 3.x and
+ 4.x. The <TT
+CLASS="LITERAL"
+>FontPath</TT
+> tells X where to find the fonts it uses
+ to render text on your display.  Order is important -- when an X application
+ asks X to render some text, the X server usually has some leeway to choose the
+ font that is used.  The X server then goes through the
+ <TT
+CLASS="LITERAL"
+>FontPath</TT
+> and grabs the first font it sees that matches the
+ X client's criteria, and then displays it. (Note that Red Hat's xfs for versions 6.x
+ and later has a different way of setting the <TT
+CLASS="LITERAL"
+>FontPath</TT
+>. See
+ the <A
+HREF="xfs.html"
+>Section A.2</A
+> below for more on xfs.)&#13;</P
+><P
+> If the 100dpi fonts are not listed, they probably did not get installed for 
+ whatever reason, so you may want install them now. Default installations
+ may put 75dpi fonts before the 100dpi fonts. If you have a high
+ resolution display (1024x768 or higher), this means very tiny fonts. If this
+ is the case, the first tweak you'll use is to switch the 75dpi and 100dpi
+ FontPath lines:</P
+><A
+NAME="AEN171"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/misc/"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/Type1/"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/Speedo/"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/100dpi/"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/75dpi/"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> Next, specify that you prefer to use unscaled bitmap fonts.  If you've ever
+ used Netscape or any other program that displays titles using big fonts,
+ you might have noticed that those fonts were pixelized.  This is ugly and needs
+ to be corrected.  So add <TT
+CLASS="LITERAL"
+>:unscaled</TT
+> to the ends of the misc,
+ 100dpi and 75dpi fonts. You can even use both unscaled and scaled fonts if
+ you want, just put the unscaled <TT
+CLASS="LITERAL"
+>FontPath</TT
+> lines first to
+ tell X you prefer unscaled fonts if possible:</P
+><A
+NAME="AEN179"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/misc:unscaled"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/100dpi:unscaled"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/75dpi:unscaled"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/Type1"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/Speedo"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/misc"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/100dpi"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/75dpi"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> After making these changes, restart X (and your font server, if installed).
+ Doesn't the desktop look better already?</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN185">2.2. X Server Command Line Options</H2
+><P
+> The next thing you might need to do is adjust the command line options for
+ the X server. It is important that the <TT
+CLASS="LITERAL"
+>dpi</TT
+> resolution
+ be accurate. Run this command:</P
+><P
+> <P
+CLASS="LITERALLAYOUT"
+>&nbsp;&nbsp;<TT
+CLASS="LITERAL"
+> $ xdpyinfo  |  grep resolution
+ resolution:     111x111 dots per inch
+  </TT
+><br>
+&nbsp;</P
+></P
+><P
+> If this does not look to match what your monitor can do, or if it is 
+ unbalanced (e.g <TT
+CLASS="LITERAL"
+>98x95</TT
+>),  you will need to use the
+ <TT
+CLASS="LITERAL"
+>-dpi</TT
+> switch which specifies the display resolution in dots
+ per inch.  As a lot of systems use high resolution displays these days,
+ chances are they'll be working at 100 dpi, or better. While an unbalanced
+ setting reportedly can really play havoc with some fonts.</P
+><P
+> If you start X from the console command prompt, type:</P
+><P
+> <TT
+CLASS="LITERAL"
+> $ startx -- -dpi 100 -depth 16   # v4.x syntax
+ </TT
+></P
+><P
+> Or these options can be stored in <TT
+CLASS="FILENAME"
+>~/.xserverrc</TT
+>. See the 
+ <B
+CLASS="COMMAND"
+>startx</B
+> and <B
+CLASS="COMMAND"
+>xinit</B
+> man pages for more on
+ this. </P
+><P
+> If you use xdm (or friends such as gdm) for graphical logins, you'll want to
+ edit your <TT
+CLASS="FILENAME"
+>/usr/X11/lib/X11/xdm/Xservers</TT
+> file (or
+ possibly <TT
+CLASS="FILENAME"
+>/etc/X11/xdm/Xservers</TT
+>) which will have the
+ command line for the Xserver in it.  Mine has the line:</P
+><P
+> <TT
+CLASS="LITERAL"
+> :0 local /usr/X11R6/bin/X -dpi 100 -gamma 1.6
+ </TT
+></P
+><P
+> You want to specify a value that is compatible with your monitor's output.</P
+><P
+> More information is in the <B
+CLASS="COMMAND"
+>X</B
+>, <B
+CLASS="COMMAND"
+>Xserver</B
+>,
+ <B
+CLASS="COMMAND"
+>xdm</B
+>, <B
+CLASS="COMMAND"
+>xinit,</B
+> and
+ <B
+CLASS="COMMAND"
+>startx</B
+> man pages. </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="intro.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="truetype.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Introduction</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>TrueType Fonts</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

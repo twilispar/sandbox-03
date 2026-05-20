@@ -1,0 +1,313 @@
+<HTML
+><HEAD
+><TITLE
+>Source Address Filtering</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Networking -Firewall"
+HREF="soft-netfirew.html"><LINK
+REL="PREVIOUS"
+TITLE="Rules used in the Firewall script files"
+HREF="chap10sec100.html"><LINK
+REL="NEXT"
+TITLE="The firewall scripts files"
+HREF="fwall-scripts.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap10sec100.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 10. Networking -Firewall</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="fwall-scripts.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN6542"
+>10.5. Source Address Filtering</A
+></H1
+><P
+>&#13;          All <SPAN
+CLASS="acronym"
+>IP</SPAN
+> packet headers contain the source and destination <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses and the type of <SPAN
+CLASS="acronym"
+>IP</SPAN
+> protocol message; <SPAN
+CLASS="acronym"
+>ICMP</SPAN
+>, <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> or <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> this 
+          packet contains. The only means of identification under the Internet Protocol - <SPAN
+CLASS="acronym"
+>IP</SPAN
+>) is the source address in the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> packet header. This is a problem that opens the door to source address spoofing, where the 
+          sender may replaces its address with either a nonexistent address, or the address of some other site.
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          
+          # Refuse spoofed packets pretending to be from the external address.
+          ipchains -A input  -i $EXTERNAL_INTERFACE -s $IPADDR -l -j DENY
+          
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;          Also, there are at least seven sets of source addresses you should refuse on your external interface in all cases.
+          These are incoming packets claiming to be from:
+          <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;          Your external <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address
+          </P
+></LI
+><LI
+><P
+>&#13;          <TT
+CLASS="literal"
+>Class A</TT
+> private <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses
+          </P
+></LI
+><LI
+><P
+>&#13;          <TT
+CLASS="literal"
+>Class B</TT
+> private <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses
+          </P
+></LI
+><LI
+><P
+>&#13;          <TT
+CLASS="literal"
+>Class C</TT
+> private <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses
+          </P
+></LI
+><LI
+><P
+>&#13;          <TT
+CLASS="literal"
+>Class D</TT
+> multicast addresses
+          </P
+></LI
+><LI
+><P
+>&#13;          <TT
+CLASS="literal"
+>Class E</TT
+> reserved addresses
+          </P
+></LI
+><LI
+><P
+>&#13;          The loopback interface
+          </P
+></LI
+></OL
+>
+          With the exception of your own <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address, blocking outgoing packets containing these source addresses protects you from possible configuration errors on your part. 
+          </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+          Don't forget to exclude your own <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address from outgoing packets blocked. By default I choose to exclude the <TT
+CLASS="literal"
+>Class C</TT
+> private <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses since it's the most used by the 
+          majority of people at this time. If you used another class instead of the <TT
+CLASS="literal"
+>Class C</TT
+>, then you must comment out the lines that refer to your class under the SPOOFING &#38; BAD ADDRESSES section of the firewall.
+          script file.
+          </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;          The rest of the rules used in the firewall scripts files are:
+           <P
+></P
+><UL
+><LI
+><P
+>&#13;          Accessing a Service from the Outside World
+          </P
+></LI
+><LI
+><P
+>&#13;          Offering a Service to the Outside World
+          </P
+></LI
+><LI
+><P
+>&#13;          Masquerading the Internal Machines
+          </P
+></LI
+></UL
+>
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap10sec100.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="fwall-scripts.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Rules used in the Firewall script files</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netfirew.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The firewall scripts files</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

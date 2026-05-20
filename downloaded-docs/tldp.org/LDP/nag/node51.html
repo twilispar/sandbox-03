@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The PLIP Driver</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node52.html">The SLIP and PPP </A>
+<B>Up:</B> <A HREF="node41.html">Configuring the Networking Hardware</A>
+<B> Previous:</B> <A HREF="node50.html">Ethernet Autoprobing</A>
+<BR> <P>
+<H1><A NAME="SECTION005500000">The PLIP Driver</A></H1>
+<A NAME="hardwaredriversplip"></A>
+PLIP stands for <em>Parallel Line IP</em> and is a cheap way to
+network when you want to connect only two machines. It uses a
+parallel port and a special cable, achieving speeds of 10kBps to
+20kBps.
+<P>
+PLIP was originally developed by Crynwr, Inc.  Its design is rather
+ingenuous (or, if you prefer, hackish): for a long time, the parallel
+ports on PCs used to be only uni-directional printer ports; that is,
+the eight data lines could only be used to send from the PC to the
+peripheral device, but not the other way round. PLIP works around
+this by using the port's five status line for input, which limits it
+to transferring all data as nibbles (half bytes) only. This mode of
+operation is called mode zero PLIP.  Today, these uni-directional
+ports don't seem to be used much anymore. Therefore, there is also a
+PLIP extension called mode 1 that uses the full 8-bit interface.
+<P>
+Currently,  only supports mode 0.  Unlike earlier versions of the
+PLIP code, it now attempts to be compatible with the PLIP implementations
+from Crynwr, as well as the PLIP driver in NCSA telnet.<A HREF="footnode.html#2220"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> To connect two machines using PLIP, you need a special cable sold at
+some shops as ``Null Printer'' or ``Turbo Laplink'' cable. You can,
+however, make one yourself fairly easily. Appendix-<A HREF="node284.html#appendixplip"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>
+shows you how.
+<P>
+
+The PLIP driver for  is the work of almost countless persons.
+It is currently maintained by Niibe Yutaka.  If compiled into the
+kernel, it sets up a network interface for each of the possible
+printer ports, with plip0 corresponding to parallel port
+lp0, plip1 corresponding to lp1, etc.  The
+mapping of interface to ports is currently this:
+<pre>
+      --------------------------------
+      +-----------+-----------+------+
+      |Interface  | I/O Port  | IRQ  |
+      +-----------+-----------+------+
+      |plip0      | 0x3BC     | 7    |
+      |plip1      | 0x378     | 7    |
+      |plip2      | 0x278     | 5    |
+      +-----------+-----------+------+
+      +-----------+-----------+------+
+ </pre>
+
+If you have configured your printer port in a different way, you
+have to change these values in drivers/net/Space.c in
+the  kernel source, and build a new kernel.
+<P>
+This mapping does not mean, however, that you cannot use these
+parallel ports as usual. They are accessed by the PLIP driver only
+when the corresponding interface is configured up.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node52.html">The SLIP and PPP </A>
+<B>Up:</B> <A HREF="node41.html">Configuring the Networking Hardware</A>
+<B> Previous:</B> <A HREF="node50.html">Ethernet Autoprobing</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

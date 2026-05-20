@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Linux Ultra-DMA Mini-Howto: Onboard UDMA interfaces</TITLE>
+ <LINK HREF="Ultra-DMA-7.html" REL=next>
+ <LINK HREF="Ultra-DMA-5.html" REL=previous>
+ <LINK HREF="Ultra-DMA.html#toc6" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Ultra-DMA-7.html">Next</A>
+<A HREF="Ultra-DMA-5.html">Previous</A>
+<A HREF="Ultra-DMA.html#toc6">Contents</A>
+<HR>
+<H2><A NAME="onboard"></A> <A NAME="s6">6. Onboard UDMA interfaces</A></H2>
+
+<P>
+<P>These are UDMA­capable drive interfaces built into motherboards. They use
+the standard IDE I/O ports and so are fully usable at the slower non­UDMA
+speeds on an unpatched 2.0.x kernel such as are used when installing Linux.
+Thus they should not cause any difficulties during installation, and patching
+for UDMA speed is a welcome luxury instead of a necessary step. Some UDMA
+support is in the latest 2.0.x kernels I believe, and is built into current
+2.2.x kernels for the Intel chipsets.
+<P>
+<H2><A NAME="intel"></A> <A NAME="ss6.1">6.1 Intel FX, HX, VX, TX, LX, and BX</A>
+</H2>
+
+<P>
+<P>Thanks again to Gadi for this info:
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Bus mastering DMA support for the Intel TX chipset is available in 2.0.31
+and above.
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>In older kernels (such as Slackware 3.4's 2.0.30), the interface will be
+used in the slower EIDE mode.
+In either case the interface will be automatically detected by the kernel
+and you should have no trouble using it.
+<P>Full UDMA mode 2 support for these chipsets is included in 2.2.x kernels
+and the unified IDE patch; see 
+<A HREF="Ultra-DMA-7.html#unified">Unified IDE</A>.
+<P>
+<H2><A NAME="via"></A> <A NAME="ss6.2">6.2 The VIA VP2 and Related Chipsets</A>
+</H2>
+
+<P>
+<P>This interface also can be autodetected and used in EIDE mode by an unpatched
+kernel, but if you have one of these, you will want to grab a patch so you
+can get faster throughput and do away with annoying "unkown PCI device"
+messages.
+<P>One is available at
+<A HREF="http://www.ipass.net/~prefect">http://www.ipass.net/~prefect/</A>; it is designed for the VIA VP2/97
+chipset, found on FIC's PA-2007 and PA-2011 motherboards, but may work on related chipsets.
+It has been reported that it functions on the newer VIA VP3 chipset, your mileage may vary.
+<P>Note that this patch only supports Bus Mastering mode,
+not full UDMA mode, but it's still better than plain-vanilla EIDE mode.
+Follow the directions at the patch's site for enabling BMDMA mode.
+<P>There is another patch that supports full UDMA mode at
+<A HREF="http://www.pyreneesweb.com/Udma/udma.html">http://www.pyreneesweb.com/Udma/udma.html</A>,
+designed for the VIA VT82C586B, and it ought to work on the
+VP2, VP3, VPX, P6 and AGP Apollo chipsets. Follow the directions 
+for installation and UDMA enabling there, but it is recommended that you
+back up any data you want to keep, as there are potential problems with 
+incompatible motherboards. But, if it does work, it should work without 
+problems.
+<P>Note that the VP1 chipset is not known to work with these patches,
+but is supported by the 
+<A HREF="Ultra-DMA-7.html#unified">Unified IDE</A> patch.
+<P>
+<H2><A NAME="ss6.3">6.3 TX Pro and other ``Pro'' boards</A>
+</H2>
+
+<P>
+<P>UDMA is not currently supported for the TX Pro motherboards. They are not
+the same as a TX mobo, and apparently misreport their DMA capabilities hence
+the problem. Someone is working on this I hear, so a patch may appear some
+time in the future but not yet.
+<P>
+<H2><A NAME="hpt366"></A> <A NAME="ss6.4">6.4 HPT 366</A>
+</H2>
+
+<P>
+<P>This chipset is on the popular Abit BP-6 motherboard and others, and provides
+UDMA mode 4 66MB/s support on two generals, generally in addition to two
+other mode 2 33MB/s channels. It is supported by the current 
+<A HREF="Ultra-DMA-7.html#unified">unified IDE code</A> but not in any current release kernels. Installation
+thus may require workarounds similar to the 
+<A HREF="Ultra-DMA-5.html#promise">Promise Ultra33</A> did on older 2.0.x kernels.
+<P>
+<P>
+<P>
+<HR>
+<A HREF="Ultra-DMA-7.html">Next</A>
+<A HREF="Ultra-DMA-5.html">Previous</A>
+<A HREF="Ultra-DMA.html#toc6">Contents</A>
+</BODY>
+</HTML>

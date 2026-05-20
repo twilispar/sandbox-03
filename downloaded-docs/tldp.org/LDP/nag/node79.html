@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Future</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node80.html">Name Service and Resolver </A>
+<B>Up:</B> <A HREF="node58.html">Configuring TCP/IP Networking</A>
+<B> Previous:</B> <A HREF="node78.html">Checking the ARP Tables</A>
+<BR> <P>
+<H1><A NAME="SECTION0071100000">The Future</A></H1>
+<P>
+ networking is still evolving.  Major changes at the kernel
+layer will bring a very flexible configuration scheme that will allow
+you to configure the network devices at run time.  For instance, the
+ifconfig command will take arguments that set the IRQ line and
+DMA channel.
+<P>
+<A NAME="3129"></A>
+<A NAME="3195"></A>
+Another change to come soon is the additional mtu flag to the
+route command which will set the Maximum Transmission Unit for a 
+particular route.  This route-specific MTU overrides the MTU specified
+for the interface.  You will typically use this option for routes
+through a gateway, where the link between the gateway and the
+destination host requires a very low MTU. For instance, assume 
+host wanderer is connected to vlager through a SLIP link.
+When sending data from vstout to wanderer, the
+networking layer on wanderer would would use packets of up to
+1500 bytes, because packets are sent across the Ethernet. The SLIP
+link, on the other hand, is operated with an MTU of 296, so the network
+layer on vlager would have to break up the IP packets into
+smaller fragments that fit into 296 bytes. If instead, you would have
+configured the route on vstout to use a MTU of 296 right from
+the start, this relatively expensive fragmentation could be avoided:
+<pre>
+           # route add wanderer gw vlager mtu 296
+</pre>
+
+Note that the mtu option also allows you to selectively undo
+the effects of the `Subnets Are Local' Policy (SNARL). This policy is
+a kernel configuration option and is described in chapter-<A HREF="node41.html#hardware"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+
+
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

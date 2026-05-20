@@ -1,0 +1,271 @@
+<HTML
+><HEAD
+><TITLE
+>xfsft</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Appendix: Font Servers"
+HREF="appendix.html"><LINK
+REL="PREVIOUS"
+TITLE="Red Hat's xfs"
+HREF="xfs.html"><LINK
+REL="NEXT"
+TITLE="Appendix: fonts.dir to fonts.alias"
+HREF="appendixb.html"></HEAD
+><BODY
+CLASS="SECTION"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XFree86 Font De-uglification HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="xfs.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>A. Appendix: Font Servers</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="appendixb.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECTION"
+><H1
+CLASS="SECTION"
+><A
+NAME="AEN1086">A.3. xfsft</H1
+><P
+> <A
+HREF="http://www.dcs.ed.ac.uk/home/jec/programs/xfsft/"
+TARGET="_top"
+>xfsft</A
+>
+ is a TrueType solution from Juliusz Chroboczek. xfsft is based on the 
+ FreeType font library as developed by Mark Leisher and others. It is 
+ essentially is a patch for XFree86's xfs and related libraries -- xfs + ft.
+ Red Hat's xfs is essentially xfsft with a few minor modifications. Also,
+ XFree86 4.x includes the <TT
+CLASS="LITERAL"
+>freetype</TT
+> font module which is also
+ the result of Juliusz's work, and is one of the TrueType solutions available
+ for XFree86 4.x.&#13;</P
+><P
+> Building xfsft requires having at least some of the XFree86 source available, 
+ in addition to xfsft itself, so this is not for the faint of heart.
+ Instructions for building and configuring xfsft are in the tarball, so I won't 
+ go into details here. They are pretty straight forward. There are links to 
+ binaries available at the xfsft home page (see above).</P
+><P
+> Note that you <EM
+>must</EM
+> also create
+ <TT
+CLASS="FILENAME"
+>fonts.scale</TT
+> and <TT
+CLASS="FILENAME"
+>fonts.dir</TT
+> files for
+ xfsft. <TT
+CLASS="FILENAME"
+>fonts.scale</TT
+> can be created manually (ugh!), or with
+ the <B
+CLASS="COMMAND"
+>ttmkfdir</B
+> utility. This is not included with xfsft but
+ you can get it here:  <A
+HREF="http://www.joerg-pommnitz.de/TrueType/ttmkfdir.tar.gz"
+TARGET="_top"
+>http://www.joerg-pommnitz.de/TrueType/ttmkfdir.tar.gz</A
+>,
+ or probably on many Linux archives sites too. Red Hat has this as part of the
+ <TT
+CLASS="FILENAME"
+>Freetype</TT
+> RPM. And for Debian it is called
+ <B
+CLASS="COMMAND"
+>mkttfdir </B
+> and is in the <TT
+CLASS="FILENAME"
+>fttools</TT
+>
+ package.
+&#13;</P
+><P
+> You will also need a configuration file. Here is a sample:&#13;</P
+><A
+NAME="AEN1103"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>-----------------------------------------------------<br>
+<br>
+clone-self&nbsp;=&nbsp;off<br>
+use-syslog&nbsp;=&nbsp;off<br>
+<br>
+client-limit&nbsp;=&nbsp;20<br>
+<br>
+catalogue&nbsp;=&nbsp;/usr/local/share/font/ttfonts<br>
+<br>
+error-file&nbsp;=&nbsp;/home/jec/fonts/xfs.errors<br>
+<br>
+#&nbsp;in&nbsp;decipoints<br>
+default-point-size&nbsp;=&nbsp;120<br>
+<br>
+#&nbsp;x,y<br>
+default-resolutions&nbsp;=&nbsp;100,100,75,75<br>
+<br>
+-----------------------------------------------------<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> You can then run start xfsft:&#13;</P
+><P
+> <TT
+CLASS="LITERAL"
+> # xfs -port 7100 -config /path/to/your/config/file &#38;
+ </TT
+></P
+><P
+> You can then add xfsft to the X server's <TT
+CLASS="LITERAL"
+>FontPath</TT
+>:&#13;</P
+><P
+> <TT
+CLASS="LITERAL"
+> $ xset +fp tcp/localhost:7100
+ </TT
+></P
+><P
+> If all goes well, you could then add this <TT
+CLASS="LITERAL"
+>FontPath</TT
+> to
+ <TT
+CLASS="FILENAME"
+>XF86Config</TT
+>.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="xfs.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="appendixb.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Red Hat's xfs</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="appendix.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Appendix: <TT
+CLASS="FILENAME"
+>fonts.dir</TT
+> to <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+></TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

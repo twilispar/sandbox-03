@@ -1,0 +1,279 @@
+<HTML>
+<center>
+<A HREF="../tlk-toc.html"> Table of Contents</A>, 
+<A href="../tlk.html" target="_top"> Show Frames</A>, 
+<A href="../sources/sources.html" target="_top"> No Frames</A> 
+</center>
+<hr>
+<META NAME="TtH" CONTENT="1.03">                                          
+
+<p>
+                  <H1><A NAME="tth_chAp14">Chapter 14     <br>The Linux Kernel Sources</H1>
+<A NAME="sources-chapter"></A>
+<p>
+<img src="../logos/sit3-bw-tran.1.gif"><br> <tt><b></tt></b> 
+This chapter describes where in the Linux kernel sources you should
+start looking for particular kernel functions.
+
+<p>
+This book does not depend on a knowledge of the 'C' programming
+language or require that you have the Linux kernel sources available in
+order to understand how the Linux kernel works.
+That said, it is a fruitful exercise to look at the kernel sources
+to get an in-depth understanding of the Linux operating system.
+This chapter gives an overview of the kernel sources; how
+they are arranged and where you might start to look for particular
+code.
+
+<p>
+
+<H2>Where to Get The Linux Kernel Sources</H2>
+All of the major Linux distributions ( Craftworks,  Debian,
+<font face="helvetica">Slackware</font>, <font face="helvetica">Red Hat</font> etcetera) include the kernel sources in them.
+Usually the Linux kernel that got installed on your Linux system
+was built from those sources.
+By their very nature these sources tend to be a little out of date so
+you may want to get the latest sources from one of the web sites
+mentioned in chapter&nbsp;<A href="../appendices/www.html"
+> www-appendix</A>.
+They are kept on <tt>ftp://ftp.cs.helsinki.fi</tt>
+and all of the other web sites shadow them.
+This makes the Helsinki web site the most up to date, but sites like
+MIT and Sunsite are never very far behind.
+
+<p>
+If you do not have access to the web, there are many CD ROM vendors who
+offer snapshots of the world's major web sites at a very reasonable
+cost.  Some even offer a subscription service with quarterly or even
+monthly updates.  
+Your local Linux User Group is also a good source of sources.
+
+<p>
+The Linux kernel sources have a very simple numbering system. 
+Any even number kernel (for example <tt>2.0.30</tt>) is a stable, released,
+kernel and any odd numbered kernel (for example <tt>2.1.42</tt> is a 
+development kernel.
+This book is based on the stable <tt>2.0.30</tt> source tree.
+Development kernels have all of the latest features and support
+all of the latest devices. 
+Although they can be unstable, which may not be exactly what you want it,
+is important that the Linux community tries the latest kernels.
+That way they are tested for the whole community.
+Remember that it is <em>always</em> worth backing up your system thoroughly if you do 
+try out non-production kernels.
+
+<p>
+Changes to the kernel sources are distributed as <font face="helvetica">patch</font> files.  The <font face="helvetica">patch</font>
+utility is used to apply a series of edits to a set of source files.  
+So, for example, if you have the 2.0.29 kernel source tree and you wanted to move
+to the 2.0.30 source tree, you would obtain the 2.0.30 patch file and apply the
+patches (edits) to that source tree:
+
+<pre>
+
+$ cd /usr/src/linux
+$ patch -p1 &lt; patch-2.0.30
+</pre>
+<p>
+This saves copying whole source trees, perhaps over slow serial connections.
+A good source of kernel patches (official and unofficial) is 
+the <tt>http://www.linuxhq.com</tt> web site.
+
+<p>
+
+<H2>How The Kernel Sources Are Arranged</H2>
+At the very top level of the source tree <tt>/usr/src/linux</tt> you will
+see a number of directories:
+
+<DL compact>
+<p>
+	<dt><b>arch</b></dt><dd> The <tt>arch</tt> subdirectory contains all of the 
+		architecture specific kernel code.  It has further 
+		subdirectories, one per supported architecture, for
+		example <tt>i386</tt> and <tt>alpha</tt>.
+	<dt><b>include</b></dt><dd> The <tt>include</tt> subdirectory contains most of
+		the include files needed to build the kernel code.  It too
+		has further subdirectories including one for every architecture
+		supported.  The <tt>include/asm</tt> subdirectory is a 
+		soft link to the real include directory needed for this
+		architecture, for example <tt>include/asm-i386</tt>.
+		To change architectures you need to edit the kernel makefile
+		and rerun the Linux kernel configuration program.
+	<dt><b>init</b></dt><dd> This directory contains the initialization code
+		for the kernel and it is a very good place to start looking
+		at how the kernel works.
+	<dt><b>mm</b></dt><dd> This directory contains all of the memory management
+		code.  The architecture specific memory management code lives
+		down in <tt>arch/*/mm/</tt>, for example <tt>arch/i386/mm/fault.c</tt>.
+	<dt><b>drivers</b></dt><dd> All of the system's device drivers live in this
+		directory.  They are further sub-divided into classes of
+		device driver, for example <tt>block</tt>.
+	<dt><b>ipc</b></dt><dd> This directory contains the kernels inter-process 
+		communications code.
+	<dt><b>modules</b></dt><dd> This is simply a directory used to hold built
+		modules.
+	<dt><b>fs</b></dt><dd> All of the file system code.  This is further sub-divided
+		into directories, one per supported file system, for example
+		<tt>vfat</tt> and <tt>ext2</tt>.
+	<dt><b>kernel</b></dt><dd> The main kernel code.  Again, the architecture 
+		specific kernel code is in <tt>arch/*/kernel</tt>.
+	<dt><b>net</b></dt><dd> The kernel's networking code.
+	<dt><b>lib</b></dt><dd> This directory contains the kernel's library code.
+	The architecture specific library code can be found in 
+		<tt>arch/*/lib/</tt>.
+	<dt><b>scripts</b></dt><dd> This directory contains the 
+		scripts (for example <font face="helvetica">awk</font> and <font face="helvetica">tk</font> scripts) 
+		that are used when the kernel is configured.
+</DL>
+<p>
+
+<H2>Where to Start Looking</H2>
+A large complex program like the Linux kernel can be rather daunting
+to look at.
+It is rather like a large ball of string with no end showing.
+Looking at one part of the kernel often leads to looking at several
+other related files and before long you have forgotten what you were
+looking for.
+The next subsections give you a hint as to where in the source tree the
+best place to look is for a given subject.
+
+<p>
+
+<H3>System Startup and Initialization</H3>
+On an Intel based system, the kernel starts  when either loadlin.exe
+or LILO has loaded the kernel into memory and passed control to it.
+Look in <tt>arch/i386/kernel/head.S</tt> for this part.
+<tt>Head.S</tt> does some architecture specific setup and then jumps
+to the <tt>main()</tt> routine in <tt>init/main.c</tt>.
+
+<p>
+
+<H3>Memory Management</H3>
+This code is mostly in <tt>mm</tt> but the architecture specific code is in
+<tt>arch/*/mm</tt>.
+The page fault handling code is in <tt>mm/memory.c</tt> and the memory mapping and
+page cache code is in <tt>mm/filemap.c</tt>.
+The buffer cache is implemented in <tt>mm/buffer.c</tt> and the swap cache in
+<tt>mm/swap_state.c</tt> and <tt>mm/swapfile.c</tt>.
+
+<p>
+
+<H3>Kernel</H3>
+Most of the relevent generic code is in <tt>kernel</tt> with the architecture
+specific code in <tt>arch/*/kernel</tt>.
+The scheduler is in <tt>kernel/sched.c</tt> and the fork code is in <tt>kernel/fork.c</tt>.
+The bottom half handling code is in <tt>include/linux/interrupt.h</tt>.
+The <tt>task_struct</tt> data structure can be found in <tt>include/linux/sched.h</tt>.
+
+<p>
+
+<H3>PCI</H3>
+The PCI pseudo driver is in <tt>drivers/pci/pci.c</tt> with the system wide
+definitions in <tt>include/linux/pci.h</tt>.
+Each architecture has some specific PCI BIOS code, Alpha AXP's is in 
+<tt>arch/alpha/kernel/bios32.c</tt>.
+
+<p>
+
+<H3>Interprocess Communication</H3>
+This is all in <tt>ipc</tt>.
+All System V IPC objects include an <tt>ipc_perm</tt> data structure and this can be found
+in <tt>include/linux/ipc.h</tt>.
+System V messages are implemented in <tt>ipc/msg.c</tt>, shared memory in <tt>ipc/shm.c</tt> and
+semaphores in <tt>ipc/sem.c</tt>.
+Pipes are implemented in <tt>ipc/pipe.c</tt>.
+
+<p>
+
+<H3>Interrupt Handling</H3>
+The kernel's interrupt handling code is almost all microprocessor (and often platform)
+specific.  The Intel interrupt handling code is in <tt>arch/i386/kernel/irq.c</tt> and
+its definitions in <tt>include/asm-i386/irq.h</tt>.
+
+<p>
+
+<H3>Device Drivers</H3>
+Most of the lines of the Linux kernel's source code are in its device drivers.
+All of Linux's device driver sources are held in <tt>drivers</tt> but these
+are further broken out by type:
+
+<DL compact>
+<p>
+	<dt><b>/block</b></dt><dd> block device drivers such as ide (in <tt>ide.c</tt>).
+	If you want to look at how all of the devices that could possibly
+	contain file systems are initialized then you should look at 
+	<tt>device_setup()</tt> in <tt>drivers/block/genhd.c</tt>.  It not only
+	initializes the hard disks but also the network as you need a network
+	to  mount <tt>nfs</tt> file systems.  Block devices include both IDE and
+	SCSI based devices.
+
+<p>
+	<dt><b>/char</b></dt><dd> This the place to look for character based devices such
+	as <tt>ttys</tt>, serial ports and mice.
+
+<p>
+	<dt><b>/cdrom</b></dt><dd> All of the CDROM code for Linux.  It is here that the
+	special CDROM devices (such as Soundblaster CDROM) can be found.  Note
+	that the ide CD driver is <tt>ide-cd.c</tt> in <tt>drivers/block</tt> and that
+	the SCSI CD driver is in <tt>scsi.c</tt> in <tt>drivers/scsi</tt>.
+
+<p>
+	<dt><b>/pci</b></dt><dd> This are the sources for the PCI pseudo-driver.  A good place
+	to look at how the PCI subsystem is mapped and initialized.  The Alpha AXP&nbsp;
+	PCI fixup code is also worth looking at in <tt>arch/alpha/kernel/bios32.c</tt>.
+
+<p>
+	<dt><b>/scsi</b></dt><dd>  This is where to find all of the SCSI code as well as all of the
+	drivers for the scsi devices supported by Linux.
+
+<p>
+	<dt><b>/net</b></dt><dd> This is where to look to find the network device drivers such as
+	the DECChip 21040 PCI ethernet driver which is in <tt>tulip.c</tt>.
+
+<p>
+	<dt><b>/sound</b></dt><dd> This is where all of the sound card drivers are.
+
+<p>
+</DL>
+<H3>File Systems</H3>
+The sources for the <tt>EXT2</tt> file system are all in the <tt>fs/ext2/</tt> directory with
+data structure definitions in <tt>include/linux/ext2_fs.h, ext2_fs_i.h</tt> 
+and <tt>ext2_fs_sb.h</tt>.
+The Virtual File System data structures are described in <tt>include/linux/fs.h</tt> and the
+code is in <tt>fs/*</tt>.
+The buffer cache is implemented in <tt>fs/buffer.c</tt> along with the <tt>update</tt> kernel
+daemon.
+
+<p>
+
+<H3>Network</H3>
+The networking code is kept in <tt>net</tt> with most of the include files in <tt>include/net</tt>.
+The BSD socket code is in <tt>net/socket.c</tt> and 
+the IP version 4 INET socket code is in <tt>net/ipv4/af_inet.c</tt>.
+The generic protocol support code (including the <tt>sk_buff</tt> handling routines) is in <tt>net/core</tt>
+with the TCP/IP networking code in <tt>net/ipv4</tt>.
+The network device drivers are in <tt>drivers/net</tt>.
+
+<p>
+
+<H3>Modules</H3>
+The kernel module code is partially in the kernel and partially in the <tt>modules</tt>
+package.
+The kernel code is all in <tt>kernel/modules.c</tt> with the data structures and 
+kernel demon <tt>kerneld</tt> messages in <tt>include/linux/module.h</tt> and
+<tt>include/linux/kerneld.h</tt> respectively.
+You may want to look at the structure of an <tt>ELF</tt> object file in 
+<tt>include/linux/elf.h</tt>.
+
+<p>
+
+<p><hr><small>File translated from T<sub><font size=-1>E</font></sub>X by <a href="http://hutchinson.belmont.ma.us/tth/tth.html">T<sub><font size=-1>T</font></sub>H</a>, version 1.0.</small>
+<hr>
+<center>
+<A HREF="../sources/sources.html"> Top of Chapter</A>, 
+<A HREF="../tlk-toc.html"> Table of Contents</A>, 
+<A href="../tlk.html" target="_top"> Show Frames</A>, 
+<A href="../sources/sources.html" target="_top"> No Frames</A><br> 
+© 1996-1999 David A Rusling <A HREF="../misc/copyright.html">copyright notice</a>.
+</center>
+</HTML>

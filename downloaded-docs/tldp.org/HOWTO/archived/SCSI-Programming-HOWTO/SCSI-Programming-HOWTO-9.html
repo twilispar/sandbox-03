@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Linux SCSI programming HOWTO: Inquiry Command Example</TITLE>
+ <LINK HREF="SCSI-Programming-HOWTO-10.html" REL=next>
+ <LINK HREF="SCSI-Programming-HOWTO-8.html" REL=previous>
+ <LINK HREF="SCSI-Programming-HOWTO.html#toc9" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="SCSI-Programming-HOWTO-10.html">Next</A>
+<A HREF="SCSI-Programming-HOWTO-8.html">Previous</A>
+<A HREF="SCSI-Programming-HOWTO.html#toc9">Contents</A>
+<HR>
+<H2><A NAME="s9">9. Inquiry Command Example</A></H2>
+
+<P>One of the most basic SCSI commands is the <CODE>INQUIRY</CODE> command, used
+to identify the type and make of the device. Here is the definition
+from the SCSI-2 specification (for details refer to the SCSI-2
+standard).
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+                            Table 44: INQUIRY Command
++=====-========-========-========-========-========-========-========-========+
+|  Bit|   7    |   6    |   5    |   4    |   3    |   2    |   1    |   0    |
+|Byte |        |        |        |        |        |        |        |        |
+|=====+=======================================================================|
+| 0   |                           Operation Code (12h)                        |
+|-----+-----------------------------------------------------------------------|
+| 1   | Logical Unit Number      |                  Reserved         |  EVPD  |
+|-----+-----------------------------------------------------------------------|
+| 2   |                           Page Code                                   |
+|-----+-----------------------------------------------------------------------|
+| 3   |                           Reserved                                    |
+|-----+-----------------------------------------------------------------------|
+| 4   |                           Allocation Length                           |
+|-----+-----------------------------------------------------------------------|
+| 5   |                           Control                                     |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>The output data are as follows:
+<BLOCKQUOTE><CODE>
+<PRE>
+                     Table 45: Standard INQUIRY Data Format
++=====-========-========-========-========-========-========-========-========+
+|  Bit|   7    |   6    |   5    |   4    |   3    |   2    |   1    |   0    |
+|Byte |        |        |        |        |        |        |        |        |
+|=====+==========================+============================================|
+| 0   | Peripheral Qualifier     |           Peripheral Device Type           |
+|-----+-----------------------------------------------------------------------|
+| 1   |  RMB   |                  Device-Type Modifier                        |
+|-----+-----------------------------------------------------------------------|
+| 2   |   ISO Version   |       ECMA Version       |  ANSI-Approved Version   |
+|-----+-----------------+-----------------------------------------------------|
+| 3   |  AENC  | TrmIOP |     Reserved    |         Response Data Format      |
+|-----+-----------------------------------------------------------------------|
+| 4   |                           Additional Length (n-4)                     |
+|-----+-----------------------------------------------------------------------|
+| 5   |                           Reserved                                    |
+|-----+-----------------------------------------------------------------------|
+| 6   |                           Reserved                                    |
+|-----+-----------------------------------------------------------------------|
+| 7   | RelAdr | WBus32 | WBus16 |  Sync  | Linked |Reserved| CmdQue | SftRe  |
+|-----+-----------------------------------------------------------------------|
+| 8   | (MSB)                                                                 |
+|- - -+---                        Vendor Identification                    ---|
+| 15  |                                                                 (LSB) |
+|-----+-----------------------------------------------------------------------|
+| 16  | (MSB)                                                                 |
+|- - -+---                        Product Identification                   ---|
+| 31  |                                                                 (LSB) |
+|-----+-----------------------------------------------------------------------|
+| 32  | (MSB)                                                                 |
+|- - -+---                        Product Revision Level                   ---|
+| 35  |                                                                 (LSB) |
+|-----+-----------------------------------------------------------------------|
+| 36  |                                                                       |
+|- - -+---                        Vendor Specific                          ---|
+| 55  |                                                                       |
+|-----+-----------------------------------------------------------------------|
+| 56  |                                                                       |
+|- - -+---                        Reserved                                 ---|
+| 95  |                                                                       |
+|=====+=======================================================================|
+|     |                       Vendor-Specific Parameters                      |
+|=====+=======================================================================|
+| 96  |                                                                       |
+|- - -+---                        Vendor Specific                          ---|
+| n   |                                                                       |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>The next example uses the low-level function <CODE>handle_SCSI_cmd</CODE> to
+perform the Inquiry SCSI command.
+<P>We first append the command block to the generic header, then call
+<CODE>handle_SCSI_cmd</CODE>.  Note that the output buffer size argument for
+the <CODE>handle_SCSI_cmd</CODE> call excludes the generic header size.
+After command completion the output buffer contains the requested
+data, unless an error occurred.
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+#define INQUIRY_CMD     0x12
+#define INQUIRY_CMDLEN  6
+#define INQUIRY_REPLY_LEN 96
+#define INQUIRY_VENDOR  8       /* Offset in reply data to vendor name */
+
+/* request vendor brand and model */
+static unsigned char *Inquiry ( void )
+{
+  unsigned char Inqbuffer[ SCSI_OFF + INQUIRY_REPLY_LEN ];
+  unsigned char cmdblk [ INQUIRY_CMDLEN ] = 
+      { INQUIRY_CMD,  /* command */
+                  0,  /* lun/reserved */
+                  0,  /* page code */
+                  0,  /* reserved */
+  INQUIRY_REPLY_LEN,  /* allocation length */
+                  0 };/* reserved/flag/link */
+
+  memcpy( cmd + SCSI_OFF, cmdblk, sizeof(cmdblk) );
+
+  /*
+   * +------------------+
+   * | struct sg_header | &lt;- cmd
+   * +------------------+
+   * | copy of cmdblk   | &lt;- cmd + SCSI_OFF
+   * +------------------+
+   */
+
+  if (handle_SCSI_cmd(sizeof(cmdblk), 0, cmd, 
+                      sizeof(Inqbuffer) - SCSI_OFF, Inqbuffer )) {
+      fprintf( stderr, "Inquiry failed\n" );
+      exit(2);
+  }
+  return (Inqbuffer + SCSI_OFF);
+}
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>The example above follows this structure. The Inquiry function copies
+its command block behind the generic header (given by
+<CODE>SCSI_OFF</CODE>). Input data is not present for this command.
+<CODE>Handle_SCSI_cmd</CODE> will define the header structure. We can now
+implement the function <CODE>main</CODE> to complete this working example
+program.
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+void main( void )
+{
+  fd = open(DEVICE, O_RDWR);
+  if (fd &lt; 0) {
+    fprintf( stderr, "Need read/write permissions for "DEVICE".\n" );
+    exit(1);
+  }
+
+  /* print some fields of the Inquiry result */
+  printf( "%s\n", Inquiry() + INQUIRY_VENDOR );
+}
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>We first open the device, check for errors, and then call the higher
+level subroutine. Then we print the results in human readable format
+including the vendor, product, and revision.
+<P>Note: There is more information in the Inquiry result than this little
+program gives. You may want to extend the program to give device type,
+ANSI version etc. The device type is of special importance, since it
+determines the mandatory and optional command sets for this device.
+If you don't want to program it yourself, you may want to use the
+scsiinfo program from Eric Youngdale, which requests nearly all
+information about an SCSI device. Look at tsx-11.mit.edu in
+pub/Linux/ALPHA/scsi.
+<P>
+<HR>
+<A HREF="SCSI-Programming-HOWTO-10.html">Next</A>
+<A HREF="SCSI-Programming-HOWTO-8.html">Previous</A>
+<A HREF="SCSI-Programming-HOWTO.html#toc9">Contents</A>
+</BODY>
+</HTML>

@@ -1,0 +1,311 @@
+<HTML
+><HEAD
+><TITLE
+>Tighten scripts under /etc/rc.d/</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="
+            Physical hard copies of all-important logs
+              "
+HREF="chap5sec50.html"><LINK
+REL="NEXT"
+TITLE="
+            Bits from root-owned programs
+              "
+HREF="chap5sec52.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec50.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec52.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3933"
+>5.22. Tighten scripts under <TT
+CLASS="filename"
+>/etc/rc.d/</TT
+></A
+></H1
+><P
+>&#13;            Fix the permissions of the script files that are responsible for starting and stopping all your normal processes that need to run at boot time.
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep] /# <B
+CLASS="command"
+>chmod</B
+> -R 700  /etc/rc.d/init.d/*
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            Which means just root is allowed to Read, Write, and Execute scripts files on this directory. I don't think regular users need to know what is inside those script files.
+            </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+            If you install a new program or update a program that use the init system V script located under <TT
+CLASS="filename"
+>/etc/rc.d/init.d/</TT
+> directory, don't 
+            forget to change or verify the permission of this script file again.
+              </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN3948"
+>5.22.1. The <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> file</A
+></H2
+><P
+>&#13;            By default, when you login to a Linux box, it tells you the Linux distribution name, version, kernel version, and the name of the server. This is giving away too 
+            much info. We'd rather just prompt users with a <TT
+CLASS="prompt"
+>Login:</TT
+>
+            </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>              
+            To do this, Edit the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> file and Place <TT
+CLASS="prompt"
+>#</TT
+> in front of the following 
+            lines as shown:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            
+            # This will overwrite /etc/issue at every boot.  So, make any changes you
+            # want to make to /etc/issue here or you will lose them when you reboot.
+            #echo "" &#62; /etc/issue
+            #echo "$R" &#62;&#62; /etc/issue
+            #echo "Kernel $(uname -r) on $a $(uname -m)" &#62;&#62; /etc/issue
+            #
+            #cp -f /etc/issue /etc/issue.net
+            #echo &#62;&#62; /etc/issue
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            
+              </P
+></LI
+><LI
+><P
+>              
+            Then, remove the following files: <TT
+CLASS="filename"
+>issue.net</TT
+> and <TT
+CLASS="filename"
+>issue</TT
+> under <TT
+CLASS="filename"
+>/etc</TT
+> directory:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep] /# <B
+CLASS="command"
+>rm</B
+> -f  /etc/issue
+            [root@deep] /# <B
+CLASS="command"
+>rm</B
+> -f  /etc/issue.net
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            </P
+></LI
+></OL
+></DIV
+><P
+>&#13;            The <TT
+CLASS="filename"
+>/etc/issue.net</TT
+> file is the login banner that users will see when they make a networked <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> telnet, SSH connection to 
+            your machine. You will find it in the <TT
+CLASS="filename"
+>/etc</TT
+> directory, along with a similar file called <TT
+CLASS="filename"
+>issue</TT
+>, which is the login banner 
+            that gets displayed to local users. It is simply a text file and can be customized to your own taste, but be aware that as noted above, if you do change it or 
+            remove it like we do, you'll also need to modify the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> shell script, which re-creates both the <TT
+CLASS="filename"
+>issue</TT
+> and <TT
+CLASS="filename"
+>issue.net</TT
+> files 
+            every time the system boots.
+            </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec50.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec52.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Physical hard copies of all-important logs</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Bits from root-owned programs</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

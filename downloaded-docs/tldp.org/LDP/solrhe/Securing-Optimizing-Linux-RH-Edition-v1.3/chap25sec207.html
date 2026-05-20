@@ -1,0 +1,436 @@
+<HTML
+><HEAD
+><TITLE
+>Testing the installation</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FreeS/WAN VPN"
+HREF="fSWAn.html"><LINK
+REL="PREVIOUS"
+TITLE="Required network setup for IPSec"
+HREF="chap25sec206.html"><LINK
+REL="NEXT"
+TITLE="Further documentation"
+HREF="chap25sec208.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap25sec206.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 25. Linux FreeS/WAN VPN</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap25sec208.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN15370"
+>25.10. Testing the installation</A
+></H1
+><P
+>&#13;Reboot the both gateways to get FreeS/WAN started. Examine the <TT
+CLASS="filename"
+>/var/log/messages</TT
+> file for any signs of trouble. If all goes well you should see something like this in 
+the <TT
+CLASS="filename"
+>/var/log/messages</TT
+> file:
+</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;Feb  2 05:22:35 deep ipsec_setup: Starting FreeS/WAN IPSEC snap2000jan31b...
+Feb  2 05:22:35 deep ipsec_setup: KLIPS debug `none'
+Feb  2 05:22:35 deep ipsec_setup: KLIPS ipsec0 on eth0 192.168.1.1/255.255.255.0 broadcast 192.168.1.255
+Feb  2 05:22:36 deep ipsec_setup: Disabling core dumps:
+Feb  2 05:22:36 deep ipsec_setup: Starting Pluto (debug `none'):
+Feb  2 05:22:37 deep ipsec_setup: Loading Pluto database `deep-mail':
+Feb  2 05:22:37 deep ipsec_setup: Enabling Pluto negotiation:
+Feb  2 05:22:37 deep ipsec_setup: Routing for Pluto conns `deep-mail':
+Feb  2 05:22:37 deep ipsec_setup: Initiating Pluto tunnel `deep-mail':
+Feb  2 05:22:39 deep ipsec_setup: 102 "deep-mail" #1: STATE_MAIN_I1: initiate
+Feb  2 05:22:39 deep ipsec_setup: 104 "deep-mail" #1: STATE_MAIN_I2: from STATE_MAIN_I1; sent MI2, expecting MR2
+Feb  2 05:22:39 deep ipsec_setup: 106 "deep-mail" #1: STATE_MAIN_I3: from STATE_MAIN_I2; sent MI3, expecting MR3
+Feb  2 05:22:39 deep ipsec_setup: 004 "deep-mail" #1: STATE_MAIN_I4: SA established
+Feb  2 05:22:39 deep ipsec_setup: 110 "deep-mail" #2: STATE_QUICK_I1: initiate
+Feb  2 05:22:39 deep ipsec_setup: 004 "deep-mail" #2: STATE_QUICK_I2: SA established
+Feb  2 05:22:39 deep ipsec_setup: ...FreeS/WAN IPSEC started
+</TT
+></PRE
+></TD
+></TR
+></TABLE
+><P
+>&#13;Examine the <TT
+CLASS="filename"
+>/var/log/secure</TT
+> file for any signs of trouble. If all goes well you should see something like the following:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;Feb 21 14:45:42 deep Pluto[432]: Starting Pluto (FreeS/WAN Version 1.3)
+Feb 21 14:45:43 deep Pluto[432]: added connection description "deep-mail"
+Feb 21 14:45:43 deep Pluto[432]: listening for IKE messages
+Feb 21 14:45:43 deep Pluto[432]: adding interface ipsec0/eth0 192.168.1.1
+Feb 21 14:45:43 deep Pluto[432]: loading secrets from "/etc/ipsec.secrets"
+Feb 21 14:45:43 deep Pluto[432]: "deep-mail" #1: initiating Main Mode
+Feb 21 14:45:44 deep Pluto[432]: "deep-mail" #1: ISAKMP SA established
+Feb 21 14:45:44 deep Pluto[432]: "deep-mail" #2: initiating Quick Mode POLICY_RSASIG+POLICY_ENCRYPT+POLICY_AUTHENTICATE+POLICY_TUNNEL+POLICY_PFS
+Feb 21 14:45:46 deep Pluto[432]: "deep-mail" #2: sent QI2, IPsec SA established
+Feb 21 14:45:47 deep Pluto[432]: "deep-mail" #3: responding to Main Mode
+Feb 21 14:45:49 deep Pluto[432]: "deep-mail" #3: sent MR3, ISAKMP SA established
+Feb 21 14:45:49 deep Pluto[432]: "deep-mail" #4: responding to Quick Mode
+Feb 21 14:45:50 deep Pluto[432]: "deep-mail" #4: IPsec SA established
+</TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><P
+>&#13;On both gateways, the following entries should now exist in the <TT
+CLASS="filename"
+>/proc/net/</TT
+> directory:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>ls</B
+> -l /proc/net/ipsec_*
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;-r--r--r--   1 root     root            0 Feb  2 05:30 /proc/net/ipsec_eroute
+-r--r--r--   1 root     root            0 Feb  2 05:30 /proc/net/ipsec_klipsdebug
+-r--r--r--   1 root     root            0 Feb  2 05:30 /proc/net/ipsec_spi
+-r--r--r--   1 root     root            0 Feb  2 05:30 /proc/net/ipsec_spigrp
+-r--r--r--   1 root     root            0 Feb  2 05:30 /proc/net/ipsec_spinew
+-r--r--r--   1 root     root            0 Feb  2 05:30 /proc/net/ipsec_tncfg
+-r--r--r--   1 root     root            0 Feb  2 05:30 /proc/net/ipsec_version
+</TT
+></PRE
+></TD
+></TR
+></TABLE
+><P
+>&#13;The <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> interfaces should be attached on top of the specified physical interfaces. Confirm that with:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>cat</B
+> /proc/net/ipsec_tncfg
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;ipsec0 -&#62; eth0 mtu=16260 -&#62; 1500
+ipsec1 -&#62; NULL mtu=0 -&#62; 0
+ipsec2 -&#62; NULL mtu=0 -&#62; 0
+ipsec3 -&#62; NULL mtu=0 -&#62; 0
+</TT
+></PRE
+></TD
+></TR
+></TABLE
+><P
+>&#13;Now execute the following command to show minimal debugging information and see if the output looks something like this:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>ipsec</B
+> look
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;deep.openna.com Fri Feb  4 17:25:17 EST 2000
+============-============
+192.168.1.1/32     -&#62; 192.168.1.2/32     =&#62; tun0x106@192.168.1.2 esp0x4450894d@192.168.1.2 ah0x4450894c@192.168.1.2
+------------=------------
+ah0x3350f551@192.168.1.1 AH_HMAC_MD5: dir=in ooowin=32 seq=115 bit=0xffffffff alen=128 aklen=16 life(c,s,h)=bytes(16140,0,0)add(51656,0,0)use(54068,0,0)packets(115,0,0) idle=499
+ah0x4450894c@192.168.1.2 AH_HMAC_MD5: dir=out ooowin=32 seq=2828 alen=128 aklen=16 life(c,s,h)=bytes(449488,0,0)add(51656,0,0)use(51656,0,0)packets(2828,0,0) idle=6
+esp0x3350f552@192.168.1.1 ESP_3DES: dir=in ooowin=32 seq=115 bit=0xffffffff eklen=24 life(c,s,h)=bytes(13380,0,0)add(51656,0,0)use(54068,0,0)packets(115,0,0) idle=499
+esp0x4450894d@192.168.1.2 ESP_3DES: dir=out ooowin=32 seq=2828 eklen=24 life(c,s,h)=bytes(381616,0,0)add(51656,0,0)use(51656,0,0)packets(2828,0,0) idle=6
+tun0x105@192.168.1.1 IPIP: dir=in 192.168.1.2 -&#62; 192.168.1.1 life(c,s,h)=add(51656,0,0)
+tun0x106@192.168.1.2 IPIP: dir=out 192.168.1.1 -&#62; 192.168.1.2 life(c,s,h)=bytes(327581,0,0)add(51656,0,0)use(51656,0,0)packets(2828,0,0) idle=6
+192.168.1.0     0.0.0.0         255.255.255.0   U         0 0          0 eth0
+192.168.1.0     0.0.0.0         255.255.255.0   U         0 0          0 ipsec0
+192.168.1.1     0.0.0.0         255.255.255.255 UH        0 0          0 eth0
+192.168.1.2     192.168.1.2     255.255.255.255 UGH       0 0          0 ipsec0
+Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+</TT
+></PRE
+></TD
+></TR
+></TABLE
+><P
+>&#13;Try pinging <TT
+CLASS="literal"
+>192.168.1.2</TT
+> from the <TT
+CLASS="literal"
+>192.168.1.1</TT
+> client. If this works then you have set it up correctly. If it does not work check your network to make sure <TT
+CLASS="literal"
+>208.164.186.1</TT
+> can 
+reach <TT
+CLASS="literal"
+>208.164.186.2</TT
+>, and that <SPAN
+CLASS="acronym"
+>TCP</SPAN
+>-<SPAN
+CLASS="acronym"
+>IP</SPAN
+> forwarding is enabled, and make sure that no firewall rules are blocking the packets, or trying to masquerade them before the rules allowing 
+IPSec related traffic. For this test to work, it is important to use pings that go from one subnet to the other.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;  208.164.186.1 ---- 205.151.222.250 ---- 205.151.222.251 ---- 208.164.186.2
+  |		   					  |
+  192.168.1.0/24     		     			     192.168.1.0/24
+  |						          |
+  192.168.1.1					  	     192.168.1.2
+</TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;A last note about testing the installation of FreeSWAN <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+>, if you encounter a problem that you are unable to resolve, you can use the following command to view a collection of debugging information, 
+<EM
+>contents of files, selections from logs, etc.</EM
+> Anything related to the <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> encryption/authentication system that you should send to the Linux-IPSEC Mailing List <TT
+CLASS="email"
+>&#60;<A
+HREF="mailto:linux-ipsec@clinet.fi"
+>linux-ipsec@clinet.fi</A
+>&#62;</TT
+> to help you.
+
+Use the following command to make an output of a collection of debugging information:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>ipsec</B
+> barf &#62; result
+</PRE
+></TD
+></TR
+></TABLE
+>
+This command is primarily provided as a convenience for remote debugging; A single command which packages up -<EM
+>and labels</EM
+> all information that might be relevant to diagnosing a problem in <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+>.
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap25sec206.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap25sec208.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Required network setup for IPSec</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="fSWAn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Further documentation</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

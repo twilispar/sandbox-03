@@ -1,0 +1,1405 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Cellular Phone Connection</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Specific Connections and IrDA - Protocols"
+HREF="infrared-howto-c-specific-connections.html"><LINK
+REL="PREVIOUS"
+TITLE="Connecting from Linux to WinCE 3.0 (aka PocketPC)"
+HREF="infrared-howto-s-pocketpc-connection.html"><LINK
+REL="NEXT"
+TITLE="Digital Camera Connection"
+HREF="infrared-howto-s-digital-camera-connection.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-pocketpc-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Specific Connections and IrDA - Protocols</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-digital-camera-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-cellular-phone-connection"
+></A
+>3.10. Cellular Phone Connection</H1
+><P
+>&#13;   As far as I know some cellular phones use the IrCOMM standard, e.g.
+   Ericsson SH888 and NOKIA 6110 (I'm not sure about the NOKIA 8110).
+   Some cellular phones  (Ericsson T68) use the IrOBEX standard or IrMC.
+   For more and general information about Linux and cell phones see
+   <A
+HREF="http://tuxmobil.org/phones_linux.html"
+TARGET="_top"
+>TuxMobil</A
+>
+   . You may use IrCOMM to set up a PPP modem connection and OpenOBEX
+   to send or retrieve files (e.g. addressbook entries, logo, ringtones).
+</P
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN684"
+></A
+>3.10.1. Generic Instructions</H2
+><P
+>&#13;   This chapter describes how to connect your mobile 
+   phone via IrDA with your Linux box. It is based
+   on a report by Matthias Schmidt. It was
+   tested with the following mobiles:
+</P
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>Ericsson T39m</P
+></LI
+><LI
+><P
+>Siemens S25</P
+></LI
+><LI
+><P
+>Siemens S35i</P
+></LI
+><LI
+><P
+>Siemens ME45</P
+></LI
+><LI
+><P
+>Nokia 6110</P
+></LI
+><LI
+><P
+>Nokia 6210</P
+></LI
+></UL
+>
+
+</P
+><P
+>&#13;   Configure the IrDA basics as described above (kernel configuration,
+   /etc/modules.conf, irattach, PPP) (for detailed
+   information about PPP see also the
+   <A
+HREF="http://tldp.org/HOWTO/PPP-HOWTO/"
+TARGET="_top"
+>PPP-HOWTO</A
+>.
+   Now check whether your mobile phone was found:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;# irdadump
+xid:rsp be1eb736 &#62; 08666644 S=6 s=4 SIEMENS S35 hint=9024 [ Modem IrCOMM IrOBEX ] (28)
+# irdadump
+xid:rsp be1eb736 &#62; 35450000 S=6 s=4 Nokia 6100 hint=8101 [ PnP Telephony ] (28)
+# irdadump
+xid:rsp be1eb736 &#62; 04489982 S=6 s=5 SIEMENS ME45 hint=b124 [ PnP Modem Fax IrCOMM IrOBEX ] (29)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN704"
+></A
+>3.10.1.1. PPP dial-up Software</H3
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN706"
+></A
+>3.10.1.1.1. minicom</H4
+><P
+>&#13;   There are several ways to connect to your ISP. The easiest 
+   (and sometimes the only)  way is to
+   use a terminal program like <B
+CLASS="command"
+>minicom</B
+>.
+</P
+></DIV
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN710"
+></A
+>3.10.1.1.2. wvdial</H4
+><P
+>&#13;   If you prefer more comfort, you can use 
+   <A
+HREF="http://www.worldvisions.ca/wvdial/"
+TARGET="_top"
+>wvdial</A
+>.
+   It's easy to configure and it works
+   with a lot of roaming providers and the german Tante T.  gh0st and me did
+   some testing yesterday and we weren't able to connect to 
+   the dial-in server of the HRZ with wvdial. wvdial
+   always failed with "Bad password", because the server 
+   respondend faster that the mobile softmodem could send
+   the login and password strings. 
+   See the standard ppp config below.
+
+   <TT
+CLASS="filename"
+>/etc/wvdial.conf</TT
+>:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;[Dialer Defaults]
+Modem = /dev/ircomm0
+Baud = 9600
+Init1 = ATZ
+Init2 = ATQ0 V1 E1 S0=0 &#38;C1 &#38;D2 +FCLASS=0
+Password = internet
+Username = internet
+Phone = 00393492002800
+ISDN = 0
+Modem Type = Analog Modem
+
+[Dialer shh]
+Init3 = ATM0
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN716"
+></A
+>3.10.1.1.3. PPP Tools</H4
+><P
+>&#13;   Problems with wvdial (see explanation above)? IMHO the best way is to use the standard
+   <A
+HREF="http://ppp.samba.org/ftp/unpacked/ppp/"
+TARGET="_top"
+>PPP tools</A
+>
+   
+   . You can configure
+   them via <B
+CLASS="command"
+>pppconfig</B
+>, start with <B
+CLASS="command"
+>pon</B
+> 
+   and stop connection with <B
+CLASS="command"
+>poff</B
+>.
+</P
+><P
+>&#13;
+   Example files for PPP with a connection named <TT
+CLASS="filename"
+>irda</TT
+>:
+
+<TT
+CLASS="filename"
+>/etc/ppp/pap-secrets</TT
+>
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;# username	connection-name	password
+test	irda		test
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+<TT
+CLASS="filename"
+>/etc/ppp/peers/irda</TT
+>
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;hide-password
+noauth
+connect "/usr/sbin/chat -v -f /etc/chatscripts/irda"
+debug
+/dev/ircomm0
+9600
+defaultroute
+noipdefault
+user test
+remotename irda
+ipparam irda
+usepeerdns
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+<TT
+CLASS="filename"
+>/etc/chatscripts/irda</TT
+>
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;ABORT BUSY ABORT 'NO CARRIER' ABORT VOICE ABORT 'NO DIALTONE' 
+ABORT 'NO DIAL TONE' ABORT 'NO ANSWER' ABORT DELAYED
+'' ATZ
+# dial-in number of the ISP
+OK-AT-OK ATDT&#60;YOUR_ISP_PHONE_NUMBER&#62;
+CONNECT \d\c
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></DIV
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN731"
+></A
+>3.10.1.2. Logos, Sounds, SMS, ...</H3
+><P
+>&#13;   If you get your mobile working via infrared, you can do some nice stuff
+   with it. You can save your phonebook or your SMS, send SMS, put new
+   logos (BMP format) on it, save the old logo to your harddisk and do the same with
+   your ringtones (MIDI). To do all this nice things, you'll need the following:
+</P
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>a OBEX capable mobile phone, e.g. a Siemens mobile-phone
+</P
+></LI
+><LI
+><P
+>a working infrared connection
+</P
+></LI
+><LI
+><P
+>the <A
+HREF="http://www.hendrik-sattler.de/scmxx/"
+TARGET="_top"
+>scmxx</A
+> tool
+</P
+></LI
+><LI
+><P
+>gscmxx (optional)
+</P
+></LI
+></UL
+>
+
+</P
+><P
+>&#13;Bind your mobile phone to IrDA services
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+> 
+# irattach /dev/ttyS1 -s
+IrDA: Registered device irda0
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;
+Check the connection
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;# irdadump
+xid:cmd 9d5dcefa &#60; ffffffff S=6 s=3 (14)
+xid:cmd 9d5dcefa &#60; ffffffff S=6 s=4 (14)
+xid:rsp 9d5dcefa &#62; 08666644 S=6 s=3 SIEMENS S35 hint=9024 [ Modem IrCOMM IrOBEX ] (28)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;Show general information about your mobile phone
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;# scmxx -i
+Accessing device /dev/ircomm0
+OK, a modem device is present.
+Vendor:         SIEMENS
+Model:          S35i
+Revision:       20
+Serial (Phone): xxxxxxxxxxxxxxx
+Serial (SIM):   xxxxxxxxxxxxxxx
+SIM-ID:         xxxxxxxxxxxxxxxxxxxxx
+Operator:       D2
+SMS Server:     +491722270333
+Charset:        GSM
+Battery:        40%
+Signal/BER:     -79 dBm/?
+Time:           02/10/07,11:48:49
+Readable Slots: bmp: 0-1, mid: 0, vcs: 1-30
+Phonebooks:     FD, SM, ON, ME, LD, MC, RC, OW, MS, CD, BL, RD, CS
+SMS storages:   SM
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;Save your phonebook to disk
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;# scmxx -g -PSM -f phonebook
+Accessing device /dev/ircomm0
+OK, a modem device is present.
+Detected SIEMENS S35i
+phonebook created.
+Receiving: 1 2 3 4 5 6 7 8 9 [...] 
+Received all gettable entries
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;Show your SMS (here in slot 3)
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;# scmxx -g -S3 -f -
+Accessing device /dev/ircomm0
+OK, a modem device is present.
+Detected SIEMENS S35i
+Looking for SMS of specified type...
+Receiving incoming, read SMS from slot 3.
+Slot: 3
+From: xxxxxxxxxxxxxx
+Date: 2002-10-03 23:11:47 (GMT+0)
+SMSC number: xxxxxxxxxxxxxxxx
+PDU type: SMS-DELIVER MMS
+Data Coding Scheme: 7bit-GSM
+Message length: 160
+Message:
+	xxxxxxxxxxxxxxxxxxxxxxxxxx
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;Save your current logo to disk
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;# scmxx -g -B0 -f logo.bmp
+Accessing device /dev/ircomm0
+OK, a modem device is present.
+Detected SIEMENS S35i
+Slot 0...
+Receiving packet 1 of 5...
+logo.bmp created.
+Receiving packet 2 of 5...
+Receiving packet 3 of 5...
+Receiving packet 4 of 5...
+Receiving packet 5 of 5...
+File transfer complete.
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;Save your current ringtone to disk
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;# scmxx -g -M0 -f sound.mid
+Accessing device /dev/ircomm0
+OK, a modem device is present.
+Detected SIEMENS S35i
+Slot 0...
+Receiving packet 1 of 1...
+sound.mid created.
+File transfer complete.
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN759"
+></A
+>3.10.2. OBEX Connection</H2
+><P
+>&#13;   See the OpenOBEX chapter below. Detailed information about
+   OBEX connections to mobile phones will follow soon hopefully.
+   See also the Palm III section for information about setting up a connection.
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN762"
+></A
+>3.10.3. Specific Mobile Phones</H2
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN764"
+></A
+>3.10.3.1. Motorola</H3
+><P
+>&#13;   Michael McConnell 
+   has posted an initial version of a guide to get the Motorola Timeport GSM
+   phone and Linux-IrDA talking on 
+   <A
+HREF="http://www.eridani.co.uk/docs/linux-timeport/"
+TARGET="_top"
+>his website</A
+>.
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN768"
+></A
+>3.10.3.2. Ericsson</H3
+><P
+>&#13;   Note for T39 users (maybe for T300, too).
+   Please check the web page of
+   <A
+HREF="http://www.hpl.hp.com/personal/Jean_Tourrilhes/IrDA/index.html"
+TARGET="_top"
+>Jean Tourrilhes</A
+>
+   , you will need to apply kernel patches and tweak
+   <TT
+CLASS="filename"
+>/proc/sys/net/irda/max_tx_window</TT
+>
+</P
+><P
+>&#13;   1. Configuration
+
+   To start a communication session with <TT
+CLASS="filename"
+>/dev/ircomm0</TT
+> , for instance, say:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;dip -t
+&#62; port ircomm0
+&#62; term
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   Probably you may use <B
+CLASS="command"
+>cu</B
+> or <B
+CLASS="command"
+>xc</B
+> instead of 
+   <B
+CLASS="command"
+>dip</B
+>, too <B
+CLASS="command"
+>cu -l /dev/ircomm0</B
+>
+   or <B
+CLASS="command"
+>xc -l /dev/ircomm0</B
+>. There are also reports 
+   about some efforts with
+   the Ericsson GF768 and IR Modem DI 27.
+</P
+><P
+>&#13;   Benny Amorsen wrote: The SH888 emulates an IRDA-port when you connect
+   it using the serial cable. Why someone would think up something weird
+   like that is beyond me, but that is the way you get it to work in
+   Windows. Not that I ever managed to make it work in Windows, though.
+</P
+><P
+>&#13;   Ales Dryak has send this survey (looks like a Debian/GNU Linux
+   distribution, please modify your configuration accordingly). Mobile
+   Ericsson SH888 <B
+CLASS="command"
+>ati1 = 980408 1035 PRGCXC125101</B
+>:
+</P
+><P
+>&#13;
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;mknod /dev/ircomm0 c 161 0
+mknod /dev/ircomm1 c 161 1
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+    2. /etc/conf.modules:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;alias tty-ldisc-11 irtty
+alias char-major-161 ircomm-tty
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+    3. /etc/irda/drivers: irattach /dev/ttyS0 -s # (IrDA port in SIR mode)
+    4. /etc/chatscripts/sh888
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;&#60;ABORT stuff&#62;
+"" \d\d\d\d\d\dATZE0
+OK ATD&#60;phone number to call)
+CONNECT \d\c
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+    5. /etc/ppp/peers/sh888
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;noauth
+connect "/usr/sbin/chat -v -f /etc/chatscripts/sh888"
+/dev/ircomm
+115200
+defaultroute
+noipdefault
+user &#60;your username&#62; # don't forget to add your password to chap secrets or chat script
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   A few seconds (app. 30) after executing 
+   <B
+CLASS="command"
+>pppd call sh888</B
+> I get
+   connected to our Intranet/Internet having full IP connectivity
+   (telnet, ftp, www, icmp tested). Futhermore I can connect to
+   <TT
+CLASS="filename"
+>/dev/ircomm</TT
+>
+   using <B
+CLASS="command"
+>minicom</B
+> and play with AT command. Great! And looks
+   stable!
+</P
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN793"
+></A
+>3.10.3.2.1. Tools</H4
+><P
+>&#13;   Gerhard Gonter reported: Several members of the list are successfully
+   using the Ericsson mobile phone SH888 with the Linux-IrDA software,
+   usually to use it as a modem. The software is also quite useful to
+   access other parts of the phone using AT commands. The built-in
+   phonebook is an interesting target.
+</P
+><P
+>&#13;   After A quick research on the Internet (FreshMeat, Deja, YAHOO), I did
+   not find any phonebook tool for Linux (or another Unix). To solve that
+   problem, I wrote a small Perl script and a related module. Since this
+   now works acceptably well for me, I decided to wrap that up and
+   release it at this early stage of development. The tarball can be
+   retrieved 
+   <A
+HREF="http://falbala.wu-wien.ac.at:8684/pub/english.cgi/0/172903"
+TARGET="_top"
+>here</A
+>
+   
+   .
+</P
+><P
+>&#13;   In the mailing list <B
+CLASS="command"
+>gsmlib</B
+> was also recommended, though ... there was
+   no way for me to use this over infrared, no connection with my sh888.
+   Florian Lohoff reported: Works (kind of) with the S25. I needed to
+   change a ifdef as it seems the S25 does not respond with CR LF. But
+   setting a link from /dev/mobilephone -&#62; /dev/ircomm lets me send SMS
+   via the S25 without a problem. Phonebook backup does NOT work because
+   the S25 does some silly responses to probably empty phonebooks.
+</P
+><P
+>&#13;   The specifications for SMS messages and phone books can be downloaded
+   free (of charge, not FSF free ;-) from ETSI. Search for GSM 07.07 (you
+   might also want GSM 07.05). You have to register before downloading
+   it. The standards are in Acrobat PDF format. The S25 supported
+   commands are available on the Siemens websites as a PDF for free.
+</P
+><P
+>&#13;   A survey of the AT commands for the SH888 is at
+   <A
+HREF="http://mobileinternet.ericsson.se/emi_download/sh888/888_R1D.pdf"
+TARGET="_top"
+>Ericsson</A
+>
+   .
+</P
+></DIV
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN803"
+></A
+>3.10.3.3. NOKIA</H3
+><P
+>&#13;   Carlos Vidal wrote: Correct me if I'm wrong, but it seems to me that
+   Nokia telephones do not contain a genuine hardware modem, but
+   something which is similar in principle to WinModems for PC. Whenever
+   Nokia writes about modem communication, they use the name "Windows
+   software modem" (or something similar). Which is actually backed up by
+   the need to use special Nokia software for Windows (called Nokia
+   Cellular Data Suite).
+</P
+><P
+>&#13;   Joonas Lehtinen wrote: This is true with 61xx models. Models: 8810,
+   9000(i) and 9110 should work fine. (They have inbuilt modem). My Nokia
+   9000 reports IrCOMM with linux.
+</P
+><P
+>&#13;   Some suggestion by Carlos Vidal carlos_at_tarkus.se : "I'm doing some
+   tests trying to see how far can I get with my Nokia 6110 on Linux.
+   I've just compiled gnokii-0.2.4 [
+   <A
+HREF="http://www.gnokii.org/"
+TARGET="_top"
+>gnokii</A
+>
+   
+   is a tool set for Nokia mobile phones connected via serial cable for Linux and *BSD
+   , WH], but it doesn't work [please check current <B
+CLASS="command"
+>gnokii</B
+>
+   , the behaviour should have been improved, there is also useful
+   documentation about IrDA connections to phones, WH]. As I have Nokia Data Suite I did the following connection:
+</P
+><P
+>&#13;   Nokia 6110 &#60;-- Nokia Cable --&#62; PC/Linux &#60;-- Null-modem cable --&#62;
+   PC/W95
+</P
+><P
+>&#13;   In the PC/Linux I run the program snooper (by Jun-ichiro itojun Itoh
+   , sorry couldn't find an URL maybe some other
+   sniffer will do it also, e.g. sniffit, see also appendix about serial
+   sniffers, WH) with small modifications in order to configure the
+   serial port correctly.
+</P
+><P
+>&#13;   Normally, if snooper has the correct baud rate, the phone and the
+   PC/W95 should communicate as if there was no snooper in between. This
+   worked pretty well when I cracked the protocol of my Minolta camera.
+   The problem here is that the phone doesn't answer or hangs after a
+   while.
+</P
+><P
+>&#13;   It seems that the timing is quite important during the initial phase
+   of the communication. The log I obtain is:
+</P
+><P
+>&#13;<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;0&#62;1: UUUUUUUUUUUUUUUUUUUUUUUU
+line 0: LE *DTR *RTS ST SR CTS CD RI *DSR
+line 1: LE *DTR *RTS ST SR CTS CD RI *DSR
+0&#62;1: UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUU\x1e\x00\x0c\x02\x00\x09\x00\x01\x00\x0d\x00\x00\x02\x01@\x00P\x
+06
+1&#62;0: \x18\x00\x00\x00\xfc\x18\x00\x00\x00\x00\x00\x00\xc0\xf0
+0&#62;1: \x1e\x00\x0c\x02\x00\x09\x00\x01\x00\x0d\x00\x00\x02\x01@\x00P\x06
+1&#62;0: \x18\x00\x00\x00\x18\x00\x00\xc0\xf0\x18\x00\x00\x00\x00\x00\x00\xc0\xf0
+0&#62;1: \x1e\x00\x0cd\x00\x06\x00\x01\x00\x10\x01`\x13\x13
+1&#62;0: \x18\x00\x00\xf0\x00\x00\xfc
+0&#62;1: \x1e\x00\x0cd\x00\x06\x00\x01\x00\x10\x01`\x13\x13
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   0 is the PC/95 and 1 is the phone. The communication starts with a
+   stream of 'U' (0x55) and with DSR/DTR on. The phone answers with '0x18
+   0x00 ...'. This dialog continues for a while as if both were deaf and
+   finally the phone crashes and the only way to reset it is to remove
+   the batteries!
+</P
+><P
+>&#13;   I guess that what happens is that the phone is trying to find the
+   correct baud-rate and fails because of the delays introduced by
+   snooper. This probably has to do with some IrDA protocol used with
+   also with the infrared connection."
+</P
+><P
+>&#13;   Wessel de Roode "I managed to get the
+   Discovery IR hint bits (with my Palm Pilot):
+</P
+><P
+>&#13;<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;Discover:
+0:xxxxxxxx:81.01
+    01  IR_HINT_PNP     01  IR_HINT_TELEPHONY (IrMC ?)
+    80  IR_HINT_EXT
+
+Device info query:
+\006Device\012DeviceName
+    4e 6f 6b 69 61 20 36 31 30 30       Nokia 6100
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   I also managed to query the PNP device of the Nokia. It has one PNP
+   device. It's PNPC100 which equalt a 9600 baud modem. I deleted the
+   query, if somene can send me a hint to restore it. was somthing like
+   IrDA:&#60;dunno&#62;:PNP:Comp#01 The same query with IrDA:&#60;dunno&#62;:PNP:CompCnt
+   gives the number of PNP-devices are available in the Nokia. Which is
+   here only one."
+</P
+><P
+>&#13;   There are also reports about gsmlib for sending and receiving sms
+   messages, updating address books etc). These functions are working,
+   except for minor charset problems.
+</P
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN821"
+></A
+>3.10.3.3.1. Recommended Tools</H4
+><P
+>&#13;   <A
+HREF="http://www.gnokii.org"
+TARGET="_top"
+>gnokii</A
+> 
+   is a Linux/Unix tool suite and soon to be modem/fax driver
+   for Nokia (GSM) mobile phones. Phones supported include 3110,
+   3810, 8110, 5110, 6110 and their derivatives.
+
+</P
+></DIV
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN825"
+></A
+>3.10.3.4. Siemens</H3
+><P
+>&#13;Configuration
+
+   By Florian Lohoff: "Do it step by step - Get your
+   irda working <B
+CLASS="command"
+>irattach /dev/ttySx</B
+> etc. Then have a look at the
+   <TT
+CLASS="filename"
+>/proc/net/irda/discovery</TT
+>
+   whether you find something like this:
+</P
+><P
+>&#13;
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;(flo@paradigm)~# cat /proc/net/irda/discovery
+IrLMP: Discovery log:
+nickname: SIEMENS S25, hint: 0x9024, saddr: 0x4286ce23, daddr: 0x04295741
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   Now load ircomm and ircomm-tty and normally(tm) you should be able to
+   connect to the correct /dev/ircomm and you can easily dial and
+   load/backup the phonebook etc ...", e.g. with minicom.
+</P
+><P
+>&#13;   Timo Felbinger describes the connection between a Toshiba and a
+   Siemens S25:
+</P
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>&#13;   kernel 2.2.12 and patch-2.2.12-irda3, IrDA support in the kernel,
+   ircomm and ircomm-tty as a module
+
+</P
+></LI
+><LI
+><P
+>&#13;   <B
+CLASS="command"
+>mknod /dev/ircomm0 c 161 0</B
+>
+</P
+></LI
+><LI
+><P
+>&#13;   <B
+CLASS="command"
+>modprobe ircomm</B
+>, <B
+CLASS="command"
+>modprobe ircomm-tty</B
+>
+</P
+></LI
+><LI
+><P
+>&#13;   start irattach with modprobe toshoboe in the start section of
+   /etc/irda/drivers . Note: don't load toshoboe before the
+   irattach, this may cause device or resource busy
+
+</P
+></LI
+><LI
+><P
+>&#13;   after <B
+CLASS="command"
+>dip -t</B
+> and the command port ircomm0 the S25 shows a
+   connection. Note: the IR port of the S25 has to be activated of
+   course, the distance between the two devices seems not critical.
+</P
+></LI
+><LI
+><P
+>&#13;   After term the S25 behaves like the usual Hayes modem and can be
+   used with the AT commands.
+</P
+></LI
+><LI
+><P
+>&#13;   dial-out with pppd works out of the box.
+</P
+></LI
+></UL
+>
+
+</P
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN853"
+></A
+>3.10.3.4.1. Recommended Tools</H4
+><P
+>&#13;   <A
+HREF="http://www.hendrik-sattler.de/scmxx"
+TARGET="_top"
+>SCMxx</A
+> 
+   can copy files to and from a Siemens mobile phone and also delete
+   stored files.  Files can read from a given file or through stdin and stored to
+   a given file or stdout.  SMS can also be directly sent or received without
+   storing in the mobile phone.  SCMxx was tested with several mobile phones
+   manufactured by Siemens (only S25 and later).
+</P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN857"
+></A
+>3.10.4. German e-plus</H2
+><P
+>&#13;   A note to German e-plus users:
+</P
+><P
+>&#13;   Every e-plus contract (except Free&#38;Easy) contains a PPP conncetion to
+   the WWW (no separate registration necessary). This service is
+   available around Germany under the phone number 123100. This worked
+   also out of the box.
+</P
+><P
+>&#13;   pppd configuration:
+</P
+><P
+>&#13;
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;/dev/ircomm0
+defaultroute
+netmask 255.255.255.0
+debug
+mtu 552
+crtscts
+noauth
+connect '/usr/sbin/chat -v -f /etc/ppp/eplus.chat'
+chat script /etc/ppp/eplus.chat:
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;ABORT "BUSY"
+ABORT "ERROR"
+ABORT "NO CARRIER"
+ABORT "NO DIALTONE"
+ABORT "NO ANSWER"
+SAY "initializing modem..."
+"" "AT"
+"OK" "ATZ"
+SAY "dialing..."
+"OK" "ATDT123100"
+SAY "waiting for CONNECT..."
+"CONNECT" ""
+SAY "connected!"
+SAY ""
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   For the nameserver you may use 192.76.144.66 . Username or password
+   are not necessary.
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-pocketpc-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-digital-camera-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Connecting from Linux to WinCE 3.0 (aka PocketPC)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-specific-connections.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Digital Camera Connection</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

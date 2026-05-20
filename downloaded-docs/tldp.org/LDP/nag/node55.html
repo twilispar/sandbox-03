@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Introduction to Serial Devices</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node56.html">Accessing Serial Devices</A>
+<B>Up:</B> <A HREF="node53.html">Setting up the Serial </A>
+<B> Previous:</B> <A HREF="node54.html">Communication Software for Modem </A>
+<BR> <P>
+<H1><A NAME="SECTION006200000">Introduction to Serial Devices</A></H1>
+<A NAME="serialttys"></A>
+The devices a  kernel provides for accessing serial devices are
+typically called <em>ttys</em>. This is an abbreviation for <em>Teletype</em>,
+which used to be one of the major manufacturers of terminals in the
+early days of Unix.  The term is used nowadays for any character-based data
+terminal.  Throughout this chapter, we will use the term exclusively to
+refer to kernel devices.
+<P>
+ distinguishes three classes of ttys: (virtual) consoles,
+pseudo-terminals (similar to a two-way pipe, used by application such as
+X11), and serial devices.  The latter are also counted as ttys, because
+they permit interactive sessions over a serial connection; be it from a
+hard-wired terminal or a remote computer over a telephone line.
+<P>
+Ttys have a number of configurable parameters which can be set using the
+ioctl(2) system call. Many of them apply only to serial devices,
+since they need a great deal more flexibility to handle varying types of
+connections.
+<P>
+<A NAME="2306"></A>
+<A NAME="2307"></A>
+Among the most prominent line parameters are the line speed and parity.
+But there are also flags for the conversion between upper and lower case
+characters, of carriage return into line feed, etc. The tty driver may
+also support various <em>line disciplines</em> which make the device
+driver behave completely different. For example, the SLIP driver for
+ is implemented by means of a special line discipline.
+<P>
+<A NAME="2310"></A>
+<A NAME="2311"></A>
+<A NAME="2312"></A>
+<A NAME="2313"></A>
+There is a bit of ambiguity about how to measure a line's speed.  The
+correct the term is <em>Bit rate</em>, which is related to the line's transfer
+speed measured in bits per second (or bps for short).  Sometimes, you hear
+people refer to it as the <em>Baud rate</em>, which is not quite correct.
+These two terms are, however, not interchangeable. The Baud rate
+refers to a physical characteristic of some serial device, namely the
+clock rate at which pulses are transmitted.  The bit rate rather
+denotes a current state of an existing serial connection between two
+points, namely the average number of bits transferred per second. It
+is important to know that these two values are usually different, as
+most devices encode more than one bit per electrical pulse.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node56.html">Accessing Serial Devices</A>
+<B>Up:</B> <A HREF="node53.html">Setting up the Serial </A>
+<B> Previous:</B> <A HREF="node54.html">Communication Software for Modem </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

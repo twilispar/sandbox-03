@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>IP Addresses</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node26.html">Address Resolution</A>
+<B>Up:</B> <A HREF="node23.html">Issues of TCP/IP Networking</A>
+<B> Previous:</B> <A HREF="node24.html">Networking Interfaces</A>
+<BR> <P>
+<H1><A NAME="SECTION004200000">IP Addresses</A></H1>
+As mentioned in the previous chapter, the addresses understood by the
+IP-networking protocol are 32-bit numbers. Every machine must be assigned a
+number unique to the networking environment. If you are running
+a local network that does not have TCP/IP traffic with other 
+networks, you may assign these numbers according to your personal
+preferences. However, for sites on the Internet, numbers are
+assigned by a central authority, the Network Information Center,
+or NIC.<A HREF="footnode.html#891"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="812"></A>
+For easier reading, IP addresses are split up into four 8-bit numbers
+called <em>octets</em>.  For example, quark.physics.groucho.edu has an
+IP-address of 0x954C0C04, which is written as 149.76.12.4.
+This format is often referred to as the <em>dotted quad notation</em>.
+<P>
+Another reason for this notation is that IP-addresses are split into a
+<em>network</em> number, which is contained in the leading octets, and a
+<em>host</em> number, which is the remainder.  When applying to the NIC
+for IP-addresses, you are not assigned an address for each single host
+you plan to use. Instead, you are given a network number, and are
+allowed to assign all valid IP-addresses within this range to hosts on
+your network according to your preferences.
+<P>
+Depending on the size of the network, the host part may need to be
+smaller or larger. To accommodate different needs, there are several
+classes of networks, defining different splits of IP-addresses.
+<pre>
+
+
+        Class A Class A comprises networks  1.0.0.0  through  127.0.0.0.   The
+                network number is contained in the first octet.  This provides
+                for a 24 bit host part, allowing roughly 1.6 million hosts.
+
+
+        Class B Class B contains networks 128.0.0.0 through  191.255.0.0;  the
+                network  number  is  in the first two octets.  This allows for
+                16320 nets with 65024 hosts each.
+
+
+        Class C Class C networks range from 192.0.0.0  through  223.255.255.0,
+                with  the  network  number  being contained in the first three
+                octets. This allows for nearly 2 million networks with  up  to
+                254 hosts.
+
+
+      Classes D, E, and F Addresses   falling  into  the  range  of  224.0.0.0
+                through 254.0.0.0 are either experimental, or are reserved for
+                future use and don't specify any network.
+
+
+
+</pre>
+If we go back to the example in the previous chapter, we find that
+149.76.12.4, the address of quark, refers to host
+12.4 on the class-B network 149.76.0.0.
+<P>
+<A NAME="834"></A>
+You may have noticed that in the above list not all possible values were
+allowed for each octet in the host part. This is because host numbers
+with octets all 0 or all 255 are reserved for special purposes.
+An address where all host part bits are zero refers to the network, and
+one where all bits of the host part are 1 is called a broadcast address.
+This refers to all hosts on the specified network simultaneously.
+Thus, 149.76.255.255 is not a valid host address, but refers
+to all hosts on network 149.76.0.0.
+<P>
+<A NAME="839"></A>
+<A NAME="892"></A>
+<A NAME="841"></A>
+<A NAME="842"></A>
+There are also two network addresses that are reserved, 0.0.0.0 and
+127.0.0.0. The first is called the <em>default route</em>, the latter
+the <em>loopback address</em>. The default route has something to do with the
+way IP routes datagrams, which will be dealt with below.
+<P>
+Network 127.0.0.0 is reserved for IP traffic local to your
+host.  Usually, address 127.0.0.1 will be assigned to a special
+interface on your host, the so-called <em>loopback interface</em>, which
+acts like a closed circuit. Any IP packet handed to it from TCP or UDP
+will be returned to them as if it had just arrived from some network.
+This allows you to develop and test networking software without ever
+using a ``real'' network. Another useful application is when you want
+to use networking software on a standalone host. This may not be as
+uncommon as it sounds; for instance, many UUCP sites don't have IP
+connectivity at all, but still want to run the INN news system
+nevertheless. For proper operation on , INN requires the
+loopback interface.
+<P>
+<A NAME="851"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node26.html">Address Resolution</A>
+<B>Up:</B> <A HREF="node23.html">Issues of TCP/IP Networking</A>
+<B> Previous:</B> <A HREF="node24.html">Networking Interfaces</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

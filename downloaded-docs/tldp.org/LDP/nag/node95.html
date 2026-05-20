@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Using dip</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node96.html">A Sample Script</A>
+<B>Up:</B> <A HREF="node92.html">Serial Line IP</A>
+<B> Previous:</B> <A HREF="node94.html">SLIP Operation</A>
+<BR> <P>
+<H1><A NAME="SECTION009300000">Using dip</A></H1>
+<A NAME="slipdip"></A>
+<A NAME="4004"></A>
+<A NAME="4005"></A>
+Now, that was rather simple. Nevertheless, you might want to automate
+the above steps so that you only have to invoke a simple command that
+performs all steps shown above. This is what dip is
+for.<A HREF="footnode.html#4006"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> The current release as of this writing is version-3.3.7. It has been
+patched very heavily by a number of people, so that you can't speak of
+<em>the</em> dip program anymore. These different strains of
+development will hopefully be merged in a future release.
+<P>
+dip provides an interpreter for a simple scripting language that
+can handle the modem for you, convert the line to SLIP mode, and
+configure the interfaces.  This is rather primitive and restrictive, but
+sufficient for most cases. A new release of dip may feature a
+more versatile language one day.
+<P>
+<A NAME="3794"></A>
+<A NAME="3795"></A>
+<A NAME="3796"></A>
+To be able to configure the SLIP interface, dip requires root
+privilege. It would now be tempting to make dip setuid to
+root, so that all users can dial up some SLIP server without
+having to give them root access. This is very dangerous, because setting
+up bogus interfaces and default routes with dip may disrupt
+routing on your network badly.  Even worse, this will give your users
+the power to connect to <em>any</em> SLIP server, and launch dangerous
+attacks on your network. So if you want to allow your users to fire up a
+SLIP connection, write small wrapper programs for each prospective SLIP
+server, and have these wrappers invoke dip with the specific
+script that establishes the connection. These programs can then safely
+be made setuid root.<A HREF="footnode.html#4007"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<BR> <HR>
+<UL> 
+<LI> <A HREF="node96.html#SECTION009310000">A Sample Script</A>
+<LI> <A HREF="node97.html#SECTION009320000">A dip Reference</A>
+<UL> 
+<LI> <A HREF="node98.html#SECTION009321000">The Modem Commands</A>
+<LI> <A HREF="node99.html#SECTION009322000">echo and term</A>
+<LI> <A HREF="node100.html#SECTION009323000">The get Command</A>
+<LI> <A HREF="node101.html#SECTION009324000">The print Command</A>
+<LI> <A HREF="node102.html#SECTION009325000">Variable Names</A>
+<LI> <A HREF="node103.html#SECTION009326000">The if and goto Commands</A>
+<LI> <A HREF="node104.html#SECTION009327000">send, wait and sleep</A>
+<LI> <A HREF="node105.html#SECTION009328000">mode and default</A>
+</UL>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

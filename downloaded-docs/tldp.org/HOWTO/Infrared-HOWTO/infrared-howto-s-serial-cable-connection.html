@@ -1,0 +1,263 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Connection via Serial Cable</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Specific Connections and IrDA - Protocols"
+HREF="infrared-howto-c-specific-connections.html"><LINK
+REL="PREVIOUS"
+TITLE="Connection to Keyboard"
+HREF="infrared-howto-s-keyboard-connection.html"><LINK
+REL="NEXT"
+TITLE="Null Modem Cable Connection"
+HREF="infrared-howto-s-null-modem.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-keyboard-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Specific Connections and IrDA - Protocols</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-null-modem.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-serial-cable-connection"
+></A
+>3.17. Connection via Serial Cable</H1
+><P
+>&#13;   For some reasons it may be useful to connect via serial cable instead
+   of using a real infrared link. Bjorn Hanson wrote: "Using a cable, I
+   managed to get a PPP connection through my Ericsson SH888. I did the
+   following (maybe some steps are wrong but they worked for me :-)
+</P
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>&#13;   added <B
+CLASS="command"
+>alias tty-ldisc-11 irtty</B
+> to 
+   <TT
+CLASS="filename"
+>/etc/conf.modules</TT
+>
+</P
+></LI
+><LI
+><P
+>&#13;   edited /etc/irda/drivers to irattach /dev/ttyS0
+</P
+></LI
+><LI
+><P
+>&#13;   manually inserted the irda and irtty modules using modprobe
+</P
+></LI
+><LI
+><P
+>&#13;   start irattach
+</P
+></LI
+><LI
+><P
+>&#13;   run kppp using /dev/ircomm0 (through symlink /dev/modem)
+</P
+></LI
+><LI
+><P
+>&#13;   executed <B
+CLASS="command"
+>stty &#60; /dev/ircomm0</B
+>
+</P
+></LI
+><LI
+><P
+>&#13;   ping the host
+</P
+></LI
+><LI
+><P
+>&#13;   <B
+CLASS="command"
+>ifconfig irda0 down</B
+>
+</P
+></LI
+></UL
+>
+
+</P
+><P
+>&#13;   Everything worked fine for ping and ssh (doing ls -l a couple of
+   times) but the computer hang when I tried to mail (Netscape) this
+   through that PPP. After reboot I tried both Netscape and lynx. Both
+   were able to establish contact but none got any data."
+</P
+><P
+>&#13;   Another way by Claudiu Costin:
+</P
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>&#13;   Linux 2.2.5 with IrDA compiled as modules
+</P
+></LI
+><LI
+><P
+>&#13;   Because irattach don't make kernel to load automatically IrDA
+   stack, let's type <B
+CLASS="command"
+>modprobe actisys</B
+> .
+</P
+></LI
+><LI
+><P
+>&#13;   Now, irattach /dev/ttyS1 -d actisys where COM2 is used for null
+   link
+</P
+></LI
+><LI
+><P
+>&#13;   ping &#60;address&#62; works very good!
+</P
+></LI
+></UL
+>
+
+</P
+><P
+>&#13;   This has to be done for both machines.
+</P
+><P
+>&#13;   Please note this is not the recommended way to connect two machines.
+   Use PPP instead. Though I cannot see how this approach is useful I
+   have included it beause it was asked sometimes in the mailing list.
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-keyboard-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-null-modem.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Connection to Keyboard</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-specific-connections.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Null Modem Cable Connection</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

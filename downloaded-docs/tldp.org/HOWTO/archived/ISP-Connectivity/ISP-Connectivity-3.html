@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>ISP-Connectivity-mini-HOWTO: Electronic Mail on your Linux Box</TITLE>
+ <LINK HREF="ISP-Connectivity-2.html" REL=previous>
+ <LINK HREF="ISP-Connectivity.html#toc3" REL=contents>
+</HEAD>
+<BODY>
+Next
+<A HREF="ISP-Connectivity-2.html">Previous</A>
+<A HREF="ISP-Connectivity.html#toc3">Contents</A>
+<HR>
+<H2><A NAME="s3">3. Electronic Mail on your Linux Box</A></H2>
+
+<P>One of the most important aspects of the Internet, is it's fasinating
+capaiblity to transfer mail to and from countries, or more locally
+perhaps. Linux is extreemly strong in easy mail packages for the console.
+The one we're going to document today is called Pine (Program for Internet
+Mail and News), made by the University of Washington, and to download the
+mail, a program called Fetchmail, made by Eric S. Raymond. Both should be
+included in your Linux distribution.
+<P>Fetchmail is a program that downloads your e-mail from your server using
+POP, transfers the mail onto your computer and then deletes it off the
+server, much like programs like Eudora or Microsoft Internet Mail/Exchange
+do. To configure and automate fetchmail, you use a file in your home
+directory called .fetchmailrc. Simply open up &nbsp;/.fetchmailrc 
+(Remember: your doing this bit as yourself, not as root) with your
+favourite editor and observe the command lin eoptions below:
+<P><EM>poll mail.yourisp.com proto pop3 user login_name password your_passwd</EM>
+<P><EM>user login_name with pass your_passwd is login_name here</EM>
+<P>All you have to do is replace <EM>mail.yourisp.com</EM> with the name of
+the mail server of your ISP, <EM>your_passwd</EM> with your password, and
+<EM>login_name</EM> with your login name. 
+<P>An important thing to note. For Pine and this procedure to work correctly,
+your login name must corrospond with the login name you use on your ISP.
+That is your local login name must match the one you use on your server,
+and your e-mail address.
+<P>Next, ensure that .fetchmailrc has the correct permissions (user
+read/write only) and your laughing. Fetchmail can be started in two ways,
+in standard mode (where it'll fetch messages from the server and
+terminate), or in daemon mode (where it will stay active, and
+check/download mail every X seconds). To use daemon mode, type
+<I>fetchmail -a -d(Seconds between Polls)</I>. -a ensures it downloads
+all mail. To use the standard mode, just type <I>fetchmail -a</I>.
+<P>Next, you need to setup Pine. Open up Pine, by typing pine at your prompt,
+choose Setup - Configuration. Setup your userdomain as the domain in your
+e-mail address, for example jack@linux.org, would be linux.org. Next,
+setup smtp-server as your POP mail server (the same you used in the
+fetchmail setup). So we enter www.linux.org. If you want news, setup your
+nntp server to your ISP's news server.
+<P>So there you have it folks, everything should be working now. To connect
+up to your ISP, just run &nbsp;/ppp-connect as root. Then, to get your e-mail
+run fetchmail -a as yourself. To browse your e-mail and news, use
+Pine. Install a text-based browser such as Lynx to browse the web if you
+like. 
+<P><I>Send any comments questions and suggestions to
+mstrates@croftj.net</I>
+<P>
+<HR>
+Next
+<A HREF="ISP-Connectivity-2.html">Previous</A>
+<A HREF="ISP-Connectivity.html#toc3">Contents</A>
+</BODY>
+</HTML>

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>SLIP Operation</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node95.html">Using dip</A>
+<B>Up:</B> <A HREF="node92.html">Serial Line IP</A>
+<B> Previous:</B> <A HREF="node93.html">General Requirements</A>
+<BR> <P>
+<H1><A NAME="SECTION009200000">SLIP Operation</A></H1>
+<A NAME="slipoperation"></A>
+<A NAME="3734"></A>
+<A NAME="3735"></A>
+<A NAME="3736"></A>
+Dial-up IP-servers frequently offer SLIP service through special user
+accounts. After logging into such an account, you are not dropped into
+the common shell; instead a program or shell script is executed that
+enables the server's SLIP driver for the serial line and configures the
+appropriate network interface. Then you have to do the same at your end
+of the link.
+<P>
+On some operating systems, the SLIP driver is a user-space program;
+under , it is part of the kernel, which makes it a lot faster.
+This requires, however, that the serial line be converted to SLIP mode
+explicitly. This is done by means of a special tty line discipline,
+SLIPDISC. While the tty is in normal line discipline (DISC0), it will
+exchange data only with user processes, using the normal read(2)
+and write(2) calls, and the SLIP driver is unable to write to or
+read from the tty. In SLIPDISC, the roles are reversed: now any
+user-space processes are blocked from writing to or reading from the
+tty, while all data coming in on the serial port will be passed directly
+to the SLIP driver.
+<P>
+<A NAME="3739"></A>
+<A NAME="3740"></A>
+<A NAME="3741"></A>
+<A NAME="3742"></A>
+The SLIP driver itself understands a number of variations on the SLIP
+protocol. Apart from ordinary SLIP, it also understands CSLIP, which
+performs the so-called Van Jacobson header compression on outgoing
+IP-packets.<A HREF="footnode.html#3743"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> This improves throughput for interactive sessions noticeably.
+Additionally, there are six-bit versions for each of these protocols.
+<P>
+<A NAME="4001"></A>
+A simple way to convert a serial line to SLIP mode is by using the
+slattach tool. Assume you have your modem on /dev/cua3,
+and have logged into the SLIP server successfully. You will then
+execute:
+<pre>
+	# slattach /dev/cua3 &
+
+</pre>
+This will switch the line discipline of cua3 to SLIPDISC, and
+attach it to one of the SLIP network interfaces. If this is your first
+active SLIP link, the line will be attached to sl0; the second
+would be attached to sl1, and so on. The current kernels support
+up to eight simultaneous SLIP links.
+<P>
+<A NAME="3752"></A>
+The default encapsulation chosen by slattach is CSLIP.  You may
+choose any other mode using the -p switch.  To use normal SLIP
+(no compression), you would use
+<pre>
+	# slattach -p slip /dev/cua3 &
+
+</pre>
+Other modes are cslip, slip6, cslip6 (for the
+six-bit version of SLIP), and adaptive for adaptive SLIP.  The
+latter leaves it to the kernel to find out which type of SLIP
+encapsulation the remote end uses.
+<P>
+Note that you must use the same encapsulation as your peer does.  For
+example, if cowslip uses CSLIP, you have to do so, too.  The
+symptoms of a mismatch will be that a ping to the remote host
+will not receive any packets back.  If the other host pings you,
+you may also see messages like ``Can't build ICMP header'' on
+your console. One way to avoid these difficulties is to use 
+adaptive SLIP.
+<P>
+In fact, slattach does not only allow you to enable
+SLIP, but other protocols that use the serial line as well,
+like PPP or KISS (another protocol used by ham radio people).
+For details, please refer to the slattach(8) manual page.
+<P>
+After turning over the line to the SLIP driver, you have to configure
+the network interface. Again, we do this using the standard
+ifconfig and route commands. Assume that from
+vlager, we have dialed up a server named cowslip. You
+would then execute
+<PRE>
+           # ifconfig sl0 vlager pointopoint cowslip
+           # route add cowslip
+           # route add default gw cowslip
+
+ 
+</PRE>
+The first command configures the interface as a point-to-point link to
+cowslip, while the second and third add the route to
+cowslip and the default route using cowslip as a gateway.
+<P>
+When taking down the SLIP link, you first have to remove all routes
+through cowslip using route with the del option,
+take the interface down, and send slattach the hangup signal.
+Afterwards you have to hang up the modem using your terminal program
+again:
+<PRE>
+           # route del default
+           # route del cowslip
+           # ifconfig sl0 down
+           # kill -HUP 516
+
+</pre>
+
+
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  
+<BR>
+<B> Next:</B> <A HREF="node95.html">Using dip</A>
+<B>Up:</B> <A HREF="node92.html">Serial Line IP</A>
+<B> Previous:</B> <A HREF="node93.html">General Requirements</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

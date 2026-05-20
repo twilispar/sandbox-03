@@ -1,0 +1,337 @@
+<HTML
+><HEAD
+><TITLE
+>DNS</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.63
+"><LINK
+REL="HOME"
+TITLE="LDAP Implementation HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Samba"
+HREF="samba.html"><LINK
+REL="NEXT"
+TITLE="Mail Transfer Agents"
+HREF="sendmail.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>LDAP Implementation HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="samba.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="sendmail.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="DNS"
+>5. DNS</A
+></H1
+><P
+>There are to ways of dns that can be configured via ldap, client side and server side.
+The first, client side, is using the name server switch to access the dns entries in the Ldap database.
+This means that only clients that modify their <TT
+CLASS="FILENAME"
+>/etc/nsswitch.conf</TT
+>
+file will see the dns entries from ldap.
+The second way to do it is to use ldap as a backend for bind or tinydns.
+There are some projects going on about this subject and i will describe them below.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN405"
+>5.1. Using nss</A
+></H2
+><P
+>When using nss to access (additional) host entries, please take not that
+only "friendly" machines (e.g. machines that you know of and whoes configuration
+you can control) can use this service. It might be useful for intranet host
+lookups that change often, but it cannot be used to distribute your webservers
+virtual hostnames to the world. Note that also the <B
+CLASS="COMMAND"
+>nslookup</B
+>
+command bypasses both <TT
+CLASS="FILENAME"
+>/etc/hosts</TT
+> and ldap, so it cannot
+be used to check if your setup is working. Use something like <B
+CLASS="COMMAND"
+>host</B
+>
+or <B
+CLASS="COMMAND"
+>ping</B
+> instead, which does a lookup with the internel gehostbyname() function.</P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN412"
+>5.1.1. Configuration</A
+></H3
+><P
+>To have the name server switch use ldap for dns lookups it must be configured with nss_ldap.
+How to set up nss_ldap, you can find in <A
+HREF="pamnss.html"
+>Section 2</A
+>. Here i will assume you have a working nss_ldap configuration.
+The dns lookups of nss are controlled with the <EM
+>hosts</EM
+> line in <TT
+CLASS="FILENAME"
+>/etc/nsswitch.conf</TT
+>.
+It is very unlikely that you do not already have a hosts line. Most probably it will contain the <EM
+>files</EM
+> and <EM
+>dns</EM
+> entries. You should add <EM
+>ldap</EM
+> to it like this:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>hosts:		files, dns, ldap</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>Think well about the order in which you specify these! It is advised always to put <EM
+>files</EM
+> as the first entry.
+Then, if you want ldap to override your local dns server, you have to make sure that the ip of the ldap server can be found in the <TT
+CLASS="FILENAME"
+>/etc/hosts</TT
+> file.
+If not, you will have a nice recursive lookup going. -- You want to look up a host, it's not in files, so we try to contact the ldap server, whoes ip we don't know, so we try to look it up in files, where we cannot find it, so we try to contact the ldap server -- get the point? You could bypass this problem entirely by referring to your ldap server with an ip number instead of a hostname (in <TT
+CLASS="FILENAME"
+>/etc/ldap.conf</TT
+>, that is.)</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN427"
+>5.1.2. Schema</A
+></H3
+><P
+>The schema used for this, and similar services, can be found in <A
+HREF="http://www.cis.ohio-state.edu/cgi-bin/rfc/rfc2307.html"
+TARGET="_top"
+>RFC 2307</A
+>. Entries used for mapping names to ipnumbers are in an objectclass <EM
+>ipHost</EM
+>. The name part of the mapping is given in the attribute <EM
+>cn</EM
+>, while the ip part lives in <EM
+>ipHostNumber</EM
+>.
+A typical ldif entry would therefore look like this:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>dn: cn=somehostname.mydomain.com,ou=Network,o=YourOrg,c=NL
+objectclass: top
+objectclass: ipHost
+cn: somehostname.internal.example.com
+ipHostNumber: 10.1.5.13</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>Of course, the usual restrictions and possibilities that come with dns apply.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN437"
+>5.2. Using bind</A
+></H2
+><P
+>There are a few possibilities with bind or tinydns nowadays, but imho none of them is a "real" solution (yet). I must say, however, that i have no experience with any of them. They are listed below.</P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN440"
+>5.2.1. Bind patch</A
+></H3
+><P
+>David Storey is working on a patch for Bind, which makes it get its data directly from ldap. This means that every time a request is performed on the bind daemon, it does a lookup in ldap. At this time, his future plans were: (Taken from the source) to have at least two modes of operation: cached and dynamic.
+Cached mode operates just like an rbtdb by loading the entire zone into memory and reloading whenever the server is HUP'ed.
+Dynamic mode is much like it is now: every request means an LDAP lookup. For up to date information you should check out the <A
+HREF="ftp://ftp.eyeo.com/bind/"
+TARGET="_top"
+>sources</A
+>.</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN444"
+>5.2.2. ldap2dns</A
+></H3
+><P
+>Taken entirely from their website:</P
+><P
+>ldap2dns is a program to create DNS records directly from a LDAP directory. It can and should be be used to replace the secondary name-server by a second primary one.
+ldap2dns helps to reduce all kind of administration overhead. No more flat file editing, no more zone file editing. After having installed ldap2dns, the administrator only has to access the LDAP directory.
+If he desires he can add access control for each zone, create a webbased GUI and add all other kind of zone and resource record information without interfering with the DNS server.
+ldap2dns is designed to write binary <TT
+CLASS="FILENAME"
+>data.cdb</TT
+> files used by tinydns, but also may be used to write <TT
+CLASS="FILENAME"
+>.db</TT
+>-files used by named.</P
+><P
+>The projects homepage is <A
+HREF="http://ldap2dns.tiscover.com/"
+TARGET="_top"
+>here</A
+>.</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN452"
+>5.2.3. ispman</A
+></H3
+><P
+>ispman is a perl-based isp management package. It uses an ldap database backend for it's configuration. It can do lot's of things, so you might check out what you need exactly. It's at <A
+HREF="http://www.ispman.org"
+TARGET="_top"
+>ispman.org</A
+>.</P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="samba.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="sendmail.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Samba</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Mail Transfer Agents</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

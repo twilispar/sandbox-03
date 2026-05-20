@@ -1,0 +1,582 @@
+<HTML
+><HEAD
+><TITLE
+>Configure and create Webmail IMP SQL database</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Compile to install Webmail IMP"
+HREF="chap29sec275.html"><LINK
+REL="NEXT"
+TITLE="Configure your php.ini from PHP4"
+HREF="chap29sec277.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec275.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 30. Optional component to install with Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec277.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN21628"
+>30.14. Configure and create Webmail IMP SQL database</A
+></H1
+><P
+>&#13;        We must now configure our database to be able to use Webmail <SPAN
+CLASS="acronym"
+>IMP</SPAN
+> with the <SPAN
+CLASS="acronym"
+>SQL</SPAN
+> database. The easier method is to use the predefined scripts located under the <TT
+CLASS="filename"
+>/home/httpd/horde/imp/config/scripts/</TT
+>
+        subdirectory. For PostgreSQL support, follow the simple steps below.
+      </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;          First of all, we must edit the script file <TT
+CLASS="filename"
+>pgsql_create.sql</TT
+> related to PostgreSQL located under the <TT
+CLASS="filename"
+>/home/httpd/horde/imp/config/scripts</TT
+> subdirectory, and change its default 
+          value for the username to run as from <TT
+CLASS="literal"
+>httpd</TT
+> to <TT
+CLASS="literal"
+>www</TT
+>.
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            GRANT SELECT, INSERT, UPDATE ON imp_pref, imp_addr TO nobody;
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            GRANT SELECT, INSERT, UPDATE ON imp_pref, imp_addr TO www;
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+><LI
+><P
+>&#13;          Now, we must define the username for Apache named <TT
+CLASS="literal"
+>www</TT
+> in our PostgreSQL database, to be able to create the Webmail IMP database with this username.
+          To define the httpd username named <TT
+CLASS="literal"
+>www</TT
+> in your database, run the createuser utility program of PostgreSQL:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# <B
+CLASS="command"
+>su</B
+> postgres
+            [postgres@deep /]$ <B
+CLASS="command"
+>createuser</B
+>
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;            Enter name of user to add ---&#62; www
+            Enter user's postgres ID or RETURN to use unix user ID: 80 -[Press Enter]
+            Is user "www" allowed to create databases (y/n) y
+            Is user "www" a superuser? (y/n) n
+            createuser: www was successfully added
+          </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+><LI
+><P
+>&#13;          Once the httpd user <TT
+CLASS="literal"
+>www</TT
+> has been included in PostgreSQL, log in as the user your PostgreSQL database runs as, in our case <TT
+CLASS="literal"
+>postgres</TT
+> and insert the small script related to PostgreSQL to 
+          automatically create the Webmail IMP database in PostgreSQL.
+          To automatically create Webmail IMP database in PostgreSQL, use the following commands:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# <B
+CLASS="command"
+>cd</B
+> /home/httpd/horde/imp/config/scripts/
+            [root@deep scripts]# <B
+CLASS="command"
+>su</B
+> postgres
+            [postgres@deep ] /scripts$ <B
+CLASS="command"
+>psql</B
+> template1 &#60; pgsql_create.sql
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;            // IMP database creation script for postgreSQL
+            // Author: barce@lines.edu
+            // Date:   Aug-29-1998
+            // Notes: replace "nobody" with yours httpd username
+            // Run using:  psql template1 &#60; pgsql_create.sql
+
+            CREATE DATABASE horde;
+            CREATEDB
+
+            \connect horde
+            connecting to new database: horde
+
+            CREATE TABLE imp_pref (
+            username        	text,
+            sig             		text,
+            fullname        	text,
+            replyto         		text,
+            lang            		varchar(30)
+            );
+            CREATE
+
+            CREATE TABLE imp_addr (
+            username        	text,
+            address         	text,
+            nickname        	text,
+            fullname        	text
+            );
+            CREATE
+
+
+            GRANT SELECT, INSERT, UPDATE ON imp_pref, imp_addr TO www;
+            CHANGE
+            EOF
+          </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+><LI
+><P
+>&#13;          We must restart the PostgreSQL server for the changes to take effect:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# /etc/rc.d/init.d/postgresql <B
+CLASS="command"
+>restart</B
+>
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;            Stopping postgresql service:                               [  OK  ]
+            Checking postgresql installation: looks good!
+            Starting postgresql service: postmaster [13474]
+          </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+><LI
+><P
+>&#13;
+          Copy and rename the file <TT
+CLASS="filename"
+>/home/httpd/horde/phplib/horde_phplib.inc</TT
+> to <TT
+CLASS="filename"
+>/home/httpd/php/local.inc</TT
+>, then edit the new <TT
+CLASS="filename"
+>local.inc</TT
+> file which is your phplib 
+          configuration file containing settings that will define the behavior of phplib, and follow its instruction to define the storage container you'll want to uncomment.
+          </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> /home/httpd/horde/phplib/horde_phplib.inc /home/httpd/php/local.inc
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                cp: overwrite `/home/httpd/php/local.inc'? y
+                </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+            </P
+></LI
+><LI
+><P
+>&#13;              Edit the <TT
+CLASS="filename"
+>local.inc</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/home/httpd/php/local.inc</TT
+>, then uncomment and set the following lines to define <SPAN
+CLASS="acronym"
+>SQL</SPAN
+> as your default database:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                /* To use an SQL database, uncomment and edit the following: */
+                class HordeDB extends DB_Sql {
+                var $Host = 'localhost';
+                var $Database = 'horde';
+                var $User = 'www';
+                var $Password = 'some-password';
+                var $Port = '5432';
+
+                function halt($msg) {
+                printf("&#60;b&#62;Database error (HordeDB):&#60;/b&#62; %s&#60;br&#62;\n", $msg);
+                }
+                }
+
+                class HordeCT extends CT_Sql {
+                var $database_class = 'HordeDB';         // Which database class to use...
+                var $database_table = 'active_sessions'; // and find our data in this table.
+                }
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              Don't forget to uncomment in this file the type of storage container you want to use for Webmail <SPAN
+CLASS="acronym"
+>IMP</SPAN
+>. Remember to uncomment only one type. In our case we chose to use <SPAN
+CLASS="acronym"
+>SQL</SPAN
+>. Also the 
+              parameters you must set for <SPAN
+CLASS="acronym"
+>SQL</SPAN
+> database are the <TT
+CLASS="envar"
+>var $User =</TT
+>, <TT
+CLASS="envar"
+>var $Password =</TT
+>, and <TT
+CLASS="envar"
+>var $Port =</TT
+>. The <TT
+CLASS="envar"
+>var $User =</TT
+> corresponds to your httpd 
+              username, in our case <TT
+CLASS="literal"
+>www</TT
+>, <TT
+CLASS="envar"
+>var $Password =</TT
+> corresponds to the password for the user <TT
+CLASS="literal"
+>www</TT
+> you have defined in PostgreSQL, and <TT
+CLASS="envar"
+>var $Port =</TT
+> is the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> 
+              port number used to connect to your <SPAN
+CLASS="acronym"
+>SQL</SPAN
+> database.
+
+            </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;          Finally edit the <TT
+CLASS="filename"
+>/home/httpd/php/prepend.php3</TT
+> file and specifies your default database type.
+          Edit the <TT
+CLASS="filename"
+>prepend.php3</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/home/httpd/php/prepend.php3</TT
+> then change the following line to define PostgreSQL as your database type:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            require($_PHPLIB["libdir"] . "db_mysql.inc");
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          To read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            require($_PHPLIB["libdir"] . "db_pgsql.inc");
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec275.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec277.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Compile to install Webmail IMP</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure your <TT
+CLASS="filename"
+>php.ini</TT
+> from PHP4</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

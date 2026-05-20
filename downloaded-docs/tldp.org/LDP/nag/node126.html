@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The tcpd access control facility</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node127.html">The services and protocols </A>
+<B>Up:</B> <A HREF="node124.html">Various Network Applications</A>
+<B> Previous:</B> <A HREF="node125.html">The inetd Super-Server</A>
+<BR> <P>
+<H1><A NAME="SECTION0011200000">The tcpd access control facility</A></H1>
+<A NAME="appltcpd"></A>
+<A NAME="4639"></A>
+<A NAME="4640"></A>
+<A NAME="4641"></A>
+<A NAME="4642"></A>
+<A NAME="4643"></A>
+<A NAME="4644"></A>
+<A NAME="4867"></A>
+<A NAME="4868"></A>
+Since opening a computer to network access involves many security risks,
+applications are designed to guard against several types of attacks.
+Some of these, however, may be flawed (most drastically demonstrated
+by the RTM Internet worm), or do not distinguish between secure hosts
+from which requests for a particular service will be accepted, and
+insecure hosts whose requests should be rejected. We already briefly
+discussed the finger and tftp services above.  Thus, one
+would want to limit access to these services to ``trusted hosts'' only,
+which is impossible with the usual setup, where inetd either
+provides this service to all clients, or not at all.
+<P>
+A useful tool for this is tcpd,<A HREF="footnode.html#4869"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> a so-called daemon wrapper. For TCP services you want to monitor or
+protect, it is invoked instead of the server program. tcpd logs
+the request to the syslog daemon, ckecks if the remote host is
+allowed to use that service, and only if this succeeds will it executes
+the real server program. Note that this does not work with UDP-based
+services.
+<P>
+For example, to wrap the finger daemon, you have to change the
+corresponding line in inetd.conf to
+<Pre>
+           # wrap finger daemon
+           finger  stream  tcp     nowait  root    /usr/sbin/tcpd
+in.fingerd
+ 
+</Pre>
+
+<A NAME="4870"></A>
+Without adding any access control, this will appear to the client
+just as a usual finger setup, except that any requests are logged
+to syslog's auth facility.
+<P>
+Access control is implemented by means of two files called
+/etc/hosts.allow and /etc/hosts.deny.  They contain
+entries allowing and denying access, respectively, to certain services
+and hosts.  When tcpd handles a request for a service such as
+finger from a client host named biff.foobar.com, it
+scans hosts.allow and hosts.deny (in this order) for an
+entry matching both the service and client host. If a matching entry
+is found in hosts.allow, access is granted, regardless of any
+entry in hosts.deny. If a match is found in hosts.deny,
+the request is rejected by closing down the connection. If no match is
+found at all, the request is accepted.
+<P>
+Entries in the access files look like this:
+<Pre>
+           servicelist: hostlist [:shellcmd]
+ 
+</Pre>
+servicelist is a list of service names from /etc/services,
+or the keyword ALL. To match all services except finger and
+tftp, use ``ALL EXCEPT finger, tftp''.
+<P>
+hostlist is a list of host names or IP-addresses, or the keywords
+ALL, LOCAL, or UNKNOWN. ALL matches any host,
+while LOCAL matches host names not containing a dot.<A HREF="footnode.html#4871"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> UNKNOWN matches any hosts whose name or address lookup failed.
+A name starting with a dot matches all hosts whose domain is equal to this
+name. For example, .foobar.com matches biff.foobar.com.
+There are also provisions for IP-network addresses and subnet numbers.
+Please refer to the hosts_access(5) manual page for details.
+<P>
+To deny access to the finger and tftp services to all but
+the local hosts, put the following in /etc/hosts.deny, and leave
+/etc/hosts.allow empty:
+<Pre>
+           in.tftpd, in.fingerd: ALL EXCEPT LOCAL, .your.domain
+ 
+</Pre>
+The optional shellcmd field may contain a shell command
+to be invoked when the entry is matched. This is useful to set up
+traps that may expose potential attackers:
+<Pre>
+           in.ftpd: ALL EXCEPT LOCAL, .vbrew.com :
+           echo "request from %d@%h" >> /var/log/finger.log; 
+           if [ %h != "vlager.vbrew.com" ]; then 
+               finger -l @%h >> /var/log/finger.log 
+            fi
+
+
+</Pre>
+The %h and %d arguments are expanded by tcpd
+to the client host name and service name, respectively. Please refer to the
+hosts_access(5) manual page for details.
+<P>
+<A NAME="4872"></A>
+<A NAME="4873"></A>
+<A NAME="4874"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node127.html">The services and protocols </A>
+<B>Up:</B> <A HREF="node124.html">Various Network Applications</A>
+<B> Previous:</B> <A HREF="node125.html">The inetd Super-Server</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

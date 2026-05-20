@@ -1,0 +1,585 @@
+<HTML
+><HEAD
+><TITLE
+>Secondary slave name Server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking"
+HREF="soft-netwrkng.html"><LINK
+REL="PREVIOUS"
+TITLE="Primary master name Server"
+HREF="chap21sec165.html"><LINK
+REL="NEXT"
+TITLE="Run ISC  BIND/DNS in a chroot jail"
+HREF="chap21sec167.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap21sec165.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 21. Software -Networking</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap21sec167.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN10913"
+>21.5. <TT
+CLASS="literal"
+>Secondary</TT
+> slave name Server</A
+></H1
+><P
+>&#13;   The purpose of a <TT
+CLASS="literal"
+>slave</TT
+> name server is to share the load with the <TT
+CLASS="literal"
+>master</TT
+> server, or handle the entire load if the <TT
+CLASS="literal"
+>master</TT
+> server is down. A <TT
+CLASS="literal"
+>slave</TT
+> name server loads its data over the network from another name 
+   server <EM
+>usually the <TT
+CLASS="literal"
+>master</TT
+> name server, but it can load from another <TT
+CLASS="literal"
+>slave</TT
+> name server too</EM
+>. This process is called a <SPAN
+CLASS="token"
+>zone</SPAN
+> transfer.
+
+   Necessary files to setup a secondary slave name server are:
+   </P
+><P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;   named.conf
+   </P
+></LI
+><LI
+><P
+>&#13;   db.127.0.0
+   </P
+></LI
+><LI
+><P
+>&#13;   db.cache
+   </P
+></LI
+><LI
+><P
+>&#13;   named script
+   </P
+></LI
+></OL
+><P
+>&#13;   To configure the <TT
+CLASS="filename"
+>/etc/named.conf</TT
+> file for a <TT
+CLASS="literal"
+>slave</TT
+> name server, use this configuration for the server on your network that acts as a <SPAN
+CLASS="token"
+>slave</SPAN
+> name server. You must modify the <TT
+CLASS="filename"
+>named.conf</TT
+> 
+   file on the <SPAN
+CLASS="token"
+>slave</SPAN
+> name server host. Change every occurrence of primary to secondary except for <TT
+CLASS="filename"
+>0.0.127.in-addr.arpa</TT
+> and add a masters line with the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address of the <TT
+CLASS="literal"
+>master</TT
+> server as shown below.
+   </P
+><P
+>&#13;   Create the named.conf file (touch /etc/named.conf) and add:
+   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;   options {
+   directory "/var/named";
+   fetch-glue no;
+   recursion no;
+   allow-query { 208.164.186/24; 127.0.0/8; };
+   allow-transfer { 208.164.186.1; };
+   transfer-format many-answers;
+   };
+
+   // These files are not specific to any zone
+   zone "." in {
+   type hint;
+   file "db.cache";
+   };
+
+   zone "0.0.127.in-addr.arpa" in {
+   type master;
+   file "db.127.0.0";
+   };
+
+   // These are our slave zone files
+   zone "openna.com" in {
+   type slave;
+   file "db.openna";
+   masters { 208.164.186.1; };
+   };
+
+   zone "186.164.208.in-addr.arpa" in {
+   type slave;
+   file "db.208.164.186";
+   masters { 208.164.186.1; };
+   };
+   </PRE
+></TD
+></TR
+></TABLE
+>
+
+   This tells the name server that it is a <SPAN
+CLASS="token"
+>slave</SPAN
+> for the zone <TT
+CLASS="literal"
+>openna.com</TT
+> and should track the version of this zone that is being kept on the host <TT
+CLASS="literal"
+>208.164.186.1</TT
+>.
+   </P
+><P
+>&#13;   A <TT
+CLASS="literal"
+>slave</TT
+> name server doesn't need to retrieve all of its database (db) files over the network because these db files <TT
+CLASS="filename"
+>db.127.0.0</TT
+> and <TT
+CLASS="filename"
+>db.cache</TT
+> are the same as 
+   on a <TT
+CLASS="literal"
+>primary</TT
+> master, so you can keep a local copy of these files on the slave name server.
+   <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;   Copy the <TT
+CLASS="filename"
+>db.127.0.0</TT
+>file from <TT
+CLASS="literal"
+>master</TT
+> name server to <TT
+CLASS="literal"
+>slave</TT
+> name server.
+   </P
+></LI
+><LI
+><P
+>&#13;   Copy the <TT
+CLASS="filename"
+>db.cache</TT
+> file from <TT
+CLASS="literal"
+>master</TT
+> name server to <TT
+CLASS="literal"
+>slave</TT
+> name server.
+   </P
+></LI
+></OL
+>
+   </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN10964"
+>21.5.1. <TT
+CLASS="filename"
+>/etc/rc.d/init.d/named script </TT
+></A
+></H2
+><P
+>&#13;   Configure your <TT
+CLASS="filename"
+>/etc/rc.d/init.d/named</TT
+> script file to start and stop the <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> daemon on your Server. This configuration script file can 
+   by used for all type of name server <TT
+CLASS="literal"
+>caching</TT
+>, <TT
+CLASS="literal"
+>master</TT
+> or <TT
+CLASS="literal"
+>slave</TT
+>.
+   </P
+><P
+>&#13;   Create the named script file <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/rc.d/init.d/named</TT
+> and add:
+   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;   #!/bin/sh
+   #
+   # named           This shell script takes care of starting and stopping
+   #                 named (BIND <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> server).
+   #
+   # chkconfig: - 55 45
+   # description: named (BIND) is a Domain Name Server (<SPAN
+CLASS="acronym"
+>DNS</SPAN
+>) \
+   # that is used to resolve host names to <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses.
+   # probe: true
+
+   # Source function library.
+   . /etc/rc.d/init.d/functions
+
+   # Source networking configuration.
+   . /etc/sysconfig/network
+
+   # Check that networking is up.
+   [ ${NETWORKING} = "no" ] &#38;&#38; exit 0
+
+   [ -f /usr/sbin/named ] || exit 0
+
+   [ -f /etc/named.conf ] || exit 0
+
+   RETVAL=0
+
+   # See how we were called.
+   case "$1" in
+   start)
+   # Start daemons.
+   echo -n "Starting named: "
+   daemon named
+   RETVAL=$?
+   [ $RETVAL -eq 0 ] &#38;&#38; touch /var/lock/subsys/named
+   echo
+   ;;
+   stop)
+   # Stop daemons.
+   echo -n "Shutting down named: "
+   killproc named
+   RETVAL=$?
+   [ $RETVAL -eq 0 ] &#38;&#38; rm -f /var/lock/subsys/named
+   echo
+   ;;
+   status)
+   /usr/sbin/ndc status
+   exit $?
+   ;;
+   restart)
+   $0 stop
+   $0 start
+   ;;
+   reload)
+   /usr/sbin/ndc reload
+   exit $?
+   ;; 
+   probe)
+   # named knows how to reload intelligently; we don't want linuxconf
+   # to offer to restart every time
+   /usr/sbin/ndc reload &#62;/dev/null 2&#62;&#38;1 || echo start
+   exit 0
+   ;;
+
+   *)
+   echo "Usage: named {start|stop|status|restart}"
+   exit 1
+   esac
+
+   exit $RETVAL
+   </PRE
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>&#13;   Now, make this script executable and change its default permissions:
+   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;   [root@deep]# <B
+CLASS="command"
+>chmod</B
+> 700  /etc/rc.d/init.d/named
+   </PRE
+></TD
+></TR
+></TABLE
+>
+   Create the symbolic <TT
+CLASS="filename"
+>rc.d</TT
+> links for <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> with the command:
+   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;   [root@deep]# <B
+CLASS="command"
+>chkconfig</B
+> --add named
+   </PRE
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>&#13;   The <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> script will not automatically start the named daemon when you reboot the server. You can change its default by executing the following command:
+   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;   [root@deep]# <B
+CLASS="command"
+>chkconfig</B
+> --level 345 named on
+   </PRE
+></TD
+></TR
+></TABLE
+>
+   Start your <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Server manually with the following command:
+   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;   [root@deep]# /etc/rc.d/init.d/named <B
+CLASS="command"
+>start</B
+>
+   </PRE
+></TD
+></TR
+></TABLE
+>
+   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;   Starting named:                                            [  OK  ]
+   </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+   </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap21sec165.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap21sec167.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Primary <TT
+CLASS="literal"
+>master</TT
+> name Server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netwrkng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Run <SPAN
+CLASS="acronym"
+>ISC</SPAN
+>  <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> in a chroot jail</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

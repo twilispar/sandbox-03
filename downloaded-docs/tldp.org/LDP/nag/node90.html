@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Verifying the Name Server Setup</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node91.html">Other Useful Tools</A>
+<B>Up:</B> <A HREF="node86.html">Running named</A>
+<B> Previous:</B> <A HREF="node89.html">Writing the Master Files</A>
+<BR> <P>
+<H2><A NAME="SECTION008240000">Verifying the Name Server Setup</A></H2>
+<A NAME="resolvnslookup"></A>
+<A NAME="3619"></A>
+<A NAME="3620"></A>
+<A NAME="3702"></A>
+<A NAME="3622"></A>
+<A NAME="3623"></A>
+<A NAME="3624"></A>
+There's a fine tool for checking the operation of your name server
+setup. It is called nslookup, and may be used both interactively
+and from the command line. In the latter case, you simply invoke it
+as
+<pre>
+	nslookup hostname
+</pre>
+and it will query the name server specified in resolv.conf for
+hostname.  (If this file names more than one server,
+nslookup will choose one at random).
+<P>
+The interactive mode, however, is much more exciting. Besides looking
+up individual hosts, you may query for any type of DNS record, and
+transfer the entire zone information for a domain.
+<P>
+When invoked without argument, nslookup will display the name
+server it uses, and enter interactive mode. At the `&gt;' prompt,
+you may type any domain name it should query for. By default, it asks
+for class A records, those containing the IP-address relating to the
+domain name.
+<P>
+You may change this type by issuing ``set type=<I>type</I>'', where
+type is one of the resource record names described above in
+section-<A HREF="node86.html#resolvnamed"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>, or ANY.
+<P>
+For example, you might have the following dialogue with it:
+<pre>
+           $ nslookup
+           Default Name Server:  rs10.hrz.th-darmstadt.de
+           Address:  130.83.56.60
+
+           > sunsite.unc.edu
+           Name Server:  rs10.hrz.th-darmstadt.de
+           Address:  130.83.56.60
+
+           Non-authoritative answer:
+           Name:    sunsite.unc.edu
+           Address:  152.2.22.81
+</pre>
+If you try to query for a name that has no IP-address associated, but
+other records were found in the DNS database, nslookup will come
+back with an error message saying ``No type A records found''.
+However, you can make it query for records other than type A by issuing
+the ``set type'' command. For example, to get the SOA record of
+unc.edu, you would issue:
+<pre>
+           > unc.edu
+           *** No address (A) records available for unc.edu
+           Name Server:  rs10.hrz.th-darmstadt.de
+           Address:  130.83.56.60
+
+           > set type=SOA
+           > unc.edu
+           Name Server:  rs10.hrz.th-darmstadt.de
+           Address:  130.83.56.60
+
+           Non-authoritative answer:
+           unc.edu
+                   origin = ns.unc.edu
+                   mail addr = shava.ns.unc.edu
+                   serial = 930408
+                   refresh = 28800 (8 hours)
+                   retry   = 3600 (1 hour)
+                   expire  = 1209600 (14 days)
+                   minimum ttl = 86400 (1 day)
+
+           Authoritative answers can be found from:
+           UNC.EDU nameserver = SAMBA.ACS.UNC.EDU
+           SAMBA.ACS.UNC.EDU       internet address = 128.109.157.30
+</pre>
+In a similar fashion you can query for MX records, etc.  Using a type of
+ANY returns all resource records associated with a given name.
+<pre>
+           > set type=MX
+           > unc.edu
+           Non-authoritative answer:
+           unc.edu preference = 10, mail exchanger = lambada.oit.unc.edu
+           lambada.oit.unc.edu     internet address = 152.2.22.80
+
+           Authoritative answers can be found from:
+           UNC.EDU nameserver = SAMBA.ACS.UNC.EDU
+           SAMBA.ACS.UNC.EDU       internet address = 128.109.157.30
+
+
+</pre>
+<A NAME="3647"></A>
+<A NAME="3648"></A>
+A practical application of nslookup beside debugging is
+to obtain the current list of root name servers for the named.ca
+file. You can do this by querying for all type NS records associated
+with the root domain:
+<pre>
+           > set typ=NS
+           > .
+           Name Server:  fb0430.mathematik.th-darmstadt.de
+           Address:  130.83.2.30
+
+           Non-authoritative answer:
+           (root)  nameserver = NS.INTERNIC.NET
+           (root)  nameserver = AOS.ARL.ARMY.MIL
+           (root)  nameserver = C.NYSER.NET
+           (root)  nameserver = TERP.UMD.EDU
+           (root)  nameserver = NS.NASA.GOV
+           (root)  nameserver = NIC.NORDU.NET
+           (root)  nameserver = NS.NIC.DDN.MIL
+
+           Authoritative answers can be found from:
+           (root)  nameserver = NS.INTERNIC.NET
+           (root)  nameserver = AOS.ARL.ARMY.MIL
+           (root)  nameserver = C.NYSER.NET
+           (root)  nameserver = TERP.UMD.EDU
+           (root)  nameserver = NS.NASA.GOV
+           (root)  nameserver = NIC.NORDU.NET
+           (root)  nameserver = NS.NIC.DDN.MIL
+           NS.INTERNIC.NET internet address = 198.41.0.4
+           AOS.ARL.ARMY.MIL        internet address = 128.63.4.82
+           AOS.ARL.ARMY.MIL        internet address = 192.5.25.82
+           AOS.ARL.ARMY.MIL        internet address = 26.3.0.29
+           C.NYSER.NET     internet address = 192.33.4.12
+           TERP.UMD.EDU    internet address = 128.8.10.90
+           NS.NASA.GOV     internet address = 128.102.16.10
+           NS.NASA.GOV     internet address = 192.52.195.10
+           NS.NASA.GOV     internet address = 45.13.10.121
+           NIC.NORDU.NET   internet address = 192.36.148.17
+           NS.NIC.DDN.MIL  internet address = 192.112.36.4
+
+</pre>
+The complete set of commands available with nslookup may be
+obtained by the help command from within nslookup.
+<P>
+<A NAME="3703"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node91.html">Other Useful Tools</A>
+<B>Up:</B> <A HREF="node86.html">Running named</A>
+<B> Previous:</B> <A HREF="node89.html">Writing the Master Files</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

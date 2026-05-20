@@ -1,0 +1,278 @@
+<HTML
+><HEAD
+><TITLE
+>Linux Squid Proxy Server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Proxy Network"
+HREF="netproxy-squid.html"><LINK
+REL="PREVIOUS"
+TITLE="Software -Server/Proxy Network"
+HREF="netproxy-squid.html"><LINK
+REL="NEXT"
+TITLE="Configure and Optimize"
+HREF="chap28sec228.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="netproxy-squid.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 28. Software -Server/Proxy Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap28sec228.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch28scsps"
+>28.1. Linux Squid Proxy Server</A
+></H1
+><P
+>&#13;               In our compilation and configuration we'll configure Squid to run as an httpd-accelerator to get more performance out of our web server. In accelerator mode, the Squid server acts as a reverse proxy cache: it accepts client 
+               requests, serves them out of cache, if possible, or requests them from the original server for which it is the reverse proxy. Also we'll show you how to configure Squid as a proxy-caching server to be able to let all users 
+               in your corporate network use Squid to access the Internet.
+             </P
+><P
+>&#13;               These installation instructions assume
+               <P
+></P
+><UL
+><LI
+><P
+>&#13;                 Commands are Unix-compatible.
+               </P
+></LI
+><LI
+><P
+>&#13;               The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>, <EM
+>other paths are possible</EM
+>.
+               </P
+></LI
+><LI
+><P
+>&#13;               Installations were tested on Red Hat Linux 6.1 and 6.2.
+               </P
+></LI
+><LI
+><P
+>&#13;               All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root.</TT
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               Squid version number is 2.3.STABLE2
+               </P
+></LI
+></UL
+>
+             </P
+><P
+>&#13;               These are Package(s) and are available here:
+               <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;                   Squid Homepage:<A
+HREF="appendixa.html#prtinxfp28"
+>http://www.squid-cache.org/</A
+> 
+                 </TD
+></TR
+><TR
+><TD
+>&#13;                 Squid <SPAN
+CLASS="acronym"
+>FTP</SPAN
+> Site: <A
+HREF="appendixa.html#prtinxfp28"
+>204.144.128.89</A
+>
+                 </TD
+></TR
+><TR
+><TD
+>&#13;                 You must be sure to download: squid-2.3.STABLE2-src.tar.gz
+                 </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+             </P
+><P
+>&#13;               Before you decompress tarballs, it is a good idea to make a list of files on the system before you install Squid, and one afterwards, and then compare them using diff to find out what file it placed where. Simply 
+               run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Squid1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Squid2</B
+></TT
+> after you install the software, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>Squid1 Squid2 &#62; Squid-Installed</B
+></TT
+> 
+               to get a list of what changed.
+             </P
+><P
+>&#13;               To Compile, you need to decompress the tarball, <TT
+CLASS="literal"
+>tar.gz.</TT
+>:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>cp</B
+> squid-version.STABLEz-src.tar.gz /var/tmp
+                 [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+                 [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf squid-version.STABLEz-src.tar.gz
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="netproxy-squid.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap28sec228.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software -Server/Proxy Network</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netproxy-squid.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure and Optimize</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

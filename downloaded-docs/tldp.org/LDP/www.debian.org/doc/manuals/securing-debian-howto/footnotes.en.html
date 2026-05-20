@@ -1,0 +1,1264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+
+<html>
+
+<head>
+
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+
+<title>Securing Debian Manual - Footnotes</title>
+
+<link href="index.en.html" rel="start">
+<link href=".en.html" rel="prev">
+<link href=".en.html" rel="next">
+<link href="index.en.html#contents" rel="contents">
+<link href="index.en.html#copyright" rel="copyright">
+<link href="ch1.en.html" rel="chapter" title="1 Introduction">
+<link href="ch2.en.html" rel="chapter" title="2 Before you begin">
+<link href="ch3.en.html" rel="chapter" title="3 Before and during the installation">
+<link href="ch4.en.html" rel="chapter" title="4 After installation">
+<link href="ch-sec-services.en.html" rel="chapter" title="5 Securing services running on your system">
+<link href="ch-automatic-harden.en.html" rel="chapter" title="6 Automatic hardening of Debian systems">
+<link href="ch7.en.html" rel="chapter" title="7 Debian Security Infrastructure">
+<link href="ch-sec-tools.en.html" rel="chapter" title="8 Security tools in Debian">
+<link href="ch9.en.html" rel="chapter" title="9 Developer's Best Practices for OS Security">
+<link href="ch10.en.html" rel="chapter" title="10 Before the compromise">
+<link href="ch-after-compromise.en.html" rel="chapter" title="11 After the compromise (incident response)">
+<link href="ch12.en.html" rel="chapter" title="12 Frequently asked Questions (FAQ)">
+<link href="ap-harden-step.en.html" rel="appendix" title="A The hardening process step by step">
+<link href="ap-checklist.en.html" rel="appendix" title="B Configuration checklist">
+<link href="ap-snort-box.en.html" rel="appendix" title="C Setting up a stand-alone IDS">
+<link href="ap-bridge-fw.en.html" rel="appendix" title="D Setting up a bridge firewall">
+<link href="ap-bind-chuser.en.html" rel="appendix" title="E Sample script to change the default Bind installation.">
+<link href="ap-fw-security-update.en.html" rel="appendix" title="F Security update protected by a firewall">
+<link href="ap-chroot-ssh-env.en.html" rel="appendix" title="G <code>Chroot</code> environment for <code>SSH</code>">
+<link href="ap-chroot-apache-env.en.html" rel="appendix" title="H <code>Chroot</code> environment for <code>Apache</code>">
+<link href="ch1.en.html#s-authors" rel="section" title="1.1 Authors">
+<link href="ch1.en.html#s1.2" rel="section" title="1.2 Where to get the manual (and available formats)">
+<link href="ch1.en.html#s1.3" rel="section" title="1.3 Organizational notes/feedback">
+<link href="ch1.en.html#s1.4" rel="section" title="1.4 Prior knowledge">
+<link href="ch1.en.html#s1.5" rel="section" title="1.5 Things that need to be written (FIXME/TODO)">
+<link href="ch1.en.html#s-changelog" rel="section" title="1.6 Changelog/History">
+<link href="ch1.en.html#s-credits" rel="section" title="1.7 Credits and thanks!">
+<link href="ch2.en.html#s2.1" rel="section" title="2.1 What do you want this system for?">
+<link href="ch2.en.html#s-references" rel="section" title="2.2 Be aware of general security problems">
+<link href="ch2.en.html#s2.3" rel="section" title="2.3 How does Debian handle security?">
+<link href="ch3.en.html#s-bios-passwd" rel="section" title="3.1 Choose a BIOS password">
+<link href="ch3.en.html#s3.2" rel="section" title="3.2 Partitioning the system">
+<link href="ch3.en.html#s3.3" rel="section" title="3.3 Do not plug to the Internet until ready">
+<link href="ch3.en.html#s3.4" rel="section" title="3.4 Set a root password">
+<link href="ch3.en.html#s3.5" rel="section" title="3.5 Activate shadow passwords and MD5 passwords">
+<link href="ch3.en.html#s3.6" rel="section" title="3.6 Run the minimum number of services required">
+<link href="ch3.en.html#s3.7" rel="section" title="3.7 Install the minimum amount of software required">
+<link href="ch3.en.html#s3.8" rel="section" title="3.8 Read the Debian security mailing lists">
+<link href="ch4.en.html#s-debian-sec-announce" rel="section" title="4.1 Subscribe to the Debian Security Announce mailing list">
+<link href="ch4.en.html#s-security-update" rel="section" title="4.2 Execute a security update">
+<link href="ch4.en.html#s-bios-boot" rel="section" title="4.3 Change the BIOS (again)">
+<link href="ch4.en.html#s-lilo-passwd" rel="section" title="4.4 Set a LILO or GRUB password">
+<link href="ch4.en.html#s-kernel-initramfs-prompt" rel="section" title="4.5 Disable root prompt on the initramfs">
+<link href="ch4.en.html#s-kernel-root-prompt" rel="section" title="4.6 Remove root prompt on the kernel">
+<link href="ch4.en.html#s-restrict-console-login" rel="section" title="4.7 Restricting console login access">
+<link href="ch4.en.html#s-restrict-reboots" rel="section" title="4.8 Restricting system reboots through the console">
+<link href="ch4.en.html#s4.9" rel="section" title="4.9 Mounting partitions the right way">
+<link href="ch4.en.html#s4.10" rel="section" title="4.10 Providing secure user access">
+<link href="ch4.en.html#s-tcpwrappers" rel="section" title="4.11 Using tcpwrappers">
+<link href="ch4.en.html#s-log-alerts" rel="section" title="4.12 The importance of logs and alerts">
+<link href="ch4.en.html#s-kernel-patches" rel="section" title="4.13 Adding kernel patches">
+<link href="ch4.en.html#s4.14" rel="section" title="4.14 Protecting against buffer overflows">
+<link href="ch4.en.html#s4.15" rel="section" title="4.15 Secure file transfers">
+<link href="ch4.en.html#s4.16" rel="section" title="4.16 File system limits and control">
+<link href="ch4.en.html#s-network-secure" rel="section" title="4.17 Securing network access">
+<link href="ch4.en.html#s-snapshot" rel="section" title="4.18 Taking a snapshot of the system">
+<link href="ch4.en.html#s4.19" rel="section" title="4.19 Other recommendations">
+<link href="ch-sec-services.en.html#s5.1" rel="section" title="5.1 Securing ssh">
+<link href="ch-sec-services.en.html#s5.2" rel="section" title="5.2 Securing Squid">
+<link href="ch-sec-services.en.html#s-ftp-secure" rel="section" title="5.3 Securing FTP">
+<link href="ch-sec-services.en.html#s5.4" rel="section" title="5.4 Securing access to the X Window System">
+<link href="ch-sec-services.en.html#s5.5" rel="section" title="5.5 Securing printing access (the lpd and lprng issue)">
+<link href="ch-sec-services.en.html#s5.6" rel="section" title="5.6 Securing the mail service">
+<link href="ch-sec-services.en.html#s-sec-bind" rel="section" title="5.7 Securing BIND">
+<link href="ch-sec-services.en.html#s5.8" rel="section" title="5.8 Securing Apache">
+<link href="ch-sec-services.en.html#s5.9" rel="section" title="5.9 Securing finger">
+<link href="ch-sec-services.en.html#s-chroot" rel="section" title="5.10 General chroot and suid paranoia">
+<link href="ch-sec-services.en.html#s5.11" rel="section" title="5.11 General cleartext password paranoia">
+<link href="ch-sec-services.en.html#s5.12" rel="section" title="5.12 Disabling NIS">
+<link href="ch-sec-services.en.html#s-rpc" rel="section" title="5.13 Securing RPC services">
+<link href="ch-sec-services.en.html#s-firewall-setup" rel="section" title="5.14 Adding firewall capabilities">
+<link href="ch-automatic-harden.en.html#s6.1" rel="section" title="6.1 Harden">
+<link href="ch-automatic-harden.en.html#s6.2" rel="section" title="6.2 Bastille Linux">
+<link href="ch7.en.html#s-debian-sec-team" rel="section" title="7.1 The Debian Security Team">
+<link href="ch7.en.html#s-dsa" rel="section" title="7.2 Debian Security Advisories">
+<link href="ch7.en.html#s7.3" rel="section" title="7.3 Security Tracker">
+<link href="ch7.en.html#s7.4" rel="section" title="7.4 Debian Security Build Infrastructure">
+<link href="ch7.en.html#s-deb-pack-sign" rel="section" title="7.5 Package signing in Debian">
+<link href="ch-sec-tools.en.html#s-vuln-asses" rel="section" title="8.1 Remote vulnerability assessment tools">
+<link href="ch-sec-tools.en.html#s8.2" rel="section" title="8.2 Network scanner tools">
+<link href="ch-sec-tools.en.html#s8.3" rel="section" title="8.3 Internal audits">
+<link href="ch-sec-tools.en.html#s8.4" rel="section" title="8.4 Auditing source code">
+<link href="ch-sec-tools.en.html#s-vpn" rel="section" title="8.5 Virtual Private Networks">
+<link href="ch-sec-tools.en.html#s8.6" rel="section" title="8.6 Public Key Infrastructure (PKI)">
+<link href="ch-sec-tools.en.html#s8.7" rel="section" title="8.7 SSL Infrastructure">
+<link href="ch-sec-tools.en.html#s8.8" rel="section" title="8.8 Antivirus tools">
+<link href="ch-sec-tools.en.html#s-gpg-agent" rel="section" title="8.9 GPG agent">
+<link href="ch9.en.html#s-bpp-devel-design" rel="section" title="9.1 Best practices for security review and design">
+<link href="ch9.en.html#s-bpp-lower-privs" rel="section" title="9.2 Creating users and groups for software daemons">
+<link href="ch10.en.html#s-keep-secure" rel="section" title="10.1 Keep your system secure">
+<link href="ch10.en.html#s-periodic-integrity" rel="section" title="10.2 Do periodic integrity checks">
+<link href="ch10.en.html#s-intrusion-detect" rel="section" title="10.3 Set up Intrusion Detection">
+<link href="ch10.en.html#s10.4" rel="section" title="10.4 Avoiding root-kits">
+<link href="ch10.en.html#s10.5" rel="section" title="10.5 Genius/Paranoia Ideas &mdash; what you could do">
+<link href="ch-after-compromise.en.html#s11.1" rel="section" title="11.1 General behavior">
+<link href="ch-after-compromise.en.html#s11.2" rel="section" title="11.2 Backing up the system">
+<link href="ch-after-compromise.en.html#s11.3" rel="section" title="11.3 Contact your local CERT">
+<link href="ch-after-compromise.en.html#s11.4" rel="section" title="11.4 Forensic analysis">
+<link href="ch12.en.html#s12.1" rel="section" title="12.1 Security in the Debian operating system">
+<link href="ch12.en.html#s-vulnerable-system" rel="section" title="12.2 My system is vulnerable! (Are you sure?)">
+<link href="ch12.en.html#s-debian-sec-team-faq" rel="section" title="12.3 Questions regarding the Debian security team">
+<link href="ap-bridge-fw.en.html#sD.1" rel="section" title="D.1 A bridge providing NAT and firewall capabilities">
+<link href="ap-bridge-fw.en.html#sD.2" rel="section" title="D.2 A bridge providing firewall capabilities">
+<link href="ap-bridge-fw.en.html#sD.3" rel="section" title="D.3 Basic IPtables rules">
+<link href="ap-chroot-ssh-env.en.html#sG.1" rel="section" title="G.1 Chrooting the ssh users">
+<link href="ap-chroot-ssh-env.en.html#sG.2" rel="section" title="G.2 Chrooting the ssh server">
+<link href="ap-chroot-apache-env.en.html#sH.1" rel="section" title="H.1 Introduction">
+<link href="ap-chroot-apache-env.en.html#sH.2" rel="section" title="H.2 Installing the server">
+<link href="ap-chroot-apache-env.en.html#sH.3" rel="section" title="H.3 See also">
+<link href="ch1.en.html#s1.6.1" rel="subsection" title="1.6.1 Version 3.16 (March 2011)">
+<link href="ch1.en.html#s1.6.2" rel="subsection" title="1.6.2 Version 3.15 (December 2010)">
+<link href="ch1.en.html#s1.6.3" rel="subsection" title="1.6.3 Version 3.14 (March 2009)">
+<link href="ch1.en.html#s1.6.4" rel="subsection" title="1.6.4 Version 3.13 (Februrary 2008)">
+<link href="ch1.en.html#s1.6.5" rel="subsection" title="1.6.5 Version 3.12 (August 2007)">
+<link href="ch1.en.html#s1.6.6" rel="subsection" title="1.6.6 Version 3.11 (January 2007)">
+<link href="ch1.en.html#s1.6.7" rel="subsection" title="1.6.7 Version 3.10 (November 2006)">
+<link href="ch1.en.html#s1.6.8" rel="subsection" title="1.6.8 Version 3.9 (October 2006)">
+<link href="ch1.en.html#s1.6.9" rel="subsection" title="1.6.9 Version 3.8 (July 2006)">
+<link href="ch1.en.html#s1.6.10" rel="subsection" title="1.6.10 Version 3.7 (April 2006)">
+<link href="ch1.en.html#s1.6.11" rel="subsection" title="1.6.11 Version 3.6 (March 2006)">
+<link href="ch1.en.html#s1.6.12" rel="subsection" title="1.6.12 Version 3.5 (November 2005)">
+<link href="ch1.en.html#s1.6.13" rel="subsection" title="1.6.13 Version 3.4 (August-September 2005)">
+<link href="ch1.en.html#s1.6.14" rel="subsection" title="1.6.14 Version 3.3 (June 2005)">
+<link href="ch1.en.html#s1.6.15" rel="subsection" title="1.6.15 Version 3.2 (March 2005)">
+<link href="ch1.en.html#s1.6.16" rel="subsection" title="1.6.16 Version 3.1 (January 2005)">
+<link href="ch1.en.html#s1.6.17" rel="subsection" title="1.6.17 Version 3.0 (December 2004)">
+<link href="ch1.en.html#s1.6.18" rel="subsection" title="1.6.18 Version 2.99 (March 2004)">
+<link href="ch1.en.html#s1.6.19" rel="subsection" title="1.6.19 Version 2.98 (December 2003)">
+<link href="ch1.en.html#s1.6.20" rel="subsection" title="1.6.20 Version 2.97 (September 2003)">
+<link href="ch1.en.html#s1.6.21" rel="subsection" title="1.6.21 Version 2.96 (August 2003)">
+<link href="ch1.en.html#s1.6.22" rel="subsection" title="1.6.22 Version 2.95 (June 2003)">
+<link href="ch1.en.html#s1.6.23" rel="subsection" title="1.6.23 Version 2.94 (April 2003)">
+<link href="ch1.en.html#s1.6.24" rel="subsection" title="1.6.24 Version 2.93 (March 2003)">
+<link href="ch1.en.html#s1.6.25" rel="subsection" title="1.6.25 Version 2.92 (February 2003)">
+<link href="ch1.en.html#s1.6.26" rel="subsection" title="1.6.26 Version 2.91 (January/February 2003)">
+<link href="ch1.en.html#s1.6.27" rel="subsection" title="1.6.27 Version 2.9 (December 2002)">
+<link href="ch1.en.html#s1.6.28" rel="subsection" title="1.6.28 Version 2.8 (November 2002)">
+<link href="ch1.en.html#s1.6.29" rel="subsection" title="1.6.29 Version 2.7 (October 2002)">
+<link href="ch1.en.html#s1.6.30" rel="subsection" title="1.6.30 Version 2.6 (September 2002)">
+<link href="ch1.en.html#s1.6.31" rel="subsection" title="1.6.31 Version 2.5 (September 2002)">
+<link href="ch1.en.html#s1.6.32" rel="subsection" title="1.6.32 Version 2.5 (August 2002)">
+<link href="ch1.en.html#s1.6.33" rel="subsection" title="1.6.33 Version 2.4">
+<link href="ch1.en.html#s1.6.34" rel="subsection" title="1.6.34 Version 2.3">
+<link href="ch1.en.html#s1.6.35" rel="subsection" title="1.6.35 Version 2.3">
+<link href="ch1.en.html#s1.6.36" rel="subsection" title="1.6.36 Version 2.2">
+<link href="ch1.en.html#s1.6.37" rel="subsection" title="1.6.37 Version 2.1">
+<link href="ch1.en.html#s1.6.38" rel="subsection" title="1.6.38 Version 2.0">
+<link href="ch1.en.html#s1.6.39" rel="subsection" title="1.6.39 Version 1.99">
+<link href="ch1.en.html#s1.6.40" rel="subsection" title="1.6.40 Version 1.98">
+<link href="ch1.en.html#s1.6.41" rel="subsection" title="1.6.41 Version 1.97">
+<link href="ch1.en.html#s1.6.42" rel="subsection" title="1.6.42 Version 1.96">
+<link href="ch1.en.html#s1.6.43" rel="subsection" title="1.6.43 Version 1.95">
+<link href="ch1.en.html#s1.6.44" rel="subsection" title="1.6.44 Version 1.94">
+<link href="ch1.en.html#s1.6.45" rel="subsection" title="1.6.45 Version 1.93">
+<link href="ch1.en.html#s1.6.46" rel="subsection" title="1.6.46 Version 1.92">
+<link href="ch1.en.html#s1.6.47" rel="subsection" title="1.6.47 Version 1.91">
+<link href="ch1.en.html#s1.6.48" rel="subsection" title="1.6.48 Version 1.9">
+<link href="ch1.en.html#s1.6.49" rel="subsection" title="1.6.49 Version 1.8">
+<link href="ch1.en.html#s1.6.50" rel="subsection" title="1.6.50 Version 1.7">
+<link href="ch1.en.html#s1.6.51" rel="subsection" title="1.6.51 Version 1.6">
+<link href="ch1.en.html#s1.6.52" rel="subsection" title="1.6.52 Version 1.5">
+<link href="ch1.en.html#s1.6.53" rel="subsection" title="1.6.53 Version 1.4">
+<link href="ch1.en.html#s1.6.54" rel="subsection" title="1.6.54 Version 1.3">
+<link href="ch1.en.html#s1.6.55" rel="subsection" title="1.6.55 Version 1.2">
+<link href="ch1.en.html#s1.6.56" rel="subsection" title="1.6.56 Version 1.1">
+<link href="ch1.en.html#s1.6.57" rel="subsection" title="1.6.57 Version 1.0">
+<link href="ch3.en.html#s3.2.1" rel="subsection" title="3.2.1 Choose an intelligent partition scheme">
+<link href="ch3.en.html#s3.2.1.1" rel="subsection" title="3.2.1.1 Selecting the appropriate file systems">
+<link href="ch3.en.html#s-disableserv" rel="subsection" title="3.6.1 Disabling daemon services">
+<link href="ch3.en.html#s-inetd" rel="subsection" title="3.6.2 Disabling <code>inetd</code> or its services">
+<link href="ch3.en.html#s3.7.1" rel="subsection" title="3.7.1 Removing Perl">
+<link href="ch4.en.html#s-lib-security-update" rel="subsection" title="4.2.1 Security update of libraries">
+<link href="ch4.en.html#s-kernel-security-update" rel="subsection" title="4.2.2 Security update of the kernel">
+<link href="ch4.en.html#s4.9.1" rel="subsection" title="4.9.1 Setting <code>/tmp</code> noexec">
+<link href="ch4.en.html#s4.9.2" rel="subsection" title="4.9.2 Setting /usr read-only">
+<link href="ch4.en.html#s-auth-pam" rel="subsection" title="4.10.1 User authentication: PAM">
+<link href="ch4.en.html#s-user-limits" rel="subsection" title="4.10.2 Limiting resource usage: the <code>limits.conf</code> file">
+<link href="ch4.en.html#s4.10.3" rel="subsection" title="4.10.3 User login actions: edit <code>/etc/login.defs</code>">
+<link href="ch4.en.html#s4.10.4" rel="subsection" title="4.10.4 Restricting ftp: editing <code>/etc/ftpusers</code>">
+<link href="ch4.en.html#s4.10.5" rel="subsection" title="4.10.5 Using su">
+<link href="ch4.en.html#s4.10.6" rel="subsection" title="4.10.6 Using sudo">
+<link href="ch4.en.html#s4.10.7" rel="subsection" title="4.10.7 Disallow remote administrative access">
+<link href="ch4.en.html#s-user-restrict" rel="subsection" title="4.10.8 Restricting users's access">
+<link href="ch4.en.html#s4.10.9" rel="subsection" title="4.10.9 User auditing">
+<link href="ch4.en.html#s4.10.9.1" rel="subsection" title="4.10.9.1 Input and output audit with script">
+<link href="ch4.en.html#s4.10.9.2" rel="subsection" title="4.10.9.2 Using the shell history file">
+<link href="ch4.en.html#s4.10.9.3" rel="subsection" title="4.10.9.3 Complete user audit with accounting utilities">
+<link href="ch4.en.html#s4.10.9.4" rel="subsection" title="4.10.9.4 Other user auditing methods">
+<link href="ch4.en.html#s4.10.10" rel="subsection" title="4.10.10 Reviewing user profiles">
+<link href="ch4.en.html#s4.10.11" rel="subsection" title="4.10.11 Setting users umasks">
+<link href="ch4.en.html#s4.10.12" rel="subsection" title="4.10.12 Limiting what users can see/access">
+<link href="ch4.en.html#s-limit-user-perm" rel="subsection" title="4.10.12.1 Limiting access to other user's information">
+<link href="ch4.en.html#s-user-pwgen" rel="subsection" title="4.10.13 Generating user passwords">
+<link href="ch4.en.html#s4.10.14" rel="subsection" title="4.10.14 Checking user passwords">
+<link href="ch4.en.html#s-idle-logoff" rel="subsection" title="4.10.15 Logging off idle users">
+<link href="ch4.en.html#s-custom-logcheck" rel="subsection" title="4.12.1 Using and customizing <code>logcheck</code>">
+<link href="ch4.en.html#s4.12.2" rel="subsection" title="4.12.2 Configuring where alerts are sent">
+<link href="ch4.en.html#s4.12.3" rel="subsection" title="4.12.3 Using a loghost">
+<link href="ch4.en.html#s4.12.4" rel="subsection" title="4.12.4 Log file permissions">
+<link href="ch4.en.html#s4.14.1" rel="subsection" title="4.14.1 Kernel patch protection for buffer overflows">
+<link href="ch4.en.html#s4.14.2" rel="subsection" title="4.14.2 Testing programs for overflows">
+<link href="ch4.en.html#s4.16.1" rel="subsection" title="4.16.1 Using quotas">
+<link href="ch4.en.html#s-ext2attr" rel="subsection" title="4.16.2 The ext2 filesystem specific attributes (chattr/lsattr)">
+<link href="ch4.en.html#s-check-integ" rel="subsection" title="4.16.3 Checking file system integrity">
+<link href="ch4.en.html#s4.16.4" rel="subsection" title="4.16.4 Setting up setuid check">
+<link href="ch4.en.html#s-kernel-conf" rel="subsection" title="4.17.1 Configuring kernel network features">
+<link href="ch4.en.html#s-tcp-syncookies" rel="subsection" title="4.17.2 Configuring syncookies">
+<link href="ch4.en.html#s-net-harden" rel="subsection" title="4.17.3 Securing the network on boot-time">
+<link href="ch4.en.html#s-kernel-fw" rel="subsection" title="4.17.4 Configuring firewall features">
+<link href="ch4.en.html#s-limit-bindaddr" rel="subsection" title="4.17.5 Disabling weak-end hosts issues">
+<link href="ch4.en.html#s4.17.6" rel="subsection" title="4.17.6 Protecting against ARP attacks">
+<link href="ch4.en.html#s4.19.1" rel="subsection" title="4.19.1 Do not use software depending on svgalib">
+<link href="ch-sec-services.en.html#s-ssh-chroot" rel="subsection" title="5.1.1 Chrooting ssh">
+<link href="ch-sec-services.en.html#s5.1.2" rel="subsection" title="5.1.2 Ssh clients">
+<link href="ch-sec-services.en.html#s5.1.3" rel="subsection" title="5.1.3 Disallowing file transfers">
+<link href="ch-sec-services.en.html#s-ssh-only-file" rel="subsection" title="5.1.4 Restricing access to file transfer only">
+<link href="ch-sec-services.en.html#s5.4.1" rel="subsection" title="5.4.1 Check your display manager">
+<link href="ch-sec-services.en.html#s5.6.1" rel="subsection" title="5.6.1 Configuring a Nullmailer">
+<link href="ch-sec-services.en.html#s5.6.2" rel="subsection" title="5.6.2 Providing secure access to mailboxes">
+<link href="ch-sec-services.en.html#s5.6.3" rel="subsection" title="5.6.3 Receiving mail securely">
+<link href="ch-sec-services.en.html#s-configure-bind" rel="subsection" title="5.7.1 Bind configuration to avoid misuse">
+<link href="ch-sec-services.en.html#s-user-bind" rel="subsection" title="5.7.2 Changing BIND's user">
+<link href="ch-sec-services.en.html#s-chroot-bind" rel="subsection" title="5.7.3 Chrooting the name server">
+<link href="ch-sec-services.en.html#s5.8.1" rel="subsection" title="5.8.1 Disabling users from publishing web contents">
+<link href="ch-sec-services.en.html#s5.8.2" rel="subsection" title="5.8.2 Logfiles permissions">
+<link href="ch-sec-services.en.html#s5.8.3" rel="subsection" title="5.8.3 Published web files">
+<link href="ch-sec-services.en.html#s-auto-chroot" rel="subsection" title="5.10.1 Making chrooted environments automatically">
+<link href="ch-sec-services.en.html#s5.13.1" rel="subsection" title="5.13.1 Disabling RPC services completely">
+<link href="ch-sec-services.en.html#s5.13.2" rel="subsection" title="5.13.2 Limiting access to RPC services">
+<link href="ch-sec-services.en.html#s5.14.1" rel="subsection" title="5.14.1 Firewalling the local system">
+<link href="ch-sec-services.en.html#s5.14.2" rel="subsection" title="5.14.2 Using a firewall to protect other systems">
+<link href="ch-sec-services.en.html#s5.14.3" rel="subsection" title="5.14.3 Setting up a firewall">
+<link href="ch-sec-services.en.html#s-firewall-pack" rel="subsection" title="5.14.3.1 Using firewall packages">
+<link href="ch-sec-services.en.html#s5.14.3.2" rel="subsection" title="5.14.3.2 Manual init.d configuration">
+<link href="ch-sec-services.en.html#s5.14.3.3" rel="subsection" title="5.14.3.3 Configuring firewall rules through <code>ifup</code>">
+<link href="ch-sec-services.en.html#s5.14.3.4" rel="subsection" title="5.14.3.4 Testing your firewall configuration">
+<link href="ch7.en.html#s-crossreference" rel="subsection" title="7.2.1 Vulnerability cross references">
+<link href="ch7.en.html#s-cve-compatible" rel="subsection" title="7.2.2 CVE compatibility">
+<link href="ch7.en.html#s7.4.1" rel="subsection" title="7.4.1 Developer's guide to security updates">
+<link href="ch7.en.html#s7.5.1" rel="subsection" title="7.5.1 The current scheme for package signature checks">
+<link href="ch7.en.html#s-apt-0.6" rel="subsection" title="7.5.2 Secure apt">
+<link href="ch7.en.html#s-check-releases" rel="subsection" title="7.5.3 Per distribution release check">
+<link href="ch7.en.html#s7.5.3.1" rel="subsection" title="7.5.3.1 Basic concepts">
+<link href="ch7.en.html#s7.5.3.2" rel="subsection" title="7.5.3.2 <code>Release</code> checksums">
+<link href="ch7.en.html#s7.5.3.3" rel="subsection" title="7.5.3.3 Verification of the <code>Release</code> file">
+<link href="ch7.en.html#s7.5.3.4" rel="subsection" title="7.5.3.4 Check of <code>Release.gpg</code> by <code>apt</code>">
+<link href="ch7.en.html#s7.5.3.5" rel="subsection" title="7.5.3.5 How to tell apt what to trust">
+<link href="ch7.en.html#s7.5.3.6" rel="subsection" title="7.5.3.6 Finding the key for a repository">
+<link href="ch7.en.html#s-secure-apt-add-key" rel="subsection" title="7.5.3.7 Safely adding a key">
+<link href="ch7.en.html#s7.5.3.8" rel="subsection" title="7.5.3.8 Verifying key integrity">
+<link href="ch7.en.html#s7.5.3.9" rel="subsection" title="7.5.3.9 Debian archive key yearly rotation">
+<link href="ch7.en.html#s7.5.3.10" rel="subsection" title="7.5.3.10 Known release checking problems">
+<link href="ch7.en.html#s-manual-check-releases" rel="subsection" title="7.5.3.11 Manual per distribution release check">
+<link href="ch7.en.html#s-check-non-debian-releases" rel="subsection" title="7.5.4 Release check of non Debian sources">
+<link href="ch7.en.html#s-check-pkg-sign" rel="subsection" title="7.5.5 Alternative per-package signing scheme">
+<link href="ch-sec-tools.en.html#s8.5.1" rel="subsection" title="8.5.1 Point to Point tunneling">
+<link href="ch10.en.html#s-track-vulns" rel="subsection" title="10.1.1 Tracking security vulnerabilities">
+<link href="ch10.en.html#s-keep-up-to-date" rel="subsection" title="10.1.2 Continuously update the system">
+<link href="ch10.en.html#s10.1.2.1" rel="subsection" title="10.1.2.1 Manually checking which security updates are available">
+<link href="ch10.en.html#s-update-desktop" rel="subsection" title="10.1.2.2 Checking for updates at the Desktop">
+<link href="ch10.en.html#s-cron-apt" rel="subsection" title="10.1.2.3 Automatically checking for updates with cron-apt">
+<link href="ch10.en.html#s-debsecan" rel="subsection" title="10.1.2.4 Automatically checking for security issues with debsecan">
+<link href="ch10.en.html#s10.1.2.5" rel="subsection" title="10.1.2.5 Other methods for security updates">
+<link href="ch10.en.html#s10.1.3" rel="subsection" title="10.1.3 Avoid using the unstable branch">
+<link href="ch10.en.html#s-security-support-testing" rel="subsection" title="10.1.4 Security support for the testing branch">
+<link href="ch10.en.html#s10.1.5" rel="subsection" title="10.1.5 Automatic updates in a Debian GNU/Linux system">
+<link href="ch10.en.html#s10.3.1" rel="subsection" title="10.3.1 Network based intrusion detection">
+<link href="ch10.en.html#s10.3.2" rel="subsection" title="10.3.2 Host based intrusion detection">
+<link href="ch10.en.html#s-LKM" rel="subsection" title="10.4.1 Loadable Kernel Modules (LKM)">
+<link href="ch10.en.html#s10.4.2" rel="subsection" title="10.4.2 Detecting root-kits">
+<link href="ch10.en.html#s-proactive" rel="subsection" title="10.4.2.1 Proactive defense">
+<link href="ch10.en.html#s10.4.2.2" rel="subsection" title="10.4.2.2 Reactive defense">
+<link href="ch10.en.html#s10.5.1" rel="subsection" title="10.5.1 Building a honeypot">
+<link href="ch-after-compromise.en.html#s11.4.1" rel="subsection" title="11.4.1 Analysis of malware">
+<link href="ch12.en.html#s12.1.1" rel="subsection" title="12.1.1 Is Debian more secure than X?">
+<link href="ch12.en.html#s12.1.1.1" rel="subsection" title="12.1.1.1 Is Debian more secure than other Linux distributions (such as Red Hat, SuSE...)?">
+<link href="ch12.en.html#s12.1.2" rel="subsection" title="12.1.2 There are many Debian bugs in Bugtraq. Does this mean that it is very vulnerable?">
+<link href="ch12.en.html#s12.1.3" rel="subsection" title="12.1.3 Does Debian have any certification related to security?">
+<link href="ch12.en.html#s12.1.4" rel="subsection" title="12.1.4 Are there any hardening programs for Debian?">
+<link href="ch12.en.html#s12.1.5" rel="subsection" title="12.1.5 I want to run XYZ service, which one should I choose?">
+<link href="ch12.en.html#s12.1.6" rel="subsection" title="12.1.6 How can I make service XYZ more secure in Debian?">
+<link href="ch12.en.html#s12.1.7" rel="subsection" title="12.1.7 How can I remove all the banners for services?">
+<link href="ch12.en.html#s12.1.8" rel="subsection" title="12.1.8 Are all Debian packages safe?">
+<link href="ch12.en.html#s12.1.9" rel="subsection" title="12.1.9 Why are some log files/configuration files world-readable, isn't this insecure?">
+<link href="ch12.en.html#s12.1.10" rel="subsection" title="12.1.10 Why does /root/ (or UserX) have 755 permissions?">
+<link href="ch12.en.html#s12.1.11" rel="subsection" title="12.1.11 After installing a grsec/firewall, I started receiving many console messages! How do I remove them?">
+<link href="ch12.en.html#s-faq-os-users" rel="subsection" title="12.1.12 Operating system users and groups">
+<link href="ch12.en.html#s12.1.12.1" rel="subsection" title="12.1.12.1 Are all system users necessary?">
+<link href="ch12.en.html#s12.1.12.2" rel="subsection" title="12.1.12.2 I removed a system user! How can I recover?">
+<link href="ch12.en.html#s12.1.12.3" rel="subsection" title="12.1.12.3 What is the difference between the adm and the staff group?">
+<link href="ch12.en.html#s12.1.13" rel="subsection" title="12.1.13 Why is there a new group when I add a new user? (or Why does Debian give each user one group?)">
+<link href="ch12.en.html#s12.1.14" rel="subsection" title="12.1.14 Questions regarding services and open ports">
+<link href="ch12.en.html#s12.1.14.1" rel="subsection" title="12.1.14.1 Why are all services activated upon installation?">
+<link href="ch12.en.html#s12.1.14.2" rel="subsection" title="12.1.14.2 Can I remove <code>inetd</code>?">
+<link href="ch12.en.html#s12.1.14.3" rel="subsection" title="12.1.14.3 Why do I have port 111 open?">
+<link href="ch12.en.html#s12.1.14.4" rel="subsection" title="12.1.14.4 What use is <code>identd</code> (port 113) for?">
+<link href="ch12.en.html#s12.1.14.5" rel="subsection" title="12.1.14.5 I have services using port 1 and 6, what are they and how can I remove them?">
+<link href="ch12.en.html#s12.1.14.6" rel="subsection" title="12.1.14.6 I found the port XYZ open, can I close it?">
+<link href="ch12.en.html#s12.1.14.7" rel="subsection" title="12.1.14.7 Will removing services from <code>/etc/services</code> help secure my box?">
+<link href="ch12.en.html#s12.1.15" rel="subsection" title="12.1.15 Common security issues">
+<link href="ch12.en.html#s12.1.15.1" rel="subsection" title="12.1.15.1 I have lost my password and cannot access the system!">
+<link href="ch12.en.html#s12.1.16" rel="subsection" title="12.1.16 How do I accomplish setting up a service for my users without giving out shell accounts?">
+<link href="ch12.en.html#s-vulnasses-false-positive" rel="subsection" title="12.2.1 Vulnerability assessment scanner X says my Debian system is vulnerable!">
+<link href="ch12.en.html#s12.2.2" rel="subsection" title="12.2.2 I've seen an attack in my system's logs. Is my system compromised?">
+<link href="ch12.en.html#s12.2.3" rel="subsection" title="12.2.3 I have found strange 'MARK' lines in my logs: Am I compromised?">
+<link href="ch12.en.html#s12.2.4" rel="subsection" title="12.2.4 I found users using 'su' in my logs: Am I compromised?">
+<link href="ch12.en.html#s12.2.5" rel="subsection" title="12.2.5 I have found 'possible SYN flooding' in my logs: Am I under attack?">
+<link href="ch12.en.html#s12.2.6" rel="subsection" title="12.2.6 I have found strange root sessions in my logs: Am I compromised?">
+<link href="ch12.en.html#s12.2.7" rel="subsection" title="12.2.7 I have suffered a break-in, what do I do?">
+<link href="ch12.en.html#s12.2.8" rel="subsection" title="12.2.8 How can I trace an attack?">
+<link href="ch12.en.html#s12.2.9" rel="subsection" title="12.2.9 Program X in Debian is vulnerable, what do I do?">
+<link href="ch12.en.html#s-version-backport" rel="subsection" title="12.2.10 The version number for a package indicates that I am still running a vulnerable version!">
+<link href="ch12.en.html#s12.2.11" rel="subsection" title="12.2.11 Specific software">
+<link href="ch12.en.html#s12.2.11.1" rel="subsection" title="12.2.11.1 <code>proftpd</code> is vulnerable to a Denial of Service attack.">
+<link href="ch12.en.html#s12.2.11.2" rel="subsection" title="12.2.11.2 After installing <code>portsentry</code>, there are a lot of ports open.">
+<link href="ch12.en.html#s12.3.1" rel="subsection" title="12.3.1 What is a Debian Security Advisory (DSA)?">
+<link href="ch12.en.html#s12.3.2" rel="subsection" title="12.3.2 The signature on Debian advisories does not verify correctly!">
+<link href="ch12.en.html#s12.3.3" rel="subsection" title="12.3.3 How is security handled in Debian?">
+<link href="ch12.en.html#s12.3.4" rel="subsection" title="12.3.4 Why are you fiddling with an old version of that package?">
+<link href="ch12.en.html#s12.3.5" rel="subsection" title="12.3.5 What is the policy for a fixed package to appear in security.debian.org?">
+<link href="ch12.en.html#s12.3.6" rel="subsection" title="12.3.6 What does &quot;local (remote)&quot; mean?">
+<link href="ch12.en.html#s12.3.7" rel="subsection" title="12.3.7 The version number for a package indicates that I am still running a vulnerable version!">
+<link href="ch12.en.html#s-sec-unstable" rel="subsection" title="12.3.8 How is security handled for <samp>testing</samp> and <samp>unstable</samp>?">
+<link href="ch12.en.html#s-sec-older" rel="subsection" title="12.3.9 I use an older version of Debian, is it supported by the Debian Security Team?">
+<link href="ch12.en.html#s12.3.10" rel="subsection" title="12.3.10 How does <em>testing</em> get security updates?">
+<link href="ch12.en.html#s12.3.11" rel="subsection" title="12.3.11 How is security handled for contrib and non-free?">
+<link href="ch12.en.html#s12.3.12" rel="subsection" title="12.3.12 Why are there no official mirrors for security.debian.org?">
+<link href="ch12.en.html#s12.3.13" rel="subsection" title="12.3.13 I've seen DSA 100 and DSA 102, now where is DSA 101?">
+<link href="ch12.en.html#s12.3.14" rel="subsection" title="12.3.14 I tried to download a package listed in one of the security advisories, but I got a `file not found' error.">
+<link href="ch12.en.html#s12.3.15" rel="subsection" title="12.3.15 How can I reach the security team?">
+<link href="ch12.en.html#s12.3.16" rel="subsection" title="12.3.16 What difference is there between security@debian.org and debian-security@lists.debian.org?">
+<link href="ch12.en.html#s12.3.17" rel="subsection" title="12.3.17 I guess I found a security problem, what should I do?">
+<link href="ch12.en.html#s12.3.18" rel="subsection" title="12.3.18 How can I contribute to the Debian security team?">
+<link href="ch12.en.html#s12.3.19" rel="subsection" title="12.3.19 Who is the Security Team composed of?">
+<link href="ch12.en.html#s12.3.20" rel="subsection" title="12.3.20 Does the Debian Security team check every new package in Debian?">
+<link href="ch12.en.html#s12.3.21" rel="subsection" title="12.3.21 How much time will it take Debian to fix vulnerability XXXX?">
+<link href="ch12.en.html#s12.3.22" rel="subsection" title="12.3.22 How long will security updates be provided?">
+<link href="ch12.en.html#s12.3.23" rel="subsection" title="12.3.23 How can I check the integrity of packages?">
+<link href="ch12.en.html#s12.3.24" rel="subsection" title="12.3.24 What to do if a random package breaks after a security update?">
+<link href="ap-chroot-ssh-env.en.html#sG.1.1" rel="subsection" title="G.1.1 Using <code>libpam-chroot</code>">
+<link href="ap-chroot-ssh-env.en.html#sG.1.2" rel="subsection" title="G.1.2 Patching the <code>ssh</code> server">
+<link href="ap-chroot-ssh-env.en.html#sG.2.1" rel="subsection" title="G.2.1 Setup a minimal system (the really easy way)">
+<link href="ap-chroot-ssh-env.en.html#sG.2.2" rel="subsection" title="G.2.2 Automatically making the environment (the easy way)">
+<link href="ap-chroot-ssh-env.en.html#sG.2.3" rel="subsection" title="G.2.3 Manually creating the environment (the hard way)">
+<link href="ap-chroot-apache-env.en.html#sH.1.1" rel="subsection" title="H.1.1 Licensing">
+
+</head>
+
+<body>
+
+<hr>
+
+<h1>
+Securing Debian Manual
+<br>Footnotes</h1>
+
+<h2><a href="ch2.en.html#fr1" name="f1">1</a></h2>
+
+<p>
+At a given time it was superseded by the &quot;Linux Security Knowledge
+Base&quot;.  This documentation is also provided in Debian through the
+<code>lskb</code> package.  Now it's back as the <em>Lasg</em> again.
+</p>
+
+<h2><a href="ch3.en.html#fr2" name="f2">2</a></h2>
+
+<p>
+A very good example of this kind of attacks using /tmp is detailed in <code><a
+href="http://www.hackinglinuxexposed.com/articles/20031111.html">The
+mysteriously persistently exploitable program (contest)</a></code> and <code><a
+href="http://www.hackinglinuxexposed.com/articles/20031214.html">The
+mysteriously persistently exploitable program explained</a></code> (notice that
+the incident is Debian-related).  It is basicly an attack in which a local user
+<em>stashes</em> away a vulnerable setuid application by making a hard link to
+it, effectively avoiding any updates (or removal) of the binary itself made by
+the system administrator.  Dpkg was recently fixed to prevent this (see
+<code><a href="http://bugs.debian.org/225692">225692</a></code>) but other
+setuid binaries (not controlled by the package manager) are at risk if
+partitions are not setup correctly.
+</p>
+
+<h2><a href="ch3.en.html#fr3" name="f3">3</a></h2>
+
+<p>
+Since Debian GNU/Linux 4.0, codename <samp>etch</samp>
+</p>
+
+<h2><a href="ch3.en.html#fr4" name="f4">4</a></h2>
+
+<p>
+The footprint in Debian 3.0 and earlier releases wasn't as tight, since some
+<code>inetd</code> services were enabled by default.  Also standard
+installations of Debian 2.2 installed the NFS server as well as the telnet
+server.
+</p>
+
+<h2><a href="ch3.en.html#fr5" name="f5">5</a></h2>
+
+<p>
+This is desirable if you are setting up a development chroot, for example.
+</p>
+
+<h2><a href="ch3.en.html#fr6" name="f6">6</a></h2>
+
+<p>
+For example, in Debian woody it is around 400-500 Mbs, try this:
+</p>
+
+<pre>
+       $ size=0
+       $ for i in `grep -A 1 -B 1 &quot;^Section: base&quot; /var/lib/dpkg/available |
+       grep -A 2 &quot;^Priority: required&quot; |grep &quot;^Installed-Size&quot; |cut -d : -f 2
+       `; do size=$(($size+$i)); done
+       $ echo $size
+       47762
+</pre>
+
+<h2><a href="ch3.en.html#fr7" name="f7">7</a></h2>
+
+<p>
+Many intrusions are made just to get access to resources to do illegitimate
+activity (denial of service attacks, spam, rogue ftp servers, dns pollution...)
+rather than to obtain confidential data from the compromised system.
+</p>
+
+<h2><a href="ch3.en.html#fr8" name="f8">8</a></h2>
+
+<p>
+You can make (on another system) a dummy package with <code>equivs</code>.
+</p>
+
+<h2><a href="ch4.en.html#fr9" name="f9">9</a></h2>
+
+<p>
+In <em>etch</em> and later releases
+</p>
+
+<h2><a href="ch4.en.html#fr10" name="f10">10</a></h2>
+
+<p>
+Even though the libraries have been removed from the filesystem the inodes will
+not be cleared up until no program has an open file descriptor pointing to
+them.
+</p>
+
+<h2><a href="ch4.en.html#fr11" name="f11">11</a></h2>
+
+<p>
+Depending on your lsof version you might need to use $8 instead of $9
+</p>
+
+<h2><a href="ch4.en.html#fr12" name="f12">12</a></h2>
+
+<p>
+This happened, for example, in the upgrade from libc6 2.2.x to 2.3.x due to NSS
+authentication issues, see <code><a
+href="http://lists.debian.org/debian-glibc/2003/debian-glibc-200303/msg00276.html">http://lists.debian.org/debian-glibc/2003/debian-glibc-200303/msg00276.html</a></code>.
+</p>
+
+<h2><a href="ch4.en.html#fr13" name="f13">13</a></h2>
+
+<p>
+Unless you have installed a kernel metapackage like
+<code>linux-image-2.6-686</code> which will always pull in the latest kernel
+minor revision for a kernel release and a given architecture.
+</p>
+
+<h2><a href="ch4.en.html#fr14" name="f14">14</a></h2>
+
+<p>
+A sample script called <code><a
+href="http://www.debian-administration.org/articles/70/testnet">testnet</a></code>
+is available in the <code><a
+href="http://www.debian-administration.org/?article=70">Remotely rebooting
+Debian GNU/Linux machines</a></code> article.  A more elaborate network
+connectivity testing script is available in the <code><a
+href="http://www.debian-administration.org/?article=128">Testing network
+connectivity</a></code> article.
+</p>
+
+<h2><a href="ch4.en.html#fr15" name="f15">15</a></h2>
+
+<p>
+Setting up a serial console is beyond the scope of this document, for more
+information read the <code><a
+href="http://www.tldp.org/HOWTO/Serial-HOWTO.html">Serial HOWTO</a></code> and
+the <code><a
+href="http://www.tldp.org/HOWTO/Remote-Serial-Console-HOWTO/index.html">Remote
+Serial Console HOWTO</a></code>.
+</p>
+
+<h2><a href="ch4.en.html#fr16" name="f16">16</a></h2>
+
+<p>
+The <code>/etc/securetty</code> is a configuration file that belongs to the
+<code>login</code> package.
+</p>
+
+<h2><a href="ch4.en.html#fr17" name="f17">17</a></h2>
+
+<p>
+Or <em>ttyvX</em> in GNU/FreeBSD, and <em>ttyE0</em> in GNU/KNetBSD.
+</p>
+
+<h2><a href="ch4.en.html#fr18" name="f18">18</a></h2>
+
+<p>
+Or <em>comX</em> in GNU/Hurd, <em>cuaaX</em> in GNU/FreeBSD, and <em>ttyXX</em>
+in GNU/KNetBSD.
+</p>
+
+<h2><a href="ch4.en.html#fr19" name="f19">19</a></h2>
+
+<p>
+The default configuration in <em>woody</em> includes 12 local tty and vc
+consoles, as well as the <em>console</em> device but does not allow remote
+logins.  In <em>sarge</em> the default configuration provides 64 consoles for
+tty and vc consoles.  You can safely remove this if you are not using that many
+consoles.
+</p>
+
+<h2><a href="ch4.en.html#fr20" name="f20">20</a></h2>
+
+<p>
+Look for the <em>getty</em> calls.
+</p>
+
+<h2><a href="ch4.en.html#fr21" name="f21">21</a></h2>
+
+<p>
+Some of this includes the package manager <code>dpkg</code> since the
+installation (post,pre) and removal (post,pre) scripts are at
+<code>/var/lib/dpkg/</code> and Smartlist
+</p>
+
+<h2><a href="ch4.en.html#fr22" name="f22">22</a></h2>
+
+<p>
+This dependency is not fixed, however, in the Debian 3.0 package.  Please see
+<code><a href="http://bugs.debian.org/112965">Bug #112965</a></code>.
+</p>
+
+<h2><a href="ch4.en.html#fr23" name="f23">23</a></h2>
+
+<p>
+<code>libpam-chroot</code> has not been yet thoroughly tested, it does work for
+<code>login</code> but it might not be easy to set up the environment for other
+programs
+</p>
+
+<h2><a href="ch4.en.html#fr24" name="f24">24</a></h2>
+
+<p>
+Setting HISTSIZE to a very large number can cause issues under some shells
+since the history is kept in memory for every user session.  You might be safer
+if you set this to a high-enough value and backup user's history files (if you
+need all of the user's history for some reason)
+</p>
+
+<h2><a href="ch4.en.html#fr25" name="f25">25</a></h2>
+
+<p>
+Without the append-only flag users would be able to empty the contents of the
+history file running <samp>&gt; .bash_history</samp>
+</p>
+
+<h2><a href="ch4.en.html#fr26" name="f26">26</a></h2>
+
+<p>
+Ttys are spawned for local logins and remote logins through ssh and telnet
+</p>
+
+<h2><a href="ch4.en.html#fr27" name="f27">27</a></h2>
+
+<p>
+As defined in <code>/etc/adduser.conf</code> (USERGROUPS=yes).  You can change
+this behaviour if you set this value to no, although it is not recommended
+</p>
+
+<h2><a href="ch4.en.html#fr28" name="f28">28</a></h2>
+
+<p>
+<code>Chpasswd</code> cannot handle MD5 password generation so it needs to be
+given the password in encrypted form before using it, with the <samp>-e</samp>
+option.
+</p>
+
+<h2><a href="ch4.en.html#fr29" name="f29">29</a></h2>
+
+<p>
+On older Debian releases you might need to do this:
+</p>
+
+<pre>
+       $ apt-cache showpkg libwrap0 | egrep '^[[:space:]]' | sort -u | \
+             sed 's/,libwrap0$//;s/^[[:space:]]\+//'
+</pre>
+
+<h2><a href="ch4.en.html#fr30" name="f30">30</a></h2>
+
+<p>
+be sure to use uppercase here since <em>spawn</em> will not work
+</p>
+
+<h2><a href="ch4.en.html#fr31" name="f31">31</a></h2>
+
+<p>
+there's a very good article on it written by <code><a
+href="http://www.spitzner.net/swatch.html">Lance Spitzner</a></code>
+</p>
+
+<h2><a href="ch4.en.html#fr32" name="f32">32</a></h2>
+
+<p>
+Notice that this patch conflicts with patches already included in Debian's 2.4
+kernel source package.  You will need to use the stock vanilla kernel.  You can
+do this with the following steps:
+</p>
+
+<pre>
+     # apt-get install kernel-source-2.4.22 kernel-patch-debian-2.4.22
+     # tar xjf /usr/src/kernel-source-2.4.22.tar.bz2
+     # cd kernel-source-2.4.22
+     # /usr/src/kernel-patches/all/2.4.22/unpatch/debian
+</pre>
+
+<p>
+For more information see <code><a
+href="http://bugs.debian.org/194225">#194225</a></code>, <code><a
+href="http://bugs.debian.org/199519">#199519</a></code>, <code><a
+href="http://bugs.debian.org/206458">#206458</a></code>, <code><a
+href="http://bugs.debian.org/203759">#203759</a></code>, <code><a
+href="http://bugs.debian.org/204424">#204424</a></code>, <code><a
+href="http://bugs.debian.org/210762">#210762</a></code>, <code><a
+href="http://bugs.debian.org/211213">#211213</a></code>, and the <code><a
+href="http://lists.debian.org/debian-devel/2003/debian-devel-200309/msg01133.html">discussion
+at debian-devel</a></code>
+</p>
+
+<h2><a href="ch4.en.html#fr33" name="f33">33</a></h2>
+
+<p>
+So common, in fact, that they have been the basis of 20% of the reported
+security vulnerabilities every year, as determined by <code><a
+href="http://icat.nist.gov/icat.cfm?function=statistics">statistics from ICAT's
+vulnerability database</a></code>
+</p>
+
+<h2><a href="ch4.en.html#fr34" name="f34">34</a></h2>
+
+<p>
+In previous releases, checksecurity was integrated into cron and the file was
+<code>/etc/cron.daily/standard</code>
+</p>
+
+<h2><a href="ch4.en.html#fr35" name="f35">35</a></h2>
+
+<p>
+In Debian the <code>kernel-source-<var>version</var></code> packages copy the
+sources to <code>/usr/src/kernel-source-<var>version</var>.tar.bz2</code>, just
+substitute <var>version</var> to whatever kernel version sources you have
+installed
+</p>
+
+<h2><a href="ch4.en.html#fr36" name="f36">36</a></h2>
+
+<p>
+To reproduce this (example provided by Felix von Leitner on the Bugtraq mailing
+list):
+</p>
+
+<pre>
+        host a (eth0 connected to eth0 of host b):
+          ifconfig eth0 10.0.0.1
+          ifconfig eth1 23.0.0.1
+          tcpserver -RHl localhost 23.0.0.1 8000 echo fnord
+     
+        host b:
+          ifconfig eth0 10.0.0.2
+          route add 23.0.0.1 gw 10.0.0.1
+          telnet 23.0.0.1 8000
+</pre>
+
+<p>
+It seems, however, not to work with services bound to 127.0.0.1, you might need
+to write the tests using raw sockets.
+</p>
+
+<h2><a href="ch4.en.html#fr37" name="f37">37</a></h2>
+
+<p>
+The fact that this behavior can be changed through routing was described by
+Matthew G.  Marsh in the Bugtraq thread:
+</p>
+
+<pre>
+     eth0 = 1.1.1.1/24
+     eth1 = 2.2.2.2/24
+     
+     ip rule add from 1.1.1.1/32 dev lo table 1 prio 15000
+     ip rule add from 2.2.2.2/32 dev lo table 2 prio 16000
+     
+     ip route add default dev eth0 table 1
+     ip route add default dev eth1 table 2
+</pre>
+
+<h2><a href="ch4.en.html#fr38" name="f38">38</a></h2>
+
+<p>
+There are some patches available for this behavior as described in Bugtraq's
+thread at <code><a
+href="http://www.linuxvirtualserver.org/~julian/#hidden">http://www.linuxvirtualserver.org/~julian/#hidden</a></code>
+and <code><a
+href="http://www.fefe.de/linux-eth-forwarding.diff">http://www.fefe.de/linux-eth-forwarding.diff</a></code>.
+</p>
+
+<h2><a href="ch4.en.html#fr39" name="f39">39</a></h2>
+
+<p>
+An attacker might have many problems pulling the access through after
+configuring the IP-address binding if he is not on the same broadcast domain
+(same network) as the attacked host.  If the attack goes through a router it
+might be quite difficult for the answers to return somewhere.
+</p>
+
+<h2><a href="ch-sec-services.en.html#fr40" name="f40">40</a></h2>
+
+<p>
+Gdm will <em>not</em> append <samp>-nolisten tcp</samp> if it finds a
+<samp>-query</samp> or <samp>-indirect</samp> on the command line since the
+query wouldn't work.
+</p>
+
+<h2><a href="ch-sec-services.en.html#fr41" name="f41">41</a></h2>
+
+<p>
+To retrieve the list of mailer daemons available in Debian try:
+</p>
+
+<pre>
+     $ apt-cache search mail-transport-agent
+</pre>
+
+<p>
+The list will not include <code>qmail</code>, which is distributed only as
+source code in the <code>qmail-src</code> package.
+</p>
+
+<h2><a href="ch-sec-services.en.html#fr42" name="f42">42</a></h2>
+
+<p>
+A list of servers/daemons which support these protocols in Debian can be
+retrieved with:
+</p>
+
+<pre>
+     $ apt-cache search pop3-server
+     $ apt-cache search imap-server
+</pre>
+
+<h2><a href="ch-sec-services.en.html#fr43" name="f43">43</a></h2>
+
+<p>
+Note that depending on your bind version you might not have the <samp>-g</samp>
+option, most notably if you are using bind9 in sarge (9.2.4 version).
+</p>
+
+<h2><a href="ch-sec-services.en.html#fr44" name="f44">44</a></h2>
+
+<p>
+This setup has not been tested for new release of Bind yet.
+</p>
+
+<h2><a href="ch-sec-services.en.html#fr45" name="f45">45</a></h2>
+
+<p>
+Unless you use the <samp>instdir</samp> option when calling <code>dpkg</code>
+but then the chroot jail might be a little more complex.
+</p>
+
+<h2><a href="ch-sec-services.en.html#fr46" name="f46">46</a></h2>
+
+<p>
+It does try to run them under <em>minimum priviledge</em> which includes
+running daemons with their own users instead of having them run as root.
+</p>
+
+<h2><a href="ch-sec-services.en.html#fr47" name="f47">47</a></h2>
+
+<p>
+Available since the kernel version 2.4 (which was the default kernel in Debian
+3.0).  Previous kernel versions (2.2, available in even older Debian releases)
+used <code>ipchains</code>.  The main difference between <code>ipchains</code>
+and <code>iptables</code> is that the latter is based on <em>stateful packet
+inspection</em> which provides for more secure (and easier to build) filtering
+configurations.  Older (and now unsupported) Debian distributions using the 2.0
+kernel series needed the appropriate kernel patch.
+</p>
+
+<h2><a href="ch-sec-services.en.html#fr48" name="f48">48</a></h2>
+
+<p>
+Unlike personal firewalls in other operating systems, Debian GNU/Linux does not
+(yet) provide firewall generation interfaces that can make rules limiting them
+per process or user.  However, the iptables code can be configured to do this
+(see the owner module in the <code>iptables(8)</code> manpage).
+</p>
+
+<h2><a href="ch7.en.html#fr49" name="f49">49</a></h2>
+
+<p>
+Translations are available in up to ten different languages.
+</p>
+
+<h2><a href="ch7.en.html#fr50" name="f50">50</a></h2>
+
+<p>
+The full <code><a
+href="http://cve.mitre.org/compatible/phase2/SPI_Debian.html">capability
+questionnaire</a></code> is available at CVE
+</p>
+
+<h2><a href="ch7.en.html#fr51" name="f51">51</a></h2>
+
+<p>
+Some operating systems have already been plagued with automatic-updates
+problems such as the <code><a
+href="http://www.cunap.com/~hardingr/projects/osx/exploit.html">Mac OS X
+Software Update vulnerabity</a></code>.
+</p>
+
+<p>
+FIXME: probably the Internet Explorer vulnerability handling certificate chains
+has an impact on security updates on Microsoft Windows.
+</p>
+
+<h2><a href="ch7.en.html#fr52" name="f52">52</a></h2>
+
+<p>
+Older releases, such as Debian 3.1 <em>sarge</em> can use this feature by using
+backported versions of this package management tool
+</p>
+
+<h2><a href="ch7.en.html#fr53" name="f53">53</a></h2>
+
+<p>
+Until an automatic mechanism is developed.
+</p>
+
+<h2><a href="ch7.en.html#fr54" name="f54">54</a></h2>
+
+<p>
+Technically speaking, this is an ASCII-armored detached gpg signature.
+</p>
+
+<h2><a href="ch7.en.html#fr55" name="f55">55</a></h2>
+
+<p>
+Or has poisoned your DNS, or is spoofing the server, or has replaced the file
+in the mirror you are using, etc.
+</p>
+
+<h2><a href="ch7.en.html#fr56" name="f56">56</a></h2>
+
+<p>
+&quot;ziyi&quot; is the name of the tool used for signing on the Debian
+servers, the name is based on the name of a <code><a
+href="http://en.wikipedia.org/wiki/Zhang_Ziyi">Chinese actress</a></code>.
+</p>
+
+<h2><a href="ch7.en.html#fr57" name="f57">57</a></h2>
+
+<p>
+Not all apt repository keys are signed at all by another key.  Maybe the person
+setting up the repository doesn't have another key, or maybe they don't feel
+comfortable signing such a role key with their main key.  For information on
+setting up a key for a repository see <a
+href="#s-check-non-debian-releases">Release check of non Debian sources,
+Section 7.5.4</a>.
+</p>
+
+<h2><a href="ch7.en.html#fr58" name="f58">58</a></h2>
+
+<p>
+Either because you are using the stable, <em>sarge</em>, release or an older
+release or because you don't want to use the latest apt version, although we
+would really appreciate testing of it.
+</p>
+
+<h2><a href="ch-sec-tools.en.html#fr59" name="f59">59</a></h2>
+
+<p>
+Some of them are provided when installing the <code>harden-remoteaudit</code>
+package.
+</p>
+
+<h2><a href="ch-sec-tools.en.html#fr60" name="f60">60</a></h2>
+
+<p>
+If you use this last package and are running an official Debian, the database
+will not be updated with security updates.  You should either use
+<code>clamav-freshclam</code>, <code>clamav-getfiles</code> to generate new
+<code>clamav-data</code> packages or update from the maintainers location:
+</p>
+
+<pre>
+       deb http://people.debian.org/~zugschlus/clamav-data/ /
+       deb-src http://people.debian.org/~zugschlus/clamav-data/ /
+</pre>
+
+<h2><a href="ch-sec-tools.en.html#fr61" name="f61">61</a></h2>
+
+<p>
+Actually, there is an installer package for the <em>F-prot</em> antivirus,
+which is non-free but <em>gratis</em> for home users, called
+<code>f-prot-installer</code>.  This installer, however, just downloads
+<code><a href="http://www.f-prot.com/products/home_use/linux/">F-prot's
+software</a></code> and installs it in the system.
+</p>
+
+<h2><a href="ch-sec-tools.en.html#fr62" name="f62">62</a></h2>
+
+<p>
+For more examples of how to configure <code>gnupg</code> check
+<code>/usr/share/doc/mutt/examples/gpg.rc</code>.
+</p>
+
+<h2><a href="ch9.en.html#fr63" name="f63">63</a></h2>
+
+<p>
+Some relevant threads discussing these drawbacks include <code><a
+href="http://lists.debian.org/debian-mentors/2004/10/msg00338.html">http://lists.debian.org/debian-mentors/2004/10/msg00338.html</a></code>
+and <code><a
+href="http://lists.debian.org/debian-devel/2004/05/msg01156.html">http://lists.debian.org/debian-devel/2004/05/msg01156.html</a></code>
+</p>
+
+<h2><a href="ch9.en.html#fr64" name="f64">64</a></h2>
+
+<p>
+This might eventually be introduced as a <code>dh_adduser</code> in debhelper.
+See <code><a href="http://bugs.debian.org/81697">#81967</a></code>, <code><a
+href="http://bugs.debian.org/291177">#291177</a></code> and <code><a
+href="http://bugs.debian.org/118787">#118787</a></code>.
+</p>
+
+<h2><a href="ch9.en.html#fr65" name="f65">65</a></h2>
+
+<p>
+You can even provide a SELinux policy for it
+</p>
+
+<h2><a href="ch10.en.html#fr66" name="f66">66</a></h2>
+
+<p>
+You may also want to use the <samp>--quiet</samp> (<samp>-q</samp>) option to
+reduce the output of <code>apt-get</code>, which will stop the generation of
+any output if no packages are installed.
+</p>
+
+<h2><a href="ch10.en.html#fr67" name="f67">67</a></h2>
+
+<p>
+Note that some packages might <em>not</em> use <code>debconf</code> and updates
+will stall due to packages asking for user input during configuration.
+</p>
+
+<h2><a href="ch10.en.html#fr68" name="f68">68</a></h2>
+
+<p>
+This is a common issue since many users want to maintain a stable system while
+updating some packages to <em>unstable</em> to gain the latest functionality.
+This need arises due to some projects evolving faster than the time between
+Debian's <em>stable</em> releases.
+</p>
+
+<h2><a href="ch10.en.html#fr69" name="f69">69</a></h2>
+
+<p>
+An easy way to do this is using a Live CD, such as <code><a
+href="http://www.knoppix-std.org/">Knoppix Std</a></code> which includes both
+the file integrity tools and the integrity database for your system.
+</p>
+
+<h2><a href="ch10.en.html#fr70" name="f70">70</a></h2>
+
+<p>
+There are over 28 capabilities including: <samp>CAP_BSET</samp>,
+<samp>CAP_CHOWN</samp>, <samp>CAP_FOWNER</samp>, <samp>CAP_FSETID</samp>,
+<samp>CAP_FS_MASK</samp>, <samp>CAP_FULL_SET</samp>,
+<samp>CAP_INIT_EFF_SET</samp>, <samp>CAP_INIT_INH_SET</samp>,
+<samp>CAP_IPC_LOCK</samp>, <samp>CAP_IPC_OWNER</samp>, <samp>CAP_KILL</samp>,
+<samp>CAP_LEASE</samp>, <samp>CAP_LINUX_IMMUTABLE</samp>,
+<samp>CAP_MKNOD</samp>, <samp>CAP_NET_ADMIN</samp>,
+<samp>CAP_NET_BIND_SERVICE</samp>, <samp>CAP_NET_RAW</samp>,
+<samp>CAP_SETGID</samp>, <samp>CAP_SETPCAP</samp>, <samp>CAP_SETUID</samp>,
+<samp>CAP_SYS_ADMIN</samp>, <samp>CAP_SYS_BOOT</samp>,
+<samp>CAP_SYS_CHROOT</samp>, <samp>CAP_SYS_MODULE</samp>,
+<samp>CAP_SYS_NICE</samp>, <samp>CAP_SYS_PACCT</samp>,
+<samp>CAP_SYS_PTRACE</samp>, <samp>CAP_SYS_RAWIO</samp>,
+<samp>CAP_SYS_RESOURCE</samp>, <samp>CAP_SYS_TIME</samp>, and
+<samp>CAP_SYS_TTY_CONFIG</samp>.  All of them can be de-activated to harden
+your kernel.
+</p>
+
+<h2><a href="ch10.en.html#fr71" name="f71">71</a></h2>
+
+<p>
+You don't need to install <code>lcap</code> to do this, but it's easier than
+setting <code>/proc/sys/kernel/cap-bound</code> by hand.
+</p>
+
+<h2><a href="ch10.en.html#fr72" name="f72">72</a></h2>
+
+<p>
+You will typically use a bridge firewall so that the firewall itself is not
+detectable, see <a href="ap-bridge-fw.en.html">Setting up a bridge firewall,
+Appendix D</a>.
+</p>
+
+<h2><a href="ch-after-compromise.en.html#fr73" name="f73">73</a></h2>
+
+<p>
+If you are adventurous, you can login to the system and save information on all
+running processes (you'll get a lot from /proc/nnn/).  It is possible to get
+the whole executable code from memory, even if the attacker has deleted the
+executable files from disk.  Then pull the power cord.
+</p>
+
+<h2><a href="ch-after-compromise.en.html#fr74" name="f74">74</a></h2>
+
+<p>
+In fact, this is the tool used to build the CD-ROMs for the <code><a
+href="http://www.gibraltar.at/">Gibraltar</a></code> project (a firewall on a
+live CD-ROM based on the Debian distribution).
+</p>
+
+<h2><a href="ch-after-compromise.en.html#fr75" name="f75">75</a></h2>
+
+<p>
+This is a list of some CERTs, for a full list look at the <code><a
+href="http://www.first.org/about/organization/teams/index.html">FIRST Member
+Team information</a></code> (FIRST is the Forum of Incident Response and
+Security Teams): <code><a href="http://www.auscert.org.au">AusCERT</a></code>
+(Australia), <code><a href="http://www.unam-cert.unam.mx/">UNAM-CERT</a></code>
+(Mexico) <code><a href="http://www.cert.funet.fi">CERT-Funet</a></code>
+(Finland), <code><a href="http://www.dfn-cert.de">DFN-CERT</a></code>
+(Germany), <code><a href="http://cert.uni-stuttgart.de/">RUS-CERT</a></code>
+(Germany), <code><a href="http://security.dico.unimi.it/">CERT-IT</a></code>
+(Italy), <code><a href="http://www.jpcert.or.jp/">JPCERT/CC</a></code> (Japan),
+<code><a href="http://cert.uninett.no">UNINETT CERT</a></code> (Norway),
+<code><a href="http://www.cert.hr">HR-CERT</a></code> (Croatia) <code><a
+href="http://www.cert.pl">CERT Polskay</a></code> (Poland), <code><a
+href="http://www.cert.ru">RU-CERT</a></code> (Russia), <code><a
+href="http://www.arnes.si/si-cert/">SI-CERT</a></code> (Slovenia) <code><a
+href="http://www.rediris.es/cert/">IRIS-CERT</a></code> (Spain), <code><a
+href="http://www.switch.ch/cert/">SWITCH-CERT</a></code> (Switzerland),
+<code><a href="http://www.cert.org.tw">TWCERT/CC</a></code> (Taiwan), and
+<code><a href="http://www.cert.org">CERT/CC</a></code> (US).
+</p>
+
+<h2><a href="ch-after-compromise.en.html#fr76" name="f76">76</a></h2>
+
+<p>
+Be <em>very</em> careful if using chroots, since if the binary uses a
+kernel-level exploit to increase its privileges it might still be able to
+infect your system
+</p>
+
+<h2><a href="ch12.en.html#fr77" name="f77">77</a></h2>
+
+<p>
+For example, based on some data, it might seem that Windows NT is more secure
+than Linux, which is a questionable assertion.  After all, Linux distributions
+usually provide many more applications compared to Microsoft's Windows NT.
+This <em>counting vulnerabilities</em> issues are better described in <code><a
+href="http://www.dwheeler.com/oss_fs_why.html#security">Why Open Source
+Software / Free Software (OSS/FS)?  Look at the Numbers!</a></code> by David A.
+Wheeler
+</p>
+
+<h2><a href="ch12.en.html#fr78" name="f78">78</a></h2>
+
+<p>
+Without diminishing the fact that some distributions, such as Red Hat or
+Mandrake, are also taking into account security in their standard installations
+by having the user select <em>security profiles</em>, or using wizards to help
+with configuration of <em>personal firewalls</em>.
+</p>
+
+<h2><a href="ch12.en.html#fr79" name="f79">79</a></h2>
+
+<p>
+Note that this is 'security by obscurity', and will probably not be worth the
+effort in the long term.
+</p>
+
+<h2><a href="ch12.en.html#fr80" name="f80">80</a></h2>
+
+<p>
+Be careful, as this will traverse your whole system.  If you have a lot of disk
+and partitions you might want to reduce it in scope.
+</p>
+
+<h2><a href="ch12.en.html#fr81" name="f81">81</a></h2>
+
+<p>
+There has been a declassification decision, voted in <code><a
+href="http://www.debian.org/vote/2005/vote_002">GR-2005-002</a></code>, that
+might make some posts available in the future, however.
+</p>
+
+<h2><a href="ap-snort-box.en.html#fr82" name="f82">82</a></h2>
+
+<p>
+Typically the needed packages will be installed through the dependencies
+</p>
+
+<h2><a href="ap-snort-box.en.html#fr83" name="f83">83</a></h2>
+
+<p>
+It can also be downloaded from <code><a
+href="http://www.cert.org/kb/acid/">http://www.cert.org/kb/acid/</a></code>,
+<code><a
+href="http://acidlab.sourceforge.net">http://acidlab.sourceforge.net</a></code>
+or <code><a
+href="http://www.andrew.cmu.edu/~rdanyliw/snort/">http://www.andrew.cmu.edu/~rdanyliw/snort/</a></code>.
+</p>
+
+<h2><a href="ap-bind-chuser.en.html#fr84" name="f84">84</a></h2>
+
+<hr>
+
+<p>
+Since version 9.2.1-5.  That is, since Debian release <em>sarge</em>.
+</p>
+
+<h2><a href="ap-fw-security-update.en.html#fr85" name="f85">85</a></h2>
+
+<p>
+Such as <em>knockd</em>.  Alternatively, you can open a different console and
+have the system ask for confirmation that there is somebody on the other side,
+and reset the firewall chain if no confirmation is given.  The following test
+script could be of use:
+</p>
+
+<pre>
+     #!/bin/bash
+     
+     while true; do
+         read -n 1 -p &quot;Are you there? &quot; -t 30 ayt
+         if [ -z &quot;$ayt&quot; ] ; then
+             break
+         fi
+     done
+     
+     # Reset the firewall chain, user is not available
+     echo
+     echo &quot;Resetting firewall chain!&quot;
+     iptables -F
+     iptables -P INPUT ACCEPT
+     iptables -P FORWARD ACCEPT
+     iptables -P OUTPUT ACCEPT
+     exit 1
+</pre>
+
+<p>
+Of course, you should disable any backdoors before getting the system into
+production.
+</p>
+
+<h2><a href="ap-chroot-ssh-env.en.html#fr86" name="f86">86</a></h2>
+
+<p>
+You can use the <em>debug</em> option to have it send the progress of the
+module to the <em>authpriv.notice</em> facility
+</p>
+
+<h2><a href="ap-chroot-ssh-env.en.html#fr87" name="f87">87</a></h2>
+
+<p>
+You can create a very limited bash environment with the following python
+definition for makejail, just create the directory
+<code>/var/chroots/users/foo</code> and a file with the following contents and
+call it <code>bash.py</code>:
+</p>
+
+<pre>
+     chroot=&quot;/var/chroots/users/foo&quot;
+     cleanJailFirst=1
+     testCommandsInsideJail=[&quot;bash ls&quot;]
+</pre>
+
+<p>
+And then run <em>makejail bash.py</em> to create the user environment at
+<code>/var/chroots/users/foo</code>.  To test the environment run:
+</p>
+
+<pre>
+     # chroot /var/chroots/users/foo/ ls
+     bin  dev  etc  lib  proc  sbin  usr
+</pre>
+
+<h2><a href="ap-chroot-ssh-env.en.html#fr88" name="f88">88</a></h2>
+
+<p>
+In some occasions you might need the <code>/dev/ptmx</code> and
+<code>/dev/pty*</code> devices and the <code>/dev/pts/</code> subdirectory.
+Running MAKEDEV in the <code>/dev</code> directory of the chrooted environment
+should be sufficient to create them if they do not exist.  If you are using
+kernels (version 2.6) which dynamically create device files you will need to
+create the /dev/pts/ files yourself and grant them the proper privileges.
+</p>
+
+<h2><a href="ap-chroot-ssh-env.en.html#fr89" name="f89">89</a></h2>
+
+<p>
+If you are using a kernel that implements Mandatory Access Control
+(RSBAC/SElinux) you can avoid changing this configuration just by granting the
+<em>sshd</em> user privileges to make the chroot() system call.
+</p>
+
+<h2><a href="ap-chroot-ssh-env.en.html#fr90" name="f90">90</a></h2>
+
+<p>
+Notice that there are no SETUID files.  This makes it more difficult for remote
+users to escape the <code>chroot</code> environment.  However, it also prevents
+users from changing their passwords, since the <code>passwd</code> program
+cannot modify the files <code>/etc/passwd</code> or <code>/etc/shadow</code>.
+</p>
+
+<hr>
+
+<p>
+Securing Debian Manual
+</p>
+
+<address>
+Version: 3.13, Sun, 08 Apr 2012 02:48:09 +0000<br>
+<br>
+Javier Fern&aacute;ndez-Sanguino Pe&ntilde;a <code><a href="mailto:jfs@debian.org">jfs@debian.org</a></code><br>
+<a href="ch1.en.html#s-authors">Authors, Section 1.1</a><br>
+<br>
+</address>
+<hr>
+
+</body>
+
+</html>
+

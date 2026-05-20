@@ -1,0 +1,402 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/ipsec.secrets file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FreeS/WAN VPN"
+HREF="fSWAn.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/ipsec.conf file"
+HREF="chap25sec203e.html"><LINK
+REL="NEXT"
+TITLE="Configure RSA private keys secrets"
+HREF="chap25sec205.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap25sec203e.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 25. Linux FreeS/WAN VPN</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap25sec205.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN14954"
+>25.7. The <TT
+CLASS="filename"
+>/etc/ipsec.secrets</TT
+> file</A
+></H1
+><P
+>&#13;The file <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> stores the secrets used by the pluto daemon to authenticate communication between both gateways. Two different kinds of secrets can be configured in this file, which 
+are preshared secrets and <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private keys. You must check the modes and permissions of this file to be sure that the super-user <TT
+CLASS="literal"
+>root</TT
+> owns the file, and its permissions are set to block all 
+access by others.
+ </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;An example secret is supplied in the <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> file by default. You should change it by creating your own. With automatic keying you may have a shared secret up to 256 bits, which is 
+then used during the key exchanges to make sure a man in the middle attack does not occur.
+To create a new shared secret, use the following commands:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>ipsec</B
+> ranbits 256  &#62; temp
+</PRE
+></TD
+></TR
+></TABLE
+>
+New, random keys are created with the ranbits(8) utility in the file named <TT
+CLASS="filename"
+>temp.</TT
+> The ranbits utility may pause for a few seconds if not enough entropy is available immediately.
+<DIV
+CLASS="caution"
+><P
+></P
+><TABLE
+CLASS="caution"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Caution.gif"
+ALT="Caution"
+></IMG
+></SPAN
+></B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>&#13;Dont forget to delete the temporary file as soon as you are done with it.
+</P
+></TD
+></TR
+></TABLE
+></DIV
+>
+</P
+></LI
+><LI
+><P
+>&#13;Now that our new shared secret key has been created in the <TT
+CLASS="filename"
+>temp</TT
+> file, we must put it in the <TT
+CLASS="filename"
+>/etc/ipsec.secrets</TT
+> file. When editing the <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> 
+file, you should see something like the following appearing in your text editor. Each line has the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses of the two gateways plus the secret. It should look something like this:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;# This file holds shared secrets which are currently the only inter-Pluto
+# authentication mechanism.  See ipsec_pluto(8) manpage.  Each secret is
+# (oversimplifying slightly) for one pair of negotiating hosts.
+
+# The shared secrets are arbitrary character strings and should be both
+# long and hard to guess.
+
+# Note that all secrets must now be enclosed in quotes, even if they have
+# no white space inside them.
+
+10.0.0.1 11.0.0.1         "jxVS1kVUTTulkVRRTnTujSm444jRuU1mlkklku2nkW3nnVu
+V2WjjRRnulmlkmU1Run5VSnnRT"
+
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;Edit the ipsec.secrets file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/ipsec.secrets</TT
+> and change the default secrets keys:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;10.0.0.1 11.0.0.1  " jxVS1kVUTTulkVRRTnTujSm444jRuU1mlkklku2nkW3nnVu
+V2WjjRRnulmlkmU1Run5VSnnRT "
+</PRE
+></TD
+></TR
+></TABLE
+>
+To read:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;208.164.186.1 208.164.186.2 "0x9748cc31_2e99194f_d230589b_cd846b57_dc070b01_74b66f34_19c40a1a_804906ed"
+</PRE
+></TD
+></TR
+></TABLE
+>
+
+Where <TT
+CLASS="literal"
+>208.164.186.1</TT
+> and <TT
+CLASS="literal"
+>208.164.186.2</TT
+> are the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses of the two gateways and <TT
+CLASS="literal"
+>"0x9748cc31_2e99194f_d230589b_cd846b57_dc070b01_74b66f34_19c40a1a_804906ed"</TT
+> 
+<EM
+>note that the quotes are required</EM
+> is the shared secret we have generated above with the command <TT
+CLASS="userinput"
+><B
+>ipsec ranbits 256 &#62; temp</B
+></TT
+> in the <TT
+CLASS="filename"
+>temp</TT
+> file.
+</P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;The files <TT
+CLASS="filename"
+>ipsec.conf</TT
+> and <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> must be copied to the second gateway machine so as to be identical on both ends. The only exception to this is the <TT
+CLASS="filename"
+>ipsec.conf</TT
+> file, which 
+must have in it a section labeled by the line config setup with the correct interface settings for the second gateway, if they differ from the first. The <TT
+CLASS="filename"
+>ipsec.secrets</TT
+> file, contrary to the <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private key, 
+should absolutely have the same-shared secrets on the two gateways.
+</P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+The file <TT
+CLASS="filename"
+>/etc/ipsec.secrets</TT
+> should have permissions <TT
+CLASS="literal"
+>rw------- </TT
+>(600) and be owned by the super-user <TT
+CLASS="literal"
+>root.</TT
+> The file <TT
+CLASS="filename"
+>/etc/ipsec.conf</TT
+> is installed 
+with permissions <TT
+CLASS="filename"
+>rw-r--r</TT
+> (644) and must be owned also by <TT
+CLASS="literal"
+>root.</TT
+>
+</P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap25sec203e.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap25sec205.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/ipsec.conf</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="fSWAn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private keys secrets</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

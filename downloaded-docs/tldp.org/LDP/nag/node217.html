@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Hostname Qualification</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node218.html">Sendmail+IDA</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node216.html">SMTP-based Transports</A>
+<BR> <P>
+<H1><A NAME="SECTION00161100000">Hostname Qualification</A></H1>
+<A NAME="smailqualify"></A>
+Sometimes it is desirable to catch unqualified hostnames (i.e. those
+that don't have a domain name) specified in sender or recipient
+addresses, for example when gatewaying between two networks, where one
+requires fully qualified domain names.  On an Internet-UUCP relay,
+unqualified hostnames should be mapped to the uucp domain by
+default.  Other address modifications than these are questionable.
+<P>
+The /usr/lib/smail/qualify file tells smail which domain names
+to tack onto which hostnames.  Entries in the qualify file
+consists of a hostname beginning in column one, followed by domain name.
+Lines containing a hash sign as its first non-white character are
+considered comments.  Entries are searched in the order they appear in.
+<P>
+If no qualify file exists, no hostname qualification is performed
+at all.
+<P>
+A special hostname of * matches any hostnames, thus enabling you
+to map all hosts not mentioned before into a default domain. It should
+be used only as the last entry.
+<P>
+At the Virtual Brewery, all hosts have been set up to use fully
+qualified domain names in the sender's addresses. Unqualified recipient
+addresses are considered to be in the uucp domain, so only a
+single entry in the qualify file is needed.
+<PRE>
+           # /usr/lib/smail/qualify, last changed Feb 12, 1994 by janet
+           #
+           *            uucp
+</PRE>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

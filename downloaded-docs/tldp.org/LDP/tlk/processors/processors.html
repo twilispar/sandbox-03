@@ -1,0 +1,115 @@
+<HTML>
+<center>
+<A HREF="../tlk-toc.html"> Table of Contents</A>, 
+<A href="../tlk.html" target="_top"> Show Frames</A>, 
+<A href="../processors/processors.html" target="_top"> No Frames</A> 
+</center>
+<hr>
+<META NAME="TtH" CONTENT="1.03">                                          
+
+<p>
+                  <H1><A NAME="tth_chAp13">Chapter 13     <br>Processors</H1>
+<img src="../logos/sit3-bw-tran.1.gif"><br>
+<p>
+<A NAME="processors-chapter"></A> <tt><b></tt></b> 
+Linux runs on a number of processors; this chapter gives a brief outline
+of each of them.
+
+<p>
+
+<H2><A NAME="tth_sEc13.1">13.1&nbsp;</A> X86</H2>
+
+<p>
+TBD
+
+<p>
+
+<H2><A NAME="tth_sEc13.2">13.2&nbsp;</A> ARM</H2>
+
+<p>
+The ARM processor implements a low power, high performance 32 bit RISC architecture.
+It is being widely used in embedded devices such as mobile phones and PDAs (Personal
+Data Assistants).
+It has 31 32 bit registers with 16 visible in any mode.
+Its instructions are simple load and store instructions (load a value from memory,
+perform an operation and store the result back into memory).
+One interesting feature it has is that every instruction is conditional.
+For example, you can test the value of a register and, until you next test for
+the same condition, you can conditionally execute instructions as and when you like.
+Another interesting feature is that you can perform arithmetic and shift operations
+on values as you load them.
+It operates in several modes, including a system mode that can be entered from user mode
+via a SWI (software interrupt).
+
+<p>
+It is a synthasisable core and ARM (the company) does not itself manufacture
+processors.  Instead the ARM partners (companies such as Intel or LSI for 
+example) implement the ARM architecture in silicon.
+It allows other processors to be tightly coupled via a co-processor interface and
+it has several memory management unit variations.  These range from simple memory
+protection schemes to complex page hierarchies.
+
+<p>
+
+<H2><A NAME="tth_sEc13.3">13.3&nbsp;</A> Alpha AXP Processor</H2>
+
+<p>
+The Alpha AXP&nbsp;architecture  is a 64-bit load/store RISC architecture designed
+with speed in mind.
+All registers are 64 bits in length; 32 integer registers and 32 floating
+point registers.  Integer register 31 and floating point register 31 are 
+used for null operations.  A read from them generates a zero value and
+a write to them has no effect.
+All instructions are 32 bits long and memory operations are either reads
+or writes.
+The architecture allows different implementations so long as the 
+implementations follow the architecture.
+
+<p>
+There are no instructions that operate directly on values stored in
+memory; all data manipulation is done between registers.
+So, if you want to increment a counter in memory, you first read it
+into a register, then modify it and write it out.
+The instructions only interact with each other by one instruction 
+writing to a register or memory location and another register reading
+that register or memory location.
+One interesting feature of Alpha AXP&nbsp;is that there are instructions 
+that can generate flags, such as testing if two registers are equal,
+the result is not stored in a processor status register, but is instead
+stored in a third register.
+This may seem strange at first, but removing this dependency from 
+a status register means that it is much easier to build a CPU which
+can issue multiple instructions every cycle.
+Instructions on unrelated registers do not have to wait for each other
+to execute as they would if there were a single status register.
+The lack of direct operations on memory and the large number of registers
+also help issue multiple instructions. 
+
+<p>
+The Alpha AXP&nbsp;architecture uses a set of subroutines, called privileged
+architecture library code (PALcode).
+PALcode is specific to the operating system, the CPU implementation
+of the Alpha AXP&nbsp;architecture and to the system hardware.
+These subroutines provide operating system primitives  for context
+switching, interrupts, exceptions and memory management.
+These subroutines can be invoked by hardware or by CALL_PAL 
+instructions.
+PALcode is written in standard Alpha AXP&nbsp;assembler with some 
+implementation specific extensions to provide direct access to low
+level hardware functions, for example internal processor registers.
+PALcode is executed in PALmode, a privileged mode that stops some
+system events happening and allows the PALcode complete control of
+the physical system hardware.
+
+<p>
+
+<p><hr><small>File translated from T<sub><font size=-1>E</font></sub>X by <a href="http://hutchinson.belmont.ma.us/tth/tth.html">T<sub><font size=-1>T</font></sub>H</a>, version 1.0.</small>
+<hr>
+<center>
+<A HREF="../processors/processors.html"> Top of Chapter</A>, 
+<A HREF="../tlk-toc.html"> Table of Contents</A>, 
+<A href="../tlk.html" target="_top"> Show Frames</A>, 
+<A href="../processors/processors.html" target="_top"> No Frames</A><br> 
+© 1996-1999 David A Rusling <A HREF="../misc/copyright.html">copyright notice</a>.
+</center>
+</HTML>

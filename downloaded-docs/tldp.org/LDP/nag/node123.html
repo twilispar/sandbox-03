@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Configuring a PPP Server</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node124.html">Various Network Applications</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node122.html">The PAP Secrets File</A>
+<BR> <P>
+<H1><A NAME="SECTION00101100000">Configuring a PPP Server</A></H1>
+<A NAME="4506"></A>
+Running pppd as a server is just a matter of adding the appropriate
+options to the command line.  Ideally, you would create a special account,
+say ppp, and give it a script or program as login shell that invokes
+pppd with these options. For instance, you would add the following
+line to /etc/passwd:
+<Pre>
+           ppp:*:500:200:Public PPP Account:/tmp:/etc/ppp/ppplogin
+</Pre>
+Of course, you may want to use different uids and gids than those shown
+above. You would also have to set the password for the above account
+using the passwd command.
+<P>
+The ppplogin script might then look like this:
+<Pre>
+           #!/bin/sh
+           # ppplogin - script to fire up pppd on login
+           mesg n
+           stty -echo
+           exec pppd -detach silent modem crtscts
+</pre>
+
+The mesg command disables other users to write to the tty
+using, for instance, the write command. The stty command
+turns off character echoing. The is necessary, because otherwise
+everything the peer sends would be echoed back to it.  The most
+important pppd option given above is -detach, because
+it prevents pppd drom detaching from the controlling tty.  If
+we didn't specify this option, it would go to the background, making
+the shell script exit. This would in turn would cause the serial line
+to be hung up and the connection to be dropped.  The silent
+option causes pppd to wait until it receives a packet from the
+calling system before it starts sending. This prevents transmit
+timeouts to occur when the calling system is slow in firing up its PPP
+client.  The modem makes pppd watch the DTR line to
+see if the peer has dropped the connection, and crtscts turns
+on hardware handshake.
+<P>
+Beside these options, you might want to force some sort of authentication,
+for example by specifying auth on pppd's command line, or
+in the global options file.  The manual page also discusses more specific
+options for turning individual authentication protocols on and off.
+<A NAME="4553"></A>
+<A NAME="4531"></A>
+<A NAME="4532"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node124.html">Various Network Applications</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node122.html">The PAP Secrets File</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

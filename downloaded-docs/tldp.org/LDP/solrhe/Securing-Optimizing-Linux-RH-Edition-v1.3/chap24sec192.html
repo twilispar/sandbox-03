@@ -1,0 +1,733 @@
+<HTML
+><HEAD
+><TITLE
+>Compile and Optimize</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking/Encryption"
+HREF="netencrypt.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux OPENSSL Server"
+HREF="opssl.html"><LINK
+REL="NEXT"
+TITLE="Configure OpenSSL to optimise"
+HREF="chap24sec193.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="opssl.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 24. Software -Networking/Encryption</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap24sec193.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN13648"
+>24.2. Compile and Optimize</A
+></H1
+><P
+>&#13;         Move into the new Openssl directory and type the following commands on your terminal:
+         </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;         Edit the <TT
+CLASS="filename"
+>c_rehash</TT
+> file, <B
+CLASS="command"
+>vi</B
+> +11 <TT
+CLASS="filename"
+>tools/c_rehash</TT
+> and change the line:
+
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         DIR=/usr/local/ssl
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         DIR=/usr
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The changed line above will build and install OpenSSL in the default location <TT
+CLASS="filename"
+>/usr</TT
+>.
+         </P
+></LI
+><LI
+><P
+>&#13;         By default, OpenSSL source files suppose that your Perl program directory is located under the <TT
+CLASS="filename"
+>/usr/local/bin/perl</TT
+> directory. We must modify the <SPAN
+CLASS="markup"
+>#!/usr/local/bin/perl</SPAN
+> line 
+         in all scripts that rely on perl to reflect our Perl directory under Red Hat Linux to be <TT
+CLASS="filename"
+>/usr/bin</TT
+>.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>perl</B
+> util/perlpath.pl /usr/bin <A
+NAME="prssl"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap24sec192.html#prssl"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;         where your perl program reside.
+         </DD
+></DL
+></DIV
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         OpenSSL must know where to find the necessary OpenSSL source libraries to compile successfully its required files. With the command below, we set the <TT
+CLASS="literal"
+>PATH</TT
+> environment variable to the default directory where we 
+         have uncompressed the OpenSSL source files.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>export</B
+> LD_LIBRARY_PATH=`pwd`
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Now, we must configure OpenSSL for our system:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         CC="egcs" \
+         ./Configure linux-elf -DSSL_FORBID_ENULL \ <A
+NAME="dsfrd"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+         --prefix=/usr  \
+         --openssldir=/etc/ssl
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap24sec192.html#dsfrd"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;         The <TT
+CLASS="envar"
+>-DSSL_FORBID_ENULL</TT
+> option is required for not allowing null encryption for security reasons.
+         </DD
+></DL
+></DIV
+>
+         </P
+></LI
+><LI
+><P
+>         
+         Edit the Makefile.ssl file  and change the following line:
+         </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;         <B
+CLASS="command"
+>vi</B
+> +50 <TT
+CLASS="filename"
+>Makefile.ssl</TT
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         CC= gcc
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         CC= egcs
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Edit with <B
+CLASS="command"
+>vi</B
+> +52 <TT
+CLASS="filename"
+>Makefile.ssl</TT
+> and add/change the following line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         CFLAG= -DTHREADS -D_REENTRANT -DSSL_FORBID_ENULL -DL_ENDIAN -DTERMIO -O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions -Wall -DSHA1_ASM -DMD5_ASM -DRMD160_ASM
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Edit with <B
+CLASS="command"
+>vi</B
+> +79 <TT
+CLASS="filename"
+>Makefile.ssl</TT
+> and add the following value for a Pentium Pro processor:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         PROCESSOR=  686
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         The three modifications we made above will set the optimization flag for compilation of OpenSSL software on the server. For the last modification <TT
+CLASS="envar"
+>PROCESSOR=</TT
+> above, if you use 
+         <TT
+CLASS="literal"
+>586</TT
+> to denote a Pentium, use <TT
+CLASS="literal"
+>686</TT
+> to denote Pro/II/III, use <TT
+CLASS="literal"
+>486</TT
+> to denote a 486, depending on the type of processor you have. 
+         </P
+></BLOCKQUOTE
+></DIV
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Edit with <B
+CLASS="command"
+>vi</B
+> +161 <TT
+CLASS="filename"
+>Makefile.ssl</TT
+> and change the following line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         MANDIR=$(OPENSSLDIR)/man
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         MANDIR=/usr/man
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         This step is necessary to set the directory for where the man pages of OpenSSL will be installed. With this modification, we install them under <TT
+CLASS="filename"
+>/usr/man</TT
+> directory.
+         </P
+></LI
+></OL
+></LI
+></OL
+></DIV
+><P
+>&#13;           Now we must compile and install OpenSSL on the server:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>make</B
+> -f  Makefile
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>make</B
+> test
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>make</B
+> install
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>mv</B
+> /etc/ssl/misc/*  /usr/bin/
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>rm</B
+> -rf  /etc/ssl/misc/
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>rm</B
+> -rf  /etc/ssl/lib/
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>rm</B
+> -f   /usr/bin/CA.pl
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>rm</B
+> -f   /usr/bin/CA.sh
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>install</B
+> -m 644 libRSAglue.a  /usr/lib/
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>install</B
+> -m 644 rsaref/rsaref.h  /usr/include/openssl/
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>strip</B
+> /usr/bin/openssl
+             [root@deep ]/openssl-0.9.5a# <B
+CLASS="command"
+>mkdir</B
+> -p /etc/ssl/crl
+           </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         <P
+></P
+><UL
+><LI
+><P
+>&#13;           The <B
+CLASS="command"
+>make</B
+> -f  command will build the OpenSSL libraries, <TT
+CLASS="filename"
+>libcrypto.a</TT
+> and <TT
+CLASS="filename"
+>libssl.a</TT
+> and the OpenSSL binary openssl. The libraries 
+           will be built in the top-level directory, and the binary will be in the <TT
+CLASS="filename"
+>apps</TT
+> directory.
+         </P
+></LI
+><LI
+><P
+>&#13;         After a successful build, the <B
+CLASS="command"
+>make test</B
+> will test the libraries and finally the <B
+CLASS="command"
+>make install</B
+> will create the installation directory and <B
+CLASS="command"
+>install</B
+> OpenSSL.
+         </P
+></LI
+><LI
+><P
+>&#13;         The <B
+CLASS="command"
+>mv</B
+> command will move all files under the <TT
+CLASS="filename"
+>/etc/ssl/misc/</TT
+> directory to the <TT
+CLASS="filename"
+>/usr/bin/</TT
+> directory. These 
+         files are binary and must be located under <TT
+CLASS="filename"
+>/usr/bin/</TT
+> since in our system, all binary files are keep in this directory. Also putting these files in the <TT
+CLASS="filename"
+>/usr/bin/</TT
+> 
+         directory will keep them in our <TT
+CLASS="literal"
+>PATH</TT
+> environment variable.
+         </P
+></LI
+><LI
+><P
+>&#13;         The <B
+CLASS="command"
+>rm</B
+> command will remove the <TT
+CLASS="filename"
+>/etc/ssl/misc/</TT
+> and <TT
+CLASS="filename"
+>/etc/ssl/lib/</TT
+> directories from our system, since files that were in these directories are 
+         now located in other places. Also, it will remove the <TT
+CLASS="filename"
+>CA.pl</TT
+> and <TT
+CLASS="filename"
+>CA.sh</TT
+> files, that are small scripts used to create your own CA certificates. Those scripts related to <B
+CLASS="command"
+>openssl ca</B
+> 
+         commands has some strange requirements,  and the default OpenSSL config doesn't allow one easily to use <B
+CLASS="command"
+>openssl ca</B
+> directly. So we'll create the <TT
+CLASS="filename"
+>sign.sh</TT
+> script program later to replace them.
+         </P
+></LI
+></UL
+>
+         </P
+><DIV
+CLASS="caution"
+><P
+></P
+><TABLE
+CLASS="caution"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Caution.gif"
+ALT="Caution"
+></IMG
+></SPAN
+></B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>&#13;           The <TT
+CLASS="literal"
+>bc-1.05a-4.i386.rpm</TT
+> package or higher must be already installed on your Linux server or you'll receive an error message during the library test of OpenSSL.
+         </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>&#13;           Please don't forget to cleanup later:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+             [root@deep tmp]# <B
+CLASS="command"
+>rm</B
+>  -rf openssl-version/ openssl-version.tar.gz
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           The <B
+CLASS="command"
+>rm</B
+> command will remove all the source files we have used to compile and install OpenSSL. It will also remove the OpenSSL compressed archive from th<TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="opssl.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap24sec193.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux OPENSSL Server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netencrypt.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure OpenSSL to optimise</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

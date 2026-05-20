@@ -1,0 +1,355 @@
+<HTML
+><HEAD
+><TITLE
+>Kernel configuration -Part "E"</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Configuring and Building a Secure, Optimized Kernel"
+HREF="secopt-kernel.html"><LINK
+REL="PREVIOUS"
+TITLE='Kernel configuration -Part "D"'
+HREF="chap7sec83.html"><LINK
+REL="NEXT"
+TITLE="Installing the new kernel"
+HREF="chap7sec85.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap7sec83.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. Configuring and Building a Secure, Optimized Kernel</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap7sec85.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN5590"
+>7.9. Kernel configuration -Part "E"</A
+></H1
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Security options. </B
+><EM
+>&#13;             Security options will appear only if you have patched your kernel with the Openwall Project patch.
+             </EM
+>             
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>                  
+               Non-executable user stack area (CONFIG_SECURE_STACK) <TT
+CLASS="userinput"
+><B
+>Y</B
+></TT
+>
+               Autodetect and emulate GCC trampolines (CONFIG_SECURE_STACK_SMART) <TT
+CLASS="userinput"
+><B
+>Y</B
+></TT
+>
+               Restricted links in /tmp (CONFIG_SECURE_LINK) <TT
+CLASS="userinput"
+><B
+>Y</B
+></TT
+>
+               Restricted FIFOs in /tmp (CONFIG_SECURE_FIFO) <TT
+CLASS="userinput"
+><B
+>Y</B
+></TT
+>
+               Restricted <TT
+CLASS="filename"
+>/proc</TT
+> (CONFIG_SECURE_PROC) N <TT
+CLASS="userinput"
+><B
+>Y</B
+></TT
+>
+               Special handling of fd 0, 1, and 2 (CONFIG_SECURE_FD_0_1_2) <TT
+CLASS="userinput"
+><B
+>Y</B
+></TT
+>
+               Enforce RLIMIT_NPROC on execve(2) (CONFIG_SECURE_RLIMIT_NPROC) <TT
+CLASS="userinput"
+><B
+>Y</B
+></TT
+>
+               Destroy shared memory segments not in use (CONFIG_SECURE_SHM) N <TT
+CLASS="userinput"
+><B
+>Y</B
+></TT
+>
+             </PRE
+></TD
+></TR
+></TABLE
+>
+
+             </P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>&#13;             Kernel hacking. </B
+>
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             Magic SysRq key (CONFIG_MAGIC_SYSRQ) N/y/?
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></DIV
+><P
+>&#13;           Now, return to the <TT
+CLASS="filename"
+>/usr/src/linux/</TT
+> directory, if you are not already in it. You need to compile the new kernel. You do so by using the following command:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep ] /linux# <B
+CLASS="command"
+>make dep</B
+>; <B
+CLASS="command"
+>make clean</B
+>; <B
+CLASS="command"
+>make bzImage</B
+>
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           This line contains three commands in one.
+           <P
+></P
+><UL
+><LI
+><P
+>&#13;           The first one, <B
+CLASS="command"
+>make dep</B
+>, actually takes your configuration and builds the corresponding dependency tree. This process determines what gets compiled and what doesn't. 
+           </P
+></LI
+><LI
+><P
+>&#13;           The next step, <B
+CLASS="command"
+>make clean</B
+>, erase all previous traces of a compilation so as to avoid any mistakes in which version of a feature gets tied into the kernel. 
+           </P
+></LI
+><LI
+><P
+>&#13;           Finally, <B
+CLASS="command"
+>make bzImage</B
+> does the full compilation of the kernel.
+           </P
+></LI
+></UL
+>
+           </P
+><P
+>&#13;           After the process is complete, the kernel is compressed and ready to be installed on your system. Before we can install the new kernel, we must know if we need to compile the 
+           corresponding modules. This is required only if you said <TT
+CLASS="userinput"
+><B
+>Yes</B
+></TT
+> to Enable loadable module support <TT
+CLASS="envar"
+>CONFIG_MODULES</TT
+> and have compiled some options in the kernel configuration above 
+           as a module. In this case, you must execute the following commands:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep ] /linux#<B
+CLASS="command"
+>make modules</B
+>
+           [root@deep ] /linux#<B
+CLASS="command"
+>make modules_install</B
+>
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+           The <B
+CLASS="command"
+>make modules</B
+> and <B
+CLASS="command"
+>make modules_install</B
+> commands are required only if you say Yes to Enable loadable module support <TT
+CLASS="envar"
+>CONFIG_MODULES</TT
+> in your kernel configuration above.
+           </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap7sec83.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap7sec85.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Kernel configuration -Part "D"</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="secopt-kernel.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Installing the new kernel</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

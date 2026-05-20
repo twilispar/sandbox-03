@@ -1,0 +1,306 @@
+<HTML
+><HEAD
+><TITLE
+>chroot'd Guest FTP access</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FTP Server"
+HREF="ftpd.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux FTP Server"
+HREF="ftpd.html"><LINK
+REL="NEXT"
+TITLE="Setup an FTP user account minus shells"
+HREF="chap29sec295.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="ftpd.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 32. Linux <TT
+CLASS="literal"
+>FTP</TT
+> Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec295.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch32sftp"
+>32.1. chroot'd Guest FTP access</A
+></H1
+><P
+>&#13;      Various methods exist to configure your <TT
+CLASS="literal"
+>FTP</TT
+> servers. One is as a private user-only site, which is the default configuration for an <TT
+CLASS="literal"
+>FTP</TT
+> server; a private <TT
+CLASS="literal"
+>FTP</TT
+> server allows users on 
+      the Linux system only to be able to connect via <TT
+CLASS="literal"
+>FTP</TT
+> and access their files.
+    </P
+><P
+>&#13;      Anohter method is to configure as an anonymous <TT
+CLASS="literal"
+>FTP</TT
+> server. An anonymous <TT
+CLASS="literal"
+>FTP</TT
+> server allows anyone on the network to connect to it and transfer files without having an account. Due to the potential 
+      security risk involved with this setup, precautions should be taken to allow access only to certain directories on the system.
+    </P
+><P
+>&#13;      The configuration we will cover here is an <TT
+CLASS="literal"
+>FTP</TT
+> server that allows <TT
+CLASS="literal"
+>FTP</TT
+> to semi-secure areas of a Unix file system, <EM
+>chroot'd Guest FTP access</EM
+>. This configuration allows users to 
+      have access to the <TT
+CLASS="literal"
+>FTP</TT
+> server directories without allowing them to get into higher levels. This is the most secure setup for an <TT
+CLASS="literal"
+>FTP</TT
+> server.
+
+      <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/FTP-Schema.gif"
+ALT="FTP"
+></IMG
+></P
+></DIV
+>
+
+    </P
+><P
+>&#13;      These installation instructions assume
+      <P
+></P
+><UL
+><LI
+><P
+>&#13;        Commands are Unix-compatible.
+      </P
+></LI
+><LI
+><P
+>&#13;      The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>, <EM
+>other paths are possible</EM
+>.
+      </P
+></LI
+><LI
+><P
+>&#13;      Installations were tested on Red Hat Linux 6.1 and 6.2.
+      </P
+></LI
+><LI
+><P
+>&#13;      All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+      </P
+></LI
+><LI
+><P
+>&#13;      wu-ftpd version number is 2.6.0
+      </P
+></LI
+></UL
+>
+    </P
+><P
+>&#13;      These are the Package(s):
+      <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;        Wu-ftpd Homepage:<A
+HREF="appendixa.html#prtinxfp32er"
+>http://www.wu-ftpd.org/</A
+>
+      </TD
+></TR
+><TR
+><TD
+>&#13;      Wu-ftpd FTP Site:<A
+HREF="appendixa.html#prtinxfp32er"
+>205.133.13.68</A
+>
+      </TD
+></TR
+><TR
+><TD
+>&#13;      You must be sure to download: wu-ftpd-2.6.0.tar.gz
+      </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+    </P
+><P
+>&#13;    To compile, you need to decompress the tarball, <TT
+CLASS="literal"
+>tar.gz</TT
+>.
+    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;      [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> wu-ftpd-version.tar.gz /var/tmp
+      [root@deep ] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+      [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf wu-ftpd-version.tar.gz
+    </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="ftpd.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec295.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux <TT
+CLASS="literal"
+>FTP</TT
+> Server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ftpd.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Setup an <TT
+CLASS="literal"
+>FTP</TT
+> user account minus shells</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

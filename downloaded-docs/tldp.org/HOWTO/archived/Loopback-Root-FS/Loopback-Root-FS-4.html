@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Loopback Root Filesystem HOWTO: Booting the System</TITLE>
+ <LINK HREF="Loopback-Root-FS-5.html" REL=next>
+ <LINK HREF="Loopback-Root-FS-3.html" REL=previous>
+ <LINK HREF="Loopback-Root-FS.html#toc4" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Loopback-Root-FS-5.html">Next</A>
+<A HREF="Loopback-Root-FS-3.html">Previous</A>
+<A HREF="Loopback-Root-FS.html#toc4">Contents</A>
+<HR>
+<H2><A NAME="s4">4. Booting the System</A></H2>
+
+<P>To boot from this new root device all that is required is that the floppy disk
+prepared as described above is inserted for the PC to boot from.
+<P>
+<P>You will see the following sequence of events.
+<OL>
+<LI>DOS boots</LI>
+<LI>AUTOEXEC.BAT starts</LI>
+<LI>LOADLIN is run</LI>
+<LI>The Linux kernel is copied into memory</LI>
+<LI>The initial ramdisk is copied into memory</LI>
+<LI>The Linux kernel is started running</LI>
+<LI>The <CODE>/linuxrc</CODE> file on the initial ramdisk is run</LI>
+<LI>The DOS partition is mounted and the root and swap devices set up</LI>
+<LI>The boot sequence continues from the loopback device</LI>
+</OL>
+<P>When this is complete you can remove the boot floppy and use the Linux system.
+<P>
+<H2><A NAME="ss4.1">4.1 Possible Problems With Solutions</A>
+</H2>
+
+<P>There are a number of stages where this process could fail, I will try to
+explain what they are and what to check.
+<P>
+<P>DOS booting is easy to recognise by the message that it prints <CODE>MS-DOS
+Starting ...</CODE> on the screen.  If this is not seen then the floopy disk is
+either not-bootable or the PC is not bootable from the floppy disk drive.
+<P>
+<P>When the <CODE>AUTOEXEC.BAT</CODE> file is run the commands in it should be echoed
+to the screen by default.  In this case there is just the single line in the
+file that starts <CODE>LOADLIN</CODE>.
+<P>
+<P>When <CODE>LOADLIN</CODE> executes it will do two very visible things, firstly it
+will load the kernel into memory, secondly it will copy the ramdisk into memory.
+Both of these are indicated by a <CODE>Loading...</CODE> message.
+<P>
+<P>The kernel starts by uncompressing itself, this can give <B>crc</B> errors if
+the kernel image is corrupted.  Then it will start running the initialisation
+sequence which is very verbose with diagnostic messages.  Loading of the initial
+ramdisk device is also visible during this phase.
+<P>
+<P>When the <CODE>/linuxrc</CODE> file is run there is no diagnostic messages, but you
+can add these yourself as an aid to debugging.  If this stage fails to set up
+the loopback device as the root device then you may see a message that there is
+no root device and the kernel aborts.
+<P>
+<P>The normal boot sequence of the new root device will now continue and this is
+quite verbose.  There may be problems about the root device being mounted
+read-write, but the <CODE>LOADLIN</CODE> command line option '<CODE>ro</CODE>' should
+stop that.  Other problems that can occur are that the boot sequence is confused
+about where the root device is, this is probably due to a problem with
+<CODE>/etc/fstab</CODE>.
+<P>
+<P>When the boot sequence has completed, the remaining problem is that programs are
+confused about whether the DOS partition is mounted or not.  This is why it is a
+good idea to use the fake mount command described earlier.  This makes life a
+lot easier if you want to access the files on the DOS device.
+<P>
+<P>
+<H2><A NAME="ss4.2">4.2 Reference Documents</A>
+</H2>
+
+<P>The documents that I used to create my first loopback root filesystem were:
+<P>
+<P>
+<UL>
+<LI>The Linux kernel source, in particular <CODE>init/main.c</CODE></LI>
+<LI>The Linux kernel documentation, in particular
+<CODE>Documentation/initrd.txt</CODE> and <CODE>Documentation/ramdisk.txt</CODE>.</LI>
+<LI>The <CODE>LILO</CODE> documentation.</LI>
+<LI>The <CODE>LOADLIN</CODE> documentation</LI>
+</UL>
+<P>
+<P>
+<HR>
+<A HREF="Loopback-Root-FS-5.html">Next</A>
+<A HREF="Loopback-Root-FS-3.html">Previous</A>
+<A HREF="Loopback-Root-FS.html#toc4">Contents</A>
+</BODY>
+</HTML>

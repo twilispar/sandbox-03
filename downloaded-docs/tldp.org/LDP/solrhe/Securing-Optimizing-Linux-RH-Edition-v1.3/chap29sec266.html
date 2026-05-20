@@ -1,0 +1,305 @@
+<HTML
+><HEAD
+><TITLE
+>Make Apache aware of Webalizer output directory</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/webalizer.conf file"
+HREF="chap29sec265.html"><LINK
+REL="NEXT"
+TITLE="Run Webalizer automatically with a cron job"
+HREF="chap29sec267.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec265.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 30. Optional component to install with Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec267.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN21094"
+>30.4. Make Apache aware of Webalizer output directory</A
+></H1
+><P
+>&#13;      Once Webalizer has been installed in the system we must add the following lines into the <TT
+CLASS="filename"
+>httpd.conf</TT
+> file of Apache to be able to locate and use it features.
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        Edit the <TT
+CLASS="filename"
+>httpd.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/httpd/conf/httpd.conf</TT
+> and add the following lines between the section tags &#60;IfModule mod_alias.c&#62; and &#60;/IfModule&#62;:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          Alias /usage/ "/home/httpd/usage/"
+          &#60;Directory "/home/httpd/usage"&#62;
+          Options None
+          AllowOverride None
+          Order deny,allow
+          Deny from all
+          Allow from 192.168.1.0/24
+          &#60;/Directory&#62;
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        Don't forget to restart your Apache web server once you have added the above lines to its <TT
+CLASS="filename"
+>httpd.conf</TT
+> file:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# /etc/rc.d/init.d/httpd <B
+CLASS="command"
+>restart</B
+>
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          Shutting down http:                                        	[  OK  ]
+          Starting httpd:                                            	[  OK  ]
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN21112"
+>30.4.1. Running Webalizer manually first time</A
+></H2
+><P
+>&#13;        Now it's time to run the program to generate reports, <TT
+CLASS="literal"
+>html</TT
+> and graphics in the default Webalizer directory so that we can see them in our web browser interface. This step is required just the first time you install 
+        and use Webalizer, since it's preferable to use a cron job to automate this task in the future. To run Webalizer manually, to generate reports, use the following command:
+      </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# /usr/bin/webalizer
+      </PRE
+></TD
+></TR
+></TABLE
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        Webalizer V1.30-04 (Linux 2.2.14) English
+        Using logfile /var/log/httpd/access_log
+        Creating output in /home/httpd/usage
+        Hostname for reports is 'deep.openna.com'
+        History file not found...
+        Previous run data not found...
+        Saving current run data... [03/06/2000 04:42:03]
+        Generating report for March 2000
+        Generating summary report
+        Saving history information...
+        81 records (2 ignored) in 0.31 seconds
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+><P
+>&#13;        At this stage, we should verify that Webalizer is working on the system. To do that, point your web browser to the following address: <TT
+CLASS="literal"
+>http://my-web-server/usage/</TT
+>.
+        The <TT
+CLASS="filename"
+>my-web-server</TT
+> is the address where your Apache web server lives, and <TT
+CLASS="filename"
+>usage</TT
+> is the directory that host all the Webalizer reports files.
+      </P
+><DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Webalizer.gif"
+ALT="Webalizer"
+></IMG
+></P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec265.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec267.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/webalizer.conf</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Run Webalizer automatically with a cron job</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

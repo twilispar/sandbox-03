@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Forcing Mail into Misconfigured Remote Sites</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node249.html">Forcing Mail to be </A>
+<B>Up:</B> <A HREF="node246.html">Administrivia and Stupid Mail </A>
+<B> Previous:</B> <A HREF="node247.html">Forwarding Mail to a </A>
+<BR> <P>
+<H2><A NAME="SECTION0017620000">Forcing Mail into Misconfigured Remote Sites</A></H2>
+<P>
+<A NAME="8463"></A>
+<A NAME="8464"></A>
+<P>
+Frequently, Internet hosts will have trouble getting mail into misconfigured
+remote sites.  There are several variants of this problem, but the general
+symptom is that mail is bounced by the remote system or never gets there at
+all.
+<P>
+These problems can put the local system administrator in a bad position
+because your users generally don't care that you don't personally administer
+every system worldwide (or know how to get the remote administrator to fix
+the problem).  They just know that their mail didn't get through to the
+desired recipient on the other end and that you're a likely person to complain
+to.
+<P>
+A remote site's configuration is their problem, not yours.  In all cases, be
+certain to <em>not</em> break your site in order to communicate with a
+misconfigured remote site. If you can't get in touch with the Postmaster at
+the remote site to get them to fix their configuration in a timely manner,
+you have two options.
+<P>
+<UL><LI>
+	It is generally possible to force mail into the remote system
+	successfully, although since the remote system is misconfigured,
+	replies on the remote end might not work...but then that's the
+	remote administrator's problem.
+<P>
+	You can fix the bad headers in the envelope on your outgoing messages
+	only by using a domaintable entry for their host/domain that
+	results in the invalid information being corrected in mail
+	originating from your site:
+<P>
+	<P><P><LI>
+	Frequently, misconfigured sites `bounce' mail back to the sending
+	system and effectively say ``that mail isn't for this site'' because
+	they do not have their PSEUDONYMNS or equivalent set
+	properly in their configuration.  It is possible to totally strip off
+	all hostname and domain information from the envelope of messages
+	going from your site to them.
+<P>
+	The ! in the following mailertable delivers mail to
+	their remote site making it appear to their sendmail as if it
+	had originated locally on their system.  Note that this changes only
+	the envelope address, so the proper return address will still show up
+	in the message.
+<P>
+	<P><P></UL>
+<P>
+Regardless, even if you get mail into their system, there is no guarantee that
+they can reply to your message (they're broken, remember...) but then their
+users are yelling at their administrators rather than your users yelling at
+you.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node249.html">Forcing Mail to be </A>
+<B>Up:</B> <A HREF="node246.html">Administrivia and Stupid Mail </A>
+<B> Previous:</B> <A HREF="node247.html">Forwarding Mail to a </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

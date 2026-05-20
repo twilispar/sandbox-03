@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Bugs and Term Wish List</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Using Term to Pierce an Internet Firewall mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Telnet Mode"
+HREF="telnet.html"><LINK
+REL="NEXT"
+TITLE="Tricks That Do Not Seem to Work"
+HREF="tricks.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Using Term to Pierce an Internet Firewall mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="telnet.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="tricks.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="BUGS"
+></A
+>10. Bugs and Term Wish List</H1
+><P
+>The <B
+CLASS="COMMAND"
+>linecheck</B
+> program has some problems checking telnet connections
+sometimes.  This is sometimes because it doesn't check the return code
+of the <TT
+CLASS="FUNCTION"
+>read()</TT
+> call it makes.  For network connections,
+this call to <TT
+CLASS="FUNCTION"
+>read()</TT
+> can return <TT
+CLASS="LITERAL"
+>-1</TT
+>
+with an <TT
+CLASS="LITERAL"
+>EINTR</TT
+> (interrupted) or
+<TT
+CLASS="LITERAL"
+>EAGAIN</TT
+> (try again) error code.
+Obviously this should be checked for.</P
+><P
+>There are a number of features that could ease the use of term over
+telnet.  These primarily relate to an assumption that influenced the
+design of term, namely that the connection is low bandwidth, low
+latency, and somewhat noisy.</P
+><P
+>A telnet connection is in general high bandwidth, high latency, and
+error free.  This means that the connection could be better utilized
+if (a) the maximum window size was raised, well above the limit
+imposed by term's <TT
+CLASS="LITERAL"
+>N_PACKETS/2=16</TT
+>,
+(b) there was an option to turn off sending and checking packet checksums,
+and (c) larger packets were permitted when appropriate.</P
+><P
+>Also, to enhance security, it would be nice to have a term option to
+log all connections through the socket it monitors to a log file, or
+to <TT
+CLASS="LITERAL"
+>stderr</TT
+>, or both.  This would allow one to see if one's term
+connection is being subverted by nasty hackers on the outside insecure
+machine.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="telnet.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="tricks.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Telnet Mode</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Tricks That Do Not Seem to Work</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,296 @@
+<HTML
+><HEAD
+><TITLE
+>DNS Administrative Tools</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking"
+HREF="soft-netwrkng.html"><LINK
+REL="PREVIOUS"
+TITLE="Clean-up and Test the new chrooted jail"
+HREF="chap21sec169.html"><LINK
+REL="NEXT"
+TITLE="DNS Users Tools"
+HREF="chap21sec171.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap21sec169.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 21. Software -Networking</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap21sec171.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN11414"
+>21.9. DNS Administrative Tools</A
+></H1
+><P
+>&#13; The commands listed belows are some that we use often, but many more exist. Check the man pages and documentation for more details and information.
+ </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>dig. </B
+>
+ The <B
+CLASS="command"
+>dig</B
+> command utility <EM
+>domain information groper</EM
+> can be used to update your <TT
+CLASS="filename"
+>db.cache</TT
+> file by telling your server where the servers for the <TT
+CLASS="literal"
+>root zone</TT
+> 
+ are. When the server knows about the location of these zones, it queries a new db.cache from it. The root name servers do not change very often, but they do change. A good practice is to update your <TT
+CLASS="filename"
+>db.cache</TT
+> 
+ file every month or two.
+ </P
+></DIV
+><P
+>&#13; Use the following command to query a new <TT
+CLASS="filename"
+>db.cache</TT
+> file for your <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Server:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>dig</B
+> @.aroot-servers.net . ns &#62; db.cache
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ Copy the db.cache file to /var/named/ after retrieving it.
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>cp</B
+> db.cache /var/named/
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ Where @a.root-servers.net is the address of the root server for querying the new <TT
+CLASS="filename"
+>db.cache</TT
+> file and <TT
+CLASS="filename"
+>db.cache</TT
+> file is the name of your new <TT
+CLASS="filename"
+>db.cache</TT
+> file.
+ </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>ndc. </B
+>
+ The <B
+CLASS="command"
+>ndc</B
+> command utility of <SPAN
+CLASS="acronym"
+>ISC</SPAN
+>   <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> allows the system administrator to control interactively via a terminal the operation of a name server.
+ 
+ Type <B
+CLASS="command"
+>ndc</B
+> on your terminal and then help to see help on different command.
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>ndc</B
+>
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13; Type   help  -or-   /h   if you need help.
+ ndc&#62; help
+ getpid
+ status
+ stop
+ exec
+ reload [zone] ...
+ reconfig (just sees new/gone zones)
+ dumpdb
+ stats
+ trace [level]
+ notrace
+ querylog
+ qrylog
+ help
+ quit
+ ndc&#62; /e
+ </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap21sec169.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap21sec171.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Clean-up and Test the new chrooted jail</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netwrkng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Users Tools</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

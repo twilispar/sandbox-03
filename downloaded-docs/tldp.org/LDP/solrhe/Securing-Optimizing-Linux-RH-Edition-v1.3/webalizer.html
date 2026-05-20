@@ -1,0 +1,459 @@
+<HTML
+><HEAD
+><TITLE
+>Linux Webalizer</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="NEXT"
+TITLE="Compile"
+HREF="chap29sec263.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="opt-Apache.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 30. Optional component to install with Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec263.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch30swblzr"
+>30.1. Linux Webalizer</A
+></H1
+><P
+>&#13;      A web server like Apache logs all predefined log entry information into a text file that can be viewed and analyzed by the web administrator. This file can also be evaluated by a special program which can produce the information in a 
+      graphical presentation, making interpretation easier for the administrator.
+    </P
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN20888"
+></A
+><P
+><B
+>As per in the [<SPAN
+CLASS="citation"
+>README</SPAN
+>] file of Webalizer:</B
+></P
+><P
+>&#13;        The Webalizer is a web server log file analysis program, which produces usage statistics in HTML format for viewing with a browser.  The results are presented in both columnar and graphical format, which facilitates 
+        interpretation. Yearly, monthly, daily and hourly usage statistics are presented, along with the ability to display usage by site, URL, referrer, user agent, <EM
+>browser</EM
+> and country, <EM
+>user 
+        agent and referrer are only available if your web server produces Combined log format files</EM
+>.
+      </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;      These installation instructions assume
+      <P
+></P
+><UL
+><LI
+><P
+>&#13;          Commands are Unix-compatible.
+        </P
+></LI
+><LI
+><P
+>&#13;        The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>, <EM
+>other paths are possible</EM
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;        Installations were tested on Red Hat Linux 6.1 and 6.2.
+        </P
+></LI
+><LI
+><P
+>&#13;        All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;        Webalizer version number is 1_30-04
+        </P
+></LI
+></UL
+>
+    </P
+><P
+>&#13;      These are the Package(s):
+      <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;          Webalizer Homepage: <A
+HREF="appendixa.html#prtinxfp33"
+>http://www.mrunix.net/webalizer/</A
+>
+        </TD
+></TR
+><TR
+><TD
+>&#13;        Webalizer FTP Site: <A
+HREF="appendixa.html#prtinxfp33"
+>207.153.121.6</A
+>
+        </TD
+></TR
+><TR
+><TD
+>&#13;        You must be sure to download: webalizer-1_30-04-src.tgz
+        </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+    </P
+><P
+>&#13;      Before you compile, decompress the tarball (tar.gz).
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep /]# <B
+CLASS="command"
+>cp</B
+> webalizer-version-src.tgz /var/tmp/
+        [root@deep /]# <B
+CLASS="command"
+>cd</B
+> /var/tmp/
+        [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf webalizer-version-src.tgz
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+        There are a few prerequisites; the Webalizer requires that the <SPAN
+CLASS="acronym"
+>GD</SPAN
+> Graphics Library, which is required for generating inline graphics for the Webalizer program, be already installed on your system. If this is 
+        not the case, you must install it from your Red Hat Linux CD-ROM.
+      </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;      To verify that the <SPAN
+CLASS="acronym"
+>GD</SPAN
+> package is installed on your Linux system, use the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep /]# <B
+CLASS="command"
+>rpm</B
+> -qi gd
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        package gd is not installed
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+
+      To install the <SPAN
+CLASS="acronym"
+>GD</SPAN
+> packages on your Linux system, use the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep /]# <B
+CLASS="command"
+>mount</B
+> /dev/cdrom /mnt/cdrom/
+        [root@deep /]# <B
+CLASS="command"
+>cd</B
+> /mnt/cdrom/RedHat/RPMS/
+        [root@deep ]/RPMS# <B
+CLASS="command"
+>rpm</B
+> -Uvh gd-version.i386.rpm
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        gd                          ##################################################
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/RPMS# <B
+CLASS="command"
+>rpm</B
+> -Uvh gd-devel-version.i386.rpm
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        gd-devel                    ##################################################
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/RPMS# <B
+CLASS="command"
+>cd</B
+> /; umount /mnt/cdrom/
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>      
+        The Apache web server should be already installed on your system to be able to use Webalizer software, of course.
+      </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;      For more information on <A
+HREF="netweb-Apache.html"
+>Apache web server</A
+>, see its related chapter in this book.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec263.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Optional component to install with Apache</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

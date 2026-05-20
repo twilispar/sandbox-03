@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The checkgroups Message</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node271.html">sendsysversion, and senduuname</A>
+<B>Up:</B> <A HREF="node267.html">Control Messages</A>
+<B> Previous:</B> <A HREF="node269.html">newgroup and rmgroup</A>
+<BR> <P>
+<H2><A NAME="SECTION0019830000">The checkgroups Message</A></H2>
+<A NAME="cnewscontrolcheckgroups"></A>
+Checkgroups messages are sent by news administrators to make
+all sites within a network synchronize their active files with
+the realities of Usenet. For example, commercial Internet service
+providers might send out such a message to their customers' sites.  Once
+a month, the ``official'' checkgroups message for the major
+hierarchies is posted to comp.announce.newgroups by its
+moderator.  However, it is posted as an ordinary article, not as a
+control message. To perform the checkgroups operation, save
+this article to a file, say /tmp/check, remove everything up to
+the beginning of the control message itself, and feed it to the
+checkgroups script using the following command:
+<PRE>
+           #   su   news  -c  "/usr/lib/news/bin/ctl/checkgroups"  <
+           /tmp/check
+</PRE><P>
+This will update your newsgroups file, adding the groups
+listed in localgroups. The old newsgroups file will be 
+moved to newsgroups.bac. Note that posting the message locally
+will rarely work, because inews refuses to accept that large
+an article.
+<P>
+If C-News finds mismatches between the checkgroups list and the
+active file, it will produce a list of commands that would bring
+your site up to date, and mail it to the news administrator. The output
+typically looks like this:
+<PRE>
+           From news Sun Jan 30 16:18:11 1994
+           Date: Sun, 30 Jan 94 16:18 MET
+           From: news (News Subsystem)
+           To: usenet
+           Subject: Problems with your active file
+
+           The following newsgroups are not valid and should be removed.
+                   alt.ascii-art
+                   bionet.molbio.gene-org
+                   comp.windows.x.intrisics
+                   de.answers
+
+           You can do this by executing the commands:
+                    /usr/lib/news/bin/maint/delgroup alt.ascii-art
+                    /usr/lib/news/bin/maint/delgroup bionet.molbio.gene-org
+                    /usr/lib/news/bin/maint/delgroup comp.windows.x.intrisics
+                    /usr/lib/news/bin/maint/delgroup de.answers
+
+           The following newsgroups were missing.
+                   comp.binaries.cbm
+                   comp.databases.rdb
+                   comp.os.geos
+                   comp.os.qnx
+                   comp.unix.user-friendly
+                   misc.legal.moderated
+                   news.newsites
+                   soc.culture.scientists
+                   talk.politics.crypto
+                   talk.politics.tibet
+</PRE><P>
+
+When you receive a message like this from your news system, don't
+believe it blindly. Depending on who sent the checkgroups
+message, it may lack a few groups or even entire hierarchies; so
+you should be careful about removing any groups. If you find
+groups are listed as missing that you want to carry at your site, 
+you have to add them using the addgroup script. Save the list
+of missing groups to a file and feed it to the following little
+script:
+<PRE>
+           #!/bin/sh
+           cd /usr/lib/news
+
+           while read group; do
+               if grep -si "^$group[[:space:]].*moderated" newsgroup; then
+                   mod=m
+               else
+                   mod=y
+               fi
+               /usr/lib/news/bin/maint/addgroup $group $mod
+           done
+</PRE>
+<P>
+<P><P><BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

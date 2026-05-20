@@ -1,0 +1,625 @@
+<HTML
+><HEAD
+><TITLE
+> Uninstallation and Optimization</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Configuring and Building a Secure, Optimized Kernel"
+HREF="secopt-kernel.html"><LINK
+REL="PREVIOUS"
+TITLE="Pre-Install"
+HREF="chap7sec76.html"><LINK
+REL="NEXT"
+TITLE="Securing the kernel"
+HREF="chap7sec78.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap7sec76.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. Configuring and Building a Secure, Optimized Kernel</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap7sec78.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN5045"
+>7.2. Uninstallation and Optimization</A
+></H1
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;               We must copy the archive file of the Kernel to the <TT
+CLASS="filename"
+>/usr/src</TT
+> directory and move to this directory.
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /#<B
+CLASS="command"
+>cp</B
+> linux-version_tar.gz /usr/src/
+               [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /usr/src/
+               </PRE
+></TD
+></TR
+></TABLE
+>
+                              
+               These steps are required only if you already have installed a Linux kernel with a tar archive before. If it is a first, fresh install of Linux kernel, then instead uninstall 
+               the kernel-headers-version.i386.rpm, kernel-version.i386.rpm package that are on your system.
+               Remove the Linux symbolic link with the following command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep ] /src#<B
+CLASS="command"
+>rm</B
+> -rf linux
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               Remove the Linux kernel headers directory with the following command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep ] /src#<B
+CLASS="command"
+>rm</B
+> -rf linux-2.2.xx
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               Remove the Linux kernel modules directory with the following command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep ] /src#<B
+CLASS="command"
+>rm</B
+> -rf /lib/modules/2.2.xx
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+                 Removing the old kernel modules is required only if you have installed a modularized kernel version before. If the modules directory doesn't exist under 
+               the <TT
+CLASS="filename"
+>/lib</TT
+> directory it's because your old kernel version is not a modularized kernel.
+               </P
+></BLOCKQUOTE
+></DIV
+>
+               
+               If the original kernels <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> package are installed on your system instead of the Linux kernel tar archive, because you have just finished installing your new Linux system, or 
+               have used an <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> package before to upgrade your Linux system, then use the following command to uninstall the Linux kernel:
+               You can verify that a kernel <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> package is installed on your system with the following command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep ] /src#<B
+CLASS="command"
+>rpm</B
+> -qa |<B
+CLASS="command"
+>grep</B
+> kernel
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;               kernel-headers-2.2.xx.i386.rpm
+               kernel-2.2.xx.i386.rpm
+               </TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>               
+               To uninstall the linux kernel <SPAN
+CLASS="acronym"
+>RPM</SPAN
+>, use the following command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep ] /src#<B
+CLASS="command"
+>rpm</B
+> -e --nodeps kernel-headers kernel
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <P
+CLASS="literallayout"
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<TT
+CLASS="computeroutput"
+>&#13;               cannot remove /usr/src/linux-2.2.xx - directory not empty
+               cannot remove /lib/modules/2.2.xx - directory not empty
+               </TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep ] /src#<B
+CLASS="command"
+>rm</B
+> -rf /usr/src/linux-2.2.xx/
+               [root@deep ] /src#<B
+CLASS="command"
+>rm</B
+> -rf /lib/modules/2.2.xx/
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               In the steps below, we remove manually the empty <TT
+CLASS="filename"
+>/usr/src/linux-2.2.xx</TT
+> and <TT
+CLASS="filename"
+>/lib/modules/2.2.xx</TT
+> directories 
+               after the uninstallation of the kernels <SPAN
+CLASS="acronym"
+>RPM</SPAN
+>, the <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> uninstall program will not completely remove those directories.
+               </P
+></LI
+><LI
+><P
+>&#13;               
+               Now, we must decompress the tar archive of the kernel and remove the Linux tar archive from the system.
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep ] /src#<B
+CLASS="command"
+>tar</B
+> xzpf linux-version_tar.gz
+               [root@deep ] /src#<B
+CLASS="command"
+>rm</B
+> -f  linux-version_tar.gz
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               
+               
+               To increase the number of tasks allowed the maximum number of processes per user, you may need to edit the <TT
+CLASS="filename"
+>/usr/src/linux/include/linux/tasks.h</TT
+> file and 
+               change the following parameters.
+               
+               Edit the tasks.h file, vi +14 <TT
+CLASS="filename"
+>/usr/src/linux/include/linux/tasks.h</TT
+> and change the following parameters:
+               <TT
+CLASS="envar"
+>NR_TASKS</TT
+> from <TT
+CLASS="userinput"
+><B
+>512</B
+></TT
+> to <TT
+CLASS="userinput"
+><B
+>3072</B
+></TT
+> and <TT
+CLASS="envar"
+>MIN_TASKS_LEFT_FOR_ROOT</TT
+> from <TT
+CLASS="userinput"
+><B
+>4</B
+></TT
+> to <TT
+CLASS="userinput"
+><B
+>24</B
+></TT
+>
+               
+               <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+> 
+               The value in the <TT
+CLASS="envar"
+>NR_TASKS</TT
+> line denotes the maximum number of tasks (processes) handles that the Linux kernel will allocate per users. Increasing this number will allow you to handle more connections from clients 
+               on your server, example: an <SPAN
+CLASS="acronym"
+>HTTP</SPAN
+> web server will be able to serve more client connections. 
+               Please don't forget, Linux is protected from allocation of all process slots for normal users. There is a special parameter 
+               line <TT
+CLASS="envar"
+>MIN_TASKS_LEFT_FOR_ROOT</TT
+> reserved especially for the super-user root that you may set for the number of process reserved to root <TT
+CLASS="literal"
+>-24</TT
+> is a good value.
+               </P
+></BLOCKQUOTE
+></DIV
+>
+               </P
+></LI
+><LI
+><P
+>&#13;                              
+               To optimize the Linux kernel to fit your specific <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>CPU</SPAN
+></SPAN
+> architecture and optimization flags you may need to edit the <TT
+CLASS="filename"
+>/usr/src/linux/Makefile</TT
+> file and change the following parameters.
+                </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;               Edit the Makefile file (vi +18 /usr/src/linux/Makefile) and change the line:
+               <TT
+CLASS="envar"
+>HOSTCC =gcc </TT
+> to read:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               <TT
+CLASS="envar"
+>HOSTCC =egcs</TT
+>.
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               Edit the Makefile file, vi +25 <TT
+CLASS="filename"
+>/usr/src/linux/Makefile</TT
+> and change the line:
+               <TT
+CLASS="envar"
+>CC =$(CROSS_COMPILE)gcc D__KERNEL__ -I$(HPATH) </TT
+> to read:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               <TT
+CLASS="envar"
+>CC =$(CROSS_COMPILE)egcs D__KERNEL__ -I$(HPATH)</TT
+>.
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               Edit the Makefile file vi +90 <TT
+CLASS="filename"
+>/usr/src/linux/Makefile</TT
+> and change the line:
+               <TT
+CLASS="envar"
+>CFLAGS = -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer</TT
+> to read:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               <TT
+CLASS="envar"
+>CFLAGS = -Wall -Wstrict-prototypes -O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions</TT
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               Edit the Makefile file vi +19 <TT
+CLASS="filename"
+>/usr/src/linux/Makefile</TT
+> and change the line:
+               <TT
+CLASS="envar"
+>HOSTCFLAGS =-Wall -Wstrict-prototypes -O2 -fomit-frame-pointer</TT
+> to read:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               <TT
+CLASS="envar"
+>HOSTCFLAGS =-Wall -Wstrict-prototypes -O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions</TT
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+></OL
+></LI
+></OL
+></DIV
+><P
+>&#13;               <DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+               These changes turn on aggressive optimization tricks that may or may not work with all kernels. Please, if the optimization flags above, or the ones you have chosen for your <SPAN
+CLASS="acronym"
+>CPU</SPAN
+> architecture do not 
+               work for you, don't try to absolutely force it to work. I wouldn't want to make your system unstable like Microsoft Windows.
+               </P
+></BLOCKQUOTE
+></DIV
+>
+               </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap7sec76.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap7sec78.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Pre-Install</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="secopt-kernel.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Securing the kernel</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

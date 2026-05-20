@@ -1,0 +1,343 @@
+<HTML
+><HEAD
+><TITLE
+>Test the new chrooted jail</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="The /chroot/etc directory"
+HREF="chap29sec256.html"><LINK
+REL="NEXT"
+TITLE="Configure the new /etc/logrotate.d/apache file"
+HREF="chap29sec258.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec256.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec258.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19936"
+>29.20. Test the new chrooted jail</A
+></H1
+><P
+>&#13;      Finally, we must test the new chrooted jail configuration of our Apache Web Server. The first thing to do is to restart our syslogd daemon with the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# /etc/rc.d/init.d/syslog <B
+CLASS="command"
+>restart</B
+>
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        Shutting down kernel logger:                               	[  OK  ]
+        Shutting down system logger:                               	[  OK  ]
+        Starting system logger:                                    	[  OK  ]
+        Starting kernel logger:                                		[  OK  ]
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      Now, start the new chrooted jail Apache with the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# /etc/rc.d/init.d/httpd <B
+CLASS="command"
+>start</B
+>
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        Starting httpd:                                            		[  OK  ]
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      If you don't get any errors, do a <B
+CLASS="command"
+>ps ax</B
+> | <B
+CLASS="command"
+>grep httpd</B
+> and see if we're running:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# <B
+CLASS="command"
+>ps ax</B
+> | <B
+CLASS="command"
+>grep httpd</B
+>
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        14373 ?        S      0:00 httpd -DSSL
+        14376 ?        S      0:00 httpd -DSSL
+        14377 ?        S      0:00 httpd -DSSL
+        14378 ?        S      0:00 httpd -DSSL
+        14379 ?        S      0:00 httpd -DSSL
+        14380 ?        S      0:00 httpd -DSSL
+        14381 ?        S      0:00 httpd -DSSL
+        14382 ?        S      0:00 httpd -DSSL
+        14383 ?        S      0:00 httpd -DSSL
+        14384 ?        S      0:00 httpd -DSSL
+        14385 ?        S      0:00 httpd -DSSL
+        14386 ?        S      0:00 httpd -DSSL
+        14387 ?        S      0:00 httpd -DSSL
+        14388 ?        S      0:00 httpd -DSSL
+        14389 ?        S      0:00 httpd -DSSL
+        14390 ?        S      0:00 httpd -DSSL
+        14391 ?        S      0:00 httpd -DSSL
+        14397 ?        S      0:00 httpd -DSSL
+        14476 ?        S      0:00 httpd -DSSL
+        14477 ?        S      0:00 httpd -DSSL
+        14478 ?        S      0:00 httpd -DSSL
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      If so, lets check to make sure it's chrooted by picking out one of its process numbers and doing <TT
+CLASS="userinput"
+><B
+>ls -la /proc/that_process_number/root/.</B
+></TT
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# ls -la /proc/14373/root/
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      If you see:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        dev
+        etc
+        home
+        lib
+        usr
+        var
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      congratulations!
+    </P
+><P
+>&#13;      As mentioned above, if you use Perl, you'll need to copy or hardlink any system libraries, perl libraries <TT
+CLASS="filename"
+>/usr/lib/perl5</TT
+>, and binaries into the chroot area. The same applies for <SPAN
+CLASS="acronym"
+>SSL</SPAN
+>, <SPAN
+CLASS="acronym"
+>PHP</SPAN
+>, LDAP, 
+      PostgreSQL and other programs.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec256.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec258.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/chroot/etc</TT
+> directory</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the new <TT
+CLASS="filename"
+>/etc/logrotate.d/apache</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

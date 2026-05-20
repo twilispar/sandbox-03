@@ -1,0 +1,390 @@
+<HTML
+><HEAD
+><TITLE
+>Linux FAQ-O-Matic</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Run Webalizer automatically with a cron job"
+HREF="chap29sec267.html"><LINK
+REL="NEXT"
+TITLE="Compile and install FAQ-O-Matic"
+HREF="chap29sec269.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec267.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 30. Optional component to install with Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec269.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch30scfqmtc"
+>30.6. Linux FAQ-O-Matic</A
+></H1
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN21146"
+></A
+><P
+><B
+>As per the [<SPAN
+CLASS="citation"
+>Faq-O-Matic</SPAN
+>] web site:</B
+></P
+><P
+>&#13;        A mailing list archive is good, because it lets thoughtful people with Frequently Asked Questions search for an immediate answer, and avoids bothering the people who have answers. Unfortunately, the answers in a mailing list 
+        archive become stale over time, are disorganized, and are hard to sift from the conversational noise of the mailing list. 
+      </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;      A Frequently Asked Questions, list <SPAN
+CLASS="acronym"
+>FAQ</SPAN
+> is even better, because the people with questions can be a little lazier and still find their answer right away. Unfortunately, maintaining a <SPAN
+CLASS="acronym"
+>FAQ</SPAN
+> list requires 
+      effort; if people with the answers become lazy, the <SPAN
+CLASS="acronym"
+>FAQ</SPAN
+> list becomes stale.
+    </P
+><P
+>&#13;      The Faq-O-Matic is a <SPAN
+CLASS="acronym"
+>CGI</SPAN
+>-based system that automates the process of maintaining a <SPAN
+CLASS="acronym"
+>FAQ</SPAN
+> or Frequently Asked Questions list. It allows visitors to your <SPAN
+CLASS="acronym"
+>FAQ</SPAN
+> to take part in 
+      keeping it up-to-date. A permission system also makes it useful as a help-desk application, bug-tracking database, or documentation system.
+    </P
+><P
+>&#13;      These installation instructions assume
+      <P
+></P
+><UL
+><LI
+><P
+>&#13;          Commands are Unix-compatible.
+        </P
+></LI
+><LI
+><P
+>&#13;        The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>, <EM
+>other paths are possible</EM
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;        Installations were tested on Red Hat Linux 6.1 and 6.2.
+        </P
+></LI
+><LI
+><P
+>&#13;        All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;        FAQ-O-Matic version number is 2.709
+        </P
+></LI
+></UL
+>
+    </P
+><P
+>&#13;      These are the Package(s) required:
+      <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;        FAQ-O-Matic Homepage: <A
+HREF="appendixa.html#prtinxfp34"
+>http://www.dartmouth.edu/~jonh/ff-serve/cache/1.html</A
+>
+      </TD
+></TR
+><TR
+><TD
+>&#13;      The most recent version of the FAQ-O-Matic is always available at: <A
+HREF="appendixa.html#prtinxfp34"
+>ftp://ftp.cs.dartmouth.edu/pub/jonh.</A
+>
+      </TD
+></TR
+><TR
+><TD
+>&#13;      You must be sure to download: FAQ-OMatic-2.709.tar.gz
+      </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+    </P
+><P
+>&#13;      There are some prerequisites which you need to keep in mind before can install FAQ-O-Matic,
+      <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;          Apache web server should be already installed on your system in order to be able to use FAQ-O-Matic software.
+        </P
+></LI
+><LI
+><P
+>&#13;        Revision Control System, <SPAN
+CLASS="acronym"
+>RCS</SPAN
+> file version management tools should also already be installed on your system to be able to use FAQ-O-Matic software.
+        </P
+></LI
+></OL
+>
+    </P
+><P
+>&#13;      To verify that the <SPAN
+CLASS="acronym"
+>RCS</SPAN
+> package is installed on your system, use the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>rpm</B
+> -qi rcs
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        package rcs is not installed
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      To install the <B
+CLASS="command"
+>RCS</B
+> package on your Linux system, use the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>mount</B
+> /dev/cdrom /mnt/cdrom/
+        [root@deep ] /# <B
+CLASS="command"
+>cd</B
+> /mnt/cdrom/RedHat/RPMS/
+        [root@deep ]/RPMS# <B
+CLASS="command"
+>rpm</B
+> -Uvh rcs-version.i386.rpm
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        rcs                         ##################################################
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/RPMS# <B
+CLASS="command"
+>cd</B
+> /; umount /mnt/cdrom/
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      For more information on the required software, see the related chapters in this book.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec267.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec269.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Run Webalizer automatically with a cron job</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile and install FAQ-O-Matic</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

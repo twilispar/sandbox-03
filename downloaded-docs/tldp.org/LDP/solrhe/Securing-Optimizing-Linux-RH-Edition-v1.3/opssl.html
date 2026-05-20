@@ -1,0 +1,486 @@
+<HTML
+><HEAD
+><TITLE
+>Linux OPENSSL Server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking/Encryption"
+HREF="netencrypt.html"><LINK
+REL="PREVIOUS"
+TITLE="Software -Networking/Encryption"
+HREF="netencrypt.html"><LINK
+REL="NEXT"
+TITLE="Compile and Optimize"
+HREF="chap24sec192.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="netencrypt.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 24. Software -Networking/Encryption</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap24sec192.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch24sc1ossl"
+>24.1. Linux OPENSSL Server</A
+></H1
+><TABLE
+BORDER="0"
+WIDTH="100%"
+CELLSPACING="0"
+CELLPADDING="0"
+CLASS="EPIGRAPH"
+><TR
+><TD
+WIDTH="45%"
+>&nbsp;</TD
+><TD
+WIDTH="45%"
+ALIGN="LEFT"
+VALIGN="TOP"
+><I
+><P
+><I
+>The OpenSSL Project is a collaborative effort to develop a robust, commercial-grade, fully featured, and Open Source toolkit implementing the Secure Sockets Layer; <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> v2/v3, and Transport Layer Security -<SPAN
+CLASS="acronym"
+>TLS</SPAN
+> v1 
+         protocols with full-strength cryptography. The project is managed by a worldwide community of volunteers that use the Internet to communicate, plan, and develop the OpenSSL toolkit and its related documentation.
+         <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/SSL-Schema.gif"
+ALT="
+         Cryptographic Technology
+         "
+></IMG
+></P
+></DIV
+></I
+></P
+></I
+></TD
+></TR
+><TR
+><TD
+WIDTH="45%"
+>&nbsp;</TD
+><TD
+WIDTH="45%"
+ALIGN="RIGHT"
+VALIGN="TOP"
+><I
+><SPAN
+CLASS="attribution"
+>From the [<SPAN
+CLASS="citation"
+>OpenSSL web site</SPAN
+>]</SPAN
+></I
+></TD
+></TR
+></TABLE
+><P
+>&#13;         The main advantages gained by using encryption technology follow:
+         <P
+></P
+><DIV
+CLASS="variablelist"
+><P
+><B
+>Cryptography Advantages</B
+></P
+><DL
+><DT
+>Data Confidentiality</DT
+><DD
+><P
+>&#13;         When a message is encrypted, the input plain text is transformed by an algorithm into enciphered text that hides the meaning of the message and can be sent via any public mechanism. This process involves a secret 
+         key that is used to encrypt and later decrypt the data. Without the secret key, the encrypted data is meaningless.
+         </P
+></DD
+><DT
+>Data Integrity</DT
+><DD
+><P
+>&#13;         A cryptographic checksum, called a message authentication code -<SPAN
+CLASS="acronym"
+>MAC</SPAN
+>, can be calculated on arbitrarily user-supplied text to protect the integrity of data. The result, text and <SPAN
+CLASS="acronym"
+>MAC</SPAN
+> 
+         are then sent to the receiver which can verify the trial <SPAN
+CLASS="acronym"
+>MAC</SPAN
+> appended to a message by recalculating the <SPAN
+CLASS="acronym"
+>MAC</SPAN
+> for the message, using the appropriate secret key and verifying that 
+         it exactly equals the trial <SPAN
+CLASS="acronym"
+>MAC</SPAN
+>.
+         </P
+></DD
+><DT
+>Authentication</DT
+><DD
+><P
+>&#13;         Personal identification is another use of cryptography, where the user/sender knows a secret, which can serve to authenticate his/her identity.
+         </P
+></DD
+><DT
+>Electronic Signature</DT
+><DD
+><P
+>&#13;         A digital signature assures the sender and receiver that the message is authentic and that only the owner of the key could have generated the digital signature.
+         </P
+></DD
+></DL
+></DIV
+>
+         </P
+><DIV
+CLASS="warning"
+><P
+></P
+><TABLE
+CLASS="warning"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><A
+NAME="pr6ch24sc1wr"
+></A
+>Patents</B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Warning.gif"
+ALT="Warning"
+></IMG
+></P
+></DIV
+><P
+>&#13;         Several legal issues exist for <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> technology. If you intend to use OpenSSL for commercial purpose, you may need to obtain a license from <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> regarding use of <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> libraries.
+         </P
+><P
+>&#13;         Here's an excerpt from the README file of OpenSSL:
+         Various companies hold various patents for various algorithms in various locations around the world. _YOU_ are responsible for ensuring that your use of any algorithms is legal by checking if there are any patents 
+         in your country. This file contains some of the patents that we know about or are rumored to exist. This is not a definitive list.
+         <P
+></P
+><UL
+><LI
+><P
+>&#13;         <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> Data Security holds software patents on the <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> and <SPAN
+CLASS="acronym"
+>RC5</SPAN
+> algorithms. If their ciphers are used inside the USA and Japan?, you must contact <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> 
+         Data Security for licensing conditions. Their web page is <A
+HREF="appendixa.html#prtinxfp21"
+>http://www.rsa.com/.</A
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         <SPAN
+CLASS="acronym"
+>RC4</SPAN
+> is a trademark of <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> Data Security, so use of this label should perhaps only be used with <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> Data Security's permission.
+         </P
+></LI
+><LI
+><P
+>&#13;         The <SPAN
+CLASS="acronym"
+>IDEA</SPAN
+> algorithm is patented by Ascom in Austria, France, Germany, Italy, Japan, Netherlands, Spain, Sweden, Switzerland, UK and the USA. They should be contacted if that algorithm is to be 
+         used; their web page is <A
+HREF="appendixa.html#prtinxfp21"
+>http://www.ascom.ch/</A
+>
+         </P
+></LI
+></UL
+>
+         </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>&#13;         These installation instructions assume:
+         <P
+></P
+><UL
+><LI
+><P
+>&#13;         Commands are Unix-compatible.
+         </P
+></LI
+><LI
+><P
+>&#13;         The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+> -<EM
+>other paths are possible</EM
+>.
+         </P
+></LI
+><LI
+><P
+>&#13;         Installations were tested on Red Hat Linux 6.1 and 6.2.
+         </P
+></LI
+><LI
+><P
+>&#13;         All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+         </P
+></LI
+><LI
+><P
+>&#13;         OpenSSL version number is 0.9.5a
+         </P
+></LI
+></UL
+>
+         </P
+><P
+>&#13;         Before you decompress the tarballs, it is a good idea to make a list of files on the system before you install Openssl, and one afterwards, and then compare them using <B
+CLASS="command"
+>diff</B
+> to find out what file it placed 
+         where. Simply run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; OpenSSL1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; OpenSSL2</B
+></TT
+> after you install the software, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>OpenSSL1 OpenSSL2 &#62; OpenSSL-Installed</B
+></TT
+> 
+         to get a list of what changed.
+         </P
+><P
+>&#13;         These are the Package(s) required:
+         <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;         OpenSSL Homepage: <A
+HREF="appendixa.html#prtinxfp22"
+>http://www.openssl.org/</A
+>
+         </TD
+></TR
+><TR
+><TD
+>&#13;         You must be sure to download: openssl-0.9.5a.tar.gz
+         </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+         </P
+><P
+>&#13;         To Compile, you need to decompress the tarball (tar.gz).
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>cp</B
+> openssl-version.tar.gz /var/tmp
+         [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+         [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf openssl-version.tar.gz
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="netencrypt.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap24sec192.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software -Networking/Encryption</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netencrypt.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile and Optimize</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

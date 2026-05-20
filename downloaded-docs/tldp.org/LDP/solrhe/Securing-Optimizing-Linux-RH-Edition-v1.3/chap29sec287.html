@@ -1,0 +1,316 @@
+<HTML
+><HEAD
+><TITLE
+>Optimizing Samba</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="PREVIOUS"
+TITLE="Encrypted Samba password file for clients"
+HREF="chap29sec286.html"><LINK
+REL="NEXT"
+TITLE="Tuning the buffermem"
+HREF="chap29sec289.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec286.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 31. Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec289.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN22359"
+>31.8. Optimizing Samba</A
+></H1
+><P
+>&#13;      It is a big mistake to set the <TT
+CLASS="envar"
+>wide links</TT
+> Samba parameter to <TT
+CLASS="envar"
+>no</TT
+> in the Samba configuration file <TT
+CLASS="filename"
+>/etc/smb.conf</TT
+>. This option, if set to <TT
+CLASS="envar"
+>no</TT
+>, tells Samba not to follow 
+      symbolic links outside of an area designated as being exported as a share point. In order to determine if a link points outside the shared area, Samba has to follow the link and then do a directory path lookup to determine where 
+      on the file system the link ended up. This ends up adding a total of six extra system calls per filename lookup, and Samba looks up filenames a lot. A test done was published that showed that setting this parameter will cause a 
+      25 to 30 -percent slowdown in Samba performance.
+    </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN22366"
+>31.8.1. Tuning the buffer cache</A
+></H2
+><P
+>&#13;        The modification of the filesystem cache-tuning parameters can significantly improve Linux's file-serving performance up to a factor of two. Linux will attempt to use memory not being used for any other purpose for filesystem caching. 
+        A special daemon, called <TT
+CLASS="literal"
+>bdflush</TT
+>, will periodically flush <TT
+CLASS="literal"
+>dirty</TT
+> buffers, <EM
+>buffers that contain modified filesystem data or metadata</EM
+> to the disk.
+      </P
+><P
+>&#13;        The secret to good performance is to keep as much of the data in memory for as long as is possible. Writing to the disk is the slowest part of any filesystem. If you know that the filesystem will be heavily used, then you can tune this 
+        process for Linux Samba. As with many kernel tuneable options, this can be done on the fly by writing to special files in the <TT
+CLASS="filename"
+>/proc</TT
+> filesystem. The trick is, you have to tell Linux you want it to do that. You do so by executing the 
+        following command for a Linux 2.2 kernel.
+      </P
+><P
+>&#13;        The default setup for the <TT
+CLASS="literal"
+>bdflush</TT
+> parameters under Red Hat Linux is:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          "40 500 64 256 500 3000 500 1884 2"
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        To change the values of bdflush, type the following command on your terminal:
+      </P
+><P
+>&#13;        Under 
+        <SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Version6.1.gif"
+ALT="Version 6.1"
+></IMG
+></SPAN
+>
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# echo "80 500 64 64 15 6000 6000 1884 2" &#62;/proc/sys/vm/bdflush
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        You may add the above commands to the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> script file and you'll not have to type it again the next time you reboot your system.
+
+      </P
+><P
+>&#13;        Under
+        <SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Version6.2.gif"
+ALT="Version 6.2"
+></IMG
+></SPAN
+>
+         
+        Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following line:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          # Improve file system performance
+          vm.bdflush = 80 500 64 64 15 6000 6000 1884 2
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+><P
+>&#13;        You must restart your network for the change to take effect. The command to restart the network is the following:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          Setting network parameters		[  OK  ]
+          Bringing up interface lo		[  OK  ]
+          Bringing up interface eth0	        [  OK  ]
+          Bringing up interface eth1	        [  OK  ]
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+        This line tells <TT
+CLASS="literal"
+>bdflush</TT
+> not to worry about writing out dirty blocks to the disk until the filesystem buffer cache is 80 percent full (80). The other values tune such things as the number of buffers 
+        to write out in one disk operation (500), how long to allow dirty buffers to age in the kernel (60*HZ), etc. You can find full details in the 2.2 kernel documentation in the file <TT
+CLASS="filename"
+>linux/Documentation/sysctl/vm.txt</TT
+>,
+        and also, you can check <A
+HREF="gen-optim.html"
+>General System Optimization</A
+>, for more information.
+      </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec286.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec289.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Encrypted Samba password file for clients</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Tuning the buffermem</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Login Chat</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node164.html">Alternates</A>
+<B>Up:</B> <A HREF="node159.html">How to Tell UUCP </A>
+<B> Previous:</B> <A HREF="node162.html">Port and Speed</A>
+<BR> <P>
+<H3><A NAME="SECTION0014364000">The Login Chat</A></H3>
+<P>
+<A NAME="6038"></A>
+<A NAME="6039"></A>
+<A NAME="6040"></A>
+<A NAME="6041"></A>
+<P>
+Above, we already encountered the login chat script, which tells
+uucico how to log into the remote system.  It consists of a list
+of tokens, specifying strings expected and sent by the local
+uucico process. The intention is to make uucico wait until
+the remote machine sends a login prompt, then return the login name,
+wait for the remote system to send the password prompt, and send the
+password. Expect and send strings are given in alternation.
+uucico automatically appends a carriage return character
+(r) to any send string. Thus, a simple chat script would
+look like
+<P>
+<P><P>
+<P>
+You will notice that the expect fields don't contain the whole prompts.
+This is to make sure that the login succeeds even if the remote system
+broadcasts Login: instead of login:.
+<P>
+uucico also allows for some sort of conditional execution, for
+example in the case that the remote machine's getty needs to be
+reset before sending a prompt. For this, you can attach a sub-chat to an
+expect string, offset by a dash.  The sub-chat is executed only if the
+main expect fails, i.e. a timeout occurs.  One way to use this feature
+is to send a BREAK if the remote site doesn't display a login prompt.
+The following example gives an allround chat script that should also
+work in case you have to hit return before the login appears.
+ tells UUCP to not wait for anything and continue with
+the next send string immediately.
+<P>
+<P><P>
+<P>
+There are a couple of special strings and escape characters which may
+occur in the chat script. The following is an incomplete list of
+characters legal in expect strings:
+<P>
+<P><P>
+<P>
+<P>
+On send strings, the following escape characters and strings are legal
+in addition to the above:
+<P>
+<P><P>
+<P>
+<A NAME="6078"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node164.html">Alternates</A>
+<B>Up:</B> <A HREF="node159.html">How to Tell UUCP </A>
+<B> Previous:</B> <A HREF="node162.html">Port and Speed</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

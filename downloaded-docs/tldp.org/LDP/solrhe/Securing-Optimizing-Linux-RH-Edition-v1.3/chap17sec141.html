@@ -1,0 +1,376 @@
+<HTML
+><HEAD
+><TITLE
+>Integrity or Interactive Check Mode</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities/System Integrity"
+HREF="sysintegrity.html"><LINK
+REL="PREVIOUS"
+TITLE="Securing Tripwire for Linux"
+HREF="chap17sec140.html"><LINK
+REL="NEXT"
+TITLE="Installed files"
+HREF="chap17sec142.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap17sec140.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 17. Software -Securities/System Integrity</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap17sec142.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN9566"
+>17.6. Integrity or Interactive Check Mode</A
+></H1
+><P
+>&#13;           Tripwire has a feature called <I
+CLASS="wordasword"
+>Integrity Check Mode</I
+>. Now that our database has been built, we can run this feature to compare the current file system objects with their properties as recorded 
+           in the Tripwire database. All violations of files will be printed to <TT
+CLASS="literal"
+>stdout</TT
+>, the report-generated file will be saved and can later be accessed by the twprint utility.
+           The syntax for integrity check mode is:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>tripwire</B
+> --check
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           To run the integrity check mode, use the command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>tripwire</B
+> --check
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><P
+>&#13;           Tripwire can also be run in <I
+CLASS="wordasword"
+>Interactive Check Mode</I
+>. In this mode you can automatically update your changes via the terminal.
+
+           To run in interactive check mode, use the command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>tripwire</B
+> --check --interactive
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><P
+>&#13;           An email option exists with Tripwire and allows you to send email. This option will specify that reports be emailed to the recipients designated in the policy file.
+
+           To run in integrity check mode and send email to the recipient, use the command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>tripwire</B
+> --check --email-report
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><P
+>&#13;           Updating the database after an integrity check
+           If you have decided to use the <I
+CLASS="wordasword"
+>Integrity Check Mode</I
+> of Tripwire instead of the <I
+CLASS="wordasword"
+>Interactive Check Mode</I
+>, you must update the Tripwire database with 
+           the <I
+CLASS="wordasword"
+>Database Update Mode</I
+> feature. This update process allows you to save time by updating the database without having to regenerate it, and it also enables selective 
+           updating, which cannot be done through regeneration.
+
+           The syntax for database update mode is:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /# tripwire --update -r
+           </PRE
+></TD
+></TR
+></TABLE
+>
+
+           To update the database, use the command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>tripwire</B
+> --update -r /usr/TSS/report/deep.openna.com-200001-021854.twr
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           Where  -r read the specified report file <TT
+CLASS="filename"
+>deep.openna.com-200001-021854.twr</TT
+>. This option is required since the <TT
+CLASS="envar"
+>REPORTFILE</TT
+> variable in the current 
+           configuration file uses <TT
+CLASS="prompt"
+>$</TT
+>(DATE).
+           </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+           In Database Update Mode or Interactive Check Mode, Tripwire software displays the report in your terminal with a ballot box next to each policy violation. You can approve a change to the file system by 
+           leaving the x next to each policy violation or remove the x from the ballot box and the database will not be updated with the new value(s) for that object. After you exit the editor and provide the local pass 
+           phrase, Tripwire software will update and save your changes.
+           </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;           Updating the policy file
+           Some times you want to change the rules in your policy file to reflect new file locations or policy rules. A special command exists to do the work and update the database without requiring a complete 
+           re-initialization of the policy file. This can save a significant amount of time and preserves security by keeping the policy file synchronized with the database it uses.
+
+           The syntax for policy update mode is:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>tripwire</B
+> --update-policy /path/to/new/policy/file
+           </PRE
+></TD
+></TR
+></TABLE
+>
+
+           To update the policy file, use the command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>tripwire</B
+> --update-policy /usr/TSS/policy/newtwpol.txt
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><P
+>&#13;           The policy Update mode runs with the  --secure-mode high option by default. You may encounter errors when running with this option if the file system has changed since the last database update, and 
+           if the changes cause a violation in the new policy. After determining that all of the violations reported in high security mode are authorized, you can update the policy file in low security mode to solve this situation:
+
+           To update the policy file in low security mode, use the command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>tripwire</B
+> --update-policy --secure-mode low /usr/TSS/policy/newtwpol.txt
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap17sec140.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap17sec142.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Securing Tripwire for Linux</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="sysintegrity.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Installed files</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

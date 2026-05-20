@@ -1,0 +1,636 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/squid/squid.conf file -in httpd-accelerator mode</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Proxy Network"
+HREF="netproxy-squid.html"><LINK
+REL="PREVIOUS"
+TITLE="Configurations"
+HREF="chap28sec230.html"><LINK
+REL="NEXT"
+TITLE="Configure of the /etc/squid/squid.conf file -/proxy-caching mode"
+HREF="chap28sec232.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap28sec230.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 28. Software -Server/Proxy Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap28sec232.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch28scsqcnf"
+>28.6. Configure the <TT
+CLASS="filename"
+>/etc/squid/squid.conf</TT
+> file -in <TT
+CLASS="literal"
+>httpd-accelerator mode</TT
+></A
+></H1
+><P
+>&#13;               The <TT
+CLASS="filename"
+>squid.conf</TT
+> file is used to set and configure all the different options for your Squid proxy server. In the configuration file below, we'll configure the <TT
+CLASS="filename"
+>/etc/squid/squid.conf</TT
+> file 
+               to be in <TT
+CLASS="literal"
+>httpd-accelerator</TT
+> mode. In this acceleration mode, if the Web Server runs on the same server where Squid is installed, you must set its daemon to run on port 81. With the Apache web server, you can 
+               do it by assigning the line <TT
+CLASS="literal"
+>Port 80</TT
+> to <TT
+CLASS="literal"
+>Port 81</TT
+> in its <TT
+CLASS="filename"
+>httpd.conf</TT
+> file. If the Web Server runs on other servers in your network like we do, you can keep the same port 
+               number (80) for Apache, since Squid will bind on a different IP number where port (80) is not already in use.
+               <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Squid-Accelerator-Schema.gif"
+ALT="Squid/Accelerator"
+></IMG
+></P
+></DIV
+>
+             </P
+><P
+>&#13;               Edit the <TT
+CLASS="filename"
+>squid.conf file</TT
+>, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/squid/squid.conf</TT
+> and add/change the following options:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 http_port 80
+                 icp_port 0
+                 acl QUERY urlpath_regex cgi-bin \?
+                 no_cache deny QUERY
+                 cache_mem 16 MB
+                 cache_dir ufs /cache 200 16 256
+                 emulate_httpd_log on
+                 redirect_rewrites_host_header off
+                 replacement_policy GDSF
+                 acl all src 0.0.0.0/0.0.0.0
+                 http_access allow all
+                 cache_mgr admin@openna.com
+                 cache_effective_user squid
+                 cache_effective_group squid
+                 httpd_accel_host 208.164.186.3
+                 httpd_accel_port 80
+                 log_icp_queries off
+                 cachemgr_passwd my-secret-pass all
+                 buffered_logs on
+               </PRE
+></TD
+></TR
+></TABLE
+>
+
+               This tells the <TT
+CLASS="filename"
+>squid.conf</TT
+> file to set itself up for this particular configuration setup with:
+               <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+><TT
+CLASS="envar"
+>http_port</TT
+> 80</B
+></DT
+><DD
+><P
+>&#13;                     The option <TT
+CLASS="envar"
+>http_port</TT
+> specifies the port number where Squid will listen for <SPAN
+CLASS="acronym"
+>HTTP</SPAN
+> client requests. If you set this option to port 80, the client will have the illusion of being connected 
+                     to the Apache Web Server. Since we are running Squid in accelerator mode, we must listen on port 80.
+                   </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>icp_port 0</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The option <TT
+CLASS="envar"
+>icp_port</TT
+> specifies the port number where Squid will sends and receive <SPAN
+CLASS="acronym"
+>ICP</SPAN
+> requests from neighboring caches. We must set the value of this option to 0 to disable it, since we 
+                   are configuring Squid to be in accelerator mode for the Web Server. The <SPAN
+CLASS="acronym"
+>ICP</SPAN
+> feature is needed only in a multi-level cache environment with multiple siblings and parent caches. Using <SPAN
+CLASS="acronym"
+>ICP</SPAN
+> 
+                   in an accelerator mode configuration would add unwanted overhead to Squid.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>acl QUERY urlpath_regex cgi-bin \? and no_cache deny QUERY</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The options <TT
+CLASS="envar"
+>acl QUERY urlpath_regex cgi-bin \? and no_cache deny QUERY</TT
+> are used to force certain objects to never be cached, like files under <TT
+CLASS="filename"
+>cgi-bin</TT
+> directory. This 
+                   is a security feature.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>cache_mem 16 MB</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The option <TT
+CLASS="envar"
+>cache_mem</TT
+> specifies the amount of memory; 
+                   <SPAN
+CLASS="acronym"
+>RAM</SPAN
+>, to be used for caching the so called: 
+                   In-Transit objects, 
+                   Hot Objects, 
+                   Negative-Cached objects. 
+                   This is an optimization feature. It's important to note that Squid can uses much more memory than the value you specify in this parameter, and for this reason if you have 48 MB free for Squid, you must put 48/3 = 16 MB here.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>cache_dir ufs /cache 200 16 256</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The option <TT
+CLASS="envar"
+>cache_dir</TT
+> specifies in this order: 
+                   which kind of storage system to use; ufs, 
+                   the name of the cache directory; <TT
+CLASS="filename"
+>/cache</TT
+> for Squid, 
+                   the disk space in megabytes to use under this directory <EM
+>200 Mbytes</EM
+>, 
+                   the number of first-level subdirectories to be created under the cache directory; 16 Level-1, 
+                   and the number of second-level subdirectories to be created under each first-level cache directory; 256 Level-2. 
+                   In accelerator mode, this option is directly related to the size and number of files that you want to serve with your Apache web server.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>emulate_httpd_log on</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The option <TT
+CLASS="envar"
+>emulate_httpd_log,</TT
+> if set to <TT
+CLASS="envar"
+>ON,</TT
+> specifies that Squid should emulate the log file format of the Apache web server. This is very useful if you want to use a third party program like Webalizer 
+                   to analyze the Web Server <TT
+CLASS="literal"
+>httpd</TT
+> log file.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>redirect_rewrites_host_header off</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The option <TT
+CLASS="envar"
+>redirect_rewrites_host_header</TT
+>, if set to <TT
+CLASS="envar"
+>OFF,</TT
+> tells Squid to not rewrites any Host: header in redirected requests. It's recommended to set this option to <TT
+CLASS="envar"
+>OFF</TT
+> if you are running Squid 
+                   in accelerator mode.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>replacement_policy GDSF</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The option <TT
+CLASS="envar"
+>replacement_policy</TT
+> specifies the cache policy Squid will use to determine which objects in the cache must be replaced when the proxy need to make disk space. The Squid LRU policy is used by default if you 
+                   have not specified the  <TT
+CLASS="literal"
+>--enable-heap-replacement</TT
+> option during compile time. In our configuration, we choose the GDSF -<EM
+>Greedy-Dual Size Frequency</EM
+> policy as our default policy. See 
+                   <A
+HREF="appendixa.html#prtinxfp28sqc"
+>http://www.hpl.hp.com/techreports/1999/HPL-1999-69.html</A
+> and <A
+HREF="appendixa.html#prtinxfp28sqc"
+>http://fog.hpl.external.hp.com/techreports/98/HPL-98-173.html</A
+> for more information.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>acl all src 0.0.0.0/0.0.0.0</TT
+> and <TT
+CLASS="envar"
+>http_access allow all</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The options <TT
+CLASS="envar"
+>acl</TT
+> and <TT
+CLASS="envar"
+>http_access</TT
+> specify and define an access control list to be applied on the proxy server Squid. Our <TT
+CLASS="envar"
+>acl</TT
+> and <TT
+CLASS="envar"
+>http_access</TT
+> options are not restricted, and 
+                   allow every one to connect on the proxy server since we use this proxy to accelerate the public Apache Web Server. See your Squid documentation for more information when using Squid in non-accelerator mode.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>cache_mgr admin</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The option <TT
+CLASS="envar"
+>cache_mgr</TT
+> specify the email-address of the administrator responsible for the Squid proxy server. This person is the one who will receive mail if Squid encounter problems. You can specify the name or the 
+                   complete email address in this option.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>cache_effective_user squid</TT
+> and <TT
+CLASS="envar"
+>cache_effective_group squid</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The options <TT
+CLASS="envar"
+>cache_effective_user</TT
+> and <TT
+CLASS="envar"
+>cache_effective_group</TT
+> specify the <SPAN
+CLASS="acronym"
+>UID/GID</SPAN
+> that the cache will run on. Don't forget to never run Squid as <TT
+CLASS="literal"
+>root</TT
+>. In our 
+                   configuration we use the <SPAN
+CLASS="acronym"
+>UID</SPAN
+> <TT
+CLASS="literal"
+>squid</TT
+> and the <SPAN
+CLASS="acronym"
+>GID</SPAN
+> <TT
+CLASS="literal"
+>squid</TT
+>.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>httpd_accel_host 208.164.186.3</TT
+> and <TT
+CLASS="envar"
+>httpd_accel_port 80</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The options <TT
+CLASS="envar"
+>httpd_accel_host</TT
+> and <TT
+CLASS="envar"
+>httpd_accel_port</TT
+> specify to Squid the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address and port number where the real <SPAN
+CLASS="acronym"
+>HTTP</SPAN
+> Server <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> Apache is. In 
+                   our configuration, the real <SPAN
+CLASS="acronym"
+>HTTP</SPAN
+> Web Server is on the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address <TT
+CLASS="literal"
+>208.164.186.3</TT
+>, <TT
+CLASS="literal"
+>www.openna.com</TT
+> and on port (80). <TT
+CLASS="literal"
+>www.openna.com</TT
+> is 
+                   another host name on our network, and since the Squid Proxy Server doesn't reside on the same host of Apache <SPAN
+CLASS="acronym"
+>HTTP</SPAN
+> Web Server, we can use port (80) for our Squid Proxy Server, and port (80) for our Apache Web 
+                   Server, and the illusion is perfect.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>log_icp_queries off</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The option <TT
+CLASS="envar"
+>log_icp_queries</TT
+> specifies if you want <SPAN
+CLASS="acronym"
+>ICP</SPAN
+>; <EM
+><SPAN
+CLASS="acronym"
+>ICP</SPAN
+> is used to exchange hints about the existence of <SPAN
+CLASS="acronym"
+>URL</SPAN
+>s in neighbor caches</EM
+> queries 
+                   to be logged to the <TT
+CLASS="filename"
+>access.log</TT
+> file or not. Since we don't use the <SPAN
+CLASS="acronym"
+>ICP</SPAN
+> feature in Squid accelerator mode, we can safely set this option to <TT
+CLASS="envar"
+>OFF</TT
+>.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>cachemgr_passwd my-secret-pass all</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The option <TT
+CLASS="envar"
+>cachemgr_passwd</TT
+> specifies a password that will be required for accessing the operations of the <TT
+CLASS="filename"
+>cachemgr.cgi</TT
+> program utility. This <SPAN
+CLASS="acronym"
+>CGI</SPAN
+> utility program is designed to run 
+                   through a web interface and outputs statistics about the Squid configuration and performance. The <TT
+CLASS="filename"
+>my-secret-pass</TT
+> is the password that you have chosen, and the keyword <TT
+CLASS="envar"
+>all</TT
+> specifies to set this 
+                   password to be the same for all actions you can perform with this program. See The cachemgr.cgi program utility of Squid, below in this chapter for more information.
+                 </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>buffered_logs on</TT
+></B
+></DT
+><DD
+><P
+>&#13;                   The option <TT
+CLASS="envar"
+>buffered_logs</TT
+>, if turned <TT
+CLASS="envar"
+>ON</TT
+>, can speed up the writing of some log files slightly. This is an optimization feature.
+                 </P
+></DD
+></DL
+></DIV
+>
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap28sec230.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap28sec232.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configurations</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netproxy-squid.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure of the <TT
+CLASS="filename"
+>/etc/squid/squid.conf</TT
+> file -/proxy-caching mode</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

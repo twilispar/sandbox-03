@@ -1,0 +1,269 @@
+<HTML
+><HEAD
+><TITLE
+>Shell logging</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Conceal binary RPM "
+HREF="chap5sec46.html"><LINK
+REL="NEXT"
+TITLE="The LILO and lilo.conf file"
+HREF="chap5sec48.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec46.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec48.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3744"
+>5.18. Shell logging</A
+></H1
+><P
+>&#13;                To make it easy for you to repeat long commands, the bash shell stores up to 500 old commands in the <TT
+CLASS="filename"
+>~/.bash_history</TT
+> file where <TT
+CLASS="filename"
+>~/</TT
+> is your home directory. Each 
+                user that has an account on the system will have this file <TT
+CLASS="filename"
+>.bash_history</TT
+> in their home directory. Reducing the number of old commands the <TT
+CLASS="filename"
+>.bash_history</TT
+> files can 
+                hold may protect users on the server who enter by mistake their password on the screen in plain text and have their password stored for a long time in the <TT
+CLASS="filename"
+>.bash_history</TT
+> file.
+                </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;                      The <TT
+CLASS="envar"
+>HISTFILESIZE</TT
+> and <TT
+CLASS="envar"
+>HISTSIZE</TT
+> lines in the <TT
+CLASS="filename"
+>/etc/profile</TT
+> file determine the size of old commands the <TT
+CLASS="filename"
+>.bash_history</TT
+> file for all users on your system can 
+                      hold. For all accounts I would highly recommend setting the HISTFILESIZE and HISTSIZE in <TT
+CLASS="filename"
+>/etc/profile</TT
+> file to a low value such as 20.
+                      Edit the profile file vi <TT
+CLASS="filename"
+>/etc/profile</TT
+> and change the lines to:
+                      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                        HISTFILESIZE=20
+                        HISTSIZE=20
+                      </PRE
+></TD
+></TR
+></TABLE
+>
+                      Which mean, the <TT
+CLASS="filename"
+>.bash_history</TT
+> file in each users home directory can store 20 old commands and no more. Now, if a cracker tries to see the <TT
+CLASS="filename"
+>~/.bash_history</TT
+> file of users on your server to find 
+                      some password typed by mistake in plain text, he or she has less chance to find one.
+                    </P
+></LI
+><LI
+><P
+>&#13;                      The administrator should also add into the /etc/skel/.bash_logout file the <B
+CLASS="command"
+>rm</B
+>   -f  <TT
+CLASS="filename"
+>$HOME/.bash_history</TT
+> line, so that each time a user logs out, its <TT
+CLASS="filename"
+>.bash_history</TT
+> 
+                      file will be deleted so crackers will not be able to use <TT
+CLASS="filename"
+>.bash_history</TT
+> file of users who are not presently logged into the system.
+                      Edit the <TT
+CLASS="filename"
+>.bash_logout</TT
+> file vi <TT
+CLASS="filename"
+>/etc/skel/.bash_logout</TT
+> and add the following line:
+                      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                        <B
+CLASS="command"
+>rm</B
+> -f  $HOME/.bash_history
+                      </PRE
+></TD
+></TR
+></TABLE
+>
+                    </P
+></LI
+></OL
+></DIV
+><P
+>&#13;                <EM
+>&#13;                  The above hack will only work for future users you'll add in the server. If you already have existing users in the <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file, you must edit and add the above line into their <TT
+CLASS="filename"
+>.bash_logout</TT
+> files manually.
+                </EM
+>
+            </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec46.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec48.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Conceal binary <SPAN
+CLASS="acronym"
+>RPM</SPAN
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The LILO and <TT
+CLASS="filename"
+>lilo.conf</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The VPN HOWTO : Doing it </TITLE>
+ <LINK HREF="VPN-5.html" REL=next>
+ <LINK HREF="VPN-3.html" REL=previous>
+ <LINK HREF="VPN.html#toc4" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="VPN-5.html">Next</A>
+<A HREF="VPN-3.html">Previous</A>
+<A HREF="VPN.html#toc4">Contents</A>
+<HR>
+<H2><A NAME="s4">4. Doing it </A></H2>
+
+<P>
+<H2><A NAME="ss4.1">4.1 Planning </A>
+</H2>
+
+<P>
+<P>Before you start to set up your system, you should know the networking details. I assume you have two firewalls protecting one intranet per firewall, and they are both connected to the internet. So now you should have two network interfaces (at least) per firewall. Take a sheet of paper, write down their IP addresses and network mask. You will need one more IP adresses per firewall for the VPN you want to do now. Those addresses should be outside of your existing subnets. I suggest using addresses from the "private" address ranges. They are the followings:  
+<UL>
+<LI>10.0.0.0 - 10.255.255.255  </LI>
+<LI>172.16.0.0 - 172.31.255.255  </LI>
+<LI>192.168.0.0 - 192.168.255.255  </LI>
+</UL>
+<P>For the sake of example, here's a sample configuration: The two bastions are called fellini and polanski. They have one interface for the internet (-out), one for the intranet (-in), and one for the vpn (-vpn). The addresses and netmasks: 
+<UL>
+<LI>fellini-out: 193.6.34.12 255.255.255.0  </LI>
+<LI>fellini-in: 193.6.35.12 255.255.255.0  </LI>
+<LI>fellini-vpn: 192.168.0.1 point-to-point </LI>
+<LI>polanski-out: 193.6.36.12 255.255.255.0  </LI>
+<LI>polanski-in: 193.6.37.12 255.255.255.0  </LI>
+<LI>polanski-vpn: 192.168.0.2 point-to-point  </LI>
+</UL>
+<P>So we have the plan. 
+<H2><A NAME="ss4.2">4.2 Gathering the tools </A>
+</H2>
+
+<P>
+<P>You will need a  
+<UL>
+<LI>Linux firewall  </LI>
+<LI>kernel  </LI>
+<LI>very minimal configuration  </LI>
+<LI>ipfwadm  </LI>
+<LI>fwtk   </LI>
+<LI>Tools for the VPN  </LI>
+<LI>ssh  </LI>
+<LI>pppd  </LI>
+<LI>sudo  </LI>
+<LI>pty-redir   </LI>
+</UL>
+<P>Current versions: 
+<UL>
+<LI>kernel: 2.0.29 Use a stable kernel, and it must be newer than 2.0.20, because the ping'o'death bug. At the time of writing 2.0.30 is the last "stable" kernel, but it has some bugs. If you want to have the fast and cool networking code introduced in it, try a prepatch. the 3rd is working for me nicely.</LI>
+<LI>base system: I prefer Debian. YMMV. You absolutely don't want to use any big packages, and you never even tought of using sendmail, of course. You also definitely don't want to enable telnet, ftp, and the 'r' commands (as usual in case of any other unix hosts). </LI>
+<LI>ipfwadm: I've used 2.3.0 </LI>
+<LI>fwtk: I've used 1.3 </LI>
+<LI>ssh: &gt;= 1.2.20. There are problems with the underlying protocol in the older versions. </LI>
+<LI>pppd: I've used 2.2.0f for the tests, but I'm not sure if is it secure, this is why I turned the setuid bit off, and used sudo to launch it. </LI>
+<LI>sudo: 1.5.2 the newest I am aware of  </LI>
+<LI>pty-redir: It is written by me. Try ftp://ftp.vein.hu/ssa/contrib/mag/pty-redir-0.1.tar.gz. Its version number is 0.1 now. Tell me it there is any problem with it.  </LI>
+</UL>
+<H2><A NAME="ss4.3">4.3 Compile and install </A>
+</H2>
+
+<P>
+<P>Compile or otherwise install the gathered tools. Look at every one's documentation (and the firewall-howto) for details. Now we have the tools. 
+<H2><A NAME="ss4.4">4.4 Configure the other subsystems </A>
+</H2>
+
+<P>
+<P>Configure your firewall rules, etc. You need to enable ssh traffic between the two firewll hosts. It means a connection to port 22 on the slave from the master. Start sshd on the slave and verify if you can login. This step is untested, please tell me your results. 
+<H2><A NAME="ss4.5">4.5 Set up the accounts for the VPN </A>
+</H2>
+
+<P>
+<P>Create an account on the slave firewall use your favourite tool (e.g. vi, mkdir, chown, chmod) you might create an account on the master also, but I think you want to set up the connection at boot time, so your ordinary root account will do. Can anyone point out risks on using the root account on the master?  
+<H2><A NAME="ss4.6">4.6 Generate an ssh key for your master account </A>
+</H2>
+
+<P>
+<P>Use the ssh-keygen program. Set empty password for the private key if you want to do automatic setup of the VPN.  
+<H2><A NAME="ss4.7">4.7 Set up automatic ssh login for the slave account </A>
+</H2>
+
+<P>
+<P>Copy the newly generated public key in the slave account under .ssh/authorized_keys, and set up file permissions like the following:  
+<PRE>
+drwx------ 2 slave slave 1024 Apr 7 23:49 ./  
+drwx------ 4 slave slave 1024 Apr 24 14:05 ../  
+-rwx------ 1 slave slave 328 Apr 7 03:04 authorized_keys  
+-rw------- 1 slave slave 660 Apr 14 15:23 known_hosts  
+-rw------- 1 slave slave 512 Apr 21 10:03 random_seed  
+</PRE>
+<P>The first row being ~slave/.ssh, and the second is ~slave. 
+<H2><A NAME="ss4.8">4.8 Tighten ssh security on the bastions. </A>
+</H2>
+
+<P>
+<P>It means the followings on my setup in sshd_conf:  
+<PRE>
+PermitRootLogin no  
+IgnoreRhosts yes  
+StrictModes yes  
+QuietMode no  
+FascistLogging yes  
+KeepAlive yes  
+RhostsAuthentication no  
+RhostsRSAAuthentication no  
+RSAAuthentication yes  
+PasswordAuthentication no  
+PermitEmptyPasswords no 
+</PRE>
+<P>Password authentication is turned off, so login is only possible with authorized keys. (You've turned off telnet and the 'r' commands of course). 
+<H2><A NAME="ss4.9">4.9 Enable execution of ppp and route for both accounts. </A>
+</H2>
+
+<P>
+<P>As the master account is the root in my case, it has nothing to do. For the slave account, the following lines appear in /etc/sudoers:  
+<PRE>
+Cmnd_Alias VPN=/usr/sbin/pppd,/usr/local/vpn/route  
+slave ALL=NOPASSWD: VPN  
+</PRE>
+<P>As you can see, I am using some scripts to set up ppp and the routing tables on the slave host.  
+<H2><A NAME="ss4.10">4.10 Do the scripting </A>
+</H2>
+
+<P>
+<P>On the master host there is a full-blown init script I am using:  
+<PRE>
+#! /bin/sh
+# skeleton      example file to build /etc/init.d/ scripts.
+#               This file should be used to construct scripts for /etc/init.d.
+#
+#               Written by Miquel van Smoorenburg &lt;miquels@cistron.nl>.
+#               Modified for Debian GNU/Linux
+#               by Ian Murdock &lt;imurdock@gnu.ai.mit.edu>.
+#
+# Version:      @(#)skeleton  1.6  11-Nov-1996  miquels@cistron.nl
+#
+
+PATH=/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/bin/X11/:
+PPPAPP=/home/slave/ppp
+ROUTEAPP=/home/slave/route
+PPPD=/usr/sbin/pppd
+NAME=VPN
+REDIR=/usr/local/bin/pty-redir
+SSH=/usr/bin/ssh
+MYPPPIP=192.168.0.1
+TARGETIP=192.168.0.2
+TARGETNET=193.6.37.0
+MYNET=193.6.35.0
+SLAVEWALL=polanski-out
+SLAVEACC=slave
+
+test -f $PPPD || exit 0
+
+set -e
+
+case "$1" in
+  start)
+        echo setting up vpn
+        $REDIR $SSH -o 'Batchmode yes' -t -l $SLAVEACC $SLAVEWALL sudo $PPPAPP >/tmp/device
+        TTYNAME=`cat /tmp/device`
+echo tty is $TTYNAME
+        sleep 10s
+        if [ ! -z $TTYNAME ]
+        then
+        $PPPD $TTYNAME ${MYPPPIP}:${TARGETIP}
+        else
+                echo FAILED!
+                logger "vpn setup failed"
+        fi
+        sleep 5s
+        route add -net $TARGETNET gw $TARGETIP
+        $SSH -o 'Batchmode yes' -l $SLAVEACC $SLAVEWALL sudo $ROUTEAPP
+    ;;
+  stop)
+        ps -ax | grep "ssh -t -l $SLAVEACC " | grep -v grep | awk '{print $1}' | xargs kill
+    ;;
+  *)
+    # echo "Usage: /etc/init.d/$NAME {start|stop|reload}"
+    echo "Usage: /etc/init.d/$NAME {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
+ 
+</PRE>
+<P>The slave uses one script for routing setup (/usr/local/vpn/route):  
+<PRE>
+#!/bin/bash  
+/sbin/route add -net 193.6.35.0 gw 192.168.0.1  
+</PRE>
+<P>and its .ppprc consists of the following:  
+<PRE>
+passive  
+</PRE>
+<HR>
+<A HREF="VPN-5.html">Next</A>
+<A HREF="VPN-3.html">Previous</A>
+<A HREF="VPN.html#toc4">Contents</A>
+</BODY>
+</HTML>

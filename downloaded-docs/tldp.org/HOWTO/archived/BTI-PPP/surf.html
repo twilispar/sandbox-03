@@ -1,0 +1,519 @@
+<HTML
+><HEAD
+><TITLE
+>Surftime</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="BTinternet pppd mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Requirements"
+HREF="req.html"><LINK
+REL="NEXT"
+TITLE="BTi Anytime"
+HREF="x199.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>BTinternet pppd mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="req.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x199.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="SURF">3. Surftime</H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN116">3.1. PPPd Setup</H2
+><P
+> Right, to start off you will need a working installation of
+PPPd, I know from experience that Mandrake 8.0 that sometime is
+doesn't install pppd so check its installed first. Once it is it
+usually resides in <TT
+CLASS="FILENAME"
+>/usr/sbin/pppd</TT
+> check that any
+users you want to access it have setuid access.</P
+><P
+>Note: Setuid allows pppd to run as-if root allowing non-superusers to run pppd without less problems. To do this use the command <B
+CLASS="COMMAND"
+>chmod 4750 /usr/sbin/pppd</B
+>. Beware: Some distributions have a watchdog program that will change the pppd permissions back to normal. I have not tested this but on RedHat derived systems with Linuxconf installed then removing the <TT
+CLASS="FILENAME"
+>/usr/lib/linuxconf/redhat/perm/ppp</TT
+> should stop this happening.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN123">3.2. Chatscript (Dialup)</H2
+><P
+> The Chatscript is a text file, usually residing in
+<TT
+CLASS="FILENAME"
+>/etc/ppp</TT
+> that contains the commands passed to
+the modem to make it dial to BTi. If you want to compare this to DUN
+in Windows then this is the phone number and init commands.  </P
+><P
+> Below is the chatscript used to dial BTi, I've now opted for putting the \T metacharacter in the script. The means when we run <B
+CLASS="COMMAND"
+>chat</B
+>, inside the pppd command, we can use a <TT
+CLASS="FILENAME"
+>-T</TT
+> parameter and supply the needed telephone number.</P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  "" "ATZ"
+
+  # The next two lines should be left commented out until
+  # the script works.
+
+  # "OK" "ATL0"
+  # "OK" "ATM0"
+  
+  SAY "Dialing modem...\n"
+  "OK" "ATDT \T"
+  ABORT BUSY
+  ABORT "NO CARRIER"
+  TIMEOUT 60
+  CONNECT \c</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> This script will dial BTi providing you put in the \T so we can added the telephone number later. I suggest saving the chatscript as something like <TT
+CLASS="FILENAME"
+>/etc/ppp/chatscript</TT
+> Once you've saved it we can move onto setting up BTi's CHAP authentication.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN134">3.3. Authentication</H2
+><P
+> With PPP dialup's the most widely used authentication method,
+apparently, is PAP (Password Authentication Protocol). However, just
+to be a pain in the backside BTi use CHAP (Challenge Handshake
+Authentication Protocol). To be fair CHAP is a more secure authentication method than PAP but it's still a pain. Now PPPd does support this but not through
+nice easy to use Linuxconf dialogs.  </P
+><P
+>In the
+<TT
+CLASS="FILENAME"
+>/etc/ppp</TT
+> directory should be a
+<TT
+CLASS="FILENAME"
+>chap-secrets</TT
+> that looks roughly like this when
+first installed:  </P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  # Secrets for authentication using CHAP
+  # client    server    secret    IP addresses</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> We can safely ignore the IP Address column but the others me
+must worry about. So fill in the gaps like this:  </P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  # Secrets for authentication using CHAP
+  # client    server    secret    IP addresses
+  "bloggs@btinternet.com"  *   "mypasswordhere"</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> These two extra lines will try and authenticate ANY outgoing
+PPP connection that responds using CHAP using your BTi details. It
+goes without saying that you replace
+<EM
+>bloggs@btinternet.com</EM
+> and
+<EM
+>mypasswordhere</EM
+> with your details. Also, the second line is not strictly needed but I've found it helps sometimes.</P
+><P
+><STRONG
+>Note</STRONG
+>: If you're not using BTi at this point you can usually get away with having identical <TT
+CLASS="FILENAME"
+>chap-secrets</TT
+> and <TT
+CLASS="FILENAME"
+>pap-secrets</TT
+>. If you the same kind of pattern as above it should work.</P
+><P
+>I suggest that you do a "<B
+CLASS="COMMAND"
+>chmod 600 /etc/ppp/*secrets</B
+>". It was pointed out to me that it stops pppd shouting about security.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN154">3.4. Setting your global options</H2
+><P
+> In your <TT
+CLASS="FILENAME"
+>/etc/ppp</TT
+> directory there is a
+file called <TT
+CLASS="FILENAME"
+>options</TT
+>. If your open it with your
+favourite text editor you should see:</P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  lock</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> And thats it, now we need to add some more settings in here so
+make it look like:  </P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  lock
+  usepeerdns
+  defaultroute
+  noipdefault
+  noauth
+  asyncmap 0
+  crtscts
+  modem
+  115200</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> Don't worry what they do, if you're interested look at the man
+page for pppd. As a passing note if you would like PPPd to redial
+dropped connections then add <EM
+>persist</EM
+> to the end
+of your options file.  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN166">3.5. Testing your link</H2
+><P
+> Now you've created your Chatscript there are only two steps
+left till you should be on the Internet. First is getting a working
+link and second is creating a couple of easy dialup scripts to help
+you.  </P
+><P
+>To test your link try this command:</P
+><P
+><B
+CLASS="COMMAND"
+>pppd ttyS0 connect '/usr/sbin/chat -v -TPHONE_NUM_HERE -f /etc/ppp/chatscript' updetach debug name bloggs@btinternet.com</B
+></P
+><P
+> Now obviosuly if your testing at Daytiem rate add the Daytiem number where instead of <TT
+CLASS="FILENAME"
+>PHONE_NUM_HERE</TT
+> and similar with Surftime.</P
+><P
+> This will tell PPPd to dial the modem on ttyS0 (COM1) using the chatscript. The <TT
+CLASS="OPTION"
+>updetach</TT
+> tells PPPd to only fork away to the commandline after the connection is established and the <TT
+CLASS="OPTION"
+>debug</TT
+> will show all authentication commands onscreen (providing updetach it set) while it trys to connect. </P
+><P
+> If that connected then move onto the next section and we can
+make a set of scripts to allow easy dialing.  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN178">3.6. Dialing scripts</H2
+><P
+> Here I'll just set out a set of scripts that will let your
+dial BTi from a command line easily. The following should be
+self-explanatory, the italic filename is the filename to put the data
+into and the proceeding text the file contents:  </P
+><P
+><B
+CLASS="COMMAND"
+>/etc/ppp/peers/bt-surf</B
+></P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  ttyS0 connect '/usr/sbin/chat -v -TSURFTIME_NUMBER_HERE -f /etc/ppp/chatscript' 
+  updetach name bloggs@btinternet.com</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+><B
+CLASS="COMMAND"
+>/etc/ppp/peers/bt-day</B
+></P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  ttyS0 connect '/usr/sbin/chat -v -TDAYTIME_NUMBER HERE -f /etc/ppp/chatscript' 
+  updetach name bloggs@btinternet.com</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> Change any of the filenames to suit what you called them and
+the username. Do the same with this:  </P
+><P
+><B
+CLASS="COMMAND"
+>/usr/bin/internet</B
+></P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  #!/bin/bash
+  # a script to dial BTi
+  case "$1" in
+  daytime)
+     /usr/sbin/pppd call bt-day
+     ;;
+  surftime)
+     /usr/sbin/pppd call bt-surf
+     ;;
+  off)
+     killall pppd
+     ;;
+  esac</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> Once you've done that run this command at the command prompt:</P
+><P
+><B
+CLASS="COMMAND"
+>chmod a+x /usr/bin/internet</B
+></P
+><P
+> Now you've done, simply type 
+<B
+CLASS="COMMAND"
+>internet daytime/surftime/off</B
+> and it 
+will connect you to the internet.  </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="req.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x199.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Requirements</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>BTi Anytime</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

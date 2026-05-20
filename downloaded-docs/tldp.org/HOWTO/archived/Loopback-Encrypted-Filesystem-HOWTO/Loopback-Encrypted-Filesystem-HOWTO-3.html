@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>Loopback Encrypted Filesystem HOWTO: Summary</TITLE>
+ <LINK HREF="Loopback-Encrypted-Filesystem-HOWTO-4.html" REL=next>
+ <LINK HREF="Loopback-Encrypted-Filesystem-HOWTO-2.html" REL=previous>
+ <LINK HREF="Loopback-Encrypted-Filesystem-HOWTO.html#toc3" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO-4.html">Next</A>
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO-2.html">Previous</A>
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO.html#toc3">Contents</A>
+<HR>
+<H2><A NAME="s3">3. Summary</A></H2>
+
+<P>There are many steps involved in the process.  I will provide
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO-4.html#Details">Details</A>
+ for these steps in the next section. I thought
+it would
+be nice to provide a summary first to provide reference (if you
+are experienced with unix/linux you probably don't need the
+details anyway).  Here they are summarized as follows:
+<P>
+<OL>
+<LI>Download the newest international crypto patch (I used
+'patch-int-2.2.10.4' at the time this document was written) from: 
+
+<P>
+<BLOCKQUOTE><CODE>
+<A HREF="http://ftp.kerneli.org/pub/kerneli/">http://ftp.kerneli.org/pub/kerneli/</A></CODE></BLOCKQUOTE>
+<P>
+<P>
+</LI>
+<LI>Patch the kernel
+
+<P>
+</LI>
+<LI>Run 'config' (or 'menuconfig' or 'xconfig') to configure
+your
+'MakeFile' for the new kernel.  The options to enable encryption
+are
+scattered.  First of all, before you will see any other options
+you must
+enable 'Prompt for development and/or incomplete code/drivers'
+under 'Code
+Maturity level options'.  Under 'Crypto options' enable 'crypto
+ciphers' and
+'serpent'.  Once again, this document assumes you are using
+serpent, but try
+whatever you want.  Remember that DES is known to be incompatible
+as of
+2.2.10.4 - it may never be supported at all.  There are several
+important options to select under 'Block Devices'.  These include
+'Loopback
+device support', 'Use relative block numbers as basis for
+transfer functions
+(RECOMMENDED)', and 'General encryption support'.  DO NOT select
+'cast 128' or
+'twofish' encryption here.  Also note that you don't need any of
+the crypto
+options under the various network categories.  I will not go  any
+further into
+configuration of the kernel, it is out of the scope of this
+document and can
+be found at the LDP site.
+
+<P>
+</LI>
+<LI>Compile the new kernel.
+
+<P>
+</LI>
+<LI>Edit '/etc/lilo.conf' to add the new kernel image.  Run
+'lilo -v' to
+add the kernel to the boot loader.
+
+<P>
+</LI>
+<LI>Download the source for the newest 'util-linux' (I used
+'util-linux-2.9v') package from:
+
+<P>
+<BLOCKQUOTE><CODE>
+<A HREF="ftp://ftp.kernel.org/pub/linux/utils/util-linux/">ftp://ftp.kernel.org/pub/linux/utils/util-linux/</A></CODE></BLOCKQUOTE>
+<P>
+<P>
+</LI>
+<LI>Extract the 'util-linux' source.
+
+<P>
+</LI>
+<LI>Apply the corresponding patch found in your
+'/usr/src/linux/Documentation/crypto/' directory.
+
+<P>
+</LI>
+<LI>CAREFULLY read the 'INSTALL' file!  This package
+contains the 
+sources for many system dependent files (important tools such as
+'login', 'passwd', and 'init').  If you don't carefully edit the
+MCONFIG
+file before compiling these sources have a boot disk and/or
+shotgun ready
+because your system will be quite confused.  Basically you want
+to set almost
+all of the 'HAVE_*' fields equal to yes so that the important
+authentication
+tools are not compiled and written over.  The tools you do want
+rebuilt
+are 'mount' and 'losetup' to accommodate the new encryption
+schemes.  I
+suggest that you refer to the 
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO-4.html#Details">Details</A>
+ section below
+for this step.
+
+<P>
+</LI>
+<LI>Compile and install the 'util-linux' source
+
+<P>
+</LI>
+<LI>Reboot the machine with the new kernel.
+
+<P>
+</LI>
+<LI>Edit '/etc/fstab', adding an entry for your mount point
+as follows:
+
+<P>
+<BLOCKQUOTE><CODE>
+<HR>
+<PRE>
+/dev/loop0  /mnt/crypt  ext2  user,noauto,rw,loop 0 0
+</PRE>
+<HR>
+</CODE></BLOCKQUOTE>
+<P>
+<P>
+</LI>
+<LI>Create the directory that will hold your filesystem, as
+in
+'/mnt/crypt' above.
+
+<P>
+</LI>
+<LI>As the user, create your encrypted file as follows:
+
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+dd if=/dev/urandom of=/etc/cryptfile bs=1M count=10
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>
+</LI>
+<LI>Run losetup as follows:
+
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+losetup -e serpent /dev/loop0 /etc/cryptfile
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>You only have one chance to enter the password, be careful.  If
+you want to
+double-check your password, you can use the command:
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+losetup -d /dev/loop0
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>This will deactivate your loop device.  Next you will run losetup
+again to
+test your password, as follows:
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+losetup -e serpent /dev/loop0 /etc/cryptfile
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>
+</LI>
+<LI>Make your ext2 filesystem as follows:
+
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+mkfs -t ext2 /dev/loop0
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>
+</LI>
+<LI>Now you can mount the encrypted filesystem with:
+
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+mount -t ext2 /dev/loop0 /mnt/crypt
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>
+</LI>
+<LI>When your done, you want to unmount and protect your
+filesystem as
+follows: 
+
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+umount /dev/loop0
+losetup -d /dev/loop0
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+</LI>
+</OL>
+<P>
+<P>
+<HR>
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO-4.html">Next</A>
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO-2.html">Previous</A>
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO.html#toc3">Contents</A>
+</BODY>
+</HTML>

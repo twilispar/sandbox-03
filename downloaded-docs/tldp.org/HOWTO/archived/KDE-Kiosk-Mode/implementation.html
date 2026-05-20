@@ -1,0 +1,713 @@
+<HTML
+><HEAD
+><TITLE
+>Implementation</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="KDE Kiosk Mode HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Motivation"
+HREF="motivation.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>KDE Kiosk Mode HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="motivation.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+>&nbsp;</TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="IMPLEMENTATION">3. Implementation</H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PATCHES">3.1. Source Code Patches</H2
+><P
+>Some files in kdebase-2.1.1 have to be patched:
+ </P
+><P
+></P
+><UL
+><LI
+><P
+>appletop_mnu.cpp.patch: Applets on the panel can be moved and removed, but
+the Preferences dialog is disabled.</P
+></LI
+><LI
+><P
+>k_mnu.cpp.patch: <SPAN
+CLASS="GUIMENUITEM"
+>Run Command...</SPAN
+> and
+<SPAN
+CLASS="GUISUBMENU"
+>Configure Panel</SPAN
+> entries are 
+  removed from the standard <SPAN
+CLASS="GUIMENU"
+>K</SPAN
+> Menu</P
+></LI
+><LI
+><P
+>khc_man.cc.patch: Online Help is completely disabled. This would
+  open konqueror.</P
+></LI
+><LI
+><P
+>konq_popupmenu.cc.patch: right-mouse menu on icons on the desktop
+  are reduced to <SPAN
+CLASS="GUIMENUITEM"
+>Cut</SPAN
+>,
+<SPAN
+CLASS="GUIMENUITEM"
+>Copy</SPAN
+>, <SPAN
+CLASS="GUIMENUITEM"
+>Paste</SPAN
+>,
+<SPAN
+CLASS="GUIMENUITEM"
+>Delete</SPAN
+>, ... but no <SPAN
+CLASS="GUIMENUITEM"
+>Open With
+...</SPAN
+>,
+  no <SPAN
+CLASS="GUIMENUITEM"
+>Edit File Type...</SPAN
+> and no
+<SPAN
+CLASS="GUIMENUITEM"
+>Poperties...</SPAN
+> dialogs. </P
+></LI
+><LI
+><P
+>pagerapplet.cpp.patch: on minipager selection of type
+(<SPAN
+CLASS="GUIMENUITEM"
+>Preview</SPAN
+>,
+<SPAN
+CLASS="GUIMENUITEM"
+>Number</SPAN
+>, 
+  <SPAN
+CLASS="GUIMENUITEM"
+>Name</SPAN
+>) is disabled. this caused trouble in
+multihead environment.  </P
+></LI
+><LI
+><P
+>panel.cpp.patch: right mouse menu on Panel is disabled.</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="GLOBAL-MODIFICATION">3.2. Global modifications</H2
+><P
+>&#13;Instead of a dcop call, a program <B
+CLASS="COMMAND"
+>screensaver</B
+> is
+executed, which must be found in the <TT
+CLASS="ENVAR"
+>PATH</TT
+>. Just create
+a script called <B
+CLASS="COMMAND"
+>screensaver</B
+> 
+with the following contents:
+
+    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>#!/bin/bash
+
+dcop kdesktop KScreensaverIface lock
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+make it executable and put it in <TT
+CLASS="FILENAME"
+>$KDEDIR/bin</TT
+>.
+
+   </P
+><P
+>&#13;Instead of the normal procedure, a program <B
+CLASS="COMMAND"
+>klogout</B
+>
+is called, which must be found in the <TT
+CLASS="ENVAR"
+>PATH</TT
+>. Create a
+script called <B
+CLASS="COMMAND"
+>klogout</B
+> with the following contents:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>#!/bin/bash
+
+dcop kdesktop KDesktopIface logout</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+make it executable and put it in <TT
+CLASS="FILENAME"
+>$KDEDIR/bin</TT
+>,
+where <TT
+CLASS="FILENAME"
+>$KDEDIR</TT
+> is the install directory of KDE and
+<TT
+CLASS="FILENAME"
+>$KDEDIR/bin</TT
+> is found in your
+<TT
+CLASS="ENVAR"
+>PATH</TT
+>. 
+   </P
+><P
+></P
+><UL
+><LI
+><P
+>krootwm.cc.patch: klogout is executed instead of a dcop call</P
+></LI
+><LI
+><P
+>systemtrayapplet.cpp.patch: again call of klogout and screensaver
+  instead of dcop calls.</P
+></LI
+><LI
+><P
+>workspace.cpp.patch: call of klogout instead of dcop call.</P
+></LI
+></UL
+><P
+>Everything else can be done with normal configuration, that is:
+
+(Configuration files can be found in <TT
+CLASS="FILENAME"
+>$KDEDIR/share/config</TT
+>) 
+
+Remove Trash, Templates and Autostart Icons from the desktop and disable
+<B
+CLASS="KEYCAP"
+>Alt</B
+>+<B
+CLASS="KEYCAP"
+>F2</B
+>
+by modifying <TT
+CLASS="FILENAME"
+>kdeglobals</TT
+>. Make sure the following
+entries exist: 
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>[Paths]
+
+Trash=$HOME/.kde2/Trash/
+
+Autostart=$HOME/.kde2/Autostart/
+
+Templates=$HOME/.kde2/Templates/
+
+Desktop=$HOME/.kde2/Desktop/
+
+
+[Global Keys]
+
+Execute command=</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+(it may be <TT
+CLASS="FILENAME"
+>.kde</TT
+> instead of <TT
+CLASS="FILENAME"
+>.kde2</TT
+>)&#13;</P
+><P
+>disable Desktop menu and tips on start. Make sure the following entry
+exists in <TT
+CLASS="FILENAME"
+>kdesktoprc</TT
+>:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>[Mouse Buttons]
+
+Right=
+
+[General] 
+
+TipsOnStart=false</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+You could also login as the special user, and configure it only for
+him, then the config files are found in <TT
+CLASS="FILENAME"
+>$KDEHOME/share/config</TT
+> where
+<TT
+CLASS="FILENAME"
+>$KDEHOME</TT
+> is normally <TT
+CLASS="FILENAME"
+>$HOME/.kde</TT
+>.&#13;</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="KDE-MODE">3.3. How to set the variable KDE_MODE</H2
+><P
+>To answer this, you must understand what happens after you
+successfully authorized yourself to the system: Depending on your
+distribution, some scripts are executed, from which one should be
+modified to set <TT
+CLASS="ENVAR"
+>KDE_MODE</TT
+>. There is a script called
+<B
+CLASS="COMMAND"
+>Xsession</B
+> under <TT
+CLASS="FILENAME"
+>/etc/X11/xdm</TT
+> or
+<TT
+CLASS="FILENAME"
+>/usr/X11R6/lib/xdm</TT
+>, which you could modify, or
+<B
+CLASS="COMMAND"
+>startkde</B
+>, that is located under
+<TT
+CLASS="FILENAME"
+>$KDEDIR/bin</TT
+>.  Note however, that the variable
+must be set prior to calling the kde processes.</P
+><P
+>Since we had the need to make a setup for a big environment (now
+reaching 300 users) we wrote an application that enables us to
+administer.  It also creates the KDE Menus. It writes a file called
+<TT
+CLASS="FILENAME"
+>.env.sh</TT
+> in a user's home directory, that will be
+sourced in <B
+CLASS="COMMAND"
+>Xsession</B
+>. That is what you could do. So
+you could put in <TT
+CLASS="FILENAME"
+>.env.sh</TT
+> of that specific user's
+home directory:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>#!/bin/sh
+
+KDE_MODE="restricted"
+
+export KDE_MODE</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>and add to Xsession, somewhere prior to calling startkde:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>if [ -f $HOME/.env.sh ]; then
+
+    . $HOME/.env.sh
+
+fi</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>We also have two kdedirs that looks like to separate installations of
+KDE, this was neccessary so "normal" users could still have a
+full-featured KDE. So we have an original kdedir, and a restricted
+kdedir, in which we removed entries under
+<TT
+CLASS="FILENAME"
+>share/applnk</TT
+> and set the variable
+<TT
+CLASS="ENVAR"
+>KDEDIR</TT
+> (under KDE 2 the variable <TT
+CLASS="ENVAR"
+>KDEDIRS</TT
+>
+was introduced but <TT
+CLASS="ENVAR"
+>KDEDIR</TT
+> is still used). The files
+under <TT
+CLASS="FILENAME"
+>share/applnk</TT
+> make up the menu. Caution, you
+cannot just remove all files there, because some are needed to
+initialize KDE.</P
+><P
+>You also set the Variable <TT
+CLASS="ENVAR"
+>KDEDIR</TT
+> in
+<B
+CLASS="COMMAND"
+>Xsession</B
+>, after sourcing
+<TT
+CLASS="FILENAME"
+>.env.sh</TT
+> like this:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>case "$KDE_MODE" in
+
+    restricted)
+
+        KDEDIR=/usr/local/kde/restricted_kdedir
+
+        ;;
+
+    *)
+
+        KDEDIR=/usr/local/kde
+
+esac
+
+export KDEDIR</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Replace <TT
+CLASS="FILENAME"
+>/usr/local/kde</TT
+> with the install directory
+of your KDE.  The contents of
+<TT
+CLASS="FILENAME"
+>/usr/local/kde/restricted_kdedir</TT
+> looks like:
+
+<TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>&#13;bin -&#62; ../bin
+
+cgi-bin -&#62; ../cgi-bin
+
+etc -&#62; ../etc
+
+lib -&#62; ../lib
+
+share&#13;</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>&#13;</P
+><P
+>only share is a real directory, every other directory is a symbolic
+link pointing to original
+kdedir. <TT
+CLASS="FILENAME"
+>/usr/local/kde/restricted_kdedir/share</TT
+>
+has the following contents: 
+
+<TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>&#13;aclocal -&#62; ../../share/aclocal
+
+applnk
+
+apps -&#62; ../../share/apps
+
+autostart -&#62; ../../share/autostart
+
+config -&#62; ../../share/config
+
+doc -&#62; ../../share/doc
+
+fonts -&#62; ../../share/fonts
+
+icons -&#62; ../../share/icons
+
+locale -&#62; ../../share/locale
+
+mimelnk -&#62; ../../share/mimelnk
+
+services -&#62; ../../share/services
+
+servicetypes -&#62; ../../share/servicetypes
+
+sounds -&#62; ../../share/sounds
+
+templates -&#62; ../../share/templates
+
+wallpapers -&#62; ../../share/wallpapers&#13;</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>&#13;</P
+><P
+>only applnk is a real directory.  As a minimal requirement remove
+everything except:
+
+<TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>&#13;Settings/Peripherals/mouse.desktop
+
+Settings/LookNFeel/background.desktop
+
+                  /colors.desktop
+
+                  /kwinoptions.desktop
+
+                  /style.desktop
+
+                  /virtualdesktops.desktop&#13;</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+under <TT
+CLASS="FILENAME"
+>/usr/local/kde/restricted_kdedir/share/applnk</TT
+>&#13;</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="motivation.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Motivation</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

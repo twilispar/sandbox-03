@@ -1,0 +1,269 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/sysctl.conf file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Files -Networking Functionality"
+HREF="file-netfunc.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/sysconfig/network file"
+HREF="chap9sec93.html"><LINK
+REL="NEXT"
+TITLE="The /etc/hosts file"
+HREF="chap9sec95.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap9sec93.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. Files -Networking Functionality</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap9sec95.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN6129"
+>9.6. The <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file</A
+></H1
+><P
+>&#13;           In Red Hat Linux 6.2, many kernel options related to networking security such as dropping packets that come in over interfaces they shouldn't or ignoring <TT
+CLASS="literal"
+>ping/broadcasts</TT
+> request, <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+> can 
+           be set in the new <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file instead of the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> file. One important consideration is the <TT
+CLASS="literal"
+>IPv4</TT
+> forwarding parameter which is now done via 
+           the sysctl program, as opposed to being controlled by the contents of the file in <TT
+CLASS="filename"
+>/etc/sysconfig/network</TT
+>. The sysctl settings are stored in <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+>, and are loaded at each 
+           boot before the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> file is loaded. We've already talked about all networking security parameters that we must set into the 
+           server in <A
+HREF="gen-syssecured.html"
+>General System Security</A
+>, and for this reason we'll focus only on the kernel option for <TT
+CLASS="literal"
+>IPv4</TT
+> forwarding.
+           </P
+><P
+>&#13;           To enable IPv4 forwarding on your RH 6.2 system, use the following command:
+           Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following line:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           # Enable packet forwarding
+           net.ipv4.ip_forward = 1
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           
+           You must restart your network for the change to take effect. The command to restart the network is the following:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+>&#13;           <TT
+CLASS="computeroutput"
+>&#13;           Setting network parameters	        [  OK  ]
+           Bringing up interface lo	        [  OK  ]
+           Bringing up interface eth0	        [  OK  ]
+           Bringing up interface eth1	        [  OK  ]
+           </TT
+>
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+           Enabling IPv4 forwarding via the <TT
+CLASS="filename"
+>sysctl.conf</TT
+> file is only valid for Red Hat Linux 6.2 users. Users with version 6.1 of Red Hat must set this parameter into the <TT
+CLASS="filename"
+>/etc/sysconfig/network</TT
+> file as 
+           explained above.
+           </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap9sec93.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap9sec95.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/sysconfig/network</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="file-netfunc.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/hosts</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

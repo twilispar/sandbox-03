@@ -1,0 +1,735 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Linux PDAs: Agenda, iPAQ, Yopy, Zaurus</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Hardware Supported by Linux/IrDA"
+HREF="infrared-howto-c-hardware-supported.html"><LINK
+REL="PREVIOUS"
+TITLE="IrDA and USB"
+HREF="infrared-howto-s-irda-usb.html"><LINK
+REL="NEXT"
+TITLE="Advanced Topics"
+HREF="infrared-howto-c-advanced-topics.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-irda-usb.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 4. Hardware Supported by Linux/IrDA</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-c-advanced-topics.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-irda-pda"
+></A
+>4.7. Linux PDAs: Agenda, iPAQ, Yopy, Zaurus</H1
+><P
+>&#13;   The most known Linux PDAs in these days are the
+   <A
+HREF="http://tuxmobil.org/pda_linux_agenda.html"
+TARGET="_top"
+>Agenda VR3</A
+>
+   by AgendaComputing (out-of-production),
+   the 
+   <A
+HREF="http://tuxmobil.org/pda_linux_ipaq.html"
+TARGET="_top"
+>iPAQ</A
+>
+   by COMPAQ, 
+   the
+   <A
+HREF="http://tuxmobil.org/pda_linux_sharp_sl5000.html"
+TARGET="_top"
+>Zaurus SL-5000/5500</A
+>
+   by SHARP,
+   and the <A
+HREF="http://tuxmobil.org/pda_yopy.html"
+TARGET="_top"
+>Yopy</A
+>
+   by Samsung.
+   All of these have an infrared port. 
+   There are different Linux distributions for Linux PDAs
+   available, e.g.:
+   <A
+HREF="http://www.trolltech.com/"
+TARGET="_top"
+>QT Embedded</A
+> (pre-installed on the SHARP Zaurus),
+   <A
+HREF="http://opie.handhelds.org/"
+TARGET="_top"
+>Opie</A
+>,
+   <A
+HREF="http://familiar.handhelds.org/"
+TARGET="_top"
+>Familiar</A
+>
+   and more.
+
+   Software IPK packages mentioned below you may find at
+   <A
+HREF="http://www.killefiz.de/zaurus/"
+TARGET="_top"
+>Zaurus Software Index - ZSI</A
+>
+   or
+   <A
+HREF="http://ipkgfind.handhelds.org"
+TARGET="_top"
+>ipkgfind</A
+>.
+   See
+   <A
+HREF="http://tuxmobil.org/pda_linux.html"
+TARGET="_top"
+>TuxMobil</A
+>
+   for further information about Linux on and with PDAs in general.
+</P
+><P
+>&#13;   The following is based on my experience with the 
+   <A
+HREF="http://www.sharp-world.com/"
+TARGET="_top"
+>SHARP</A
+>
+   Zaurus SL-5500G, with the original SHARP romimage 2.38G and 
+   Kernel 2.4.6-rmk1-np2-embedix#1,
+   but may be applied mutatis mutandis to other Linux PDAs.
+   The Zaurus comes with a written manual, where beaming files and PPP connections
+   are explained using the GUI (e.g. FileManager, Settings). 
+   Here I will try to cover what can be done
+   from the command line and topics neither included in the official SHARP manual nor the
+   <A
+HREF="http://www.rit.edu/~tfs1812/opieusermanual/book1.htm"
+TARGET="_top"
+>Opie User Manual</A
+>
+   
+   .
+   The infrared functions seem to be part of the StrongARM SA1110 CPU, the
+   IrDA driver module is named <B
+CLASS="command"
+>sa1110_ir</B
+> (on the stock
+   Zaurus IrDA support seems to be built into the Kernel). From the
+   <B
+CLASS="command"
+>irda-utils</B
+> only <B
+CLASS="command"
+>irattach</B
+> is
+   available. IrDA support is attached via <B
+CLASS="command"
+>irattach /dev/ttyS2 -s 1</B
+>
+   (note "-s 1" will be replaced by "-s" with newer versions). So it looks like 
+   SIR is used, I don't have information about FIR support yet.
+   To get some of the functionality of <B
+CLASS="command"
+>irdadump</B
+> and
+   detect other IrDA devices in range or debug IrDA you may use 
+   <B
+CLASS="command"
+>cat /proc/net/irda/discovery</B
+> and the other 
+   files in the <TT
+CLASS="filename"
+>/proc</TT
+> filesystem or compile
+   the <B
+CLASS="command"
+>irda-utils</B
+> for the ARM archictecture by yourself,
+   also pre-compiled binaries are available.
+   From the device files only <TT
+CLASS="filename"
+>/dev/ircomm</TT
+> (note 
+   it's not <TT
+CLASS="filename"
+>/dev/ircomm0</TT
+>) is
+   created by default. The file <TT
+CLASS="filename"
+>modules.conf</TT
+> doesn't
+   seem to exist. With <B
+CLASS="command"
+>irrecv</B
+> you may start the infrared
+   GUI settings. IrOBEX support is available, but the appropriate tools from
+   <A
+HREF="http://sourceforge.net/projects/openobex/"
+TARGET="_top"
+>OpenOBEX</A
+>
+   are missing, but you may beam files to a Palm PDA, cell phone or
+   another Linux box or a Microsoft-Windows machine from the GUI.
+   The IrDA startup scripts lives in <TT
+CLASS="filename"
+>/home/etc/rc.d/init.d/irda</TT
+>.
+   For infrared remote control support see below.
+   With <B
+CLASS="command"
+>irdadump</B
+> from another Linux box the Zaurus
+   identifies as (look at the second line):
+</P
+><P
+>&#13;
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;10:56:48.652982 xid:cmd b03cbbb9 &#62; ffffffff S=6 s=5 (14)
+10:56:48.652963 xid:rsp b03cbbb9 &#60; b7960e8f S=6 s=4 localhost hint=8420 [ Computer IrOBEX ] (26)
+10:56:48.742992 xid:cmd b03cbbb9 &#62; ffffffff S=6 s=* japh hint=0400 [ Computer ] (20)
+10:56:51.203002 xid:cmd b03cbbb9 &#62; ffffffff S=6 s=0 (14)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1295"
+></A
+>4.7.1. PPP</H2
+><P
+>&#13;   With PPP you may get a network connection through your cell phone or
+   with another computer. See the
+   <A
+HREF="http://tldp.org/HOWTO/PPP-HOWTO/"
+TARGET="_top"
+>PPP-HOWTO</A
+> 
+   for details. For fowarding packages via NAT through another Linux box
+   see the 
+   <A
+HREF="http://iptables-tutorial.frozentux.net/"
+TARGET="_top"
+>IPTABLES-Tutorial</A
+>
+   .
+</P
+><P
+>&#13;   You may start <B
+CLASS="command"
+>pppd</B
+> with commandline options, but
+   for me it's more convenient to have a configuration file
+   <TT
+CLASS="filename"
+>/etc/ppp/peers/irda</TT
+>. Here is an example for
+   a first test:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;connect /bin/true
+noauth
+persist
+debug
+kdebug 7
+nodetach
+115200
+local
+/dev/ircomm
+192.168.0.2:192.168.0.3
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+
+</P
+><P
+>&#13;   If the other IrDA device is a Linux laptop
+   you may use the same configuration file name and the
+   same PPP options without the last line, 
+   which sets the LOCAL and REMOTE IP address. Also take care
+   of the correct device name, e.g. <TT
+CLASS="filename"
+>/dev/ircomm0</TT
+>.
+   The following entries are for debugging purposes
+   and can be commented out when everything works fine:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;persist
+debug
+kdebug 7
+nodetach
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+</P
+><P
+>&#13;   Now start PPP with <B
+CLASS="command"
+>pppd call irda</B
+> on both machines. 
+   For diagnostic purposes leave the messages running in this 
+   terminal window and switch to another window for the next steps.
+   You may now check the network connectivity with <B
+CLASS="command"
+>ifconfig</B
+>
+   and <B
+CLASS="command"
+>ping</B
+>.
+   For connections to a cell phone see the 
+   Cellular Phone Connection chapter above.
+
+
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1311"
+></A
+>4.7.2. Beaming Files - OpenOBEX</H2
+><P
+>&#13;   The advantage of OBEX is usually the integration. Send an
+   appointement event over OBEX, and most likely the Zaurus will
+   integrate that in the built-in calendar automagically, like the Palm
+   does. Same for business cards.
+   The IrOBEX protocol offers an easy way to beam files via infrared
+   to another PDA, a cell phone or computer. The
+   Linux tools are provided by
+   <A
+HREF="http://sourceforge.net/projects/openobex/"
+TARGET="_top"
+>OpenOBEX</A
+>
+   . Beaming via the GUI between two Zaurus PDAs or to a Palm PDA might
+   work. But currently I couldn't send or receive files from my Linux laptop.
+   When trying to send a file per <B
+CLASS="command"
+>ircp FILE</B
+>, I get this
+   <B
+CLASS="command"
+>irdadump</B
+> message:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;11:11:03.943005 i:cmd  &#62; ca=8a pf=1 nr=0 ns=0 LM slsap=12 dlsap=00 CONN_CMD (6)
+11:11:03.972964 i:rsp  &#60; ca=8a pf=1 nr=1 ns=0 LM slsap=00 dlsap=12 CONN_RSP (6)
+11:11:03.973010 i:cmd  &#62; ca=8a pf=1 nr=1 ns=1 LM slsap=12 dlsap=00 GET_VALUE_BY_CLASS: "OBEX:IrXfer" "IrDA:TinyTP:LsapSel" (37)
+11:11:04.002973 i:rsp  &#60; ca=8a pf=1 nr=2 ns=1 LM slsap=00 dlsap=12 GET_VALUE_BY_CLASS: No such class (11)
+11:11:04.003015 i:cmd  &#62; ca=8a pf=1 nr=2 ns=2 LM slsap=12 dlsap=00 DISC (6)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+</P
+><P
+>&#13;   When trying to receive a file per <B
+CLASS="command"
+>ircp -r</B
+>, I get this
+   
+   <B
+CLASS="command"
+>irdadump</B
+> message:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;11:15:08.682979 i:cmd  &#60; ca=8a pf=1 nr=4 ns=5 LM slsap=53 dlsap=00 CONN_CMD (6)
+11:15:08.683063 i:rsp  &#62; ca=8a pf=1 nr=6 ns=4 LM slsap=00 dlsap=53 CONN_RSP (6)
+11:15:08.712970 i:cmd  &#60; ca=8a pf=1 nr=5 ns=6 LM slsap=53 dlsap=00 GET_VALUE_BY_CLASS: "OBEX" "IrDA:TinyTP:LsapSel" (30)
+11:15:08.713035 i:rsp  &#62; ca=8a pf=1 nr=7 ns=5 LM slsap=00 dlsap=53 GET_VALUE_BY_CLASS: No such class (11)
+11:15:08.732976 i:cmd  &#60; ca=8a pf=1 nr=6 ns=7 LM slsap=53 dlsap=00 DISC (6)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+</P
+><P
+>&#13;   Jean Tourrilhes suggests this solution:
+   "The Zaurus doesn't support the "OBEX:IrXfer" service, it
+   probably only supports the "OBEX" service use 
+   <B
+CLASS="command"
+>cat /proc/net/irda/irias</B
+> to verify.
+   So, either you start a server on "OBEX:IrXfer" on the Zaurus,
+   (<B
+CLASS="command"
+>ircp_server</B
+> - cross compiled for Zaurus), 
+   or you use a client using "OBEX" on the 
+   laptop (<B
+CLASS="command"
+>irobex_palm3</B
+>)."
+</P
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN1326"
+></A
+>4.7.2.1. Tools</H3
+><P
+>&#13;   Beamster is a little Gtk/python utility to help with IrDA transfers
+   especially from and to Linux PDAs
+   (ftp://ftp.handhelds.org/pub/linux/dists/familiar/feeds/unstable/packages/armv4l/).
+   It can talk to most handhelds/laptops/printers which use the IrDA Object
+   Exchange protocol (OBEX), in fact any device which already works with
+   the openobex package will work with this.
+   
+   It should be fairly intuitive to use. Make sure that IrDA is 'On',
+   position the two devices, wait for the status bar to show that a new
+   peer has been discovered, choose the transfer mode (use 'Palm3' for
+   PalmOS peers and 'Windows' for everything else) then press 'beam' or
+   'receive' as appropriate. Note that 'receive' toggles on and off.
+
+   Tested transfers to and from this IrDA devices: an old Palm3,
+   a Psion 5MX, a Windows 98 ThinkPad and a Linux desktop with an Actisys
+   L220+ dongle.
+</P
+><P
+>&#13;   The ObexFTP implementation 
+   <A
+HREF="http://triq.net/obexftp"
+TARGET="_top"
+>flexmem</A
+>
+   accesses the Flex.Memory directly. I piped a S45 data
+   explorer (windows) session through sersniff.
+   The log looks roughly like OBEX over cable. In fact old Open OBEX is working
+   with the Siemens S45 mobile phone.
+   It is confirmed to work well with Siemens S45/ME45 and similar mobile phones.
+   You may access the Flex Memory on Siemens mobile equipment via IrDA or
+   serial connection.
+</P
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1331"
+></A
+>4.7.3. Printing</H2
+><P
+>&#13;   To print directly to an IrDA capable printer you need the device
+   file <TT
+CLASS="filename"
+>/dev/irlpt0</TT
+>. If it's not available, use
+   <B
+CLASS="command"
+>mknod /dev/irlpt0 c 161 16</B
+> to create it.
+   Now you may perform a first and simple test.
+   Try to write a small file to <TT
+CLASS="filename"
+>/dev/irlpt0</TT
+> by 
+   <B
+CLASS="command"
+>cat FILE &#62;/dev/irlpt0</B
+>. With the stock Kernel
+   from SHARP this didn't work, but with a custom kernel it worked fine.
+   Do not wonder about a bad format (the lines form sort of steps)
+   this is just a first check.
+   To get a pretty print format you may have to write a filter
+   as described in the Printing-HOWTO from
+   <A
+HREF="http://www.linuxprinting.org"
+TARGET="_top"
+>LinuxPrinting.org</A
+>
+   .
+   More about printing from mobile Linux devices you may find in the
+   <A
+HREF="http://tuxmobil.org/howto_linux_laptop.html"
+TARGET="_top"
+>Linux-Mobile-Guide</A
+>
+   .
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1340"
+></A
+>4.7.4. Remote Control - LIRC</H2
+><P
+>&#13;   Consumer InfraRed - CIR aka remote control via infrared can be had on 
+   a Linux PDA by installing lirc-modules-KERNEL for the appropriate 
+   Kernel version, and 
+   <A
+HREF="http://www.lirc.org/"
+TARGET="_top"
+>LIRC</A
+>. 
+   For more details see the
+   <A
+HREF="http://handhelds.org/z/wiki/ConsumerIR"
+TARGET="_top"
+>HandHelds.org-WiKi</A
+>
+   and the
+   <A
+HREF="http://www.rit.edu/~tfs1812/"
+TARGET="_top"
+>Opie-Remote</A
+>
+   page.
+   Opie-Remote is a remote control emulator for the Compaq iPAQ and the SHARP
+   Zaurus.
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1346"
+></A
+>4.7.5. Programing QT Embedded for IrDA</H2
+><P
+>&#13;   At the SHARP Zaurus Developer Site you may find the 
+   <A
+HREF="http://www.zauruszone.com/howtos/irda_howto.shtml"
+TARGET="_top"
+>Zaurus-IrDA-HOWTO</A
+>
+   , which explains how to utilize the IrDA port on the Zaurus. The
+   <A
+HREF="http://www.uv-ac.de/ipaqhelp/"
+TARGET="_top"
+>iPAQ Help - iPAQ and Zaurus development using QPE</A
+>
+   by Werner Schulte desribes how to develope Qtopia applications in general.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1351"
+></A
+>4.7.6. Keyboards and Scanners</H2
+><P
+>&#13;   For the iPAQ there is module <TT
+CLASS="filename"
+>h3600_microkbd</TT
+>, which
+   supports the MicroInnovations IR keyboard.
+   
+   There seem to be optical barcode readers available, which use sort
+   of a red light to read the data. But I doubt that this has anything
+   to do with IrDA or Consumer InfraRed - CIR.
+</P
+><P
+>&#13;   <A
+HREF="http://195.184.237.106/~zaurus/"
+TARGET="_top"
+>IRK</A
+>
+   allows you to use external infrared keyboards with the Zaurus. It
+   interfaces the LIRC driver to the Qtopia environment. Currently only the
+   Chicony KB-9820 keyboard (German version) is supported.
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-irda-usb.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-advanced-topics.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>IrDA and USB</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-hardware-supported.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Advanced Topics</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

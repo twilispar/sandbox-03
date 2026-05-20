@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>More on Ports</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node16.html">The Socket Library</A>
+<B>Up:</B> <A HREF="node7.html">TCP/IP Networks</A>
+<B> Previous:</B> <A HREF="node14.html">The User Datagram Protocol</A>
+<BR> <P>
+<H2><A NAME="SECTION003380000">More on Ports</A></H2>
+<A NAME="introtcpipports"></A>
+Ports may be viewed as attachment points for network connections.  If an
+application wants to offer a certain service, it attaches itself to a
+port and waits for clients (this is also called <em>listening</em> on the
+port).  A client that wants to use this service allocates a port on its
+local host, and connects to the server's port on the remote host.
+<P>
+An important property of ports is that once a connection has been
+established between the client and the server, another copy of the server
+may attach to the server port and listen for more clients.  This permits,
+for instance, several concurrent remote logins to the same host, all using
+the same port 513. TCP is able to tell these connections from each other,
+because they all come from different ports or hosts. For example, if you
+twice log into quark from erdos, then the first rlogin
+client will use the local port 1023, and the second one will use port 1022.
+Both however, will connect to the same port 513 on quark.
+<P>
+This example shows the use of ports as rendezvous points, where
+a client contacts a specific port to obtain a specific service.
+In order for a client to know the proper port number, an agreement has
+to be reached between the administrators of both systems on the
+assignment of these numbers. For services that are widely used,
+such as rlogin, these numbers have to be administered
+centrally. This is done by the IETF (or <em>Internet Engineering
+Task Force</em>), which regularly releases an RFC titled <em>Assigned
+Numbers</em>. It describes, among other things, the port numbers assigned
+to <em>well-known services</em>. Linux uses a file mapping service
+names to numbers, called /etc/services. It is described in
+section-<A HREF="node127.html"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+It is worth noting that although both TCP and UDP connections rely on
+ports, these numbers do not conflict. This means that TCP port 513, for
+example, is different from UDP port 513. In fact, these ports serve as
+access points for two different services, namely rlogin (TCP) and
+rwho (UDP).
+<P>
+<A NAME="587"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node16.html">The Socket Library</A>
+<B>Up:</B> <A HREF="node7.html">TCP/IP Networks</A>
+<B> Previous:</B> <A HREF="node14.html">The User Datagram Protocol</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

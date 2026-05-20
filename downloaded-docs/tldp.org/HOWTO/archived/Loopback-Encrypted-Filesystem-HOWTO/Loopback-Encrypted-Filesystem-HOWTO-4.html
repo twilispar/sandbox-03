@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>Loopback Encrypted Filesystem HOWTO: Details</TITLE>
+ <LINK HREF="Loopback-Encrypted-Filesystem-HOWTO-3.html" REL=previous>
+ <LINK HREF="Loopback-Encrypted-Filesystem-HOWTO.html#toc4" REL=contents>
+</HEAD>
+<BODY>
+Next
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO-3.html">Previous</A>
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO.html#toc4">Contents</A>
+<HR>
+<H2><A NAME="Details"></A> <A NAME="s4">4. Details</A></H2>
+
+<P><B>Kernel Patches:</B>
+<P>You can upgrade from '2.2.x' releases by patching.  Each patch
+that is released for '2.2.x' contains bugfixes.  New features
+will be added to the Linux '2.3.x' development kernel.  To
+install by patching, get all the newer patch files and do the
+following:
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+cd /usr/src
+gzip -cd patchXX.gz | patch -p0
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>Repeat xx for all versions bigger than the version of your
+current source tree, IN ORDER.
+<P>The default directory for the kernel source is '/usr/src/linux'.
+If your source is installed somewhere else, I would suggest using
+a symbolic link from '/usr/src/linux'.
+<P>
+<P>
+<P><B>Editing 'MCONFIG' for the 'util-linux' package
+compilation:</B>
+<P>The following are excerpts from the 'MCONFIG' file I used to
+compile the 'util-linux' package.  Note that this is fairly
+specific for my setup, which is loosely based on RedHat 5.2.  The
+point is to make sure you don't overwrite any important system
+tools such as 'login', 'getty', or 'passwd'.  Anyway, here are
+the
+important lines as follows:
+<P>
+<BLOCKQUOTE><CODE>
+<HR>
+<PRE>
+CPU=$(shell uname -m | sed s/I.86/intel/)
+
+LOCALEDIR=/usr/share/locale
+
+HAVE_PAM=no
+
+HAVE_SHADOW=yes
+
+HAVE_PASSWD=yes
+
+REQUIRE_PASSWORD=yes
+
+ONLY_LISTED_SHELLS=yes
+
+HAVE_SYSVINIT=yes
+
+HAVE_SYSVINIT_UTILS=yes
+
+HAVE_GETTY=yes
+
+USE_TTY_GROUP=yes
+
+HAVE_RESET=yes
+
+HAVE_SLN=yes
+
+CC=gcc
+</PRE>
+<HR>
+</CODE></BLOCKQUOTE>
+<P>
+<P><B>Suggestions:</B>
+<P>Note that you could use any of the eight loopback devices, from
+'dev/loop0'
+to '/dev/loop7'.  Use an inconspicuous directory for the mount
+point.  I would
+suggest creating a folder with 700 permissions inside your home
+folder.  The
+same goes for the file that holds the data.  I use a filename
+like 'sysfile'
+or 'config.data' inside the '/etc' folder.  This will usually get
+overlooked.
+<P>I created very simple Perl scripts to mount and unmount the
+filesystem with one command.  Write these, make them executable
+(chmod u+x), and store them somewhere in your path.
+<P>
+<BLOCKQUOTE><CODE>
+<HR>
+<PRE>
+#!/usr/bin/perl -w
+#
+#minimal utility to setup loopback encryption filesystem
+#Copyright 1999 by Ryan T. Rhea
+`losetup -e serpent /dev/loop0 /etc/cryptfile`;
+`mount /mnt/crypt`;
+</PRE>
+<HR>
+</CODE></BLOCKQUOTE>
+<P>Name the above script 'loop', and then you can be on your way
+with one command ('loop') and a password.
+<P>
+<BLOCKQUOTE><CODE>
+<HR>
+<PRE>
+#!/usr/bin/perl -w
+#
+#minimal utility to deactivate loopback encryption filesystem
+#Copyright 1999 by Ryan T. Rhea
+`umount /mount/crypt`;
+`losetup -d /dev/loop0`;
+</PRE>
+<HR>
+</CODE></BLOCKQUOTE>
+<P>Name the second one 'unloop', and then typing 'unloop' will
+quickly deactivate your filesystem.
+<P>
+<HR>
+Next
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO-3.html">Previous</A>
+<A HREF="Loopback-Encrypted-Filesystem-HOWTO.html#toc4">Contents</A>
+</BODY>
+</HTML>

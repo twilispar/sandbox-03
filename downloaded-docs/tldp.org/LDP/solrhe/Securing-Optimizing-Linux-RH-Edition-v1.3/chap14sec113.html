@@ -1,0 +1,473 @@
+<HTML
+><HEAD
+><TITLE
+>Configure and Optimize sXid</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Security/Monitoring"
+HREF="soft-secmonitor.html"><LINK
+REL="PREVIOUS"
+TITLE="sXid"
+HREF="chap14sec112.html"><LINK
+REL="NEXT"
+TITLE="Logcheck"
+HREF="chap14sec114.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap14sec112.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 14. Software -Security/Monitoring</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap14sec114.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN7400"
+>14.2. Configure and Optimize sXid</A
+></H1
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>All the configuration files required for each software described in this book has been provided by us as a gzipped file, <TT
+CLASS="filename"
+>floppy.tgz</TT
+> for your convenience. This can be downloaded from this web address: <A
+HREF="appendixa.html#sc24obecfrs2"
+>http://www.openna.com/books/floppy.tgz</A
+>
+             You can unpack this to any location on your local machine, say for example <TT
+CLASS="filename"
+>/tmp</TT
+>, assuming you have done this your directory structure will be <TT
+CLASS="filename"
+>/tmp/floppy</TT
+>. Within this floppy directory each configuration file has its own directory 
+             for respective software. For example <I
+CLASS="wordasword"
+>sXid</I
+> configuration file are organised like this:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;               total 4
+               -rw-r--r--    1 harrypotter    harrypotter        1586 Jun  8 13:00 sxid.conf
+             </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+             You can either cut and paste this directly if you are faithfully following our instructions from the begining or manually edit these to modify to your needs. This facility is there though as a convenience but please don't forget ultimately it will be your 
+             responsibility to check, verify, <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+> before you use them whether modified or as it is.
+           </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+         To run sXid, the following file from the floppy.tgz archive is required and must be created or copied to the appropriate directory on your server. Copy the sxid.conf file to the <TT
+CLASS="filename"
+>/etc/</TT
+> directory.
+         or alternatively you can copy and paste directly from this book to the concerned file.
+         </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN7427"
+>14.2.1. Configure the <TT
+CLASS="filename"
+>/etc/sxid.conf</TT
+> file</A
+></H2
+><P
+>&#13;         The configuration file for sXid <TT
+CLASS="filename"
+>/etc/sxid.conf</TT
+> allows you to set options that modify the operation of the program. It is well commented and very basic.
+         </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;         Edit the sxid.conf file <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/sxid.conf</TT
+> and set your needs:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         # Configuration file for sXid
+         # Note that all directories must be absolute with no trailing /'s
+
+         # Where to begin our file search
+         SEARCH = "/"
+
+         # Which subdirectories to exclude from searching
+         EXCLUDE = "/proc /mnt /cdrom /floppy"
+
+         # Who to send reports to
+         EMAIL = "root"
+
+         # Always send reports, even when there are no changes?
+         ALWAYS_NOTIFY = "no"
+
+         # Where to keep interim logs. This will rotate 'x' number of
+         # times based on KEEP_LOGS below
+         LOG_FILE = "/var/log/sxid.log"
+
+         # How many logs to keep
+         KEEP_LOGS = "5"
+
+         # Rotate the logs even when there are no changes?
+         ALWAYS_ROTATE = "no"
+
+         # Directories where +s is forbidden (these are searched
+         # even if not explicitly in SEARCH), EXCLUDE rules apply
+         FORBIDDEN = "/home /tmp"
+
+         # Remove (-s) files found in forbidden directories?
+         ENFORCE = "yes"
+
+         # This implies ALWAYS_NOTIFY. It will send a full list of
+         # entries along with the changes
+         LISTALL = "no"
+
+         # Ignore entries for directories in these paths
+         # (this means that only files will be recorded, you
+         # can effectively ignore all directory entries by
+         # setting this to "/"). The default is /home since
+         # some systems have /home g+s.
+         IGNORE_DIRS = "/home"
+
+         # File that contains a list of (each on it's own line)
+         # of other files that sxid should monitor. This is useful
+         # for files that aren't +s, but relate to system
+         # integrity (tcpd, inetd, apache...).
+         # EXTRA_LIST = "/etc/sxid.list"
+
+         # Mail program. This changes the default compiled in
+         # mailer for reports. You only need this if you have changed
+         # it's location and don't want to recompile sxid.
+         # MAIL_PROG = "/usr/bin/mail"
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Place an entry into root's crontabs to make sXid run as a cronjob. sXid will run from crond; basically it tracks any changes in your <TT
+CLASS="literal"
+>s[ug]id</TT
+> files and folders. If there are any new 
+         ones, ones that aren't set any more, or they have changed bits or other modes then it reports the changes. To add sxid in your cronjob you must edit the crontab and add the following line:
+         To edit the crontab, use the command <EM
+>as root</EM
+>:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>crontab</B
+> -e
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         # Sample crontab entry to run every day at 4am
+         0 4 * * * /usr/bin/sxid
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+></OL
+></DIV
+><P
+>&#13;         Further documentation for more details, there are some man pages you can read <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>sxid.conf</SPAN
+>(5)</SPAN
+> -<EM
+>configuration settings for sxid</EM
+> 
+         and  <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>sxid</SPAN
+>(1)</SPAN
+> - <EM
+>check for changes in s[ug]id files and directories</EM
+>
+         </P
+><P
+>&#13;         sXid as administrative tool is meant to run as a cronjob. It must run once a day, but busy shell boxes may want to run it twice a day. You can also run this manually for spot-checking.
+         To run sxid manually, use the command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>sxid</B
+> -k
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         sXid Vers  : 4.0.1
+         Check run  : Wed Dec 29 12:40:32 1999
+         This host  : mail.openna.com
+         Spotcheck  : /home/admin
+         Excluding  : /proc /mnt /cdrom /floppy
+         Ignore Dirs: /home
+         Forbidden  : /home /tmp
+         
+         </TT
+></P
+>
+
+         <EM
+>No changes found!</EM
+>
+         
+         This checks for changes by recursing the current working directory. Log files will not be rotated 
+         and no email sent. All output will go to stdout.
+         </P
+><P
+>&#13;         These are the Installed files on your system by the program sXid.
+         <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;         /etc/sxid.conf
+         </TT
+>
+         </TD
+></TR
+><TR
+><TD
+>&#13;         <TT
+CLASS="filename"
+>&#13;         /usr/bin/sxid
+         </TT
+>
+         </TD
+></TR
+><TR
+><TD
+>&#13;         <TT
+CLASS="filename"
+>&#13;         /usr/man/man1/sxid.1
+         </TT
+>
+         </TD
+></TR
+><TR
+><TD
+>&#13;         <TT
+CLASS="filename"
+>&#13;         /usr/man/man5/sxid.conf.5
+         </TT
+>
+         </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+         </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap14sec112.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap14sec114.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>sXid</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-secmonitor.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Logcheck</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

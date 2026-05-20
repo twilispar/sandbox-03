@@ -1,0 +1,590 @@
+<HTML
+><HEAD
+><TITLE
+>Introduction</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="NEXT"
+TITLE="X Server Configuration"
+HREF="x-config.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XFree86 Font De-uglification HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="index.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x-config.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="INTRO">1. Introduction</H1
+><P
+> An often heard complaint is the poor default fonts and font settings of X as
+ implemented by many Linux distributions. Some programs use fixed width
+ default fonts when a variable width font would be more appropriate. Other
+ programs use fonts that are so small as to be practically unreadable. Many of 
+ the fonts that are bundled with XFree86 are not of the same quality as found
+ on some other platforms. XFree86 does come with a halfway decent courier
+ font, but its Times and Helvetica fonts are simple bitmap fonts that pixelize
+ when scaled. This is changing for the better recently, but a default Linux
+ desktop still often needs some tweaking to get the best fonts possible.&#13;</P
+><P
+> This HOWTO attempts to show how to adjust various font settings, install new
+ fonts, and a few other things that should greatly improve the appearance and
+ readability of fonts on the X Window Desktop. This is done by adjusting the
+ <TT
+CLASS="LITERAL"
+>FontPath</TT
+> in the <TT
+CLASS="FILENAME"
+>XF86Config</TT
+> file, by
+ adding switches to X server command line in <B
+CLASS="COMMAND"
+>startx</B
+> or
+ <B
+CLASS="COMMAND"
+>xdm</B
+> (and variants), by adding new fonts, and by 
+ making sure TrueType fonts are installed and available. TrueType does
+ indeed make a huge difference in many applications.&#13;</P
+><P
+> Comments, corrections, additions and critiques are always welcome. You can
+ reach the author at <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:hal@foobox.net"
+>hal@foobox.net</A
+>&#62;</TT
+>. Contributions are also
+ welcomed. Especially anyone who really stays current with KDE and/or GNOME
+ issues! (So I guess nobody uses these since the silence is deafening?)&#13;</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN40">1.1. Conventions Used in this Document</H2
+><P
+> <P
+></P
+><UL
+><LI
+><P
+>     <SPAN
+CLASS="QUOTE"
+>"X"</SPAN
+> and <SPAN
+CLASS="QUOTE"
+>"XFree86"</SPAN
+> are (incorrectly) used 
+     here interchangably. The overwhelming percentage of Linux users indeed
+     use XFree86.org's X implementation, but there are other implentations 
+     as well. The information here probably does not apply to those others in
+     most cases.
+   </P
+></LI
+><LI
+><P
+>    Where examples of commands are used, a <SPAN
+CLASS="QUOTE"
+>"#"</SPAN
+> character is used to
+    denote where typically the command would be run as the root user. A
+    <SPAN
+CLASS="QUOTE"
+>"$"</SPAN
+> is used where typically a non-root user would be executing
+    the command.
+   </P
+></LI
+><LI
+><P
+>    The examples use <TT
+CLASS="FILENAME"
+>/usr/local/share/fonts/ttfonts</TT
+> as our
+    TrueType font directory. There is no magic to this location, and could
+    conceivably just as well be in any number of other locations. Some 
+    distros may have a default location for TrueType fonts, and you may 
+    want to use that instead.
+   </P
+></LI
+><LI
+><P
+>    References to "xfs" are to the xfs as packaged by Red Hat (and some other
+    distros) for versions 6.x and later. This differs significantly in some
+    respects from the stock XFree86 xfs. 
+   </P
+></LI
+><LI
+><P
+>    References to "Netscape" are to the entire suite of programs from Netscape:
+    Communicator, Navigator, Messenger, etc. And for all intents and purposes,
+    font configuration in Mozilla is very similar (but generally looks 
+    better!).
+   </P
+></LI
+><LI
+><P
+>    'XF86Config' is the X configuration file. This has changed to 
+    'XF86Config-4' for XFree86 v4.x. For the most part, we'll just use
+    'XF86Config' here.
+   
+   </P
+><P
+>    Also, while some aspects of XFree86 4.x configuration are the same as
+    3.3.x, there are some significant differences. We'll only highlight the
+    differences. So unless noted otherwise, any comments or examples should
+    apply to both 3.3.x and 4.x versions.
+ 
+   </P
+></LI
+><LI
+><P
+>    File system layout varies somewhat from distribution to distribution. It 
+    is impossible to stay on top of every conceivable variation of who keeps 
+    which files where. So take the examples here with a grain of salt if the 
+    PATHs don't seem to match your system.
+   </P
+></LI
+></UL
+></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN64">1.2. Change Log and What's New</H2
+><P
+>&#13;<P
+></P
+><UL
+><LI
+><P
+>   2.04: October 30, 2002.
+   Include info on TrueType <SPAN
+CLASS="QUOTE"
+>"hinting"</SPAN
+>, and enabling in 
+   freetype sources (thanks Andreas Oesterhelt!). A few new useful links, 
+   and minor cleanups.
+  </P
+><P
+>   If this keeps up, this document will have to be renamed the 
+   <I
+CLASS="CITETITLE"
+>Font Beautification HOWTO</I
+> ;-).
+  </P
+></LI
+><LI
+><P
+>   2.03: October 17, 2002. 
+   Some brief notes on Red Hat 8.0 differences/newness, notably the changes 
+   that accompany Xft2. More on the distinction of core X fonts and Xft (and
+   then Xft2).
+  </P
+></LI
+><LI
+><P
+>   2.01: October 03, 2002. 
+   Update links for obtaining the MS web fonts (TrueType fonts of choice).
+   There are two <A
+HREF="http://sf.net"
+TARGET="_top"
+>Sourceforge</A
+> projects 
+   with these fonts available, including.
+   <A
+HREF="http://sourceforge.net/projects/font-tool/"
+TARGET="_top"
+>http://sourceforge.net/projects/font-tool/</A
+>.
+  </P
+><P
+>   Add section to <A
+HREF="apps.html#MOZILLA"
+>Mozilla</A
+> configuration to 
+   include info on Xft and anti-aliasing.
+  </P
+></LI
+><LI
+><P
+>   2.00: September 12, 2002. 
+   Wow, MS has taken down their webfonts page :( Not good news. Installing
+   TrueType is a key ingredient to better living through nice fonts.
+  </P
+><P
+>   Major re-organization by moving the font server section to the appendix,
+   since any recent distro is already installing these, or they are 
+   not any longer needed.
+  </P
+><P
+>   Some clarifications on gdkxft and font anti-aliasing. Finally, add 
+   Aristotle Pagaltzis's perl script for converting <TT
+CLASS="FILENAME"
+>fonts.dir</TT
+>
+   to <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+>. Include interesting example 
+   of using anti-aliased TrueType fonts in <B
+CLASS="COMMAND"
+>xterm</B
+>.
+   Note that GNOME 2 is out. Fix the usual assorted broken links.
+  </P
+><P
+>   Clarifications on <TT
+CLASS="LITERAL"
+>dpi</TT
+> settings, and add tip 
+   about unbalanced dpi causing major trouble with fonts.
+  </P
+></LI
+><LI
+><P
+>   1.95: February 11, 2002. A few corrections. Removed the section on Fonts in
+   KDE since this has to have changed, and I don't know anything about KDE
+   (does anyone want to help here?). Added a brief section on gdkxft, which 
+   adds anti-aliasing support for GTK+ 1.2 applications.
+  </P
+></LI
+><LI
+><P
+>   1.9: November 5, 2001. A few new links and some minor catch ups only.
+  </P
+></LI
+><LI
+><P
+>   1.8: June 25, 2001: Included a new section on Anti-aliasing and Xft from
+   Danny Tholen <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:obiwan@mailmij.org"
+>obiwan@mailmij.org</A
+>&#62;</TT
+>. Many thanks on this not so
+   well documented subject. Also, Sebastiano Vigna's neat little package for
+   downloading and installing MS webfonts: <A
+HREF="http://freshmeat.net/webFonts4Linux"
+TARGET="_top"
+>http://freshmeat.net/webFonts4Linux</A
+>.
+   A few other odds and ends.
+
+  </P
+></LI
+><LI
+><P
+>  1.70: April 18, 2001: 
+   Added links for converting Mac TrueType Fonts (thanks to Karl A. Krueger),
+   links to Unicode TrueType fonts (thanks to Tzafrir Cohen for suggestions
+   and URLs), and added a section on anti-aliasing with X 4.0.2 (or greater).
+   Also, included a reference to <A
+HREF="http://www.kyz.uklinux.net/cabextract.php3"
+TARGET="_top"
+>cabextract</A
+>, a
+   utility that is now available for extracting Win32 Fonts (among other
+   things) from a Window's <SPAN
+CLASS="QUOTE"
+>"cab"</SPAN
+> archive.
+  </P
+></LI
+><LI
+><P
+>  1.60: March 21, 2001: 
+   A few very minor changes. Most notable news is anti-aliasing support now 
+   in XFree 4.02 (referenced in the Notes section only). Chinese translation 
+   URL added.
+  </P
+></LI
+></UL
+></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN104">1.3. New Versions</H2
+><P
+> The pre-release versions of this document can be found at 
+ <A
+HREF="http://feenix.burgiss.net/ldp/fdu/index.html"
+TARGET="_top"
+>http://feenix.burgiss.net/ldp/fdu/index.html</A
+>.&#13;</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="LEGAL">1.4. Copyright</H2
+><P
+> Copyright © 1999 by Doug Holland, 2002 Hal Burgiss.</P
+><P
+> Unless otherwise stated, Linux HOWTO documents are copyrighted by their
+ respective authors.  Linux HOWTO documents may be reproduced and distributed
+ in whole or in part, in any medium physical or electronic, as long as this
+ copyright notice is retained on all copies.  Commercial redistribution is
+ allowed and encouraged; however, the author would like to be notified of any
+ such distributions.</P
+><P
+> All translations, derivative works, or aggregate works incorporating any
+ Linux HOWTO documents must be covered under this copyright notice. That is,
+ you may not produce a derivative work from a HOWTO and impose additional
+ restrictions on its distribution. Exceptions to these rules may be granted
+ under certain conditions; please contact the Linux HOWTO coordinator for more
+ information.</P
+><P
+> In short, we wish to promote dissemination of this information through as
+ many channels as possible. However, we do wish to retain copyright on the
+ HOWTO documents, and would very much like to be notified of any plans to
+ redistribute the HOWTOs, this one in particular!  Web page authors are free
+ to link to this HOWTO without restriction, though the author would appreciate
+ an email informing him of this, just so he can boost his ego by knowing who
+ else reads and links to this document. </P
+><P
+> Many of the terms mentioned in this document are trade names. Unless
+ otherwise stated, all trademarks are property of their respective owners.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CREDITS">1.5. Credits</H2
+><P
+><P
+CLASS="LITERALLAYOUT"
+>&nbsp;&nbsp;Original&nbsp;author:&nbsp;Doug&nbsp;Holland.<br>
+&nbsp;&nbsp;Email:&nbsp;<A
+HREF="mailto:meldroc@frii.com"
+TARGET="_top"
+>meldroc@frii.com</A
+><br>
+&nbsp;&nbsp;WWW:&nbsp;<A
+HREF="http://www.frii.com/~meldroc/"
+TARGET="_top"
+>http://www.frii.com/~meldroc/</A
+><br>
+&nbsp;</P
+></P
+><P
+><P
+CLASS="LITERALLAYOUT"
+>&nbsp;<br>
+&nbsp;Updated&nbsp;and&nbsp;maintained&nbsp;by&nbsp;Hal&nbsp;Burgiss.<br>
+&nbsp;&nbsp;Email:&nbsp;<A
+HREF="mailto:hal@foobox.net"
+TARGET="_top"
+>hal@foobox.net</A
+><br>
+&nbsp;&nbsp;WWW:&nbsp;<A
+HREF="http://feenix.burgiss.net/ldp/fdu"
+TARGET="_top"
+>http://feenix.burgiss.net/ldp/fdu/</A
+><br>
+&nbsp;</P
+></P
+><P
+>Special thanks go to:
+
+<P
+></P
+><UL
+><LI
+><P
+>    The developers of the <A
+HREF="http://www.xfree86.org"
+TARGET="_top"
+>XFree86 Project</A
+>, 
+    for all the hard work and time they have given. Also, Juliusz Chroboczek for
+    his work with xfsft, and XFree86 4.x to help bring TrueType to the 
+    hungry masses. And Keith Packard for his anti-aliasing, and other work.
+    This is not to slight the many, many other XFree86 volunteers.
+   </P
+></LI
+><LI
+><P
+>    Font wizard Kristin Aanestad, whose legwork and insight on much of the xfs,
+    TrueType, Netscape, and especially, the fonts.alias sections are much
+    appreciated. More from Kristin at <A
+HREF="http://home.c2i.net/dark/linux.html"
+TARGET="_top"
+>Some Linux for Beginners</A
+>
+    on a wide range of topics.
+   </P
+></LI
+><LI
+><P
+>    Danny Tholen <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:obiwan@mailmij.org"
+>obiwan@mailmij.org</A
+>&#62;</TT
+> is responsible for the nice
+    Xft section, and examples.
+   </P
+></LI
+><LI
+><P
+>    The folks at <A
+HREF="news:comp.os.linux.x"
+TARGET="_top"
+>comp.os.linux.x</A
+> who
+    gave me a hand in figuring all of this out in the first place.
+   </P
+></LI
+><LI
+><P
+>    The Linux community in general who made all of this possible
+    in the first place. Especially those who have offered suggestions and
+    comments that help to make this HOWTO a better resource. Keep those cards
+    and letters coming ;-)
+   </P
+></LI
+></UL
+>&#13;</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN143">1.6. Translations</H2
+><P
+>&#13;Chinese: <A
+HREF="http://www.linux.org.tw/CLDP/mini/FDU.html"
+TARGET="_top"
+>http://www.linux.org.tw/CLDP/mini/FDU.html</A
+> by Yu-Chia Chang.&#13;</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x-config.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>XFree86 Font De-uglification HOWTO</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>X Server Configuration</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

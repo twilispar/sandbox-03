@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Name Lookups with DNS</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node38.html">Domain Name Servers</A>
+<B>Up:</B> <A HREF="node34.html">The Domain Name System</A>
+<B> Previous:</B> <A HREF="node36.html">Enter DNS</A>
+<BR> <P>
+<H2><A NAME="SECTION004630000">Name Lookups with DNS</A></H2>
+At first glance, all this domain and zone fuss seems to make name
+resolution an awfully complicated business. After all, if no central
+authority controls what names are assigned to which hosts, then how is a
+humble application supposed to know?!
+<P>
+Now comes the really ingenuous part about DNS. If you want to find
+out the IP-address of erdos, then, DNS says, go ask the people
+that manage it, and they will tell you.
+<P>
+<A NAME="1572"></A>
+In fact, DNS is a giant distributed database. It is implemented by means
+of so-called name servers that supply information on a given domain or
+set of domains. For each zone, there are at least two, at most a few,
+name servers that hold all authoritative information on hosts in that
+zone. To obtain the IP-address of erdos, all you have to do is
+contact the name server for the groucho.edu zone, which will then
+return the desired data.
+<P>
+<A NAME="1575"></A>
+<A NAME="1576"></A>
+Easier said than done, you might think. So how do I know how to reach
+the name server at Groucho Marx University? In case your computer isn't
+equipped with an address-resolving oracle, DNS provides for this, too.
+When your application wants to look up information on erdos, it
+contacts a local name server, which conducts a so-called iterative query
+for it.  It starts off by sending a query to a name server for the root
+domain, asking for the address of erdos.maths.groucho.edu. The root
+name server recognizes that this name does not belong to its zone of
+authority, but rather to one below the edu domain. Thus, it tells
+you to contact an edu zone name server for more information, and
+encloses a list of all edu name servers along with their addresses.
+Your local name server will then go on and query one of those, for instance
+a.isi.edu.  In a manner similar to the root name server,
+a.isi.edu knows that the groucho.edu people run a zone of
+their own, and point you to their servers. The local name server will then
+present its query for erdos to one of these, which will finally
+recognize the name as belonging to its zone, and return the corresponding
+IP-address.
+<P>
+Now, this looks like a lot of traffic being generated for looking up a
+measly IP-address, but it's really only miniscule compared to the amount
+of data that would have to be transferred if we were still stuck with
+HOSTS.TXT. But there's still room for improvement with this
+scheme.
+<P>
+To improve response time during future queries, the name server will
+store the information obtained in its local <em>cache</em>.  So the next
+time anyone on your local network wants to look up the address of a
+host in the groucho.edu domain, your name server will not have
+to go through the whole process again, but will rather go to the
+groucho.edu name server directly.<A HREF="footnode.html#1590"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="1591"></A>
+<A NAME="1747"></A>
+Of course, the name server will not keep this information forever, but
+rather discard it after some period. This expiry interval is called the
+<em>time to live</em>, or TTL. Each datum in the DNS database is assigned
+such a TTL by administrators of the responsible zone.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node38.html">Domain Name Servers</A>
+<B>Up:</B> <A HREF="node34.html">The Domain Name System</A>
+<B> Previous:</B> <A HREF="node36.html">Enter DNS</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

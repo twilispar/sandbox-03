@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Choosing the Right Maps</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node137.html">Using the passwd and </A>
+<B>Up:</B> <A HREF="node130.html">The Network Information System</A>
+<B> Previous:</B> <A HREF="node135.html">Setting up a NIS </A>
+<BR> <P>
+<H1><A NAME="SECTION0012600000">Choosing the Right Maps</A></H1>
+<P>
+<A NAME="nisnsswitch"></A>
+<A NAME="5336"></A>
+<A NAME="5145"></A>
+<P>
+Having made sure you can reach the NIS server, you have to decide which
+configuration files to replace or augment with NIS maps. Commonly, you
+will want use NIS maps for the host and password lookup functions. The
+former is especially useful if you do not run BIND. The latter permits
+all users to log into their account from any system in the NIS domain;
+this usually requires sharing a central /home directory between
+all hosts via NFS. It is explained detail in section-<A HREF="node137.html#nispasswd"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>
+below. Other maps, like services.byname, aren't such
+a dramatic gain, but save you some editing work if you install any
+network applications that use a service name that's not in the
+standard services file.
+<P>
+Generally, you want to have some freedom of choice when a lookup
+function uses the local files, and when it queries the NIS server.
+NYS allows you to configure the order in which a function accesses these
+services. This is controlled through the /etc/nsswitch.conf file,
+which stands for <em>Name Service Switch</em> but of course isn't limited
+to the name service.  For any of the data lookup functions supported by
+NYS, it contains a line naming the services to use.
+<P>
+<A NAME="5337"></A>
+<A NAME="5338"></A>
+The right order of services depends on the type of data. It is unlikely
+that the services.byname map will contain entries differing from those
+in the local services file; it may only contain more. So a good
+choice may be to query the local files first, and check NIS only if
+the service name wasn't found. Hostname information, on the other hand,
+may change very frequently, so that DNS or the NIS server should always
+have the most accurate account, while the local hosts file
+is only kept as a backup if DNS and NIS should fail. In this case,
+you would want to check the local file last.
+<P>
+The example below shows how to configure gethostbyname(2),
+gethostbyaddr(2), and getservbyname(2) functions as
+described above. They will try the listed services in turn; if a lookup
+succeeds, the result is returned, otherwise the next service is tried.
+<P>
+<P><P>
+<P>
+The complete list of services that may be used with an entry in the
+nsswitch.conf file is shown below. The actual maps, files,
+servers and objects being queried depend on the entry name.
+<P>
+<P><P>
+<P>
+Currently, NYS supports the following nsswitch.conf entries:
+hosts, networks, passwd, group,
+shadow, gshadow, services,
+protocols, rpc, and ethers. More entries
+are likely to be added.
+<P>
+Figure-<A HREF="node136.html#nisfigswitch"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> shows a more complete example which
+introduces another feature of nsswitch.conf: the
+[NOTFOUND=return] keyword in the hosts entry tells
+NYS to return if the desired item couldn't be found in the NIS or DNS
+database.  That is, NYS will continue and search the local files 
+<em>only</em> if calls to the NIS and DNS servers failed for some other
+reason. The local files will then only be used at boot time and as a
+backup when the NIS server is down.
+<P>
+<P><A NAME="5339"></A><BR>
+<STRONG>Figure:</STRONG> 
+  <A NAME="nisfigswitch"></A>
+  Sample nsswitch.conf file.
+ <BR>
+<P>
+<P>
+<A NAME="5340"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node137.html">Using the passwd and </A>
+<B>Up:</B> <A HREF="node130.html">The Network Information System</A>
+<B> Previous:</B> <A HREF="node135.html">Setting up a NIS </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

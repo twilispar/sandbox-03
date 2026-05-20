@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The PAP Secrets File</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node123.html">Configuring a PPP Server</A>
+<B>Up:</B> <A HREF="node119.html">Authentication with PPP</A>
+<B> Previous:</B> <A HREF="node121.html">The CHAP Secrets File</A>
+<BR> <P>
+<H2><A NAME="SECTION00101030000">The PAP Secrets File</A></H2>
+<A NAME="4481"></A>
+The PAP secrets file is very similar to that used by CHAP. The first two
+fields always contain a user name and a server name; the third holds the
+PAP secret.  When the remote sends an authenticate request, pppd
+uses the entry that has a server field equal to the local hostname, and
+a user field equal to the user name sent in the request.  When
+authenticating itself with the peer, pppd picks the secret to be
+sent from the line with the user field equal to the local user name, and
+the server field equal to the remote hostname.
+<P>
+A sample PAP secrets file might look like this:
+<Pre>
+           # /etc/ppp/pap-secrets
+           #
+           # user          server          secret          addrs
+           vlager-pap      c3po            cresspahl       vlager.vbrew.com
+           c3po            vlager          DonaldGNUth     c3po.lucas.com
+</Pre>
+The first line is used to authenticate ourselves when talking to
+c3po.  The second line describes how a user named c3po has
+to authenticate itself with us.
+<P>
+The name vlager-pap in column one is the user name we
+send to c3po.  By default, pppd will pick the local
+hostname as the user name, but you can also specify a different name by
+giving the user option, followed by that name.
+<P>
+When picking an entry from the pap-secrets file for
+authentication with the peer, pppd has to know the remote host's
+name.  As it has no way of finding that out, you have to specify it on
+the command line using the remotename keyword, followed by the
+peer's hostname. For instance, to use the above entry for authentication with 
+c3po, we have to add the following option to pppd's command
+line:
+<Pre>
+           # pppd ...domain vbrew.com
+</Pre>
+In the fourth field (and all fields following), you may specify what
+IP-addresses are allowed for that particular host, just as in the CHAP
+secrets file.  The peer may then only request addresses from that list.
+In the sample file, we require c3po to use its real IP-address.
+<P>
+Note that PAP is a rather weak authentication method, and it is
+suggested you use CHAP instead whenever possible. We will therefore
+not cover PAP in greater detail here;  if you are interested in using
+PAP, you will find some more PAP features in the pppd(8) manual
+page.
+
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node123.html">Configuring a PPP Server</A>
+<B>Up:</B> <A HREF="node119.html">Authentication with PPP</A>
+<B> Previous:</B> <A HREF="node121.html">The CHAP Secrets File</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

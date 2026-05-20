@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Mail Routing in the UUCP World</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node193.html">Mixing UUCP and RFC-822</A>
+<B>Up:</B> <A HREF="node190.html">How does Mail Routing </A>
+<B> Previous:</B> <A HREF="node191.html">Mail Routing on the </A>
+<BR> <P>
+<H2><A NAME="SECTION0015420000">Mail Routing in the UUCP World</A></H2>
+<A NAME="mailroutinguucp"></A>
+Mail routing on UUCP networks is much more complicated than on the
+Internet, because the transport software does not perform any routing
+itself.  In earlier times, all mail had to be addressed using bang paths.
+Bang paths specified a list of hosts through which to forward the
+message, separated by exclamation marks, and followed by the user's
+name.  To address a letter to Janet User on a machine named moria,
+you would have used the path eek!swim!moria!janet. Whis would
+have sent the mail from your host to eek, from there on to
+swim and finally to moria.
+<P>
+The obvious drawback of this technique is that it requires you to
+remember much about the network topology, fast links, etc.  Much worse
+than that, changes in the network topology--- like links being deleted
+or hosts being removed--- may cause messages to fail simply because you
+weren't aware of the change. And finally, in case you move to a
+different place, you will most likely have to update all these routes.
+<P>
+One thing, however, that made the use of source routing necessary was
+the presence of ambiguous hostnames: For instance, assume there are two
+sites named moria, one in the U.S., and one in France. Which site
+now does moria!janet refer to? This can be made clear by
+specifying what path to reach moria through.
+<P>
+The first step in disambiguating hostnames was the founding of
+<em>The UUCP Mapping Project</em>. It is located at Rutgers University, and
+registers all official UUCP hostnames, along with information on their
+UUCP neighbors and their geographic location, making sure no hostname is
+used twice. The information gathered by the Mapping Project is published
+as the <em>Usenet Maps</em>, which are distributed regularly through
+Usenet.<A HREF="footnode.html#7166"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> A typical system entry in a Map (after removing the comments) looks
+like this.
+<PRE>
+           moria
+                   bert(DAILY/2),
+                   swim(WEEKLY)
+</PRE>
+This entry says that moria has a link to bert, which it
+calls twice a day, and swim, which it calls weekly. We will
+come back to the Map file format in more detail below.
+<P>
+Using the connectivity information provided in the maps, you can
+automatically generate the full paths from your host to any destination
+site. This information is usually stored in the paths file,
+also called <em>pathalias database</em> sometimes.  Assume the Maps
+state that you can reach bert through ernie, then a
+pathalias entry for moria generated from the Map snippet above
+may look like this:
+<PRE>
+           moria           ernie!bert!moria!%s
+</PRE>
+If you now give a destination address of janet@moria.uucp,
+your MTA will pick the route shown above, and send the message to
+ernie with an envelope address of bert!moria!janet.
+<P>
+Building a paths file from the full Usenet maps is however not
+a very good idea. The information provided in them is usually rather
+distorted, and occasionally out of date.  Therefore, only a number of
+major hosts use the complete UUCP world maps to build their
+paths file.  Most sites only maintain routing information for
+sites in their neighborhood, and send any mail to sites they don't
+find in their databases to a smarter host with more complete routing
+information. This scheme is called <em>smart-host routing</em>.  Hosts
+that have only one UUCP mail link (so-called <em>leaf sites</em>) don't
+do any routing of their own; they rely entirely on their smart-host.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node193.html">Mixing UUCP and RFC-822</A>
+<B>Up:</B> <A HREF="node190.html">How does Mail Routing </A>
+<B> Previous:</B> <A HREF="node191.html">Mail Routing on the </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

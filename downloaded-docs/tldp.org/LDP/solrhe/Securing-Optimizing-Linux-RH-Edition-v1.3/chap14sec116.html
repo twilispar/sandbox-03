@@ -1,0 +1,585 @@
+<HTML
+><HEAD
+><TITLE
+>PortSentry</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Security/Monitoring"
+HREF="soft-secmonitor.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure and Optimize Logcheck"
+HREF="chap14sec115.html"><LINK
+REL="NEXT"
+TITLE="Configure and Optimise Portsentry"
+HREF="chap14sec117.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap14sec115.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 14. Software -Security/Monitoring</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap14sec117.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="prt5ch2sc5PS"
+>14.5. PortSentry</A
+></H1
+><P
+>&#13;         Firewalls help us to protect our network from unsolicited intrusions. Using them we can choose which ports we want to be open and which one's we dont. Information is kept private by your organization and responsibility of individuals asociated. 
+         Nobody from the outside implicitly knows this information, but attackers know as well as spammers, that for some kind of attacks you can use a special program to scan all the ports on a server to glean this valuable information <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> what is open and what is not.
+         </P
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN7654"
+></A
+><P
+><B
+>From the [<SPAN
+CLASS="citation"
+>PortSentry introduction</SPAN
+>]:</B
+></P
+><P
+>&#13;         A port scan is a symptom of a larger problem coming your way. It is often the pre-cursor for an attack and is a critical piece of information for properly defending your information resources. PortSentry is a program designed 
+         to detect and respond to port scans against a target host in real-time and has a number of options to detect port scans. When it finds one it can react in the following ways:
+         <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;         A log indicating the incident is made via syslog().
+         </TD
+></TR
+><TR
+><TD
+>&#13;         The target host is automatically dropped into <TT
+CLASS="filename"
+>/etc/hosts.deny</TT
+> for <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> Wrappers.
+         </TD
+></TR
+><TR
+><TD
+>&#13;         The local host is automatically re-configured to route all traffic to the target to a dead host to make the target system disappear.
+         </TD
+></TR
+><TR
+><TD
+>&#13;         The local host is automatically re-configured to drop all packets from the target via a local packet filter.
+         </TD
+></TR
+><TR
+><TD
+>&#13;         The purpose of this is to give an admin a heads up that their host is being probed.
+         </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+         </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;         These installation instructions assume:
+         <P
+></P
+><UL
+><LI
+><P
+>&#13;         Commands are Unix-compatible.
+         </P
+></LI
+><LI
+><P
+>&#13;         The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+> <EM
+>other paths are possible</EM
+>.
+         </P
+></LI
+><LI
+><P
+>&#13;         Installations were tested on Red Hat Linux 6.1 and 6.2.
+         </P
+></LI
+><LI
+><P
+>&#13;         All steps in the installation will happen in super-user account root.
+         </P
+></LI
+><LI
+><P
+>&#13;         Portsentry version number is <TT
+CLASS="literal"
+>1.0</TT
+>
+         </P
+></LI
+></UL
+>
+         </P
+><P
+>&#13;         These are the Package(s) you have to download and Portsentry Homepage:<A
+HREF="appendixa.html#prtinxfp10"
+>http://www.psionic.com/abacus/portsentry/</A
+>
+         You must be sure to download: portsentry-1.0.tar.gz
+         </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+         Please do not forget to read the <TT
+CLASS="filename"
+>README</TT
+> and/or <TT
+CLASS="filename"
+>INSTALL</TT
+> with in the tarball you have downloaded if the version number is not the same as we have suggested and follow the instructions
+         since there are chances of some changes either by the way of additions or deletions are likely to be there.         
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         When you install from Tarball(s), it is always better to make a list of files on the system before you install Portsentry, and one afterwards, and then compare them using diff to find out what file is placed 
+         where.A Simple step <TT
+CLASS="userinput"
+><B
+><B
+CLASS="command"
+>find</B
+> /* &#62; Portsentry1</B
+></TT
+> before and <TT
+CLASS="userinput"
+><B
+><B
+CLASS="command"
+>find</B
+> /* &#62; Portsentry2</B
+></TT
+> after you install the software, and 
+         use <TT
+CLASS="userinput"
+><B
+><B
+CLASS="command"
+>diff</B
+> Portsentry1 Portsentry2 &#62; PortSentry-Installed</B
+></TT
+> to get a list of what changed.
+         </P
+><P
+>&#13;         You need to Compile so Decompress the tarball <TT
+CLASS="literal"
+>*.tar.gz</TT
+>.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>cp</B
+> portsentry-version.tar.gz /var/tmp/
+         [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /var/tmp
+         [root@deep ]/tmp#<B
+CLASS="command"
+>tar</B
+> xzpf portsentry-version.tar.gz
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="procedure"
+><P
+><B
+>Optimize to compile</B
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;         You must modify the <TT
+CLASS="filename"
+>Makefile</TT
+> file for Portsentry to specify installation paths, compilation flags, and optimizations for your system. We must also modify this file to be compliant with Red Hat file's system structure.
+         Move into the new Portsentry directory and with the following commands on your terminal edit the <TT
+CLASS="filename"
+>Makefile</TT
+> file <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>Makefile</TT
+> and change the following lines:
+         </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         CC = cc         
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         CC = egcs
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         CFLAGS = -O -Wall
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         CFLAGS = -O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions -Wall
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         INSTALLDIR = /usr/local/psionic
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         INSTALLDIR = /usr/psionic
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         The above changes will configure the software to use egcs compiler, optimization flags specific to our system, and locate all files related to Portsentry software to the target directories we have chosen.
+         </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;         Since we are using an alternate path for the files <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> <EM
+>not</EM
+> <TT
+CLASS="filename"
+>/usr/local/psionic</TT
+>, we need to change the path to the PortSentry configuration file in the main portsentry_config.h header file. Move into the new 
+         PortSentry directory and edit the portsentry_config.h file <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>portsentry_config.h</TT
+> and change the following line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         #define CONFIG_FILE "/usr/local/psionic/portsentry/portsentry.conf"
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         #define CONFIG_FILE "/usr/psionic/portsentry/portsentry.conf"
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Step 3
+         Install Portsentry on your system.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/portsentry-1.0#<B
+CLASS="command"
+>make</B
+> linux
+         [root@deep ]/portsentry-1.0#<B
+CLASS="command"
+>make install</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The above commands will configure the software to the Linux operating system, compile, build, and then finally install files into the appropriate locations.
+         </P
+></LI
+></OL
+></DIV
+><P
+>&#13;         Please do a cleanup later:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# cd /var/tmp
+         [root@deep ]/tmp#<B
+CLASS="command"
+>rm</B
+> -rf portsentry-version/ portsentry-version_tar.gz
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The <B
+CLASS="command"
+>rm</B
+> command will remove all the source files we have used to compile and install PortSentry. It will also remove the PortSentry compressed archive from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap14sec115.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap14sec117.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure and Optimize Logcheck</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-secmonitor.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure and Optimise Portsentry</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

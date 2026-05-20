@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Using NIS with Shadow Support</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node139.html">Using the Traditional NIS </A>
+<B>Up:</B> <A HREF="node130.html">The Network Information System</A>
+<B> Previous:</B> <A HREF="node137.html">Using the passwd and </A>
+<BR> <P>
+<H1><A NAME="SECTION0012800000">Using NIS with Shadow Support</A></H1>
+<P>
+<A NAME="nisshadow"></A>
+<A NAME="5259"></A>
+<P>
+There is no NIS support yet for sites that use the shadow login suite.
+John F.-Haugh, the author of the shadow suite, recently released a
+version of the shadow library functions covered by the GNU Library GPL
+to comp.sources.misc. It already has some support for NIS, but
+it isn't complete, and the files haven't been added to the standard C
+library yet. On the other hand, publishing the information from
+/etc/shadow via NIS kind of defeats the purpose of the shadow
+suite.
+<P>
+Although the NYS password lookup functions don't use a shadow.byname
+map or anything likewise, NYS supports using a local /etc/shadow
+file transparently. When the NYS implementation of getpwnam is
+called to look up information related to a given login name, the facilities
+specified by the passwd entry in nsswitch.conf are
+queried. The nis service will simply look up the name in the
+passwd.byname map on the NIS server. The files service,
+however, will check if /etc/shadow is present, and if so, try to
+open it. If none is present, or if the user doesn't have root
+privilege, if reverts to the traditional behavior of looking up the user
+information in /etc/passwd only. However, if the shadow file
+exists and can be opened, NYS will extract the user password from
+shadow. The getpwuid function is implemented accordingly.  In
+this fashion, binaries compiled with NYS will deal with a local
+the shadow suite installation transparently.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

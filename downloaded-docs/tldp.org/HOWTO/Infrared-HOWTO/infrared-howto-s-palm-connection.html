@@ -1,0 +1,323 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Palm III Connection - IrCOMM</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Specific Connections and IrDA - Protocols"
+HREF="infrared-howto-c-specific-connections.html"><LINK
+REL="PREVIOUS"
+TITLE="HP NetBeamer Connection"
+HREF="infrared-howto-s-netbeamer-connection.html"><LINK
+REL="NEXT"
+TITLE="Linux Terminal on Palm (Handspring Visor) via IR"
+HREF="infrared-howto-s-terminal-palm.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-netbeamer-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Specific Connections and IrDA - Protocols</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-terminal-palm.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-palm-connection"
+></A
+>3.5. Palm III Connection - IrCOMM</H1
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>&#13;PPP
+   Rui Oliveira wrote: "This is just to let you know that with the
+   latest IrCOMM patch (050998) of Takahide Higuchi, I managed to
+   HotSync and establish a PPP connection between my Palm III and my
+   Linux box. I'm using IRLink (from IsComplete) to redirect the
+   serial port to ir. Communication with <B
+CLASS="command"
+>pilot-xfer</B
+>
+   (available from the "pilot-link" package at
+   <A
+HREF="http://www.slac.com/pilone/kpilot_home/"
+TARGET="_top"
+>kpilot</A
+>
+   ) works
+   flawlessly. Although I was able to establish a PPP connection, I'm
+   still unable to fetch mail and do Web browsing. This is probably
+   due to connection time-outs. I am checking this out. Please see
+   the 
+   <A
+HREF="http://tldp.org/HOWTO/PPP-HOWTO/"
+TARGET="_top"
+>PPP-HOWTO</A
+> 
+   for further information about PPP.
+   I managed to establish an apparently robust connection between
+   my Linux box and a Palm III. The pppd invocation I use is as
+   follows:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;   /usr/sbin/pppd /dev/ircomm0 57600 192.168.2.10:192.168.2.11
+   proxyarp passive silent persist noauth local nodetach
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   Over the PPP connection I used <B
+CLASS="command"
+>ping</B
+>,
+   <B
+CLASS="command"
+>ssh</B
+>, and HTTP.
+   Strange is however the fact that discovery must be enabled (maybe
+   obsolete) . Otherwise, even with an active IrCOMM connection, the
+   link goes down due to a IrLAP disconnect.
+   The pilot-link tools (used for Linux/Palm synchronization) also
+   ran flawlessly over IrCOMM via <TT
+CLASS="filename"
+>/dev/ircomm0</TT
+>."
+   There are also reports about <B
+CLASS="command"
+>kpilot</B
+>, though not working as
+   flawlessly as <B
+CLASS="command"
+>pilot-xfer</B
+>.
+</P
+></LI
+><LI
+><P
+>&#13;IrCOMM
+   Jon Howell wrote: "I thought I'd try IrCOMM, since the Palm III
+   can be made to reroute serial info to the IR port (using IrLink
+   from IS/Complete, available at 
+   <A
+HREF="http://www.palmcentral.com"
+TARGET="_top"
+>PalmCentral</A
+>
+   , and then you can run a terminal program (like PalmTelnet in serial mode) over
+   IrDA. I can only assume it's using the IrCOMM protocol. I've
+   tested this configuration between two Palm Pilots, but of course I
+   can't know what the protocol running over the IR is."
+   (1) Start HotSync on your Palm. You need the 
+   
+   
+   <A
+HREF="http://www.palm.com/support/downloads/irenhanc.html"
+TARGET="_top"
+>IrDA upgrade</A
+> for the
+   Palm to have IrCOMM support
+   (2) Place the Palm in front of the dongle.
+   (3) Start <B
+CLASS="command"
+>pilot-xfer -p /dev/ircomm0 -s &#60;sync-dir&#62;</B
+> .
+   And if you are lucky it will start syncing. If you start
+   <B
+CLASS="command"
+>pilot-xfer</B
+> before you start HotSync on the Pilot, you will _not_
+   be lucky!
+   Maybe a terminal program like <B
+CLASS="command"
+>PalmTerm</B
+> or
+   <A
+HREF="http://pamupamu.tripod.co.jp/soft/mterm/mterm_E.htm"
+TARGET="_top"
+>MiniTerm</A
+>
+   (a former version of this HOWTO referred to it as MTerm)
+   is also useful.
+
+
+
+</P
+></LI
+></UL
+>
+
+</P
+><P
+>&#13;   Wessel de Roode wrote: The Palmpilot is default locked on 57k. You can
+   however if you write your own software for the Pilot, use the 115k
+   line settings. I quote a part from the irlib.h:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;---------- irlib.h from the SDK 3.0 from palmpilot -----
+// Options values for IrOpen
+#define irOpenOptBackground     0x80000000   // Unsupported background task use
+#define irOpenOptSpeed115200    0x0000003F   // sets max negotiated baud rate
+#define irOpenOptSpeed57600     0x0000001F   // default is 57600
+#define irOpenOptSpeed9600      0x00000003
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   Peter Pregler reported: If the Palm enters the range of the
+   irda-device a popup appears with the text "Transmission: waiting for
+   sender"
+</P
+><P
+>&#13;   Ron Choy answered: There is a software called 
+   <A
+HREF="http://hp.vector.co.jp/authors/VA005810/irda/shutup10.zip"
+TARGET="_top"
+>ShutupIR</A
+>
+   that is supposed to help with this problem of annoying popup I haven't
+   tried it but it looks like it would fix your problem.
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-netbeamer-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-terminal-palm.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>HP NetBeamer Connection</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-specific-connections.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Linux Terminal on Palm (Handspring Visor) via IR</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

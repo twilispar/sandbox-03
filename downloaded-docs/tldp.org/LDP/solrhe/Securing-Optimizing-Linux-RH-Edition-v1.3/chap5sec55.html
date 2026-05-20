@@ -1,0 +1,261 @@
+<HTML
+><HEAD
+><TITLE
+>Routing Protocols</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Refuse responding to broadcasts request"
+HREF="chap5sec54.html"><LINK
+REL="NEXT"
+TITLE="Enable TCP SYN Cookie Protection"
+HREF="chap5sec56.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec54.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec56.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4077"
+>5.26. Routing Protocols</A
+></H1
+><P
+>&#13;              Routing and routing protocols can create several problems. The <SPAN
+CLASS="acronym"
+>IP</SPAN
+> source routing, where an <SPAN
+CLASS="acronym"
+>IP</SPAN
+> packet contains details of the path to its intended destination, is dangerous because 
+              according to <SPAN
+CLASS="acronym"
+>RFC</SPAN
+> 1122 the destination host must respond along the same path. If an attacker was able to send a source routed packet into your network, then he would be able to 
+              intercept the replies and fool your host into thinking it is communicating with a trusted host. I strongly recommend that you disable IP source routing to protect your server from this hole.
+              </P
+><P
+>&#13;              To disable IP source routing on your server, type the following command in your terminal:
+               <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.1.gif"
+ALT="Version 6.1 only"
+></IMG
+></P
+></DIV
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              [root@deep] /# for f in /proc/sys/net/ipv4/conf/*/accept_source_route; do
+              &#62; echo 0 &#62; $f
+              &#62; done
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /#
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              
+              Add the above commands to the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> script file and you'll not have to type it again the next time you reboot your system.
+             </P
+><P
+>&#13;                  <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+                               
+              Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following line:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              # Disables IP source routing
+              net.ipv4.conf.all.accept_source_route = 0
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              
+              You must restart your network for the change to take effect. The command to restart the network is the following:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;              Setting network parameters	[  OK  ]
+              Bringing up interface lo		[  OK  ]
+              Bringing up interface eth0	[  OK  ]
+              Bringing up interface eth1	[  OK  ]
+             </TT
+>&nbsp;</P
+>
+               Take Note that the above command for Red Hat Linux 6.1 or 6.2 will disable Source Routed Packets on 
+               all your interfaces lo, ethN, pppN etc.
+               </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec54.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec56.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Refuse responding to broadcasts request</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Enable TCP SYN Cookie Protection</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

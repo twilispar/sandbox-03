@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>C-News in an NFS Environment</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node273.html">Maintenance Tools and Tasks</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node271.html">sendsysversion, and senduuname</A>
+<BR> <P>
+<H1><A NAME="SECTION0019900000">C-News in an NFS Environment</A></H1>
+<A NAME="cnewsnfs"></A>
+A simple way to distribute news within a local network is to keep all
+news on a central host, and export the relevant directories via NFS, so
+that newsreaders may scan the articles directly.  The advantage of this
+method over NNTP is that the overhead involved in retrieving and
+threading articles is significantly lower. NNTP, on the other hand, wins
+in a heterogeneous network where equipment varies widely among hosts, or
+where users don't have equivalent accounts on the server machine.
+<P>
+When using NFS, articles posted on a local host have to be forwarded to
+the central machine, because accessing administrative files might
+otherwise expose the system to race-conditions that leave the files
+inconsistent. Also, you might want to protect your news spool area by
+exporting it read-only, which requires forwarding to the central
+machine, too.
+<P>
+C-News handles this transparently. When you post an article, your
+newsreader usually invokes inews to inject the article into the
+news system. This command runs a number of checks on the article,
+completes the header, and checks the file server in /usr/lib/news. If
+this file exists and contains a hostname different from the local host's
+name, inews is invoked on that server host via rsh. Since
+the inews script uses a number of binary commands and support files
+from C-News, you have to either have C-News installed locally, or mount
+the news software from the server.
+<P>
+For the rsh invocation to work properly, each user must have an
+equivalent account on the server system, i.e. one to which she can log
+in without being asked for a password.
+<P>
+Make sure that the hostname given in server literally matches the
+output of the hostname(1) command on the server machine, else
+C-News will loop forever when trying to deliver the article.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node273.html">Maintenance Tools and Tasks</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node271.html">sendsysversion, and senduuname</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

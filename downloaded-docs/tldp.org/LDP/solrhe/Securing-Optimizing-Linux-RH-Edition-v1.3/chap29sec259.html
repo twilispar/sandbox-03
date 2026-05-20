@@ -1,0 +1,309 @@
+<HTML
+><HEAD
+><TITLE
+>Optimizing Apache</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the new /etc/logrotate.d/apache file"
+HREF="chap29sec258.html"><LINK
+REL="NEXT"
+TITLE="Installed files for Apache Web Server"
+HREF="chap29sec260.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec258.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec260.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch29sapo"
+>29.22. Optimizing Apache</A
+></H1
+><P
+>&#13;      The mod_mmap_static module of Apache, is a special module with the Apache distribution named <TT
+CLASS="literal"
+>mod_mmap_static</TT
+> that can be used to improve the performance of your Web Server. This module works by providing 
+      mappings of a statically configured list of frequently requested, but not changed, files in your RootDirectory. So, if files displayed by Apache don't change often, you can use this module to memory-map the static documents 
+      and increase the speed of your Apache web server.
+    </P
+><P
+>&#13;    It's important to note that the mod_mmap_static module of Apache must be enabled during the configuration and compilation time of Apache before you can use it. If you have followed our steps described in the configuration and 
+    compilation time section above, this is already in Apache  <TT
+CLASS="envar"
+>--add-module-../mod_mmap_static.c</TT
+>.
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        To memory-map static documents, use the following command:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/# find /home/httpd/ona -type f -print | sed -e 's/.*/mmapfile &#38;/' /etc/httpd/conf/mmap.conf
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        The <TT
+CLASS="filename"
+>/home/httpd/ona</TT
+> is the RootDirectory, or to be more precise, the directory out of which you will serve your documents, and the <TT
+CLASS="filename"
+>/etc/httpd/conf/mmap.conf</TT
+> 
+        is the location where we want to create this file, <TT
+CLASS="filename"
+>mmap.conf</TT
+>, that contains a static memory-map of all documents under our RootDirectory.
+      </P
+></LI
+><LI
+><P
+>&#13;        Once the <TT
+CLASS="filename"
+>mmap.conf</TT
+> file has been created under the location where we have chosen to keep this file, we must include it in the <TT
+CLASS="filename"
+>httpd.conf</TT
+> file of Apache to be able to use its features on our web server.
+        Edit the <TT
+CLASS="filename"
+>httpd.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/httpd/conf/httpd.conf</TT
+> and add the line:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          &#60;IfModule mod_include.c&#62;
+          Include conf/mmap.conf
+          &#60;/IfModule&#62;
+        </PRE
+></TD
+></TR
+></TABLE
+>
+
+      </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Proxy Netscape Configuration"
+></IMG
+></SPAN
+>: </B
+>
+        See your Apache documentation for more information about the use of mod_mmap_static. Remember that this feature must be only used when you serve documents that don't change often on your web site.
+      </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;        You must restart the Apache web server for the changes to take effect:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/# /etc/rc.d/init.d/httpd <B
+CLASS="command"
+>restart</B
+>
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          Shutting down http:                                        	[  OK  ]
+          Starting httpd:                                            	[  OK  ]
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+>The atime and noatime attributes: </B
+>
+      <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></P
+></DIV
+>
+      The atime and noatime attributes of Linux can be used to get measurable performance gains in Apache. See in this book, <A
+HREF="chap6sec73.html"
+>General System Optimization</A
+>, for more information on the subject.
+      </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec258.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec260.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the new <TT
+CLASS="filename"
+>/etc/logrotate.d/apache</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Installed files for Apache Web Server</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

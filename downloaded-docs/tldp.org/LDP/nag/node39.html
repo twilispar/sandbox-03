@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The DNS Database</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node40.html">Reverse Lookups</A>
+<B>Up:</B> <A HREF="node34.html">The Domain Name System</A>
+<B> Previous:</B> <A HREF="node38.html">Domain Name Servers</A>
+<BR> <P>
+<H2><A NAME="SECTION004650000">The DNS Database</A></H2>
+<A NAME="tcpipdnsrecords"></A>
+We have seen above that DNS does not only deal with IP-addresses of
+hosts, but also exchanges information on name servers.  There are in
+fact a whole bunch of different types of entries the DNS database may
+have.
+<P>
+A single piece of information from the DNS database is called a
+<em>resource record</em>, or RR for short. Each record has a type
+associated with it, describing the sort of data it represents, and a
+class specifying the type of network it applies to. The latter
+accommodates the needs of different addressing schemes, like
+IP-addresses (the IN class), or addresses of Hesiod networks (used at
+MIT), and a few more.  The prototypical resource record type is the A
+record which associates a fully qualified domain name with an
+IP-address.
+<P>
+Of course, a host may have more than one name. However, one of these
+names must be identified as the official, or <em>canonical host name</em>,
+while the others are simply aliases referring to the former. The
+difference is that the canonical host name is the one with an A record
+associated, while the others only have a record of type CNAME which
+points to the canonical host name.
+<P>
+We will not go through all record types here, but save them for a later
+chapter, but rather give you a brief example here.
+Figure-<A HREF="node40.html#introfighosts"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> shows a part of the domain database that is
+loaded into the name servers for the physics.groucho.edu zone.
+<P>
+Apart from A and CNAME records, you can see a special record at the top
+of the file, stretching several lines. This is the SOA resource record,
+signaling the <em>Start of Authority</em>, which holds general information
+on the zone the server is authoritative for. This comprises, for
+instance, the default time-to-live for all records.
+<P>
+Note that all names in the sample file that do not end with a dot should
+be interpreted relative to the groucho.edu domain.  The special
+name ``@'' used in the SOA record refers to the domain name by
+itself.
+<P>
+We have seen above that the name servers for the groucho.edu
+domain somehow have to know about the physics zone so that they
+can point queries to their name servers. This is usually achieved by a
+pair of records: the NS record that gives the server's FQDN, and
+an A record associating an address with that name. Since these records
+are what holds the name space together, they are frequently called the
+<em>glue records</em>.  They are the only instances of records where a
+parent zone actually holds information on hosts in the subordinate zone.
+The glue records pointing to the name servers for
+physics.groucho.edu are shown in figure-<A HREF="node40.html#introfignsptr"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P><HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node40.html">Reverse Lookups</A>
+<B>Up:</B> <A HREF="node34.html">The Domain Name System</A>
+<B> Previous:</B> <A HREF="node38.html">Domain Name Servers</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

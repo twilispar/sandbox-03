@@ -1,0 +1,464 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/mail/aliases and aliases.db files</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Mail Network"
+HREF="soser-mailn.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/mail/access and access.db files "
+HREF="chap22sec178.html"><LINK
+REL="NEXT"
+TITLE="The /etc/mail/local-host-names file "
+HREF="chap22sec180.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap22sec178.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 22. Software -Server/Mail Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap22sec180.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN12298"
+>22.7. The <TT
+CLASS="filename"
+>/etc/mail/aliases</TT
+> and <TT
+CLASS="filename"
+>aliases.db</TT
+> files</A
+></H1
+><P
+>&#13;         Aliasing is the process of converting one local recipient name on the system into another -<EM
+>aliasing occurs only on local names</EM
+>. Example uses are to convert a generic name -such as root, into a 
+         real username on the system, or to convert one name into a list of many names -<EM
+>for mailing lists</EM
+>. For every envelope that lists a local user as a recipient, Sendmail looks up that recipient's name 
+         in the <TT
+CLASS="filename"
+>aliases</TT
+> file. Because Sendmail may have to search through thousands of names in the <TT
+CLASS="filename"
+>aliases</TT
+> file, a copy of the file is stored in a separate <TT
+CLASS="literal"
+>db</TT
+> database 
+         format file to significantly improve lookup speed. If you configure your Sendmail to use a Central Server <TT
+CLASS="literal"
+>Mail Hub</TT
+> to handles all mail, you don't need to install the <TT
+CLASS="filename"
+>aliases</TT
+> and <TT
+CLASS="filename"
+>aliases.db</TT
+> 
+         files on the neighbor server or client machines.
+         </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;         Create the <TT
+CLASS="literal"
+>aliases</TT
+> file <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/mail/aliases</TT
+> and add the following lines by default:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         #
+         #       @(#)aliases     8.2 (Berkeley) 3/5/94
+         #
+         #  Aliases in this file will NOT be expanded in the header from
+         #  Mail, but WILL be visible over networks or from /bin/mail.
+         #
+         #       &#62;&#62;&#62;&#62;&#62;&#62;&#62;&#62;&#62;&#62;      	The program "newaliases" must be run after
+         #       &#62;&#62; NOTE &#62;&#62;      	this file is updated for any changes to
+         #       &#62;&#62;&#62;&#62;&#62;&#62;&#62;&#62;&#62;&#62;      	show through to sendmail.
+         #
+
+         # Basic system aliases -- these MUST be present.
+         MAILER-DAEMON:  	postmaster
+         postmaster:     		root
+
+         # General redirections for pseudo accounts.
+         bin:            	root
+         daemon:         	root
+         nobody:         	root
+
+         # Person who should get root's mail
+         #root:          	admin
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         Your aliases file will be probably far more complex, but even so, note how the example shows the minimum form of aliases.
+         </P
+></BLOCKQUOTE
+></DIV
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Since <TT
+CLASS="filename"
+>/etc/mail/aliases</TT
+> is a database, after creating the text file as described above, you must use the <B
+CLASS="command"
+>makemap</B
+> program to create the database map.
+
+         To create the <TT
+CLASS="filename"
+>aliases database map</TT
+>, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>makemap</B
+> hash /etc/mail/aliases.db &#60; /etc/mail/aliases
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN12333"
+>22.7.1. The <TT
+CLASS="filename"
+>/etc/mail/</TT
+> Directory</A
+></H2
+><P
+>&#13;         The 
+         <P
+></P
+><UL
+><LI
+><P
+>&#13;         <TT
+CLASS="filename"
+>/etc/mail/virtusertable, </TT
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         <TT
+CLASS="filename"
+>domaintable</TT
+>  
+         </P
+></LI
+><LI
+><P
+>&#13;         <TT
+CLASS="filename"
+>mailertable</TT
+>  
+         </P
+></LI
+></UL
+>
+           and 
+           <P
+></P
+><UL
+><LI
+><P
+>&#13;           <TT
+CLASS="filename"
+>virtusertable.db, </TT
+> 
+           </P
+></LI
+><LI
+><P
+>&#13;         <TT
+CLASS="filename"
+>domaintable.db, </TT
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         <TT
+CLASS="filename"
+>mailertable.db</TT
+>
+         </P
+></LI
+></UL
+>
+         All of these files relate to particular features of Sendmail that can be tuned by the system administrator. Once again, these features are usually required only in the Central Mail Hub server. The following is the explanation of each one.
+         </P
+><DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>The <TT
+CLASS="filename"
+>virtusertable</TT
+> &#38; <TT
+CLASS="filename"
+>virtusertable.db</TT
+> files</B
+></DT
+><DD
+><P
+>&#13;         A virtusertable is a database that maps virtual domains into news addresses. With this feature, mail for virtual domain on your network can be delivered to local, remote, or a single user address.
+         </P
+></DD
+><DT
+><B
+>The <TT
+CLASS="filename"
+>domaintable</TT
+> &#38; <TT
+CLASS="filename"
+>domaintable.db</TT
+> files</B
+></DT
+><DD
+><P
+>&#13;         A domaintable is a database that maps old domain to a new one. With this feature, multiple domain names on your network can be rewritten from the old domain to the new.
+         </P
+></DD
+><DT
+><B
+>The <TT
+CLASS="filename"
+>mailertable</TT
+> &#38; <TT
+CLASS="filename"
+>mailertable.db</TT
+> files</B
+></DT
+><DD
+><P
+>&#13;         A mailertable is a database that maps <TT
+CLASS="literal"
+>host.domain</TT
+> names to special delivery agent and new domain name pairs. With this feature mail on your network can be delivered through the use of a particular 
+         delivery agent to a new local or remote domain name.
+         </P
+></DD
+></DL
+></DIV
+><P
+>&#13;         To create the <TT
+CLASS="filename"
+>virtusertable, domaintable, mailertable</TT
+>, and their corresponding <TT
+CLASS="filename"
+>.db</TT
+> files into <TT
+CLASS="filename"
+>/etc/mail</TT
+> directory, use the following commands:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# for map in virtusertable domaintable mailertable
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         &#62; do
+         &#62; touch /etc/mail/${map}
+         &#62; chmod 0644 /etc/mail/${map}
+         &#62; makemap hash /etc/mail/${map}.db &#60; /etc/mail/${map}
+         &#62; chmod 0644 /etc/mail/${map}.db
+         &#62; done
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap22sec178.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap22sec180.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/mail/access</TT
+> and <TT
+CLASS="filename"
+>access.db</TT
+> files</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soser-mailn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/mail/local-host-names</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

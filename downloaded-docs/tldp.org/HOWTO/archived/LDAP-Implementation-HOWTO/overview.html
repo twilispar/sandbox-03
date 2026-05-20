@@ -1,0 +1,248 @@
+<HTML
+><HEAD
+><TITLE
+>Overview</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.63
+"><LINK
+REL="HOME"
+TITLE="LDAP Implementation HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="LDAP Implementation HOWTO"
+HREF="index.html"><LINK
+REL="NEXT"
+TITLE="LDAP authentication using pam_ldap and
+nss_ldap"
+HREF="pamnss.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>LDAP Implementation HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="index.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="pamnss.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="OVERVIEW"
+>1. Overview</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN48"
+>1.1. Why this howto?</A
+></H2
+><P
+>I started learning about ldap when my company felt the need for a centralized storage of user account information, and wanted to use ldap for this. I soon found that there were bits and pieces of documantation everywhere, but that there was no document that put it all together. This has been the reason to start it.</P
+><P
+>Furthermore, Ldap is becoming more widely used every day. I think it is useful that when people are considering to use Ldap, they can get a full overview of which applications are Ldap aware. This might help them to choose their system setup carefully, without throwing everything about every time they want to change something or add functionality.</P
+><P
+>It started out as a project roadmap on how we wanted to implement Ldap for our own uses. But thanks to my employer, <A
+HREF="http://www.linvision.com"
+TARGET="_top"
+>Linvision</A
+>, who gave me the opportunity to do some research on things that weren't really useful to our own cause, it changed from a roadmap to a technical overview of applications that are ldap aware.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN54"
+>1.2. What is it about?</A
+></H2
+><P
+>Most of the common services can be authenticated through PAM, Pluggable Authentication Modules. With the pam_ldap and nss_ldap modules, all pamified programs can get their information from LDAP. More information about PAM in general can be found on <A
+HREF="http://www.kernel.org/pub/linux/libs/pam/"
+TARGET="_top"
+>the Linux-PAM site</A
+>. Information about pam_ldap and nss_ldap can be found on the  <A
+HREF="http://www.padl.com"
+TARGET="_top"
+>padl software</A
+> site.</P
+><P
+>For Samba, things are a little difficult at this moment. The current stable Samba versions do not have Ldap support. Ldap support can be found in the HEAD and TNG branch, and probably also in the combined tree. The problem is that samba has it's own usernames and passwords. It does have usage for PAM, in fact, but that is not sufficient to do all the authentication and retrieval of user information. Because the implementation of LDAP in samba is not fully finished yet, there are a few limitations to the use of ldap with samba. From my experiences, the HEAD is at this time (early June 2000) not stable enough, and the performance is unsatisfying. However, when the ldap support is fully functional in the new releases, samba too can be configured to get all of it's user information from ldap.</P
+><P
+>Another thing that can be stored into an ldap database is DNS. When the amount of machines connected to your network increases, it is no longer feasable to edit the DNS files by hand. When machine accounts are stored into ldap, two simple DNS entries (one for the lookup, and one for the  reverse lookup) can easily be added at the same time. This too provides a simplification of system management. Although the storage of DNS entries in an ldap database may not be neccesary for most systems, it may prove useful to some people.</P
+><P
+>Since sendmail version 8.9 (see <A
+HREF="http://www.sendmail.net/"
+TARGET="_top"
+>sendmail.net</A
+>
+for more details), sendmail has Ldap support. Postfix and QMail are ldap-aware too. When setting up an email system which has multiple mailhosts and or fallback hosts, it is convenient to store all the information in one place. Normally, every system needs to be configured separately, with the same information. When using ldap, this can be avoided.</P
+><P
+>Roaming access can also be used with LDAP. Netscape versions 4.5 and up have the possibility to store user data like bookmarks and such via an HTML or LDAP server. This gives users their good old preferences, wherever they log in and use Netscape.</P
+><P
+>Microsoft's office programs can import address books. Thay can also use an Active Directory service to automagically match emailaddresses to user names or nicknames. With Ldap this can be done on a Linux system, without the need for Microsoft Exchange Server or something the like.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN65"
+>1.3. What is it NOT about?</A
+></H2
+><P
+>First thing: I will try not to talk too much about the actual setup and administration of Ldap itself.
+There is an excellent Ldap HOWTO available at the Linux Documentation Project that discusses this.</P
+><P
+>Secondly, I will not discuss things regarding the applications itself, when they have nothing to do with Ldap.</P
+><P
+>Lastly, in most cases, I cannot tell you if it is wise to use Ldap. I don't have that kind of experience. I can tell you how to do it, if you want, but i cannot tell you if you should. There is plenty documentaion available that discusses the useability of Ldap in general.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN70"
+>1.4. Acknowledgements</A
+></H2
+><P
+>At first, I would like to thank my employer, <A
+HREF="http://www.linvision.com"
+TARGET="_top"
+>Linvision</A
+>, for giving me the opportunity to work on this document in their time.</P
+><P
+>Furthermore, I would like to thank the following people, who have contributed to this document in some way (in no particular order): Giuseppe Lo Biondo.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN75"
+>1.5. Disclaimer</A
+></H2
+><P
+>This document is provided as is and should be considered as a work in progress. Several sections are as yet unfinished, and probably a lot of things that should be in here, aren't. I would greatly appreciate any comments on this document, of whatever nature they may be.</P
+><P
+>In any case, think before you go messing around with your system and don't come to me if it breaks.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN79"
+>1.6. Copyright and license</A
+></H2
+><P
+>Copyright (c) by Roel van Meer, Giuseppe Lo Biondo. This document
+may be distributed only subject to the terms and conditions set forth in
+the LDP License at the <A
+HREF="http://www.linuxdoc.org/COPYRIGHT.html"
+TARGET="_top"
+>Linux Documentation Project</A
+>.</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="index.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="pamnss.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>LDAP Implementation HOWTO</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>LDAP authentication using pam_ldap and
+nss_ldap</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

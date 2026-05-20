@@ -1,0 +1,336 @@
+<HTML
+><HEAD
+><TITLE
+>How to use RPM Commands</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Installation of your Linux Server"
+HREF="installlin.html"><LINK
+REL="PREVIOUS"
+TITLE="Select Individual Package -Part 'B'"
+HREF="chap3sec19.html"><LINK
+REL="NEXT"
+TITLE="Starting and stopping daemon services"
+HREF="chap3sec21.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap3sec19.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Installation of your Linux Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap3sec21.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN1528"
+>3.11. How to use RPM Commands</A
+></H1
+><P
+>&#13;                 This section contains an overview of principal modes using with <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> for installing, uninstalling, upgrading, querying, listing, and checking <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> packages on your Linux 
+                 system. You must be familiar with these <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> commands now because we'll use them often in the continuation of this book.
+                 To install a RPM package, use the command:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /#<B
+CLASS="command"
+>rpm</B
+> -ivh foo-1.0-2.i386.rpm
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 Take a note that <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> packages have a file of names like <TT
+CLASS="filename"
+>foo-1.0-2.i386.rpm,</TT
+> which include the package name (foo), version (1.0), release (2), and architecture (i386).
+                 </P
+><P
+>&#13;                 To uninstall a RPM package, use the command:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /#<B
+CLASS="command"
+>rpm</B
+> -e foo
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 Notice that we used the package name <TT
+CLASS="filename"
+>foo,</TT
+> not the name of the original package file <TT
+CLASS="filename"
+>foo-1.0-2.i386.rpm.</TT
+>
+                 </P
+><P
+>&#13;                 To upgrade a RPM package, use the command:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /#<B
+CLASS="command"
+>rpm</B
+> -Uvh foo-1.0-2.i386.rpm
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 With this command, <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> automatically uninstall the old version of <TT
+CLASS="filename"
+>foo</TT
+> package and install the new one. Always 
+                 use <TT
+CLASS="userinput"
+><B
+>rpm -Uvh</B
+></TT
+> to install packages, since it works fine even when there are no previous versions of the package installed.
+                 </P
+><P
+>&#13;                 To query a RPM package, use the command:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /#<B
+CLASS="command"
+>rpm</B
+> -q foo
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 This command will print the package name, version, and release number of installed package <TT
+CLASS="filename"
+>foo.</TT
+> Use this command to verify that a package is or is not installed on your system.
+                 </P
+><P
+>&#13;                 To display package information, use the command:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /#<B
+CLASS="command"
+>rpm</B
+> -qi foo
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 This command display package information; includes name, version, and description of the installed program. Use this command to get information about the installed package.
+                 </P
+><P
+>&#13;                 To list files in package, use the command:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /#<B
+CLASS="command"
+>rpm</B
+> -qlfoo
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 This command will list all files in a installed <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> package. It works only when the package is already installed on your system.
+                 </P
+><P
+>&#13;                 To check a RPM signature package, use the command:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /#<B
+CLASS="command"
+>rpm</B
+>  --checksig foo
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 This command checks the <SPAN
+CLASS="acronym"
+>PGP</SPAN
+> signature of specified package to ensure its integrity and origin. Always use this command first before installing new 
+                 <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> package on your system. Also, <SPAN
+CLASS="application"
+>GnuPG</SPAN
+> or <SPAN
+CLASS="application"
+>Pgp</SPAN
+> software must be already installed on your system before you can use this command.
+                 </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap3sec19.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap3sec21.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Select Individual Package -Part 'B'</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="installlin.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Starting and stopping daemon services</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

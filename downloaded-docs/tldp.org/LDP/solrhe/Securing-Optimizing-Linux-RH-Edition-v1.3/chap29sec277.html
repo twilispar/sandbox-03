@@ -1,0 +1,319 @@
+<HTML
+><HEAD
+><TITLE
+>Configure your php.ini from PHP4</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure and create Webmail IMP SQL database"
+HREF="chap29sec276.html"><LINK
+REL="NEXT"
+TITLE="Configure Webmail IMP via your web browser"
+HREF="chap29sec279.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec276.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 30. Optional component to install with Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec279.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN21708"
+>30.15. Configure your <TT
+CLASS="filename"
+>php.ini</TT
+> from PHP4</A
+></H1
+><P
+>&#13;        Another setting you need to configure is in your PHP4 configuration file <TT
+CLASS="filename"
+>/etc/httpd/php.ini</TT
+>. This modification is required in order to define which features, such as <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+>, PostgreSQL and others, 
+        are to be loaded automatically by PHP4. Since we decided to use PostgreSQL as our database, and need to use <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> features in our Webmail software, we must define them in the <TT
+CLASS="filename"
+>php.ini</TT
+> configuration 
+        file of PHP4.
+      </P
+><P
+>&#13;        Edit the <TT
+CLASS="filename"
+>php.ini</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/httpd/php.ini</TT
+>, and add under the Dynamic Extensions section your desired choices. In our case, as you can see, we chose <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> 
+        and PostgreSQL support:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          extension=imap.so		; Added for IMAP support
+          extension=pgsql.so		; Added for PostgreSql support
+          extension=mysql.so		; Added for MySql support
+          extension=ldap.so		; Added for LDAP support
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+><P
+>&#13;        You must tell where to look when including files that don't have absolute paths as well, to automatically prepend the contents of phplib's <TT
+CLASS="filename"
+>prepend.php3</TT
+> to each file, and turns off magic quotes.
+        Edit the <TT
+CLASS="filename"
+>php.ini</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/httpd/php.ini</TT
+> and add the following parameters to the related lines:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          magic_quotes_gpc        	=   Off
+          auto_prepend_file       	=   "/home/httpd/php/prepend.php3"
+          include_path 			=   "/home/httpd/horde:/home/httpd/php"
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN21728"
+>30.15.1. Configure Apache to recognize Webmail IMP</A
+></H2
+><P
+>&#13;          Once Webmail <SPAN
+CLASS="acronym"
+>IMP</SPAN
+> has been installed in the system, we must add the following lines in the <TT
+CLASS="filename"
+>httpd.conf</TT
+> file of Apache to be able to locate and use its features.
+        </P
+><P
+>&#13;          Edit the <TT
+CLASS="filename"
+>httpd.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/httpd/conf/httpd.conf</TT
+> and add the following lines between the section tags &#60;IfModule mod_alias.c&#62; and &#60;/IfModule&#62;:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            Alias /horde/ "/home/httpd/horde/"
+            &#60;Directory "/home/httpd/horde"&#62;
+            Options None
+            AllowOverride None
+            Order allow,deny
+            Allow from all
+            &#60;/Directory&#62;
+
+            Alias /imp/ "/home/httpd/horde/imp/"
+            &#60;Directory "/home/httpd/horde/imp"&#62;
+            Options None
+            AllowOverride None
+            Order allow,deny
+            Allow from all
+            &#60;/Directory&#62;
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+><P
+>&#13;          You must restart the Apache web server for the changes to take effect, use the following commands:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# /etc/rc.d/init.d/httpd <B
+CLASS="command"
+>restart</B
+>
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;            Shutting down http:                                        	[  OK  ]
+            Starting httpd:                                            	[  OK  ]
+          </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec276.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec279.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure and create Webmail IMP SQL database</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure Webmail <SPAN
+CLASS="acronym"
+>IMP</SPAN
+> via your web browser</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

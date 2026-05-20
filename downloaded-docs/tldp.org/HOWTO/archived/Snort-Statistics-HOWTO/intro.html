@@ -1,0 +1,531 @@
+<HTML
+><HEAD
+><TITLE
+>Introduction</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="Snort-Setup for Statistics HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Snort-Setup for Statistics HOWTO"
+HREF="index.html"><LINK
+REL="NEXT"
+TITLE="Structure"
+HREF="structure.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Snort-Setup for Statistics HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="index.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="structure.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="INTRO">1. Introduction</H1
+><P
+>   This document was written when I created an IDS sensor with Snort and
+   using some statistic tools in order to help others implementing it. If at
+   least one out there can be helped it has been worth the work.   
+  </P
+><P
+>   Snort is an excellent Network Intrusion Detection System (NIDS) for various
+   unices. The Snort homepage can be found at <A
+HREF="http://www.snort.org/"
+TARGET="_top"
+>http://www.snort.org/</A
+>. The version
+   described here is 1.8.3 which was the actual version at the time of writing.
+  </P
+><P
+>   The statistic tools I will describe here are ACID, a database analysis tool
+   for Snort which can be found at <A
+HREF="http://www.cert.org/kb/acid/"
+TARGET="_top"
+>http://www.cert.org/kb/acid/</A
+> and
+   SnortSnarf, a statistic tool for Snort logs downloadable from
+   <A
+HREF="http://www.silicondefense.com/software/snortsnarf/index.htm"
+TARGET="_top"
+>   http://www.silicondefense.com/software/snortsnarf/index.htm</A
+>.
+  </P
+><P
+>   Additional support packages are needed for ACID. These are a PHP4 capable
+   webserver like <EM
+>apache</EM
+> (<A
+HREF="http://www.apache.org/"
+TARGET="_top"
+>http://www.apache.org/</A
+>), PHPlot used for
+   creating graphs in PHP (<A
+HREF="http://www.phplot.com/"
+TARGET="_top"
+>http://www.phplot.com/</A
+>) and ADODB used
+   for connecting to databases with PHP (<A
+HREF="http://php.weblogs.com/ADODB/"
+TARGET="_top"
+>http://php.weblogs.com/ADODB/</A
+>).
+  </P
+><P
+>   The description also includes which additional software is needed for ACID
+   and how to configure along with some scripts I use including a changed
+   version of the snortd initscript and a short chapter about swatch (<A
+HREF="http://www.stanford.edu/~atkins/swatch"
+TARGET="_top"
+>http://www.stanford.edu/~atkins/swatch</A
+>) a log file watcher script written
+   in perl. I created a swatch RPM which can be found at <A
+HREF="http://www.lug-burghausen.org/projects/Snort-Statistics/swatch-3.0.2-1.noarch.rpm"
+TARGET="_top"
+>http://www.lug-burghausen.org/projects/Snort-Statistics/swatch-3.0.2-1.noarch.rpm</A
+>.
+  </P
+><P
+>   One hint for those interested in maintaining more than one snort sensor: You
+   might take a look at IDSPM (IDS Policy Manager) at <A
+HREF="http://www.activeworx.com/"
+TARGET="_top"
+>http://www.activeworx.com/</A
+> which is
+   an application to maintain various sensors with different policies along with
+   merging capabilities for new rules and a lot more. The only "nasty" thing is
+   that it runs on W2K/XP and is not (yet?) Open Source.
+  </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="COPYRIGHT">1.1. Copyright Information</H2
+><P
+>    This document is copyrighted (c) 2001, 2002 Sandro Poppi and is
+    distributed under the terms of the Linux Documentation Project
+    (LDP) license, stated below.
+   </P
+><P
+>    Unless otherwise stated, Linux HOWTO documents are
+    copyrighted by their respective authors. Linux HOWTO documents may
+    be reproduced and distributed in whole or in part, in any medium
+    physical or electronic, as long as this copyright notice is
+    retained on all copies. Commercial redistribution is allowed and
+    encouraged; however, the author would like to be notified of any
+    such distributions.
+   </P
+><P
+>    All translations, derivative works, or aggregate works
+    incorporating any Linux HOWTO documents must be covered under this
+    copyright notice. That is, you may not produce a derivative work
+    from a HOWTO and impose additional restrictions on its
+    distribution. Exceptions to these rules may be granted under
+    certain conditions; please contact the Linux HOWTO coordinator at
+    the address given below.
+   </P
+><P
+>    In short, we wish to promote dissemination of this
+    information through as many channels as possible. However, we do
+    wish to retain copyright on the HOWTO documents, and would like to
+    be notified of any plans to redistribute the HOWTOs.
+   </P
+><P
+>    If you have any questions, please contact 
+    <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:linux-howto at metalab.unc.edu"
+>linux-howto at metalab.unc.edu</A
+>&#62;</TT
+>
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="DISCLAIMER">1.2. Disclaimer</H2
+><P
+>    No liability for the contents of this documents can be accepted.
+    Use the concepts, examples and other content at your own risk.
+    As this is a new edition of this document, there may be errors
+    and inaccuracies, that may of course be damaging to your system.
+    Proceed with caution, and although this is highly unlikely,
+    the author(s) do not take any responsibility for that.
+   </P
+><P
+>    All copyrights are held by their respective owners, unless
+    specifically noted otherwise.  Use of a term in this document
+    should not be regarded as affecting the validity of any trademark
+    or service mark.
+   </P
+><P
+>    Naming of particular products or brands should not be seen 
+    as endorsements.
+   </P
+><P
+>    You are strongly recommended to take a backup of your system 
+    before major installation and backups at regular intervals.
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="NEWVERSIONS">1.3. New Versions</H2
+><P
+>    This is the initial release.
+   </P
+><P
+>    The main site for this HOWTO is <A
+HREF="http://www.lug-burghausen.org/projects/Snort-Statistics/"
+TARGET="_top"
+>http://www.lug-burghausen.org/projects/Snort-Statistics/</A
+>.
+   </P
+><P
+>    Mirrors may be found at the <A
+HREF="http://www.linuxdoc.org/"
+TARGET="_top"
+>Linux
+    Documentation Project</A
+> or <A
+HREF="http://www.snort.org/"
+TARGET="_top"
+>Snort</A
+> homepages. 
+   </P
+><P
+>    The newest version of this HOWTO will always be made available on
+    the main website, in a variety of formats:
+   </P
+><P
+>   <P
+></P
+><UL
+><LI
+><P
+>      <A
+HREF="http://www.lug-burghausen.org/projects/Snort-Statistics/index.html"
+TARGET="_top"
+>HTML</A
+>.
+     </P
+></LI
+><LI
+><P
+>      <A
+HREF="http://www.lug-burghausen.org/projects/Snort-Statistics/Snort-Statistics-HOWTO.ps.gz"
+TARGET="_top"
+>compressed
+postscript (A4)</A
+>.
+     </P
+></LI
+><LI
+><P
+>      <A
+HREF="http://www.lug-burghausen.org/projects/Snort-Statistics/Snort-Statistics-HOWTO.sgml"
+TARGET="_top"
+>SGML
+source</A
+>.
+     </P
+></LI
+></UL
+>
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="CREDITS">1.4. Credits</H2
+><P
+>    Credits go to a variaty of people including
+   </P
+><P
+>    <P
+></P
+><UL
+><LI
+><P
+>       Martin Roesch <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:roesch at sourcefire.com"
+>roesch at sourcefire.com</A
+>&#62;</TT
+> Author of Snort
+      </P
+></LI
+><LI
+><P
+>       Roman Danyliw <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:roman at danyliw.com"
+>roman at danyliw.com</A
+>&#62;</TT
+> Author of ACID
+      </P
+></LI
+><LI
+><P
+>       James Hoagland <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:hoagland at SiliconDefense.com"
+>hoagland at SiliconDefense.com</A
+>&#62;</TT
+> Author of
+       SnortSnarf
+      </P
+></LI
+><LI
+><P
+>       Stuart Staniford <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:stuart at SiliconDefense.com"
+>stuart at SiliconDefense.com</A
+>&#62;</TT
+> Author of
+       SnortSnarf
+      </P
+></LI
+><LI
+><P
+>       Joe McAlerney <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:joey at siliconDefense.com"
+>joey at siliconDefense.com</A
+>&#62;</TT
+> Author of
+       SnortSnarf 
+      </P
+></LI
+><LI
+><P
+>       John Lim <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:jlim at natsoft.com.my"
+>jlim at natsoft.com.my</A
+>&#62;</TT
+> Author of ADODB
+      </P
+></LI
+><LI
+><P
+>       Afan Ottenheimer <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:afan at users.sourceforge.net"
+>afan at users.sourceforge.net</A
+>&#62;</TT
+> Author of
+       PHPlot
+      </P
+></LI
+><LI
+><P
+>       Andreas Östling <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:andreaso at it.su.se"
+>andreaso at it.su.se</A
+>&#62;</TT
+> Author of
+       arachnids_upd
+      </P
+></LI
+><LI
+><P
+>       Max Vision <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:vision at whitehats.com"
+>vision at whitehats.com</A
+>&#62;</TT
+> "Distributor" of
+       vision.rules and maintainer of http://www.whitehats.com/
+      </P
+></LI
+><LI
+><P
+>       Greg Sarsons <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:gsarsons at home.com"
+>gsarsons at home.com</A
+>&#62;</TT
+> for proof reading and
+       suggestions
+      </P
+></LI
+><LI
+><P
+>       All the peaople on the <EM
+>snort-users</EM
+> mailinglist, they
+       helped me and of course they will help YOU &#62;;)
+      </P
+></LI
+><LI
+><P
+>       ...
+      </P
+></LI
+></UL
+>
+   </P
+><P
+>    If I missed someone it was not because of not honoring her or his work!
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="FEEDBACK">1.5. Feedback</H2
+><P
+>    Feedback is most certainly welcome for this document. Without
+    your submissions and input, this document wouldn't exist. Please
+    send your additions, comments and criticisms to the following
+    email address : <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:spoppi at gmx.de"
+>spoppi at gmx.de</A
+>&#62;</TT
+>.
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="TRANSLATIONS">1.6. Translations</H2
+><P
+>    There are currently no translations available.
+   </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="structure.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Snort-Setup for Statistics HOWTO</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Structure</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

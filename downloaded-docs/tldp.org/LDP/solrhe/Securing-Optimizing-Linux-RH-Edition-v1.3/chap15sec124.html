@@ -1,0 +1,356 @@
+<HTML
+><HEAD
+><TITLE
+>OpenSSH Per-User Configuration</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities"
+HREF="soft-netsecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure OpenSSH to use TCP-Wrappers/inetd super server"
+HREF="chap15sec123.html"><LINK
+REL="NEXT"
+TITLE="OpenSSH Users Tools"
+HREF="chap15sec125.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap15sec123.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 15. Software -Securities</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap15sec125.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN8430"
+>15.6. OpenSSH Per-User Configuration</A
+></H1
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;          Create your private &#38; public keys of local, by executing:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /#<B
+CLASS="command"
+>su</B
+> admin
+          [admin@deep /]$<B
+CLASS="command"
+>ssh-keygen</B
+>
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          The result should look like the following example:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          
+          Initializing random number generator...
+          Generating p:  ............................++ (distance 430)
+          Generating q:  ......................++ (distance 456)
+          Computing the keys...
+          Testing the keys...
+          Key generation complete.
+          Enter file in which to save the key (<TT
+CLASS="filename"
+>/home/admin/.ssh/identity</TT
+>): [Press <B
+CLASS="keycap"
+>Enter</B
+>]
+          Enter passphrase: 
+          Enter the same passphrase again: 
+          Your identification has been saved in /home/admin/.ssh/identity.
+          Your public key is:
+          1024 37 14937757511251955533691120318477293862290049394715136511145806108870001764378494676831297577843158532
+          2723612061006231460440536487184367748423324091941848098890786099717524446977589647127757030728779973708569993
+          017043141563536333068888944038178461608592483844590202154102756903055846534063365635584899765402181 
+          </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          admin@deep.openna.com
+          Your public key has been saved in /home/admin/.ssh/identity.pub
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+          If you have multiple accounts you might want to create a separate key on each of them. You may want to have separate keys for:
+          <P
+></P
+><UL
+><LI
+><P
+>&#13;          Your Mail server
+          </P
+></LI
+><LI
+><P
+>&#13;          Your Web server
+          </P
+></LI
+><LI
+><P
+>&#13;          Your GW server
+          </P
+></LI
+></UL
+>
+          This allows you to limit access between these servers, e.g. not allowing the Mail account to access your Web account or the machines in the GW. This enhances the overall security in the case any of your authentication 
+          keys are compromised for any reason.
+          </P
+></BLOCKQUOTE
+></DIV
+>
+          </P
+></LI
+><LI
+><P
+>          
+          Copy your local public keys <TT
+CLASS="filename"
+>identity.pub</TT
+> to the <TT
+CLASS="filename"
+>/home/admin/.ssh</TT
+> directory remotely under the name, say, <TT
+CLASS="filename"
+>authorized_keys</TT
+>.
+          <DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+          One way to copy the file is to use the ftp command or you might need to send your public key in electronic mail to the administrator of the system. Just include the contents of the <TT
+CLASS="filename"
+>~/.ssh/identity.pub</TT
+> file 
+          in the message.
+          </P
+></BLOCKQUOTE
+></DIV
+>
+          </P
+></LI
+></OL
+></DIV
+><P
+>&#13;          You might feel the need to Change your pass-phrase for various reason and can do so at any time by using the  -p option of ssh-keygen.
+          To change the pass-phrase, use the command:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /#<B
+CLASS="command"
+>su</B
+> admin
+          [admin@deep /]$<B
+CLASS="command"
+>ssh-keygen</B
+> -p
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          Enter file key is in <TT
+CLASS="filename"
+>/home/admin/.ssh/identity</TT
+>: [Press <B
+CLASS="keycap"
+>ENTER</B
+>]
+          Enter old passphrase:
+          Key has comment 'admin@deep.openna.com'
+          Enter new passphrase:
+          Enter the same passphrase again:
+          Your identification has been saved with the new passphrase.
+          </TT
+>
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap15sec123.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap15sec125.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure OpenSSH to use TCP-Wrappers/inetd super server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netsecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>OpenSSH Users Tools</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

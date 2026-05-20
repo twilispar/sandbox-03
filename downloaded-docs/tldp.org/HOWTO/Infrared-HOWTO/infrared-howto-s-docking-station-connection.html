@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Connection to Docking Station</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Specific Connections and IrDA - Protocols"
+HREF="infrared-howto-c-specific-connections.html"><LINK
+REL="PREVIOUS"
+TITLE="Multiple Instances"
+HREF="infrared-howto-s-multiple-instances.html"><LINK
+REL="NEXT"
+TITLE="Connection to Keyboard"
+HREF="infrared-howto-s-keyboard-connection.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-multiple-instances.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Specific Connections and IrDA - Protocols</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-keyboard-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-docking-station-connection"
+></A
+>3.15. Connection to Docking Station</H1
+><P
+>&#13;   Dag Brattli: "Connection to the 
+   <A
+HREF="http://www.tekram.com/"
+TARGET="_top"
+>Tekram IRDocking IR-660</A
+>
+   
+   . This device is
+   a docking station with LAN access, printer, mouse and keyboard. You
+   can also use them at the same time as the internal mouse and keyboard!
+   Just fire up <B
+CLASS="command"
+>gpm -t ps2 /dev/irkbd</B
+> and the laptop will make a
+   keyboard/mouse connection to the IR-660. Now I just have to make gpm
+   read both /dev/psaux and /dev/irkbd, and then make X11 read
+   /dev/gpmdata, and I should have the thing configured!
+</P
+><P
+>&#13;   ... one problem: gpm can handle multiple mice, but Linux cannot handle
+   multiple different keyboards. So if you have one norwegian keyboard
+   and one remote US keyboard like I have, then things will be a little
+   bit confusing. I got a hint from Alan Cox about a project that is
+   implementing real support for multiple keyboards, so I'll check that
+   out.
+</P
+><P
+>&#13;   ... OK, I sort of worked it out. By using TIOCSTI on /dev/console, you
+   can insert scancodes directly into the tty queue. This can be a
+   problem for virtual consoles that expect to receive some translated
+   and cooked keycodes, but X happens to like raw scancodes, so this will
+   work quite nice when using X but not for other virtual consoles.
+   Anyway this is good enough for me, so I will not use a lot of time
+   converting the scancodes to keycodes and index them with some keymap
+   just to make it work with text only virtual consoles. As I see it the
+   irkbd driver has now been successfully been ported to user-space :-)
+</P
+><P
+>&#13;   ... the Tekram IR-660 device can, in addition to attach a keyboard and
+   mouse, also print using IrTTP (it can print using IrLPT, but that is
+   not so funny since it requires exclusive use of IrLMP, and you don't
+   wan't to stop the network, mouse and keyboard just to print a
+   document). I'll try and see if I can get IrTTP printing working using
+   a fifo as well.
+</P
+><P
+>&#13;   ... Tekram has added a control channel in addition to the data channel
+   so that you can get some status information about what is going on.
+   The name of their own protocol is P1248. It's published through the
+   "P1248" class and "IrDA:TinyTP:LsapSel" LM-IAS entry, so you can try
+   to find it.
+</P
+><P
+>&#13;   ... Canon is using the P1248 protocol, and their printer monitor
+   program BrintBuddy2 (Japanese version) is using this protocol now. I
+   don't know what they use for the data channel. Maybe they support
+   TinyTP directly in addition to the other methods. You can try and look
+   up the "IrLPT" class with the "IrDA:TinyTP:LsapSel" in the LM-IAS and
+   see if you can find it."
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-multiple-instances.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-keyboard-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Multiple Instances</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-specific-connections.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Connection to Keyboard</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

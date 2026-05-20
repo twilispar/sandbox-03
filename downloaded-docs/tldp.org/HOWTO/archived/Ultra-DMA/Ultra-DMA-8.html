@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Linux Ultra-DMA Mini-Howto: Activating and Deactivating UDMA</TITLE>
+ <LINK HREF="Ultra-DMA-9.html" REL=next>
+ <LINK HREF="Ultra-DMA-7.html" REL=previous>
+ <LINK HREF="Ultra-DMA.html#toc8" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Ultra-DMA-9.html">Next</A>
+<A HREF="Ultra-DMA-7.html">Previous</A>
+<A HREF="Ultra-DMA.html#toc8">Contents</A>
+<HR>
+<H2><A NAME="activate"></A> <A NAME="s8">8. Activating and Deactivating UDMA</A></H2>
+
+<P>
+<P>Normally, a UDMA-aware kernel will automatically enable UDMA support for
+drives and interfaces that support it. In most cases that it doesn't, the kernel
+either doesn't know how to drive your IDE chipset (get yourself a patch, see
+<A HREF="Ultra-DMA-7.html#unified">above</A>) or doesn't believe it is safe to enable
+it (meaning you shouldn't!).
+<P>However in some cases the drive is capable of UDMA but the BIOS drops the ball
+and doesn't report it properly, and forcing the issue can be useful.
+<P>
+<H2><A NAME="bootparam"></A> <A NAME="ss8.1">8.1 Using kernel boot parameters</A>
+</H2>
+
+<P>
+<P>On kernels 2.1.113 and up, you can enable DMA for both drives on a given IDE
+interface using the <CODE>ideX=dma</CODE> kernel parameter, where X is the number
+of the interface (the first is 0). This may not actually force UDMA though.
+<P>Kernel boot parameters can be set using LILO, LOADLIN, or most Linux boot
+loaders. For more information see the 
+<A HREF="http://www.linuxdoc.org/HOWTO/Bootdisk-HOWTO.html">Bootdisk HOWTO</A>.
+<P>
+<P>
+<H2><A NAME="hdparm"></A> <A NAME="ss8.2">8.2 Using hdparm</A>
+</H2>
+
+<P>
+<P><CODE>hdparm</CODE> is a program used to tweak the parameters of hard drives under
+Linux. Among other things you can use it to enable or disable UDMA for a
+drive and test its sustained transfer rate.
+<P>The current version of <CODE>hdparm</CODE>, is 3.6 as of this writing. Unpatched older versions
+will not properly report or set information on UDMA, so be sure to upgrade! You
+can obtain the source code for hdparm 3.6 at
+<A HREF="http://metalab.unc.edu/pub/Linux/system/hardware/hdparm-3.6.tar.gz">http://metalab.unc.edu/pub/Linux/system/hardware/hdparm-3.6.tar.gz</A>.
+<P>Compile and install it something like this:
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+tar zxvf /tmp/download/hdparm-3.6.tar.gz
+cd hdparm-3.5
+make
+su root
+(type password when prompted)
+make install
+cp /usr/local/sbin/hdparm /sbin/hdparm
+exit
+</PRE>
+</CODE></BLOCKQUOTE>
+<P><B>To enable DMA for a hard drive:</B> <CODE>hdparm -d1 /dev/hda</CODE>
+<P><B>To disable DMA for a hard drive:</B> <CODE>hdparm -d0 /dev/hda</CODE>
+<P><B>To measure transfer rate of a hard drive:</B> <CODE>hdparm -Tt /dev/hda</CODE>
+<P><B>To see what options are enabled for a hard drive:</B> <CODE>hdparm /dev/hda</CODE>
+<P><B>To see more info on your drive than you wanted to know</B>: (this will show which UDMA
+modes are supported/enabled)
+<CODE>hdparm -i /dev/hda</CODE>
+<P>For more detailed info (such as how to choose which UDMA mode to use) read
+the man page (``<CODE>man 8 hdparm</CODE>'').
+<P>
+<HR>
+<A HREF="Ultra-DMA-9.html">Next</A>
+<A HREF="Ultra-DMA-7.html">Previous</A>
+<A HREF="Ultra-DMA.html#toc8">Contents</A>
+</BODY>
+</HTML>

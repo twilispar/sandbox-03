@@ -1,0 +1,1014 @@
+<HTML
+><HEAD
+><TITLE
+>TrueType Fonts</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="X Server Configuration"
+HREF="x-config.html"><LINK
+REL="NEXT"
+TITLE="XFree86 4.x"
+HREF="x-4x.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XFree86 Font De-uglification HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x-config.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x-4x.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="TRUETYPE">3. TrueType Fonts</H1
+><P
+> Historically, the Unix world relied on Type 1 fonts for high 
+ quality scalable fonts. Linux supports Type 1 quite well, both for 
+ printing and for screen output. But, Type 1 never was widely adopted 
+ by web designers, and on other platforms. TrueType, due to its association
+ with Windows, is the preferred web font. And XFree86 seems to render 
+ TrueType a little better.&#13;</P
+><P
+> You won't find many decent TrueType fonts included with any distribution,
+ however. The reason is that there are not many quality TrueType fonts
+ available under a suitable license at this time. In fact, many of the 
+ <SPAN
+CLASS="QUOTE"
+>"free"</SPAN
+> ones, are rather poor. Many distributions are
+ including some TrueType fonts, and also including tools for automating the
+ process of adding TrueType fonts from external sources. See if that is an
+ option for you. This will be easiest route. You will definitely want 
+ to add some quality TrueType fonts, one way or another.</P
+><P
+> Because the boys in Redmond are very concerned with the appearance of their
+ software (as opposed to the internal workings ;), they built TrueType font
+ support into Windows.  And of course no big surprise, but they got the idea
+ from Apple. In fact, TrueType is a registered trademark of Apple Computer,
+ Inc. Windows 9x, NT, 2K and nearly every other incarnation of Windows comes
+ with Arial, Times New Roman, and Courier New, which are roughly equivalent
+ to Helvetica, Times and Courier. TrueType fonts are scalable, so they look
+ good in large sizes, and they are well hinted, so they are readable at small
+ sizes.  Many windows applications come with dozens more TrueType fonts.
+ And let's face it, those MS and Apple fonts are, generally speaking, just 
+ plain better than the freely available ones with a suitable license. Don't
+ microwave your Windows CD yet, you'll want to get those quality fonts first!
+ </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN220">3.1. Making TrueType Fonts Available</H2
+><P
+> Let's start with the fonts first. Any TrueType font included with the various
+ MS Windows incarnations should work. Don't forget word processors and other
+ apps that may include their own fonts. MacOS fonts will only work if 
+ converted to a usable format. (See the <A
+HREF="end.html#LINKS"
+>links
+ section</A
+> for converter packages.) There are also some 'free' TrueType
+ fonts available for download if you have already nuked that CD (see <A
+HREF="end.html#LINKS"
+>links section</A
+>).</P
+><P
+> Many distributions are now bundling tools for automating the process of
+ including quality TrueType fonts. SuSE, Debian, and Mandrake do (Red Hat 7.x
+ does not at this time). See what packages you might have for this as this
+ will be the most painless way to go. Essentially, these tools help migrate
+ fonts from a Windows installation, or download those available from
+ Microsoft [note 08/15/02 MS has recently removed these fonts!] , and then
+ handle the installation and configuration all in one neat utility. If you do
+ have such a utility, the below information may not be necessary!&#13;</P
+><P
+> In order to use TrueType, the fonts will have to be always accessible to 
+ X. This means they will have to be on a filesystem that is
+ <EM
+>always</EM
+> mounted. This can conceivably be a Windows
+ partition on a dual boot system. Alternately, the fonts can be copied to
+ Linux.  First <B
+CLASS="COMMAND"
+>su</B
+> to root: </P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;#&nbsp;su&nbsp;-<br>
+&nbsp;#&nbsp;mkdir&nbsp;-p&nbsp;/usr/local/share/fonts/ttfonts<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> Now, change to the new font directory:</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;&nbsp;#&nbsp;cd&nbsp;&nbsp;/usr/local/share/fonts/ttfonts<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> Then, add the fonts to this directory, either by copying them from your
+ Windows system:</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;#&nbsp;cp&nbsp;/mnt/&#60;path_to_fonts&#62;/*ttf&nbsp;&nbsp;.<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> or by downloading those available directly from Microsoft: 
+ <A
+HREF="http://www.microsoft.com/typography/fontpack/default.htm"
+TARGET="_top"
+>http://www.microsoft.com/typography/fontpack/default.htm</A
+>.
+ Note 08/17/02: Microsoft has recently <EM
+>discontinued this
+ page</EM
+>. At this time, the following pages (may!) still have these
+ fonts available (or google search for them):</P
+><P
+> <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>       <A
+HREF="http://nuoriso.hel.fi/__files/ms_truetype_core_fonts_for_the_web/Win95-98-NT/index.html"
+TARGET="_top"
+>http://nuoriso.hel.fi/__files/ms_truetype_core_fonts_for_the_web/Win95-98-NT/index.html</A
+>
+  </TD
+></TR
+><TR
+><TD
+>       <A
+HREF="http://web.archive.org/web/20000420210719/http://www.microsoft.com/opentype/fontpack/default.htm"
+TARGET="_top"
+>http://web.archive.org/web/20000420210719/http://www.microsoft.com/opentype/fontpack/default.htm</A
+>
+  </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>&#13;</P
+><P
+> 
+ These can be unarchived under Linux with 
+ <B
+CLASS="COMMAND"
+>cabextract</B
+>, which can be found 
+ <A
+HREF="http://www.kyz.uklinux.net/cabextract.php3"
+TARGET="_top"
+>http://www.kyz.uklinux.net/cabextract.php3</A
+>.
+ This would now seem to be the best way to go at this time.</P
+><P
+> A slick solution to this from Sebastiano Vigna is his 
+ <A
+HREF="http://freshmeat.net/webFonts4Linux"
+TARGET="_top"
+> http://freshmeat.net/webFonts4Linux</A
+>, which automates 
+ the downloading, extracting and installation of the Microsoft fonts 
+ all in one neat package. A utility designed primarily for Red Hat can be found:
+ <A
+HREF="http://sourceforge.net/projects/font-tool/"
+TARGET="_top"
+>http://sourceforge.net/projects/font-tool/</A
+>, 
+ which includes all the core MS web fonts, plus relevant system configuration. 
+ There is a tarball, as well as RPMs (both require cabextract).</P
+><P
+> 
+ You can also get an RPM of WebFonts that contains some of the MS Web 
+ fonts from <A
+HREF="ftp://ftp.rpmfind.net/linux/contrib/noarch/noarch/webfonts-1-3.noarch.rpm"
+TARGET="_top"
+>ftp://ftp.rpmfind.net/linux/contrib/noarch/noarch/webfonts-1-3.noarch.rpm</A
+>.
+ This has enough basic fonts to keep Mozilla and other web browsers happy. 
+ Something similar for Debian is <A
+HREF="http://packages.debian.org/unstable/graphics/msttcorefonts.html"
+TARGET="_top"
+>http://packages.debian.org/unstable/graphics/msttcorefonts.html</A
+>.
+ This does not include the actual fonts, but facilitates the installation.</P
+><P
+> If doing it yourself, you will also have to include the new TrueType
+ directory(s) in the X server's fontpath. So with your text editor of choice
+ add the line(s) as appropriate: </P
+><A
+NAME="AEN262"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/local/share/fonts/ttfonts"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/misc:unscaled"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/100dpi:unscaled"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/75dpi:unscaled"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/Type1"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/Speedo"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/misc"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/100dpi"<br>
+FontPath&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"/usr/X11R6/lib/X11/fonts/75dpi"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> This configuration is for <SPAN
+CLASS="QUOTE"
+>"core X font"</SPAN
+> support. For 
+ additional configuration relating to the new Xft rendering engine, 
+ see <A
+HREF="x-4x.html#XFT"
+>the sections below on XFT</A
+> and anti-aliasing.&#13;</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="HINTING">3.2. TrueType Hinting</H2
+><P
+> <SPAN
+CLASS="QUOTE"
+>"Hinting"</SPAN
+> is a TrueType specific feature, that is generally
+ considered to be a useful technique that improves the appearance of TrueType
+ fonts. Unfortunately, there are some licensing and patent issues involved
+ with this, and it is disabled by default in the freetype sources! And also
+ quite likely that if you are using vendor supplied binaries, it is disabled
+ there as well.</P
+><P
+> To enable this feature, the sources need to be rebuilt. Look for 
+ <TT
+CLASS="FILENAME"
+>include/freetype/config/ftoption.h</TT
+> in the freetype
+ source tree, and then search for:</P
+><P
+> <TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  #undef TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+ </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> And very simply, make this small change:</P
+><P
+> <TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  #define TT_CONFIG_OPTION_BYTECODE_INTERPRETER
+ </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> Red Hat users can rebuild the src.rpm by toggling one setting at the top,
+ and accomplish the same thing:</P
+><P
+> <TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  %define without_bytecode_interpreter    1
+ </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> And change to:</P
+><P
+> <TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  %define without_bytecode_interpreter    0
+ </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> Other vendors may have a similar, easy-to-use mechanism.</P
+><P
+> Then rebuild and install the finished binaries. Be sure to restart X as well 
+ since the freetype code is already loaded into memory by X.</P
+><P
+> Note that <SPAN
+CLASS="QUOTE"
+>"hinting"</SPAN
+>, <SPAN
+CLASS="QUOTE"
+>"anti-aliasing"</SPAN
+>, and
+ <SPAN
+CLASS="QUOTE"
+>"sub-pixel rendering"</SPAN
+> are separate concepts (see <A
+HREF="x-4x.html#XFT"
+>the section on Xft below</A
+> for more). Again, this is not a
+ cure-all for <SPAN
+CLASS="QUOTE"
+>"ugly"</SPAN
+> fonts, but one more piece in the puzzle of
+ font <SPAN
+CLASS="QUOTE"
+>"beautification"</SPAN
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="TTF-CONFIG">3.3. Configuration</H2
+><P
+> This section pertains to installing and configuring TrueType fonts 
+ for any <SPAN
+CLASS="QUOTE"
+>"freetype"</SPAN
+> based font renderer. This would include
+ the <TT
+CLASS="LITERAL"
+>freetype</TT
+> font module from XFree86-4.x, 
+ Red Hat's <TT
+CLASS="LITERAL"
+>xfs</TT
+>, and the <TT
+CLASS="LITERAL"
+>xfsft</TT
+> font 
+ server. Again, if you have used a distro supplied tool for migrating 
+ TrueType fonts, it is likely this has been done for you already. The 
+ steps described below would only be necessary for manual font installation.</P
+><P
+> There is still more work to be done before we can actually use any TrueType
+ fonts. First, all font files must have lower case names. Secondly,
+ they shouldn't have embedded spaces. And then, we will need to create a
+ couple of configuration files to make things go.</P
+><P
+> Su to root, and change to the directory where the TrueType fonts are. </P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;#&nbsp;su&nbsp;-<br>
+&nbsp;#&nbsp;cd&nbsp;/usr/local/share/fonts/ttfonts<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> If there are any upper case font names, you can use the following script to
+ convert all names to lower case:</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;<br>
+<br>
+&nbsp;#!/bin/sh<br>
+&nbsp;#<br>
+&nbsp;##&nbsp;--------&nbsp;convert&nbsp;upper&nbsp;to&nbsp;lower&nbsp;case&nbsp;---------<br>
+&nbsp;<br>
+&nbsp;ls&nbsp;*&nbsp;|&nbsp;while&nbsp;read&nbsp;f<br>
+&nbsp;&nbsp;do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;[&nbsp;-f&nbsp;$f&nbsp;];&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;[&nbsp;"$f"&nbsp;!=&nbsp;"`echo&nbsp;\"$f\"&nbsp;|&nbsp;tr&nbsp;A-Z&nbsp;a-z`"&nbsp;];&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Note&nbsp;that&nbsp;'This'&nbsp;will&nbsp;overwrite&nbsp;'this'!<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mv&nbsp;-iv&nbsp;"$f"&nbsp;"`echo&nbsp;\"$f\"&nbsp;|&nbsp;tr&nbsp;A-Z&nbsp;a-z`"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fi<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fi<br>
+&nbsp;&nbsp;done<br>
+<br>
+&nbsp;##&nbsp;eof<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> Note the punctuation -- the backquotes are important! Remove any spaces from
+ font names too. Once the TrueType fonts are properly installed, you must 
+ create both <TT
+CLASS="FILENAME"
+>fonts.dir</TT
+> and
+ <TT
+CLASS="FILENAME"
+>fonts.scale</TT
+> files. The following commands do this: &#13;</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;#&nbsp;ttmkfdir&nbsp;-o&nbsp;fonts.scale<br>
+&nbsp;#&nbsp;mkfontdir<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> If you don't have <B
+CLASS="COMMAND"
+>ttmkfdir</B
+> installed, check your 
+ distribution's repository, or it can be downloaded from:
+ <A
+HREF="http://www.joerg-pommnitz.de/TrueType/ttmkfdir.tar.gz"
+TARGET="_top"
+>http://www.joerg-pommnitz.de/TrueType/ttmkfdir.tar.gz</A
+>.
+ This is necessary!</P
+><P
+> As of Red Hat 7.1, the above commands are run from the xfs init script. 
+ So restarting xfs (<B
+CLASS="COMMAND"
+>/etc/rc.d/init.d/xfs restart</B
+>) will
+ accomplish the same thing for Red Hat users. Other distros may have 
+ similar shortcuts.</P
+><P
+> You should now have <TT
+CLASS="FILENAME"
+>fonts.dir</TT
+> and 
+ <TT
+CLASS="FILENAME"
+>fonts.scale</TT
+> files in your TrueType font
+ directory. <B
+CLASS="COMMAND"
+>ttmkfdir</B
+> is in the 
+ <TT
+CLASS="FILENAME"
+>Freetype</TT
+> RPM for Red Hat users, and must be run 
+ before <B
+CLASS="COMMAND"
+>mkfontdir</B
+>. With Debian based distros, there  
+ is a similar utility called <B
+CLASS="COMMAND"
+>mkttfdir</B
+>, and is in the 
+ <TT
+CLASS="FILENAME"
+>fttools</TT
+> Deb package. Though this apparently does not 
+ generate as many encodings as <B
+CLASS="COMMAND"
+>ttmkfdir</B
+>. These commands
+ may not always report errors, so verify that they were created and are not
+ empty files:&#13;</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;$&nbsp;ls&nbsp;-l&nbsp;fonts.*<br>
+&nbsp;&nbsp;-rw-r--r--&nbsp;&nbsp;1&nbsp;root&nbsp;&nbsp;&nbsp;root&nbsp;&nbsp;&nbsp;&nbsp;11657&nbsp;Aug&nbsp;17&nbsp;10:31&nbsp;fonts.dir<br>
+&nbsp;&nbsp;-rw-r--r--&nbsp;&nbsp;1&nbsp;root&nbsp;&nbsp;&nbsp;root&nbsp;&nbsp;&nbsp;&nbsp;11657&nbsp;Aug&nbsp;17&nbsp;10:31&nbsp;fonts.scale<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> If you encounter any problems, try <B
+CLASS="COMMAND"
+>ttmkfdir</B
+> with the 
+ <B
+CLASS="COMMAND"
+>- m</B
+> switch. This will discard bad characters from the 
+ font file. Specify a number such as 50 or l00 
+ (<B
+CLASS="COMMAND"
+>ttmkfdir -m 50</B
+>).  The files themselves are text files.
+ Have a look:&#13;</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;<br>
+&nbsp;$&nbsp;less&nbsp;&nbsp;fonts.dir<br>
+&nbsp;&nbsp;114<br>
+&nbsp;&nbsp;webdings.ttf&nbsp;&nbsp;-microsoft-Webdings-medium-r-normal--0-0-0-0-p-0-microsoft-symbol<br>
+&nbsp;&nbsp;verdanaz.ttf&nbsp;&nbsp;-microsoft-Verdana-bold-i-normal--0-0-0-0-p-0-ascii-0<br>
+&nbsp;&nbsp;verdanaz.ttf&nbsp;&nbsp;-microsoft-Verdana-bold-i-normal--0-0-0-0-p-0-fcd8859-15<br>
+&nbsp;&nbsp;verdanaz.ttf&nbsp;&nbsp;-microsoft-Verdana-bold-i-normal--0-0-0-0-p-0-iso8859-15<br>
+&nbsp;&nbsp;verdanaz.ttf&nbsp;&nbsp;-microsoft-Verdana-bold-i-normal--0-0-0-0-p-0-iso8859-9<br>
+&nbsp;&nbsp;verdanaz.ttf&nbsp;&nbsp;-microsoft-Verdana-bold-i-normal--0-0-0-0-p-0-iso8859-1<br>
+&nbsp;[...]<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> If <B
+CLASS="COMMAND"
+>ttmkfdir</B
+> is persistently giving problems by 
+ not generating a proper output file, there may be one or more 
+ <SPAN
+CLASS="QUOTE"
+>"bad"</SPAN
+> fonts (ie fonts it can't handle). In that 
+ case, just start with a few common ones, like Arial and Verdana. 
+ If this works, then add a few at a time.</P
+><P
+> Now be sure the new fonts are included in the <TT
+CLASS="LITERAL"
+>FontPath</TT
+>.
+ And either restart X (Ctrl-Alt-BS), or the font server (if using one). 
+ You could also try refreshing the <TT
+CLASS="LITERAL"
+>FontPath</TT
+>:</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;#&nbsp;xset&nbsp;fp&nbsp;rehash<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> Red Hat 6.x/7.x users can update the FontPath and xfs: </P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;#&nbsp;chkfontpath&nbsp;--add&nbsp;/usr/local/share/fonts/ttfonts<br>
+&nbsp;#&nbsp;/etc/rc.d/init.d/xfs&nbsp;restart<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> You should now be in business. You can check which fonts are available to X:</P
+><P
+> <TT
+CLASS="LITERAL"
+> $ xlsfonts | less
+ </TT
+></P
+><P
+> or check them out further with <B
+CLASS="COMMAND"
+>xfontsel</B
+>, or 
+ <B
+CLASS="COMMAND"
+>gfontsel</B
+>. If they are visible to
+ <B
+CLASS="COMMAND"
+>xlsfonts</B
+>, then they are available to X and vice versa. If
+ they are not there, try restarting X with Ctrl-Alt-BS.</P
+><P
+> This gets you as far as X knows about your new fonts. Individual applications 
+ will need to be configured to use them. GNOME and KDE will require additional 
+ steps as well (see the respective docs). You will also want to configure 
+ Xft (see <A
+HREF="x-4x.html#XFT"
+>below</A
+>), if using XFree86 v4.x or later.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="FONTSERVERS">3.4. Font Servers</H2
+><P
+> Historically, font servers were used to serve fonts over a network. Font 
+ resources could then reside on one host, and clients could access them as 
+ needed. But, the developers have enhanced these to include features such as 
+ the ability to render TrueType fonts.  XFree86 4.x <EM
+>does have built
+ in support</EM
+> for TrueType (see <A
+HREF="x-4x.html"
+>Section 4</A
+>), making a font
+ server not a necessity, though some distros default to using a font server
+ for other reasons now.</P
+><P
+> XFree86 3.x does not come with built in TrueType support, so you'll have to
+ add it yourself if you are using a 3.x version. This will mean installing a
+ supplemental font server that does support TrueType. And, of course,
+ installing the fonts themselves (see above). See the 
+ <A
+HREF="appendix.html"
+>Appendix</A
+> for font server installation, 
+ and related tips.</P
+><P
+> Any recent distro will have one or more font servers included, and the 
+ important configuration should be done by the installation program.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="FALIAS">3.5. The fonts.alias File</H2
+><P
+> <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> is yet another font configuration file that 
+ can be used to tweak how fonts are handled. Like <TT
+CLASS="FILENAME"
+>fonts.scale</TT
+> 
+ and <TT
+CLASS="FILENAME"
+>fonts.dir</TT
+>, <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> must be in
+ the same directory as the fonts you are aliasing. It is not mandatory however,
+ but does solve certain potential problems. Here is an example from the first
+ line of<TT
+CLASS="FILENAME"
+>/usr/X11R6/lib/X11/fonts/misc/fonts.alias</TT
+> on 
+ a Red Hat system:</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;fixed&nbsp;&nbsp;&nbsp;&nbsp;-misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> <TT
+CLASS="LITERAL"
+>fixed</TT
+> is the 'alias' here. Any time this is requested, we 
+ actually get the font definition from the second column. Font too small? Just 
+ change the definition. (Warning: this is a critical file, at least on Red Hat.)
+ The same principle applies to all fonts, including TrueType. In fact, if you 
+ don't have TrueType, you could conceivably use this trick to have a
+ comparable Type 1, or other, font aliased as a TrueType.</P
+><P
+> <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> is important for some applications that don't
+ handle the data provided by <TT
+CLASS="FILENAME"
+>fonts.scale</TT
+> well. Most notably 
+ here is Netscape. Without a <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> you will find that 
+ Netscape will only show point sizes of 0 and 12 available.
+ <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> fixes this. You might also find that if you a 
+ specify another size with the <TT
+CLASS="LITERAL"
+>scalable font</TT
+> option under 
+ <TT
+CLASS="LITERAL"
+>Preferences</TT
+>, Netscape will not remember this setting.
+ Annoying! This is also fixed. So we really need this file. Sample excerpt from
+ a <TT
+CLASS="FILENAME"
+>fonts.scale</TT
+>:&#13;</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;<br>
+&nbsp;arial.ttf&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--0-0-0-0-p-0-ascii-0<br>
+&nbsp;arial.ttf&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--0-0-0-0-p-0-fcd8859-15<br>
+&nbsp;arial.ttf&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--0-0-0-0-p-0-iso8859-15<br>
+&nbsp;arial.ttf&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--0-0-0-0-p-0-iso8859-1<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> These are scalable so we don't get any predefined point sizes. We will need to 
+ create our <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> something like this excerpt for
+ Arial:</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+><br>
+&nbsp;-monotype-Arial-medium-r-normal--6-60-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--9-90-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--7-70-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--9-90-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--8-80-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--10-100-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--9-90-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--11-110-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--10-100-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--12-120-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--11-110-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--12-120-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--12-120-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--12-120-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--13-130-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--13-130-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--14-140-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--14-140-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--15-150-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--15-150-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--18-180-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--18-180-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;-monotype-Arial-medium-r-normal--24-240-0-0-p-0-iso8859-1&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-monotype-Arial-medium-r-normal--24-240-75-75-p-0-iso8859-1<br>
+<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> (<EM
+>Please note that I have split each line for readability</EM
+>.
+ There should be two columns all on one line, without the <SPAN
+CLASS="QUOTE"
+>"\"</SPAN
+>, and
+ separated by at least one space.) This will keep Netscape happy. Also, if
+ font names should have embedded spaces, then you should enclose the filename
+ in quotes. You might also note the <TT
+CLASS="LITERAL"
+>pointsize</TT
+> discrepancy
+ between the first and second columns of the first few rows. The first column
+ of the first entry has a '6', whereas this is aliased to a '9' in the second
+ column, and thus '9' point. This is by design and is an excellent way to
+ overcome the Netscape 'damn tiny fonts' syndrome. Adjust to suit your tastes,
+ resolution, and eyesight. &#13;</P
+><P
+> This file can be created manually with a text editor, or conceivably with some 
+ fancy sed or awk scripting. There is an excellent discussion of this file,
+ and other font related topics at Kristin Aanestad's site  at 
+ <A
+HREF="http://home.c2i.net/dark/linux.html#ttf"
+TARGET="_top"
+>http://home.c2i.net/dark/linux.html</A
+>. There is
+ also a link to a python script which can reportedly automatically generate
+ a <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> file at this same site. A perl version 
+ of this script is re-printed in the <A
+HREF="appendixb.html"
+>Appendix</A
+>. Thanks to Kristin whose work and insight
+ was the inspiration for this section!&#13;</P
+><P
+> Another potential use of <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> would be to map 
+ one font to something quite different. Say you don't have TrueType fonts, 
+ and didn't want to install Microsoft's. You could alias nice, scalable Type 1
+ fonts to a TrueType. That way when the system (or some web page) wants a
+ TrueType, you'd get something of comparable quality instead of bitmap that 
+ doesn't scale well.&#13;</P
+><P
+> Note that with XFree86 4.0.2 and greater, there are new font handling 
+ mechanisms available via the Xft extensions. Font aliasing is done 
+ in Xft's own configuration file: <TT
+CLASS="FILENAME"
+>XftConfig</TT
+>. This 
+ is the preferred method where anti-aliasing, and the other new rendering 
+ features are desired. See the <A
+HREF="x-4x.html#AA"
+>Anti-aliasing Section</A
+> 
+ for more on this and de-mystification. This is only true where the
+ application (i.e. the toolkit, e.g QT) itself supports the new extensions!
+ At this time, not all do (yet).&#13;</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x-config.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x-4x.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>X Server Configuration</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>XFree86 4.x</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

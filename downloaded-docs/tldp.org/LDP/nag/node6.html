@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>How to Use UUCP</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node7.html">TCP/IP Networks</A>
+<B>Up:</B> <A HREF="node5.html">UUCP Networks</A>
+<B> Previous:</B> <A HREF="node5.html">UUCP Networks</A>
+<BR> <P>
+<H2><A NAME="SECTION003210000">How to Use UUCP</A></H2>
+<A NAME="introuucphowto"></A>
+The idea behind UUCP is rather simple: as its name indicates, it
+basically copies files from one host to another, but it also allows
+certain actions to be performed on the remote host.
+<P>
+Suppose your machine is allowed to access a hypothetical host named
+swim, and have it execute the lpr print command for you.
+Then you could type the following on your command line to have this
+book printed on swim:<A HREF="footnode.html#416"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<pre>
+	$ uux -r swim!lpr !netguide.dvi
+</pre>
+This makes uux, a command from the UUCP suite, schedule a
+<em>job</em> for swim. This job consists of the input file,
+netguide.dvi, and the request to feed this file to lpr.
+The -r flag tells uux not to call the remote system
+immediately, but to rather store the job away until a connection
+is established at a later occasion. This is called <em>spooling</em>.
+<P>
+<A NAME="287"></A>
+Another property of UUCP is that it allows to forward jobs and files
+through several hosts, provided they cooperate. Assume that swim
+from the above examples has a UUCP link with groucho, which
+maintains a large archive of  applications.  To download the file
+tripwire-1.0.tar.gz to your site, you might issue
+<pre>
+           $ uucp  -mr  swim!groucho!~/security/tripwire-1.0.tar.gz
+           trip.tgz
+</pre>
+The job created will request swim to fetch the file from
+groucho, and send it to your site, where UUCP will store it
+in trip.tgz and notify you via mail of the file's arrival.
+This will be done in three steps. First, your site sends the job to
+swim. When swim establishes contact with groucho the
+next time, it downloads the file. The final step is the actual
+transfer from swim to your host.
+<P>
+The most important services provided by UUCP networks these days
+are electronic mail and news. We will come back to these later,
+so we will give only a brief introduction here.
+<P>
+Electronic mail-- email for short-- allows you to exchange
+messages with users on remote hosts without actually having to know
+how to access these hosts. The task of directing a message from your
+site to the destination site is performed entirely by the mail
+handling system. In a UUCP environment, mail is usually transported
+by executing the rmail command on a neighboring host, passing
+it the recipient address and the mail message. rmail will
+then forward the message to another host, and so on, until it reaches
+the destination host. We will look at this in detail in
+chapter-<A HREF="node186.html#mail"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+News may best be described as sort of a distributed bulletin board
+system. Most often, this term refers to Usenet News, which is by far the
+most widely known news exchange network with an estimated number of
+120,000-participating sites.  The origins of Usenet date back to 1979,
+when, after the release of UUCP with the new Unix-V7, three graduate
+students had the idea of a general information exchange within the Unix
+community. They put together some scripts, which became the first netnews
+system. In 1980, this network connected duke, unc, and
+phs, at two Universities in North Carolina.  Out of this, Usenet
+eventually grew. Although it originated as a UUCP-based network, it is no
+longer confined to one single type of network.
+<P>
+The basic unit of information is the article, which may be posted to
+a hierarchy of newsgroups dedicated to specific topics. Most
+sites receive only a selection of all newsgroups, which carry an
+average of 60MB worth of articles a day.
+<P>
+In the UUCP world, news is generally sent across a UUCP link by collecting
+all articles from the groups requested, and packing them up in a number of
+<em>batches</em>. These are sent to the receiving site, where they are fed to
+the rnews command for unpacking and further processing.
+<P>
+Finally, UUCP is also the medium of choice for many dial-up archive sites
+which offer public access.  You can usually access them by dialing them up
+with UUCP, logging in as a guest user, and download files from a publicly
+accessible archive area. These guest accounts often have a login name and
+password of uucp/nuucp or something similar.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node7.html">TCP/IP Networks</A>
+<B>Up:</B> <A HREF="node5.html">UUCP Networks</A>
+<B> Previous:</B> <A HREF="node5.html">UUCP Networks</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

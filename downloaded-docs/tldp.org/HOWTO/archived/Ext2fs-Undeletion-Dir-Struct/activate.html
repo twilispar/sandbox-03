@@ -1,0 +1,203 @@
+<HTML
+><HEAD
+><TITLE
+>Activating inodes</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.57"><LINK
+REL="HOME"
+TITLE="Ext2fs Undeletion of Directory Structures mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Locating deleted inodes"
+HREF="locate.html"><LINK
+REL="NEXT"
+TITLE="Adding directory entries"
+HREF="add.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Ext2fs Undeletion of Directory Structures mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="locate.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="add.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="ACTIVATE"
+>7. Activating inodes</A
+></H1
+><P
+>      Now it is time for changing some flags of the deleted inodes.
+    </P
+><P
+>      Copy the following 6 lines into a file named "make-debugfs-input".
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        #!/bin/sh
+        awk '{ print "mi &#60;" $1 "&#62;\n"\
+                     "\n\n\n\n\n\n\n"\
+                     "0\n"\
+                     "1\n"\
+                     "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" }'</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      This will simulate the user input when editing the inodes manually.
+      We will set <I
+CLASS="EMPHASIS"
+>deletion time</I
+> to 0
+      and <I
+CLASS="EMPHASIS"
+>link count</I
+> to 1.
+    </P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>        I am using <I
+CLASS="EMPHASIS"
+>debugfs</I
+> version 1.18 and if you have
+        another version you should check if you need to adjust the number of
+        returns above.
+      </P
+></BLOCKQUOTE
+></DIV
+><P
+>      Now change the inodes.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # ./make-debugfs-input &#60; inodes | debugfs -w /dev/hdy1 | tail -c 40</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      If all went well it should end with "Triple Indirect Block [0] debugfs:".
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="locate.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="add.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Locating deleted inodes</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Adding directory entries</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

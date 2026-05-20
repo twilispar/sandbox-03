@@ -1,0 +1,1044 @@
+<HTML
+><HEAD
+><TITLE
+>QuakeWorld</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Game Server HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Basics"
+HREF="basics.html"><LINK
+REL="NEXT"
+TITLE="Quake II"
+HREF="quake2.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Game Server HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="basics.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="quake2.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="QUAKEWORLD"
+></A
+>3. QuakeWorld</H1
+><P
+> QuakeWorld is a multiplayer-only version of Quake with optimized network code. id Software released the source code for Quake/QuakeWorld in 1999, spawning a number of projects set out to improve, optimize and add more features to the code and make it more secure. <A
+HREF="http://www.quakeforge.net"
+TARGET="_top"
+>QuakeForge</A
+> is quite well-developed on the client side, but mvdsv (part of the <A
+HREF="http://qwex.does.it"
+TARGET="_top"
+>qwextended</A
+> project) seems to be the most popular server in the QW community. It's famous for its ability to record demos from each player's POV (Point of View) and store them for retrieval by the players.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="QWREQUIREMENTS"
+></A
+>3.1. System requirements</H2
+><P
+>Here are the minimum system requirements for the QW (QuakeWorld) server. Remember that the requirements vary depending on the number of clients.
+ </P
+><P
+>  <P
+></P
+><UL
+><LI
+><P
+>    Pentium 90 or better
+    </P
+></LI
+><LI
+><P
+>    16 MB RAM
+    </P
+></LI
+><LI
+><P
+>    The *.pak files from the Quake CD-ROM
+    </P
+></LI
+><LI
+><P
+>    Kernel 2.0.24 or later
+    </P
+></LI
+><LI
+><P
+>    Enough free space on your HDD (depends on what you want to install; at least 40-70 MB)
+    </P
+></LI
+></UL
+>
+ </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="QWINSTALLING"
+></A
+>3.2. Installing</H2
+><P
+> id Software's old qwsv is quite dated and should not be used (nor <EM
+>can</EM
+> it be used in most cases, since it's built for the ancient libc5). So, use either mvdsv or QuakeForge. 
+ </P
+><P
+> <EM
+>Note:</EM
+> Both mvdsv QuakeForge are actively being developed (more or less), and it's highly possible that newer versions than the ones linked below have been released, so check <A
+HREF="http://qwex.does.it/"
+TARGET="_top"
+>http://qwex.does.it/</A
+> or <A
+HREF="http://quakeforge.net/files.php"
+TARGET="_top"
+>http://quakeforge.net/files.php</A
+> before you proceed further.
+ </P
+><P
+>  <P
+></P
+><UL
+><LI
+><P
+>    <A
+HREF="http://www.wsb.poznan.pl/~pawel/q/q/ktpro/develop/qwex_src-0.165b.tar.gz"
+TARGET="_top"
+>mvdsv 0.165b source</A
+>
+    </P
+></LI
+><LI
+><P
+>    <A
+HREF="http://www.wsb.poznan.pl/~pawel/q/q/ktpro/develop/mvdsv.0.165b.linux.glibc2.1.3.gz"
+TARGET="_top"
+>mvdsv 0.165b binary (glibc 2.1.3)</A
+>
+    </P
+></LI
+><LI
+><P
+>    <A
+HREF="http://download.sourceforge.net/quake/quakeforge-0.5.2.tar.bz2"
+TARGET="_top"
+>QuakeForge 0.5.2 source</A
+>
+    </P
+></LI
+></UL
+>
+
+ </P
+><P
+>Create a directory for the QW server in your home directory:
+ </P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>mkdir quake</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> <EM
+>If you downloaded the mvdsv source:</EM
+>
+ </P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>tar zxvf qwex_src-0.165b.tar.gz</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>cd mvdsrc</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>make build_sv</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>cp releasei386-glibc/mvdsv ../quake</B
+> </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> <EM
+>If you downloaded the mvdsv binary:</EM
+>
+ </P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>gunzip mvdsv.0.165b.linux.glibc2.1.3.gz</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>mv mvdsv.0.165b.linux.glibc2.1.3 mvdsv</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>chmod +x mvdsv</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>mv mvdsv quake/</B
+> </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> <EM
+>If you downloaded the QuakeForge source:</EM
+>
+ </P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>tar zxvf quakeforge-0.2.99beta6.tar.gz</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>cd quakeforge-0.2.99beta6</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>./configure --prefix=$HOME/quake --bindir=$HOME/quake; make; make install</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> This will <EM
+>at least</EM
+> build qf-server, nq-server (RealQuake) and some client binaries. We don't need the latter; you can choose not to compile them, or simply remove them later. Anyway, if the compilation went fine you should now have a binary called qf-server in <TT
+CLASS="FILENAME"
+>$HOME/quake</TT
+>, where $HOME is your home directory (usually /home/user).
+ </P
+><P
+>You might want to rename mdsv or qw-server to qwsv, since that's what I'll call it in the rest of this document. Now create the directory <TT
+CLASS="LITERAL"
+>id1</TT
+> in the quake directory and copy the pak0.pak and pak1.pak files from your Quake CD or wherever you have them into that directory:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>cd ~/quake</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>mkdir id1</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>cp /some/where/id1/pak*.pak id1</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>You also need the qw files:</P
+><P
+></P
+><UL
+><LI
+><P
+><A
+HREF="ftp://ftp.sunet.se/pub/pc/games/idgames2/idstuff/quakeworld/qwsv230.zip"
+TARGET="_top"
+>qwsv230.zip</A
+>
+    </P
+></LI
+></UL
+><P
+>Unzip it in your <TT
+CLASS="FILENAME"
+>quake</TT
+> directory:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>cd ~/quake</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>unzip qwsv230.zip</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Now you're ready to run qwsv. Start it by running <TT
+CLASS="LITERAL"
+>./qwsv</TT
+> in the quake directory. It should work fine (if not, make sure all the filenames are in lower-case). Try connecting to your server with a client.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="QWCONFIGURING"
+></A
+>3.3. Configuring</H2
+><P
+> Now it's time to configure your QW server. Make a server.cfg file in the id1 directory containing the following:
+ </P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>sv_gamedir qw
+deathmatch 1
+hostname                "QW testserver"
+serverinfo admin        "webmaster@xyz.com"
+serverinfo url          "http://url.net"
+rcon_password xxxx
+timelimit 35
+fraglimit 150
+noexit 1
+pausable 0
+samelevel 2
+maxclients 16
+map dm3
+floodprot 4 8 30
+floodprotmsg "You have activated the flood protection and will be silenced for 30 seconds"
+maxspectators 2
+allow_dowload 1
+allow_download_skins 1
+allow_download_models 1
+allow_download_sounds 1
+allow_download_maps 1</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>As you can see the server.cfg file contains all kinds of variables the server uses.</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>-master IP-address</TT
+> - Command line parameter. Connects to the specified master server. QWSV starts in masterless mode by default.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>-port</TT
+> - Specifies which port the server will listen to, default is 27500.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>gamedir</TT
+> - Which game directory you want to use. Change it if you want to run a mod. The QW directory is used by default.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>deathmatch</TT
+> - Can be set to 1, 2 or 3. 1 = Normal deathmatch; Weapons/items can be picked up and respawned (30 sec respawn time). 2 = Weapon stay. You can only pick up a weapon once, ammo &#38; armor doesn't respawn. 3 = Combination between 1 and 2. You can only pick up a weapon once, ammo respawns after 15 seconds, everything else respawns normally.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>hostname</TT
+> - Servername.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>serverinfo admin</TT
+> -  The admin's e-mail address.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>serverinfo url</TT
+> - Server URL.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>timelimit</TT
+> - Match ends when timelimit (specified in minutes) is reached.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>fraglimit</TT
+> - Match ends when fraglimit is reached.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>maxclients</TT
+> - Max number of players.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>map mapname</TT
+> - Map that will be played.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>maxspectators</TT
+> - Max number of spectators.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>password</TT
+> - Password protect the server. Clients must set a matching password to be able to connect.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>rcon_password</TT
+> - Password used for remote administration.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>allow_download</TT
+> - Set this to 1 to allow clients to download files they don't have from the server.</P
+></LI
+></UL
+></P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>./qwsv &#62; /dev/null &#38;</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>The above command runs the qwsv server in the background and sends the output to /dev/null (if you want to log the output, just replace /dev/null with /blah/qw.log or whatever). -port specifies the port the server will use; QW's default is 27500. 
+For a complete list of commands and the official QW manual, see <A
+HREF="http://www.quakeworld.net"
+TARGET="_top"
+>QuakeWorld.net</A
+>. For a list of special commands that can be used with mvdsv, see the <A
+HREF="http://www.wsb.poznan.pl/~pawel/q/q/qwex/readme.txt"
+TARGET="_top"
+>qwex readme</A
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="QWCTF"
+></A
+>3.4. Threewave CTF (Capture The Flag)</H2
+><P
+>Capture The Flag, or CTF for short, is - or was, at least - the most popular Quake modification. There are many different CTF variants. Threewave CTF is the original and most popular CTF modification for QW.
+You need the following files:</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+><A
+HREF="ftp://ftp.sunet.se/pub/games/PC/idgames2/planetquake/threewave/ctf/server/3wave42.zip"
+TARGET="_top"
+>ftp://ftp.sunet.se/planetquake/threewave/ctf/server/3wave42.zip</A
+> - All the server files.</P
+></LI
+><LI
+><P
+><A
+HREF="ftp://ftp.sunet.se/pub/games/PC/idgames2/planetquake/threewave/ctf/server/3wave421.zip"
+TARGET="_top"
+>ftp://ftp.sunet.se/planetquake/threewave/ctf/server/3wave421.zip</A
+> - Some bugs fixed (4.2 is required).</P
+></LI
+><LI
+><P
+><A
+HREF="ftp://ftp.sunet.se/pub/games/PC/idgames2/planetquake/threewave/ctf/client/3wctfc.zip"
+TARGET="_top"
+>ftp://ftp.sunet.se/planetquake/threewave/ctf/client/3wctfc.zip</A
+> - All the CTF maps.</P
+></LI
+></UL
+></P
+><P
+>Create a ctf directory and extract all the files you downloaded to it:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>cd ~/quake</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>mkdir ctf</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>unzip 3wave42.zip -d ctf</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>unzip 3wave421.zip -d ctf</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>unzip 3wctfc.zip -d ctf</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Now try to start the server (if you don't specify a map it'll default to an interesting modified version of Quake's start level):</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>./qwsv +gamedir ctf +map ctf1</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>For more information, read <TT
+CLASS="FILENAME"
+>ctf/server.txt</TT
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="QWKT"
+></A
+>3.5. Kombat Teams Pro</H2
+><P
+>Kombat Teams is a very popular mod that's been around for a long time. Most QW servers run it. KTeams greatly simplifies all forms of DM games by supplying commands to set teams, timer, readiness and much more.</P
+><P
+>Download the following:</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+><A
+HREF="http://www.wsb.poznan.pl/~pawel/q/q/ktpro/ktpro.1.57.tar.gz"
+TARGET="_top"
+>http://www.wsb.poznan.pl/~pawel/q/q/ktpro/ktpro.1.57.tar.gz</A
+></P
+></LI
+></UL
+></P
+><P
+>Extract it in your quake directory:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>tar zxvf ktpro.1.57.tar.gz</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Start the server:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>./qwsv +gamedir ktprosrv</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Default is a 1on1 server. To start a 2on2 server you'd add +exec 2on2.cfg, or +exec 4on4.cfg for a 4on4 server, or +exec free.cfg for a free for all server. KTPro comes with a bunch of scripts which do this; ktpro1on1, ktpron2on2, etc. in the quake directory. Check out all the configuration examples in <TT
+CLASS="FILENAME"
+>ktprosrv/</TT
+> and the documentation in <TT
+CLASS="FILENAME"
+>ktpro.doc/</TT
+>. </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="QWRA"
+></A
+>3.6. Rocket Arena</H2
+><P
+> <A
+HREF="http://www.planetquake.com/servers/arena/"
+TARGET="_top"
+>Rocket Arena</A
+> is a very exciting modification. It's one-on-one games with the simple rule "winner stays, loser goes". Each player waits for his/her turn to fight in the arena. Every player gets full armor (200), 100 health and all weapons when they enter the arena. The winner stays to fight again, the loser goes back to the line. Simple? Yes. Boring? Not at all!
+ </P
+><P
+> Now, on to installing this modification. Get the following files:</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+><A
+HREF="ftp://ftp.sunet.se/pub/games/PC/idgames2/planetquake/servers/arena/fasrv12.zip"
+TARGET="_top"
+>ftp://ftp.sunet.se/pub/games/PC/idgames2/planetquake/servers/arena/fasrv12.zip</A
+> - All the server files.</P
+></LI
+><LI
+><P
+><A
+HREF="ftp://ftp.sunet.se/pub/games/PC/idgames2/planetquake/servers/arena/farena12.zip"
+TARGET="_top"
+>ftp://ftp.sunet.se/pub/games/PC/idgames2/planetquake/servers/arena/farena12.zip</A
+> - The required client files (maps and sounds).</P
+></LI
+></UL
+></P
+><P
+>Create a directory called <TT
+CLASS="FILENAME"
+>arena</TT
+> in your quake directory and unzip the above files to it:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>cd quake</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>mkdir arena</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>unzip ~/fasrv12.zip -d arena</B
+>
+<TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>unzip ~/farena12.zip -d arena</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Start the server:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>./qwsv +gamedir arena +setmaster 204.182.161.2 +exec rotate.cfg +maxclients 6 +timelimit 20 +fraglimit 15</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>For the map rotation you can choose one of the following (of course you can edit these or make your own, remember that the last map must loop to the first):</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>rotate.cfg</TT
+> - All the Final Arena maps.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>newmaps.cfg</TT
+> - The new Final Arena and the TF arena maps.</P
+></LI
+><LI
+><P
+><TT
+CLASS="LITERAL"
+>classic.cfg</TT
+> - The most popular older Arena maps.</P
+></LI
+></UL
+></P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="basics.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="quake2.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Basics</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Quake II</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

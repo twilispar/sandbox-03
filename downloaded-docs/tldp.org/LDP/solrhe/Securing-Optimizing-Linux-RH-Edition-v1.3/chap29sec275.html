@@ -1,0 +1,349 @@
+<HTML
+><HEAD
+><TITLE
+>Compile to install Webmail IMP</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Set up PHPLib "
+HREF="chap29sec274.html"><LINK
+REL="NEXT"
+TITLE="Configure and create Webmail IMP SQL database"
+HREF="chap29sec276.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec274.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 30. Optional component to install with Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec276.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN21572"
+>30.13. Compile to install Webmail IMP</A
+></H1
+><P
+>&#13;        To install the Webmail IMP program on your server, please follow the simple steps below.
+      </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;          Copy <TT
+CLASS="literal"
+>horde-1.2.0-pre11.tar.gz</TT
+> to your web servers DocumentRoot, <TT
+CLASS="filename"
+>/home/httpd/</TT
+>, untar it and move the directory from <TT
+CLASS="filename"
+>horde-version</TT
+> 
+          to <TT
+CLASS="filename"
+>horde</TT
+> by executing the following commands:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> horde-version.tar.gz /home/httpd/
+            [root@deep ] /# <B
+CLASS="command"
+>cd</B
+> /home/httpd/
+            [root@deep ] /httpd# <B
+CLASS="command"
+>tar</B
+> xzpf horde-version.tar.gz
+            [root@deep ] /httpd# <B
+CLASS="command"
+>mv</B
+> horde-version horde
+            [root@deep ] /httpd# <B
+CLASS="command"
+>rm</B
+> -f  horde-version.tar.gz
+          </PRE
+></TD
+></TR
+></TABLE
+> 
+          We remove the tar archive of Horde once we have finished moving the <TT
+CLASS="filename"
+>horde-version</TT
+> directory of Horde to its new name <TT
+CLASS="filename"
+>horde</TT
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;          Copy <TT
+CLASS="literal"
+>imp-2.2.0-pre11.tar.gz</TT
+> to your new <TT
+CLASS="filename"
+>horde</TT
+> directory, <TT
+CLASS="filename"
+>/home/httpd/horde/</TT
+>, untar it and move the directory from <TT
+CLASS="filename"
+>imp-version</TT
+> 
+          to <TT
+CLASS="filename"
+>imp</TT
+> by executing the following commands:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> imp-version.tar.gz /home/httpd/horde/
+            [root@deep ] /# <B
+CLASS="command"
+>cd</B
+> /home/httpd/horde/
+            [root@deep ] /horde# <B
+CLASS="command"
+>tar</B
+> xzpf imp-version.tar.gz
+            [root@deep ] /horde# <B
+CLASS="command"
+>mv</B
+> imp-version imp
+            [root@deep ] /horde# <B
+CLASS="command"
+>rm</B
+> -f  imp-version.tar.gz
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+              It's important that the directory <TT
+CLASS="filename"
+>imp</TT
+> reside inside <TT
+CLASS="filename"
+>horde</TT
+> directory, or Webmail will not work. We remove the tar archive of IMP once we have 
+              finished moving the <TT
+CLASS="filename"
+>imp-version</TT
+> directory of IMP to its new name <TT
+CLASS="filename"
+>imp</TT
+>.
+            </P
+></BLOCKQUOTE
+></DIV
+>
+        </P
+></LI
+><LI
+><P
+>&#13;          Change the <TT
+CLASS="filename"
+>horde</TT
+> directory and all its subdirectories and files to be owned by the super-user <TT
+CLASS="literal"
+>root</TT
+> for security reasons.
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# <B
+CLASS="command"
+>chown</B
+> -R 0.0 /home/httpd/horde/
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+><LI
+><P
+>&#13;
+          Copy the <TT
+CLASS="filename"
+>/home/httpd/horde/phplib/*.ihtml</TT
+> files to your new <TT
+CLASS="filename"
+>php</TT
+> directory, <TT
+CLASS="filename"
+>/home/httpd/php/</TT
+> by executing the following commands:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> /home/httpd/horde/phplib/*.ihtml /home/httpd/php/
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec274.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec276.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Set up PHPLib</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure and create Webmail IMP SQL database</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

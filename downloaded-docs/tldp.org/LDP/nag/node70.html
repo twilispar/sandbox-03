@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The PLIP Interface</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node71.html">The SLIP and PPP </A>
+<B>Up:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<B> Previous:</B> <A HREF="node69.html">Configuring a Gateway</A>
+<BR> <P>
+<H2><A NAME="SECTION007750000">The PLIP Interface</A></H2>
+
+When using a PLIP link to connect two machines, things are a
+little different from what you have to do when using an Ethernet.
+The former are so-called <em>point-to-point</em> links, because
+they involve only two hosts (``points''), as opposed
+to broadcast networks.
+<P>
+As an example, we consider the laptop computer of some employee at
+the Virtual Brewery that is connected to vlager via PLIP.
+The laptop itself is called vlite, and has only one
+parallel port. At boot time, this port will be registered as
+plip1. To activate the link, you have to configure the
+plip1 interface using the following commands:<A HREF="footnode.html#3180"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<Pre>
+           # ifconfig plip1 vlite pointopoint vlager
+           # route add default gw vlager
+ 
+</pre>
+The first command configures the interface, telling the kernel that this
+is a point-to-point link, with the remote side having the address of
+vlager. The second installs the default route, using
+vlager as gateway.  On vlager, a similar ifconfig
+command is necessary to activate the link (a route invocation is
+not needed):
+<Pre>
+           # ifconfig plip1 vlager pointopoint vlite
+
+ 
+</Pre>
+The interesting point is that the plip1 interface on
+vlager does not have to have a separate IP-address, but may also
+be given the address 191.72.1.1.<A HREF="footnode.html#2854"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+Now, we have configured routing from the laptop to the Brewery's
+network; what's still missing is a way to route from any of the
+Brewery's hosts to vlite. One particularly cumbersome way is
+to add a specific route to every host's routing table that names 
+vlager as a gateway to vlite:
+<pre>
+           # route add vlite gw vlager
+
+ 
+</Pre>
+<A NAME="2860"></A>
+<A NAME="2861"></A>
+<A NAME="3181"></A>
+<A NAME="2863"></A>
+<A NAME="2864"></A>
+A much better option when faced with temporary routes is to use dynamic
+routing.  One way to do so is to use gated, a routing daemon,
+which you would have to install on each host in the network in order
+to distribute routing information dynamically.  The easiest way,
+however, is to use <em>proxy</em> ARP. With proxy ARP, vlager will
+respond to any ARP query for vlite by sending its own Ethernet
+address. The effect of this is that all packets for vlite will wind
+up at vlager, which then forwards them to the laptop. We will come
+back to proxy ARP in section-<A HREF="#ifaceverifyarp"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> below.
+<P>
+Future Net-3 releases will contain a tool called plipconfig
+which will allow you to set the IRQ of the printer port to use. Later,
+this may even be replaced by a more general ifconfig command.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node71.html">The SLIP and PPP </A>
+<B>Up:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<B> Previous:</B> <A HREF="node69.html">Configuring a Gateway</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

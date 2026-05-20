@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>How is Mail Delivered?</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node189.html">Email Addresses</A>
+<B>Up:</B> <A HREF="node186.html">Electronic Mail</A>
+<B> Previous:</B> <A HREF="node187.html">What is a Mail </A>
+<BR> <P>
+<H1><A NAME="SECTION0015200000">How is Mail Delivered?</A></H1>
+<A NAME="maildelivery"></A>
+Generally, you will compose mail using a mailer interface like mail
+or mailx; or more sophisticated ones like elm, mush,
+or pine. These programs are called <em>mail user agents</em>, or MUA's
+for short. If you send a mail message, the interface program will in most
+cases hand it to another program for delivery. This is called the
+<em>mail transport agent</em>, or MTA. On some systems, there are different
+mail transport agents for local and remote delivery; on others, there is
+only one.  The command for remote delivery is usually called rmail,
+the other is called lmail (if it exists).
+<P>
+Local delivery of mail is, of course, more than just appending the
+incoming message to the recipient's mailbox. Usually, the local MTA
+will understand aliasing (setting up local recipient addresses pointing
+to other addresses), and forwarding (redirecting a user's mail to some
+other destination). Also, messages that cannot be delivered must usually
+be <em>bounced</em>, that is, returned to the sender along with some
+error message.
+<P>
+For remote delivery, the transport software used depends on the nature
+of the link.  If the mail must be delivered over a network using TCP/IP,
+SMTP is commonly used.  SMTP stands for Simple Mail Transfer Protocol,
+and is defined in RFC-788 and RFC-821.  SMTP usually connects to the
+recipient's machine directly, negotiating the message transfer with the
+remote side's SMTP daemon.
+<P>
+In UUCP networks, mail will usually not be delivered directly, but
+rather be forwarded to the destination host by a number of intermediate
+systems. To send a message over a UUCP link, the sending MTA will
+usually execute rmail on the forwarding system using uux,
+and feed it the message on standard input.
+<P>
+Since this is done for each message separately, it may produce a
+considerable work load on a major mail hub, as well as clutter the UUCP
+spool queues with hundreds of small files taking up an unproportional
+amount of disk space.<A HREF="footnode.html#6870"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> Some MTAs therefore allow you to collect several messages for a remote
+system in a single batch file. The batch file contains the SMTP commands
+that the local host would normally issue if a direct SMTP connection was
+used.  This is called BSMTP, or <em>batched</em> SMTP. The batch is then
+fed to the rsmtp or bsmtp program on the remote system,
+which will process the input as if a normal SMTP connection had
+occurred.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node189.html">Email Addresses</A>
+<B>Up:</B> <A HREF="node186.html">Electronic Mail</A>
+<B> Previous:</B> <A HREF="node187.html">What is a Mail </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,485 @@
+<HTML
+><HEAD
+><TITLE
+>Delete programs, Edit files pertaining to modules</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Configuring and Building a Secure, Optimized Kernel"
+HREF="secopt-kernel.html"><LINK
+REL="PREVIOUS"
+TITLE="Installing the new kernel"
+HREF="chap7sec85.html"><LINK
+REL="NEXT"
+TITLE="Create a emergency Rescue and Boot floppy disk"
+HREF="chap7sec87.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap7sec85.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. Configuring and Building a Secure, Optimized Kernel</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap7sec87.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN5761"
+>7.11. Delete programs, Edit files pertaining to modules</A
+></H1
+><P
+>&#13;           By default when you install Red Hat Linux for the first time like we do, the kernel is built as a modularized kernel. This means that each device or function we need exists as modules and is controlled by 
+           the Kernel Daemon program named kmod, which automatically loads some modules and functions support into memory as it is needed, and unloads it when it's no longer being used.
+           </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;           kmod and other module management programs included in the modutils <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> package use the <TT
+CLASS="filename"
+>conf.modules</TT
+> file located in the <TT
+CLASS="filename"
+>/etc</TT
+> directory to know, for example which Ethernet card you 
+           have, if your Ethernet card requires special configuration and so on. Since we are not using any modules in our new compiled kernel, we can remove the <TT
+CLASS="filename"
+>conf.modules</TT
+> file and uninstall completely the 
+           modutils package program.
+
+           To remove the <TT
+CLASS="filename"
+>conf.modules</TT
+> file, use the command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>rm</B
+> -f  /etc/conf.modules
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           To uninstall the modutils package, use the following command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>rpm</B
+> -e --nodeps modutils
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+><LI
+><P
+>&#13;           
+           One last thing to do is to edit the file <TT
+CLASS="filename"
+>rc.sysinit</TT
+> and comment out all the lines related to <B
+CLASS="command"
+>depmod</B
+> -a by inserting a <TT
+CLASS="prompt"
+>#</TT
+> at 
+           the beginning of the lines. This is needed since at boot time the system read the <TT
+CLASS="filename"
+>rc.sysinit</TT
+> script to find module dependencies in the kernel by default.
+           <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+           
+           Comment out the line 260 in the <TT
+CLASS="filename"
+>rc.sysinit</TT
+> file vi +260 <TT
+CLASS="filename"
+>/etc/rc.d/rc.sysinit</TT
+>:
+           <TT
+CLASS="userinput"
+><B
+>&#13;           if [ -x /sbin/depmod -a -n "$USEMODULES" ]; then</B
+></TT
+>,
+           To read:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           #if [ -x /sbin/depmod -a -n "$USEMODULES" ]; then
+           </PRE
+></TD
+></TR
+></TABLE
+>
+
+           Comment out the lines 272 to 277 in the <TT
+CLASS="filename"
+>rc.sysinit</TT
+> file vi +272 <TT
+CLASS="filename"
+>/etc/rc.d/rc.sysinit</TT
+>:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           if [ -L /lib/modules/default ]; then
+           INITLOG_ARGS= action "Finding module dependencies" depmod -a default
+           else
+           INITLOG_ARGS= action "Finding module dependencies" depmod -a
+           fi
+           fi
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           To read:
+           #    if [ -L /lib/modules/default ]; then
+           #        INITLOG_ARGS= action "Finding module dependencies" depmod -a default
+           #    else
+           #        INITLOG_ARGS= action "Finding module dependencies" depmod -a
+           #    fi
+           #fi
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+             The procedure described above relates to initscripts-4_70-1 package under Red Hat Linux version 6.1.
+             </P
+></BLOCKQUOTE
+></DIV
+>
+
+           <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+           Comment out the line 243 in the <TT
+CLASS="filename"
+>rc.sysinit</TT
+> file vi +243 <TT
+CLASS="filename"
+>/etc/rc.d/rc.sysinit</TT
+>:
+           <TT
+CLASS="userinput"
+><B
+>if [ -x /sbin/depmod -a -n "$USEMODULES" ]; then</B
+></TT
+>,
+           To read:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           #if [ -x /sbin/depmod -a -n "$USEMODULES" ]; then
+           </PRE
+></TD
+></TR
+></TABLE
+>
+
+           Comment out the lines 255 to 260 in the <TT
+CLASS="filename"
+>rc.sysinit</TT
+> file vi +255 <TT
+CLASS="filename"
+>/etc/rc.d/rc.sysinit</TT
+>:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           if [ -L /lib/modules/default ]; then
+           INITLOG_ARGS= action "Finding module dependencies" depmod -a default
+           else
+           INITLOG_ARGS= action "Finding module dependencies" depmod -a
+           fi
+           fi
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           To read:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           
+           #    if [ -L /lib/modules/default ]; then
+           #        INITLOG_ARGS= action "Finding module dependencies" depmod -a default
+           #    else
+           #        INITLOG_ARGS= action "Finding module dependencies" depmod -a
+           #    fi
+           #fi
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           Once again, all of this part Delete program, file and lines related to modules is required only if you said No to <TT
+CLASS="userinput"
+><B
+>Enable loadable</B
+></TT
+> module support <TT
+CLASS="envar"
+>CONFIG_MODULES</TT
+> in your kernel configuration above.
+           </P
+></LI
+><LI
+><P
+>&#13;           
+           Now you must Reboot your system and test your results.
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>reboot</B
+>
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           When the system is rebooted and you are logged in, verify the new version of your kernel with the following command:
+
+           To verify the version of your new kernel, use the following command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>uname</B
+> -a
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <P
+CLASS="literallayout"
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<TT
+CLASS="computeroutput"
+>&#13;           Linux deep.openna.com 2.2.14 #1 Mon Jan 10 10:40:35 EDT 2000 i686 unknown
+           [root@deep]#
+           </TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+           </P
+></LI
+></OL
+></DIV
+><P
+>&#13;           <EM
+>&#13;           Congratulation !.
+           </EM
+>
+           </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap7sec85.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap7sec87.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Installing the new kernel</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="secopt-kernel.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Create a emergency Rescue and Boot floppy disk</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

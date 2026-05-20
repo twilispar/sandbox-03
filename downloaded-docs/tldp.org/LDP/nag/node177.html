@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Protecting Yourself Against Swindlers</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node178.html">Be Paranoid-- Call Sequence </A>
+<B>Up:</B> <A HREF="node174.html">Setting up your System </A>
+<B> Previous:</B> <A HREF="node176.html">Providing UUCP Accounts</A>
+<BR> <P>
+<H2><A NAME="SECTION0014530000">Protecting Yourself Against Swindlers</A></H2>
+<P>
+uucp.security.called-loginProtecting Yourself Against Swindlers
+<A NAME="6390"></A>
+<A NAME="6391"></A>
+<P>
+One of the biggest problems about UUCP is that the calling system
+can lie about its name; it announces its name to the called system after
+logging in, but the server doesn't have a way to check this. Thus, an
+attacker could log into his or her own UUCP account, pretend to be
+someone else, and pick up that other site's mail. This is particularly
+troublesome if you offer login via anonymous UUCP, where the password is
+made public.
+<P>
+Unless you know you can trust all sites that call your system to be honest,
+you <em>must</em> guard against this sort of impostors. The cure against
+this disease is to require each system to use a particular login name
+by specifying a called-login in sys. A sample system entry
+may look like this:
+<P>
+<P><P>
+<P>
+The upshot of this is that whenever a system logs in and pretends it is
+pablo, uucico will check whether it has logged in as
+Upablo. If it hasn't, the calling system will be turned down, and
+the connection is dropped. You should make it a habit to add the
+called-login command to every system entry you add to your
+sys file. It is important that you do this for <em>all</em> systems,
+regardless of whether they will ever call your site or not. For those sites
+that never call you, you should probably set called-login to some
+totally bogus user name, such as neverlogsin.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

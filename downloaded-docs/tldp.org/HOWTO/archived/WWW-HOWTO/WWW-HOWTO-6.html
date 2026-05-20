@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>Linux WWW HOWTO : Setting up WWW server systems</TITLE>
+ <LINK HREF="WWW-HOWTO-7.html" REL=next>
+ <LINK HREF="WWW-HOWTO-5.html" REL=previous>
+ <LINK HREF="WWW-HOWTO.html#toc6" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="WWW-HOWTO-7.html">Next</A>
+<A HREF="WWW-HOWTO-5.html">Previous</A>
+<A HREF="WWW-HOWTO.html#toc6">Contents</A>
+<HR>
+<H2><A NAME="s6">6. Setting up WWW server systems</A></H2>
+
+<P>This section contains information on different http server software
+packages and additional server side tools like script languages for
+CGI programs etc.  There are several dozen web servers, I only covered those
+that are fully functional.  As some of these are commercial products, 
+I have no way of trying
+them.  Most of the information in the overview section was pieced together
+from various web sites. 
+If there is any incorrect or missing information please let me know.
+<P>For a technical description on the http mechanism, take a look at
+the RFC documents mentioned in the chapter "For further reading" of
+this HOWTO.
+<P>I prefer to use the Apache server.  It has almost all the features you would
+ever need and its free!  I will admit that this section is heavily biased
+toward Apache.  I decided to concentrate my efforts on the Apache section
+rather than spread it out over all the web servers.  I may cover other web
+servers in the future.
+<P>
+<P>
+<P>
+<P>
+<H2><A NAME="ss6.1">6.1 Overview</A>
+</H2>
+
+<P>
+<DL>
+<DT><B>Cern httpd</B><DD><P>This was the first web server.  It was developed by the
+European Laboratory for Particle Physics (CERN).  CERN httpd is no longer
+supported.  The CERN httpd server
+is reported to have some ugly bugs, to be quite slow and resource hungry. 
+The latest version is 3.0.  For more information visit the CERN httpd home
+page at 
+<A HREF="http://www.w3.org/Daemon/Status.html">http://www.w3.org/Daemon/Status.html</A>.
+It is available for download at
+<A HREF="ftp://sunsite.unc.edu/pub/Linux/apps/www/servers/httpd-3.0.term.tpz">ftp://sunsite.unc.edu/pub/Linux/apps/www/servers/httpd-3.0.term.tpz</A>
+(no it is not a typo, the extension is actually .tpz on the site; probably 
+should be .tgz)
+<P>
+<DT><B>NCSA HTTPd</B><DD><P>The NCSA HTTPd server is the father to Apache (The
+development split into two different servers).   Therefore the setup files
+are very similar.  NCSA HTTPd is free and the source code is available.  
+This server not covered in this document, although
+reading the Apache section may give you some help.  The NCSA server was once
+popular, but most people are replacing it with Apache.  Apache is a drop in
+replacement for the NCSA server(same configuration files), and it fixes several
+shortcomings of the NCSA server.  NCSA HTTPd accounts for 4.9% (and
+falling) of all web servers. (source September 1997 
+<A HREF="http://www.netcraft.com/survey/">Netcraft survey</A>).
+The latest version is 1.5.2a.  For
+more information see the NCSA website at 
+<A HREF="http://hoohoo.ncsa.uiuc.edu">http://hoohoo.ncsa.uiuc.edu</A>.
+<P>
+<DT><B>
+<A HREF="WWW-HOWTO-7.html#apache">Apache</A></B><DD><P>Apache is the king of all web
+servers.  Apache and its source code is free.  Apache is modular, therefore
+it is easy to add features.  Apache is very flexible and has many, many
+features.  Apache 
+and its derivatives makes up 44% of all web domains (50% if you count all
+the derivatives).  
+There are over 695,000 Apache servers in operation (source November 1997 
+<A HREF="http://www.netcraft.com/survey/">Netcraft survey</A>).
+<P>The official Apache is missing SSL, but there are two
+derivatives that fill the gap.  Stronghold is a commercial product that is
+based on Apache.  It retails for $995; an economy version is available for
+$495 (based on an old version of Apache).  Stronghold is the number two
+secure server behind Netscape (source 
+<A HREF="http://www.c2.net/products/stronghold">C2 net</A> and 
+<A HREF="http://www.netcraft.com/survey/">Netcraft survey</A>).  
+For more information visit the Stronghold website at 
+<A HREF="http://www.c2.net/products/stronghold/">http://www.c2.net/products/stronghold/</A>.  It was developed
+outside the US, so it is available with 128 bit SSL everywhere.
+<P>Apache-SSL is a free implementation of SSL, but it is not for commercial use
+in the US (RSA has US patents on SSL technology).  It can be used for
+non-commercial use in the US if you link with the free RSAREF library.  For
+more information see the website at 
+<A HREF="http://www.algroup.co.uk/Apache-SSL/">http://www.algroup.co.uk/Apache-SSL/</A>.
+<P>
+<DT><B>Netscape Fast Track Server</B><DD><P>Fast Track was developed by Netscape, but the
+Linux version is put out by Caldera.  The Caldera site lists it as Fast
+Track for OpenLinux.  I'm not sure if it only runs on Caldera OpenLinux or
+if any Linux distribution will do (E-mail me if you have the answer). 
+Netscape servers account for 11.5% (and falling) of all web servers (source 
+September 1997 
+<A HREF="http://www.netcraft.com/survey/">http://www.netcraft.com/survey/</A>).
+The server sells for $295.  It is also included with the Caldera OpenLinux
+Standard distribution which sells for $399 ($199.50 educational).  The web
+pages tell of a nice administration interface and
+a quick 10 minute setup.  The server has support for 40-bit SSL.  
+To get the full 128-bit SSL you need 
+Netscape Enterprise Server.  Unfortunately that is not available for Linux :(
+The latest version available for Linux is 2.0 (Version 3 is in beta, but its
+not available for Linux yet).  
+To buy a copy goto the Caldera web site at 
+<A HREF="http://www.caldera.com/products/netscape/netscape.html">http://www.caldera.com/products/netscape/netscape.html</A>
+For more information goto the Fast Track page at
+<A HREF="http://www.netscape.com/comprod/server_central/product/fast_track/">http://www.netscape.com/comprod/server_central/product/fast_track/</A><P>
+<P>
+<DT><B>WN</B><DD><P>WN has many features that make it attractive.  First it is smaller
+than the CERN, NCSA HTTPd, an Apache servers.  It also has many built-in
+features that would require CGI's.  For example site searches, enhanced
+server side includes.  It can also decompress/compress files on the fly
+with its filter feature.  It also has the ability to retrieve only part of a
+file with its ranges feature.  It is released under the GNU public license.  
+The current version is 1.18.3. For more information see the WN website at
+<A HREF="http://hopf.math.nwu.edu/">http://hopf.math.nwu.edu/</A>.
+<P>
+<DT><B>AOLserver</B><DD><P>AOLserver is made by America Online.  I'll admit that I
+was surprised by the features of a web server coming from AOL.  In addition
+to the standard features it supports database connectivity.  Pages can query
+a database by Structured Query Language (SQL) commands.  The database is
+access through Open Database Connectivity (ODBC).  It also has built-in
+search engine and TCL scripting.  If that is not enough you can add your own
+modules through the c Application Programming Interface (API).  I almost
+forgot to mention support for 40 bit SSL.  And you get all this for free!
+For more information visit the AOLserver site at 
+<A HREF="http://www.aolserver.com/server/">http://www.aolserver.com/server/</A><P>
+<DT><B>Zeus Server</B><DD><P>Zeus Server was developed by Zeus Technology.  They claim
+that they are the fastest web server (using WebSpec96 benchmark).  The
+server can be configured and controlled from a web browser!  It can limit processor and memory
+resources for CGI's, and it executes them in a secure environment (whatever
+that means).  It also supports unlimited virtual servers.  It sells for $999
+for the standard version.  If you want the secure server (SSL) the price jumps
+to $1699.  They are based outside the US so 128 bit SSL is available
+everywhere.  For more information visit the Zeus Technology website at
+<A HREF="http://www.zeus.co.uk">http://www.zeus.co.uk</A>.  The US website is at 
+<A HREF="http://www.zeus.com">http://www.zeus.com</A>.
+I'll warn you they are cocky about the
+fastest web server thing.  But they don't even show up under top web servers
+in the Netcraft Surveys.
+<P>
+<DT><B>CL-HTTP</B><DD><P>CL-HTTP stands for Common Lisp Hypermedia Server.  If you are
+a Lisp programmer this server is for you.  You can write your CGI scripts in
+Lisp.  It has a web based setup function.  It also supports all the standard
+server features.  CL-HTTP is free and the source code is available.  
+For more information visit the CL-HTTP website at
+<A HREF="http://www.ai.mit.edu/projects/iiip/doc/cl-http/home-page.html">http://www.ai.mit.edu/projects/iiip/doc/cl-http/home-page.html</A>
+(could they make that url any longer?).
+</DL>
+<P>If you have a commercial purpose (company web site, or ISP), I would
+strongly recommend that you use Apache.  If you are looking for easy setup at the
+expense of advanced features then the Zeus Server wins hands down.  I've
+also heard that the Netscape Server is easy to setup.
+If you have an internal use you can be a bit more flexible. 
+But unless one of them has a feature that you just have to use, I
+would still recommend using one of the three above.
+<P>This is only a partial listing of all the servers available.  For a more
+complete list visit Netcraft at 
+<A HREF="http://www.netcraft.com/survey/servers.html">http://www.netcraft.com/survey/servers.html</A> or Web Compare at
+<A HREF="http://webcompare.internet.com">http://webcompare.internet.com</A>.
+<P>
+<P>
+<P>
+<HR>
+<A HREF="WWW-HOWTO-7.html">Next</A>
+<A HREF="WWW-HOWTO-5.html">Previous</A>
+<A HREF="WWW-HOWTO.html#toc6">Contents</A>
+</BODY>
+</HTML>

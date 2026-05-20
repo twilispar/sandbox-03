@@ -1,0 +1,1098 @@
+<HTML
+><HEAD
+><TITLE
+>Unreal Tournament</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Game Server HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Half-Life"
+HREF="halflife.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Game Server HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="halflife.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+>&nbsp;</TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="UT"
+></A
+>7. Unreal Tournament</H1
+><P
+> Unreal Tournament is a very addictive first person shooter which is designed to be run in one of several modes; DeathMatch, Capture the Flag, Last Man Standing and Assault are the most popular. It features bots, a bevy of weapons and plenty of community support. It was originally ported as an in-house development effort at Epic but later releases are handled by
+Loki Software. Current version as of this writing is 436.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="UTSYSREQ"
+></A
+>7.1. System requirements</H2
+><P
+>As always, the system requirements will vary slightly depending on the
+number of players on the server. Here are the basics:</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+>Pentium 266 (For more than 8 users, a faster server is recommended)</P
+></LI
+><LI
+><P
+>At least 32 MB RAM (For a VERY dedicated machine. The more maps,
+  skins, mutators, bots, and players that are online, the more RAM the
+  server will use.)  64 MB is highly recommended.</P
+></LI
+><LI
+><P
+>Linux kernel 2.2.14 or later, Glibc 2.1 or later.</P
+></LI
+><LI
+><P
+>The retail Unreal Tournament CD (Just the first one is necessary).</P
+></LI
+><LI
+><P
+>At least 500 MB disk space. Maps, skins, and mods will require a bit more.</P
+></LI
+><LI
+><P
+>Enough bandwidth if you're going to run an Internet server. Epic recommends about 20kbps per player.</P
+></LI
+></UL
+></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="UTINSTALLING"
+></A
+>7.2. Installing</H2
+><P
+>First, download the latest ut-install file from Loki's website.  As of
+this version of the HOWTO, that is 436.</P
+><P
+>  <P
+></P
+><UL
+><LI
+><P
+>    <A
+HREF="http://www.lokigames.com/products/ut/updates.php3"
+TARGET="_top"
+>http://www.lokigames.com/products/ut/updates.php3</A
+>
+    </P
+></LI
+></UL
+>
+ </P
+><P
+>Mount the Unreal Tournament CD (Usually /cdrom or /mnt/cdrom), and run
+the ut-install*.run file.  It will verify the archive, check the CD for
+the appropriate files, and begin installing.  It will ask you where you
+want to install UT to, as well as a few other questions.  It is actually
+fairly painless.</P
+><P
+>Once you have it installed, you will want to change ownership of the
+files to the user ID that they will be running under (See Security and
+permissions).</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="UTCONFIGURING"
+></A
+>7.3. Configuring</H2
+><P
+>Now it's time to write a config file.  Unreal Tournament uses an INI-style
+config file format which is exactly like Windows INI files.  This config
+file will contain ALL the variables the server will use, including game
+types, defaults for those types, number of players, bots, etc.  The cfg's
+should be kept in the System/  directory (either <TT
+CLASS="LITERAL"
+>$UTROOT/System/</TT
+> or
+<TT
+CLASS="LITERAL"
+>~/.loki/ut/System/</TT
+>).  If you have an UnrealTournament.ini and/or User.ini
+in that System/ directory, it will be loaded and can override settings in
+the server's cfg file. This is a sanitized copy of my server's cfg file
+(called ucc.ini):</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>----[snip]-----
+[URL]
+Protocol=unreal
+ProtocolDescription=Unreal Protocol
+Name=Player
+Map=Index.unr
+LocalMap=DM-Deck16][.unr
+Host=
+Portal=
+MapExt=unr
+SaveExt=usa
+Port=7777
+Class=Botpack.TMale1
+
+[FirstRun]
+FirstRun=428
+
+[PackageRemap]
+UnrealShare=UnrealI
+
+[Engine.Engine]
+GameRenderDevice=NullDrv.NullRenderDevice
+WindowedRenderDevice=NullDrv.NullRenderDevice
+RenderDevice=NullDrv.NullRenderDevice
+AudioDevice=NullDrv.NullRenderDevice
+NetworkDevice=IpDrv.TcpNetDriver
+DemoRecordingDevice=Engine.DemoRecDriver
+Console=UTMenu.UTConsole
+Language=int
+GameEngine=Engine.GameEngine
+EditorEngine=Editor.EditorEngine
+DefaultGame=Botpack.DeathMatchPlus
+DefaultServerGame=Botpack.DeathMatchPlus
+ViewportManager=SDLDrv.SDLClient
+Render=Render.Render
+Input=Engine.Input
+Canvas=Engine.Canvas
+
+[Core.System]
+PurgeCacheDays=30
+SavePath=../Save
+CachePath=../Cache
+CacheExt=.uxx
+Paths=../System/*.u
+Paths=/path/to/ut/Maps/*.unr
+Paths=/path/to/ut/Textures/*.utx
+Paths=/path/to/ut/Sounds/*.uax
+Paths=/path/to/ut/Music/*.umx
+Suppress=DevLoad
+Suppress=DevSave
+Suppress=DevNetTraffic
+Suppress=DevGarbage
+Suppress=DevKill
+Suppress=DevReplace
+Suppress=DevSound
+Suppress=DevCompile
+Suppress=DevBind
+Suppress=DevBsp
+
+[Engine.GameEngine]
+CacheSizeMegs=4
+UseSound=False
+ServerActors=IpDrv.UdpBeacon
+ServerActors=IpServer.UdpServerQuery
+;ServerActors=IpServer.UdpServerUplink MasterServerAddress=unreal.epicgames.com MasterServerPort=27900
+;ServerActors=IpServer.UdpServerUplink MasterServerAddress=master0.gamespy.com MasterServerPort=27900
+;ServerActors=IpServer.UdpServerUplink MasterServerAddress=master.mplayer.com MasterServerPort=27900
+ServerActors=UWeb.WebServer
+ServerPackages=SoldierSkins
+ServerPackages=CommandoSkins
+ServerPackages=FCommandoSkins
+ServerPackages=SGirlSkins
+ServerPackages=BossSkins
+ServerPackages=Botpack
+
+[Engine.Player]
+ConfiguredInternetSpeed=20000
+ConfiguredLanSpeed=20000
+
+[IpDrv.TcpNetDriver]
+AllowDownloads=True
+ConnectionTimeout=15.0
+InitialConnectTimeout=300.0
+AckTimeout=1.0
+KeepAliveTime=0.2
+MaxClientRate=20000
+SimLatency=0
+RelevantTimeout=5.0
+SpawnPrioritySeconds=1.0
+ServerTravelPause=4.0
+NetServerMaxTickRate=20
+LanServerMaxTickRate=35
+DownloadManagers=IpDrv.HTTPDownload
+DownloadManagers=Engine.ChannelDownload
+
+[Engine.DemoRecDriver]
+DemoSpectatorClass=Botpack.CHSpectator
+MaxClientRate=25000
+ConnectionTimeout=15.0
+InitialConnectTimeout=500.0
+AckTimeout=1.0
+KeepAliveTime=1.0
+SimLatency=0
+RelevantTimeout=5.0
+SpawnPrioritySeconds=1.0
+ServerTravelPause=4.0
+NetServerMaxTickRate=60
+LanServerMaxTickRate=60
+
+[Engine.GameReplicationInfo]
+ServerName=Generic UT Server
+ShortName=UT Server
+AdminName=Lamer
+AdminEmail=root@localhost
+Region=0
+MOTDLine1=
+MOTDLine2=
+MOTDLine3=
+MOTDLine4=
+
+[IpDrv.TcpipConnection]
+SimPacketLoss=0
+SimLatency=0
+
+[IpServer.UdpServerUplink]
+DoUpLink=False
+UpdateMinutes=1
+MasterServerPort=27900
+
+[IpServer.UdpServerQuery]
+GameName=ut
+
+[IpDrv.UdpBeacon]
+DoBeacon=True
+BeaconTime=0.50
+BeaconTimeout=5.0
+BeaconProduct=ut
+
+[UMenu.UnrealConsole]
+RootWindow=UMenu.UMenuRootWindow
+UWindowKey=IK_Esc
+ShowDesktop=False
+
+[UMenu.UMenuMenuBar]
+ShowHelp=True
+GameUMenuDefault=UTMenu.UTGameMenu
+MultiplayerUMenuDefault=UTMenu.UTMultiplayerMenu
+OptionsUMenuDefault=UTMenu.UTOptionsMenu
+ModMenuClass=UMenu.UMenuModMenu
+
+[Botpack.ChallengeBotInfo]
+Difficulty=1
+
+[Botpack.DeathMatchPlus]
+bNoviceMode=True
+bHardCoreMode=False
+bUseTranslocator=True
+bCoopWeaponMode=False
+MinPlayers=8
+AirControl=0.350000
+bChangeLevels=True
+bMegaSpeed=False
+bAltScoring=False
+bTournament=False
+NetWait=10
+RestartWait=15
+InitialBots=10
+FragLimit=30
+TimeLimit=0
+bMultiWeaponStay=False
+bForceRespawn=False
+MaxCommanders=0
+bNoMonsters=False
+bHumansOnly=False
+bClassicDeathMessages=False
+
+[Botpack.CTFGame]
+bUseTranslocator=True
+bCoopWeaponMode=True
+GoalTeamScore=3.000000
+bNoTeamChanges=False
+FriendlyFireScale=0.000000
+MaxTeams=2
+MaxTeamSize=16
+FragLimit=0
+TimeLimit=0
+bMultiWeaponStay=True
+bForceRespawn=False
+MaxCommanders=0
+bNoMonsters=False
+bHumansOnly=True
+bClassicDeathMessages=False
+
+[Botpack.Domination]
+bDumbDown=True
+bUseTranslocator=True
+bCoopWeaponMode=True
+GoalTeamScore=100.000000
+bNoTeamChanges=False
+FriendlyFireScale=0.000000
+MaxTeams=2
+MaxTeamSize=16
+FragLimit=30
+TimeLimit=0
+bMultiWeaponStay=True
+bForceRespawn=False
+MaxCommanders=0
+bNoMonsters=False
+bHumansOnly=False
+bClassicDeathMessages=False
+
+[Botpack.Assault]
+bUseTranslocator=False
+bCoopWeaponMode=True
+Defenses=3
+SavedTime=0.000000
+NumDefenses=0
+CurrentDefender=0
+bDefenseSet=False
+bTiePartOne=False
+GameCode=
+Part=1
+bNoTeamChanges=False
+FriendlyFireScale=0.000000
+MaxTeams=2
+GoalTeamScore=0.000000
+MaxTeamSize=16
+FragLimit=0
+TimeLimit=7
+bMultiWeaponStay=False
+bForceRespawn=False
+MaxCommanders=2
+bNoMonsters=False
+bHumansOnly=False
+bClassicDeathMessages=False
+
+[Botpack.TeamGamePlus]
+bBalanceTeams=True
+GoalTeamScore=30
+bPlayersBalanceTeams=True
+
+[Engine.GameInfo]
+bLowGore=False
+bVeryLowGore=False
+bMuteSpectators=False
+bNoCheating=True
+bAllowFOV=False
+AutoAim=0.930000
+GameSpeed=1.000000
+MaxSpectators=2
+AdminPassword=
+GamePassword=
+MaxPlayers=16
+IPPolicies[0]=ACCEPT,*
+IPPolicies[1]=
+IPPolicies[2]=
+IPPolicies[3]=
+IPPolicies[4]=
+IPPolicies[5]=
+IPPolicies[6]=
+IPPolicies[7]=
+IPPolicies[8]=
+IPPolicies[9]=
+IPPolicies[10]=
+IPPolicies[11]=
+IPPolicies[12]=
+IPPolicies[13]=
+IPPolicies[14]=
+IPPolicies[15]=
+IPPolicies[16]=
+IPPolicies[17]=
+IPPolicies[18]=
+IPPolicies[19]=
+IPPolicies[20]=
+IPPolicies[21]=
+IPPolicies[22]=
+IPPolicies[23]=
+IPPolicies[24]=
+IPPolicies[25]=
+IPPolicies[26]=
+IPPolicies[27]=
+IPPolicies[28]=
+IPPolicies[29]=
+IPPolicies[30]=
+IPPolicies[31]=
+IPPolicies[32]=
+IPPolicies[33]=
+IPPolicies[34]=
+IPPolicies[35]=
+IPPolicies[36]=
+IPPolicies[37]=
+IPPolicies[38]=
+IPPolicies[39]=
+IPPolicies[40]=
+IPPolicies[41]=
+IPPolicies[42]=
+IPPolicies[43]=
+IPPolicies[44]=
+IPPolicies[45]=
+IPPolicies[46]=
+IPPolicies[47]=
+IPPolicies[48]=
+IPPolicies[49]=
+ServerLogName=server.log
+bLocalLog=True
+bWorldLog=True
+bBatchLocal=False
+DemoBuild=0
+DemoHasTuts=0
+bExternalBatcher=False
+bNoMonsters=False
+bHumansOnly=False
+bCoopWeaponMode=False
+bClassicDeathMessages=False
+
+[UnrealShare.UnrealGameOptionsMenu]
+bCanModifyGore=True
+
+[UWeb.WebServer]
+Applications[0]=UTServerAdmin.UTServerAdmin
+ApplicationPaths[0]=/ServerAdmin
+Applications[1]=UTServerAdmin.UTImageServer
+ApplicationPaths[1]=/images
+DefaultApplication=0
+bEnabled=True
+ListenPort=5080
+MaxConnections=30
+
+[UTServerAdmin.UTServerAdmin]
+AdminUsername=utadmin
+AdminPassword=utpasswd
+MenuPage=menu
+RootPage=root
+CurrentPage=current
+CurrentMenuPage=current_menu
+CurrentIndexPage=current_index
+CurrentPlayersPage=current_players
+CurrentGamePage=current_game
+CurrentConsolePage=current_console
+CurrentConsoleLogPage=current_console_log
+CurrentConsoleSendPage=current_console_send
+DefaultSendText=say
+CurrentMutatorsPage=current_mutators
+CurrentRestartPage=current_restart
+DefaultsPage=defaults
+DefaultsMenuPage=defaults_menu
+DefaultsMapsPage=defaults_maps
+DefaultsRulesPage=defaults_rules
+DefaultsSettingsPage=defaults_settings
+DefaultsBotsPage=defaults_bots
+DefaultsServerPage=defaults_server
+DefaultsIPPolicyPage=defaults_ippolicy
+DefaultsRestartPage=defaults_restart
+MessageUHTM=message.uhtm
+DefaultBG=#aaaaaa
+HighlightedBG=#ffffff
+AdminRealm=UT Remote Admin Server
+
+[IpDrv.HTTPDownLoad]
+UseCompression=True
+
+[Engine.StatLog]
+LocalBatcherURL=../NetGamesUSA.com/ngStats/ngStatsUT
+LocalBatcherParams=
+LocalStatsURL=../NetGamesUSA.com/ngStats/html/ngStats_Main.html
+WorldBatcherURL=../NetGamesUSA.com/ngWorldStats/bin/ngWorldStats
+WorldBatcherParams=-d ../NetGamesUSA.com/ngWorldStats/logs -g UT
+WorldStatsURL=http://www.netgamesusa.com
+LocalLogDir=../Logs
+WorldLogDir=../NetGamesUSA.com/ngWorldStats/logs
+bWorldBatcherError=False
+
+[Botpack.TrainingDM]
+FragLimit=3
+TimeLimit=0
+bMultiWeaponStay=True
+bForceRespawn=False
+bUseTranslocator=False
+MaxCommanders=0
+bNoMonsters=False
+bHumansOnly=False
+bCoopWeaponMode=False
+bClassicDeathMessages=False
+
+[Botpack.TrainingDOM]
+bDumbDown=True
+bNoTeamChanges=False
+FriendlyFireScale=0.000000
+MaxTeams=2
+GoalTeamScore=100.000000
+MaxTeamSize=16
+FragLimit=0
+TimeLimit=0
+bMultiWeaponStay=True
+bForceRespawn=False
+bUseTranslocator=True
+MaxCommanders=0
+bNoMonsters=False
+bHumansOnly=False
+bCoopWeaponMode=True
+bClassicDeathMessages=False
+
+[UTMenu.UTServerSetupPage]
+bLanPlay=True
+
+[UTMenu.UTStartGameCW]
+Map=DM-Deck16][.unr
+GameType=BotPack.DeathMatchPlus
+MutatorList=
+bKeepMutators=False
+
+[Botpack.TDMmaplist]
+Maps[0]=DM-Liandri.unr
+Maps[1]=DM-Codex.unr
+Maps[2]=DM-Grinder.unr
+Maps[3]=DM-Pressure.unr
+Maps[4]=DM-HyperBlast.unr
+Maps[5]=DM-Peak.unr
+Maps[6]=DM-KGalleon.unr
+Maps[7]=DM-Turbine.unr
+Maps[8]=DM-StalwartXL.unr
+Maps[9]=DM-Curse][.unr
+Maps[10]=DM-Deck16][.unr
+Maps[11]=DM-Phobos.unr
+Maps[12]=
+Maps[13]=
+Maps[14]=
+Maps[15]=
+Maps[16]=
+Maps[17]=
+Maps[18]=
+Maps[19]=
+Maps[20]=
+Maps[21]=
+Maps[22]=
+Maps[23]=
+Maps[24]=
+Maps[25]=
+Maps[26]=
+Maps[27]=
+Maps[28]=
+Maps[29]=
+Maps[30]=
+Maps[31]=
+MapNum=0
+
+[Botpack.TrainingCTF]
+bNoTeamChanges=False
+FriendlyFireScale=0.000000
+MaxTeams=2
+GoalTeamScore=3.000000
+MaxTeamSize=16
+FragLimit=0
+TimeLimit=0
+bMultiWeaponStay=True
+bForceRespawn=False
+bUseTranslocator=True
+MaxCommanders=0
+bNoMonsters=False
+bHumansOnly=True
+bCoopWeaponMode=True
+bClassicDeathMessages=False
+
+[UTMenu.UTMenuBotmatchCW]
+Map=DM-Gothic.unr
+GameType=BotPack.DeathMatchPlus
+MutatorList=
+bKeepMutators=False
+
+[Botpack.ASMapList]
+Maps[0]=AS-Hispeed.unr
+Maps[1]=AS-Frigate.unr
+Maps[2]=AS-Rook.unr
+Maps[3]=AS-Mazon.unr
+Maps[4]=AS-OceanFloor.unr
+Maps[5]=AS-Overlord.unr
+Maps[6]=AS-Guardia.unr
+Maps[7]=
+Maps[8]=
+Maps[9]=
+Maps[10]=
+Maps[11]=
+Maps[12]=
+Maps[13]=
+Maps[14]=
+Maps[15]=
+Maps[16]=
+Maps[17]=
+Maps[18]=
+Maps[19]=
+Maps[20]=
+Maps[21]=
+Maps[22]=
+Maps[23]=
+Maps[24]=
+Maps[25]=
+Maps[26]=
+Maps[27]=
+Maps[28]=
+Maps[29]=
+Maps[30]=
+Maps[31]=
+MapNum=0
+
+-----[snip]-----</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>A few things of note here.</P
+><P
+>The following values should be changed before the server is launched for
+the first time:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>[Core.System]
+Paths=../System/*.u
+Paths=/path/to/ut/Maps/*.unr
+Paths=/path/to/ut/Textures/*.utx
+Paths=/path/to/ut/Sounds/*.uax
+Paths=/path/to/ut/Music/*.umx</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Should all be set to where Unreal Tournament is installed.</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>[Engine.GameEngine]
+;ServerActors=IpServer.UdpServerUplink</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Should be uncommented if you wish to link your Unreal Tournament server
+into an existing Unreal Tournament league and have it accessible over the
+Internet.</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>[IpServer.UdpServerUplink]
+DoUpLink=False</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Additionally, if you do want to link your UT server with an Internet
+league, you will need to allow UpLinking.</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>[Engine.Player]
+ConfiguredInternetSpeed=20000</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>This should be set to the allocated bandwidth (in bytes per second) for
+each player.  Leaving it at the recommended 20000 is good.</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>[Engine.GameReplicationInfo]
+ServerName=Generic UT Server
+ShortName=UT Server
+AdminName=Lamer
+AdminEmail=root@localhost
+Region=0
+MOTDLine1=
+MOTDLine2=
+MOTDLine3=
+MOTDLine4=</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>All of that should be changed.</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>[Engine.GameInfo]
+AdminPassword=
+MaxPlayers=16</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>An admin password should be set, and the Max Players should be set to a
+sane value (See ConfiguredInternetSpeed).</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>[UWeb.WebServer]
+bEnabled=True
+ListenPort=5080</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>One of the most interesting aspects of running a UT server is the
+web-server interface for admins.  By setting bEnabled to True and
+specifying a ListenPort, you can administer an UnrealTournament server via
+a normal Web Browser.</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>[UTServerAdmin.UTServerAdmin]
+AdminUsername=utadmin
+AdminPassword=utpasswd
+AdminRealm=UT Remote Admin Server</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>If you do decide to run the UT Webserver interface (Recommended), the
+above values should be set.  AdminRealm is less important, but will be
+used by your browser to know when to ask for the administrator username
+and password.</P
+><P
+>All other values should be checked and seasoned to taste.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="UTSTARTING"
+></A
+>7.4. Starting the server</H2
+><P
+>To start the Unreal Tournament server, you will need to use the
+command "ucc server" and specify a few things on the command line.  These
+being:</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+>Mapname - Name of the map to start from the Maps/ directory, minus the
+  .unr extension.</P
+></LI
+><LI
+><P
+>Gametype - One of Botpack.DeathMatchPlus, Botpack.Domination,
+  Botpack.CTFGame.</P
+></LI
+><LI
+><P
+>INI - The config file to use to start the server.</P
+></LI
+><LI
+><P
+>LOG - the log file the server should use.</P
+></LI
+><LI
+><P
+>Port - (Optional) the port the UT server should use.</P
+></LI
+></UL
+></P
+><P
+>Most of this is specified in the config file, but the mapname and Gametype
+are required.</P
+><P
+>Here is an example:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+><TT
+CLASS="PROMPT"
+>$</TT
+> <B
+CLASS="COMMAND"
+>ucc server "DM-Turbine?game=Botpack.DeathMatchPlus" ini=ucc.ini log=ucc.log</B
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>I quoted the mapname and gametype because of the presence of the ? (Linux
+shells use that as a wild card) and because a lot of Unreal Tournament
+maps have odd characters in their name (DM-Deck16][ anyone?).  I recommend
+they always be quoted.</P
+><P
+>Once the server starts, it will load the settings specified in the
+System/ucc.ini file and load the game.</P
+><P
+>I also recommend the server be started with the nohup command and placed
+in the background.  All the configuration will take place in the web
+interface.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="UTADMIN"
+></A
+>7.5. Administrating the server</H2
+><P
+>Administering the server is as easy as browsing a website.  When you
+started the server, you should have seen something like this toward the
+end:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>Spawning: IpDrv.UdpBeacon
+Spawning: IpServer.UdpServerQuery
+Spawning: UWeb.WebServer
+Bound to UWeb.so</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Notice the UWeb.Webserver and UWeb.so sections?  Those are the webserver,
+and since it didn't give any errors, we know it's running.</P
+><P
+>Now, in the configuration section, you told it what port to listen on:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>[UWeb.WebServer]
+bEnabled=True
+ListenPort=5080</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>So, to connect to the administration server, you would need to browse to
+<TT
+CLASS="LITERAL"
+>http://utserver:5080/ServerAdmin</TT
+></P
+><P
+>The first thing that will happen is that your browser will ask you for
+authentication.  Back in the configuration file, we specified that:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>[UTServerAdmin.UTServerAdmin]
+AdminUsername=utadmin
+AdminPassword=utpasswd
+AdminRealm=UT Remote Admin Server</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>So in this case, you would sign in as utadmin with a password of utpasswd
+(You had better change these before you actually start the server).</P
+><P
+>Once you are authenticated, you are presented with an interface that
+allows you to specify the game type, map, number of bots and connections
+as well as kick and ban users. It's all very point-n-click.</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="halflife.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Half-Life</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

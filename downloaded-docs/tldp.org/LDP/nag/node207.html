@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Message Routing and Delivery</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node208.html">Routing Messages</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node206.html">Miscellaneous config Options</A>
+<BR> <P>
+<H1><A NAME="SECTION0016600000">Message Routing and Delivery</A></H1>
+<P>
+<A NAME="smaildelivery"></A>
+<A NAME="7811"></A>
+<P>
+smail splits up mail delivery into three different tasks,
+the router, director, and transport module.
+<P>
+The router module resolves all remote addresses, determining to which
+host the message should be sent to next, and which transport must be
+used. Depending on the nature of the link, different transports
+such as UUCP or SMTP may be used.
+<P>
+Local addresses are given to the director task which resolves any
+forwarding or aliasing. For example, the address might be an alias or a
+mailing list, or the user might want to forward her mail to another
+address.  If the resulting address is remote, it is handed to the router
+module for additional routing, otherwise it is assigned a transport for
+local delivery. By far the most common case will be delivery to a
+mailbox, but messages may also be piped into a command, or appended to
+some arbitrary file.
+<P>
+The transport module, finally, is responsible for whatever method
+of delivery has been chosen. It tries to deliver the message, and in
+case of failure either generates a bounce message, or defers it for
+a later retry.
+<P>
+<A NAME="7812"></A>
+<A NAME="7813"></A>
+<A NAME="7814"></A>
+With smail, you have much freedom in configuring these tasks.
+For each of them, a number of drivers are available, from
+which you can choose those you need. You describe them to smail
+in a couple of files, namely routers, directors, and
+transports, located in /usr/lib/smail. If these files do not exist,
+reasonable defaults are assumed that should be suitable for many sites
+that either use SMTP or UUCP for transport. If you want to change
+smail's routing policy, or modify a transport, you should get the
+sample files from the smail source distribution,<A HREF="footnode.html#7815"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> copy the sample files to /usr/lib/smail, and modify them according to your
+needs. Sample configuration files are also given in
+Appendix-<A HREF="node285.html#appendixsmail"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node208.html">Routing Messages</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node206.html">Miscellaneous config Options</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

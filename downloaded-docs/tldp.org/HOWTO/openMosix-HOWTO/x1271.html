@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>I don't see all my nodes</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="The openMosix HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Common Problems"
+HREF="problems.html"><LINK
+REL="PREVIOUS"
+TITLE="My processes won't migrate"
+HREF="x1247.html"><LINK
+REL="NEXT"
+TITLE="I often get errors: No such process"
+HREF="x1280.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>The openMosix HOWTO: </TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1247.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 12. Common Problems</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x1280.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN1271"
+></A
+>12.3. I don't see all my nodes</H1
+><P
+>&#13;First of all , are you using the same kernel version on each machine ? 
+The 'same-kernel' refers to the version. You can build different kernel 
+images of the same source version to meet the hardware/software needs of a 
+given node.
+However you wil need toe make sure that when you install openMosix 
+on your cluster, all your machines should have the openmosix-x.x.x-y 
+kernel installed, in contrast to having one machine running 
+openmosix-x.x.z-x, another running openmosix-x.x.x-y, another running 
+openmosix x.x.x-z, and so on and so forth
+&#13;</P
+><P
+>&#13;When you run mosmon, press t to see the total of machines running. Does 
+it warn you that mosix is not running?</P
+><P
+>&#13;If yes, then make sure your machine's ip is included in /etc/mosix.map 
+(don't use 127.0.0.1 - if your machine's ip is such, then you probably 
+have problems with your dhcp server/nameserver). If it does not tell you 
+that mosix is not running, see what machines show up. Do you see only your 
+machine?</P
+><P
+>&#13;If yes, then your machine is most likely running a firewall and is not 
+letting openmosix through.</P
+><P
+>&#13;If not, then the problem is most likely with the machine that doesn't show 
+up.
+
+Also: Do you have two nic cards on a node? then you have to edit the 
+/etc/hosts file to have a line that has the following format 
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>non-cluster_ip  cluster-hostname.cluster-domain cluster-hostname</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+You 
+might also 
+need to set up a routing table, which is a whole different subject. </P
+><P
+>Maybe you used different kernel-parameters on each machine? Especially if 
+you use the 'Support clusters with a complex network topology' option you 
+should take care that you use the same value for the also appearing option 
+'Maximum network-topology complexity support' on each machine.
+
+
+ </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1247.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x1280.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>My processes won't migrate</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="problems.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>I often get errors: No such process</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

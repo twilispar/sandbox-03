@@ -1,0 +1,378 @@
+<HTML
+><HEAD
+><TITLE
+>Securing Tripwire for Linux</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities/System Integrity"
+HREF="sysintegrity.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /usr/TSS/policy/twpol.txt file"
+HREF="chap17sec139.html"><LINK
+REL="NEXT"
+TITLE="Integrity or Interactive Check Mode"
+HREF="chap17sec141.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap17sec139.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 17. Software -Securities/System Integrity</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap17sec141.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN9482"
+>17.5. Securing Tripwire for Linux</A
+></H1
+><P
+>&#13;           It is important to make sure that the integrity of the system you are running has not been already compromised. For maximum confidence in your baseline database, you should generate operating system and application 
+           files from a clean installation and original media. Also, it is recommended that you delete the plain text copy of the Tripwire configuration file named <TT
+CLASS="filename"
+>twcfg.txt</TT
+> located under the <TT
+CLASS="filename"
+>/usr/bin</TT
+>
+           directory to hide the location of Tripwire's files and prevent anyone from creating a second, or alternate, configuration file.
+
+           To delete the plain text copy of the tripwire configuration file, use the following command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>rm</B
+> -f  /usr/bin/twcfg.txt
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><P
+>&#13;           Further documentation for more details, there are several man pages you can read:
+           <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>siggen</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;           - signature gathering routine for Tripwire
+           </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>tripwire</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;           - a file integrity checker for UNIX systems
+           </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>twadmin</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;             - Tripwire administrative and utility tool
+             </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>twconfig</SPAN
+>(4)</SPAN
+></DT
+><DD
+><P
+>&#13;           - Tripwire configuration file reference
+           </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>twfiles</SPAN
+>(5)</SPAN
+></DT
+><DD
+><P
+>&#13;           - overview of files used by Tripwire and file backup process
+           </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>twintro</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;           - introduction to Tripwire software
+           </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>twpolicy</SPAN
+>(4)</SPAN
+></DT
+><DD
+><P
+>&#13;           - Tripwire policy file reference
+           </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>twprint</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;           - Tripwire database and report printer
+           </P
+></DD
+></DL
+></DIV
+>
+           </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN9547"
+>17.5.1. Often used Commands</A
+></H2
+><P
+>&#13;           The commands listed below are some that we use often in our regular use, but many more exist. Check the man page for more details.
+           Creating the database for the first time; once your policy file has been installed, it is time to build and initialize your database 
+           of file system objects, based on the rules from your policy file. This database will serve as the baseline for later integrity checks.
+           </P
+><P
+>&#13;           The syntax for Database Initialization mode is:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>tripwire</B
+> --init
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><P
+>&#13;           To initialize your database file, use the following command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>tripwire</B
+> --init
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;           Please enter your local passphrase:
+           Parsing policy file: /usr/TSS/policy/tw.pol
+           Generating the database...
+           *** Processing Unix File System ***
+           Wrote database file: /usr/TSS/db/deep.openna.com.twd
+           The database was successfully generated.
+           </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+           When this command has executed, the database is ready and you can check system integrity and review the report file.
+           </P
+></BLOCKQUOTE
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap17sec139.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap17sec141.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/usr/TSS/policy/twpol.txt</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="sysintegrity.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Integrity or Interactive Check Mode</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

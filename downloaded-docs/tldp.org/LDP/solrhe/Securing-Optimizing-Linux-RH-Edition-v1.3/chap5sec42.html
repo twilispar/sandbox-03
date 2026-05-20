@@ -1,0 +1,582 @@
+<HTML
+><HEAD
+><TITLE
+>Special accounts</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/securetty file"
+HREF="chap5sec41.html"><LINK
+REL="NEXT"
+TITLE="Blocking; su to root, by one and sundry"
+HREF="chap5sec43.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec41.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec43.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3516"
+>5.13. Special accounts</A
+></H1
+><P
+>&#13;               It is important to <TT
+CLASS="envar"
+>DISABLE ALL</TT
+> default vendor accounts that you don't use on your system, some accounts exist by default even if you have not installed the related services on your server. This 
+               should be checked after each upgrade or new software installation. Linux provides these accounts for various system activities, which you may not need if the services are not installed on your 
+               server. If you do not need the accounts, remove them. The more accounts you have, the easier it is to access your system.
+               </P
+><P
+>&#13;               We assume you are using the Shadow password suite on your Linux system. If you are not, you should consider doing so, as it helps to tighten up security somewhat. This must already be set if 
+               you've followed our instructions till now and selected under the <A
+HREF="chap3sec16.html"
+> Authentication Configuration</A
+> the option to <B
+CLASS="command"
+>Enable Shadow Passwords</B
+> see 
+               <A
+HREF="chap3sec16.html"
+>Post Partitioning</A
+> for more information.
+                              
+               To delete user on your system, use the command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> username
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               To delete group on your system, use the command:
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>groupdel</B
+> username
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;               Type the following commands on your terminal to delete users listed below:
+
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> adm
+               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> lp
+               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> sync
+               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> shutdown
+               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> halt
+               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> news
+               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> uucp
+               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> operator
+               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> games       <A
+NAME="pr2ch1s22co1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>  
+               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> gopher
+               [root@deep] /# <B
+CLASS="command"
+>userdel</B
+> ftp         <A
+NAME="pr2ch1s22co2"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap5sec42.html#pr2ch1s22co1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;               Delete this user if you don't use X Window Server.
+               </DD
+><DT
+><A
+HREF="chap5sec42.html#pr2ch1s22co2"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;               Delete this user if you don't use ftp anonymous server.
+               </DD
+></DL
+></DIV
+>
+               <EM
+>&#13;               By default, the <B
+CLASS="command"
+>userdel</B
+> command will not delete a user's home directory. If you want the home directories of accounts to be deleted too, then 
+               add the <TT
+CLASS="literal"
+>-r</TT
+> option to the userdel command.
+               </EM
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               Type the following commands on your terminal to delete the usersgroups listed below:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>groupdel</B
+> adm
+               [root@deep] /# <B
+CLASS="command"
+>groupdel</B
+> lp
+               [root@deep] /# <B
+CLASS="command"
+>groupdel</B
+> news
+               [root@deep] /# <B
+CLASS="command"
+>groupdel</B
+> uucp
+               [root@deep] /# <B
+CLASS="command"
+>groupdel</B
+> games      <A
+NAME="pr2ch1s22co3"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+> 
+               [root@deep] /# <B
+CLASS="command"
+>groupdel</B
+> dip
+               [root@deep] /# <B
+CLASS="command"
+>groupdel</B
+> pppusers
+               [root@deep] /# <B
+CLASS="command"
+>groupdel</B
+> popusers   <A
+NAME="pr2ch1s22co4"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+> 
+               [root@deep] /# <B
+CLASS="command"
+>groupdel</B
+> slipusers
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap5sec42.html#pr2ch1s22co3"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;               Delete this group if you don't use X Window Server.
+               </DD
+><DT
+><A
+HREF="chap5sec42.html#pr2ch1s22co4"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;               Delete this group if you don't use pop server for email.
+               </DD
+></DL
+></DIV
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               Add the necessary user to the system, to add a new user on your system, use the command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>useradd</B
+> username
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               To add or change password for user on your system, use the command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>passwd</B
+> username
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               For example:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>useradd</B
+> admin
+               [root@deep] /# <B
+CLASS="command"
+>passwd</B
+> admin
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               The output should look something like this.
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;               Changing password for user admin
+               New UNIX password: somepasswd
+               passwd: all authentication tokens updated successfully
+               </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               The immutable bit can be used to prevent accidentally deleting or overwriting a file that must be protected. It also prevents someone from creating a symbolic link to this file, which has been the source of attacks involving the deletion 
+               of <TT
+CLASS="filename"
+>/etc/passwd</TT
+>, <TT
+CLASS="filename"
+>/etc/shadow</TT
+>, <TT
+CLASS="filename"
+>/etc/group</TT
+> or <TT
+CLASS="filename"
+>/etc/gshadow</TT
+>.
+               To set the immutable bit on the passwords and groups files, use the command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>chattr</B
+>   +i /etc/passwd
+               [root@deep] /# <B
+CLASS="command"
+>chattr</B
+>   +i /etc/shadow
+               [root@deep] /# <B
+CLASS="command"
+>chattr</B
+>   +i /etc/group
+               [root@deep] /# <B
+CLASS="command"
+>chattr</B
+>   +i /etc/gshadow
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+               In future, if you intend to add or delete users, passwords, usergroups, or group files, you must unset the immutable bit on all those files or you will not be able to make your changes. Also if you intend to install an RPM program that will automatically add a new user to the different 
+               immunized passwd and group files, then you will receive an error message during the install if you have not unset the immutable bit from those files.
+               </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec41.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec43.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/securetty</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Blocking; <B
+CLASS="command"
+>su</B
+> to root, by one and sundry</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

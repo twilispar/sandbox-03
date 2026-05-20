@@ -1,0 +1,257 @@
+<HTML
+><HEAD
+><TITLE
+>Enable IP spoofing protection</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Enable bad error message Protection"
+HREF="chap5sec59.html"><LINK
+REL="NEXT"
+TITLE="Log Spoofed, Source Routed and Redirect Packets"
+HREF="chap5sec61.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec59.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec61.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4196"
+>5.31. Enable <SPAN
+CLASS="acronym"
+>IP</SPAN
+> spoofing protection</A
+></H1
+><P
+>&#13;              The spoofing protection prevents your network from being the source of spoofed <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> forged communications that are 
+              often used in <SPAN
+CLASS="acronym"
+>DoS</SPAN
+> attacks.
+
+              <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.1.gif"
+ALT="Version 6.1 only"
+></IMG
+></P
+></DIV
+>
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              [root@deep] /# for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
+              &#62; echo 1 &#62; $f
+              &#62; done
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /#
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              
+              Add the above commands to the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> script file and you'll not have to type it again the next time 
+              you reboot your system.
+              </P
+><P
+>&#13;              <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+              Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following line:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              # Enable <SPAN
+CLASS="acronym"
+>IP</SPAN
+> spoofing protection, turn on Source Address Verification
+              net.ipv4.conf.all.rp_filter = 1
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              
+              You must <B
+CLASS="command"
+>restart</B
+> your network for the change to take effect. The command to manually restart the network 
+              is the following:
+
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+              Setting network parameters	[  OK  ]
+              Bringing up interface lo		[  OK  ]
+              Bringing up interface eth0	[  OK  ]
+              Bringing up interface eth1	[  OK  ]
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec59.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec61.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Enable bad error message Protection</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Log Spoofed, Source Routed and Redirect Packets</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

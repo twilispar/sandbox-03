@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<!-- updated   Sun Jul 14 18:15:48 MET DST 1996 by:
+    Tony den Haan (tony@iaehv.nl)  ftp://ftp.IAEhv.nl/pub/users/tony-->
+ 
+<HEAD>
+<TITLE>Expiring News</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node266.html">Miscellaneous Files</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node264.html">Article Batching</A>
+<BR> <P>
+<H1><A NAME="SECTION0019600000">Expiring News</A></H1>
+<A NAME="cnewsexplist"></A>
+In Bnews, expiring used to be performed by a program called expire,
+which took a list of newsgroups as arguments, along with a time
+specification after which articles had to be expired.  To have different
+hierarchies expired at different times, you had to write a script that
+invoked expire for each of them separately.  C-News offers a more
+convenient solution to this: in a file called explist, you may
+specify newsgroups and expiration intervals.  A command called
+doexpire is usually run once a day from cron, and
+processes all groups according to this list.
+<P>
+Occasionally, you may want to retain articles from certain groups even
+after they have been expired; for example, you might want to keep
+programs posted to comp.sources.unix. This is called
+<em>archiving</em>. explist permits you to mark groups for
+archiving.
+<P>
+An entry in explist looks like this:
+<PRE>
+           grouplist perm times archive
+</PRE>
+
+grouplist is a comma-separated list of newsgroups to which
+the entry applies. Hierarchies may be specified by giving the group
+name prefix, optionally appended with all. For example, for
+an entry applying to all groups below comp.os, you might
+either enter comp.os or comp.os.all in
+grouplist.
+<P>
+When expiring news from a group, the name is checked against all
+entries in explist in the order given. The first matching entry
+applies. For example, to throw away the majority of comp after
+four days, except for comp.os.linux.announce which you want
+to keep for a week, you simply have an entry for the latter,
+which specifies a seven-day expiration period, followed by that for
+comp, which specifies four days.
+<P>
+The perm field details if the entry applies to moderated,
+unmoderated, or any groups. It may take the values m,
+u, or x, which denote moderated, unmoderated, or any
+type.
+<P>
+The third field, times, usually contains only a single number.
+This is the number of days after which articles will be expired if they
+haven't been assigned an artificial expiration date in an Expires:
+field in the article header. Note that this is the number of days counting
+from its <em>arrival</em> at your site, not the date of posting.
+<P>
+The times field may, however, be more complex than that.  It may
+be a combination of up to three numbers, separated from one another by a
+dash. The first denotes the number of days that have to pass before the
+article is considered a candidate for expiration. It is rarely useful to
+use a value other than zero. The second field is the above-mentioned
+default number of days after which it will be expired. The third is the
+number of days after which an article will be expired unconditionally,
+regardless of whether it has an Expires: field or not. If only
+the middle number is given, the other two take default values. These may
+be specified using the special entry /bounds/, which is
+described below.
+<P>
+The fourth field, archive, denotes whether the newsgroup is to be
+archived, and where.  If no archiving is intended, a dash should be
+used.  Otherwise, you either use a full path name (pointing to a
+directory), or an at sign (@). The at sign denotes the default
+archive directory which must then be given to doexpire by using
+the -a flag on the command line.  An archive directory should
+be owned by news. When doexpire archives an article from,
+say comp.sources.unix, it stores it in the directory
+comp/sources/unix below the archive directory, creating it if not
+existent. The archive directory itself, however, will not be created.
+<P>
+There are two special entries in your explist file that
+doexpire relies on.  Instead of a list of newsgroups, they have
+the keywords /bounds/ and /expired/. The
+/bounds/ entry contains the default values for the three
+values of the times field described above.
+<P>
+The /expired/ field determines how long C-News will hold on to
+lines in the history file. This is needed because C-News will not
+remove a line from the history file once the corresponding article(s)
+have been expired, but will hold on to it in case a duplicate should
+arrive after this date. If you are fed by only one site, you can keep
+this value small. Otherwise, a couple of weeks is advisable on UUCP
+networks, depending on the delays you experience with articles from
+these sites.
+<P>
+A sample explist file with rather tight expiry intervals
+is reproduced below:
+<PRE>
+           # keep history lines for two weeks. Nobody gets more than three mont
+           /expired/                       x       14      -
+           /bounds/                        x       0-1-90  -
+
+           # groups we want to keep longer than the rest
+           comp.os.linux.announce          m       10      -
+           comp.os.linux                   x       5       -
+           alt.folklore.computers          u       10      -
+           rec.humor.oracle                m       10      -
+           soc.feminism                    m       10      -
+
+           # Archive *.sources groups
+           comp.sources,alt.sources        x       5       @
+
+           # defaults for tech groups
+           comp,sci                        x       7       -
+
+           # enough for a long weekend
+           misc,talk                       x       4       -
+
+           # throw away junk quickly
+           junk                            x       1       -
+
+           # Archive *.sources groups
+           comp.sources,alt.sources        x       5       @
+
+           # defaults for tech groups
+           comp,sci                        x       7       -
+
+           # enough for a long weekend
+           misc,talk                       x       4       -
+
+           # throw away junk quickly
+           junk                            x       1       -
+
+           # control messages are of scant interest, too
+           control                         x       1       -
+
+           # catch-all entry for the rest of it
+           all                             x       2       -
+</PRE>
+With expiring in C-News, there are a number of potential troubles
+looming.  One is that your newsreader might rely on the third field of
+the active file, which contains the number of the lowest article
+on-line.  When expiring articles, C-News does not update this field. If
+you need (or want) to have this field represent the real situation, you
+need to run a program called updatemiin after each run of
+doexpire.<A HREF="footnode.html#9518"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+Second, C-News does not expire by scanning the newsgroup's directory,
+but simply checks the history file if the article is due for
+expiration.<A HREF="footnode.html#9288"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> If your history file somehow gets out of sync, articles may be
+around on your disk forever, because C-News has literally forgotten
+them.<A HREF="footnode.html#9520"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> You can repair this using the addmissing script in
+/usr/lib/news/bin/maint, which will add missing articles to the
+history file, or mkhistory, which re-builds the entire
+file from scratch.  Don't forget to become news before invoking
+it, else you will wind up with a history file unreadable by
+C-News.
+<P>
+<A NAME="9296"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node266.html">Miscellaneous Files</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node264.html">Article Batching</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

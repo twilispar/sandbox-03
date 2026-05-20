@@ -1,0 +1,640 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Software</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Getting Started"
+HREF="infrared-howto-c-getting-started.html"><LINK
+REL="PREVIOUS"
+TITLE="Getting Started"
+HREF="infrared-howto-c-getting-started.html"><LINK
+REL="NEXT"
+TITLE="Kernel"
+HREF="infrared-howto-s-kernel.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-c-getting-started.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 2. Getting Started</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-kernel.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-software"
+></A
+>2.1. Software</H1
+><P
+>&#13;   The commands provided by the irda-utils package are the basic set of
+   tools to get a working IrDA connection. The other tools (e-Squirt,
+   IrNET, ..) are optional. Since version 0.9.15 manual pages are included.
+   Most current manual pages are at
+   <A
+HREF="http://tuxmobil.org/software.html"
+TARGET="_top"
+>TuxMobil</A
+>.
+</P
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN132"
+></A
+>2.1.1. IrDA-Utils</H2
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN134"
+></A
+>2.1.1.1. Compilation</H3
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>&#13;   Use the latest source of irda-utils available at Linux/IrDA
+   Project. Also recommended is the latest glibc library. You may find
+   out the current version with <B
+CLASS="command"
+>ldd --version</B
+>.
+   The use of the older libc5 library may lead to compile errors.
+</P
+></LI
+><LI
+><P
+>&#13;   Untar the package with <B
+CLASS="command"
+>tar xvzf irda-utils&#60;VERSION&#62; </B
+>
+  . I recommend to do this in <TT
+CLASS="filename"
+>/usr/src</TT
+>.
+</P
+></LI
+><LI
+><P
+>&#13;   Do a <B
+CLASS="command"
+>make clean</B
+> (not necessary if you 
+   compile the package for the first time).
+</P
+></LI
+><LI
+><P
+>&#13;   Do a <B
+CLASS="command"
+>make all</B
+> to build the binaries.
+</P
+></LI
+><LI
+><P
+>&#13;   Do a <B
+CLASS="command"
+>make install</B
+>, this brings all 
+   commands into the right place
+   and installs some config files in <TT
+CLASS="filename"
+>/etc/irda</TT
+>.
+</P
+></LI
+><LI
+><P
+>&#13;   Sometimes, when you compile the IrDA stack or some various IrDA package, you
+   may have the compiler complaining the things such as IRLMP_HINT_MASK_SET or
+   IRDAPROTO_ULTRA are not defined.  This is because of a mess related to
+   kernel headers and the way most distributions deal with it. If you have the
+   2.4.X kernel source lying around, the fix is simple. Just copy the header
+   irda.h from the kernel to your include directory 
+   <B
+CLASS="command"
+>cp /usr/src/linux/include/linux/irda.h /usr/include/linux</B
+>
+
+</P
+></LI
+></UL
+>
+
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN158"
+></A
+>2.1.1.2. Precompiled Packages</H3
+><P
+>&#13;   Debian/GNU Linux provides an irda-utils package since Potato.
+   Also Mandrake since 6.1, Redhat
+   since 6.1 and SuSE since 6.1 contain RPM packages of the irda-utils.
+   Some caveat with precompiled packages might be some incompatibilities
+   between kernel version and appropriate package version.
+   
+</P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN161"
+></A
+>2.1.1.3. Contents of Linux/IrDA-Utils</H3
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN163"
+></A
+>2.1.1.3.1. irattach</H4
+><P
+>&#13;   <B
+CLASS="command"
+>irattach</B
+> uses the module set as 
+   parameter; it can be a specific 
+   FIR driver: <B
+CLASS="command"
+>irattach toshoboe</B
+>
+   or <B
+CLASS="command"
+>ircomm</B
+> (and then it loads the module aliased 
+   as "irda0" in <TT
+CLASS="filename"
+>/etc/modules.conf</TT
+>)
+</P
+><P
+>&#13;   If you are one of the lucky people which have a FIR chipset that is
+   supported, then you don't need to use irattach anymore. Now you just
+   have to modprobe the driver.
+</P
+></DIV
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN171"
+></A
+>2.1.1.3.2. irdadump</H4
+><P
+>&#13;   A program that displays all the frames sent, and received on the
+   infrared link.
+</P
+><P
+>&#13;   One advantage of implementing IrDA device drivers as network device
+   drivers is that you should be able to attach sniffers to the device
+   (or actually the packet type). That way, it is possible to use a
+   really handy utility called irdadump (instead of tcpdump). This will
+   make debugging MUCH easier. Linux-2.2 implements the BPF (Berkeley
+   Packet Filter), so its possible to filter out exactly the frames you
+   want to see.
+</P
+><P
+>&#13;   Note: You probably have to be root for using <B
+CLASS="command"
+>irdadump</B
+> . CONFIG_PACKET
+   has to be enabled in the kernel. If compiled as a module you might
+   load the module manually. <B
+CLASS="command"
+>irdadump</B
+>
+   has been converted into a library,
+   so it can be used from GUI applications as well.
+</P
+><P
+>&#13;   Here is a sample output of a small session between Linux and a Palm
+   III. This log shows that the local irobex layer is not responding, so
+   the Palm III sends a disc frame.
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;dagbnb /home/dagb/linux/irda-utils/irdadump/ # ./irdadump
+
+20:18:15.305711 xid:cmd:saddr=0x05c589 &#62; daddr=0xffffffff,S=6,s=0
+20:18:15.385597 xid:cmd:saddr=0x05c589 &#62; daddr=0xffffffff,S=6,s=1
+20:18:15.465568 xid:cmd:saddr=0x05c589 &#62; daddr=0xffffffff,S=6,s=2
+20:18:15.545953 xid:cmd:saddr=0x05c589 &#62; daddr=0xffffffff,S=6,s=3
+20:18:15.625574 xid:cmd:saddr=0x05c589 &#62; daddr=0xffffffff,S=6,s=4
+20:18:15.705575 xid:cmd:saddr=0x05c589 &#62; daddr=0xffffffff,S=6,s=5
+20:18:15.785601 xid:cmd:saddr=0x05c589 &#62; daddr=0xffffffff,S=6,s=255,info=Linux
+20:18:18.075526 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=0
+20:18:18.225498 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=1
+20:18:18.375495 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=2
+20:18:18.526355 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=3
+20:18:18.675614 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=4
+20:18:18.676364 xid:rsp:saddr=0x05c589 &#62; daddr=0xb50c14b,S=6,s=4
+20:18:18.765506 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=5
+20:18:18.927221 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=255,info=Palm III
+20:18:18.975796 snrm:cmd,ca=0xfe,pf=1
+20:18:18.976534 ua:rsp,ca=0x58,pf=1
+20:18:18.977145 ua:rsp,ca=0x58,pf=1
+20:18:19.585627 rr:rsp,ca=0x58,nr=0,pf=1
+20:18:19.585810 rr:rsp,ca=0x58,nr=0,pf=1
+20:18:19.606413 i:cmd,ca=0x58,nr=0,ns=0,pf=1
+20:18:19.606582 rr:rsp,ca=0x58,nr=1,pf=1
+20:18:19.627708 rr:cmd,ca=0x58,nr=0,pf=1
+20:18:19.627871 i:rsp,ca=0x58,nr=1,ns=0,pf=1
+20:18:19.650571 disc:cmd,ca=0x58,pf=1
+20:18:19.650736 ua:rsp,ca=0x58,pf=1
+20:18:21.165524 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=0
+20:18:21.315608 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=1
+20:18:21.315793 xid:rsp:saddr=0x05c589 &#62; daddr=0xb50c14b,S=6,s=1
+20:18:21.395499 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=2
+20:18:21.545516 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=3
+20:18:21.695500 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=4
+20:18:21.845840 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=5
+20:18:22.007222 xid:cmd:saddr=0xb50c14b &#62; daddr=0xffffffff,S=6,s=255,info=Palm
+III
+20:18:22.056143 snrm:cmd,ca=0xfe,pf=1
+20:18:22.056310 ua:rsp,ca=0xc8,pf=1
+20:18:22.056381 ua:rsp,ca=0xc8,pf=1
+
+37 pacckets received by filter
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></DIV
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN180"
+></A
+>2.1.1.3.3. irdaping</H4
+><P
+>&#13;   Makes it possible to try and ping a remote device using IrDA test
+   frames. Not all devices implement support for test frames. This is a
+   program similar to ping(8). It sends IrDA test frames, enriched by some
+   userdata which contain the frame number and the time the frame was
+   sent. You can also change the size of the frame by using the 
+   <B
+CLASS="command"
+>-s</B
+>
+   option. You must supply an IrDA device address, and not an IP address.
+   You have to be able to get that device address by using irdadump.
+</P
+><P
+>&#13;   Here is one output sample (pinging an ACTiSYS IR-100M):
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;dagbnb /home/dagb/linux/irda-utils/irdaping/ # ./irdaping 0xf7be8388
+IrDA ping (0xf7be8388): 32 bytes
+32 bytes from 0xf7be8388: irda_seq=0 time=102.466003 ms.
+32 bytes from 0xf7be8388: irda_seq=1 time=102.202003 ms.
+32 bytes from 0xf7be8388: irda_seq=2 time=102.170998 ms.
+32 bytes from 0xf7be8388: irda_seq=3 time=101.633003 ms.
+
+4 packets received by filter
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;Christian Gennerat 
+"I use an alias which does not use any parameter (in $HOME/.bashrc):
+<B
+CLASS="command"
+>alias irping="irdaping \`grep daddr /proc/net/irda/discovery|sed s/.*daddr://\`"</B
+>
+It works fine when there is only one discovered client."
+</P
+></DIV
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN188"
+></A
+>2.1.1.3.4. irkbd</H4
+><P
+>&#13;   Implements support for the mouse and keyboard protocol as used by the
+   Tekram IR-660 infrared docking station. For details on how to use
+   external keyboards with Linux PDAs see below.
+</P
+></DIV
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN191"
+></A
+>2.1.1.3.5. findchip</H4
+><P
+>&#13;   Tries to find out which FIR IrDA chipset your machine is using. Try
+   out <B
+CLASS="command"
+>findchip -v</B
+> to check it out. For other methods to detect the
+   chipset see below.
+</P
+></DIV
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN195"
+></A
+>2.1.1.3.6. irsockets</H4
+><P
+>&#13;   A collection of programs which uses IrDA sockets.
+</P
+></DIV
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN198"
+></A
+>2.1.1.3.7. irpsion5</H4
+><P
+>&#13;   File transfer program for exchanging files with your Psion PDA.
+</P
+></DIV
+><DIV
+CLASS="sect4"
+><H4
+CLASS="sect4"
+><A
+NAME="AEN201"
+></A
+>2.1.1.3.8. /etc/irda</H4
+><P
+>&#13;   This directory contains the configuration file <TT
+CLASS="filename"
+>irda.conf</TT
+>. 
+   You may for example configure the serial port for the SIR driver. 
+   For first testing you should try the SIR driver.
+</P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN205"
+></A
+>2.1.2. openobex</H2
+><P
+>&#13;   The overall goal of the 
+   <A
+HREF="http://sourceforge.net/projects/openobex/"
+TARGET="_top"
+>OpenOBEX</A
+>
+   project is to make an open source
+   implementation of the Object Exchange (OBEX) protocol. <SPAN
+CLASS="acronym"
+>OBEX</SPAN
+> is a
+   session protocol and can best be described as a binary HTTP protocol.
+   <SPAN
+CLASS="acronym"
+>OBEX</SPAN
+> is builtin in devices 
+   like PDA's like the Palm Pilot, and mobile phones
+   like the Ericsson R320, Siemens S25, Siemens S45, Siemens ME45, Nokia NM207 and
+   Nokia 9110 Communicator.
+   <SPAN
+CLASS="acronym"
+>OBEX</SPAN
+> is optimised for ad-hoc wireless links and can be used to exchange all kind of
+   objects like files, pictures, calendar entries (vCal) and business cards
+   (vCard). A typical application is the "beam" function of PalmOS.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN212"
+></A
+>2.1.3. e-squirt</H2
+><P
+>&#13;   <A
+HREF="http://www.hpl.hp.com/personal/Jean_Tourrilhes/IrDA/index.html"
+TARGET="_top"
+>e-Squirt</A
+> is a simple protocol for sending URLs over the IrDA medium.
+   This allows for interaction with CoolTown enabled devices.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN216"
+></A
+>2.1.4. IrNET for Linux-IrDA</H2
+><P
+>&#13;   <A
+HREF="http://www.hpl.hp.com/personal/Jean_Tourrilhes/IrDA/index.html"
+TARGET="_top"
+>IrNET</A
+> 
+   is a protocol allowing to carry TCP/IP traffic between two IrDA
+   peers in an efficient fashion. It is a thin layer, passing PPP packets
+   in a IrTTP socket. It uses PPP in synchronous mode for efficiency, and
+   offers lots of flexibility and various features. The main part of
+   IrNET in included in kernel 2.4.x, and a user-space daemon (to
+   automate connections) is available on the web page.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN220"
+></A
+>2.1.5. Java - IrDA Interface</H2
+><P
+>&#13;   This 
+   <A
+HREF="http://www.hpl.hp.com/personal/Jean_Tourrilhes/IrDA/index.html"
+TARGET="_top"
+>Java Infrared Socket API</A
+>
+   provides a way of communicating through
+   infrared medium on a linux machine using Java. Thus, Java application
+   developers can develop applications involving infrared access much
+   easily. The API is very similar to java.net.Socket API and has been
+   implemented using the Linux infrared stack. Both connection oriented
+   streams (IrSocket and IrServerSocket) and connectionless Ultra
+   (UltraSocket, UltraPacket) interfaces are available.
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-getting-started.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-kernel.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Getting Started</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-getting-started.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Kernel</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

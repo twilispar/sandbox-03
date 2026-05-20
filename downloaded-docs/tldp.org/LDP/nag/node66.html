@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Loopback Interface</TITLE>
+
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node67.html">Ethernet Interfaces</A>
+<B>Up:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<B> Previous:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<BR> <P>
+<H2><A NAME="SECTION007710000">The Loopback Interface</A></H2>
+
+The very first interface to be activated is the loopback interface:
+<Pre>
+           # ifconfig lo 127.0.0.1
+ 
+</Pre>
+Occasionally, you will also see the dummy hostname localhost
+being used instead of the IP-address. ifconfig will look up
+the name in the hosts file where an entry should declare
+it as the hostname for 127.0.0.1:
+<Pre>
+           # Sample /etc/hosts entry for localhost
+           localhost     127.0.0.1
+ 
+</Pre>
+To view the configuration of an interface, you invoke ifconfig
+giving it the interface name as argument:
+<Pre>
+           $ ifconfig lo
+           lo        Link encap Local Loopback
+                     inet addr 127.0.0.1  Bcast [NONE SET]  Mask 255.0.0.0
+                     UP BROADCAST LOOPBACK RUNNING  MTU 2000  Metric 1
+                     RX packets 0 errors 0 dropped 0 overrun 0
+                     TX packets 0 errors 0 dropped 0 overrun 0
+ 
+</Pre>
+As you can see, the loopback interface has been assigned a netmask
+of 255.0.0.0, since 127.0.0.1 is a class-A address.
+As you can see, the interface doesn't have a broadcast address set,
+which isn't normally very useful for the loopback anyway. However, if
+you run the rwhod daemon on your host, you may have to set the
+loopback device's broadcast address in order for rwho to function
+properly. Setting the broadcast is explained in section ``All about
+ifconfig'' below.
+<P>
+Now, you can almost start playing with your mini-``network.'' What is
+still missing is an entry in the routing table that tells IP that
+it may use this interface as route to destination 127.0.0.1.
+This is accomplished by typing
+<Pre>
+           # route add 127.0.0.1
+ 
+</Pre>
+Again, you can use localhost instead of the IP-address.
+<p>
+Next, you should check that everything works fine, for example by using
+ping.  ping is the networking equivalent of a sonar
+device<A HREF="footnode.html#2695"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> and is used to verify that a given address is actually reachable, and
+to measure the delay that occurs when sending a datagram to it and back
+again.  The time required for this is often referred to as the
+round-trip time.
+<Pre>
+           # ping localhost
+           PING localhost (127.0.0.1): 56 data bytes
+           64 bytes from 127.0.0.1: icmp seq=0 ttl=32 time=1 ms
+           64 bytes from 127.0.0.1: icmp seq=1 ttl=32 time=0 ms
+           64 bytes from 127.0.0.1: icmp seq=2 ttl=32 time=0 ms
+           ^C
+
+           --- localhost ping statistics ---
+           3 packets transmitted, 3 packets received, 0% packet loss
+           round-trip min/avg/max = 0/0/1 ms
+
+</Pre>
+When invoking ping as shown here, it will go on emitting packets
+forever unless interrupted by the user. The <code>^C</code> above marks the
+place where we pressed Ctrl-C.
+<P>
+The above example shows that packets for 127.0.0.1 are properly
+delivered and a reply is returned to ping almost instantaneously.
+This shows you have succeeded in setting up your first network interface.
+<P>
+
+If the output you get from ping does not resemble that shown above,
+you are in trouble. Check any error if they indicate some file hasn't
+been installed properly. Check that the ifconfig and route
+binaries you use are compatible with the kernel release you run, and,
+above all, that the kernel has been compiled with networking enabled
+(you see this from the presence of the /proc/net directory).
+If you get an error message saying ``Network unreachable,'' then you
+probably have got the route command wrong. Make sure you use
+the same address as you gave to ifconfig.
+<P>
+
+The steps described above are enough to use networking applications on
+a standalone host. After adding the above lines to rc.inet1 and
+making sure both rc.inet scripts are executed from
+/etc/rc, you may reboot your machine and try out various
+applications. For instance, ``telnet localhost'' should
+establish a telnet connection to your host, giving you a login
+prompt.
+<P>
+However, the loopback interface is useful not only as an example in
+networking books, or as a test-bed during development, but is actually
+used by some applications during normal operation.<A HREF="footnode.html#3175"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> Therefore, you always have to configure it, regardless of whether your
+machine is attached to a network or not.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node67.html">Ethernet Interfaces</A>
+<B>Up:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<B> Previous:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

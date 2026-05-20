@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Kernel Options in  1.1.14 and Higher</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node46.html">A Tour of  Network </A>
+<B>Up:</B> <A HREF="node43.html">Kernel Configuration</A>
+<B> Previous:</B> <A HREF="node44.html">Kernel Options in  1.0 </A>
+<BR> <P>
+<H2><A NAME="SECTION005220000">Kernel Options in  1.1.14 and Higher</A></H2>
+<P>
+Starting with  1.1.14, which added alpha support for IPX,
+the configuration procedure changed slightly. The general options section
+now asks whether you want networking support in general. It is
+immediately followed by a couple of question on miscellaneous
+networking options.
+<P>
+<P><P>
+<P>
+	To use TCP/IP networking, you must answer this question with
+	y. If you answer with n, however, you will still
+	be able to compile the kernel with IPX support.
+<P>
+<P><P>
+<P>
+	<A NAME="1955"></A>
+	<A NAME="1956"></A>
+	You have to enable this option if your system acts as a
+	gateway between two Ethernets, or between and Ethernet and a
+	SLIP link, etc.  Although it doesn't hurt to enable this by
+	default, you may want to disable this to configure a host as a
+	so-called firewall. Firewalls are hosts that are connected to
+	two or more networks, but don't route traffic between them.
+	They are commonly used to provide users from a company network
+	with Internet access at a minimal risk to the internal
+	network. Users will be allowed to log into the firewall and
+	use Internet services, but the company's machines will be
+	protected from outside attacks because any incoming
+	connections can't cross the firewall.
+<P>
+<P><P>
+<P>
+	<A NAME="1959"></A>
+	This option works around an incompatibility with some versions
+	of PC/TCP, a commercial TCP/IP implementation for DOS-based
+	PCs. If you enable this option, you will still be able to
+	communicate with normal  machines, but performance may
+	be hurt over slow links.
+<P>
+<P><P>
+<P>
+	<A NAME="1963"></A>
+	This function enables RARP, the Reverse Address Resolution
+	Protocol. RARP is used by diskless clients and X-terminals to
+	inquire their IP-address when booting.  You should enable RARP
+	only when you plan to serve this sort of clients.  The latest
+	package of network utilities (net-0.32d) contains a small
+	utility named rarp that allows you to add systems to the
+	RARP cache.
+<P>
+<P><P>
+<P>
+	<A NAME="1968"></A>
+	<A NAME="1969"></A>
+	<A NAME="1970"></A>
+	<A NAME="1971"></A>
+	<A NAME="2207"></A>
+	When sending data over TCP, the kernel has to break up the
+	stream into several packets before giving it to IP. For hosts
+	that can be reached over a local network such as an Ethernet,
+	larger packets will be used than for hosts where data has to
+	go through long-distance links.<A HREF="footnode.html#1973"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> If you don't enable SNARL, the kernel will assume
+	only those networks are local that it actually has an interface
+	to. However, if you look at the class B network at Groucho
+	Marx University, the whole class B network is local, but most
+	hosts interface to only one or two subnets. If you enable
+	SNARL, the kernel will assume <em>all</em> subnets
+	are local and use large packets when talking to all hosts on
+	campus.
+<P>
+	If you do want to use smaller packet sizes for data sent to
+	specific hosts (because, for instance, the data goes through
+	a SLIP link), you can do so using the mtu option of
+	route, which is briefly discussed at the end of this
+	chapter.
+<P>
+<P><P>
+<P>
+	<A NAME="1981"></A>
+	<A NAME="1982"></A>
+	<A NAME="1983"></A>
+	<A NAME="1984"></A>
+	Nagle's rule is a heuristic to avoid sending particularly
+	small IP packets, also called tinygrams. Tinygrams are usually
+	created by interactive networking tools that transmit single
+	keystrokes, such as telnet or rsh. Tinygrams can
+	become particularly wasteful on low-bandwidth links like SLIP.
+	The Nagle algorithm attempts to avoid them by holding back
+	transmission of TCP data briefly under some circumstances. You
+	might only want to disable Nagle's algorithm if you have
+	severe problems with packets getting dropped.
+<P>
+<P><P>
+<P>
+	<A NAME="1989"></A>
+	<A NAME="1990"></A>
+	<A NAME="1991"></A>
+	This enables support for IPX, the transport protocol used by
+	Novell Networking. It is still under development, and isn't
+	really useful yet. One benefit of this will be that you can
+	exchange data with IPX-based DOS utilities one day, and route
+	traffic between your Novell-based networks through a PPP link.
+	Support for the high-level protocols of Novell
+	networking is however not in sight, as the specifications for
+	these are available only at horrendous cost and under a
+	non-disclosure agreement.
+<P>
+	Starting in the 1.1.16 kernel,  supports another
+	driver type, the dummy driver.  The following question appears
+	toward the start of the device driver section.
+<P>
+<P><P>
+<P>
+	The dummy driver doesn't really do much, but is quite useful 
+	on standalone or SLIP hosts.  It is basically a masqueraded
+	loopback interface. The reason to have this sort of interface
+	is that on hosts that do SLIP but have no Ethernet, you want to
+	have an interface that bears your IP address all the time.
+	This is discussed in a little more detail in
+	section-<A HREF="#ifaceinterfacedummy"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> in chapter-<A HREF="node58.html#iface"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node46.html">A Tour of  Network </A>
+<B>Up:</B> <A HREF="node43.html">Kernel Configuration</A>
+<B> Previous:</B> <A HREF="node44.html">Kernel Options in  1.0 </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

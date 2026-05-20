@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Maintenance Tools and Tasks</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node274.html">A Description of NNTP</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node272.html">C-News in an NFS </A>
+<BR> <P>
+<H1><A NAME="SECTION00191000000">Maintenance Tools and Tasks</A></H1>
+<a name="cnews.maintMaintenance">Tools and Tasks</a>
+Despite the complexity of C-News, a news administrator's life
+can be fairly easy, because C-News provides you with a wide variety
+of maintenance tools.  Some of these are intended to be run regularly
+from cron, like newsdaily.  Using these scripts reduces
+daily care and feeding requirements of your C-News installation greatly.
+<P>
+Unless stated otherwise, these commands are located in
+/usr/lib/news/bin/maint.  Note that you must become user news
+before invoking these commands. Running them as super-user may render
+these files inaccessible to C-News.
+<DL><DT>newsdaily<DD> The name already says it: runs this once  a  day.   It  is  an
+                important  script that helps you keep log files small, retain-
+                ing copies of each from the last three runs.  It also tries to
+                sense  any  anomalies,  like stale batches in the incoming and
+                outgoing directories, postings to unknown  or  moderated  news-
+                groups,  etc.   Resulting error messages will be mailed to the
+                newsmaster.
+
+	<DT>newswatch<DD> This is a script that should be  run  regularly  to  look  for anomalies  in  the  news  system,  once  an  hour or so. It is
+                intended to detect problems that will have immediate effect on
+                the  operability of your news system and mail a trouble report
+                to the newsmaster.  Things checked include  stale  lock  files
+                that  don't  get  removed,  unattended input batches, and disk
+                space shortage.
+	<DT>addgroup<DD> Adds a group to your site locally. The proper invocation is
+
+<PRE>
+                     addgroup groupname y|n|m|=realgroup
+</PRE><P>
+
+
+
+                     The  second  argument has the same meaning as the flag in
+                the active file, meaning that anyone may  post  to  the  group
+                (y),  that  no-one  may post (n), that it is moderated (m), or
+                that it is an alias for another group (=realgroup).
+<P>
+
+                     You might also want to use addgroup when the first  arti-
+                cles in a newly created group arrive earlier than the newgroup
+                control message that is intended to create it.
+
+	<DT>delgroup<DD> Allows you to delete a group locally. Invoke it as
+<PRE>
+                     delgroup groupname
+</PRE><P>
+                     You still have to delete the articles that remain in  the
+                newsgroup's spool directory. Alternatively, you might leave it
+                to the natural course of events (a.k.a. expire) to  make  them
+                go away.
+	<DT>addmissing<DD> Adds  missing  articles  to the history file. Run this script
+                when there are articles that seem to hang around forever.(11)
+	<DT>newsboot<DD> This  script should be run at system boot time. It removes any lock files left over when news processes were killed at  shut-
+                down,  and closes and executes any batches left over from NNTP
+                connections that were terminated when shutting down  the  sys-
+                tem.
+	<DT>newsrunning<DD> This  resides in /usr/lib/news/bin/input, and may be used to disable un-batching of incoming news, for instance during  work
+                hours. You may turn off un-batching by invoking
+	<PRE>
+                     /usr/lib/news/bin/input/newsrunning off
+	</PRE>
+</DL>
+<HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

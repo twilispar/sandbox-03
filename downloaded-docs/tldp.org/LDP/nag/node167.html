@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>How to Dial a Number-- the dial File</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node168.html">UUCP Over TCP</A>
+<B>Up:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<B> Previous:</B> <A HREF="node166.html">What Devices there are-- </A>
+<BR> <P>
+<H2><A NAME="SECTION0014380000">How to Dial a Number-- the dial File</A></H2>
+<P>
+<A NAME="6614"></A>
+<A NAME="6172"></A>
+<P>
+The dial file describes the way various dialers are used.
+Traditionally, UUCP talks of dialers rather than modems, because in
+earlier times, it was usual practice to have one (expensive) automatic
+dialing device serve a whole bank of modems. Today, most modems have
+dialing support built in, so this distinction gets a little blurred.
+<P>
+Nevertheless, different dialers or modems may require a different
+configuration.  You can describe each of them in the dial file.
+Entries in dial start with the dialer command that
+gives the dialer's name.
+<P>
+The most important entry beside this is the modem chat, specified by
+the chat command. Similar to the login chat, it consists of
+a sequence of strings uucico sends to the dialer and the
+responses it expects in return. It is commonly used to reset the modem
+to some known state, and dial the number. The following sample dialer
+entry shows a typical modem chat for a Hayes-compatible modem:
+<P>
+<P><P>
+<P>
+The modem chat begins with , the empty expect string.
+uucico will therefore send the first command (ATZ) right
+away.  ATZ is the Hayes command to reset the modem. It then waits
+until the modem has sent OK, and sends the next command which
+turns off local echo, and the like. After the modem returns OK
+again, uucico sends the dialing command (ATDT). The escape
+sequence T in this string is replaced with the phone number
+taken from the system entry sys file. uucico then waits for
+the modem to return the string CONNECT, which signals that a
+connection with the remote modem has been established successfully.
+<P>
+Often, the modem fails to connect to the remote system, for instance if
+the other system is talking to someone else and the line is busy.  In
+this case, the modem will return some error message indicating the
+reason.  Modem chats are not capable to detect such messages;
+uucico will continue to wait for the expected string until it
+times out. The UUCP log file will therefore only show a bland ``timed
+out in chat script'' instead of the true reason.
+<P>
+However, Taylor UUCP allows you to tell uucico about these error
+messages using the chat-fail command as shown above. When
+uucico detects a chat-fail string while executing the modem chat,
+it aborts the call, and logs the error message in the UUCP log file.
+<P>
+The last command in the example shown above tells UUCP to toggle the
+DTR line before starting the modem chat. Most modems can be configured
+to go on-hook when detecting a change on the DTR line, and enter
+command mode.<A HREF="footnode.html#6197"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="6198"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node168.html">UUCP Over TCP</A>
+<B>Up:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<B> Previous:</B> <A HREF="node166.html">What Devices there are-- </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

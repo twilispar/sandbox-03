@@ -1,0 +1,260 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/ftpconversions file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FTP Server"
+HREF="ftpd.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/ftphosts file"
+HREF="chap29sec298.html"><LINK
+REL="NEXT"
+TITLE="Configure the /etc/logrotate.d/ftpd file"
+HREF="chap29sec300.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec298.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 32. Linux <TT
+CLASS="literal"
+>FTP</TT
+> Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec300.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN23175"
+>32.6. Configure the <TT
+CLASS="filename"
+>/etc/ftpconversions</TT
+> file</A
+></H1
+><P
+>&#13;      The <TT
+CLASS="filename"
+>/etc/ftpconversions</TT
+> file contains instructions that permit you to compress files on demand before the transfer.
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;      Edit the <TT
+CLASS="filename"
+>ftpconversions</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/ftpconversions</TT
+> and add in this file the following lines:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        :.Z:  :  :/bin/compress -d -c %s:T_REG|T_ASCII:O_UNCOMPRESS:UNCOMPRESS
+        :   : :.Z:/bin/compress -c %s:T_REG:O_COMPRESS:COMPRESS
+        :.gz: :  :/bin/gzip -cd %s:T_REG|T_ASCII:O_UNCOMPRESS:GUNZIP
+        :   : :.gz:/bin/gzip -9 -c %s:T_REG:O_COMPRESS:GZIP
+        :   : :.tar:/bin/tar -c -f - %s:T_REG|T_DIR:O_TAR:TAR
+        :   : :.tar.Z:/bin/tar -c -Z -f - %s:T_REG|T_DIR:O_COMPRESS|O_TAR:TAR+COMPRESS
+        :   : :.tar.gz:/bin/tar -c -z -f - %s:T_REG|T_DIR:O_COMPRESS|O_TAR:TAR+GZIP
+        :   : :.crc:/bin/cksum %s:T_REG::CKSUM
+        :   : :.md5:/bin/md5sum %s:T_REG::MD5SUM
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        Now, change its default permissions to be <TT
+CLASS="literal"
+>600</TT
+>:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 600 /etc/ftpconversions
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN23192"
+>32.6.1. Configure the <TT
+CLASS="filename"
+>/etc/pam.d/ftp</TT
+> file</A
+></H2
+><P
+>&#13;        Configure your <TT
+CLASS="filename"
+>/etc/pam.d/ftp</TT
+> file to use pam authentication by creating  the <TT
+CLASS="filename"
+>/etc/pam.d/ftp</TT
+> file and add the following lines:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          #%PAM-1.0
+          auth       required     /lib/security/pam_listfile.so item=user sense=deny file=/etc/ftpusers onerr=succeed
+          auth       required     /lib/security/pam_pwdb.so shadow nullok
+          auth       required     /lib/security/pam_shells.so
+          account    required     /lib/security/pam_pwdb.so
+          session    required     /lib/security/pam_pwdb.so
+          </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec298.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec300.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/ftphosts</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ftpd.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/logrotate.d/ftpd</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

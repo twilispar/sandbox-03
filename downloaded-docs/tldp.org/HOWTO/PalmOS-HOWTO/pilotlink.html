@@ -1,0 +1,479 @@
+<HTML
+><HEAD
+><TITLE
+>The pilot-link suite</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="Palm OS Desktop HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Connecting to the PC"
+HREF="pc-connect.html"><LINK
+REL="NEXT"
+TITLE="Coldsync"
+HREF="coldsync.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Palm OS Desktop HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="pc-connect.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="coldsync.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="PILOTLINK">3. The pilot-link suite</H1
+><P
+>The pilot-link suite provides the tools for communicating with
+your PDA. The pilot-link programs provide the background functionality for
+many higher level programs, but can also be used on their own as command
+line tools.  </P
+><P
+>Most distributions come with the pilot-link
+suite available as an optional package. The package will be available on
+the installation media or from the ftp site of the distribution. Install
+the package in the usual way for your distribution. You may also need
+development versions of the packages if you wish to compile any software
+that uses pilot-link.  </P
+><P
+><EM
+>Note:</EM
+> Unless otherwise specified, the details below refer 
+to the 0.9.x release of
+pilot-link. The version in development is 0.10.x. This version contains 
+support for USB devices, and has been updated to ensure greater consistency 
+between the various utilities. Once 0.10.x is officially released, this 
+document will be updated for the new version.</P
+><P
+>If you upgrade to 0.10.x, you will also need to update applications which use
+pilot-link. In particular, J-Pilot and gnome-pilot need modifications to work with 
+0.10.x.  J-Pilot 0.99.2 should work with the 
+latest version of pilot-link.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PILOTLINK-INSTALLING">3.1. Installing the pilot-link 
+software</H2
+><P
+>The pilot-link suite comes with most major
+Linux distributions, including RedHat, Mandrake, SUSE and Debian. If
+you intend to compile applications which rely on pilot-link, you
+may need to install development packages as well.  </P
+><P
+>If you use a distribution that does not come with pilot-link, or you
+need a more recent version, you can find the latest release at <A
+HREF="http://www.pilot-link.org/"
+TARGET="_top"
+>www.pilot-link.org</A
+>. As well as
+the current version, you will find a link to the latest CVS snapshot.</P
+><P
+>Once you have the downloaded the source, unpack and
+compile it as follows: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>tar -zxvf pilot-link.0.9.5.tar.gz cd pilot-link.0.9.5
+./configure
+make
+make install</PRE
+></FONT
+></TD
+></TR
+></TABLE
+> </P
+><P
+>The programs can be run directly from
+the directory in which they were compiled. You may wish to test them
+before running <TT
+CLASS="COMPUTEROUTPUT"
+>make install</TT
+>. For more
+information, see the README file that comes with pilot-link.  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PILOTLINK-USING">3.2. Using the pilot-link software</H2
+><P
+>Most of the programs in the <TT
+CLASS="LITERAL"
+>pilot-link</TT
+> suite are <EM
+>conduits</EM
+>,
+that is they transfer data into or out of your Palm OS device.  </P
+><P
+>Each time you use of one of the programs, press the HotSync button
+on your PDA's cradle.  This will initiate the PDA
+side of the data transfer.  Note that not all of these programs prompt
+you to press the `HotSync' button, so you may have to remember to do
+it yourself.  </P
+><P
+>For more details, view the corresponding manual
+page.  There is an overview manual page under the name
+<TT
+CLASS="COMPUTEROUTPUT"
+>pilot-link</TT
+>.</P
+><P
+>The pilot-link programs all use the same method of determining the
+location of your PDA: </P
+><P
+></P
+><UL
+><LI
+><P
+>If a device is specified on the command line, that device will be used
+regardless of the other settings.  </P
+></LI
+><LI
+><P
+>If the environment variable <TT
+CLASS="COMPUTEROUTPUT"
+>$PILOTPORT</TT
+>
+is set, that will be used unless a port is specified on the command line.</P
+></LI
+><LI
+><P
+>If no port is specified on the
+command line, and the <TT
+CLASS="COMPUTEROUTPUT"
+>$PILOTPORT</TT
+> variable
+is not set, <TT
+CLASS="COMPUTEROUTPUT"
+>/dev/pilot</TT
+> will be used.</P
+></LI
+></UL
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="PILOT-XFER">3.2.1. pilot-xfer</H3
+><P
+>Possibly the most useful program in the pilot-link suite,
+<TT
+CLASS="COMPUTEROUTPUT"
+>pilot-xfer</TT
+> allows you to install programs
+on your Palm OS device, make a backup, and restore that backup.  </P
+><P
+>To install a program:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>pilot-xfer /dev/pilot -i program.prc</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>To backup your Palm OS device:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>pilot-xfer /dev/pilot -b backup-directory</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>This will copy all of the databases on your Palm OS device, (including
+programs?)  to a directory called ``backup-directory'', creating it if
+it does not already exist.  </P
+><P
+>To restore data to Palm OS device:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>pilot-xfer /dev/pilot -r backup-directory</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>Generally, you will only need to do this if your Palm OS device loses
+power or if you have to do a hard reset.  </P
+><P
+>To list the programs on your Palm OS device:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>pilot-xfer /dev/pilot -l</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="INSTALL-MEMO">3.2.2. install-memo</H3
+><P
+>To install a memo into your (already existing) 
+<EM
+>project</EM
+> category: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>install-memo /dev/pilot -c project project.memo</PRE
+></FONT
+></TD
+></TR
+></TABLE
+> </P
+><P
+>The name of the
+file will be inserted into the memo as its first line and will appear
+in the directory of memos on your Palm OS device.  </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="MEMOS">3.2.3. memos</H3
+><P
+> This program grabs each memo from the Palm OS device and prints
+it out in standard mailbox format.  </P
+><P
+> To view your memos: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>memos /dev/pilot</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>&#13;</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="CONNECT-PILOT-ADDRESSES">3.2.4. pilot-addresses</H3
+><P
+>Transfer the address database to or from your PDA.  </P
+><P
+>To write your address data to a Linux file from your PDA: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>pilot-addresses /dev/pilot -w storage.file</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>To read your address data from a Linux file onto your PDA: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>pilot-addresses /dev/pilot -r file</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pc-connect.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="coldsync.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Connecting to the PC</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Coldsync</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

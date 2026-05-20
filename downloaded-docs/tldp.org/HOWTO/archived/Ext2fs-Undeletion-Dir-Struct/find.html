@@ -1,0 +1,303 @@
+<HTML
+><HEAD
+><TITLE
+>Finding inodes for deleted directories</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.57"><LINK
+REL="HOME"
+TITLE="Ext2fs Undeletion of Directory Structures mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Preparation"
+HREF="prep.html"><LINK
+REL="NEXT"
+TITLE="Analyse of directory dump"
+HREF="analyse.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Ext2fs Undeletion of Directory Structures mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="prep.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="analyse.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="FIND"
+>4. Finding inodes for deleted directories</A
+></H1
+><P
+>      We will try to find out the inode numbers of the deleted directories.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # debugfs /dev/hdy1</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Walk to that place in the structure where the directories were located
+      before the deletion. You can use <I
+CLASS="EMPHASIS"
+>ls</I
+> and
+      <I
+CLASS="EMPHASIS"
+>cd</I
+> inside <I
+CLASS="EMPHASIS"
+>debugfs</I
+>.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        debugfs: ls -l</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Example of output from the above command.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        179289  20600      0      0       0 17-Feb-100 18:26 file-1
+        918209  40700    500    500    4096 16-Jan-100 15:18 file-2
+        160321  41777      0      0    4096  3-Jun-100 06:13 file-3
+        177275  60660      0      6       0  5-May-98  22:32 file-4
+        229380 100600    500    500   89891 19-Dec-99  15:40 file-5
+        213379 120777      0      0      17 16-Jan-100 14:24 file-6</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Description of the fields.
+    </P
+><P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>          Inode number.
+        </P
+></LI
+><LI
+><P
+>          First two (or one) numbers represents the kind of inode we got:
+        </P
+><P
+>2 = Character device</P
+><P
+>4 = Directory</P
+><P
+>6 = Block device</P
+><P
+>10 = Regular file</P
+><P
+>12 = Symbolic link</P
+><P
+>          Last four numbers are the usual Unix rights.
+        </P
+></LI
+><LI
+><P
+>          Owner in number representation.
+        </P
+></LI
+><LI
+><P
+>          Group in number representation.
+        </P
+></LI
+><LI
+><P
+>          Size in bytes.
+        </P
+></LI
+><LI
+><P
+>          Date (Here we can see the Y2K bug =)).
+        </P
+></LI
+><LI
+><P
+>          Time.
+        </P
+></LI
+><LI
+><P
+>          Filename.
+        </P
+></LI
+></OL
+><P
+>      Now dump the mother directory to disk. Here <I
+CLASS="EMPHASIS"
+>inode</I
+> is
+      the corresponding inode number (do not forget the '&#60;' and '&#62;').
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        debugfs: dump &#60;inode&#62; debugfs-dump</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Get out of <I
+CLASS="EMPHASIS"
+>debugfs</I
+>.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        debugfs: quit</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="prep.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="analyse.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Preparation</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Analyse of directory dump</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

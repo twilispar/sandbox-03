@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Delivering News</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node261.html">Installation</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node259.html">C-News</A>
+<BR> <P>
+<H1><A NAME="SECTION0019100000">Delivering News</A></H1>
+<P>
+<A NAME="cnewsrnews"></A>
+Articles may be fed to C-News in several ways. When a local user posts an
+article, the newsreader usually hands it to the inews command,
+which completes the header information. News from remote sites, be it a
+single article or a whole batch, is given to the rnews command,
+which stores it in the /var/spool/newsin.coming directory, from where
+it will be picked up at a later time by newsrun. With any of
+these two techniques, however, the article will eventually be handed to
+the relaynews command.
+<P>
+For each article, the relaynews command first checks if the
+article has already been seen at the local site by looking up the
+message id in the history file. Duplicate articles will be
+dropped. Then, relaynews looks at the Newsgroups: header
+line to find out if the local site requests articles from any of these
+groups.  If it does, and the newsgroup is listed in the active
+file, relaynews tries to store the article in the corresponding
+directory in the news spool area. If this directory does not exist, it
+is created.  The article's message id will then be logged to the
+history file.  Otherwise, relaynews drops the article.
+<P>
+If relaynews fails to store an incoming article because a group
+it has been posted to is not listed in your active file, the
+article will be moved to the junk group.<A HREF="footnode.html#8835"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> relaynews will also check for stale or misdated articles and
+reject them. Incoming batches that fail for any other reason are moved
+to /var/spool/news/in.coming/bad, and an error message is logged.
+<P>
+After this, the article will be relayed to all other sites that request
+news from these groups, using the transport specified for each
+particular site. To make sure it isn't sent to a site that already has
+seen it, each destination site is checked against the article's
+Path: header field, which contains the list of sites the article
+has traversed so far, written in bang path style.  Only if the
+destination site's name does not appear in this list will the article be
+sent to it.
+<P>
+C-News is commonly used to relay news between UUCP sites, although it is
+also possible to use it in a NNTP environment. To deliver news to a remote
+UUCP site--- either single articles or whole batches--- uux
+is used to execute the rnews command on the remote site, and
+feed the article or batch to it on standard input.
+<P>
+When batching is enabled for a given site, C-News does not send any
+incoming article immediately, but appends its path name to a file,
+usually out.going/site/togo.  Periodically, a batcher
+program is executed from a crontab entry,<A HREF="footnode.html#8837"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> which puts the articles in one or more files, optionally compresses
+them, and sends them to rnews at the remote site.
+<P>
+Figure-<A HREF="node260.html#cnewsfigflow"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> shows the news flow through
+relaynews. Articles may be relayed to the local site (denoted by
+ME), to some site named ponderosa via email, and a site
+named moria, for which batching is enabled.
+<P>
+<P><A NAME="9495"></A><BR>
+<STRONG>Figure:</STRONG> 
+  <A NAME="cnewsfigflow"></A>
+  News flow through relaynews.
+<!--tony: need .gif from nag.src.tar.gz/TheGuide/figures/?.fig  18.1-->
+ <BR>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node261.html">Installation</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node259.html">C-News</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

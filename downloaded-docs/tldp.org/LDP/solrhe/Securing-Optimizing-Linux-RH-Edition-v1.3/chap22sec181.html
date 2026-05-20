@@ -1,0 +1,369 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/rc.d/init.d/sendmail script file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Mail Network"
+HREF="soser-mailn.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/mail/local-host-names file "
+HREF="chap22sec180.html"><LINK
+REL="NEXT"
+TITLE="Secure Sendmail using smrsh"
+HREF="chap22sec182.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap22sec180.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 22. Software -Server/Mail Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap22sec182.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN12442"
+>22.9. The <TT
+CLASS="filename"
+>/etc/rc.d/init.d/sendmail</TT
+> script file</A
+></H1
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         Please note that the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/sendmail</TT
+> file is for all type of configuration.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         To configure your <TT
+CLASS="filename"
+>/etc/rc.d/init.d/sendmail</TT
+> script file to start and stop the Sendmail daemon, You have to create the sendmail script file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/rc.d/init.d/sendmail</TT
+> and add:
+         </P
+><P
+>&#13;         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         #!/bin/sh
+         #
+         # sendmail      This shell script takes care of starting and stopping
+         #               sendmail.
+         #
+         # chkconfig: 2345 80 30
+         # description: Sendmail is a Mail Transport Agent, which is the program \
+         #              that moves mail from one machine to another.
+         # processname: sendmail
+         # config: /etc/sendmail.cf
+         # pidfile: /var/run/sendmail.pid
+
+         # Source function library.
+         . /etc/rc.d/init.d/functions
+
+         # Source networking configuration.
+         . /etc/sysconfig/network
+
+         # Source sendmail configuration.
+         if [ -f /etc/sysconfig/sendmail ] ; then
+         . /etc/sysconfig/sendmail
+         else
+         DAEMON=yes
+         QUEUE=1h
+         fi
+
+         # Check that networking is up.
+         [ ${NETWORKING} = "no" ] &#38;&#38; exit 0
+
+         [ -f /usr/sbin/sendmail ] || exit 0
+
+         RETVAL=0
+
+         # See how we were called.
+         case "$1" in
+         start)
+         # Start daemons.
+
+         echo -n "Starting sendmail: "
+         /usr/bin/newaliases &#62; /dev/null 2&#62;&#38;1
+         for i in virtusertable access domaintable mailertable ; do
+         if [ -f /etc/mail/$i ] ; then
+         makemap hash /etc/mail/$i &#60; /etc/mail/$i
+         fi
+         done
+         daemon /usr/sbin/sendmail $([ "$DAEMON" = yes ] &#38;&#38; echo -bd) \
+         $([ -n "$QUEUE" ] &#38;&#38; echo -q$QUEUE)
+         RETVAL=$?
+         echo
+         [ $RETVAL -eq 0 ] &#38;&#38; touch /var/lock/subsys/sendmail
+         ;;
+         stop)
+         # Stop daemons.
+         echo -n "Shutting down sendmail: "
+         killproc sendmail
+         RETVAL=$?
+         echo
+         [ $RETVAL -eq 0 ] &#38;&#38; rm -f /var/lock/subsys/sendmail
+         ;;
+         restart|reload)
+         $0 stop
+         $0 start
+         RETVAL=$?
+         ;;
+         status)
+         status sendmail
+         RETVAL=$?
+         ;;
+         *)
+         echo "Usage: sendmail {start|stop|restart|status}"
+         exit 1
+         esac
+
+         exit $RETVAL
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         Now, make this script executable and change its default permissions:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>chmod</B
+> 700  /etc/rc.d/init.d/sendmail
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         Create the symbolic rc.d links for Sendmail with the command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>chkconfig</B
+> --add sendmail
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         Start your Sendmail Server manually with the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /etc/rc.d/init.d/sendmail start
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Starting sendmail:                                         [  OK  ]
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         Please do a cleanup as always later:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+         [root@deep ]/tmp# <B
+CLASS="command"
+>rm</B
+> -rf sendmail-version/ sendmail.version.tar.gz
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The <B
+CLASS="command"
+>rm</B
+> command as used above will remove all the source files we have used to compile and install Sendmail. It will also remove the Sendmail compressed archive from 
+         the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap22sec180.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap22sec182.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/mail/local-host-names</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soser-mailn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Secure Sendmail using <B
+CLASS="command"
+>smrsh</B
+></TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,404 @@
+<HTML
+><HEAD
+><TITLE
+>The ulimit parameter</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux General Optimization"
+HREF="gen-optim.html"><LINK
+REL="PREVIOUS"
+TITLE="
+          The file-max parameter
+            "
+HREF="chap6sec72.html"><LINK
+REL="NEXT"
+TITLE="The atime and noatime attribute"
+HREF="chap6sec73.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap6sec72.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. Linux General Optimization</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap6sec73.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4733"
+>6.10. The ulimit parameter</A
+></H1
+><P
+>&#13;          Linux itself has a Max Processes per user limit. This feature allows us to control the number of processes an existing user on the server may be authorized 
+          to have. To improve performance, we can safely set the limit of processes for the super-user root to be unlimited.
+          Edit the <TT
+CLASS="filename"
+>.bashrc</TT
+> file vi <TT
+CLASS="filename"
+>/root/.bashrc</TT
+> and add the following line:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          <B
+CLASS="command"
+>ulimit</B
+> -u unlimited
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          You must exit and re-login from your terminal for the change to take effect. 
+          <DIV
+CLASS="informalexample"
+><A
+NAME="AEN4740"
+></A
+><P
+></P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>ulimit</B
+> -a
+           </PRE
+></TD
+></TR
+></TABLE
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          core file size (blocks) 	1000000
+          data seg size (kbytes)  	unlimited
+          file size (blocks)	        unlimited
+          max memory size (kbytes)	unlimited
+          stack size (kbytes)	        8192
+          cpu time (seconds)	        unlimited
+          max user processes	        unlimited  <A
+NAME="rhomp1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+          pipe size (512 bytes)	        8
+          open files	                1024
+          virtual memory (kbytes)	2105343
+          </PRE
+></TD
+></TR
+></TABLE
+><DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="x4733.html#rhomp1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;          Make sure that when you type as root the command <B
+CLASS="command"
+>ulimit</B
+> <TT
+CLASS="literal"
+>-a</TT
+> on your terminal, it shows <TT
+CLASS="envar"
+>unlimited</TT
+> next to 
+          max user processes.
+          </DD
+></DL
+></DIV
+><P
+></P
+></DIV
+>
+          </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+          You may also do <B
+CLASS="command"
+>ulimit</B
+> <TT
+CLASS="literal"
+>-u</TT
+> unlimited at the command prompt instead of adding it to the <TT
+CLASS="filename"
+>/root/.bashrc</TT
+> file.
+          </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;          Increases the system limit on open files for instance a process on Red Hat 6.0 with kernel 2.2.5 could open at least 31000 file descriptors this way and a process on kernel 2.2.12 can open at 
+          least 90000 file descriptors this way. The upper bound seems to be available memory. To increases the number of open files to 90000 for the root account do the following:
+
+          Edit the <TT
+CLASS="filename"
+>.bashrc file</TT
+> vi <TT
+CLASS="filename"
+>/root/.bashrc</TT
+> and add the following line:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          <B
+CLASS="command"
+>ulimit</B
+> -n 90000
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          You must exit from your terminal and re-login for the change to take effect. 
+          
+          </P
+><P
+>&#13;          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>ulimit</B
+> -a
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          core file size (blocks)	1000000
+          data seg size (kbytes)	unlimited
+          file size (blocks)	        unlimited
+          max memory size (kbytes)	unlimited
+          stack size (kbytes)	        8192
+          cpu time (seconds)	        unlimited
+          max user processes	        unlimited
+          pipe size (512 bytes)	        8
+          open files	                90000   <A
+NAME="rhopf1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+          virtual memory (kbytes)	2105343
+           </PRE
+></TD
+></TR
+></TABLE
+>
+          <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="x4733.html#rhopf1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;          Make sure that when you type as root the command ulimit -a on your terminal, it 
+          shows 90000 next to open files.
+          </DD
+></DL
+></DIV
+>
+          
+          <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+          In older 2.2 kernels, though, the number of open files per process is still limited to 1024, even with the above changes.
+          </P
+></BLOCKQUOTE
+></DIV
+>
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap6sec72.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap6sec73.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The file-max parameter</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-optim.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The atime and noatime attribute</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

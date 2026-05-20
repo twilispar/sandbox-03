@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Email Addresses</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node190.html">How does Mail Routing </A>
+<B>Up:</B> <A HREF="node186.html">Electronic Mail</A>
+<B> Previous:</B> <A HREF="node188.html">How is Mail Delivered?</A>
+<BR> <P>
+<H1><A NAME="SECTION0015300000">Email Addresses</A></H1>
+<A NAME="mailaddress"></A>
+For electronic mail, an address is made up of at least the name of a
+machine handling the person's mail, and a user identification recognized
+by this system. This may be the recipient's login name, but may also be
+anything else. Other mail addressing schemes, like X.400, use a more
+general set of ``attributes'' which are used to look up the recipient's
+host in an X.500 directory server.
+<P>
+The way a machine name is interpreted, i.e. at which site your message
+will finally wind up, and how to combine this name with the recipient's
+user name greatly depends on the network you are on.
+<P>
+Internet sites adhere to the RFC-822 standard, which requires a notation
+of user@host.domain, where host.domain is the host's fully
+qualified domain name. The middle thing is called an ``at'' sign.
+Because this notation does not involve a route to the destination host
+but gives the (unique) hostname instead, this is called an <em>absolute</em>
+address.
+<P>
+In the original UUCP environment, the prevalent form was
+path!host!user, where path described a sequence of hosts
+the message had to travel before reaching the destination host.
+This construct is called the <em>bang path</em> notation, because an
+exclamation mark is loosely called a ``bang''.  Today, many UUCP-based
+networks have adopted RFC-822, and will understand this type of
+address.
+<P>
+Now, these two types of addressing don't mix too well. Assume an address
+of hostA!user@hostB. It is not clear whether the `@' sign
+takes precedence over the path, or vice versa: do we have to send the
+message to hostB, which mails it to hostA!user, or should it
+be sent to hostA, which forwards it to user@hostB?
+<P>
+Addresses that mix different types of address operators are called
+<em>hybrid addresses</em>. Most notorious is the above example. It is
+usually resolved by giving the `@' sign precedence over the
+path. In the above example, this means sending the message to
+hostB first.
+<P>
+However, there is a way to specify routes in RFC-822-conformant ways:
+&lt;@hostA,@hostB:user@hostC&gt; denotes the address of user on
+hostC, where hostC is to be reached through hostA
+and hostB (in that order). This type of address is frequently
+called a <em>route-addr address</em>.
+<P>
+Then, there is the `%' address operator: user%hostB@hostA
+will first be sent to hostA, which expands the rightmost (in this
+case, only) percent sign to an `@' sign. The address is now
+user@hostB, and the mailer will happily forward your message to
+hostB which delivers it to user.  This type of address is
+sometimes referred to as ``Ye Olde ARPANET Kludge'', and its use is
+discouraged. Nevertheless, many mail transport agents generate this
+type of address.
+<P>
+Other networks have still different means of addressing. DECnet-based
+networks, for example, use two colons as an address separator, yielding
+an address of host::user.<A HREF="footnode.html#7189"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> Lastly, the X.400 standard uses an entirely different scheme, by
+describing a recipient by a set of attribute-value pairs, like country
+and organization.
+<P>
+On FidoNet, each user is identified by a code like 2:320/204.9,
+consisting of four numbers denoting zone (2 is for Europe), net (320
+being Paris and Banlieue), node (the local hub), and point (the
+individual user's PC). Fidonet addresses can be mapped to RFC-822; the
+above would be written as
+Thomas.Quinot@p9.f204.n320.z2.fidonet.org. Now didn't I say
+domain names are easy to remember?
+<P>
+There are some implications to using these different types of addressing
+which will be described throughout the following sections. In a RFC-822
+environment, however, you will rarely use anything else than absolute
+addresses like user@host.domain.
+<P>
+<A NAME="6929"></A>
+<A NAME="6930"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node190.html">How does Mail Routing </A>
+<B>Up:</B> <A HREF="node186.html">Electronic Mail</A>
+<B> Previous:</B> <A HREF="node188.html">How is Mail Delivered?</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

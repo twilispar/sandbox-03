@@ -1,0 +1,354 @@
+<HTML
+><HEAD
+><TITLE
+>Compile and install FAQ-O-Matic</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux FAQ-O-Matic"
+HREF="faqomqtic.html"><LINK
+REL="NEXT"
+TITLE="Make Apache aware Faq-O-Matic file's location"
+HREF="chap29sec270.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="faqomqtic.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 30. Optional component to install with Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec270.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN21203"
+>30.7. Compile and install FAQ-O-Matic</A
+></H1
+><P
+>&#13;      Before you Compile, Decompress the tarball (tar.gz).
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> FAQ-O-Matic-version.tar.gz /var/tmp/
+        [root@deep ] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp/
+        [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf FAQ-O-Matic-version.tar.gz
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      You need to compile, to install the Faq-O-Matic program on your computer, move into the new FAQ-O-Matic directory and type the following commands on your terminal:
+ 
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /FAQ-OMatic-2.709# <B
+CLASS="command"
+>perl</B
+> Makefile.PL
+          [root@deep ] /FAQ-OMatic-2.709# <B
+CLASS="command"
+>make</B
+>
+          [root@deep ] /FAQ-OMatic-2.709# <B
+CLASS="command"
+>make install</B
+>
+          [root@deep ] /FAQ-OMatic-2.709# <B
+CLASS="command"
+>mv</B
+> fom /home/httpd/cgi-bin/           <A
+NAME="cgbnap"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+          [root@deep ] /FAQ-OMatic-2.709# <B
+CLASS="command"
+>mkdir</B
+> -p /home/httpd/cgi-bin/fom-meta
+          [root@deep ] /FAQ-OMatic-2.709# <B
+CLASS="command"
+>mkdir</B
+> -p /home/httpd/faqomatic
+          [root@deep ] /FAQ-OMatic-2.709# <B
+CLASS="command"
+>chown</B
+> root.www /home/httpd/cgi-bin/fom
+          [root@deep ] /FAQ-OMatic-2.709# <B
+CLASS="command"
+>chown</B
+> -R www.www /home/httpd/cgi-bin/fom-meta/
+          [root@deep ] /FAQ-OMatic-2.709# <B
+CLASS="command"
+>chown</B
+> -R www.www /home/httpd/faqomatic/
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec269.html#cgbnap"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;          Or wherever your CGIs live.
+        </DD
+></DL
+></DIV
+>
+ 
+      <P
+></P
+><UL
+><LI
+><P
+>&#13;          The <B
+CLASS="command"
+>make</B
+> command will compile all source files into executable binaries
+        </P
+></LI
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>make install</B
+> will install the Perl programs and any supporting files into the appropriate locations
+        </P
+></LI
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>mv</B
+> command will move the main <TT
+CLASS="literal"
+>fom</TT
+> <SPAN
+CLASS="acronym"
+>CGI</SPAN
+> program of Faq-O-Matic to the <TT
+CLASS="filename"
+>cgi-bin</TT
+> directory of your Apache web server. 
+        </P
+></LI
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>mkdir</B
+> will create new directories named <TT
+CLASS="filename"
+>fom-meta</TT
+> and <TT
+CLASS="filename"
+>faqomatic</TT
+> under the <TT
+CLASS="filename"
+>/home/httpd/</TT
+> 
+        directory where we'll handle all related FAQ-O-Matic files. 
+        </P
+></LI
+><LI
+><P
+>&#13;        Finally, the <B
+CLASS="command"
+>chown</B
+> command will set the owner of the <TT
+CLASS="literal"
+>fom</TT
+> <SPAN
+CLASS="acronym"
+>CGI</SPAN
+> program to be the super-user <TT
+CLASS="literal"
+>root</TT
+> and the group to be the user Apache run as <TT
+CLASS="literal"
+>www</TT
+> 
+        and will set the directories <TT
+CLASS="filename"
+>fom-meta</TT
+> and <TT
+CLASS="filename"
+>faqomatic</TT
+> to be owned by <TT
+CLASS="literal"
+>www</TT
+> and group by <TT
+CLASS="literal"
+>www</TT
+>.
+        </P
+></LI
+></UL
+>
+    </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+        You'll receive a temporary password via mail during the compilation of the software. This password will be necessary to complete later the installation of Faq-O-Matic through the web interface.
+  
+      </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="faqomqtic.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec270.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux FAQ-O-Matic</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Make Apache aware Faq-O-Matic file's location</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

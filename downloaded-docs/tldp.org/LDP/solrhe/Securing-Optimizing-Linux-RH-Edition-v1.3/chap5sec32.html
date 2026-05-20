@@ -1,0 +1,204 @@
+<HTML
+><HEAD
+><TITLE
+>The root account</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Choose a right Password"
+HREF="chap5sec31.html"><LINK
+REL="NEXT"
+TITLE="The /etc/exports file"
+HREF="chap5sec33.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec31.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec33.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3244"
+>5.4. The root account</A
+></H1
+><P
+>&#13;            The <EM
+>root</EM
+> account is the most privileged account on a Unix system. The <EM
+>root</EM
+> account has no security restrictions imposed upon it. This means the 
+            system assumes you know what you are doing, and will do exactly what you request -- <EM
+>no questions asked</EM
+>. Therefore it is easy, with a mistyped command, to wipe out crucial system files. When 
+            using this account it is important to be as careful as possible. For security reasons, never log in on your server as <EM
+>root</EM
+> unless it is absolutely an instance that 
+            necessitates root access. Also, if you are not on your server, never sign in and leave yourself on as <EM
+>root</EM
+> <EM
+>--this is Very, Very, Very BAD practice</EM
+>.
+            </P
+><P
+>&#13;            <EM
+>Set login time out for the root account</EM
+>. Despite the notice to never, if they are not on the server sign in as <EM
+>root</EM
+> and leave it unattended, administrators 
+            still stay on as <EM
+>root</EM
+> or forget to logout after finishing their work and leave their terminals unattended. The answer to solve this problem is to make the bash shell automatically 
+            logout after not being used for a period of time. To do that, you must set the special variable of Linux named <TT
+CLASS="envar"
+>TMOUT</TT
+> to the time in seconds of no input before logout.
+            Edit your profile file <TT
+CLASS="filename"
+> /etc/profile</TT
+> and add the following line somewhere after the line that read <TT
+CLASS="envar"
+>HISTFILESIZE=</TT
+> on this file:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            TMOUT=7200
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            The value we enter for the variable <TT
+CLASS="envar"
+>TMOUT=</TT
+> is in second and represent 2 hours (60 * 60 = 3600 * 2 = 7200 seconds). It is important to note that if you decide to put the above line 
+            in your <TT
+CLASS="filename"
+>/etc/profile</TT
+> file, then the automatic logout after two hours of inactivity will apply for all users on the system. So, instead, if your prefer to control which users will be automatically 
+            logged out and which ones not, you can set this variable in their individual <TT
+CLASS="filename"
+>.bashrc</TT
+>  file.
+            After this parameter has been set on your system, you must logout and login again as root for the change to take effect.
+            </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec31.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec33.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Choose a right Password</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/exports</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

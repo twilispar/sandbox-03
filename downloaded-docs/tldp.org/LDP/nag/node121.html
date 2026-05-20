@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The CHAP Secrets File</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node122.html">The PAP Secrets File</A>
+<B>Up:</B> <A HREF="node119.html">Authentication with PPP</A>
+<B> Previous:</B> <A HREF="node120.html">CHAP versus PAP</A>
+<BR> <P>
+<H2><A NAME="SECTION00101020000">The CHAP Secrets File</A></H2>
+
+When it has to authenticate itself with some server using CHAP, pppd
+searches the pap-secrets file for an entry with the client field
+equal to the local hostname, and the server field equal to the remote
+hostname sent in the CHAP Challenge.  When requiring the peer to
+authenticate itself, the roles are simply reversed: pppd will then
+look for an entry with the client field equal to the remote hostname (sent
+in the client's CHAP Response), and the server field equal to the local
+hostname.
+<P>
+The following is a sample chap-secrets file for
+vlager:<A HREF="footnode.html#4424"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<pre>
+           # CHAP secrets for vlager.vbrew.com
+           #
+           # client          server            secret                addrs
+           #-------------------------------------------------------------------
+           vlager.vbrew.com  c3po.lucas.com    "Use The Source Luke" vlager.vbr
+           c3po.lucas.com    vlager.vbrew.com  "riverrun, pasteve"   c3po.lucas
+           *                 vlager.vbrew.com  "VeryStupidPassword"  pub.vbrew.
+
+</pre>
+When establishing a PPP connection with c3po, c3po asks
+vlager to authenticate itself using CHAP by sending a CHAP
+challenge. pppd then scans chap-secrets for an entry
+with the client field equal to vlager.vbrew.com and the server
+field equal to c3po.lucas.com,<A HREF="footnode.html#4434"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> and finds the first line shown above. It then produces the CHAP Response
+from the challenge string and the secret (Use The Source Luke),
+and sends it off to c3po.
+<P>
+At the same time, pppd composes a CHAP challenge for c3po,
+containing a unique challenge string, and its fully qualified hostname
+vlager.vbrew.com. c3po constructs a CHAP Response in the
+manner we just discussed, and returns it to vlager. pppd now
+extracts the client hostname (c3po.vbrew.com) from the Response, and
+searches the chap-secrets file for a line matching c3po as a
+client, and vlager as the server. The second line does this, so
+pppd combines the CHAP challenge and the secret riverrun,
+pasteve, encrypts them, and compares the result to c3po's CHAP
+response.
+<P>
+
+The optional fourth field lists the IP-addresses that are acceptable
+for the clients named in the first field. The addresses may be given
+in dotted quad notation or as hostnames that are looked up with the
+resolver.  For instance, if c3po requests to use an IP address
+during IPCP negotiation that is not in this list, the request will be
+rejected, and IPCP will be shut down.  In the sample file shown above,
+c3po is therefore limited to using its own IP-address.  If the
+address field is empty, any addresses will be allowed; a value of
+- prevents the use of IP with that client altogether.
+<P>
+The third line of the sample chap-secrets file allows any host to
+establish a PPP link with vlager because a client or server field of
+* matches any hostname.  The only requirement is that it knows
+the secret, and uses the address of pub.vbrew.com.  Entries with
+wildcard hostnames may appear anywhere in the secrets file, since
+pppd will always use the most specific entry that applies to a
+server/client pair.
+<P>
+There are some words to be said about the way pppd arrives at the
+hostnames it looks up in the secrets file. As explained before, the remote
+hostname is always provided by the peer in the CHAP Challenge or Response
+packet.  The local hostname will be derived by calling the
+gethostname(2) function by default. If you have set the system
+name to your unqualified hostname, such you have to provide pppd
+with the domain name in addition using the domain option:
+<pre>
+           # pppd ...domain vbrew.com
+ 
+
+</pre>
+This will append the Brewery's domain name to vlager for all
+authentication-related activities.  Other options that modify
+progpppd's idea of the local hostname are usehostname and
+name.  When you give the local IP address on the command line
+using ``local:varremote'', and local is a name
+instead of a dotted quad, pppd will use this as the local
+hostname. For details, please refer to the pppd(8) manual page.
+<P>
+
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node122.html">The PAP Secrets File</A>
+<B>Up:</B> <A HREF="node119.html">Authentication with PPP</A>
+<B> Previous:</B> <A HREF="node120.html">CHAP versus PAP</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

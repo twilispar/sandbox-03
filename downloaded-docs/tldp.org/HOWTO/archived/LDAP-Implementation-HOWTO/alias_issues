@@ -1,0 +1,78 @@
+
+From sendmail+per@sendmail.org Mon Aug 31 13:52:14 1998
+Date: Thu, 20 Aug 1998 15:23:22 +0200 (MET DST)
+From: Per Hedeland <sendmail+per@sendmail.org>
+To: curt@princeton.edu
+Cc: sendmail-questions@sendmail.org, gettes@princeton.edu,
+    bbense+ldap@stanford.edu
+Subject: Re: ldap for aliases
+
+Curt Hillegas <curt@princeton.edu> wrote:
+>We're moving all of our University directory services to LDAP.  We need
+>to be able to do directory lookups for a user that could return multiple
+>delivery addresses for that user (we're currently doing this with NIS). 
+>The most obvious place to do this would be by having the AliasFile query
+>our LDAP database, but ldapx does not have the MCF_ALIASOK flag turned
+>on.  Is there another way to achieve our goal, or is there a reason not
+>to turn on the MCF_ALIASOK for ldapx?  Are there plans to enable LDAP
+>for alias lookups in the near future?
+
+I'm Cc'ing Booker Bense on this, as he is the real expert on the LDAP
+code in sendmail (having written it:-) - hopefully he'll correct me if
+I'm wrong...
+
+First, regarding returning multiple addresses:
+
+- The current (sendmail 8.9.1) code will do this if the attribute asked
+for has a single value including all the addresses, comma-separated - as
+if specified in the aliases file.
+
+- The current code will *not* do this in the case where the found
+attribute is multi-valued - rather it will just pick the first value
+returned. Booker Bense has submitted a patch to turn the multiple values
+into a comma-separated list in this case - I can't say when (or even if)
+this will be included in the standard release, but it may not be until
+8.10.
+
+- Neither the current code nor Booker's patch will do this in the case
+where multiple entries are found - again just the first entry found will
+be used. Quoting Booker:-): "The changes needed to do this are pretty
+simple".
+
+Second, regarding MCF_ALIASOK:
+
+The above issues with multiple values is the "official" reason it isn't
+set for ldapx - I'm not sure it's a very good reason, as nothing "bad"
+will happen if you run into these situations - just that the semantics
+may not be what is expected, and as long as it is documented... I.e. if
+you want to, you should be able to go ahead and set MCF_ALIASOK in your
+copy of the code - however it is of limited benefit anyway:
+
+Setting it allows you to have an ldapx spec in the AliasFile option,
+which would look something like (assuming this is the only map there):
+
+O Aliasfile=ldapx:-h"ldap.stanford.edu"
+		-k"mailacceptinggeneralid=%s" -v maildrop
+
+which doesn't look very nice:-), and what is worse if you need to use -b
+with embedded commas, as in
+
+O Aliasfile=ldapx:-b"ou=People, o=Stanford University, c=US"
+		-h"ldap.stanford.edu" -k"mailacceptinggeneralid=%s" -v maildrop
+
+the spec will be misparsed, as the commas are taken as alias map
+separators - it should be possible to fix this, but it requires careful
+consideration to make sure such a change in the parsing doesn't break
+something else. AND... - finally some good news:-) - you can avoid these
+problems with one level of indirection, using a 'sequence' map with a
+single member:
+
+Kldapaliases ldapx -b"ou=People, o=Stanford University, c=US"
+		-h"ldap.stanford.edu" -k"mailacceptinggeneralid=%s" -v maildrop
+
+O Aliasfile=sequence:ldapaliases
+
+works just fine, even without having MCF_ALIASOK set for ldapx (the
+latter might actually be a bug:-).
+
+--Per Hedeland

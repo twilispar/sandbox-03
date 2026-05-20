@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Sample smail Configuration Files</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node286.html">The GNU General Public </A>
+<B>Up:</B> <A HREF="nag.html">The Network Administrators' Guide</A>
+<B> Previous:</B> <A HREF="node284.html">A Null Printer Cable </A>
+<BR> <P>
+<H1><A NAME="SECTION0023000000">Sample smail Configuration Files</A></H1>
+<P>
+<A NAME="appendixsmail"></A>
+<P>
+This section shows sample configuration files for a UUCP leaf site on a
+local area network. They are based on the sample files included
+in the source distribution of smail-3.1.28.
+Although I make a feeble attempt to explain how these files work,
+you are advised to read the very fine smail(8) manual page,
+which discusses these files in great length. Once you've understood
+the basic idea behind smail configuration, it's worthwhile
+reading. It's easy!
+<P>
+The first file shown is the routers file, which describes a set of
+routers to smail.  When smail has to deliver a message to
+a given address, it hands the address to all routers in turn, until one
+of them matches it.  Matching here means that the router finds the
+destination host in its database, be it the paths file,
+/etc/hosts, or whatever routing mechanism the router interfaces
+to.
+<P>
+Entries in smail configuration files always begin with a unique
+name identifying the router, transport, or director.  They are followed
+by a list of attributes that define its behavior.  This list consists of
+a set of global attributes, such as the <em>driver</em> used, and private
+attributes that are only understood by that particular driver.
+Attributes are separated by commas, while the sets of global and private
+attributes are separated from each other using a semicolon.
+<P>
+To make these fine distinctions clear, assume you want to maintain two
+separate pathalias files; one containing the routing information for
+your domain, and a second one containing global routing information,
+probably generated from the UUCP maps. With smail, you
+can now specify two routers in the routers file, both of
+which use the pathalias driver.  This driver looks up hostnames
+in a pathalias database. It expects to be given the name of the file
+in a private attribute:
+<P>
+<P><P>
+<P>
+The second global attribute given in each of the two routers
+entries above defines the transport that should be used when the router
+matches the address.  In our case, the message will be delivered using
+the uux transport.  Transports are defined in the
+transports file, which is explained below.
+<P>
+You can fine-tune by which transport a message will be delivered if you
+specify a mathod file instead of the transports attribute.
+Method files provide a mapping from target hostnames to transports.
+We won't deal with them here.
+<P>
+The following routers file defines routers for a local area
+network that query the resolver library.  On an Internet host, however,
+you would want to use a router that handles MX records.  You should
+therefore uncomment the alternative inet_bind router that
+uses smail's built-in BIND driver.
+<P>
+In an environment that mixes UUCP and TCP/IP, you may encounter the
+problem that you have hosts in your /etc/hosts file that
+you have only occasional SLIP or PPP contact with.  Usually, you
+would still want to send any mail for them over UUCP. To prevent
+the inet_hosts driver from matching these hosts, 
+you have to put them into the paths/force file. This is
+another pathalias-style database, and is consulted before smail
+queries the resolver.
+<P>
+<P><P>
+<P>
+<P>
+The handling of mail for local addresses is configured in the
+directors file.  It is made up just like the routers file,
+with a list of entries that define a director each.  Directors do
+<em>not</em> deliver a message, they merely perform all the redirection
+that is possible, for instance through aliases, mail forwarding, and the
+like.
+<P>
+When delivering mail to a local address, such as janet, 
+smail passes the usr name to all directors in turn. If
+a director matches, it either specifies a transport the message
+should be delivered by (for instance, to the user's mailbox file),
+or generates a new address (for instance, after evaluating an
+alias).
+<P>
+Because of the security issues involved, directors usually do a lot of
+checking of whether the files they use may be compromised or not.
+Addresses obtained in a somewhat dubious way (for instance from a
+world-writable aliases file) are flagged as insecure.  Some
+transport drivers will turn down such addresses, for instance the
+transport that delivers a message to a file.
+<P>
+Apart from this, smail also <em>associates a user</em> with each
+address.  Any write or read operations are performed as the user.  For
+delivery to, say janet's mailbox, the address is of course
+associated with janet.  Other addresses, such as those obtained
+from the aliases file, have other users associated from them, for
+instance, the nobody user.
+<P>
+For details of these features, please refer to the smail(8)
+manpage.
+<P>
+<P>
+<P><P>
+<P>
+<P>
+After successfully routing or directing a message, smail
+hands the message to the transport specified by the router
+or director that matched the address. These transports are
+defined in the transports file. Again, a transport
+is defined by a set of global and private options.
+<P>
+The most important option defined by each entry is driver that handles
+the transport, for instance the pipe driver, which invokes the
+command specified in the cmd attribute.  Apart from this,
+there are a number of global attributes a transport may use, that
+perform various transformations on the message header, and possibly
+message body.  The return_path attribute, for instance, makes
+the transport insert a return_path field in the message header
+The unix_from_hack attribute makes it precede every
+occurrence of the word From at the beginning of a line with a
+&gt; sign.
+<P>
+<P>
+<PRE># A sample /usr/lib/smail/transports file
+
+# local - deliver mail to local users
+local:  driver=appendfile,        # append message to a file
+        return_path,              # include a Return-Path: field
+        from,                     # supply a From_ envelope line
+        unix_from_hack,           # insert &gt; before From in body
+        local;                    # use local forms for delivery
+
+        file=/var/spool/mail/${lc:user}, # location of mailbox files
+        group=mail,               # group to own file for System V
+        mode=0660,                # group mail can access
+        suffix=&quot;\n&quot;,              # append an extra newline
+
+# pipe - deliver mail to shell commands
+pipe:   driver=pipe,              # pipe message to another program
+        return_path,              # include a Return-Path: field
+        from,                     # supply a From_ envelope line
+        unix_from_hack,           # insert &gt; before From in body
+        local;                    # use local forms for delivery
+
+        cmd=&quot;/bin/sh -c $user&quot;, # send address to the Bourne Shell
+        parent_env,               # environment info from parent addr
+        pipe_as_user,             # use user-id associated with address
+        ignore_status,            # ignore a non-zero exit status
+        ignore_write_errors,      # ignore write errors, i.e., broken pipe
+        umask=0022,               # umask for child process
+        -log_output,              # do not log stdout/stderr
+
+# file - deliver mail to files
+file:   driver=appendfile,
+        return_path,              # include a Return-Path: field
+        from,                     # supply a From_ envelope line
+        unix_from_hack,           # insert &gt; before From in body
+        local;                    # use local forms for delivery
+
+        file=$user,               # file is taken from address
+        append_as_user,           # use user-id associated with address
+        expand_user,              # expand ~ and $ within address
+        suffix=&quot;\n&quot;,              # append an extra newline
+        mode=0600,                # set permissions to 600
+
+# uux - deliver to the rmail program on a remote UUCP site
+uux:    driver=pipe,
+        uucp,                     # use UUCP-style addressing forms
+        from,                     # supply a From_ envelope line
+        max_addrs=5,              # at most 5 addresses per invocation
+        max_chars=200;            # at most 200 chars of addresses
+
+        cmd=&quot;/usr/bin/uux - -r -a$sender -g$grade $host!rmail $(($user)$)&quot;,
+        pipe_as_sender,           # have uucp logs contain caller
+        log_output,               # save error output for bounce messages
+#       defer_child_errors,       # retry if uux returns an error
+
+# demand - deliver to a remote rmail program, polling immediately
+demand: driver=pipe,
+        uucp,                     # use UUCP-style addressing forms
+        from,                     # supply a From_ envelope line
+        max_addrs=5,              # at most 5 addresses per invocation
+        max_chars=200;            # at most 200 chars of addresses
+
+        cmd=&quot;/usr/bin/uux - -a$sender -g$grade $host!rmail $(($user)$)&quot;,
+        pipe_as_sender,           # have uucp logs contain caller
+        log_output,               # save error output for bounce messages
+#       defer_child_errors,       # retry if uux returns an error
+
+# hbsmtp - half-baked BSMTP. The output files must
+#       be processed regularly and sent out via UUCP.
+hbsmtp: driver=appendfile,
+        inet,                     # use RFC 822-addressing
+        hbsmtp,                   # batched SMTP w/o HELO and QUIT
+        -max_addrs, -max_chars;   # no limit on number of addresses
+
+        file=&quot;/var/spool/smail/hbsmtp/$host&quot;,
+        user=root,                # file is owned by root
+        mode=0600,                # only read-/writable by root.
+
+# smtp - deliver using SMTP over TCP/IP
+smtp:   driver=tcpsmtp,
+        inet,
+        -max_addrs, -max_chars;   # no limit on number of addresses
+
+        short_timeout=5m,               # timeout for short operations
+        long_timeout=2h,                # timeout for longer SMTP operations
+        service=smtp,                   # connect to this service port
+# For internet use: uncomment the below 4 lines
+#       use_bind,                       # resolve MX and multiple A records
+#       defnames,                       # use standard domain searching
+#       defer_no_connect,               # try again if the nameserver is down
+#       -local_mx_okay,                 # fail an MX to the local host</PRE>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node286.html">The GNU General Public </A>
+<B>Up:</B> <A HREF="nag.html">The Network Administrators' Guide</A>
+<B> Previous:</B> <A HREF="node284.html">A Null Printer Cable </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

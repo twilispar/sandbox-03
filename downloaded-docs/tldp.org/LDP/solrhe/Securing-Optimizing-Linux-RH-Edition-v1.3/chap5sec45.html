@@ -1,0 +1,351 @@
+<HTML
+><HEAD
+><TITLE
+>Control mounting a file system</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Put limits on resource"
+HREF="chap5sec44.html"><LINK
+REL="NEXT"
+TITLE="Conceal binary RPM "
+HREF="chap5sec46.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec44.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec46.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3663"
+>5.16. Control mounting a file system</A
+></H1
+><P
+>&#13;             You can have more control on mounting a file system like <TT
+CLASS="filename"
+>/home</TT
+> and <TT
+CLASS="filename"
+>/tmp</TT
+> partitions with some nifty options like noexec, nodev, and nosuid. This can be 
+             setup in the <TT
+CLASS="filename"
+>/etc/fstab</TT
+> text file. The fstab file contains descriptive information about the various file systems mount options; each line addresses one file system.
+             Details regarding to security options in the fstab text file are:
+             <P
+><B
+>defaults: </B
+>Allow everything quota, read-write, and suid on this partition.</P
+><P
+><B
+>noquota: </B
+>Do not set users quotas on this partition.</P
+><P
+><B
+>nosuid: </B
+>Do not set <SPAN
+CLASS="acronym"
+>SUID/SGID</SPAN
+> access on this partition.</P
+><P
+><B
+>nodev: </B
+>Do not set character or special devices access on this partition.</P
+><P
+><B
+>noexec: </B
+>Do not set execution of any binaries on this partition.</P
+><P
+><B
+>quota: </B
+>Allow users quotas on this partition.</P
+><P
+><B
+>ro: </B
+>Allow read-only on this partition.</P
+><P
+><B
+>rw: </B
+>Allow read-write on this partition.</P
+><P
+><B
+>suid: </B
+>Allow <SPAN
+CLASS="acronym"
+>SUID/SGID</SPAN
+> access on this partition.</P
+>
+
+             For more information on options that you can set in this file fstab, see the man pages about <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>mount</SPAN
+>(8)</SPAN
+>.
+             </P
+><P
+>&#13;             Edit the fstab file vi <TT
+CLASS="filename"
+>/etc/fstab</TT
+> and change it depending on your needs. For example:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;             /dev/sda11	        /tmp		ext2	defaults        1 2
+             /dev/sda6		/home		ext2	defaults        1 2
+             </PRE
+></TD
+></TR
+></TABLE
+>
+            
+             To read:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;             /dev/sda11 	/tmp 		ext2 	defaults,rw,nosuid,nodev,noexec	1 2
+             /dev/sda6 	        /home 		ext2 	defaults,rw,nosuid,nodev	1 2
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;              <TT
+CLASS="literal"
+>nosuid</TT
+>, Meaning do not allow set-user-identifier or set-group-identifier bits to take effect,  
+              </TD
+></TR
+><TR
+><TD
+>&#13;              <TT
+CLASS="literal"
+>nodev</TT
+>, do not interpret character or block special devices on this file system partition, 
+              </TD
+></TR
+><TR
+><TD
+>&#13;              <TT
+CLASS="literal"
+>noexec</TT
+>, do not allow execution of any binaries on the mounted file system. 
+              </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+              Take a note that we have added the <TT
+CLASS="literal"
+>rw</TT
+> option to the modified lines above. This is because the default options for these lines are defaults, which means to set quota, read-write, and suid, so we must 
+             add the <TT
+CLASS="literal"
+>rw</TT
+> option to continue having read-write access on these modified file systems.
+             
+             For our example above, the <TT
+CLASS="filename"
+>/dev/sda11</TT
+> represent our <TT
+CLASS="filename"
+>/tmp</TT
+> directory partition on the system, and <TT
+CLASS="filename"
+>/dev/sda6</TT
+> 
+             the <TT
+CLASS="filename"
+>/home</TT
+> directory partition. Of course this will be not the same for you, depending on how you have partitioned your hard disk and what kind of disks are installed on your system, <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>IDE</SPAN
+></SPAN
+> -hda, hdb, etc 
+             or <SPAN
+CLASS="acronym"
+>SCSI</SPAN
+> -<TT
+CLASS="literal"
+>sda</TT
+>, <TT
+CLASS="literal"
+>sdb</TT
+>, etc.
+             </P
+><P
+>&#13;             Once you have made the necessary adjustments to the <TT
+CLASS="filename"
+>/etc/fstab</TT
+> file, it is time to makethe Linux system aware about the modification. This can be accomplished with the following commands:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>mount</B
+> -oremount /home/
+             [root@deep] /#<B
+CLASS="command"
+>mount</B
+> -oremount /tmp/
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;             Each file system that has been modified must be remounted with the command show above. In our example we have modified the <TT
+CLASS="filename"
+>/home/</TT
+>, 
+             and <TT
+CLASS="filename"
+>/tmp/</TT
+> file system and it is for this reason that we remount these file system with the above commands.
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec44.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec46.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Put limits on resource</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Conceal binary <SPAN
+CLASS="acronym"
+>RPM</SPAN
+></TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

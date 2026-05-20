@@ -1,0 +1,524 @@
+<HTML
+><HEAD
+><TITLE
+>The topology</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Networking -Firewall"
+HREF="soft-netfirew.html"><LINK
+REL="PREVIOUS"
+TITLE="Policy, Guidelines etc."
+HREF="chap10sec97.html"><LINK
+REL="NEXT"
+TITLE="Build a kernel with IPCHAINS Firewall support"
+HREF="chap10sec99.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap10sec97.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 10. Networking -Firewall</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap10sec99.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN6306"
+>10.2. The topology</A
+></H1
+><P
+>&#13;          All servers should be configured to block at least the unused ports, even if there are not a firewall server. This is required for more security. Imagine someone gains access to your firewall gateway server: if 
+          your neighborhoods servers are not configured to block unused ports, this is a serious network risk. The same is true for local connections; unauthorized employees can gain access from the inside to your other 
+          servers in this manner.
+          </P
+><P
+>&#13;          In our configuration we will give you three different examples that can help you to configure your firewall rules depending on the type of the server you want to protect and the placement of these servers on your 
+          network architecture. 
+          <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;          The first example firewall rules file will be for a <TT
+CLASS="literal"
+>Web Server</TT
+>. 
+          </TD
+></TR
+><TR
+><TD
+>&#13;          The second for a <TT
+CLASS="literal"
+>Mail Server</TT
+>. 
+          </TD
+></TR
+><TR
+><TD
+>&#13;          The last for a <TT
+CLASS="literal"
+>Gateway Server</TT
+> that acts as proxy for the inside Wins, Workstations and Servers machines. 
+          </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+          </P
+><P
+>&#13;          See the graph below to get an idea:
+
+          <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Firewall-Schema.gif"
+ALT="Firewall schematic representaion"
+></IMG
+><DIV
+CLASS="caption"
+><P
+>&#13;          The graph above shows you the ports that I enable on the different servers by default in my firewall scripts file in this book
+            </P
+></DIV
+></P
+></DIV
+>
+          </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>&#13;          www.openna.com
+          Caching Only DNS
+          208.164.186.3
+          . </B
+>
+          <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;          Unlimited traffic on the loopback interface allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>ICMP</SPAN
+> traffic allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Caching and Client Server on port 53 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>SSH</SPAN
+> Server on port 22 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>HTTP</SPAN
+> Server on port 80 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>HTTPS</SPAN
+> Server on port 443 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>SMTP</SPAN
+> Client on port 25 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>FTP</SPAN
+> Server on ports 20, 21 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          Outgoing traceroute request allowed
+          </P
+></LI
+></OL
+>
+          </P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>&#13;          deep.openna.com
+          Master DNS Server
+          208.164.186.1
+            . </B
+>
+          <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;          Unlimited traffic on the loopback interface allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>ICMP</SPAN
+> traffic allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Server and Client on port 53 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>SSH</SPAN
+> Server and Client on port 22 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>HTTP</SPAN
+> Server and Client on port 80 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>HTTPS</SPAN
+> Server and Client on port 443 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>WWW</SPAN
+>-CACHE Client on port 8080 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          External <SPAN
+CLASS="acronym"
+>POP</SPAN
+> Client on port 110 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          External <SPAN
+CLASS="acronym"
+>NNTP</SPAN
+> NEWS Client on port 119 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>SMTP</SPAN
+> Server and Client on port 25 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> Server on port 143 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>IRC</SPAN
+> Client on port 6667 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>ICQ</SPAN
+> Client on port 4000 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>FTP</SPAN
+> Client on port 20, 21 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          RealAudio / QuickTime Client allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          Outgoing traceroute request allowed
+          </P
+></LI
+></OL
+>
+          </P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>&#13;          mail.openna.com
+          Slave DNS Server
+          208.164.186.2
+          . </B
+>
+          <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;          Unlimited traffic on the loopback interface allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>ICMP</SPAN
+> traffic allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Server and Client on port 53 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>SSH</SPAN
+> Server on port 22 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>SMTP</SPAN
+> Server and Client on port 25 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> Server on port 143 allowed
+          </P
+></LI
+><LI
+><P
+>&#13;          Outgoing traceroute request allowed
+          </P
+></LI
+></OL
+>
+          </P
+></DIV
+><P
+>&#13;          The list above shows you the ports that I enable on the different servers by default in my firewall scripts file in this book. Depending on what services must be available in the server for the outside, you 
+          must configure your firewall script file to allow the traffic on the specified ports. 
+          <P
+></P
+><UL
+><LI
+><P
+>&#13;          <TT
+CLASS="literal"
+>www.openna.com</TT
+> is our Web Server, 
+          </P
+></LI
+><LI
+><P
+>&#13;          <TT
+CLASS="literal"
+>mail.openna.com</TT
+> is our Mail Hub Server for all the internal network, 
+          </P
+></LI
+><LI
+><P
+>&#13;          <TT
+CLASS="literal"
+>deep.openna.com </TT
+> is our Gateway Server 
+          </P
+></LI
+></UL
+>
+          for all the examples explained later in this chapter.
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap10sec97.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap10sec99.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Policy, Guidelines <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netfirew.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Build a kernel with <TT
+CLASS="literal"
+>IPCHAINS</TT
+> Firewall support</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

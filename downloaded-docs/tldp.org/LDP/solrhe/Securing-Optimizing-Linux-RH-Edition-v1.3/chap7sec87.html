@@ -1,0 +1,424 @@
+<HTML
+><HEAD
+><TITLE
+>Create a emergency Rescue and Boot floppy disk</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Configuring and Building a Secure, Optimized Kernel"
+HREF="secopt-kernel.html"><LINK
+REL="PREVIOUS"
+TITLE="Delete programs, Edit files pertaining to modules"
+HREF="chap7sec86.html"><LINK
+REL="NEXT"
+TITLE="Networking -Management, Firewall, Masquerading and Forwarding"
+HREF="net-manage.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap7sec86.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. Configuring and Building a Secure, Optimized Kernel</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="net-manage.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN5828"
+>7.12. Create a emergency Rescue and Boot floppy disk</A
+></H1
+><P
+>&#13;            After the reboot of your Linux server, you should have now a system with an upgraded kernel. Therefore, it's time is to make a new rescue image with the new kernel in case of future emergencies. To do this, follow 
+            the simple step below;
+             Login as root, and insert a new floppy, then execute the following command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>mkbootdisk</B
+> --device /dev/fd0 2.2.14
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <P
+CLASS="literallayout"
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<TT
+CLASS="computeroutput"
+>&#13;             Insert a disk in <TT
+CLASS="filename"
+>/dev/fd0</TT
+>. Any information on the disk will be lost.
+             Press &#60;Enter&#62; --device <B
+CLASS="keycap"
+>^C</B
+> to abort:
+             </TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+              </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+              The mkbootdisk program runs only on modularized kernel. So you can't use it on a monolithic kernel; instead create an emergency boot floppy as shown below if you have a problem with your system in the future.
+              </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;             Because it is possible to create a rescue floppy only on modularized kernel, we must find another way to boot our Linux system if the Linux kernel on the hard disk is damaged. This is possible with a Linux emergency 
+             boot floppy disk. You should immediately create it after you successfully start your system and log in as root.
+             </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;             To create the emergency boot floppy disk, follow these steps:
+             </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;             Insert a floppy disk and format it with the following command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>fdformat</B
+> /dev/fd0H1440
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <P
+CLASS="literallayout"
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<TT
+CLASS="computeroutput"
+>&#13;             Double-sided, 80 tracks, 18 sec/track. Total capacity 1440 kB.
+             Formatting ... done
+             Verifying ... done
+             </TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             Copy the file vmlinuz from the <TT
+CLASS="filename"
+>/boot</TT
+> directory to the floppy disk:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>cp</B
+> /boot/vmlinuz /dev/fd0
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <P
+CLASS="literallayout"
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<TT
+CLASS="computeroutput"
+>&#13;             cp: overwrite '/dev/fd0'? y
+             </TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+             The <TT
+CLASS="filename"
+>vmlinuz</TT
+> file is a symbolic link that point to the real Linux kernel.
+             </P
+></LI
+><LI
+><P
+>&#13;             Determine the kernel's root device with the following command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>rdev</B
+>
+             /dev/sda12 /
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             The kernel's root device is the disk partition where the root file system is located. In this example, the root device is <TT
+CLASS="filename"
+>dev/sda12</TT
+>; the device name may be different on your system.
+             </P
+></LI
+><LI
+><P
+>&#13;             Set the kernel's root device with the following command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>rdev</B
+> /dev/fd0 /dev/sda12
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             To set the kernel's root device, use the device reported by the rdev command utility in the previous step.
+             </P
+></LI
+><LI
+><P
+>&#13;             5.Mark the root device as read-only with the following command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>rdev</B
+> -R /dev/fd0 1
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             This causes Linux initially to mount the root file system as read-only. By setting the root device as read-only, you avoid several warning and error messages.
+             </P
+></LI
+><LI
+><P
+>&#13;             Now put the boot floppy in the drive A: and reboot your system with the following command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>reboot</B
+>
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;             Update your /dev entries:If you have added new devices to your system or have done recently a major kernel upgrade (a major kernel upgrade is for example when you pass from kernel version 2.2.9 to 2.2.15 directly), it may be 
+             important to update your <TT
+CLASS="filename"
+>/dev</TT
+> entries to avoid problems related to missing devices. 
+            
+             We can accomplish this task with the <TT
+CLASS="filename"
+>MAKEDEV</TT
+> script utility that scan the <TT
+CLASS="filename"
+>/dev</TT
+> 
+             directory where all devices that interfaces with drivers in the kernel are kept. A special option named update allow the MAKEDEV utility to create new devices that you have configured in your kernel and delete those which 
+             are no longer configured.To update your <TT
+CLASS="filename"
+>/dev</TT
+> entries, execute the following commands:
+            
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /dev
+             [root@deep ] /dev#<B
+CLASS="command"
+>./MAKEDEV</B
+> update
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap7sec86.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="net-manage.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Delete programs, Edit files pertaining to modules</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="secopt-kernel.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Networking -Management, Firewall, Masquerading and Forwarding</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,372 @@
+<HTML
+><HEAD
+><TITLE
+>Create of the quota.user and quota.group </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Set Limits using Qouta"
+HREF="quota.html"><LINK
+REL="PREVIOUS"
+TITLE="Qouta"
+HREF="chap20sec156.html"><LINK
+REL="NEXT"
+TITLE="edquota "
+HREF="chap20sec158.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap20sec156.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 20. Set Limits using Qouta</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap20sec158.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN10283"
+>20.2. Create of the <TT
+CLASS="filename"
+>quota.user</TT
+> and <TT
+CLASS="filename"
+>quota.group</TT
+></A
+></H1
+><P
+>&#13;              After the modification of your <TT
+CLASS="filename"
+>/etc/fstab</TT
+> file, in order for quotas to be established on a file system, the root directory of the file system <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> <TT
+CLASS="filename"
+>/home</TT
+> in 
+              our example must contain a file, owned by root, called <TT
+CLASS="filename"
+>quota.user</TT
+> if you want to use user quota, <TT
+CLASS="filename"
+>quota.group</TT
+> if you want to use group quota, or both if you want to use users and group quota.
+            </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;
+
+                Create the <TT
+CLASS="filename"
+>quota.user</TT
+> and/or <TT
+CLASS="filename"
+>quota.group</TT
+> files, as root go to the root of the partition you wish to enable quota <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> <TT
+CLASS="filename"
+>/home</TT
+> doing:
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                  [root@deep] /# <B
+CLASS="command"
+>touch</B
+> /home/quota.user 
+                  [root@deep] /# <B
+CLASS="command"
+>touch</B
+> /home/quota.group 
+                  [root@deep] /# <B
+CLASS="command"
+>chmod</B
+> 600  /home/quota.user 
+                  [root@deep] /# <B
+CLASS="command"
+>chmod</B
+> 600  /home/quota.group
+                </PRE
+></TD
+></TR
+></TABLE
+>
+                The <B
+CLASS="command"
+>touch</B
+> command will create new empty files under the <TT
+CLASS="filename"
+>home</TT
+> directory named <TT
+CLASS="filename"
+>quota.user</TT
+> and <TT
+CLASS="filename"
+>quota.group</TT
+>. The <B
+CLASS="command"
+>chmod</B
+> 
+                command will set the mode of these files to be read-write only by the super-user root.
+                <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+                  Both quota record files, <TT
+CLASS="filename"
+>quota.user</TT
+> and <TT
+CLASS="filename"
+>quota.group</TT
+>, should be owned by root, with read-write permission for root and none for anybody else.
+                </P
+></BLOCKQUOTE
+></DIV
+>
+              </P
+></LI
+><LI
+><P
+>&#13;
+                Now we must initialize the files <TT
+CLASS="filename"
+>quota.user</TT
+> and <TT
+CLASS="filename"
+>quota.group</TT
+> in the root directory of the file system in order to not receive an error messages about quota 
+                during the reboot of our server.
+
+                To initialize <TT
+CLASS="filename"
+>quota.user</TT
+> and/or <TT
+CLASS="filename"
+>quota.group</TT
+> files, use the following commands:
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                  [root@deep] /# <B
+CLASS="command"
+>edquota</B
+> -u wahib
+                  [root@deep] /# <B
+CLASS="command"
+>edquota</B
+> -g wahib
+                </PRE
+></TD
+></TR
+></TABLE
+>
+                The steps above are necessary just to initialize the files <TT
+CLASS="filename"
+>quota.user</TT
+> and/or <TT
+CLASS="filename"
+>quota.group</TT
+>; the command <B
+CLASS="command"
+>edquota</B
+>  -u will edit 
+                the quota for the user wahib and  -g will edit the quota for the group wahib. Note that you must edit an existing <SPAN
+CLASS="acronym"
+>UID/GID</SPAN
+> on your system to initialize the files successfully.
+              </P
+></LI
+><LI
+><P
+>&#13;
+                After you have finished setting the appropriate options for your quota program in the <TT
+CLASS="filename"
+>/etc/fstab</TT
+> file, and created and initialized the <TT
+CLASS="filename"
+>quota.users</TT
+>, 
+                and/or <TT
+CLASS="filename"
+>quota.group</TT
+> files, you must reboot the system for the changes you have made in the <TT
+CLASS="filename"
+>/etc/fstab</TT
+> file and/or the 
+                files <TT
+CLASS="filename"
+>quota.user</TT
+>, <TT
+CLASS="filename"
+>quota.group</TT
+> to take effect.
+
+                To reboot your system, use the following command:
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                  [root@deep] /# <B
+CLASS="command"
+>reboot </B
+>
+                </PRE
+></TD
+></TR
+></TABLE
+>
+              </P
+></LI
+></OL
+></DIV
+><P
+>          
+              After your system has been rebooted you can assign quotas to users or groups of users on your system. This operation is performed with the <B
+CLASS="command"
+>edquota</B
+> 
+              command. See man page <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>edquota</SPAN
+>(8)</SPAN
+>
+            </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap20sec156.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap20sec158.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Qouta</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="quota.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>edquota</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

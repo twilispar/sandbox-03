@@ -1,0 +1,987 @@
+<HTML
+><HEAD
+><TITLE
+>Setup a chroot user environment</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FTP Server"
+HREF="ftpd.html"><LINK
+REL="PREVIOUS"
+TITLE="Setup an FTP user account minus shells"
+HREF="chap29sec295.html"><LINK
+REL="NEXT"
+TITLE="Configurations"
+HREF="chap29sec297.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec295.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 32. Linux <TT
+CLASS="literal"
+>FTP</TT
+> Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec297.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN22888"
+>32.3. Setup a chroot user environment</A
+></H1
+><P
+>&#13;      What you're essentially doing is creating a skeleton root file system with enough components necessary, <EM
+>binaries, password files, etc.</EM
+> to allow Unix to do a chroot when the user logs in. Note that if you use the 
+      <TT
+CLASS="literal"
+>--enable-ls</TT
+> option during compilation as seen above, the <TT
+CLASS="filename"
+>/home/ftp/bin</TT
+>, and <TT
+CLASS="filename"
+>/home/ftp/lib</TT
+> directories are not required since this new 
+      option allows Wu-ftpd to use its own <TT
+CLASS="literal"
+>ls</TT
+> function. We still continue to demonstrate the old method for people that prefer to copy <TT
+CLASS="filename"
+>/bin/ls</TT
+> to the chroot'd <TT
+CLASS="literal"
+>FTP</TT
+> 
+      directory, <TT
+CLASS="literal"
+>/home/ftp/bin</TT
+> and create the appropriated library related to <TT
+CLASS="literal"
+>ls</TT
+>.
+      <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/FTP-Chroot.gif"
+ALT="FTP chrooted"
+></IMG
+></P
+></DIV
+>
+
+      The following are the necessary steps to run Wu-ftpd software in a chroot jail:
+    </P
+><P
+>&#13;      First create all the necessary chrooted environment directories as shown below:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>mkdir</B
+> /home/ftp/dev
+        [root@deep ] /# <B
+CLASS="command"
+>mkdir</B
+> /home/ftp/etc
+        [root@deep ] /# <B
+CLASS="command"
+>mkdir</B
+> /home/ftp/bin    <A
+NAME="ftpchr1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+        [root@deep ] /# <B
+CLASS="command"
+>mkdir</B
+> /home/ftp/lib    <A
+NAME="ftpchr2"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec296.html#ftpchr1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;          Require only if you are not using the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option.
+        </DD
+><DT
+><A
+HREF="chap29sec296.html#ftpchr2"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;          Require only if you are not using the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option
+        </DD
+></DL
+></DIV
+>
+
+    </P
+><P
+>&#13;      Change the new directories permission to <TT
+CLASS="literal"
+>0511</TT
+> for security reasons:
+      The <B
+CLASS="command"
+>chmod</B
+> command will make our chrooted <TT
+CLASS="filename"
+>dev</TT
+>, <TT
+CLASS="filename"
+>etc</TT
+>, <TT
+CLASS="filename"
+>bin</TT
+>, and <TT
+CLASS="filename"
+>lib</TT
+> directories 
+      readable and executable by the super-user <TT
+CLASS="literal"
+>root</TT
+> and executable by the user-group and all users.
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;    [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 0511 /home/ftp/dev/
+    [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 0511 /home/ftp/etc/
+    [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 0511 /home/ftp/bin    <A
+NAME="ftpchr3"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+    [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 0511 /home/ftp/lib    <A
+NAME="ftpchr4"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+</PRE
+></TD
+></TR
+></TABLE
+>
+<DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec296.html#ftpchr3"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;Require only if you are not using the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option.
+</DD
+><DT
+><A
+HREF="chap29sec296.html#ftpchr4"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;Require only if you are not using the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option.
+</DD
+></DL
+></DIV
+>
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        Copy the <TT
+CLASS="literal"
+>/bin/ls</TT
+> binary to <TT
+CLASS="filename"
+>/home/ftp/bin</TT
+> directory and change the permission of the <TT
+CLASS="literal"
+>ls</TT
+> program to <TT
+CLASS="literal"
+>0111</TT
+>. 
+        <EM
+>You don't want users to be able to modify the binaries</EM
+>:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;    [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> /bin/ls /home/ftp/bin            <A
+NAME="ftpchr6"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+    [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 0111 /bin/ls /home/ftp/bin/ls <A
+NAME="ftpchr7"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+</PRE
+></TD
+></TR
+></TABLE
+>
+<DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec296.html#ftpchr6"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;Require only if you are not using the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option.
+</DD
+><DT
+><A
+HREF="chap29sec296.html#ftpchr7"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;Require only if you are not using the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option.
+</DD
+></DL
+></DIV
+>
+        This step is necessary only if you're not using the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option during the configure time of Wu-ftpd. See the <A
+HREF="chap29sec294.html"
+>Compile and Optimize</A
+> section in this chapter for more information.
+      </P
+></LI
+><LI
+><P
+>&#13;        Find the shared library dependencies of the <TT
+CLASS="literal"
+>ls</TT
+> Linux binary program:
+      </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ] /# ldd /bin/ls <A
+NAME="ftpsc1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec296.html#ftpsc1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;              Require only if you are not using the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option.
+            </DD
+></DL
+></DIV
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;            libc.so.6 =&#62; /lib/libc.so.6 (0x00125000)
+            /lib/ld-linux.so.2 =7gt; /lib/ld-linux.so.2 (0x00110000)
+          </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;              Copy the shared libraries identified above to your new <TT
+CLASS="filename"
+>lib</TT
+> directory under <TT
+CLASS="filename"
+>/home/ftp</TT
+> directory:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> /lib/libc.so.6 /home/ftp/lib/ <A
+NAME="ftpsc2"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+                [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> /lib/ld-linux.so.2 /home/ftp/lib/ <A
+NAME="ftpsc3"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec296.html#ftpsc2"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;                  Require only if you are not using the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option
+                </DD
+><DT
+><A
+HREF="chap29sec296.html#ftpsc3"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;                  Require only if you are not using the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option
+                </DD
+></DL
+></DIV
+>
+            </P
+></LI
+><LI
+><P
+>&#13;              <DIV
+CLASS="caution"
+><P
+></P
+><TABLE
+CLASS="caution"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Caution.gif"
+ALT="Caution"
+></IMG
+></SPAN
+></B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>&#13;                These library are needed to make <TT
+CLASS="literal"
+>ls</TT
+> work. Also, steps 3 and 4 above are required only if you want to use the <TT
+CLASS="literal"
+>ls</TT
+> Linux binary program instead of the <TT
+CLASS="envar"
+>--enable-ls</TT
+> option that uses 
+                the new internal <TT
+CLASS="literal"
+>ls</TT
+> capability of Wu-ftpd.
+                </P
+></TD
+></TR
+></TABLE
+></DIV
+>
+            </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;            Create your <TT
+CLASS="filename"
+>/home/ftp/dev/null</TT
+> file:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep ] /# <B
+CLASS="command"
+>mknod</B
+> /home/ftp/dev/null c 1 3
+              [root@deep ] /# <B
+CLASS="command"
+>chmod</B
+> 666 /home/ftp/dev/null
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;            Copy the <TT
+CLASS="filename"
+>group</TT
+> and <TT
+CLASS="filename"
+>passwd</TT
+> files in <TT
+CLASS="filename"
+>/home/ftp/etc</TT
+> directory. This should not be the same as your real ones. For this reason, we'll remove all non <TT
+CLASS="literal"
+>FTP</TT
+> 
+            users except for the super-user <TT
+CLASS="literal"
+>root</TT
+> in both of these files, <TT
+CLASS="filename"
+>passwd</TT
+> and <TT
+CLASS="filename"
+>group</TT
+>.
+          </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> /etc/passwd /home/ftp/etc/
+                [root@deep ] /# <B
+CLASS="command"
+>cp</B
+> /etc/group /home/ftp/etc/
+              </PRE
+></TD
+></TR
+></TABLE
+>
+            </P
+></LI
+><LI
+><P
+>&#13;              Edit the <TT
+CLASS="filename"
+>passwd</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/home/ftp/etc/passwd</TT
+> and delete all entries except for the super-user <TT
+CLASS="literal"
+>root</TT
+> and your allowed <TT
+CLASS="literal"
+>FTP</TT
+> users. It is very important that the <TT
+CLASS="filename"
+>passwd</TT
+> file in 
+              the chroot environment has entries like:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                root:x:0:0:root:/:/dev/null
+                ftpadmin:x:502:502::/ftpadmin/:/dev/null
+              </PRE
+></TD
+></TR
+></TABLE
+>
+            </P
+></LI
+><LI
+><P
+>&#13;              <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+              We can notice two things here: first, the home directory for all users inside this modified <TT
+CLASS="filename"
+>passwd</TT
+> file are now changed to reflect the new chrooted <TT
+CLASS="literal"
+>FTP</TT
+> 
+              directory <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> <TT
+CLASS="filename"
+>/home/ftp/./ftpadmin/</TT
+> begins <TT
+CLASS="filename"
+>/ftpadmin/</TT
+>, and also, the name of the user's login 
+              shell for the <TT
+CLASS="literal"
+>root</TT
+> account has been changed to <TT
+CLASS="filename"
+>/dev/null</TT
+>.
+              </P
+></BLOCKQUOTE
+></DIV
+>
+            </P
+></LI
+><LI
+><P
+>&#13;              Edit the <TT
+CLASS="filename"
+>group</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/home/ftp/etc/group</TT
+> and delete all entries except for the super-user <TT
+CLASS="literal"
+>root</TT
+> 
+              and all your allowed <TT
+CLASS="literal"
+>FTP</TT
+> users. The <TT
+CLASS="filename"
+>group</TT
+> file should correspond to your normal group file:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                root:x:0:root
+                ftpadmin:x:502:
+              </PRE
+></TD
+></TR
+></TABLE
+>
+            </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;            Now we must set <TT
+CLASS="filename"
+>passwd</TT
+>, and <TT
+CLASS="filename"
+>group</TT
+> files in the chroot jail directory immutable for better security.
+          </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                [root@deep ] /# <B
+CLASS="command"
+>cd</B
+> /home/ftp/etc/
+                [root@deep ] /# <B
+CLASS="command"
+>chattr</B
+> +i passwd
+              </PRE
+></TD
+></TR
+></TABLE
+>
+            </P
+></LI
+><LI
+><P
+>&#13;              Set the immutable bit on <TT
+CLASS="filename"
+>group</TT
+> file:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                [root@deep ] /# <B
+CLASS="command"
+>cd</B
+> /home/ftp/etc/
+                [root@deep ] /# <B
+CLASS="command"
+>chattr</B
+> +i group
+              </PRE
+></TD
+></TR
+></TABLE
+>
+            </P
+></LI
+></OL
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec295.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec297.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Setup an <TT
+CLASS="literal"
+>FTP</TT
+> user account minus shells</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ftpd.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configurations</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

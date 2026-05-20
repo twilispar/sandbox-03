@@ -1,0 +1,197 @@
+<HTML
+><HEAD
+><TITLE
+>Simple IP Masquerading</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="BTinternet pppd mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="BTOpenworld Home 500 (Alcatel Speedtouch USB)"
+HREF="x203.html"><LINK
+REL="NEXT"
+TITLE="Troubleshooting"
+HREF="x396.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>BTinternet pppd mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x203.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x396.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN374">6. Simple IP Masquerading</H1
+><P
+> To allow sharing of your internet conenction you can eitehr
+use a proxy server or IP Masquerading. I'll cover IP Masquerding as
+it's simple to set up on the other client machines. I use a 2.4.x
+generation kernel and in effect I use IPTables. If you use a 2.2.x or
+2.0.x kernel then you need the 
+<A
+HREF="http://www.linuxdoc.org/HOWTO/IP-Masquerade-HOWTO.html"
+TARGET="_top"
+>IP
+Masquerading HOWTO</A
+>. </P
+><P
+> This part of the HOWTO assumes that your Netfilter software is
+modularised, if it isnt then no big deal, either ignore the
+<TT
+CLASS="OPTION"
+>modprobe</TT
+> lines or recompile your kernel. </P
+><P
+> Simple now, just run the commands:  </P
+><P
+><B
+CLASS="COMMAND"
+>modprobe iptable_nat</B
+></P
+><P
+><B
+CLASS="COMMAND"
+>iptables -t nat -F POSTROUTING</B
+></P
+><P
+><B
+CLASS="COMMAND"
+>iptables -t nat -A POSTROUTING -o ppp0 -s 10.0.0.0/16 -j MASQUERADE</B
+></P
+><P
+><B
+CLASS="COMMAND"
+>echo 1 &#62; /proc/sys/net/ipv4/ip_forward</B
+></P
+><P
+><STRONG
+>Note:</STRONG
+> The space between 1 and &#62; is vital. It seems not to activate the IP Forwarding if the space is not there.</P
+><P
+> Change the <TT
+CLASS="OPTION"
+>ppp0</TT
+> and/or the
+<TT
+CLASS="OPTION"
+>10.0.0.0/16</TT
+> for your relevant network settings and
+put that file either before the <TT
+CLASS="OPTION"
+>case "$1" in</TT
+> in the
+<TT
+CLASS="FILENAME"
+>internet</TT
+> file or somewhere in your startup.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x203.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x396.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>BTOpenworld Home 500 (Alcatel Speedtouch USB)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Troubleshooting</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

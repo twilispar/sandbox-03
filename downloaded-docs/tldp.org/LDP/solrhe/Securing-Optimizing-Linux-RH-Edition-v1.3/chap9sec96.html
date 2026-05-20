@@ -1,0 +1,679 @@
+<HTML
+><HEAD
+><TITLE
+>Config TCP/IP Networking manually -command line</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Files -Networking Functionality"
+HREF="file-netfunc.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/hosts file"
+HREF="chap9sec95.html"><LINK
+REL="NEXT"
+TITLE="Networking -Firewall"
+HREF="soft-netfirew.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap9sec95.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 9. Files -Networking Functionality</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="soft-netfirew.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN6199"
+>9.8. Config <SPAN
+CLASS="acronym"
+>TCP/IP</SPAN
+> Networking manually -command line</A
+></H1
+><P
+>&#13;         The ifconfig utility is the tool used to set up and configure your network card. You should understand this command in the event you need to configure the network by hand. An important note to take care with is when using ifconfig to configure your network devices; the settings will not survive a reboot.
+         To assign the <TT
+CLASS="literal"
+>eth0</TT
+> interface the <SPAN
+CLASS="acronym"
+>IP</SPAN
+>-address of <TT
+CLASS="literal"
+>208.164.186.2</TT
+> use the command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>ifconfig</B
+> eth0 208.164.186.2 netmask 255.255.255.0
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+         Usually, the pratice is to configure or change the <SPAN
+CLASS="acronym"
+>TCP/IP</SPAN
+> networking manually only to make some test on the server. If you want to keep your <SPAN
+CLASS="acronym"
+>TCP/IP</SPAN
+> values, it's preferable to set them in the files related to networking functionality.
+         </P
+></BLOCKQUOTE
+></DIV
+>
+         </P
+><P
+>&#13;         To display all the interfaces you have on your server, use the command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>ifconfig</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The output should look something like this:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+>&#13;           <TT
+CLASS="computeroutput"
+>&#13;         eth0	Link encap:Ethernet  HWaddr 00:E0:18:90:1B:56  
+         inet addr:208.164.186.2  Bcast:208.164.186.255  Mask:255.255.255.0
+         UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+         RX packets:1295 errors:0 dropped:0 overruns:0 frame:0
+         TX packets:1163 errors:0 dropped:0 overruns:0 carrier:0
+         collisions:0 txqueuelen:100 
+         Interrupt:11 Base address:0xa800 
+
+         lo	Link encap:Local Loopback  
+         inet addr:127.0.0.1  Mask:255.0.0.0
+         UP LOOPBACK RUNNING  MTU:3924  Metric:1
+         RX packets:139 errors:0 dropped:0 overruns:0 frame:0
+         TX packets:139 errors:0 dropped:0 overruns:0 carrier:0
+         collisions:0 txqueuelen:0 
+         </TT
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         If the ifconfig tool is invoked without any parameters, it displays all interfaces you have configured. An option of  -a shows the inactive one as well.
+         </P
+><P
+>&#13;         To display all interfaces as well as inactive interfaces you may have, use the command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>ifconfig</B
+> -a
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The output should look something like this:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+>         
+         <TT
+CLASS="computeroutput"
+>&#13;         eth0	Link encap:Ethernet  HWaddr 00:E0:18:90:1B:56  
+         inet addr:208.164.186.2  Bcast:208.164.186.255  Mask:255.255.255.0
+         UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+         RX packets:1295 errors:0 dropped:0 overruns:0 frame:0
+         TX packets:1163 errors:0 dropped:0 overruns:0 carrier:0
+         collisions:0 txqueuelen:100 
+         Interrupt:11 Base address:0xa800 
+
+         eth1	Link encap:Ethernet  HWaddr 00:E0:18:90:1B:56  
+         inet addr:192.168.1.1  Bcast:192.168.1.255  Mask:255.255.255.0
+         UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+         RX packets:1295 errors:0 dropped:0 overruns:0 frame:0
+         TX packets:1163 errors:0 dropped:0 overruns:0 carrier:0
+         collisions:0 txqueuelen:100 
+         Interrupt:5 Base address:0xa320
+
+         lo	Link encap:Local Loopback  
+         inet addr:127.0.0.1  Mask:255.0.0.0
+         UP LOOPBACK RUNNING  MTU:3924  Metric:1
+         RX packets:139 errors:0 dropped:0 overruns:0 frame:0
+         TX packets:139 errors:0 dropped:0 overruns:0 carrier:0
+         collisions:0 txqueuelen:0
+         </TT
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         It is important to note that the settings configured with the ifconfig toll for your network devices will not survive a reboot.
+         </P
+><P
+>&#13;         To assign the default gateway for <TT
+CLASS="literal"
+>208.164.186.12</TT
+> use the command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>route</B
+> add default gw 208.164.186.1
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         In this example, the default route is set up to go to <TT
+CLASS="literal"
+>208.164.186.12</TT
+>, your router. Once again, if you want to keep your default gateway value, it's preferable to set in it the files related 
+         to networking functionality -<TT
+CLASS="filename"
+>/etc/sysconfig/network</TT
+>.
+         </P
+><P
+>&#13;         Verify that you can reach your hosts. Choose a host from your network, for instance <TT
+CLASS="literal"
+>208.164.186.1</TT
+>. Use the command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>ping</B
+> 208.164.186.1
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The output should look something like this:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         [root@deep networking]# ping 208.164.186.1
+         PING 208.164.186.1 (208.164.186.1) from 208.164.186.2 : 56 data bytes
+         64 bytes from 208.164.186.2: icmp_seq=0 ttl=128 time=1.0 ms
+         64 bytes from 208.164.186.2: icmp_seq=1 ttl=128 time=1.0 ms
+         64 bytes from 208.164.186.2: icmp_seq=2 ttl=128 time=1.0 ms
+         64 bytes from 208.164.186.2: icmp_seq=3 ttl=128 time=1.0 ms
+
+         --- 208.164.186.1 ping statistics ---
+         4 packets transmitted, 4 packets received, 0% packet loss
+         round-trip min/avg/max = 1.0/1.0/1.0 ms
+         </TT
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         You should now display the routing information with the command route to see if both hosts have the correct routing entry. Use the command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>route</B
+> -n
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The output should look something like this:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Kernel         IP                      routing table
+         Destination	Gateway	Genmask	Flags	Metric	Ref 	Use	Iface
+         208.164.186.2	0.0.0.0	255.255.255.255	UH	0	0	0	eth0
+         208.164.186.0	208.164.186.2	255.255.255.0	UG	0	0	0	eth0
+         208.164.186.0	0.0.0.0	255.255.255.0	U	0	0	0	eth0
+         127.0.0.0	0.0.0.0	255.0.0.0	U	0	0	0	lo
+         </TT
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;
+         To check the status of the interfaces quickly, use the <B
+CLASS="command"
+>netstat</B
+> -i command, as follows:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>netstat</B
+> -i
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The output should look something like this:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Kernel Interface table
+         Iface	MTU	Met	RX-OK	RX-ERR	RX-DRP	RX-OVR	TX-OK	TX-ERR	TX-DRP	TX-OVR Flg
+         eth0	1500	0	4236	0	0	0	3700	0	0	0	BRU	
+         lo	3924	0	13300	0	0	0	13300	0	0	0	LRU
+         ppp0	1500	0	14	1	0	0	16	0	0	0	PRU
+         </TT
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         Another useful netstat option is  <TT
+CLASS="literal"
+>-t</TT
+>, which shows all active <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> connections. Following is a typical result of netstat -t:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>netstat</B
+> -t
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The output should look something like this:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Active Internet connections (w/o servers)
+         Proto	Recv-Q	Send-Q	Local Address	Foreign Address	State      
+         Tcp	0	0	deep.openar:netbios-ssn	gate.openna.com:1045	ESTABLISHED 
+         Tcp	0	0	localhost:1032	localhost:1033	ESTABLISHED 
+         Tcp	0	0	localhost:1033	localhost:1032	ESTABLISHED 
+         Tcp	0	0	localhost:1030	localhost:1034	ESTABLISHED 
+         Tcp	0	0	localhost:1031	localhost:1030	ESTABLISHED 
+         Tcp	0	0	localhost:1028	localhost:1029	ESTABLISHED 
+         Tcp	0	0	localhost:1029	localhost:1028	ESTABLISHED 
+         Tcp	0	0	localhost:1026	localhost:1027	ESTABLISHED 
+         Tcp	0	0	localhost:1027	localhost:1026	ESTABLISHED 
+         Tcp	0	0	localhost:1024	localhost:1025	ESTABLISHED 
+         Tcp	0	0	localhost:1025	localhost:1024	ESTABLISHED 
+         </TT
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         To shows all active and listen TCP connections, use the command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>netstat</B
+> -vat
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The output should look something like this:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Active Internet connections (servers and established)
+         Proto Recv-Q Send-Q Local Address           	        Foreign Address                 State      
+         tcp        0      0 deep.openna.co:domain 	        *:*                     	LISTEN      
+         tcp        0      0 localhost:domain       	        *:*                    	        LISTEN      
+         tcp        0      0 deep.openna.com:ssh   	        gate.openna.com:1682  	        ESTABLISHED 
+         tcp        0      0 *:webcache              		*:*                     	LISTEN      
+         tcp        0      0 deep.openar:netbios-ssn	        *:*                     	LISTEN      
+         tcp        0      0 localhost:netbios-ssn  		*:*                     	LISTEN      
+         tcp        0      0 localhost:1032          		localhost:1033          	ESTABLISHED 
+         tcp        0      0 localhost:1033          		localhost:1032          	ESTABLISHED 
+         tcp        0      0 localhost:1030          		localhost:1031          	ESTABLISHED 
+         tcp        0      0 localhost:1031          		localhost:1030          	ESTABLISHED 
+         tcp        0      0 localhost:1028          		localhost:1029          	ESTABLISHED 
+         tcp        0      0 localhost:1029         		localhost:1028          	ESTABLISHED 
+         tcp        0      0 localhost:1026          		localhost:1027          	ESTABLISHED 
+         tcp        0      0 localhost:1027          		localhost:1026          	ESTABLISHED 
+         tcp        0      0 localhost:1024          		localhost:1025          	ESTABLISHED 
+         tcp        0      0 localhost:1025          		localhost:1024          	ESTABLISHED 
+         tcp        0      0 deep.openna.com:www   	        *:*                    		LISTEN      
+         tcp        0      0 deep.openna.com:https 	        *:*                    		LISTEN      
+         tcp        0      0 *:389            	       		*:*                     	LISTEN      
+         tcp        0      0 *:ssh       	            	*:*              		LISTEN      
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         To stop all network devices manually on your system, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>stop</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Shutting down interface eth0	         [  OK  ]
+         Disabling IPv4 packet forwarding	 [  OK  ]
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         To start all network devices manually on your system, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>start</B
+>
+
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Enabling IPv4 packet forwarding	  [  OK  ]
+         Bringing up interface lo		  [  OK  ]
+         Bringing up interface eth0	          [  OK  ]
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap9sec95.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="soft-netfirew.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/hosts</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="file-netfunc.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Networking -Firewall</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

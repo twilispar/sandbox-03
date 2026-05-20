@@ -1,0 +1,620 @@
+<HTML
+><HEAD
+><TITLE
+>Installing the new kernel</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Configuring and Building a Secure, Optimized Kernel"
+HREF="secopt-kernel.html"><LINK
+REL="PREVIOUS"
+TITLE='Kernel configuration -Part "E"'
+HREF="chap7sec84.html"><LINK
+REL="NEXT"
+TITLE="Delete programs, Edit files pertaining to modules"
+HREF="chap7sec86.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap7sec84.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. Configuring and Building a Secure, Optimized Kernel</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap7sec86.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN5643"
+>7.10. Installing the new kernel</A
+></H1
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;             Copy the file <TT
+CLASS="filename"
+>/usr/src/linux/arch/i386/boot/bzImage</TT
+> from the kernel source tree to the <TT
+CLASS="filename"
+>/boot</TT
+> directory, and give it an 
+             appropriate new name.
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep ] /linux#<B
+CLASS="command"
+>cp</B
+> /usr/src/linux/arch/i386/boot/bzImage /boot/vmlinuz-kernel.version.number
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             An appropriated or recommended new name is something like vmlinuz-2.2.14, this is important if you want a new rescue floppy or emergency boot floppy using the mkbootdisk program 
+             that require some specific needs like for example: vmlinuz-2.2.14 instead of vmlinuz-2.2.14.a
+             </P
+></LI
+><LI
+><P
+>&#13;             Copy the file <TT
+CLASS="filename"
+>/usr/src/linux/System.map</TT
+> from the kernel source tree to the <TT
+CLASS="filename"
+>/boot</TT
+> directory, and give it an appropriate new name.
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep ] /linux#<B
+CLASS="command"
+>cp</B
+> /usr/src/linux/System.map /boot/System.map-kernel.version.number
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             Move into the <TT
+CLASS="filename"
+>/boot</TT
+> directory and rebuild the links to <TT
+CLASS="filename"
+>vmlinuz</TT
+> and <TT
+CLASS="filename"
+>System.map</TT
+> with the following commands:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep ] /linux#<B
+CLASS="command"
+>cd</B
+> /boot
+             [root@deep ] /boot#<B
+CLASS="command"
+>ln</B
+> -fs vmlinuz-kernel.version.number vmlinuz
+             [root@deep ] /boot#<B
+CLASS="command"
+>ln</B
+> -fs System.map-kernel.version.number System.map
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             We must rebuild the links of <TT
+CLASS="filename"
+>vmlinuz</TT
+> and <TT
+CLASS="filename"
+>System.map</TT
+> to point them to the new kernel version installed. Without 
+             the new links <SPAN
+CLASS="acronym"
+>LILO</SPAN
+> program will look by default for the old version of your Linux kernel.
+            </P
+></LI
+><LI
+><P
+>&#13;             Remove obsolete and unnecessary files under the <TT
+CLASS="filename"
+>/boot</TT
+> directory to make space:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep ] /boot#<B
+CLASS="command"
+>rm</B
+> -f  module-info
+             [root@deep ] /boot#<B
+CLASS="command"
+>rm</B
+> -f  initrd-2.2.xx.img
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             The <TT
+CLASS="filename"
+>module-info</TT
+> link point to the old modules directory of your original kernel. Since we have installed a brand new kernel, we don't need to keep this 
+             broken link. The <TT
+CLASS="filename"
+>initrd-2.2.xx</TT
+> is a file that contains an initial <SPAN
+CLASS="acronym"
+>RAM</SPAN
+> disk image that serves as a system before the disk is available. This file is only 
+             available and is installed from the Linux setup installation if your system has a <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>SCSI</SPAN
+></SPAN
+></SPAN
+> adapter present. If we use and have a <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>SCSI</SPAN
+></SPAN
+></SPAN
+></SPAN
+> system, the driver now will be incorporated 
+             into our new Linux kernel since we have build a monolithic kernel, so we can remove this file <TT
+CLASS="filename"
+>initrd-2.2.xx.img</TT
+> safely.
+             </P
+></LI
+><LI
+><P
+>&#13;              Create a new Linux kernel directory that will handle all header files related to Linux kernel for future compilation of other programs on your system. Recall, we had created two symlinks under the <TT
+CLASS="filename"
+></TT
+>/usr/include
+              directory that point to the Linux kernel to be able to compile it without receiving error and also be able to compile future programs.             
+             
+             
+              The <TT
+CLASS="filename"
+>/usr/include</TT
+> directory is where all header files of your Linux system are kept for reference and dependencies when you compile and install new programs. The asm, and linux links 
+              are used when program need to know some functions from compile-time specific to the kernel installed on your system. Programs call other headers in the include directory when they must know specific information, dependencies, 
+              <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+> of your system.             
+             
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep] /#<B
+CLASS="command"
+>mkdir</B
+> -p  /usr/src/linux-2.2.14/include
+              [root@deep] /#<B
+CLASS="command"
+>cp</B
+> -r  /usr/src/linux/include/asm-generic /usr/src/linux-2.2.14/include
+              [root@deep] /#<B
+CLASS="command"
+>cp</B
+> -r  /usr/src/linux/include/asm-i386 /usr/src/linux-2.2.14/include
+              [root@deep] /#<B
+CLASS="command"
+>cp</B
+> -r  /usr/src/linux/include/linux /usr/src/linux-2.2.14/include
+              [root@deep] /#<B
+CLASS="command"
+>cp</B
+> -r  /usr/src/linux/include/net /usr/src/linux-2.2.14/include
+              [root@deep] /#<B
+CLASS="command"
+>cp</B
+> -r  /usr/src/linux/include/video /usr/src/linux-2.2.14/include
+              [root@deep] /#<B
+CLASS="command"
+>cp</B
+> -r  /usr/src/linux/include/scsi /usr/src/linux-2.2.14/include
+              [root@deep] /#<B
+CLASS="command"
+>rm</B
+> -rf  /usr/src/linux
+              [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /usr/src
+              [root@deep ] /src#<B
+CLASS="command"
+>ln</B
+> -s  /usr/src/linux-2.2.14 linux             
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             
+             First we create a new directory named <TT
+CLASS="filename"
+>linux-2.2.14</TT
+> based on the version of the kernel we have installed for easy interpretation, then we copy directories 
+             asm-generic, asm-i386, linux, net, video, and scsi from <TT
+CLASS="filename"
+>/usr/linux/include</TT
+> to our new place <TT
+CLASS="filename"
+>/usr/src/linux-2.2.14/include</TT
+>. After
+             We remove the entire source directory where we had compiled the new kernel, create a new symbolic link named <TT
+CLASS="filename"
+>linux</TT
+> under <TT
+CLASS="filename"
+>/usr/src</TT
+> that
+             points to our new <TT
+CLASS="filename"
+>/usr/src/linux-2.2.14/include</TT
+> directory. With these steps, future compiled programs will know where to look for headers related to the kernel on your server.             
+             
+             <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+             This step will allow us to gain space on our hard drive and will reduce the risk of security. The Linux kernel source directory handles a of lot files and is about 75 MB in size when uncompressed. With the 
+             procedure described above, our Linux kernel directory began approximately 3 MB in size so we save 72 MB for the same functionalities.
+             </P
+></BLOCKQUOTE
+></DIV
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             Finally, you need to edit the <TT
+CLASS="filename"
+>/etc/lilo.conf</TT
+> file to make your new kernel one of the boot time options:
+               </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;                   Edit the <TT
+CLASS="filename"
+>lilo.conf</TT
+> file - vi <TT
+CLASS="filename"
+>/etc/lilo.conf</TT
+> and make the appropriated change on the line that read <TT
+CLASS="envar"
+>image=/boot/</TT
+>.
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>vi</B
+> /etc/lilo.conf
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <P
+CLASS="literallayout"
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<TT
+CLASS="computeroutput"
+>  
+             boot=/dev/sda
+             map=/boot/map
+             install=/boot/boot.b
+             prompt
+             timeout=00
+             restricted
+             password=somepasswd
+             image=/boot/vmlinuz-kernel.version.number  #add your new kernel name file here.
+             label=linux
+             root=/dev/sda6
+             read-only
+             </TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+             <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+             Don't forget to remove the line that read <TT
+CLASS="envar"
+>initrd=/boot/initrd-2.2.12-20.img</TT
+> in the <TT
+CLASS="filename"
+>lilo.conf</TT
+> file, since this line is not necessary now monolithic kernel doesn't need an initrd file.
+             </P
+></BLOCKQUOTE
+></DIV
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             
+             Once the name of the new kernel version has been put in the <TT
+CLASS="filename"
+>lilo.conf</TT
+> file as shown above, we update our <TT
+CLASS="filename"
+>lilo.conf</TT
+> file for the change to take effect 
+             with the following command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>/sbin/lilo</B
+> -v
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <P
+CLASS="literallayout"
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<TT
+CLASS="computeroutput"
+>&#13;             LILO version 21, [Copyright 1992-1998 Werner Almesberger
+             Reading boot sector from /dev/sda
+             Merging with /boot/boot.b
+             Boot image: /boot/vmlinuz-2.2.14
+             Added linux *
+             /boot/boot.0800 exits  no backup copy made.
+             Writing boot sector.
+             </TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+             <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+             If you say <TT
+CLASS="userinput"
+><B
+>NO</B
+></TT
+> to the configuration option Unix98 <SPAN
+CLASS="acronym"
+>PTY</SPAN
+> support <TT
+CLASS="envar"
+>CONFIG_UNIX98_PTYS</TT
+> during your kernel configuration, you must edit the <TT
+CLASS="filename"
+>/etc/fstab</TT
+> file and remove the line that read:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             none		/dev/pts		devpts		gid=5,mode=620	0 0
+
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></BLOCKQUOTE
+></DIV
+>
+             </P
+></LI
+></OL
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap7sec84.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap7sec86.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Kernel configuration -Part "E"</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="secopt-kernel.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Delete programs, Edit files pertaining to modules</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

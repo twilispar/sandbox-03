@@ -1,0 +1,284 @@
+<HTML
+><HEAD
+><TITLE
+>Blocking; su to root, by one and sundry</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Special accounts"
+HREF="chap5sec42.html"><LINK
+REL="NEXT"
+TITLE="Put limits on resource"
+HREF="chap5sec44.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec42.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec44.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3602"
+>5.14. Blocking; <B
+CLASS="command"
+>su</B
+> to root, by one and sundry</A
+></H1
+><P
+>&#13;               The <B
+CLASS="command"
+>su</B
+> Substitute User command allows you to become other existing users on the system. For example you can temporarily become root and execute commands as the super-user root. If you don't want anyone to su to root or restrict <B
+CLASS="command"
+>su</B
+> command to 
+               certain users then add the following two lines to the top of your <B
+CLASS="command"
+>su</B
+> configuration file in the <TT
+CLASS="filename"
+>/etc/pam.d/</TT
+> directory. We highly recommend that you limit the person 
+               allowed to <B
+CLASS="command"
+>su</B
+> to the root account.
+               </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;               Edit the su file vi <TT
+CLASS="filename"
+>/etc/pam.d/su</TT
+> and add the following two lines to the top of the file:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;               auth sufficient /lib/security/pam_rootok.so debug
+               auth required /lib/security/pam_wheel.so group=wheel
+                </PRE
+></TD
+></TR
+></TABLE
+>
+               After adding the two lines above, the <TT
+CLASS="filename"
+>/etc/pam.d/su</TT
+> file should look like this:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;               #%PAM-1.0
+               auth	      sufficient   	/lib/security/pam_rootok.so debug
+               auth             required    	/lib/security/pam_wheel.so group=wheel
+               auth       	required     	/lib/security/pam_pwdb.so shadow nullok
+               account    	required     	/lib/security/pam_pwdb.so
+               password   	required     	/lib/security/pam_cracklib.so
+               password   	required     	/lib/security/pam_pwdb.so shadow use_authtok nullok
+               session    	required     	/lib/security/pam_pwdb.so
+               session    	optional     	/lib/security/pam_xauth.so
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               Which mean only those who are a member of the wheel group can su to root; it also includes 
+               logging. Note that the wheel group is a special account on your system that can be used for this purpose. You cannot 
+               use any group name you want to make this hack. This hack combined with specifying which TTY devices root is allowed to 
+               login on will improve your security a lot on the system.
+               </P
+></LI
+><LI
+><P
+>&#13;               Now that we have defined the wheel group in our <TT
+CLASS="filename"
+>/etc/pam.d/su</TT
+> file configuration, it is time to add some users allowed to su to 
+               root account. If you want to make, for example, the user admin a member of the wheel group, and thus be able to su to root, use the following command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>usermod</B
+> -G10 admin
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <P
+></P
+><UL
+><LI
+><P
+>&#13;               Which means <TT
+CLASS="literal"
+>G</TT
+> is a list of supplementary groups, 
+               </P
+></LI
+><LI
+><P
+>&#13;               Where the user is also a member of, <TT
+CLASS="literal"
+>10</TT
+> is the numeric value of the user's <SPAN
+CLASS="acronym"
+>ID</SPAN
+> wheel, 
+               </P
+></LI
+><LI
+><P
+>&#13;               admin is the user we want to add to wheel group. 
+               </P
+></LI
+></UL
+>
+               Use the same command above for all users on your system you want to be able to su to 
+               root account.
+               <EM
+>&#13;               If you can't <B
+CLASS="command"
+>su</B
+> in a <SPAN
+CLASS="acronym"
+>GNOME</SPAN
+> terminal, it's because you've used the wrong terminal. So don't think that this advice simply doesn't work because of a terminal problem!.
+               </EM
+>
+               </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec42.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec44.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Special accounts</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Put limits on resource</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

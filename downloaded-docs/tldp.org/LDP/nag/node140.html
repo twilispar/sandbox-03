@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Network File System</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node141.html">Preparing NFS</A>
+<B>Up:</B> <A HREF="nag.html">The Network Administrators' Guide</A>
+<B> Previous:</B> <A HREF="node139.html">Using the Traditional NIS </A>
+<BR> <P>
+<H1><A NAME="SECTION0013000000">The Network File System</A></H1>
+NFS, the network filesystem, is probably the most prominent network
+services using RPC. It allows to access files on remote hosts in exactly
+the same way as a user would access any local files. This is made
+possible by a mixture of kernel functionality on the client side (that
+uses the remote file system) and an NFS server on the server side (that
+provides the file data).  This file access is completely transparent to
+the client, and works across a variety of server and host architectures.
+<P>
+NFS offers a number of advantages:
+<P>
+<UL><LI>   Data accessed by all users can be kept on a central
+        host, with clients mounting this directory at boot time. For
+        example, you can keep all user accounts on one host, and have
+        all hosts on your network mount /home from that host. If
+        installed alongside with NIS, users can then log into any
+        system, and still work on one set of files.<LI>   Data consuming large amounts of disk space may be kept
+        on a single host.  For example, all files and programs relating
+        to LaTeX and METAFONT could be kept and maintained in one
+        place.<LI>   Administrative data may be kept on a single host.
+        No need to use rcp anymore to install the same
+        stupid file on 20 different machines.
+<P>
+</UL>
+<P>
+ NFS is largely the work of Rick Sladkey,<A HREF="footnode.html#5585"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> who wrote the NFS kernel code and large parts of the NFS server. The
+latter is derived from the unfsd user-space NFS server originally
+written by Mark Shand, and the hnfs Harris NFS server written by
+Donald Becker.
+<P>
+<A NAME="5378"></A>
+Let's have a look now at how NFS works: A client may request to mount a
+directory from a remote host on a local directory just the same way it
+can mount a physical device.  However, the syntax used to specify the
+remote directory is different. For example, to mount /home from
+host vlager to /users on vale, the administrator
+would issue the following command on vale:<A HREF="footnode.html#5586"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<P><P>
+<P>
+mount will then try to connect to the mountd mount daemon
+on vlager via RPC. The server will check if vale is
+permitted to mount the directory in question, and if so, return it a
+file handle. This file handle will be used in all subsequent requests to
+files below /users.
+<P>
+<A NAME="5587"></A>
+<A NAME="5588"></A>
+When someone accesses a file over NFS, the kernel places an RPC call to
+nfsd (the NFS daemon) on the server machine. This call takes the
+file handle, the name of the file to be accessed, and the user's user
+and group id as parameters. These are used in determining access rights
+to the specified file. In order to prevent unauthorized users from
+reading or modifying files, user and group ids must be the same on both
+hosts.
+<P>
+On most  implementations, the NFS functionality of both client
+and server are implemented as kernel-level daemons that are started from
+user space at system boot.  These are the NFS daemon (nfsd) on
+the server host, and the <em>Block I/O Daemon</em> (biod) running
+on the client host. To improve throughput, biod performs
+asynchronous I/O using read-ahead and write-behind; also, several
+nfsd daemons are usually run concurrently.
+<P>
+The NFS implementation of  is a little different in that the
+client code is tightly integrated in the virtual file system (VFS) layer
+of the kernel and doesn't require additional control through
+biod. On the other hand, the server code runs entirely in user
+space, so that running several copies of the server at the same time is
+almost impossible because of the synchronization issues this would
+involve.  NFS currently also lacks read-ahead and write-behind,
+but Rick Sladkey plans to add this someday.<A HREF="footnode.html#5405"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="5406"></A>
+<A NAME="5407"></A>
+The biggest problem with the  NFS code is that the 
+kernel as of version 1.0 is not able to allocate memory in chunks bigger
+than 4K; as a consequence, the networking code cannot handle datagrams
+bigger than roughly 3500 bytes after subtracting header sizes etc. This
+means that transfers to and from NFS daemons running on systems that use
+large UDP datagrams by default (e.g. 8K on SunOS) need to be downsized
+artificially. This hurts performance badly under some
+circumstances.<A HREF="footnode.html#5410"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> This limit is gone in late -1.1 kernels, and the client code
+has been modified to take advantage of this.
+<P>
+<BR> <HR>
+<UL> 
+<LI> <A HREF="node141.html#SECTION0013100000">Preparing NFS</A>
+<LI> <A HREF="node142.html#SECTION0013200000">Mounting an NFS Volume</A>
+<LI> <A HREF="node143.html#SECTION0013300000">The NFS Daemons</A>
+<LI> <A HREF="node144.html#SECTION0013400000">The exports File</A>
+<LI> <A HREF="node145.html#SECTION0013500000">The  Automounter</A>
+</UL>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node141.html">Preparing NFS</A>
+<B>Up:</B> <A HREF="nag.html">The Network Administrators' Guide</A>
+<B> Previous:</B> <A HREF="node139.html">Using the Traditional NIS </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

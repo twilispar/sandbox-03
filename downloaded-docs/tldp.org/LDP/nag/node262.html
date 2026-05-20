@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<!-- updated   Sun Jul 14 17:45:48 MET DST 1996 by:
+    Tony den Haan (tony@iaehv.nl)  ftp://ftp.IAEhv.nl/pub/users/tony-->
+
+<HTML>
+<HEAD>
+<TITLE>The sys file</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node263.html">The active file</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node261.html">Installation</A>
+<BR> <P>
+<H1><A NAME="SECTION0019300000">The <TT>sys</TT> file</A></H1>
+<A NAME="cnewssys"></A>
+The sys file, located in /usr/lib/news, controls which
+hierarchies you receive and forward to other sites. Although there
+are maintenance tools named addfeed and delfeed, I think
+it's better to maintain this file by hand.
+<P>
+The sys file contains entries for each site you forward news to,
+as well as a description of the groups you will accept.
+An entry looks like
+<PRE>
+           site[/exclusions]:grouplist[/distlist][:flags[:cmds]]
+</PRE>
+Entries may be continued across newlines using a backslash (\).
+A hash sign (#) denotes a comment.
+
+<DL>
+<DT>site<DD> This is the name of the site the entry applies to. One usually
+                chooses the site's UUCP name for this.  There  has  to  be  an
+                entry  for  your  site in the sys file, too, else you will not
+                receive any articles yourself.
+<P>
+
+                      The special site name ME denotes your site. The ME entry
+                defines  all groups you are willing to store locally. Articles
+                that aren't matched by the ME line will go to the junk  group.
+<P>
+                       Since  C News checks site against the site names in the
+                Path: header field, you have to make sure they  really  match.
+                Some  sites  use  their  fully  qualified  domain name in this
+                field, or an alias like news.site.domain. To prevent any articles from being returned to these sites, you have to add these
+                to the exclusion list, separated by commas.
+<P>
+                     For the entry applying to site moria, for  instance,  the
+                site field would contain moria/moria.orcnet.org.
+ 
+<DT>grouplist<DD>  This  is  a  comma-separated subscription list of groups and
+                hierarchies for that particular site. A hierarchy may be specified  by  giving  the hierarchy's prefix (such as comp.os for
+                all groups whose name starts  with  this  prefix),  optionally
+                followed by the keyword all (e.g. comp.os.all).
+<P>
+                     A  hierarchy or group is excluded from forwarding by pre-
+                ceding it with an exclamation mark. If a newsgroup is  checked
+                against  the  list, the longest match applies. For example, if
+                grouplist contains
+<PRE>
+
+                     !comp,comp.os.linux,comp.folklore.computers
+</PRE>
+<DD>      no groups from the comp hierarchy except comp.folklore.computers and all groups below comp.os.linux will be fed to that site.
+
+<P>
+                     If the site requests to be forwarded all news you receive
+                yourself, enter all as grouplist.
+
+<DT>distlist<DD>   is offset from the grouplist by a slash, and contains a list
+                of distributions to be forwarded.  Again, you may exclude certain distributions by preceding them with an exclamation mark.
+                All  distributions  are  denoted  by  all.  Omitting  distlist
+                implies a list of all.
+<P>
+                     For   example,   you  may  use  a  distribution  list  of
+                all,!local to prevent news for local use only from being  sent
+                to remote sites.
+<P>
+                     There  are  usually  at  least  two distributions: world,
+                which is often the default  distribution  used  when  none  is
+                specified by the user, and local. There may be other distributions that apply to a certain  region,  state,  country,  etc.
+                Finally,  there  are  two  distributions  used by C News only;
+                these are sendme and ihave, and are used for the  sendme/ihave
+                protocol.
+<P>
+
+                     The use of distributions is a subject of debate. For one,
+                some newsreaders create bogus distributions  by  simply  using
+                the  top  level  hierarchy,  for  example comp when posting to
+                comp.os.linux.  Distributions that apply to regions are  often
+                questionable,  too,  because  news  may travel outside of your
+                region when sent across the Internet.(3) Distributions  apply-
+                ing  to  an  organization,  however,  are very meaningful, for
+                example to prevent confidential information from  leaving  the
+                company  network.  This  purpose, however, is generally served
+                better by creating a separate newsgroup or hierarchy.
+
+
+ <DT>flags<DD>
+                     This describes certain parameters for the feed. It may be
+                empty, or a combination of the following:
+
+<DL>
+<DT>F<DD>  This flag enables batching.
+
+
+<DT>f<DD>   This is almost identical to the F flag, but allows
+                          C News to calculate the  size  of  outgoing  batches
+                          more precisely.
+<DT>I<DD>   This  flag  makes  C  News produce an article list
+                          suitable for use by ihave/sendme. Additional modifi-
+                          cations  to  the  sys  and  the  batchparms file are
+                          required to enable ihave/sendme.
+<DT>n<DD>  This creates batch files for active  NNTP  transfer
+                          clients  like nntpxmit (see chapter 19.).  The batch
+                          files contain the article's filename along with  its
+                          message id.
+
+
+<DT>I<DD>   This  flag  makes  C  News produce an article list
+                          suitable for use by ihave/sendme. Additional modifi-
+                          cations  to  the  sys  and  the  batchparms file are
+                          required to enable ihave/sendme.
+
+<DT>n<DD>  This creates batch files for active  NNTP  transfer
+                          clients  like nntpxmit (see chapter 19.).  The batch
+                          files contain the article's filename along with  its
+                          message id.
+
+
+
+<DT>L<DD> This  tells  C News to transmit only articles posted
+                          at your site. This flag may be followed by a decimal
+                          number  n, which makes C News only transfer articles
+                          posted within n hops from your site. C  News  deter-
+                          mines the number of hops from the Path: field.
+
+
+<DT>u<DD> tells C News to batch only articles from unmod-
+                          erated groups.
+
+
+<DT>m<DD> tells C News to batch only articles from moder-
+                          ated groups.
+<BR>
+                     You may use at most one of F, f, I, or n.
+
+ 
+<DT>cmds<DD>   This  field contains a command to be executed for each article, unless batching is enabled. The article will  be  fed  to
+                the  command  on  standard input. This should only be used for
+                very small feeds; otherwise the load on both systems  will  be
+                too high.
+
+<P>
+                     The default command is
+<PRE>
+                     uux - -r -z system!rnews
+</PRE>
+<DD>
+      which  invokes  rnews  on  the  remote system, feeding it the article on
+                standard input.
+<P>
+
+                     The default search path for commands given in this  field
+                is /bin:/usr/bin:/usr/lib/news/bin/batch. The latter directory
+                contains a number of shell scripts whose name starts with via;
+                they are briefly described later in this chapter.
+
+<P>
+                       If batching is enabled using either of the F or f, I or
+                n flags, C News expects to find a  file  name  in  this  field
+                rather  than a command. If the file name does not begin with a
+                slash   (/),   it   is   assumed    to    be    relative    to
+                /var/spool/news/out.going.  If the field is empty, it defaults
+                to system/togo.
+
+</DL>
+</DL>
+When setting up C-News, you will most probably have to write your own
+sys file. To help you with it, we give a sample file for
+vbrew.com below, from which you might copy what you need.
+<PRE>
+           # We take whatever they give us.
+           ME:all/all::
+
+           # We send everything we receive to moria, except for local and
+           # brewery-related articles. We use batching.
+           moria/moria.orcnet.org:all,!to,to.moria/all,!local,!brewery:f:
+
+           # We mail comp.risks to jack@ponderosa.uucp
+           ponderosa:comp.risks/all::rmail jack@ponderosa.uucp
+
+           # swim gets a minor feed
+           swim/swim.twobirds.com:comp.os.linux,rec.humor.oracle/all,!local:f:
+
+           # Log mail map articles for later processing
+           usenet-maps:comp.mail.maps/all:F:/var/spool/uumaps/work/batch
+
+</PRE>
+<HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

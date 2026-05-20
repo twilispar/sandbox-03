@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>What Devices there are-- the port File</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node167.html">How to Dial a </A>
+<B>Up:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<B> Previous:</B> <A HREF="node165.html">Restricting Call Times</A>
+<BR> <P>
+<H2><A NAME="SECTION0014370000">What Devices there are-- the port File</A></H2>
+<P>
+<A NAME="6611"></A>
+<A NAME="6135"></A>
+<A NAME="6136"></A>
+<P>
+The port file tells uucico about the available ports.
+These may be modem ports, but other types such as direct serial lines
+and TCP sockets are supported as well.
+<P>
+Like the sys file, port consists of separate entries
+starting with the keyword port, followed by the port name.
+This name may be used by in the sys file's port
+statement.  The name need not be unique; if there are several ports
+with the same name, uucico will try each in turn until it finds
+one that is not currently being used.
+<P>
+The port command should be immediately followed by the
+type statement that describes what type of port is described.
+Valid types are modem, direct for direct
+connections, and tcp for TCP sockets. If the port
+command is missing, the port type defaults to modem.
+<P>
+In this section, we will cover only modem ports; TCP ports and direct
+lines are discussed in a later section.
+<P>
+For modem and direct ports, you have to specify the device for calling
+out using the device directive.  Usually, this is the name of
+a device special file in the /dev directory, like
+/dev/cua1.<A HREF="footnode.html#6612"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+In the case of a modem device, the port entry also determines what type
+of modem is connected to the port.  Different types of modems have to be
+configured differently.  Even modems that claim to be Hayes-compatible
+needn't be really compatible with each other.  Therefore, you have to
+tell uucico how to initialize the modem and how to make it dial
+the desired number.  Taylor UUCP keeps the descriptions of all dialers
+in a file named dial.  To use any of these, you have to specify
+the dialer's name using the dialer command.
+<P>
+Sometimes, you will want to use a modem in different ways, depending
+on which system you call.  For instance, some older modems don't
+understand when a high-speed modem attempts to connect at 14400bps;
+they simply drop the line instead of negotiating a connect at, say,
+9600bps. When you know site drop uses such a dumb modem, you
+have to set up your modem differently when calling them. For this, you
+need an additional port entry in the port file that specifies a
+different dialer.  Now you can give the new port a different name,
+such as serial1-slow, and use the port directive
+in drop system entry in sys.
+<P>
+A better way is to distinguish the ports by the speeds they support.
+For instance, the two port entries for the above situation may look
+like this:
+<P>
+<P><P>
+<P>
+The system entry for site drop would now give serial1
+as port name, but request to use it at 9600bps only.  uucico
+will then automatically use the second port entry. All remaining
+sites that have a speed of 38400bps in the system entry will be called
+using the first port entry.
+<P>
+<A NAME="6169"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node167.html">How to Dial a </A>
+<B>Up:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<B> Previous:</B> <A HREF="node165.html">Restricting Call Times</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

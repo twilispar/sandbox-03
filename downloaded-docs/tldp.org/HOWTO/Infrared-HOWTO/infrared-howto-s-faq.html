@@ -1,0 +1,387 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>FAQ</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Advanced Topics"
+HREF="infrared-howto-c-advanced-topics.html"><LINK
+REL="PREVIOUS"
+TITLE="IrDA Protocols"
+HREF="infrared-howto-s-irda-protocols.html"><LINK
+REL="NEXT"
+TITLE="Infrared Remote Control"
+HREF="infrared-howto-p2-infrared-remote-control.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-irda-protocols.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. Advanced Topics</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-p2-infrared-remote-control.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-faq"
+></A
+>5.11. FAQ</H1
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>&#13;   Q0 - Question: What is the difference between irport and irtty?
+</P
+></LI
+><LI
+><P
+>&#13;Answer:
+   I never used irport because irtty works for me, but it
+   should not matter which low level driver you use. I used successfully
+   irtty, nsc-ircc and irda-usb (depending on my hardware).
+</P
+></LI
+><LI
+><P
+>&#13;   Q1 - Question: I do not know anything about ports and irqs. What
+   should I do?
+</P
+></LI
+><LI
+><P
+>&#13;Answer:
+   PART A: Hardware settings
+   - 1 Have a look at your hardware specs!!! If not available look at
+   the support page of your vendor, or contact the support hotline.
+   You might also find the information in one of the hardware surveys
+   mentioned above.
+
+   PART B: How to tell the kernel about the hardware settings
+   -4 cat /proc/ioports to see which ports are already in use.
+   -5 cat /proc/interrupts to see which interrupts are already in
+   use.
+   -6 Make ports and interrupts available for use with the IR device,
+   e.g. stop the PCMCIA service or include a line like this in
+   /etc/sysconfig/pcmcia: PCIC_OPTS="irq_list=3,4,5,7,9,10,12,14,15"
+   -7 Now try to guess what the right interrupt and port is. Use
+   setserial /dev/ttySx irq M port 0xNNNN to tell the kernel. If
+   there is more then one possible chance try them all (Note: As
+   mentioned in the Serial-HOWTO you should not try irq 0, 1, 6, 8,
+   13, 14).
+   -8 If you were successful please send these parameters to the
+   author, because I would like to include them in the Infrared
+   Hardware Survey.
+   -9 Good luck.
+   It might also be necessary to fine tune the IR serial port with
+   setserial, e.g., setserial /dev/ttyS0 spd_vhi (speed rate 115200).
+</P
+></LI
+><LI
+><P
+>&#13;Q3 - Question: I get a message like tcsetattr read/write error in
+   /var/log/messages.
+
+</P
+></LI
+><LI
+><P
+>&#13;Answer: Caused probably by wrong /dev/ttyS* or wrong irq or port.
+
+</P
+></LI
+><LI
+><P
+>&#13;Q4 - Question: Every setting seems alright, because I get the
+   appropriate messages. But it still does not work.
+</P
+></LI
+><LI
+><P
+>&#13;Answer: Move the devices to within 0.5 meter (1.5 feet). Check
+   that only one application is using the infrared port. Check that
+   both devices are using the same protocol, such as IrOBEX or
+   IrCOMM.
+</P
+></LI
+><LI
+><P
+>&#13;   Q7 - Question by Ho Chin Keong: Is there other way of setting up
+   communication between the 2 laptops besides setting up a LAN route
+   between the two?
+</P
+></LI
+><LI
+><P
+>&#13;Answer by Dag Brattli: Yes and no! One of the IrDA standard,
+   IrCOMM permits you to emulate a serial cable between two laptops,
+   so you can use any application written for serial ports
+   (terminals, PPP, slip, etc.). This is however not yet implemented
+   in Linux/IrDA. The IrLPT (printer) support is actually a subset of
+   IrCOMM, so some of it is working!
+</P
+></LI
+><LI
+><P
+>&#13;Q8 - Question by Ho Chin Keong: If I block the infrared path
+   deliberately for more than 10 seconds, the connection could not
+   re-establish. I have to kill the irattach and restart the whole
+   procedure to start the infrared route. The connection could be
+   maintained, however, if the blocking is less than 10 seconds. Is
+   this part of the design or a bug? Is there any way whereby we can
+   lengthen this time limit from 10 s to longer or infinitely?
+</P
+></LI
+><LI
+><P
+>&#13;   Answer by Thomas Davis: This seems to be a bug in the primary side
+   of the IrLAP/IrLMP code. It appears not to send the
+   reset/disconnect notice all the way back up the stack. You'll
+   notice it when IrLPT gets stuck in the query mode while you were
+   trying to talk to a printer, and disconnected/interrupted it when
+   it was handshaking. (and now, it shows up in the IrLAN portion)
+</P
+></LI
+><LI
+><P
+>&#13;Q11 - Is there any IrDA support for BSD?
+</P
+></LI
+><LI
+><P
+>&#13;Answer: Linux/IrDA seems to be the only available GPL source yet.
+</P
+></LI
+><LI
+><P
+>&#13;Q12 - By Rui Oliveira: I am having a problem connecting a PalmIII
+   to a Linux box with an Actisys 220L adapter. With a motherboard
+   adapter (no brand but, I think, similar to the Actisys 210L) I
+   simply redirect a pilot syncronization tool (pilot-xfer) to
+   /dev/ttyS1 which has the ir adapter attached and, using IrLink in
+   SIR mode, I can get the Linux box to talk with the PalmIII. Trying
+   the above through a serial port with a serial-irda Actisys 220L
+   adapter I can't get this to work. My question is :What happens if
+   one just throws data into a serial port with a irda adapter?
+
+</P
+></LI
+><LI
+><P
+>&#13;Answer by Lichen Wang: In terms of hardware, IrDA SIR needs a
+   serializer- deserializer, an encoder-decoder, and a transceiver.
+   The UART that drives the COM port of any PC is a
+   serializer-deserializer. In some PC, there is also an
+   encoder-decoder which can be enabled or disabled by the BIOS. When
+   it is disabled, the COM port is usable as an old COM port. When
+   the encoder-decoder is enabled, usually the COM port is no longer
+   usable but an IrDA port is now usable instead. Actisys IR-210 is a
+   SIR transceiver and thus can be used if the PC has this kind of
+   UART with an IrDA encoder-decoder and the BIOS has enabled it.
+   Under this hardware configuration, you need to tell the Windows
+   setup program that you have "standard infrared devices" and with
+   "Built-in Infrared port on laptop or desktop". Actisys IR-220, on
+   the other hand, includes both the encoder-decoder and the
+   transceiver. It is designed to be used with a regular UART. If the
+   UART in the PC has also the encoder-decoder built-in, you must use
+   BIOS to disable that. Under either of this hardware configuration,
+   you need to tell the Windows setup program that you have an
+   "ACTiSYS" manufactured "ACT-IR220L Infrared Wireless Interface".
+   To answer your question: In addition to throwing data at the
+   serial port, you need to tell the UART and the encoder-decoder
+   what data rate to use. In the case of a built-in encoder-decoder,
+   when you set the data rate of the UART, the encoder-decode also
+   get set correctly. In the case a separate encoder-decoder, you
+   need to tell both of them the data rate separatly.
+
+</P
+></LI
+><LI
+><P
+>&#13;   Q13 - If I try to make a connection, say telnet, it takes an
+   incredibly long time for the login prompt to appear.
+
+</P
+></LI
+><LI
+><P
+>&#13;   Answers by Renaud Baldura, Dag Brattli and Hee Thong: ... it's a
+   DNS problem. The resolver times out trying to reverse-resolve the
+   IP address of your incoming connection. I think just renaming
+   /etc/resolv.conf to something else takes care of it. ... or add
+   some static bindings in /etc/hosts for the machines you want to
+   access in your ad-hoc network. That should avoid the DNS lookups.
+   ... If both machines are in a private test environment, put the
+   following line in the /etc/host.conf, order hosts, bind. This will
+   make the machine check the /etc/host file before doing a DNS
+   lookup. Remember to update the host file on both machines to
+   reflect the IP and host names of the 2 machines.
+</P
+></LI
+><LI
+><P
+>&#13;Q14 - Question by David LaPorte: I was wondering if anyone has had
+   any success getting the irda port on the Toshiba Tecra 740cdt
+   working. ... I've read that it should show up at IRQ 11, ttyS2.
+   Well, I have a PCMCIA modem which steals ttyS2 and the PCMCIA
+   controller steals IRQ 11. Does anyone have any suggestions?
+</P
+></LI
+><LI
+><P
+>&#13;Answer by Dag Brattli: If you still have Win95 on your machine,
+   you should go to the device manager and change the PnP setup for
+   the IrDA port (something else than the stuff your're already
+   using). You could for example move away ttyS1 (in Win95), so that
+   it uses the values that the PCMCIA card is going to steal, and
+   then use the settings from ttyS1 for ttyS2.
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;dagbnb ~/linux/test/ &#62; cat /etc/sysconfig/pcmcia
+PCMCIA=yes
+PCIC=i82365
+PCIC_OPTS="irq_list=7,9,10"
+CORE_OPTS=
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   ... should make sure the PCMCIA controller stays away from irq 11.
+   Also make sure that the IrDA port is enabled in Win95 since it's
+   disabled by default.
+    </P
+></LI
+></UL
+>
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-irda-protocols.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-p2-infrared-remote-control.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>IrDA Protocols</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-advanced-topics.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Infrared Remote Control</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

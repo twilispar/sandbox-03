@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Devices, Drivers, and all that</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node43.html">Kernel Configuration</A>
+<B>Up:</B> <A HREF="node41.html">Configuring the Networking Hardware</A>
+<B> Previous:</B> <A HREF="node41.html">Configuring the Networking Hardware</A>
+<BR> <P>
+<H1><A NAME="SECTION005100000">Devices, Drivers, and all that</A></H1>
+<P>
+<A NAME="hardwaredrivers"></A>
+<A NAME="1835"></A>
+<A NAME="1836"></A>
+<P>
+Up to now, we've been talking quite a bit about network interfaces and
+general TCP/IP issues, but didn't really cover exactly <em>what</em>
+happens when ``the networking code'' in the kernel accesses a piece of
+hardware.  For this, we have to talk a little about the concept of
+interfaces and drivers.
+<P>
+First, of course, there's the hardware itself, for example an Ethernet
+board: this is a slice of Epoxy, cluttered with lots of tiny chips
+with silly numbers on them, sitting in a slot of your PC.  This is
+what we generally call a device.
+<P>
+For you to be able to use the Ethernet board, special functions have
+to be present in your  kernel that understand the particular
+way this device is accessed. These are the so-called device drivers.
+For example,  has device drivers for several brands of
+Ethernet boards that are very similar in function.  They are known as
+the ``Becker Series Drivers'', named after their author, Donald
+Becker. A different example is the D-Link driver that handles a D-Link
+pocket adaptor attached to a parallel port.
+<P>
+But, what do we mean when we say a driver ``handles'' a device?  Let's
+go back to that Ethernet board we examined above. The driver has to be
+able to communicate with the peripheral's on-board logic somehow: it
+has to send commands and data to the board, while the board should
+deliver any data received to the driver.
+<P>
+ <P><A NAME="2203"></A><BR>
+<STRONG>Figure:</STRONG> 
+   <A NAME="hardwarefigdrivers"></A>
+   The relationship between drivers, interfaces, and the
+   hardware.
+  <BR>
+<P>
+<P>
+In PCs, this communication takes place through an area of I/O-memory
+that is mapped to on-board registers and the like.  All commands and
+data the kernel sends to the board have to go through these registers.
+I/O memory is generally described by giving its starting or <em>base
+address</em>. Typical base addresses for Ethernet boards are 0x300,
+or 0x360.
+<P>
+Usually, you don't have to worry about any hardware issues such as the
+base address, because the kernel makes an attempt at boot time to
+detect a board's location. This is called autoprobing, which means
+that the kernel reads several memory locations and compares the data
+read with what it should see if a certain Ethernet board was
+installed. However, there may be Ethernet boards it cannot detect
+automatically; this is sometimes the case with cheap Ethernet cards
+that are not-quite clones of standard boards from other manufacturers.
+Also, the kernel will attempt to detect only one Ethernet device when
+booting. If you're using more than one board, you have to tell the
+kernel about this board explicitly.
+<P>
+<A NAME="1903"></A>
+Another such parameter that you might have to tell the kernel about is
+the interrupt request channel.  Hardware components usually interrupt
+the kernel when they need care taken of them, e.g.  when data has
+arrived, or a special condition occurs. In a PC, interrupts may occur on
+one of 15 interrupt channels numbered 0, 1, and 3 through 15. The
+interrupt number assigned to a hardware component is called its
+<em>interrupt request number</em>, or IRQ.<A HREF="footnode.html#1905"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="1906"></A>
+<A NAME="1907"></A>
+As described in chapter-<A HREF="node23.html#tcpip"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>, the kernel accesses a device
+through a so-called interface.  Interfaces offer an abstract set of
+functions that is the same across all types of hardware, such as
+sending or receiving a datagram.
+<P>
+Interfaces are identified by means of names. These are names defined
+internally in the kernel, and are not device files in the /dev
+directory.  Typical names are eth0, eth1, etc, for
+Ethernet interfaces. The assignment of interfaces to devices usually
+depends on the order in which devices are configured; for instance the
+first Ethernet board installed will become eth0, the next will
+be eth1, and so on. One exception from this rule are SLIP
+interfaces, which are assigned dynamically; that is, whenever a SLIP
+connection is established, an interface is assigned to the serial
+port.
+<P>
+The picture given in figure-<A HREF="node42.html#hardwarefigdrivers"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> tries to show
+the relationship between the hardware, device drivers and interfaces.
+<P>
+When booting, the kernel displays what devices it detects, and what
+interfaces it installs. The following is an excerpt of a typical
+boot screen:
+<P>
+<P><P>
+<P>
+This shows that the kernel has been compiled with TCP/IP enabled, and
+drivers for SLIP, CSLIP, and PPP included.  The third line from below says
+that a D-Link pocket adaptor was detected, and installed as interface
+dl0.  If you have a different type of Ethernet card, the kernel will
+usually print a line starting with eth0, followed by the type of
+card detected.  If you have an Ethernet card installed but don't see any
+such message, this means that the kernel is unable to detect your board
+properly.  This is dealt with in a later section.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node43.html">Kernel Configuration</A>
+<B>Up:</B> <A HREF="node41.html">Configuring the Networking Hardware</A>
+<B> Previous:</B> <A HREF="node41.html">Configuring the Networking Hardware</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,717 @@
+<HTML
+><HEAD
+><TITLE
+>BTOpenworld Home 500 (Alcatel Speedtouch USB)</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="BTinternet pppd mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="BTi Anytime"
+HREF="x199.html"><LINK
+REL="NEXT"
+TITLE="Simple IP Masquerading"
+HREF="x374.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>BTinternet pppd mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x199.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x374.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN203">5. BTOpenworld Home 500 (Alcatel Speedtouch USB)</H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN205">5.1. About this section</H2
+><P
+> There is rather a large amount of credit due here, to 
+<A
+HREF="mailto:chris@black-sun.co.uk"
+TARGET="_top"
+>Chris Jones</A
+> for writing the
+<A
+HREF="http://www.linuxdoc.org/HOWTO/DSL-HOWTO/speedtouchusb.html"
+TARGET="_top"
+>Alcatel
+Speedtouch USB ASDL Modem mini-HOWTO</A
+> that is now part of the
+<A
+HREF="http://www.linuxdoc.org/HOWTO/DSL-HOWTO/"
+TARGET="_top"
+>DSL HOWTO</A
+>.
+This helped me a great deal when trying to get my Speedtouch to work. </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN211">5.2. Warning</H2
+><P
+>At home I use Linux Mandrake, although the version of the kernel I had was patched with the ATM kernel source I did end up patching a different kernel source to get it working. Please, please inspect your kernel source to see if you have the PPPoATM source patched against your kernel. To do this go into you kernel source directory, usually <TT
+CLASS="FILENAME"
+>/usr/src/linux</TT
+> and do a <B
+CLASS="COMMAND"
+>make menuconfig</B
+>. In the Network Device Support section check for:</P
+><P
+></P
+><UL
+><LI
+><P
+>Network device support-&#62;PPP over ATM</P
+></LI
+></UL
+><P
+>If it does exist then make sure it is present it you current kernel and you can skim-read the "Patching you kernel" section to make sure you have the correc toptions compiled in and then carry on.</P
+><P
+>This was just a minor warning as I orginially had a kernel patched with PPPoATM and without realising managed to trash my kernel tree by trying to force the patch onto it.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN221">5.3. Distribution Specific Information</H2
+><P
+>I have had reports about different distros that have varying 
+PPPoATM support already builtin to the kernel:</P
+><P
+></P
+><UL
+><LI
+><P
+>Mandrake 8.0: The default 2.4.3 kernel already has the
+  PPPoATM patch applied, I cannot remember if it compiled in but ignore
+  steps refering the "Patching the Kernel" below. PS: You still need to
+  configure the kernel.</P
+></LI
+><LI
+><P
+>Mandrake 8.1: Mandrake 8.1 supports the Speedtouch
+  automatically, I have no had first hand experience but from what I can
+  gather you simply have to download the Alcatel binaries and then use
+  DrakNet to sort it out.</P
+></LI
+><LI
+><P
+>Debian: I have had reports that the standard Debian
+  installtion does not include libpam, this must be installed for the
+  PPPoATM plugin modules to work.</P
+></LI
+></UL
+><P
+>NOTE: From roughly kernel 2.4.16 the PPPoATM patch is included in
+Linus' main source tree. Therefore you can miss out patching the kernel
+and just configure it.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN232">5.4. Requirements</H2
+><P
+> To get your Speedtouch USB working in Linux you have a fairly
+heavyweight task ahead of you, but hey, if I could do it so can you!
+This is what you'll need to get it working: </P
+><P
+></P
+><UL
+><LI
+><P
+>You must have the kernel source installed and
+      know the procedure for installing and compiling a new kernel.
+      If this is a problem then read the <A
+HREF="http://www.linuxdoc.org/HOWTO/Kernel-HOWTO.html"
+TARGET="_top"
+>Kernel HOWTO</A
+>.</P
+></LI
+><LI
+><P
+>You must be running one of the following
+      Kernels: 2.3.39, 2.4.0-test4, 2.4.1-pre7, 2.4.7, 2.4.8-pre5.
+      This is because the PPPoATM patch for the kernel exists patched
+      against specific kernels, some may work with similar kernel
+      versions but I cannot vouch for that</P
+></LI
+><LI
+><P
+>You, obviously, need a USB controller of some
+      description with at least one free plug. It also must be Linux
+      compatible, nowadays this is most USB controllers that are
+      UHCI/OHCI based. If you don't have one your local supplier
+      would probably have a PCI USB Controller.</P
+></LI
+><LI
+><P
+>A heap-load of confidence with meddling with
+      your config. eg: kernel recompiling, program
+      installation...</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN245">5.5. Software Downloads</H2
+><P
+> To get the Speedtouch working under Linux you will need some
+software and kernel patches found below:  </P
+><P
+></P
+><UL
+><LI
+><P
+>The kernel patch for your kernel. They can be found at <A
+HREF="http://www.kernel.org/pub/linux/kernel/people/axboe/PPPoATM/"
+TARGET="_top"
+>http://www.kernel.org/pub/linux/kernel/people/axboe/PPPoATM/</A
+>. Please note not all the kernels have patches.</P
+></LI
+><LI
+><P
+>The latest SpeedTouch driver from <A
+HREF="http://sourceforge.net/project/showfiles.php?group_id=3581"
+TARGET="_top"
+>http://sourceforge.net/project/showfiles.php?group_id=3581</A
+></P
+></LI
+><LI
+><P
+>The latest SARlib library from <A
+HREF="http://sourceforge.net/project/showfiles.php?group_id=22221"
+TARGET="_top"
+>http://sourceforge.net/project/showfiles.php?group_id=22221</A
+></P
+></LI
+><LI
+><P
+>The Alcatel speed management software. You can get it from <A
+HREF="http://www.alcatel.com/consumer/dsl/dvrreg_lx.htm"
+TARGET="_top"
+>http://www.alcatel.com/consumer/dsl/dvrreg_lx.htm</A
+>. I can't distribute this because of Alcatel's licensing scheme so get it from them.</P
+></LI
+><LI
+><P
+>Some description of PPPoATM aware PPPd binary:</P
+><P
+></P
+><UL
+><LI
+><P
+>Red Hat 7 RPM (glibc 2.2): <A
+HREF="http://sourceforge.net/project/showfiles.php?group_id=23818"
+TARGET="_top"
+>http://sourceforge.net/project/showfiles.php?group_id=23818</A
+></P
+></LI
+><LI
+><P
+>Debian (.deb): <A
+HREF="http://sourceforge.net/project/showfiles.php?group_id=23818"
+TARGET="_top"
+>http://sourceforge.net/project/showfiles.php?group_id=23818</A
+></P
+></LI
+><LI
+><P
+>Tarball: <A
+HREF="http://sourceforge.net/project/showfiles.php?group_id=23818"
+TARGET="_top"
+>http://sourceforge.net/project/showfiles.php?group_id=23818</A
+></P
+></LI
+></UL
+></LI
+><LI
+><P
+>The Linux Hotplug software from <A
+HREF="http://linux-hotplug.sourceforge.net"
+TARGET="_top"
+>http://linux-hotplug.sourceforge.net</A
+>. Get it installed as per their instructions. It seemed simple enough so I won't cover it here</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN276">5.6. Patching your kernel</H2
+><P
+> Once you have the PPPoATM kernel patch (this assumes you use
+the patch against kernel 2.4.7) you need to make sure you have a
+working 2.4.7 kernel tree, next unzip the PPPoATM patch by doing:</P
+><P
+>NOTE: From rougly kernel 2.4.16 (I haven't tested to see hwo far
+back it goes) the PPPoATM patch is included in Linus' main kernel tree,
+therefore you may skip the patching below and resume ready to configure
+the kernel.</P
+><P
+><B
+CLASS="COMMAND"
+>gzip -d pppoatm-2.zip</B
+></P
+><P
+> Next we will need to test-patch the kernel using the following
+commands:  </P
+><P
+><B
+CLASS="COMMAND"
+>patch -p1 -s -E --dry-run &#60; /point/to/pppoatm-2</B
+></P
+><P
+> If that ran without failure then patch the kernel by removing
+the <TT
+CLASS="OPTION"
+>--dry-run</TT
+> as such:  </P
+><P
+><B
+CLASS="COMMAND"
+>patch -p1 -s -E &#60; /point/to/pppoatm-2</B
+></P
+><P
+> That should have patched the kernel good-and-proper so we can
+go ahead and configure it, make sure the following options are
+selected along with your personal build options:  </P
+><P
+></P
+><UL
+><LI
+><P
+>Code maturity levels-&#62;Prompt for development and/or incomplete code/drivers</P
+></LI
+><LI
+><P
+>Networking options-&#62;Asynchronous Transfer Mode (ATM)</P
+></LI
+><LI
+><P
+>Network device support-&#62;PPP (point-to-point protocol) support</P
+></LI
+><LI
+><P
+>Network device support-&#62;PPP support for async serial ports</P
+></LI
+><LI
+><P
+>Network device support-&#62;PPP Deflate compression</P
+></LI
+><LI
+><P
+>Network device support-&#62;PPP BSD-Compress compression</P
+></LI
+><LI
+><P
+>Network device support-&#62;PPP over ATM</P
+></LI
+><LI
+><P
+>USB support-&#62;Support for USB</P
+></LI
+><LI
+><P
+>USB support-&#62;Preliminary USB device filesystem</P
+><P
+>You have to make a choice here, if your USB controller is 
+       UHCI based then select:</P
+><P
+>USB support-&#62;UHCI (Intel, PIIX4, VIA, ...) support</P
+><P
+>Alternatively choose:</P
+><P
+>USB Support-&#62;OHCI (Compaq, iMacs, OPTi, SiS, ALi, ...) support</P
+></LI
+></UL
+><P
+> You could select any of these as modules or compiled-in but as
+I followed Chris Jones' HOWTO I compiled the all but UHCI/OHCI as
+compiled-in code. Save the kernel config and compile the kernel and
+modules as you normally do.  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN314">5.7. Kernel Drivers and Software</H2
+><P
+> Now that the kernel will support using PPPoATM we can start
+compiling the bits to run the modem. Well start with the Kernel mode
+driver; first decompress the SARlib sources to a build directory.
+(Personally I build all my non-kernel sources 
+in <TT
+CLASS="FILENAME"
+>~/sources</TT
+>) and do a
+<B
+CLASS="COMMAND"
+>make</B
+> on it. There is no need to do
+a <B
+CLASS="COMMAND"
+>make install</B
+> with this library.</P
+><P
+> Next return to your source root and decompress your Speedtouch
+drivers (from Sourceforge not Alcatel!), go in there and do a
+<B
+CLASS="COMMAND"
+>make</B
+>, and then a <B
+CLASS="COMMAND"
+>make install</B
+>.</P
+><P
+> <STRONG
+>Note:</STRONG
+> If you get an "Error
+1" then check the <TT
+CLASS="FILENAME"
+>Makefile</TT
+> for a line starting
+<TT
+CLASS="OPTION"
+>SARLIB:=</TT
+> and check it points to the right directory, the
+one where you just compiled SARlib.  </P
+><P
+> Next install the Hotplug software and make sure it works. Once
+you've done that decompress Alcatel's binary management software and
+do a <B
+CLASS="COMMAND"
+>make</B
+> on that. Then do a <B
+CLASS="COMMAND"
+>make
+install</B
+>, the clever bit here is their installation
+registers the Speedtouch kernel driver and their binary to be run
+when the USB device is "hotplugged" (or coldplugged) into the system.
+<EM
+>Kiss goodbye to the hours of trying to writing modules
+loading scripts that always fail.</EM
+> </P
+><P
+> Next install the new PPPoATM aware PPPd program, I had no luck
+getting it compile from source on my machine so I used the RPM. Sorry
+you're on your own there!  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN332">5.8. PPPd Configuration</H2
+><P
+> <STRONG
+>Warning:</STRONG
+> The action will
+remove all the default settings for any previous PPPd connection.
+(Not that you want them now you've got shiny new ADSL ;P) </P
+><P
+> In the <TT
+CLASS="FILENAME"
+>/etc/ppp</TT
+> directory there is a file called
+<TT
+CLASS="FILENAME"
+>options</TT
+> in that file put the following:  </P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  lock
+  defaultroute
+  noipdefault
+  noauth
+  passive
+  asyncmap 0
+  name bloggs@hg5.btinternet.com
+  user bloggs@hg5.btinternet.com
+  plugin /usr/lib/pppd/plugins/pppoatm.so
+  0.38</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> Make sure of the following things:  </P
+><P
+></P
+><UL
+><LI
+><P
+>That you replace both name
+      <STRONG
+>and</STRONG
+> user variables with your
+      username.</P
+></LI
+><LI
+><P
+>That you get the correct VPI/VCI ATM pair,
+      these are in the windows information software, from BTi my
+      VPI:0 and VCI:38 so I use <TT
+CLASS="OPTION"
+>0.38</TT
+>. Make sure
+      you get this right or it <STRONG
+>will not
+      work</STRONG
+>.</P
+></LI
+></UL
+><P
+> Next in your <TT
+CLASS="FILENAME"
+>/etc/ppp/chap-secrets</TT
+> put:</P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  # Secrets for authentication using CHAP
+  # client    server    secret    IP addresses
+  "bloggs@hg5.btinternet.com"  *   "mypasswordhere"</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN354">5.9. Testing your link</H2
+><P
+> Next thing to do is get the link up and test it. If you've got
+a nice distro like Mandrake you should find it will auto-init your
+USB drivers and filesystem, if not then the following can be used:</P
+><P
+><B
+CLASS="COMMAND"
+>/sbin/modprobe usb-uhci</B
+></P
+><P
+><B
+CLASS="COMMAND"
+>mount none /proc/bus/usb -tusbdevfs</B
+></P
+><P
+> Next load the Speedtouch driver by doing:
+<B
+CLASS="COMMAND"
+>/sbin/modprobe speedtch</B
+>. Next use the speedmgmt
+program to get the modem init'ed: <B
+CLASS="COMMAND"
+>/usr/sbin/mgmt</B
+>.
+After a while of the lights flashing on the modem the main console
+(and/or the syslog) should report:  </P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  Speedmgmt[2074]: Modem initialised at 576 kbit/s downstream and 288 kbit/s upstream</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> Once the modem has been init'ed now make sure the PPPoATM
+module is loaded by doing:  </P
+><P
+><B
+CLASS="COMMAND"
+>modprobe pppoatm</B
+></P
+><P
+> Now start the PPP link by typing <B
+CLASS="COMMAND"
+>pppd</B
+> You
+should see something similar to this:  </P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  Oct 28 14:01:25 ds9 pppd: PPPoATM plugin_init
+  Oct 28 14:01:25 ds9 pppd: PPPoATM setdevname_pppoatm
+  Oct 28 14:01:25 ds9 pppd: PPPoATM setdevname_pppoatm - SUCCESS
+  Oct 28 14:01:26 ds9 pppd: Using interface ppp0
+  Oct 28 14:01:26 ds9 pppd: Connect: ppp0 &#60;--&#62; 0.38
+  Oct 28 14:01:28 ds9 pppd: local IP address 255.255.255.255
+  Oct 28 14:01:28 ds9 pppd: remote IP address 255.255.255.255
+  Oct 28 14:01:28 ds9 pppd: primary DNS address 213.120.62.100</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> Once that's done you're in luck, now just configure the pppd
+to autodial at startup (beyond the scope of this HOWTO, sorry!).
+Hopefully HotPlug will get your device up and going before pppd needs
+it! :).  </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x199.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x374.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>BTi Anytime</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Simple IP Masquerading</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

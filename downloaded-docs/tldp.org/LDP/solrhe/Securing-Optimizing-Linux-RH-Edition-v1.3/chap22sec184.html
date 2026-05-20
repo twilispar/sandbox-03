@@ -1,0 +1,600 @@
+<HTML
+><HEAD
+><TITLE
+>Limit queue processing to root</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Mail Network"
+HREF="soser-mailn.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/mail/aliases file"
+HREF="chap22sec183.html"><LINK
+REL="NEXT"
+TITLE="Sendmail Administrative Tools"
+HREF="chap22sec185.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap22sec183.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 22. Software -Server/Mail Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap22sec185.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN12660"
+>22.12. Limit queue processing to <TT
+CLASS="literal"
+>root</TT
+></A
+></H1
+><P
+>&#13;         Ordinarily, anyone may process the queue with the  -q switch. To limit queue processing to <TT
+CLASS="literal"
+>root</TT
+> and the owner of the queue directory, you must specify 
+         the <TT
+CLASS="envar"
+>restrictqrun</TT
+> option in the <TT
+CLASS="filename"
+>/etc/mail/sendmail.cf</TT
+> file.
+         </P
+><P
+>&#13;         Edit the <TT
+CLASS="filename"
+>sendmail.cf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/mail/sendmail.cf</TT
+> and change the line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         O PrivacyOptions=authwarnings,goaway,restrictmailq
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         O PrivacyOptions=authwarnings,goaway,restrictmailq,restrictqrun
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         Now re-start the sendmail process manually for the change to take effect:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /etc/rc.d/init.d/sendmail <B
+CLASS="command"
+>restart</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Shutting down sendmail:                                    	[  OK  ]
+         Starting sendmail:                                    		[  OK  ]
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         Any non-privileged user who attempts to process the queue will get this message:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [user@deep /]$ /usr/sbin/sendmail -q
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         You do not have permission to process the queue
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN12681"
+>22.12.1. The <SPAN
+CLASS="acronym"
+>SMTP</SPAN
+> greeting message</A
+></H2
+><P
+>&#13;         When Sendmail accepts an incoming <SPAN
+CLASS="acronym"
+>SMTP</SPAN
+> connection it sends a greeting message to the other host. This message identifies the local machine and is the first thing it sends to say it is ready.
+         </P
+><P
+>&#13;         Edit the <TT
+CLASS="filename"
+>sendmail.cf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/mail/sendmail.cf</TT
+> and change the line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         O SmtpGreetingMessage=$j Sendmail $v/$Z; $b
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         O SmtpGreetingMessage=$j
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         Now re-start the sendmail process manually for the change to take effect:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /etc/rc.d/init.d/sendmail <B
+CLASS="command"
+>restart</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+>&#13;         Shutting down sendmail:                                    	[  OK  ]
+         Starting sendmail:                                    		[  OK  ]
+         <TT
+CLASS="computeroutput"
+></TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+         This change doesn't actually affect anything, but was recommended by folks in the <TT
+CLASS="literal"
+>news.admin.net-abuse.email</TT
+> newsgroup as a legal precaution. It modifies the banner, which Sendmail displays upon receiving a connection.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         Do set the immutable bit on important Sendmail files, important Sendmail files can be set immutable for better security with the <B
+CLASS="command"
+>chattr</B
+> command of Linux. A file with the <TT
+CLASS="literal"
+>+i</TT
+> attribute 
+         cannot be modified, deleted or renamed. No link can be created to this file, and no data can be written to the file. Only the super-user can set or clear this attribute.
+         </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;         Set the immutable bit on the <TT
+CLASS="filename"
+>sendmail.cf</TT
+> file:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>chattr</B
+>  +i /etc/mail/sendmail.cf
+         </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;         Set the immutable bit on the <TT
+CLASS="filename"
+>local-host-names</TT
+> file:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>chattr</B
+>  +i /etc/mail/local-host-names
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Set the immutable bit on the <TT
+CLASS="filename"
+>aliases</TT
+> file:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>chattr</B
+>  +i /etc/mail/aliases
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         Set the immutable bit on the <TT
+CLASS="filename"
+>access</TT
+> file:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>chattr</B
+>  +i /etc/mail/access
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+></OL
+></DIV
+><P
+>&#13;         Further documentation and for more details, there are several man pages you can read:
+         <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>aliases</SPAN
+>(5)</SPAN
+></DT
+><DD
+><P
+>&#13;         - aliases file for sendmail
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>makemap</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;         - create database maps for sendmail
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>sendmail</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;         - an electronic mail transport agent
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>mailq</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;         - print the mail queue
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>newaliases</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;         - rebuild the data base for the mail aliases file
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>mailstats</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;         - display mail statistics
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>praliases</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;         - display system mail aliases
+         </P
+></DD
+></DL
+></DIV
+>
+         </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap22sec183.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap22sec185.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/mail/aliases</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soser-mailn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Sendmail Administrative Tools</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Testing the sendmail.cf file</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node245.html">Putting it all together </A>
+<B>Up:</B> <A HREF="node241.html">Installing sendmail</A>
+<B> Previous:</B> <A HREF="node243.html">Building sendmail.cf</A>
+<BR> <P>
+<H2><A NAME="SECTION0017530000">Testing the sendmail.cf file</A></H2>
+<P>
+<A NAME="8455"></A>
+<A NAME="8456"></A>
+<P>
+To put sendmail into `test' mode, you invoke it with the -bt
+flag.  The default configuration file is the sendmail.cf file that is
+installed on the system.  You can test an alternate file by using the
+-Cfilename option.
+<P>
+In the following examples, we test vstout.cf, the configuration
+file generated from the vstout.m4 file shown in
+figure-<A HREF="node222.html#sendmailfigm4"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+<P><P>
+<P>
+The following tests ensure that sendmail is able to deliver all
+mail to users on your system.  In all cases the result of the test
+should be the same and point to the local system name with the
+LOCAL mailer.
+<P>
+First test how a mail to a local user would be delivered.
+<P>
+<P><P>
+<P>
+The output shows how sendmail processes the address internally.
+It is handed to various rule-sets which analyze it, invoke other
+rule-sets in turn, and break it up into its components.
+<P>
+In our example, we passed the address me to rule-sets 3 and 0
+(this is the meaning of the 3,0 entered before the address).
+The last line shows the parsed address as returned by rules-et 0,
+containing the mailer the message would be delivered by, and the host
+and user name given to the mailer.
+<P>
+Next, test mail to a user on your system with UUCP syntax.
+<P>
+<P><P>
+<P>
+Next, test mail addressed to a user on your system with Internet syntax
+to your fully qualified hostname.
+<P>
+<P><P>
+<P>
+You should repeat the above two tests with each of the names you
+specified in the PSEUDONYMS and DEFAULT_NAME
+parameters in your sendmail.m4 file.
+<P>
+Lastly, test that you can mail to your relay host.
+<P>
+<P><P><BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

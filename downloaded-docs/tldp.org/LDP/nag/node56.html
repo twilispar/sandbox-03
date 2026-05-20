@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Accessing Serial Devices</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node57.html">Serial Hardware</A>
+<B>Up:</B> <A HREF="node53.html">Setting up the Serial </A>
+<B> Previous:</B> <A HREF="node55.html">Introduction to Serial Devices</A>
+<BR> <P>
+<H1><A NAME="SECTION006300000">Accessing Serial Devices</A></H1>
+<P>
+<A NAME="serialdevices"></A>
+Like all devices in a  system, serial ports are accessed
+through device special files, located in the /dev directory.
+There are two varieties of device files related to serial drivers,
+and for each port, there is one device file from each of them.
+Depending on the file it is accessed by, the device will behave
+differently.
+<P>
+<A NAME="2396"></A>
+<A NAME="2397"></A>
+<A NAME="2322"></A>
+<A NAME="2323"></A>
+<A NAME="2324"></A>
+The first variety is used whenever the port is used for dialing in; it
+has a major number of-4, and the files are named ttyS0,
+ttyS1, etc. The second variety is used when dialing out
+through a port; the files are called cua0, etc, and
+have a major number of-5.
+<P>
+<A NAME="2328"></A>
+<A NAME="2329"></A>
+Minor numbers are identical for both types. If you have your modem on
+one of the ports COM1 through COM4, its minor number will
+be the COM port number plus 63. If your setup is different from
+that, for example when using a board supporting multiple serial lines,
+please refer to the Serial Howto.
+<P>
+Assume your modem is on COM2. Thus its minor number will be-65,
+and its major number will be 5 for dialing out.  There should be a
+device cua1 which has these numbers. List the serial ttys in
+the /dev directory.  Columns 5 and 6 should show major and minor
+numbers, respectively:
+<pre>
+           $ ls -l /dev/cua*
+           crw-rw-rw-   1 root     root       5,  64 Nov 30 19:31 /dev/cua0
+           crw-rw-rw-   1 root     root       5,  65 Nov 30 22:08 /dev/cua1
+           crw-rw-rw-   1 root     root       5,  66 Oct 28 11:56 /dev/cua2
+           crw-rw-rw-   1 root     root       5,  67 Mar 19  1992 /dev/cua3
+
+</pre>
+If there is no such device, you will have to create one: become
+super-user and type
+<pre>
+           # mknod -m 666 /dev/cua1 c 5 65
+           # chown root.root /dev/cua1
+< /pre>
+Some people suggest making /dev/modem a symbolic link to your
+modem device, so that casual users don't have to remember the somewhat
+un-intuitive cua1. However, you cannot use modem in one
+program, and the real device file name in another. This is because
+these programs use so-called <em>lock files</em> to signal that the
+device is used. By convention, the lock file name for cua1, for
+instance, is LCK..cua1.  Using different device files for the
+same port means that programs will fail to recognize each other's lock
+files, and will both use the device at the same time. As a result, both
+applications will not work at all.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node57.html">Serial Hardware</A>
+<B>Up:</B> <A HREF="node53.html">Setting up the Serial </A>
+<B> Previous:</B> <A HREF="node55.html">Introduction to Serial Devices</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,250 @@
+<HTML
+><HEAD
+><TITLE
+>Appendix: fonts.dir to fonts.alias</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="xfsft"
+HREF="x1086.html"></HEAD
+><BODY
+CLASS="APPENDIX"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XFree86 Font De-uglification HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x1086.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+>&nbsp;</TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="APPENDIX"
+><H1
+CLASS="APPENDIX"
+><A
+NAME="APPENDIXB">B. Appendix: <TT
+CLASS="FILENAME"
+>fonts.dir</TT
+> to <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+></H1
+><P
+> Thanks to Aristotle Pagaltzis for providing this perl 
+ version of a script to convert a <TT
+CLASS="FILENAME"
+>fonts.scale</TT
+>
+ file to <TT
+CLASS="FILENAME"
+>fonts.dir</TT
+>.</P
+><P
+> <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>&#13;#!/usr/bin/perl -w
+
+# This utility is a direct translation right down to the comments
+# from mkfontalias.py written by Roman Sulzhyk to assist people
+# in de-uglification of their true type fonts. It creates a
+# fonts.alias file from the fonts.dir file found in the directory.
+
+# It supports all of the Python script's features:
+#
+# - maps the following MS webfonts:
+#	Verdana, Tahoma, Impact, Arial Black,
+#	Comic Sans MS, Georgia, Trebuchet MS
+#
+# - cheats by mapping 6, 7 and 8pt to 9pt fonts
+#
+
+# (c)2002 Aristotle Pagaltzis, licensed under the GPL
+# http://www.gnu.org/copyleft/gpl.html
+
+use strict;
+
+my $infile = "fonts.dir";
+my $outfile = "fonts.alias";
+
+my @res = (75, 75);
+
+my %cheat_map = (6 =&#62; 9, 7 =&#62; 9, 8 =&#62; 9);
+
+my @font_sizes = (6..16, 18, 24);
+
+my %font_map = (
+	"Arial" =&#62; "Arial",
+	"Times New Roman" =&#62; "Times New Roman",
+	"Verdana" =&#62; "Verdana",
+	"Tahoma" =&#62; "Tahoma",
+	"Impact" =&#62; "Impact",
+	"Arial Black" =&#62; "Arial Black",
+	"Comic Sans MS" =&#62; "Comic Sans MS",
+	"Georgia" =&#62; "Georgia",
+	"Trebuchet MS" =&#62; "Trebuchet MS",
+	"Courier New" =&#62; "Courier New"
+);
+
+# Read in the fonts.
+open(THEFILE, "&#60;", $infile) or die "Cannot read $infile: $! - are you sure you are in the fonts directory?\n";
+my @fontdir = splice @{[ &#60;THEFILE&#62; ]}, 1; # Strip the first line
+close THEFILE;
+
+# Now, create the output
+my @aliases;
+foreach (@fontdir) {
+	# Get rid of the first entry, but mind that other may have 
+	# spaces in them
+	my $font = join(" ", splice @{[ split ]}, 1) or die "Cannot parse $infile line: $_\n";
+
+	my @entries = split "-", $font;
+
+	die "Invalid font: $font\n" unless @entries == 15;
+
+	my $mapped_font = $font_map{$entries[2]} or next;
+	
+	# Create a bunch of aliases, for each size
+	for my $size (@font_sizes) {
+		# Do the "cheating" - fallback to size if not in the cheat map
+		my $real_size = $cheat_map{$size} || $size;
+
+		# Add the entry to the aliases
+		push @aliases, join(
+			" ",
+			join("-", @entries[0..6], $real_size, $real_size * 10, @entries[9..14]),
+			join("-", @entries[0..1], $mapped_font, @entries[3..6], $size, $size * 10, @res, @entries[11..14])
+		);
+	}		
+}
+
+# Boast
+print "Created ", scalar(@aliases), " aliases\n";
+
+# Backup the existing file
+if(-e $outfile) {
+	my $bakfile = "$outfile.bak";
+	my $errormsg = "Cannot backup $outfile to $bakfile:";
+	die "$errormsg file exists\n" if -e $bakfile;
+	rename $outfile, $bakfile or die "$errormsg $!\n" 
+}
+
+# Ok, write the file
+open(THEFILE, "&#62;", $outfile) or die "Cannot open $outfile for writing: $!\n";
+print THEFILE map "$_\n", @aliases;
+close THEFILE;
+
+print "Wrote ", scalar(@aliases), " aliases to $outfile\n";
+
+ </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x1086.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>xfsft</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,387 @@
+<HTML
+><HEAD
+><TITLE
+>Installing CSPM and its requirements</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Complete System Performance Monitor HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Requirements"
+HREF="x28.html"><LINK
+REL="NEXT"
+TITLE="Modifying CSPM defaults"
+HREF="x101.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Complete System Performance Monitor HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x28.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x101.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="AEN38"
+></A
+>4. Installing CSPM and its requirements</H1
+><P
+>This section describes how to acquire the Qt application development environment and install CSPM.</P
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN41"
+></A
+>4.1. Installing Qt 3.0 or later</H2
+><P
+>Qt 3.0 or later must be installed on the system before you install CSPM.   
+Follow these steps to acquire and configure Qt:
+
+<P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>Download the Qt X/11 Free Edition from <A
+HREF="www.trolltech.com"
+TARGET="_top"
+>http://www.trolltech.com</A
+> for the latest version of Qt. </P
+></LI
+><LI
+><P
+>Follow Trolltech's instructions for installing Qt. </P
+></LI
+><LI
+><P
+>Run .<B
+CLASS="command"
+>/configure</B
+> with the <TT
+CLASS="constant"
+>-thread</TT
+> switch to the configure 
+program so that Qt is installed to run in multithreaded mode.</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+># ./configure -thread</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></LI
+><LI
+><P
+>Be sure to export the variables QTDIR and LD_LIBRARY_PATH, as 
+described in the Qt installation instructions that are downloaded with the software.</P
+></LI
+></OL
+>
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN57"
+></A
+>4.2. Installing CSPM</H2
+><P
+>The following sections describe how to download and install CSPM.  
+These steps must be run by the root user.  
+The installation process creates a directory called <TT
+CLASS="filename"
+>spm</TT
+> and places all the files in that directory.
+
+</P
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN61"
+></A
+>4.2.1. Installing from rpm</H3
+><P
+>Follow these steps to install CSPM from the rpm file:</P
+><P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>Download the CSPM rpm file from SourceForge at <A
+HREF="http://sourceforge.net/projects.cspm"
+TARGET="_top"
+>http://sourceforge.net/projects/cspm</A
+>.  The program name
+for CSPM is <TT
+CLASS="filename"
+>spm2</TT
+>. </P
+></LI
+><LI
+><P
+>Install the software:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+># rpm -ihv --nodeps spm2-1.0-1.586.rpm</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>The rpm creates the binary call <B
+CLASS="command"
+>spm2</B
+> in the current directory.</P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="AEN74"
+></A
+>4.2.2. Installing from tar</H3
+><P
+>Follow these steps to install CSPM from the tar file:</P
+><P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>Download the CSPM tar file from SourceForge at <A
+HREF="http://sourceforge.net/projects.cspm"
+TARGET="_top"
+>http://sourceforge.net/projects/cspm</A
+>.  The program name
+for CSPM is <TT
+CLASS="filename"
+>spm2</TT
+>. </P
+></LI
+><LI
+><P
+>Untar the <TT
+CLASS="filename"
+>spm2.tar.gz</TT
+> file:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+># tar xvzf spm2.tar.gz</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></LI
+><LI
+><P
+>Compile CSPM:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+># make all</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>The <B
+CLASS="command"
+>make</B
+> command creates the binary call <B
+CLASS="command"
+>spm2 </B
+>in the current directory.</P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN92"
+></A
+>4.3. Starting the CSPM monitor</H2
+><P
+>The <TT
+CLASS="filename"
+>spm2</TT
+> program should be run by a user other than root so that any changes to
+the default preference settings can be changed.</P
+><P
+>Enter the following command from the directory where CSPM is installed:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+># ./spm2</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>If a segmentation fault occurs when <B
+CLASS="command"
+>spm2</B
+> is starting up, make sure that you have set the QTDIR and LD_LIBRARY_PATH variables, as described in the Qt installation instructions that are downloaded with the software.</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x28.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x101.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Requirements</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Modifying CSPM defaults</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

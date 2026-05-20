@@ -1,0 +1,491 @@
+<HTML
+><HEAD
+><TITLE
+> Kernel Configuration and Installation </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="Linux + XFS HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE=" Preparation for XFS Installation "
+HREF="x51.html"><LINK
+REL="NEXT"
+TITLE="Filesystem Migration"
+HREF="x154.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux + XFS HOWTO: Linux on Steroids</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x51.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x154.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN106">3. Kernel Configuration and Installation</H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN108">3.1. Configuring your kernel for XFS support</H2
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TH
+ALIGN="LEFT"
+VALIGN="CENTER"
+><B
+>Note</B
+></TH
+></TR
+><TR
+><TD
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>   If you have never configured and compiled a new linux kernel
+ you might consider reading the Linux Kernel HOWTO before doing this
+ step.  It can be found at the
+   <A
+HREF="http://www.linuxdoc.org/HOWTO/Kernel-HOWTO.html"
+TARGET="_top"
+>   Linux Documentation Project (LDP)
+   </A
+>
+   or one of its mirrors.
+   </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>After having downloaded the cvs source tree the actual kernel
+ source will be in /usr/src/linux-2.4-xfs(-beta)/linux, so you should
+ switch to that directory before running the make config command of
+ your choice.  The main things that must be included in your kernel
+ to provide XFS support are "Page Buffer support" and (duh)
+ "SGI XFS filesystem support." Both options are available
+ in the "File systems" section of the kernel configuration.
+ You will need to have "Prompt for development and/or incomplete
+ code/drivers" selected under "Code maturity level options"
+ for those options to be available to you. Optionally, you may also
+ want to select "Enable XFS Debug mode" and "Enable
+ XFS Vnode Tracing" under "SGI XFS filesystem support."
+ These options may slow your XFS implementation some, but may be useful
+ in tracing the cause of a crash if a crash occurs.   
+  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN115">3.2. Building the kernel and modules</H2
+><P
+>As with any kernel build, the following commands must be run
+ to actually build the new kernel:   
+  </P
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ make dep 
+$ make bzImage 
+$ make modules
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+> 
+  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN120">3.3. Installing the new kernel and modules</H2
+><P
+>Again this is standard for any kernel installation:   
+  </P
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ make modules_install 
+$ cp arch/i386/boot/bzImage /boot/vmlinuz-2.4.0-XFS   
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN125">3.4. Add a new entry to your lilo configuration and re-install lilo</H2
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ vi /etc/lilo.conf
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>   
+  </P
+><P
+>Add a new image section to your lilo.conf file similar to the
+ following:   
+  </P
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>image=/boot/vmlinuz-2.4.0-XFS label=xfs  read-only  root=/dev/hda2
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+> 
+  </P
+><P
+>The "root=" line should match the "root="
+ line from the existing image sections in your lilo.conf file.  Don't
+ forget to run lilo when you're through editing lilo.conf to make
+ the changes effective.   
+  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN133">3.5. Build and install the XFS utilities</H2
+><P
+>There are a number of tools that come with the XFS filesystem that allow 
+you to build and manage your XFS filesystems that must be built as well.  
+These tools are in the /usr/src/linux-2.4-xfs(-beta)/cmd/xfsprogs directory.   
+  </P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TH
+ALIGN="LEFT"
+VALIGN="CENTER"
+><B
+>Note</B
+></TH
+></TR
+><TR
+><TD
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>These tools rely on the /usr/lib/libuuid.a shared library.  If you
+ do not have this library installed you will need it in order for
+ the XFS utilities to compile.  You can find the rpm package for
+ your version of Linux from <A
+HREF="http://www.rpmfind.net"
+TARGET="_top"
+>Rpmfind.net</A
+> by searching for "/usr/lib/libuuid.a."  The debian package that contains libuuid is uuid-dev.  There will no doubt be other distributions that package this library in another place.  A good way to find the correct package on those distributions is to search on the <A
+HREF="http://www.google.com/linux"
+TARGET="_top"
+>Google Linux</A
+> search engine.
+ 
+   </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>Change to that directory:   
+  </P
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ cd ../cmd/xfsprogs   
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+  </P
+><P
+>Build and install the xfs utilities:
+  </P
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ make install    
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+> 
+  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN147">3.6. Boot the new kernel</H2
+><P
+>  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>$ reboot   
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+  </P
+><DIV
+CLASS="NOTE"
+><P
+></P
+><TABLE
+CLASS="NOTE"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TH
+ALIGN="LEFT"
+VALIGN="CENTER"
+><B
+>Note</B
+></TH
+></TR
+><TR
+><TD
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>   Unless you changed the default label to boot in your lilo.conf
+ file you will need to enter "xfs" at the "LILO Boot:"
+ prompt in order to boot the new kernel image.   
+   </P
+></TD
+></TR
+></TABLE
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x51.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x154.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Preparation for XFS Installation</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Filesystem Migration</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

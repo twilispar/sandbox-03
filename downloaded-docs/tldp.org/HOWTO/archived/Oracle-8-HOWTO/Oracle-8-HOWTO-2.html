@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>Oracle 8i for Linux Installation HOWTO: Starting off</TITLE>
+ <LINK HREF="Oracle-8-HOWTO-3.html" REL=next>
+ <LINK HREF="Oracle-8-HOWTO-1.html" REL=previous>
+ <LINK HREF="Oracle-8-HOWTO.html#toc2" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Oracle-8-HOWTO-3.html">Next</A>
+<A HREF="Oracle-8-HOWTO-1.html">Previous</A>
+<A HREF="Oracle-8-HOWTO.html#toc2">Contents</A>
+<HR>
+<H2><A NAME="s2">2. Starting off</A></H2>
+
+<H2><A NAME="ss2.1">2.1 Overview</A>
+</H2>
+
+<P>In this section, we'll set up Linux so that you're in a position to
+get Oracle 8i from the CD that they sent you into your hard-disk. (If
+they didn't send you a disc and you're working from a tar-ball that
+you downloaded from the Internet, don't worry. The installation
+process is identical.)
+<P>The Oracle installation process begins when you've built your PC,
+installed Linux, configured it and connected it to your network.
+<P>
+<H2><A NAME="ss2.2">2.2 Prerequisites</A>
+</H2>
+
+<H3>Your brain</H3>
+
+<P>This may sound like a very silly prerequisite, but I do mean it
+although not necessarily in the same way you might be thinking just
+now. There are two main problems.
+<P>Firstly, both Oracle and Linux change very frequently. This is a good
+thing in that bugs and security holes gets fixed quickly and there are
+always new and exciting enhancements to play with and, with luck,
+solve the problems we're actually paid to solve. The bad news is that
+no matter how much effort I put into this document it'll never be
+completely up to date.
+<P>The onus is, therefore, on you to engage brain. Sometime Oracle change
+small things. The dialog used to say "OK" but now says "Okay", or the
+screens are in a slightly different order, or... well, it could be any
+number of things. There's no way I can keep up on all the changes like
+that, just like there's no way that I can provided detailed guides for
+every version of Oracle running on every possible Linux distribution.
+<P>Or it could be the big, complex things, like when RedHat Linux 7 first
+came out with new C libraries and a slightly non-standard C
+compiler. You could apply the first point here, applying your brain,
+reading the release notes, the RedHat website and Oracle Technet but
+you'd be spending more time than you need to be. The reason is problem
+number two: the culture clash.
+<P>In the case of Linux, newer is better. People frequently upgrade their
+OS to the latest and greatest and it's certainly not unusual to add or
+upgrade individual packages to something more familiar or more
+powerful. This is not how things are done in the world of
+Oracle. Companies are still running Oracle 6, software that has been
+available for more than ten years. (Oracle have not supported this for
+quite some time, so this isn't terribly smart.) People here value
+stability and change, so loved by many Linux die-hards, is the
+complete antithesis of it.
+<P>The trick to applying this to installing Oracle 8i on your Linux box
+is to read the release notes. If they recommend RedHat Linux 6, as
+they did for Oracle 8i 8.1.5, this is the distribution that you should
+use unless there's a <I>very</I> good reason to do otherwise. The same
+for any other requirements they state: their hardware and software
+requirements have, to date, been pretty accurate.
+<P>
+<H3>Hardware</H3>
+
+<P>I think that the most important part of the prerequisites is not to
+underestimate them. Oracle is a very big and complex application and
+you won't get the best out of it if you skimp too much on the
+hardware.
+<P>My biggest mistake was to assume that Oracle were joking when they
+said that you need 128Mb of RAM. I've installed Oracle a couple of
+times on Sun servers with that much, why would I need more on a CISC
+machine?
+<P>Believe Oracle not my gut. My machine with 32Mb of Ram ground on for
+less than half an hour before I realised that it was hopeless.
+<P>I was trying to use the bare minimum of hardware, and that's generally
+a bad idea. If you can't afford the hardware you certainly won't be
+able to afford the licences!
+<P>Things to look for on a production server are many disks, possibly
+RAIDed, and fast CPU's. Database access is relatively easy to break
+down into smaller parallel phases so having a number of processors
+really does help.
+<P>On the other hand, any machine that can run Linux and that has enough
+memory should be in with a chance. My other machine, the one I used
+for the rest of this document, is fine as a development machine. It is
+a Celeron 466Mhz with 128Mb of memory, an 8Gb hard disk, an Intel
+graphics card and a DM9102 network card.
+<P>
+<H2><A NAME="ss2.3">2.3 Linux setup</A>
+</H2>
+
+<H3>Choice of distribution</H3>
+
+<P>Oracle seem to have done most of their development on RedHat Linux
+6.0. For a fuss-free installation, using RedHat is an excellent
+idea. Using version 6.2 with all the patches will be the easiest. For
+RedHat Linux 7 and later refer to my website. Depending on how you've
+installed your operating system there may be extra steps required.
+<P>I've heard horror stories about trying to get it installed on other
+distributions. However, as a general rule, anything <I>like</I> RedHat
+should also do the trick. A recent version of Mandrake should be fine
+and SuSE, in fact, are fairly active in supporting Oracle and have a
+<A HREF="http://www.suse.com/us/solutions/partners/oracle/">web page</A> dedicated to the task.
+<P>The further you get from RedHat the more problems you can expect.
+<P>
+<H3>Distribution Setup</H3>
+
+<P>Now that you've decided on which RedHat-like distribution you're going
+to use, you'll need to work out which options to set and which of the
+vast number of packages need to be installed to make Oracle work.
+<P>Firstly you need two to three times the amount of memory you have for
+your swap space. (You'll need around 200Mb of memory, real or virtual,
+just to run the installer!) Note that contrary to popular opinion,
+Linux swap partitions can be larger than 128Mb.
+<P>The arrangements of your other partitions can also be important. Make
+sure that the Oracle software is on a different partition to your
+operating system, and make sure that the Oracle data-files are on yet
+another partition.  The idea here is to make sure that your data-files
+do not get fragmented. (In a live environment, you're likely to have a
+number of disk with Oracle spread across them. There are a number of
+good books that you consult for more information on this.) Also, make
+sure you have <I>at least</I> 400Mb free in <CODE>/tmp</CODE> and that it's
+not on the root filesystem.
+<P>As for the software, I took the easy option and installed just about
+everything. You certainly need all the 'base' packages, X Windows (the
+installation routine is a Java GUI) and the development tools
+regardless of whether you intend doing any coding or not. Compared to
+the size of Oracle and your databases a Linux distribution is tiny,
+probably less than a gigabyte. It's worth installing it all for an
+easy life!
+<P>
+<H3>Kernel parameters</H3>
+
+<P>The documentation suggests that you make changes to the Linux kernel
+so you can get more shared memory. Since I was only planning on
+running a very small database, I assumed everything would be okay and
+decided to go ahead with the installation anyway. The default RedHat
+Linux settings worked, although you may have to change them for a
+larger development or production system.
+<P>Note that some people have had to recompile the kernel to get Oracle
+to work at all. I guess it must depend on the other software that
+you're running on the same machine.
+<P>Follow the instructions in the Oracle documentation (on the
+installation CD in HTML format) and the 
+<A HREF="http://www.tldp.org/HOWTO/Kernel-HOWTO.html">Linux Kernel HOWTO</A> to build your
+new kernel.
+<P>
+<H3>Users and groups</H3>
+
+<P>Using LinuxConf (or whatever other method you feel comfortable with),
+you need to add a new group called "dba" and a new user called
+"oracle", which should belong to your newly created "dba" group.
+<P>You can make any other user a DBA by putting them in the DBA group. If
+you have several DBA's this is probably a good idea for auditing
+purposes.
+<P>
+<H3>Installing the right Java Virtual Machine</H3>
+
+<P>Oracle were obviously stung by Java on their first release. All full
+release of 8i since 8.1.6 have included their own virtual machine so
+you don't need to get your own. In fact, make sure that you remove any
+reference to Java you currently have (you don't need to delete it,
+just remove it from your PATH and make sure that no other variable,
+such as JAVA_HOME or CLASSPATH, are set). The installer is
+temperamental enough without adding more variables.
+<P>If you're installing 8.1.5, read on:
+<P>If you check the official documentation, you'll find that Oracle
+recommend the Blackdown Java Runtime Environment version 1.1.6v5.
+That's what they mean. Don't think 'newer versions will be less buggy'
+as the installer probably won't work. And don't think, 'I'll be
+developing software so I'll just get the JDK,' as that won't work
+either.
+<P>There is one caveat to using this version of the JRE: the Oracle
+installer seems to be hard-coded to expect the JRE executable to be at
+<CODE>/usr/local/jre/bin/jre</CODE>. While this is inconvenient, it does
+not mean that you have to install it there.
+<P>I performed the following steps to get a working copy of the JRE:
+<P>
+<OL>
+<LI>Download the Java Runtime Environment from the 
+<A HREF="http://www.blackdown.org">Blackdown website</A>
+</LI>
+<LI>Move to where you want to install the JRE:
+
+<PRE>
+cd /usr/local
+</PRE>
+
+</LI>
+<LI>Uncompress the archive:
+
+<PRE>
+bzip2 -d -c jre-1.1.6-v5-glibc-x86.tar.bz2 | tar xvf -
+</PRE>
+
+</LI>
+<LI>Create a symbolic link between where Oracle thinks it is and
+where it actually is: 
+<PRE>
+ln -s jre116_v5 jre
+</PRE>
+
+</LI>
+</OL>
+<P>
+<H2><A NAME="ss2.4">2.4 Starting off questions and answers</A>
+</H2>
+
+<H3>Do I really need 128Mb RAM?</H3>
+
+<P>I would recommend that you do use 128Mb of RAM or more. I think it
+would be difficult to get any serious work done with less.
+<P>However, if you disable the Java option and set all the shared memory
+settings to be relatively small, there's no reason why it shouldn't
+work. I've heard success stories with 64Mb. You're probably not going
+to get away with 32Mb, though.
+<P>There is a caveat. You may only need half of what Oracle recommends to
+run the thing, but to install it their number starts to make
+sense. I've heard reports of the installer using 150Mb of memory and
+I've seen it well over 120Mb myself. If you have 64Mb or less of
+memory, make sure you have lots of swap space and patience.
+<P>An alternative if you absolutely can't add more memory: install Oracle
+on another, bigger machine and copy across the <CODE>$ORACLE_HOME</CODE>
+directory. You'll need to make sure that you have all the same users
+and groups (preferably with the same numeric codes) and take special
+care with SUID executables like <CODE>$ORACLE_HOME/bin/oracle</CODE>.
+<P>
+<H3>Does it work with Debian/SuSE/Mandrake/some other distribution?</H3>
+
+<P>Oracle specify the Linux kernel version 2.2 or above and GLIBC version
+2.1 with any window manager. In theory, any distribution that meets
+these requirements should work.
+<P>In practice, unless Oracle have certified you distribution they may
+not support it and you may have more problems trying to complete the
+installation. Unless you have a very good reason to do otherwise I
+suggest you stick to RedHat Linux 6.x with all the patches you can get
+hold of.
+<P>For the record, I've heard success stories will all those
+distributions. Some, however, consistently cause problems, Slackware
+being the main culprit.
+<P>
+<H3>Does it work with GLIBC 2.2 distributions?</H3>
+
+<P>At the moment, RedHat Linux 7.x and other distributions based on GLIBC
+2.2 are known to be fairly problematic. It is possible to make it
+work, however. To avoid "clutter" in this document I've included the
+details 
+<A HREF="http://www.zx81.org.uk/computing/oracle/oracle-howto/redhat7.html">on my website</A>.
+<P>
+<H3>Does it work with development kernels?</H3>
+
+<P>There's no obvious reason why it shouldn't work -- I used 2.3.19 for a
+while because it supported my network card and the stable kernel at
+the time didn't -- but unless there's a pressing need it's certainly
+safest to stay well clear. I switched back to the stable series as
+soon as the driver was included.
+<P>
+<H3>Does it work with Linux 2.4?</H3>
+
+<P>The current stable kernel has a number of features and performance
+improvements over the 2.2.x line that Oracle could benefit from. Can
+you use it without risking disaster? The answer is definitely "yes."
+<P>Generally the kernel is upwardly compatible with 2.2.x and I've not
+heard of any significant problems with any of the more recent 2.4
+releases (although some of the early ones are almost certainly worth
+avoiding).
+<P>
+<H3>Does it work with Linux 2.5.x and 2.6?</H3>
+
+<P>At the time of writing, the 2.6 kernel is just enter its beta testing
+phase, so the same advice as for previous development kernels applies
+here too. Summary: no technical reason why you can't use them, but not
+recommended especially in a live environment.
+<P>
+<H3>Where do I get Oracle from?</H3>
+
+<P>Firstly, if you're brave, have a very fast Internet connection or
+inexhaustible patience (and unmetered access) you can download it from
+<A HREF="http://otn.oracle.com/">Oracle Technology Network</A>. Beware: 8.1.5 is nearly 200Mb, and
+8.1.7 is nearer 500Mb.
+<P>A better option is to get the CD. Oracle sometimes offer to send you a
+free development CD when you join Technet. It's certainly worth
+spending some time looking round their web site for
+that. Alternatively, you can buy them from the Oracle Store for around
+$40. It includes lots of other software too and comes on 15 discs.
+<P>
+<H3>What if I just want to connect to an Oracle database?</H3>
+
+<P>If you have an Oracle database on another machine and just want to
+connect to it from another Linux machine, the process is very similar
+to that described here but with less of the complex stuff.
+<P>Oracle tend not to distribute an Oracle Client CD for anything other
+than Windows. Instead you just use the same Oracle Enterprise CD and
+select the "Oracle Client" or "Oracle Developer" (not to be confused
+with the Oracle Developer product) when it asks what kind of
+installation you want.
+<P>All the other advice, about using the correct version of Linux, the
+Java distribution, etc, are all just as pertinent for the client
+install as for the server, since the same installer is used.
+<P>
+<HR>
+<A HREF="Oracle-8-HOWTO-3.html">Next</A>
+<A HREF="Oracle-8-HOWTO-1.html">Previous</A>
+<A HREF="Oracle-8-HOWTO.html#toc2">Contents</A>
+</BODY>
+</HTML>

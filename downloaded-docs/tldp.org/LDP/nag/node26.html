@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Address Resolution</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node27.html">IP Routing</A>
+<B>Up:</B> <A HREF="node23.html">Issues of TCP/IP Networking</A>
+<B> Previous:</B> <A HREF="node25.html">IP Addresses</A>
+<BR> <P>
+<H1><A NAME="SECTION004300000">Address Resolution</A></H1>
+Now that you've seen how IP-addresses are made up, you may be wondering
+how they are used on an Ethernet to address different hosts. After all,
+the Ethernet protocol identifies hosts by a six-octet number that has
+absolutely nothing in common with an IP-address, doesn't it?
+<P>
+<A NAME="858"></A>
+Right. That's why a mechanism is needed to map IP-addresses onto
+Ethernet addresses. This is the so-called <em>Address Resolution
+Protocol</em>, or ARP. In fact, ARP is not confined to Ethernets at all,
+but is used on other types networks such as ham radio as well.  The
+idea underlying ARP is exactly what most people do when they have to
+find Mr. X. Ample in a throng of 150-people: they go round, calling
+out his name, confident that he will respond if he's there.
+<P>
+When ARP wants to find out the Ethernet address corresponding to a
+given IP-address, it uses a feature of Ethernet known as
+``broadcasting,'' where a datagram is addressed to all stations on the
+network simultaneously. The broadcast datagram sent by ARP contains a
+query for the IP-address. Each receiving host compares this to its own
+IP-address, and if it matches, returns an ARP reply to the inquiring
+host. The inquiring host can now extract the sender's Ethernet address
+from the reply.
+<P>
+Of course you might wonder how a host may know on which of the
+zillions of Ethernets throughout the world it is to find the desired
+host, and why this should even be an Ethernet. These questions all
+involve what is called routing, namely finding out the physical
+location of a host in a network.  This will be the topic of the
+following section.
+<P>
+For a moment, let's talk about ARP a little longer. Once a host has
+discovered an Ethernet address, it stores it in its ARP cache,
+so that it doesn't have to query for it the next time it wants to
+send a datagram to the host in question. However, it is unwise to
+keep this information forever; for instance, the remote host's
+Ethernet card may be replaced because of technical problems, so the 
+ARP entry becomes invalid. To force another query for the IP-address,
+entries in the ARP cache are therefore discarded after some time.
+<P>
+<A NAME="860"></A>
+<A NAME="861"></A>
+<A NAME="862"></A>
+Sometimes, it is also necessary to find out the IP-address associated
+with a given Ethernet address. This happens when a diskless machine
+wants to boot from a server on the network, which is quite a common
+situation on local area networks. A diskless client, however, has
+virtually no information about itself-- except for its Ethernet
+address! So what it basically does is broadcast a message containing a
+plea for boot servers to tell it its IP-address. There's another
+protocol for this, named <em>Reverse Address Resolution Protocol</em>, or
+RARP. Along with the BOOTP protocol, it serves to define a procedure
+for bootstrapping diskless clients over the network.
+<P>
+<A NAME="864"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node27.html">IP Routing</A>
+<B>Up:</B> <A HREF="node23.html">Issues of TCP/IP Networking</A>
+<B> Previous:</B> <A HREF="node25.html">IP Addresses</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

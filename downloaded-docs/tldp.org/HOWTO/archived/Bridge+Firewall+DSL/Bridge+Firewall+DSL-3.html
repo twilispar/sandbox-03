@@ -1,0 +1,341 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>Bridge + Firewall + DSL Mini-HOWTO: Procedure</TITLE>
+ <LINK HREF="Bridge+Firewall+DSL-4.html" REL=next>
+ <LINK HREF="Bridge+Firewall+DSL-2.html" REL=previous>
+ <LINK HREF="Bridge+Firewall+DSL.html#toc3" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Bridge+Firewall+DSL-4.html">Next</A>
+<A HREF="Bridge+Firewall+DSL-2.html">Previous</A>
+<A HREF="Bridge+Firewall+DSL.html#toc3">Contents</A>
+<HR>
+<H2><A NAME="s3">3. Procedure</A> </H2>
+
+<P>The basic procedure is as follows:
+<P>
+<UL>
+<LI>Setup your hardware (and verify that it works)</LI>
+<LI>Patch and configure the kernel</LI>
+<LI>Configure your network (ifconfig, route, bridging)</LI>
+<LI>Configure the firewall</LI>
+</UL>
+<H2><A NAME="ss3.1">3.1 Example Setup</A>
+ </H2>
+
+<P>Throughout this procedure, I will assume a setup with two ethernet (NIC)
+cards, an outside link via DSL (where a DSL modem connects to one of the NIC's),
+and a local net that connects to the other NIC. I will arbitrarily call
+the NIC to the DSL modem "eth1" and the local net NIC "eth0". The device naming
+by the kernel of the NIC's depends on what slot they are in.
+<P>I will assume that you have been assigned a subnet of IP addresses
+at 192.168.2.128-191, i.e. a netmask of 255.255.255.192, and the router
+provided by the DSL company is at 192.168.2.129. These are all arbitrary
+fictional examples to illustrate the setup. I will use the address
+192.168.2.130 for the firewall machine (both NIC's), though it turns
+out you can also use distinct IP addresses for each NIC if you want.
+<H2><A NAME="Hardware Setup"></A> <A NAME="ss3.2">3.2 Hardware Setup</A>
+  </H2>
+
+<P>You will need two ethernet cards to make this work. The biggest problem
+I had was that I randomly picked a slot in my motherboard for the second
+NIC and it turned out that that slot (PCI) shared an interrupt with the
+first NIC. I did not know that this was a problem (in fact there is little
+information about this, and I thought it should work fine). It caused both
+cards to shut down quietly (no error indication) and stop sending and 
+receiving packets. Naturally when you are doing all sort of configuration
+changes, this is the last thing you need. I do not know if this is a problem
+with all PCI NIC cards or just ours, but I would advise against sharing interrupts.
+The tulip driver, which we use, reports the IRQ for each NIC in syslog when you boot. 
+There is a bunch of information out there 
+(see the 
+<A HREF="http://www.linuxdoc.org/HOWTO/Ethernet-HOWTO.html">Ethernet-HOWTO</A> 
+section 
+<A HREF="http://www.linuxdoc.org/HOWTO/Ethernet-HOWTO-3.html#ss3.2">Using More than one Ethernet Card per Machine</A>) about making the kernel recognize two 
+ethernet cards using boot arguments; however, I did not need this (my kernel
+recognized both cards with no arguments).
+<P>Next, you need to hook the second NIC to the DSL modem
+(or whatever links you to the outside world) and make sure that it is working.
+You should be able to ifconfig the second ethernet card to a proper IP
+address and ping the router on the other end of your outside link.
+This verifies that you can send and receive packets over the DSL link.
+For instance, for the sample net you would do:
+<P>
+<PRE>
+  ifconfig eth1 192.168.2.130 netmask 255.255.255.192 broadcast 192.168.2.191
+ 
+</PRE>
+<P>to configure the NIC. And then
+<P>
+<PRE>
+  ifconfig eth0 down # just to make sure it does not interfere with things
+  ping 192.168.2.129
+ 
+</PRE>
+<P>to test that you can get to the router. For good measure, you should also
+test that you can get to the machines on your local network through the other
+NIC:
+<P>
+<PRE>
+  ifconfig eth1 down # just to make sure it does not interfere with things
+  ifconfig eth0 up 
+  ping 192.168.2.x # where x is the address for a machine on your local net
+ 
+</PRE>
+<P>At this point, you have verified that all the hardware is working.
+<H2><A NAME="ss3.3">3.3 Bridge Config</A>
+ </H2>
+
+<P> Depending upon your kernel version you will need either the 
+<A HREF="ftp://ftp.tux.org/people/alan-cox/BRCFG.tgz">old bridge configuration utility (BRCFG)</A> for kernels before 2.2.14, or the 
+<A HREF="http://lrp.plain.co.nz/tarballs/bridgex_0.30.tar.gz">new bridge configuration utility (bridgex)</A> for later kernels; these utilities
+allow you to control the bridging in your kernel when CONFIG_BRIDGE is turned on. <B>BRCFG</B> is distributed
+as source with pre-compiled executables. I do not know what kernel the executable was compiled with, but I got
+different results after I recompiled it with my kernel (2.2.13) include files. Unfortunately, to do this I had
+to patch them slightly. Here are the patches:
+<P>
+<PRE>
+diff -C 3 -r /tmp/BRCFG/brcfg.c ./brcfg.c
+*** /tmp/BRCFG/brcfg.c  Wed Feb 21 19:11:59 1996
+--- ./brcfg.c   Wed Dec  8 12:52:23 1999
+***************
+*** 1,6 ****
+  
+! #include &lt;sys/types.h>
+! #include &lt;sys/socket.h>
+  #include &lt;skbuff.h>
+  
+  #include "br.h"
+--- 1,6 ----
+  
+! #include &lt;types.h>
+! #include &lt;socket.h>
+  #include &lt;skbuff.h>
+  
+  #include "br.h"
+ 
+</PRE>
+<P>Apply the patch, recompile <B>brcfg</B> and install it somewhere appropriate
+(I chose <B>/usr/sbin</B>).
+<P>For kernels later than 2.2.13 you definitely want to use the newer bridge
+configuration utility 
+<A HREF="http://lrp.plain.co.nz/tarballs/bridgex_0.30.tar.gz">bridgex</A>.
+I am not sure if it works with earlier kernels or not. Not that the URL for this
+utility is found in the kernel configuration help file 
+<B>/usr/src/linux/Documentation/Configure.help</B>, so if the URL mentioned
+here is not correct, look in the help file (it is the help for the 
+<B>CONFIG_BRIDGE</B> kernel configuration item. The bridgex tarball contains
+an already compiled executable, but you should probably remake it using
+the included Makefile. Note that the bridgex
+utility takes slightly different arguments than does the BRCFG package (that
+will be covered later when I talk about configuring the bridge).
+<H2><A NAME="ss3.4">3.4 Kernel Configuration</A>
+ </H2>
+
+<P> You will need to patch and configure your kernel for bridging and the bridging filter
+(as well as firewalling, networking, etc. if you do not already have it). The following
+kernel configuration items will be needed (at least):
+<P>
+<PRE>
+  CONFIG_EXPERIMENTAL=y
+  CONFIG_BRIDGE=y
+  CONFIG_FIREWALL=y           
+  CONFIG_IP_FIREWALL=y        
+ 
+</PRE>
+<P> You should grab the 
+<A HREF="http://ac2i.tzo.com/bridge_filter/">Bridge Filter Patch</A>
+and apply it to your kernel. Recompile and install your kernel and then reboot.
+<H2><A NAME="ss3.5">3.5 Putting It All Together</A>
+ </H2>
+
+<P> So you should have your two NIC's working, a newly configured kernel, and <B>brcfg</B>
+installed. Now you need to construct a startup script to put it all together. I did this using
+the RedHat type startup scripts (<B>/etc/rc.d</B>). I put specific network addresses and
+masks in <B>/etc/sysconfig/network</B>:
+<P>
+<PRE>
+ GATEWAY=192.168.2.129          # the address of the DSL router
+ GATEWAYDEV=eth1                # the NIC that the router is connected to
+ ETH0_ADDR=192.168.2.130        # the IP address for the NIC on our LAN
+ ETH0_MASK=255.255.255.192      # the netmask of our LAN
+ ETH0_BROAD=192.168.2.191       # the broadcast address of our LAN
+ ETH1_ADDR=192.168.2.130        # the IP address for the NIC on the DSL side
+                                # can be different from ETH0_ADDR if you want
+ ETH1_MASK=$ETH0_MASK           # the DSL side netmask, should be the same as eth0
+ ETH1_BROAD=$ETH1_BROAD         # ditto for the broadcast address
+ 
+</PRE>
+<P> Next I created a script in <B>/etc/rc.d/init.d/bridge</B> to setup the bridge.
+I include two scripts here. The first script is used with the old BRCFG utility,
+the second for the newer bridgex. First the one for the older BRCFG:
+<P>
+<PRE>
+#!/bin/sh
+#
+# bridge      This shell script takes care of installing bridging for dsl with BRCFG
+#
+# description: Uses brcfg to start bridging and ifconfigs eths
+# processname: bridge
+# config: 
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# See how we were called.
+case "$1" in
+  start)
+        echo -n "Configuring bridge: "
+        ifconfig eth0 $ETH0_ADDR netmask $ETH0_MASK broadcast $ETH0_BROAD
+        ifconfig eth1 $ETH1_ADDR netmask $ETH1_MASK broadcast $ETH1_BROAD
+        route add $GATEWAY dev $GATEWAYDEV
+        route add default gw $GATEWAY dev $GATEWAYDEV
+        ifconfig eth0 promisc
+        ifconfig eth1 promisc
+        brcfg -enable
+        echo
+        ;;
+  stop)
+        # Stop daemons.
+        brcfg -disable
+        ifconfig eth0 down
+        ifconfig eth1 down
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        ;;
+  status)
+        ifconfig eth0
+        ifconfig eth1
+        brcfg
+        ;;
+  *)
+        echo "Usage: bridge {start|stop|restart|status}"
+        exit 1
+esac
+
+exit 0
+ 
+</PRE>
+<P>The next script is the one to use with the newer bridge configuration utility bridgex.
+Note that bridgex is much more configurable than the older BRCFG and so you may want
+to look man page included with the bridgex tarball and custom configure this script:
+<P>
+<PRE>
+#!/bin/sh
+#
+# bridge      This shell script takes care of installing bridging for dsl with BRCFG
+#!/bin/sh
+#
+# bridge      This shell script takes care of installing bridging for dsl with bridgex
+#
+# description: Uses brcfg to start bridging and ifconfigs eths
+# processname: bridge
+# config: 
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# See how we were called.
+case "$1" in
+  start)
+        echo -n "Configuring bridge: "
+        ifconfig eth0 $ETH0_ADDR netmask $ETH0_MASK broadcast $ETH0_BROAD
+        ifconfig eth1 $ETH1_ADDR netmask $ETH1_MASK broadcast $ETH1_BROAD
+        route add default gw $GATEWAY dev $GATEWAYDEV
+        ifconfig eth0 promisc
+        ifconfig eth1 promisc
+        brcfg start
+        brcfg device eth0 enable
+        brcfg device eth1 enable
+        echo
+        ;;
+  stop)
+        # Stop daemons.
+        brcfg stop
+        ifconfig eth0 down
+        ifconfig eth1 down
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        ;;
+  status)
+        ifconfig eth0
+        ifconfig eth1
+        brcfg
+        ;;
+  *)
+        echo "Usage: bridge {start|stop|restart|status}"
+        exit 1
+esac
+
+exit 0
+ 
+</PRE>
+<P> The script is run during bootup. It assigns addresses to each NIC, adds a default route
+that goes to the DSL router, adds a specific route direct to the DSL router, puts each NIC
+in "promiscuous" mode, and then enables bridging. I linked this script into the following
+directories in <B>/etc/rc.d</B>: 
+<P>
+<PRE>
+ /etc/rc.d/rc0.d/K90bridge
+ /etc/rc.d/rc1.d/K90bridge
+ /etc/rc.d/rc2.d/S11bridge
+ /etc/rc.d/rc3.d/S11bridge
+ /etc/rc.d/rc4.d/S11bridge
+ /etc/rc.d/rc5.d/S11bridge
+ /etc/rc.d/rc6.d/K90bridge
+ 
+</PRE>
+<P> This makes it run right after the network start script. You should disable
+other configuration of eth0 (or eth1) such as done in the <B>/etc/rc.d/init.d/network</B> script
+(in RedHat by removing files <B>ifcfg-eth?</B> from <B>/etc/sysconfig/network-scripts/</B>).
+<P> To try things out, I suggest rebooting in single user mode (specify <B>"single"</B>
+as an arg to the kernel, e.g. in lilo "lilo: linux single")
+and running the startup scripts in <B>/etc/rc.d/rc3.d</B> one at a time
+until you get to the bridge startup. Startup the bridge and then see if you can reach some
+machines (you probably
+want to use "<B>ping -n</B>" for this to keep the nameserver out of the equation):
+<P>
+<UL>
+<LI>ping the DSL router</LI>
+<LI>ping a local machine</LI>
+<LI>ping a machine on the global net</LI>
+</UL>
+<P> If you can ping all those places, there is a good chance that things are working.
+Note that the bridge takes a few moments to startup. You can monitor the status of
+the bridge by issuing the command <B>brcfg</B> with no arguments.
+<H2><A NAME="ss3.6">3.6 Firewall Setup</A>
+ </H2>
+
+<P>You still need to setup your firewall (assuming you want one) to prevent unauthorized
+access. The 
+<A HREF="http://ac2i.tzo.com/bridge_filter/">Bridge Filter Patch</A>
+that you applied allows you to use a new built-in rule "bridgein" with ipchains. This rule
+is used whenever a packet is going to be forwarded either from eth0 to eth1 or vice versa.
+The bridgein rule is not used when a packet is destined for the firewall itself; you
+will want to use the input rule for that. I will not attempt to delve into the firewall
+setup in detail; please see the
+<A HREF="http://www.linuxdoc.org/HOWTO/IPCHAINS-HOWTO.html">IPCHAINS HOWTO</A> for that.
+<H2><A NAME="ss3.7">3.7 Local Machine Setup</A>
+ </H2>
+
+<P> For each of your local machines, you simply have to setup the proper IP address and netmask
+and use the DSL router for the gateway (default route). The firewall/bridge will bridge the packets
+to/from the DSL router.
+<HR>
+<A HREF="Bridge+Firewall+DSL-4.html">Next</A>
+<A HREF="Bridge+Firewall+DSL-2.html">Previous</A>
+<A HREF="Bridge+Firewall+DSL.html#toc3">Contents</A>
+</BODY>
+</HTML>

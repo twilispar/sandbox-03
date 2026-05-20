@@ -1,0 +1,406 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Loopback Root Filesystem HOWTO: How To Create a Loopback Root Device</TITLE>
+ <LINK HREF="Loopback-Root-FS-4.html" REL=next>
+ <LINK HREF="Loopback-Root-FS-2.html" REL=previous>
+ <LINK HREF="Loopback-Root-FS.html#toc3" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Loopback-Root-FS-4.html">Next</A>
+<A HREF="Loopback-Root-FS-2.html">Previous</A>
+<A HREF="Loopback-Root-FS.html#toc3">Contents</A>
+<HR>
+<H2><A NAME="s3">3. How To Create a Loopback Root Device</A></H2>
+
+<P>Now that the general principles are explained the method of creating the
+loopback device can be explained.
+<P>
+<P>
+<H2><A NAME="ss3.1">3.1 Requirements</A>
+</H2>
+
+<P>To create the loopback root device will require a number of things.
+<P>
+<P>
+<UL>
+<LI>A working Linux system.</LI>
+<LI>A way to copy large files onto the target DOS partition.</LI>
+</UL>
+<P>Most important is access to an installed Linux system.  This is because the loop
+device can only be created under Linux.  This will mean that it is not possible
+to bootstrap a working system from nothing.  The requirements of the Linux
+system that you use is that you can compile a kernel on it.
+<P>
+<P>Once the loopback device is created it will be a large file.  I have used an 80
+MB files, but while this was sufficient for an X terminal it may not be enough
+if you want to use it for much else.  This file must be copied onto the DOS
+partition, so either a network or a lot of floppy disks must be used.
+<P>
+<P>The software that you will require includes
+<P>
+<UL>
+<LI><CODE>LOADLIN</CODE> version 1.6 or above</LI>
+<LI>A version of <CODE>mount</CODE> that supports loopback devices</LI>
+<LI>A version of the kernel that supports the required options.</LI>
+</UL>
+<P>All of these should be standard for recent Linux installations.
+<P>
+<P>
+<H2><A NAME="ss3.2">3.2 Creating the Linux Kernel</A>
+</H2>
+
+<P>I created the loopback device using Linux kernel version 2.0.31, other versions
+should also work, but they must have at least the options listed below.
+<P>
+<P>The kernel options that you will need to enable are the following:
+<UL>
+<LI>RAM disk support (<CODE>CONFIG_BLK_DEV_RAM</CODE>).</LI>
+<LI>Initial RAM disk (initrd) support (<CODE>CONFIG_BLK_DEV_INITRD</CODE>).</LI>
+<LI>Loop device support (<CODE>CONFIG_BLK_DEV_LOOP</CODE>).</LI>
+<LI>fat fs support (<CODE>CONFIG_FAT_FS</CODE>).</LI>
+<LI>msdos fs support (<CODE>CONFIG_MSDOS_FS</CODE>).</LI>
+</UL>
+<P>The first two are for the RAM disk device itself and the initial ram disk
+device.  The next one is the loop back filesystem option.  The last two are the
+msdos filesystem support which is required to mount the DOS partitition.
+<P>
+<P>Compiling a kernel without modules is the easiest option, although if you do
+want modules then it should be possible although I have not tried it.  If
+modules are used then you should make sure that you have the options above
+compiled in and not as modules themselves.
+<P>
+<P>Depending on the kernel version that you have you may need to apply a kernel
+patch.  It is a very simple one that allows the loopback device to be used as
+the root filesystem.
+<UL>
+<LI>Kernel versions before 2.0.0; I have no information about these.</LI>
+<LI>Kernel version 2.0.0 to 2.0.34; you need to apply the kernel patch for
+2.0.x kernels as shown below.</LI>
+<LI>Kernel version 2.0.35 to 2.0.x; no kernel patch is required.</LI>
+<LI>Kernel version 2.1.x; you need to apply the kernel patch for 2.0.x or
+2.2.x kernels as shown below, depending on the exact 2.1.x version.</LI>
+<LI>Kernel version 2.2.0 to 2.2.10; you need to apply the kernel patch for
+2.2.x kernels as shown below.</LI>
+<LI>Kernel version 2.3.x; you need to apply the kernel patch for 2.2.x kernels
+as shown below.</LI>
+</UL>
+<P>
+<P>For 2.0.x kernels the file <CODE>/init/main.c</CODE> needs to have a single line
+added to it as shown by the modified version below.  The line that says
+<CODE>"loop", 0x0700</CODE> is the one that was added.
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+static void parse_root_dev(char * line)
+{
+        int base = 0;
+        static struct dev_name_struct {
+                const char *name;
+                const int num;
+        } devices[] = {
+                { "nfs",     0x00ff },
+                { "loop",    0x0700 },
+                { "hda",     0x0300 },
+
+...
+
+                { "sonycd",  0x1800 },
+                { NULL, 0 }
+        };
+
+...
+
+}
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>For 2.2.x kernels the file <CODE>/init/main.c</CODE> needs to have three lines added
+to it as shown by the modified version below.  The line that says <CODE>"loop",
+0x0700</CODE> and the ones either side of it are the ones that were added.
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+static struct dev_name_struct {
+        const char *name;
+        const int num;
+} root_dev_names[] __initdata = {
+#ifdef CONFIG_ROOT_NFS
+        { "nfs",     0x00ff },
+#endif
+#ifdef CONFIG_BLK_DEV_LOOP
+        { "loop",    0x0700 },
+#endif
+#ifdef CONFIG_BLK_DEV_IDE
+        { "hda",     0x0300 },
+
+...
+
+        { "ddv", DDV_MAJOR &lt;&lt; 8},
+#endif
+        { NULL, 0 }
+};
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>Once the kernel is configured it should be compiled to produce a <CODE>zImage</CODE>
+file (<CODE>make zImage</CODE>).  This file will be <CODE>arch/i386/boot/zImage</CODE>
+when compiled.
+<P>
+<P>
+<H2><A NAME="ss3.3">3.3 Creating the Initial Ramdisk Device</A>
+</H2>
+
+<P>The initial ramdisk is most easily created as a loopback device from the start.
+You will need to do this as root, the commands that you need to execute are
+listed below, they are assumed to be run from root's home directory
+(<CODE>/root</CODE>).
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+mkdir /root/initrd
+dd if=/dev/zero of=initrd.img bs=1k count=1024
+mke2fs -i 1024 -b 1024 -m 5 -F -v initrd.img
+mount initrd.img /root/initrd -t ext2 -o loop
+cd initrd
+[create the files]
+cd ..
+umount /root/initrd
+gzip -c -9 initrd.img &gt; initrdgz.img
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>There are a number of steps to this, but they can be described as follows.
+<OL>
+<LI>Create a mount point for the initial ramdisk (an empty directory).</LI>
+<LI>Create an empty file of the size required.  Here I have used 1024kB, you may
+need less or more depending on the contents, (the size is the last parameter).</LI>
+<LI>Make an ext2 filesystem on the empty file.</LI>
+<LI>Mount the file onto the mount point, this uses the loopback device.</LI>
+<LI>Change to the mounted loopback device.</LI>
+<LI>Create the files that are required (see below for details).</LI>
+<LI>Move out of the mounted loopback device.</LI>
+<LI>Unmount the device.</LI>
+<LI>Create a compressed version for use later.</LI>
+</OL>
+<P><B>Contents Of The Initial Ramdisk</B>
+<P>The files that you will need on the ramdisk are the minimum requirements to be
+able to execute any commands.
+<P>
+<UL>
+<LI><CODE>/linuxrc</CODE> The script that is run to mount the msdos file system
+(see below).</LI>
+<LI><CODE>/lib/*</CODE> The dynamic linker and the libraries that the programs
+need.</LI>
+<LI><CODE>/etc/*</CODE> The cache used by the dynamic linker (not strictly needed,
+but does stop it complaining).</LI>
+<LI><CODE>/bin/*</CODE> A shell interpreter (<CODE>ash</CODE> because it is smaller
+than <CODE>bash</CODE>.  The <CODE>mount</CODE> and <CODE>losetup</CODE> programs for
+handling the DOS disk and setting up the loopback devices.</LI>
+<LI><CODE>/dev/*</CODE> The devices that will be used.  You need
+<CODE>/dev/zero</CODE> for <CODE>ld-linux.so</CODE>, <CODE>/dev/hda*</CODE> to mount the
+msdos disk and <CODE>/dev/loop*</CODE> for the lopback device.</LI>
+<LI><CODE>/mnt</CODE> An empty directory to mount the msdos disk on.</LI>
+</UL>
+<P>The initial ramdisk that I used is listed below, the contents come to about
+800kB when the overhead of the filesystem are taken into account.
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+total 18
+drwxr-xr-x   2 root     root         1024 Jun  2 13:57 bin
+drwxr-xr-x   2 root     root         1024 Jun  2 13:47 dev
+drwxr-xr-x   2 root     root         1024 May 20 07:43 etc
+drwxr-xr-x   2 root     root         1024 May 27 07:57 lib
+-rwxr-xr-x   1 root     root          964 Jun  3 08:47 linuxrc
+drwxr-xr-x   2 root     root        12288 May 27 08:08 lost+found
+drwxr-xr-x   2 root     root         1024 Jun  2 14:16 mnt
+
+./bin:
+total 168
+-rwxr-xr-x   1 root     root        60880 May 27 07:56 ash
+-rwxr-xr-x   1 root     root         5484 May 27 07:56 losetup
+-rwsr-xr-x   1 root     root        28216 May 27 07:56 mount
+lrwxrwxrwx   1 root     root            3 May 27 08:08 sh -&gt; ash
+
+./dev:
+total 0
+brw-r--r--   1 root     root       3,   0 May 20 07:43 hda
+brw-r--r--   1 root     root       3,   1 May 20 07:43 hda1
+brw-r--r--   1 root     root       3,   2 Jun  2 13:46 hda2
+brw-r--r--   1 root     root       3,   3 Jun  2 13:46 hda3
+brw-r--r--   1 root     root       7,   0 May 20 07:43 loop0
+brw-r--r--   1 root     root       7,   1 Jun  2 13:47 loop1
+crw-r--r--   1 root     root       1,   3 May 20 07:42 null
+crw-r--r--   1 root     root       5,   0 May 20 07:43 tty
+crw-r--r--   1 root     root       4,   1 May 20 07:43 tty1
+crw-r--r--   1 root     root       1,   5 May 20 07:42 zero
+
+./etc:
+total 3
+-rw-r--r--   1 root     root         2539 May 20 07:43 ld.so.cache
+
+./lib:
+total 649
+lrwxrwxrwx   1 root     root           18 May 27 08:08 ld-linux.so.1 -&gt; ld-linux.so.1.7.14
+-rwxr-xr-x   1 root     root        21367 May 20 07:44 ld-linux.so.1.7.14
+lrwxrwxrwx   1 root     root           14 May 27 08:08 libc.so.5 -&gt; libc.so.5.3.12
+-rwxr-xr-x   1 root     root       583795 May 20 07:44 libc.so.5.3.12
+
+./lost+found:
+total 0
+
+./mnt:
+total 0
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>The only complex steps about this are the devices in <CODE>dev</CODE>.  Use the
+<CODE>mknod</CODE> program to create them, use the existing devices in <CODE>/dev</CODE>
+as a template to get the required parameters.
+<P>
+<P><B>The /linuxrc file</B>
+<P>The <CODE>/linuxrc</CODE> file on the initial ramdisk is required to do all of the
+preparations so that the loopback device can be used for the root partition when
+it exits.
+<P>The example below tries to mount <CODE>/dev/hda1</CODE> as an msdos partition and
+if it succeeds then sets up the files <CODE>/linux/linuxdsk.img</CODE> as
+<CODE>/dev/loop0</CODE> and <CODE>/linux/linuxswp.img</CODE> as <CODE>/dev/loop1</CODE>.
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+#!/bin/sh
+
+echo INITRD: Trying to mount /dev/hda1 as msdos
+
+if /bin/mount -n -t msdos /dev/hda1 /mnt; then
+
+   echo INITRD: Mounted OK
+   /bin/losetup /dev/loop0 /mnt/linux/linuxdsk.img
+   /bin/losetup /dev/loop1 /mnt/linux/linuxswp.img
+   exit 0
+
+else
+
+   echo INITRD: Mount failed
+   exit 1
+
+fi
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>The first device <CODE>/dev/loop0</CODE> will become the root device and the second
+one <CODE>/dev/loop1</CODE> will become the swap space.
+<P>
+<P>If you want to be able to write to the DOS partition as a non-root user when you
+have finished then you should use <CODE>mount -n -t msdos /dev/hda1 /mnt -o
+uid=0,gid=0,umask=000,quiet</CODE> instead.  This will map all accesses to the DOS
+partition to root and set the permissions appropriately.
+<P>
+<P>
+<H2><A NAME="ss3.4">3.4 Creating The Root Device</A>
+</H2>
+
+<P>The root device that you will be using is the file <CODE>linuxdsk.img</CODE>.  You
+will need to create this in the same way that the initial ramdisk was created,
+but bigger.  You can install any Linux installation that you like onto this
+disk.
+<P>
+<P>The easiest way might be to copy an existing Linux installation into it.  An
+alternative is to install a new Linux installation onto it.
+<P>
+<P>Assuming that you have done this, there are some minor changes that you must
+make.
+<P>
+<P>The <CODE>/etc/fstab</CODE> file must reference the root partition and the
+swap using the two loopback devices that are setup on the initial ramdisk.
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+/dev/loop0     /      ext2   defaults 1 1
+/dev/loop1     swap   swap   defaults 1 1
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>This will ensure that when the real root device is used the kernel will not be
+confused about where the root device is.  It will also allow the swap space to
+be added in the same way a swap partition is normally used.  You should remove
+any other reference to a root disk device or swap partition.
+<P>
+<P>If you want to be able to read the DOS partition after Linux has started then
+you will need to make a number of extra small changes.
+<P>
+<P>Create a directory called <CODE>/initrd</CODE>, this is where the initial ramdisk
+will be mounted once the loopback root filesystem is mounted.
+<P>Create a symbolic link called <CODE>/DOS</CODE> that points to <CODE>/initrd/mnt</CODE>
+where the real DOS parition will be mounted.
+<P>Add a line into the rc file that mounts the disks.  This should run the command
+<CODE>mount -f -t msdos /dev/hda1 /initrd/mnt</CODE>, this will create a 'fake'
+mount of the DOS partition so that all programs (like <CODE>df</CODE>) will know that
+the DOS partition is mounted and where to find it.  If you used different
+options in the <CODE>/linuxrc</CODE> file that obviously you should use them here
+also.
+<P>
+<P>There is no need to have a Linux kernel on this root device since that is
+already loaded earlier.  If you are using modules however then you should
+include them on this device as normal.
+<P>
+<P>
+<H2><A NAME="ss3.5">3.5 Creating the Swap Device</A>
+</H2>
+
+<P>The root device that you will be using is the file <CODE>linuxswap.img</CODE>.  The
+swap device is very simple to create.  Create an empty file as was done for the
+initial ramdisk and then run <CODE>mkswap linuxswap.img</CODE> to intialise it.
+<P>
+<P>The size of the swap space will depend on what you plan to do with the installed
+system, but I would recommend between 8MB and the amount of RAM that you have.
+<P>
+<P>
+<H2><A NAME="ss3.6">3.6 Creating the MSDOS Directory</A>
+</H2>
+
+<P>The files that are going to be used need to be moved onto the DOS partition.
+<P>
+<P>The files that are required in the DOS directory called <CODE>C:\LINUX</CODE> are
+the following:
+<P>
+<UL>
+<LI><CODE>LINUXDSK.IMG</CODE> The disk image that will become the root device.</LI>
+<LI><CODE>LINUXSWP.IMG</CODE> The swap space.</LI>
+</UL>
+<P>
+<H2><A NAME="ss3.7">3.7 Creating the Boot Floppy</A>
+</H2>
+
+<P>The boot floppy that is used is just a normal DOS format bootable floppy.
+<P>This is created using <CODE>format a: /s</CODE> from DOS.
+<P>
+<P>Onto this disk you will need to create an <CODE>AUTOEXEC.BAT</CODE> file (as below)
+and copy the kernel, compressed initial ramdisk and <CODE>LOADLIN</CODE> executable.
+<P>
+<UL>
+<LI><CODE>AUTOEXEC.BAT</CODE> The DOS automatically executed batch file.</LI>
+<LI><CODE>LOADLIN.EXE</CODE> The <CODE>LOADLIN</CODE> program executable.</LI>
+<LI><CODE>ZIMAGE</CODE> The Linux kernel.</LI>
+<LI><CODE>INITRDGZ.IMG</CODE> The compressed initial ramdisk image.</LI>
+</UL>
+<P>The <CODE>AUTOEXEC.BAT</CODE> file should contain just one line as below.
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+\loadlin \zImage initrd=\initrdgz.img root=/dev/loop0 ro
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>This specifies the kernel image to use, the initial ramdisk image, the root
+device after the initial ramdisk has finished and that the root partition is to
+be mounted read-only.
+<P>
+<HR>
+<A HREF="Loopback-Root-FS-4.html">Next</A>
+<A HREF="Loopback-Root-FS-2.html">Previous</A>
+<A HREF="Loopback-Root-FS.html#toc3">Contents</A>
+</BODY>
+</HTML>

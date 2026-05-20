@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Local Users</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node212.html">Forwarding</A>
+<B>Up:</B> <A HREF="node210.html">Delivering Messages to Local </A>
+<B> Previous:</B> <A HREF="node210.html">Delivering Messages to Local </A>
+<BR> <P>
+<H2><A NAME="SECTION0016810000">Local Users</A></H2>
+The most common case for a local address is to denote a user's mailbox.
+This mailbox is located in /var/spool/mail and has the name of the user.
+It is owned by her, with a group of mail, and has mode 660.  If it
+does not exist, it is created by smail.
+<P>
+Note that although /var/spool/mail is currently the standard place to
+put the mailbox files, some mail software may have different paths
+compiled in, for example /usr/spool/mail. If delivery to users
+on your machine fails consistently, you should try if it helps to make
+this a symbolic link to /var/spool/mail.
+<P>
+There are two addresses smail requires to exist:
+MAILER-DAEMON and Postmaster. When generating a bounce
+message for an undeliverable mail, a carbon copy is sent to the
+postmaster account for examination (in case this might be due to
+a configuration problem).  The MAILER-DAEMON is used as the
+sender's address on the bounce message.
+<P>
+If these addresses do not name valid accounts on your system,
+smail implicitly maps MAILER-DAEMON to postmaster,
+and postmaster to root, respectively. You should usually
+override this by aliasing the postmaster account to whoever is
+responsible for maintaining the mail software.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

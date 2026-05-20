@@ -1,0 +1,277 @@
+<HTML
+><HEAD
+><TITLE
+>Samba Administrative Tools</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="PREVIOUS"
+TITLE="Further documentation"
+HREF="chap29sec290.html"><LINK
+REL="NEXT"
+TITLE="The /etc/rc.d/init.d/smb script file"
+HREF="chap29sec292.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec290.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 31. Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec292.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN22539"
+>31.11. Samba Administrative Tools</A
+></H1
+><P
+>&#13;      The commands listed below are some that we use often, but many more exist. Check the man pages and documentation for more details and information.
+    </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>smbstatus. </B
+>
+        The smbstatus utility is a very simple program to list the current Samba connections.
+        To report current Samba connections, use the following command:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# smbstatus
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          Samba version 2.0.7
+          Service      uid      gid      pid     machine
+          ----------------------------------------------
+          tmp          webmaster webmaster  3995   gate     (192.168.1.3) Sat Sep 25 19:40:54 1999
+
+          No locked files
+
+          Share mode memory usage (bytes):
+          1048464(99%) free + 56(0%) used + 56(0%) overhead = 1048576(100%) total
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN22548"
+>31.11.1. Samba Users Tools</A
+></H2
+><P
+>&#13;        The commands listed below are some that we use often, but many more exist. Check the man pages and documentation for more details and information.
+      </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>smbclient. </B
+>
+          The <B
+CLASS="command"
+>smbclient</B
+> program utility for Samba works much like the interface of the FTP program. This small program allow you to get files from the server to the local machine, put files from the local machine 
+          to the server, retrieve directory information from the server, and so on.
+        </P
+></DIV
+><P
+>&#13;        To connect to a Windows machine with smbclient utility, use the following command:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ] /# smbclient //sbmserver/sharename -U smbclient
+          [root@deep ] /# smbclient //gate/tmp -U smbclient
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+><P
+>&#13;        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          Password:
+          Domain=[OPENNA] OS=[Windows NT 4.0] Server=[NT LAN Manager 4.0]
+          smb: \&#62; ls
+          .                               	D       0  	Tue Mar 14 15:31:50 2000
+          ..                                  	D       0  	Tue Mar 14 15:31:50 2000
+          PostgreSQL                          	D       0  	Tue Mar 14 15:32:22 2000
+          Squid                               	D       0  	Tue Mar 14 15:32:28 2000
+          E_comm                              	D       0  	Tue Mar 14 15:32:42 2000
+          StackGuard.pdf                      	A    	61440  	Tue Dec 21 20:41:34 1999
+          installation-without-XFree86        	A	448	Tue Dec 21 20:41:28 1999
+          lcap-0_0_3-2_src.rpm                	A    	13481  	Thu Jan 13 01:50:12 2000
+          mirc561t.exe                        	A   	948224	Tue Dec 21 20:41:54 1999
+
+          65510 blocks of size 32768. 5295 blocks available
+          smb: \&#62;
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+        Where <TT
+CLASS="literal"
+>//sbmserver</TT
+> is the name of the server you want to connect to. <TT
+CLASS="filename"
+>/sharename</TT
+> is the directory on this server you want to connect to, and <TT
+CLASS="literal"
+>smbclient</TT
+> is 
+        your username on this machine.
+      </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec290.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec292.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Further documentation</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/rc.d/init.d/smb</TT
+> script file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

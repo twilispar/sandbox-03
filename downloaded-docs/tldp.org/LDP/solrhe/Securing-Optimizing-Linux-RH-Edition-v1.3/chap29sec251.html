@@ -1,0 +1,277 @@
+<HTML
+><HEAD
+><TITLE
+>Securing Apache</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="CGI.pm Perl library"
+HREF="chap29sec250.html"><LINK
+REL="NEXT"
+TITLE="users authentication with .dbmpasswd password file"
+HREF="chap29sec252.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec250.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec252.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch29apscr"
+>29.15. Securing Apache</A
+></H1
+><P
+>&#13;      Change some important permissions on files and directories for your Web Server. When you install Apache on your server, there are some files and directories that have too many permissions set by default. The binary program 
+      <TT
+CLASS="filename"
+>httpd</TT
+> can be set to be read-only by the super-user <TT
+CLASS="literal"
+>root</TT
+>, and executable by the owner, group, and others for better security. The <TT
+CLASS="filename"
+>/etc/httpd/conf</TT
+> 
+      and <TT
+CLASS="filename"
+>/var/log/httpd</TT
+> directories don't need to by readable, writable or executable by other people.
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 511 /usr/sbin/httpd
+        [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 750 /etc/httpd/conf/
+        [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 750 /var/log/httpd/
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      If you have enabled the automatic indexing of directories in your Apache configuration file; <TT
+CLASS="envar"
+>IndexOptions</TT
+> in <TT
+CLASS="filename"
+>httpd.conf</TT
+>, then you'll have a security issue since any requests for a directory 
+      that don't find an index file will build an index of what is in the directory. In many cases, you may only want people seeing files that you specifically link to. To turn this off, you need to remove read permissions from the 
+      <TT
+CLASS="filename"
+>DocumentRoot</TT
+> directory but not the files inside it.
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# <B
+CLASS="command"
+>cd</B
+> /home/httpd/
+        [root@deep ]/httpd# <B
+CLASS="command"
+>chmod</B
+> 311 ona
+        [root@deep ]/httpd# ls -la
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        d-wx--x--x   13 webadmin webadmin     1024 Jul 28 08:12 ona
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      Now, with this modification, any requests for this protected directory should return an error message like:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        Forbidden
+        You don't have permission to access /ona/ on this server.
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+        <TT
+CLASS="filename"
+>ona</TT
+> is the <TT
+CLASS="filename"
+>DocumentRoot</TT
+>, the directory out of which you will serve your documents, in our example.
+      </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec250.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec252.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>CGI.pm Perl library</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>users authentication with <TT
+CLASS="filename"
+>.dbmpasswd</TT
+> password file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

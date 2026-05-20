@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<!-- updated   Sun Jul 14 20:10:00 MET DST 1996 by:
+    Tony den Haan (tony@iaehv.nl)  ftp://ftp.IAEhv.nl/pub/users/tony-->
+ 
+<HEAD>
+<TITLE>National Character Sets</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B>Up:</B> <A HREF="node195.html">Configuring elm</A>
+<B> Previous:</B> <A HREF="node196.html">Global elm Options</A>
+<BR> <P>
+<H2><A NAME="SECTION0015620000">National Character Sets</A></H2>
+<A NAME="mailelmcharsets"></A>
+Recently, there have been proposals to amend the RFC-822 standard to
+support various types of messages, such as plain text, binary data,
+Postscript files, etc. The set of standards and RFCs covering these
+aspects are commonly referred to as MIME, or Multipurpose Internet Mail
+Extensions.  Among other things, this also lets the recipient know if a
+character set other than standard ASCII has been used when writing the
+message, for example using French accents, or German umlauts.  This is
+supported by elm to some extent.
+<P>
+The character set used by  internally to represent characters is
+usually referred to as ISO-8859-1, which is the name of the standard it
+conforms to. It is also known as Latin-1.  Any message using characters
+from this character set should have the following line in its header:
+<PRE>
+           Content-Type: text/plain; charset=iso-8859-1
+</PRE>
+The receiving system should recognize this field and take appropriate
+measures when displaying the message. The default for
+text/plain messages is a charset value of
+us-ascii.
+<P>
+To be able to display messages with character sets other than ASCII,
+elm must know how to print these characters. By default, when
+elm receives a message with a charset field other than
+us-ascii (or a content type other than text/plain,
+for that matter), it tries to display the message using a command called
+metamail. Messages that require metamail to be displayed
+are shown with an `M' in the very first column in the overview
+screen.
+<P>
+Since ' native character set is ISO-8859-1, calling
+metamail is not necessary to display messages using this
+character set. If elm is told that the display understands
+ISO-8859-1, it will not use metamail but will display the message
+directly instead. This can be done by setting the following option in
+the global elm.rc:
+<PRE>
+           displaycharset = iso-8859-1
+</PRE>
+Note that you should set this options even when you are never going to
+send or receive any messages that actually contain characters other than
+ASCII. This is because people who do send such messages usually
+configure their mailer to put the proper Content-Type: field into
+the mail header by default, whether or not they are sending ASCII-only
+messages.
+<P>
+However, setting this option in elm.rc is not enough.  The
+problem is that when displaying the message with its built-in pager,
+elm calls a library function for each character to determine
+whether it is printable or not. By default, this function will only
+recognize ASCII characters as printable, and display all other
+characters as ``?''.  You may overcome this by setting the
+environment variable LC_CTYPE to ISO-8859-1, which
+tells the library to accept Latin-1 characters as printable. Support for
+this and other features is available since libc-4.5.8.
+<P>
+When sending messages that contain special characters from ISO-8859-1,
+you should make sure to set two more variables in the elm.rc
+file:
+<PRE>
+           charset = iso-8859-1
+           textencoding = 8bit
+</PRE>
+This makes elm report the character set as ISO-8859-1 in the mail
+header, and send it as an 8 bit value (the default is to strip all
+characters to 7 bit).
+<P>
+Of course, any of these options can also be set in the private
+elmrc file instead of the global one.
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B>Up:</B> <A HREF="node195.html">Configuring elm</A>
+<B> Previous:</B> <A HREF="node196.html">Global elm Options</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

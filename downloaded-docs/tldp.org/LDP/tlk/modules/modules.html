@@ -1,0 +1,324 @@
+<HTML>
+<center>
+<A HREF="../tlk-toc.html"> Table of Contents</A>, 
+<A href="../tlk.html" target="_top"> Show Frames</A>, 
+<A href="../modules/modules.html" target="_top"> No Frames</A> 
+</center>
+<hr>
+<META NAME="TtH" CONTENT="1.03">                                          
+
+<p>
+                  <H1><A NAME="tth_chAp12">Chapter 12     <br>Modules</H1>
+<A NAME="modules-chapter"></A>
+<p>
+<img src="../logos/sit3-bw-tran.1.gif"><br> <tt><b></tt></b> 
+This chapter describes how the Linux kernel can dynamically load functions,
+for example filesystems, only when they are needed.
+
+<p>
+Linux is a monolithic kernel; 
+that is, it is one, single, large program
+where all the functional components of the kernel have access to all
+of its internal data structures and routines.
+The alternative is to have a micro-kernel structure where 
+the functional pieces of the kernel are broken out into separate units
+with strict communication mechanisms between them.
+This makes adding new components into the kernel via the configuration
+process rather time consuming.
+Say you wanted to use a SCSI driver for an NCR 810 SCSI and you had
+not built it into the kernel.
+You would have to configure and then build a new kernel before you 
+could use the NCR 810.
+There is an alternative, Linux allows you to dynamically load
+and unload components of the operating system as you need them.
+Linux modules are lumps of code that can be dynamically linked into the
+kernel at any point after the system has booted.
+They can be unlinked from the kernel and removed when they are no longer
+needed.
+Mostly Linux kernel modules are device drivers, pseudo-device drivers
+such as network drivers, or file-systems.
+
+<p>
+You can either load and unload Linux kernel modules explicitly  using
+the <font face="helvetica">insmod</font> and <font face="helvetica">rmmod</font> commands or the kernel itself can demand
+that the kernel daemon (<tt>kerneld</tt>) loads and unloads the modules as they are needed.
+
+<p>
+Dynamically loading code as it is needed is attractive as it keeps the 
+kernel size to a minimum and makes the kernel very flexible.
+My current Intel kernel uses modules extensively and is only 406Kbytes long.
+I only occasionally use <tt>VFAT</tt> file systems and so I build my Linux kernel
+to automatically load the <tt>VFAT</tt> file system module as I mount a <tt>VFAT</tt>
+partition.
+When I have unmounted the <tt>VFAT</tt> partition the system detects that I no
+longer need the <tt>VFAT</tt> file system module and removes it from the system.
+Modules can also be useful for trying out new kernel code without having
+to rebuild and reboot the kernel every time you try it out.
+Nothing, though, is for free and there is a slight performance and
+memory penalty associated with kernel modules.
+There is a little more code that a loadable module must provide 
+and this and the extra data structures take a little more memory.
+There is also a level of indirection introduced that makes accesses of
+kernel resources slightly less efficient for modules.
+
+<p>
+Once a Linux module has been loaded it is as much a part of the kernel
+as any normal kernel code.
+It has the same rights and responsibilities as any kernel code; in other
+words, Linux kernel modules can crash the kernel just like all kernel
+code or device drivers can.
+
+<p>
+So that modules can use the kernel resources that they need, they must
+be able to find them.
+Say a module needs to call <tt>kmalloc()</tt>, the kernel memory allocation
+routine.
+At the time that it is built, a module does not know where in memory 
+<tt>kmalloc()</tt> is,  so when
+the module is loaded, the kernel must fix up all of the module's
+references to <tt>kmalloc()</tt> before the module can work.
+The kernel keeps a list of all of the kernel's resources in the kernel symbol
+table so that it can resolve references to those resources from the modules 
+as they are loaded.
+Linux allows module stacking, this is where one module requires the
+services of another module.
+For example, the <tt>VFAT</tt> file system module requires the services
+of the <tt>FAT</tt> file system module as the <tt>VFAT</tt> file system is more
+or less a set of extensions to the <tt>FAT</tt> file system.
+One module requiring services or resources from another module is very
+similar to the situation where a module requires services and resources
+from the kernel itself.
+Only here the required services are in another, previously loaded
+module.
+As each module is loaded, the kernel modifies the kernel symbol table,
+adding to it all of the resources or symbols exported by the newly
+loaded module.  
+This means that, when the next module is loaded, it has access to 
+the services of the already loaded modules.
+
+<p>
+When an attempt is made to unload a module, the kernel needs to know
+that the module is unused and it needs some way of notifying the module
+that it is about to be unloaded.
+That way the module will be able to free up any system resources that it
+has allocated, for example kernel memory or interrupts, before it is
+removed from the kernel.
+When the module is unloaded, the kernel removes any symbols that that module
+exported into the kernel symbol table.
+
+<p>
+Apart from the ability of a loaded module to crash  the operating system 
+by being badly written, it presents another danger.
+What happens if you load a module built for an earlier or later kernel
+than the one that you are now running?
+This may cause a problem if, say, the module makes a call to a kernel routine
+and supplies the wrong arguments.
+The kernel can optionally protect against this by making rigorous version
+checks on the module as it is loaded.
+
+<p>
+
+<H2><A NAME="tth_sEc12.1">12.1&nbsp;</A> Loading a Module</H2>
+
+<p>
+
+<p><A NAME="tth_fIg12.1"></A> 
+<center><center> <img src="modules.gif"><br> 
+<p>
+</center></center><center>      Figure 12.1: The List of Kernel Modules</center>
+<A NAME="modules-figure"></A>
+<p>
+<p>There are two ways that a kernel module can be loaded.
+The first way is to use the <font face="helvetica">insmod</font> command to manually insert the it into 
+the kernel.
+
+<p>
+The second, and much more clever way, is to load the module as it is needed; this
+is known as demand loading.
+
+<p>
+When the kernel discovers the need for a module, for example when the user mounts
+a file system that is not in the kernel, the kernel will request that the kernel daemon
+(<tt>kerneld</tt>) attempts to load the appropriate module.
+
+<p>
+The kernel daemon is a normal user process albeit with super user privileges.
+When it is started up, usually at system boot time, it opens up an Inter-Process 
+Communication (IPC) channel to the kernel.
+This link is used by the kernel to send messages to the <tt>kerneld</tt> asking for
+various tasks to be performed.
+
+<p>
+<tt>Kerneld</tt>'s major function is to load and unload kernel modules but it is also
+capable of other tasks such as starting up the PPP link over serial line when it
+is needed and closing it down when it is not.
+<tt>Kerneld</tt> does not perform these tasks itself, it runs the neccessary programs
+such as <font face="helvetica">insmod</font> to do the work.
+<tt>Kerneld</tt> is just an agent of the kernel, scheduling work on its behalf.
+
+<p>
+The <font face="helvetica">insmod</font> utility must  find the requested kernel module that it is to load.
+Demand loaded kernel modules are normally kept in <tt>/lib/modules/kernel-version</tt>.
+The kernel modules are linked object files  just like other programs in the system
+except that they are linked as a relocatable images.
+That is, images that are not linked to run from a particular address.
+They can be either <tt>a.out</tt> or <tt>elf</tt> format object files.
+<font face="helvetica">insmod</font> makes a privileged system call to find the kernel's exported symbols.
+
+<p>
+These are kept in pairs containing the symbol's name and its value, for example its
+address.
+The kernel's exported symbol table is held in the first <tt>module</tt> data structure
+in the list of modules maintained by the kernel and pointed at by the <tt>module_list</tt>
+pointer.
+
+<p>
+Only specifically entered symbols are added into the table, which is built when the
+kernel is compiled and linked, not <em>every</em> symbol in the kernel is exported to
+its modules.
+An example symbol is <tt>``request_irq''</tt> which is the kernel routine that must
+be called when a driver wishes to take control of a particular system interrupt.
+In my current kernel, this has a value of <em>0x0010cd30</em>.
+You can easily see the exported kernel symbols and their values by looking at
+<tt>/proc/ksyms</tt> or by using the <font face="helvetica">ksyms</font> utility.
+The <font face="helvetica">ksyms</font> utility can either show you all of the exported kernel symbols or only
+those symbols exported by loaded modules.
+<font face="helvetica">insmod</font> reads the module into its virtual memory and fixes up its unresolved
+references to kernel routines and resources using the exported symbols from the
+kernel.
+This fixing up takes the form of patching the module image in memory.
+<font face="helvetica">insmod</font> physically writes the address of the symbol into the appropriate
+place in the module.
+
+<p>
+When <font face="helvetica">insmod</font> has fixed up the module's references to exported kernel symbols,
+it asks the kernel for enough space to hold the new kernel, again using a
+privileged system call.
+The kernel allocates a new <tt>module</tt> data structure and enough kernel
+memory to hold the new module and puts it at the end of the kernel modules list.
+The new module is marked as <tt>UNINITIALIZED</tt>.
+
+<p>
+Figure&nbsp;<A href="#modules-figure"
+> 12.1</A> shows the list of kernel modules after two modules,
+<tt>VFAT</tt> and <tt>VFAT</tt> have been loaded into the kernel.
+Not shown in the diagram is the first module on the list, which is a pseudo-module that is only
+there to hold the kernel's exported symbol table.
+You can use the command <font face="helvetica">lsmod</font> to list all of the loaded kernel modules and
+their interdependencies.
+<font face="helvetica">lsmod</font> simply reformats <tt>/proc/modules</tt> which is built from the list of kernel
+<tt>module</tt> data structures.
+The memory that the kernel  allocates for it is mapped into the <font face="helvetica">insmod</font> process's 
+address space so that it can access it.
+<font face="helvetica">insmod</font> copies the module into the allocated space and relocates it so
+that it will run from the kernel address that it has been allocated.
+This must happen as the module cannot expect to be loaded at the same address
+twice let alone into the same address in two different Linux systems.
+Again, this relocation involves patching the module image with the appropriate
+addresses.
+
+<p>
+The new module also exports symbols to the kernel and <font face="helvetica">insmod</font> builds a table
+of these exported images.
+Every kernel module must contain module initialization and module cleanup
+routines and these symbols are deliberately not exported but <font face="helvetica">insmod</font> must
+know the addresses of them so that it can pass them to the kernel.
+All being well, <font face="helvetica">insmod</font> is now ready to initialize the module and it makes
+a privileged system call passing the kernel the addresses of the module's initialization
+and cleanup routines.
+
+<p>
+When a new module is added into the kernel, it must update the kernel's set of symbols
+and modify the modules that are being used by the new module.
+Modules that have other modules dependent on them must maintain a list of references
+at the end of their symbol table and pointed at by their <tt>module</tt> data structure.
+Figure&nbsp;<A href="#modules-figure"
+> 12.1</A> shows that the <tt>VFAT</tt> file system module is dependent on the 
+<tt>FAT</tt> file system module.
+So, the <tt>FAT</tt> module contains a reference to the <tt>VFAT</tt> module; the reference
+was added when the <tt>VFAT</tt> module was loaded.
+The kernel calls the modules initialization routine and, if it is successful it
+carries on installing the module.
+The module's cleanup routine address is stored in it's <tt>module</tt> data structure and
+it will be called by the kernel when that module is unloaded.
+Finally, the module's state is set to <tt>RUNNING</tt>.
+
+<p>
+
+<H2><A NAME="tth_sEc12.2">12.2&nbsp;</A> Unloading a Module</H2>
+
+<p>
+Modules can be removed using the <font face="helvetica">rmmod</font> command but demand  loaded modules
+are automatically removed from the system by <tt>kerneld</tt> when they are no longer being used.
+Every time its idle timer expires, <tt>kerneld</tt> makes a system call requesting that
+all unused demand loaded modules are removed from the system.
+The timer's value is set when you start <tt>kerneld</tt>; my <tt>kerneld</tt> checks every
+180 seconds.
+So, for example, if you mount an <tt>iso9660</tt> CD ROM and your <tt>iso9660</tt> filesystem
+is a loadable module, then shortly after the CD ROM is unmounted, the <tt>iso9660</tt>
+module will be removed from the kernel.
+
+<p>
+A module cannot be unloaded so long as other components of the kernel are depending
+on it. 
+For example, you cannot unload the <tt>VFAT</tt> module if you have one or
+more  <tt>VFAT</tt> file systems mounted.
+If you look at the output of <font face="helvetica">lsmod</font>, you will see that each module has
+a count associated with it.
+For example:
+
+<pre>
+Module:        #pages:  Used by:
+msdos              5                  1
+vfat               4                  1 (autoclean)
+fat                6    [vfat msdos]  2 (autoclean)
+</pre>
+<p>
+The count is the number of kernel entities that are dependent on this module.
+In the above example, the <tt>vfat</tt> and <tt>msdos</tt> modules are both dependent on 
+the <tt>fat</tt> module and so it has a count of 2.  
+Both the <tt>vfat</tt> and <tt>msdos</tt> modules have 1 dependent, which is a mounted
+file system.
+If I were to load another <tt>VFAT</tt> file system then the <tt>vfat</tt> module's 
+count would become 2.
+A module's count is held in the first longword of its image.
+
+<p>
+This field is slightly overloaded as it also holds the <tt>AUTOCLEAN</tt> and <tt>VISITED</tt> 
+flags.
+Both of these flags are used for demand loaded modules.
+These modules are marked as <tt>AUTOCLEAN</tt> so that the system can recognize
+which ones it may automatically unload.
+The <tt>VISITED</tt> flag marks the 
+module as in use by one or more other system components; it is set whenever another
+component makes use of the module.
+Each time the system is asked by <tt>kerneld</tt> to remove unused demand loaded modules
+it looks through all of the modules in the system for likely candidates.
+It only looks at modules marked as <tt>AUTOCLEAN</tt> and in the state <tt>RUNNING</tt>.
+If the candidate has its <tt>VISITED</tt> flag cleared then it will remove the
+module, otherwise it will clear the <tt>VISITED</tt> flag and go on to look at the next
+module in the system.
+
+<p>
+Assuming that a module can be unloaded, its cleanup routine is called to allow
+it to free up the kernel resources that it has allocated.
+
+<p>
+The <tt>module</tt> data structure is marked as <tt>DELETED</tt> and it is unlinked
+from the list of kernel modules.
+Any other modules that it is dependent on have their reference lists modified
+so that they no longer have it as a dependent.
+All of the kernel memory that the module needed is deallocated.
+
+<p>
+
+<p><hr><small>File translated from T<sub><font size=-1>E</font></sub>X by <a href="http://hutchinson.belmont.ma.us/tth/tth.html">T<sub><font size=-1>T</font></sub>H</a>, version 1.0.</small>
+<hr>
+<center>
+<A HREF="../modules/modules.html"> Top of Chapter</A>, 
+<A HREF="../tlk-toc.html"> Table of Contents</A>, 
+<A href="../tlk.html" target="_top"> Show Frames</A>, 
+<A href="../modules/modules.html" target="_top"> No Frames</A><br> 
+© 1996-1999 David A Rusling <A HREF="../misc/copyright.html">copyright notice</a>.
+</center>
+</HTML>

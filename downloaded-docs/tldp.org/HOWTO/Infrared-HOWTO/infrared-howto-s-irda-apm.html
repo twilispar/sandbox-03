@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Linux/IrDA and APM</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Advanced Topics"
+HREF="infrared-howto-c-advanced-topics.html"><LINK
+REL="PREVIOUS"
+TITLE="IrDA Network Neighborhood"
+HREF="infrared-howto-s-network-neighborhood.html"><LINK
+REL="NEXT"
+TITLE="Performance Testing"
+HREF="infrared-howto-s-performance-testing.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-network-neighborhood.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. Advanced Topics</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-performance-testing.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-irda-apm"
+></A
+>5.8. Linux/IrDA and APM</H1
+><P
+>&#13;   Fons Botman wrote: "When I hibernate my HP OmniBook 2000CT, (Fn-12
+   diskimage is written to disk, machine turns off completely) with irtty
+   active and turn it on again, irda does not work. I can see it trying
+   to reply to discovery frames it receives from a windows box, using
+   irdadump on the OmniBook. but the windows PC does not see the replies.
+   If I just kill irattach and remove irtty and serial, and start
+   irattach again, it starts working again. Does this occur with other
+   linux laptops also? Is it a problem in the serial device driver? "
+   Also Pedro Figueiredo reported this problem for a Fujitsu LifeBook
+   735DX.
+</P
+><P
+>&#13;   Answer by Dag Brattli: "Could you all check if the same thing is
+   happening when your're using PPP (and not using IrDA). I guess the APM
+   stuff shuts down the serial port, so that the driver will need to
+   reinitialize it when waking up again. This is properly implemented by
+   some of the PCMCIA drivers I know about, but I really don't think the
+   serial driver gets any events from the APM system.
+</P
+><P
+>&#13;   So here you have your own little kernel project. Start adding APM
+   support to irport which will be the easiest thing (and also to the FIR
+   drivers), then you can start adding a patch to the serial driver (if
+   needed). Again I think the PCMCIA subsystem may be a good source on
+   how to fix it properly."
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-network-neighborhood.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-performance-testing.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>IrDA Network Neighborhood</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-advanced-topics.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Performance Testing</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

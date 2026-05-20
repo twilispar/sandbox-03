@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<!-- updated   Sun Jul 14 18:15:48 MET DST 1996 by:
+    Tony den Haan (tony@iaehv.nl)  ftp://ftp.IAEhv.nl/pub/users/tony-->
+<HEAD>
+<TITLE>Miscellaneous Files</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node267.html">Control Messages</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node265.html">Expiring News</A>
+<BR> <P>
+<H1><A NAME="SECTION0019700000">Miscellaneous Files</A></H1>
+<A NAME="cnewsmisc"></A>
+There are a number of files that control C-News' behavior, but are not
+essential to its functioning. All of them reside in /usr/lib/news. We will
+describe them briefly.
+<DL><DT>newsgroups<DD>  This is a companion file of active which contains a list of newsgroup names, along with a one-line description of its main
+                topic.   This  file  is  automatically  updated  when  C  News
+                receives a check-news control message (see section 18.8).
+<DT>localgroups<DD> If  you  have a number of local groups that you don't want C News to complain about every time you receive a checknews mes-
+                sage, put their names and descriptions in this file, just like
+                they would appear in newsgroups.
+
+
+<DT>mailpaths<DD>  This file contains the moderator's address for each moderated group. Each line contains the group name, followed by the mod-
+                erator's email address (offset by a tab).
+<P>
+
+                      Two special entries are provided as  default.  These  are
+                backbone  and internet. Both provide --- in bang-path notation
+                --- the path to the nearest backbone site, and the  site  that
+                understands  RFC 822-style addresses (user@host).  The default
+                entries are
+
+<PRE>
+                     internet      backbone
+</PRE>
+<P>
+                    You will not have to change the  internet  entry  if  you
+                have  smail or sendmail installed, because they understand RFC
+                822-addressing.
+<P>
+
+                     The backbone entry is used whenever a  user  posts  to  a
+                moderated  group whose moderator is not listed explicitly.  If
+                the newsgroup's name is alt.sewer, and the backbone entry con-
+                tains path!%s, C News will mail the article to path!alt-sewer,
+                hoping that the backbone machine is able to forward the  arti-
+                cle. To find out which path to use, ask the news admins at the
+                site that feeds you.  As a  last  resort,  you  can  also  use
+                uunet.uu.net!%s.
+<DT>distributions<DD>   This file is not really a C News file, but it is used by some newsreaders, and nntpd. It contains the list of distribu-
+                tions  recognized  by  your  site,  and  a  description of its
+                (intended) effect. For example, Virtual Brewery has  the  following file:
+		<DL>
+			<DT>world<DD>     everywhere in the world
+                	<DT>local<DD> Only local to this site 
+			<DT>nl<DD>    Netherlands only
+			<DT>mugnet<DD>MUGNET only
+			<DT>fr<DD>    France only
+			<DT>de<DD>    Germany only
+			<DT>brewery<DD>Virtual Brewery only
+		</DL>
+	<DT>log<DD>  This file contains a log of all  C  News  activities.  It  is
+                culled  regularly by running newsdaily; copies of the old log-
+                files are kept in log.o, log.oo, etc.
+	<DT>errlog<DD> This is a log of all error messages created by C  News.  These do  not  include articles junked due to wrong group, etc. This
+                file is mailed to the newsmaster (usenet by default) automati-
+                cally by newsdaily if it is found to be non-empty.
+
+	<DT>errlog<DD>  is  cleared  by newsdaily. Old copies are kept in
+                errlog.o and companions.
+	<DT>batchlog<DD> This logs all runs of sendbatches.  It  is  usually  of  scant interest only. It is also attended by newsdaily.
+	<DT>watchtime <DD>This is an empty file created each time newswatch is run.
+
+
+</DL>
+<HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,209 @@
+<HTML
+><HEAD
+><TITLE
+>Disable all console access</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Disable console program access"
+HREF="chap5sec34.html"><LINK
+REL="NEXT"
+TITLE="The inetd - /etc/inetd.conf file"
+HREF="chap5sec36.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec34.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec36.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN3330"
+>5.7. Disable all console access</A
+></H1
+><P
+>&#13;               The Linux-PAM library installed by default on your system allows the system administrator to choose how applications authenticate users, such as for console access, program and file access. In order to disable all these accesses for the 
+               users, you must comment out all lines that refer to <TT
+CLASS="filename"
+>pam_console.so</TT
+> in the <TT
+CLASS="filename"
+>/etc/pam.d/</TT
+> directory. This step is a continuation of the above hack <A
+HREF="chap5sec34.html"
+> Disable console program access.</A
+>
+               The following script will do the trick automatically for you. As root creates the <TT
+CLASS="filename"
+>disabling.sh</TT
+> script file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>disabling.sh</TT
+> and add the following lines inside:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;               # !/bin/sh
+               cd /etc/pam.d
+               for i in * ; do
+               sed '/[^#].*pam_console.so/s/^/#/' &#60; $i &#62; foo &#38;&#38; mv foo $i
+               done
+               </PRE
+></TD
+></TR
+></TABLE
+>               
+               Make this script executable with the following command and execute it:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>chmod</B
+>  700  disabling.sh
+               [root@deep] /# <B
+CLASS="command"
+>./disabling.sh</B
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               This will comment out all lines that refer to <TT
+CLASS="filename"
+>pam_console.so</TT
+> for all files located under <TT
+CLASS="filename"
+>/etc/pam.d</TT
+> directory. Once the script has been executed, you can remove it from your system.
+               
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec34.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec36.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Disable console program access</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The inetd - <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

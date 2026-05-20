@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>Oracle 8i for Linux Installation HOWTO: The installer</TITLE>
+ <LINK HREF="Oracle-8-HOWTO-4.html" REL=next>
+ <LINK HREF="Oracle-8-HOWTO-2.html" REL=previous>
+ <LINK HREF="Oracle-8-HOWTO.html#toc3" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Oracle-8-HOWTO-4.html">Next</A>
+<A HREF="Oracle-8-HOWTO-2.html">Previous</A>
+<A HREF="Oracle-8-HOWTO.html#toc3">Contents</A>
+<HR>
+<H2><A NAME="s3">3. The installer</A></H2>
+
+<H2><A NAME="ss3.1">3.1 How?</A>
+</H2>
+
+<P>Generally, following the documentation is a good idea. It's not that
+bad and you'll get much better support from Oracle if you have. (I
+ended up breaking things -- and knowing it would -- by following the
+documentation for Oracle Applications. It was the only way to get
+decent support.)
+<P>This document is going to give an overview, but you should still have
+their documentation available.
+<P>
+<H2><A NAME="ss3.2">3.2 What do I tell the installation program?</A>
+</H2>
+
+<P>As part of the installation Oracle will ask a number of
+questions. Generally they're not too difficult but let's see what I
+entered and why.
+<P>
+<OL>
+<LI>Many people make the mistake of following Oracle's documentation
+and, therefore, fail at the first hurdle. Don't execute
+<CODE>runInstaller</CODE> as it almost always fails. Instead move to
+<CODE>install/linux</CODE> on the CD and run <CODE>runIns.sh</CODE> while logged
+in as 'oracle'.
+</LI>
+<LI>It should show a title screen. Click 'Next.'
+</LI>
+<LI>It should ask you to enter the source directory of the
+installation files ('jar' file) and your Oracle installation
+directory. You should be able to leave the former alone. The Oracle
+home directory is where you want to install the software. According to
+the installation documentation is should be somewhere on
+<CODE>/u01</CODE>, but I ignored that and put it in
+<CODE>/home/oracle</CODE>. Oracles advice, in this respect, is usually
+worth following. Click 'Next' when you've entered the details.
+</LI>
+<LI>Now it should ask you for the DBA group. This is the Unix group
+you created in the last section and is probably 'dba'. Enter the
+details and click 'Next.'
+</LI>
+<LI>This time it wants you to log in as 'root' and run
+<CODE>/tmp/OraInstall/orainstRoot.sh</CODE>. Do as it says. (You may have
+to run <CODE>pdksh</CODE> or <CODE>bash</CODE> in the 'Bourne compatibility mode' to
+get it to complete successfully.) When you're done click 'Retry.'
+</LI>
+<LI>You're now given the option of what to install. Your best bet
+here is 'Oracle Enterprise Edition,' as this includes just about
+everything (table 3.1 in the Oracle documentation tells you exactly
+what it installs).  Make sure the right radio button is selected and
+click 'Next.'
+</LI>
+<LI>It should now allow you to choose what you install with much
+finer granularity. Unless you're particularly constrained by disk
+space or know exactly what you need, I'd recommend leaving it exactly
+as it is and clicking 'Next.' The Universal Installer won't let you
+make any silly choices so don't worry too much if you unselect
+something. You can always add it back in later.
+</LI>
+<LI>For any products that you've asked it to install, the installer
+will allow you to change where it puts them. Again, only if you have a
+good reason to should you change it. Click 'Next' when you're done.
+</LI>
+<LI>It now goes away and installs all the pieces of software you
+asked it to. This will probably take quite a while and will use far
+more memory than is reasonable.
+</LI>
+<LI>It should ask you if you want to create a database. Select
+'no'. There are two reasons for this: it often doesn't work and, even
+when it does, it's very slow (it seems to fire up another JVM, leaving
+X, the Oracle back-end and <I>two</I> virtual machines in memory; not
+good with 128Mb of memory).
+</LI>
+<LI>The installer should now ask you about the network protocols
+that you want Oracle to support. The boxes all came up blank for me. I
+don't know what's supposed to be in there, but I clicked 'Next' and
+found that everything worked.
+</LI>
+<LI>All the hard stuff is complete now. All the products you want
+should be installed and are ready to go. Congratulations.</LI>
+</OL>
+<P>
+<H2><A NAME="ss3.3">3.3 Installing the patch</A>
+</H2>
+
+<P>Unfortunately, the CD that Oracle sent you was probably version
+8.1.5.0.0. As with almost all first releases there are problems with
+that version (problems include empty files, so they're quite serious)
+and a patch, to version 8.1.5.0.2 is essential. You'll certainly need
+it to progress to the "Configuration" section of this HOWTO. The patch
+described here is a cumulative patch, i.e., it includes all the files
+required to move from version 8.1.5.0.0 to 8.1.5.0.2.
+<P>The file you need is on 
+<A HREF="http://technet.oracle.com/software/products/oracle8i/software_index.htm">the Oracle web site</A>
+and is relatively easy to install.
+<P>
+<OL>
+<LI>This is probably the first of many patches, so create a
+directory called "patches" somewhere convenient (mine is in
+<CODE>$ORACLE_HOME</CODE>).
+</LI>
+<LI>Download the file into it.
+</LI>
+<LI>Create somewhere to put the files:
+<PRE>
+mkdir /tmp/orapatch
+cd /tmp/orapatch
+</PRE>
+
+</LI>
+<LI>Uncompress the file:
+<PRE>
+tar zvxf $ORACLE_HOME/patches/linux815patches.tgz
+</PRE>
+
+</LI>
+<LI>Run the shell script that's now in the current directory:
+<PRE>
+./linux_815patches.sh
+</PRE>
+
+</LI>
+</OL>
+<P>Note that it's important not to uncompress the file in the current
+directory. The patch installer checks that the correct number of files
+are present and fails if there are not the right number. Of course, if
+it finds the patch archive it finds too many files!
+<P>
+<H2><A NAME="ss3.4">3.4 Setting up your environment</A>
+</H2>
+
+<P>Add the following lines to your ".profile" (or whatever the equivalent
+is for your shell):
+<P>
+<PRE>
+. oraenv
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib
+</PRE>
+<P>Quite why the Oracle installer doesn't do this I have no idea.
+<P>If you see "<CODE>[: integer expression expected before -lt</CODE>" the next
+time you log in, it's because 'oraenv' is expecting your ULIMIT to be
+an integer rather than the default 'unlimited.' I've seen no ill
+effects by ignoring the error, but you can fix it by setting the
+ULIMIT to something finite.
+<P>
+<H2><A NAME="ss3.5">3.5 Installations questions and answers</A>
+</H2>
+
+<H3>The installation program exits with 'CreateOUIProcess()'</H3>
+
+<P>Firstly, make sure that you're running the right version of the JVM. I
+don't know what Oracle do with their software, but it's very dependent
+on the version you use.
+<P>Secondly, it might help if, instead of running <CODE>runInstaller</CODE> from
+the root of the CD, you move into <CODE>install/linux</CODE> and run the
+<CODE>runInst.sh</CODE> shell script instead.
+<P>This problem seems more common on RedHat Linux 6.1 than 6.0 and could
+be something to do with a newer C library.
+<P>I've also heard reports that if you have the wrong version of Gnome's
+usual window manager, Enlightenment, you might get this
+problem. Upgrade or switch to another environment such as KDE or
+Fvwm2.
+<P>
+<H3>The installer just flashes on the screen and then vanishes</H3>
+
+<P>This is not an uncommon occurrence. Usually it means that you're
+running an old version of Enlightenment. Upgrading or switching to
+another environment should fix the problem.
+<P>A similar problem is the installation program vanishing at some later
+point in the process, often around 80% of the way through. The
+consensus seems to be that Oracle ran out of memory. You should
+increase the amount of swap space your machine has, anything over
+200Mb should be sufficient.
+<P>
+<H3>Strange Java errors when I start the installation program?</H3>
+
+<P>Which version of the Java Virtual Machine are you using? People have
+claimed success with other versions, but most of the problems that I
+had disappeared when I downgraded to JRE 1.1.6v5, the one that Oracle
+recommends in their documentation.
+<P>Two other things that are worth mentioning: make sure you use the JRE
+and not the JDK and, secondly, you should be using "green"
+threads. Unless you've set THREADS_FLAG to 'native' you almost
+certainly have the correct setting.
+<P>
+<H3>The installation program 'Segmentation Fault's</H3>
+
+<P>You do have GLIBC 2.1 don't you?
+<P>
+<H3>Problems loading shared libraries</H3>
+
+<P>The error message that I'm talking about looks a bit like this:
+<P>
+<PRE>
+error in loading shared libraries: libclntsh.so.8.0: cannot open
+shared object file: No such file or directory
+</PRE>
+<P>This is the same as NT complaining that it can't find a DLL. It's very
+easy to fix. Simply add the following line to the end of your
+".profile" if you're using a Bourne-like shell (ask a local guru if
+you don't know):
+<P>
+<PRE>
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib
+</PRE>
+<P>Or use the following line if you're using a CSH-like shell:
+<P>
+<PRE>
+setenv LD_LIBRARY_PATH "$LD_LIBRARY_PATH
+$ORACLE_HOME/lib"
+</PRE>
+<P>I don't use the C-Shell, so independent verification of this command
+would be appreciated.
+<P>
+<H3>Pro*C doesn't work</H3>
+
+<P>The answer to this took quite a bit of tracking down, although the
+answer <I>is</I> on the Oracle web site if you look hard enough.
+<P>The default configuration of Pro*C doesn't know where to find all its
+libraries, so you need to tell it. After installation
+<CODE>$ORACLE_HOME/precomp/admin/pcscfg.cfg</CODE> is empty, but it needs
+to contain the following:
+<P>
+<PRE>
+sys_include=(/home/oracle/precomp/public, /usr/include,
+/usr/lib/gcc-lib/i386-redhat-linux/egcs-2.91.66/include/,
+/usr/include, /usr/lib/gcc-lib/i386-redhat-linux/egcs-2.91.66/include,
+/usr/include)
+include=(/home/oracle/precomp/public) 
+include=(/home/oracle/rdbms/demo) 
+include=(/home/oracle/network/public) 
+include=(/home/oracle/plsql/public)
+ltype=short
+</PRE>
+<P>(The first four lines above, from <CODE>sys_include</CODE> to <CODE>include)</CODE>
+should all be on the same line in the file.)
+<P>The Oracle documentation doesn't mention this, but you also need to
+edit <CODE>$ORACLE_HOME/precomp/lib/env_precomp.mk</CODE>. On the line
+that defines <CODE>CCPSYSINCLUDE</CODE>, put the following:
+<P>
+<PRE>
+CCPSYSINCLUDE=sys_include='($(ORACLE_HOME)/precomp/public,
+/usr/lib/gcc-lib/i386-redhat-linux/egcs-2.91.66/include,
+/usr/include/g++-2, /usr/include)'
+</PRE>
+<P>This works for RedHat Linux 6.0, but may need tweaking for other
+distributions or later versions of RH.
+<P>
+<H3>I installed the patch but it made things worse!</H3>
+
+<P>This is tricky, barely documented by Oracle and common across all
+their products and installation programs. It's about time they did
+something about it!
+<P>Often what happens is as follows: you install Oracle Enterprise
+Edition and, as Oracle tells you, you dash off and install all the
+available patches. Then you decide you need the pre-compilers and
+install Oracle Programmer from the same CD.
+<P>Before you installed Pro*C your database worked, and now it doesn't.
+<P>The problem is that the versions of the pre-compilers that you
+installed were not patched and some of the Oracle server code relies
+on the fixes; Oracle's installer is so stupid that it will overwrite
+newer version of the same code.
+<P>The solution is not pretty. Since you can't extract an individual file
+from the CD you need to install the whole thing again, this time
+adding Oracle Programmer before the patch.
+<P>
+<H3>Oracle thinks I don't have enough disk space</H3>
+
+<P>There's something wrong with the installation program. Assuming you
+<I>do</I> have enough space it will install okay.
+<P>
+<HR>
+<A HREF="Oracle-8-HOWTO-4.html">Next</A>
+<A HREF="Oracle-8-HOWTO-2.html">Previous</A>
+<A HREF="Oracle-8-HOWTO.html#toc3">Contents</A>
+</BODY>
+</HTML>

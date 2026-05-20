@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<!-- updated   Sun Jul 14 20:10:00 MET DST 1996 by:
+    Tony den Haan (tony@iaehv.nl)  ftp://ftp.IAEhv.nl/pub/users/tony-->
+<HEAD>
+<TITLE>Pathalias and Map File Format</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node195.html">Configuring elm</A>
+<B>Up:</B> <A HREF="node186.html">Electronic Mail</A>
+<B> Previous:</B> <A HREF="node193.html">Mixing UUCP and RFC-822</A>
+<BR> <P>
+<H1><A NAME="SECTION0015500000">Pathalias and Map File Format</A></H1>
+<A NAME="mailpathalias"></A> <A NAME="mailmaps"></A>
+The pathalias database provides the main routing information in
+UUCP-based networks. A typical entry looks like this (site name
+and path are separated by TABs):
+<PRE>
+           moria.orcnet.org  ernie!bert!moria!%s
+           moria             ernie!bert!moria!%s
+</PRE>
+This makes any message to moria be delivered via ernie
+and bert. Both moria's fully qualified name and its UUCP
+name have to be given if the mailer does not have a separate way to
+map between these name spaces.
+<P>
+If you want to direct all messages to hosts inside some domain to its
+mail relay, you may also specify a path in the pathalias database,
+giving the domain name as target, preceded by a dot. For example, if
+all hosts in the sub.org may be reached through
+swim!smurf, the pathalias entry might look like this:
+<PRE>
+           \&.sub.org        swim!smurf!%s
+</PRE>
+Writing a pathalias file is acceptable only when you are running a site
+that does not have to do much routing.  If you have to do routing for a
+large number of hosts, a better way is to use the pathalias command
+to create the file from map files.  Maps can be maintained much easier,
+because you may simply add or remove a system by editing the system's map
+entry, and re-create the map file.  Although the maps published by the
+Usenet Mapping Project aren't used for routing very much anymore, smaller
+UUCP networks may provide routing information in their own set of maps.
+<P>
+A map file mainly consists of a list of sites, listing the sites
+each system polls or is polled by.  The system name begins in column
+one, and is followed by a comma-separated list of links. The list may
+be continued across newlines if the next line begins with a tab.  Each
+link consists of the name of the site, followed by a cost given in
+brackets. The cost is an arithmetic expression, made up of numbers and
+symbolic costs. Lines beginning with a hash sign are
+ignored.
+<P>
+As an example, consider moria, which polls swim.twobirds.com
+twice a day, and bert.sesame.com once per week. Moreover, the link
+to bert only uses a slow 2400bps modem.  moria's would publish
+the following maps entry:
+<PRE>
+           moria.orcnet.org
+                   bert.sesame.com(DAILY/2),
+                   swim.twobirds.com(WEEKLY+LOW)
+
+           moria.orcnet.org = moria
+</PRE>
+The last line would make it known under its UUCP name, too.  Note that
+it must be DAILY/2, because calling twice a day actually
+halves the cost for this link.
+<P>
+Using the information from such map files, pathalias is able to
+calculate optimal routes to any destination site listed in the paths
+file, and produce a pathalias database from this which can then be used
+for routing to these sites.
+<P>
+<A NAME="7173"></A>
+pathalias provides a couple of other features like site-hiding
+(i.e. making sites accessible only through a gateway) etc. See the
+manual page for pathalias for details, as well as a complete list
+of link costs.
+<P>
+Comments in the map file generally contain additional information on
+the sites described in it. There is a rigid format in which to specify
+this, so that it can be retrieved from the maps.  For instance, a
+program called uuwho uses a database created from the map files
+to display this information in a nicely formatted way.
+<P>
+When you register your site with an organization that distributes map files
+to its members, you generally have to fill out such a map entry.
+<P>
+Below is a sample map entry (in fact, it's the one for my site):
+<PRE>
+           #N      monad, monad.swb.de, monad.swb.sub.org
+           #S      AT 486DX50; Linux 0.99
+           #O      private
+           #C      Olaf Kirch
+           #E      okir@monad.swb.de
+           #P      Kattreinstr. 38, D-64295 Darmstadt, FRG
+           #L      49 52 03 N / 08 38 40 E
+           #U      brewhq
+           #W      okir@monad.swb.de (Olaf Kirch); Sun Jul 25 16:59:32 MET DST
+           #
+           monad   brewhq(DAILY/2)
+           # Domains
+           monad = monad.swb.de
+           monad = monad.swb.sub.org
+</PRE>
+The white space after the first two characters is a TAB.  The meaning of
+most of the fields is pretty obvious; you will receive a detailed
+description from whichever domain you register with.  The L
+field is the most fun to find out: it gives your geographical position
+in latitude/longitude and is used to draw the postscript maps that show
+all sites for each country, as well as world-wide.<A HREF="footnode.html#7174"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node195.html">Configuring elm</A>
+<B>Up:</B> <A HREF="node186.html">Electronic Mail</A>
+<B> Previous:</B> <A HREF="node193.html">Mixing UUCP and RFC-822</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

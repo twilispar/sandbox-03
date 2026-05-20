@@ -1,0 +1,500 @@
+<HTML
+><HEAD
+><TITLE
+>Securing the kernel</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Configuring and Building a Secure, Optimized Kernel"
+HREF="secopt-kernel.html"><LINK
+REL="PREVIOUS"
+TITLE=" Uninstallation and Optimization"
+HREF="chap7sec77.html"><LINK
+REL="NEXT"
+TITLE="Compilation"
+HREF="chap7sec79.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap7sec77.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. Configuring and Building a Secure, Optimized Kernel</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap7sec79.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN5155"
+>7.3. Securing the kernel</A
+></H1
+><P
+>&#13;             The secure Linux kernel patches from the Openwall Project are a great way to prevent attacks like Stack Buffer Overflows, and others. The Openwall patch is a collection of security-related features 
+             for the Linux kernel, all configurable via the new Security options configuration section that will be added to your new Linux kernel. This patch may change from version to version, and some may 
+             contain various other security fixes.
+             </P
+><P
+>&#13;             New features of patch version linux-2_2_14-ow2_tar.gz are:
+             <P
+></P
+><UL
+><LI
+><P
+>&#13;             Non-executable user stack area
+             </P
+></LI
+><LI
+><P
+>&#13;             Restricted links in <TT
+CLASS="filename"
+>/tmp</TT
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             Restricted FIFOs in <TT
+CLASS="filename"
+>/tmp</TT
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             Restricted <TT
+CLASS="filename"
+>/proc</TT
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             Special handling of fd 0, 1, and 2
+             </P
+></LI
+><LI
+><P
+>&#13;             Enforce <TT
+CLASS="envar"
+>RLIMIT_NPROC</TT
+> on execve(2)
+             </P
+></LI
+><LI
+><P
+>&#13;             Destroy shared memory segments not in use
+             </P
+></LI
+></UL
+>
+             </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+             When applying the linux-2_2_14-ow2 patch, a new Security options section will be added at the end of your kernel configuration. For more information and description of the different features 
+             available with this patch, see the README file that come with the source code of the patch.
+             </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;             Applying the patch
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>cp</B
+> linux-2_2_14-ow2_tar.gz /usr/src/ <A
+NAME="copy"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+             [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /usr/src/                         <A
+NAME="cdir"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+             [root@deep ]/src#<B
+CLASS="command"
+>tar</B
+> xzpf linux.2_2_14-ow2_tar.gz <A
+NAME="dcprss"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+>
+             [root@deep ]/src#<B
+CLASS="command"
+>cd</B
+> linux-2.2.14-ow2/  <A
+NAME="rbck"
+><IMG
+SRC="../images/callouts/4.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(4)"></A
+>
+             [root@deep ] /linux-2.2.14-ow2#<B
+CLASS="command"
+>mv</B
+> linux-2.2.14-ow2.diff /usr/src/  <A
+NAME="mvsrc"
+><IMG
+SRC="../images/callouts/5.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(5)"></A
+>
+             [root@deep ] /linux-2.2.14-ow2#<B
+CLASS="command"
+>cd ..</B
+>                               <A
+NAME="cdir2"
+><IMG
+SRC="../images/callouts/6.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(6)"></A
+>
+             [root@deep ]/src#<B
+CLASS="command"
+>patch</B
+> -p0 &#60;linux-2.2.14-ow2.diff     <A
+NAME="aptch"
+><IMG
+SRC="../images/callouts/7.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(7)"></A
+>
+             [root@deep ]/src#<B
+CLASS="command"
+>rm</B
+> -rf linux-2.2.14-ow2                 <A
+NAME="rmasrc1"
+><IMG
+SRC="../images/callouts/8.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(8)"></A
+>
+             [root@deep ]/src#<B
+CLASS="command"
+>rm</B
+> -f  linux-2.2.14-ow2.diff             <A
+NAME="rmasrc2"
+><IMG
+SRC="../images/callouts/9.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(9)"></A
+>
+             [root@deep ]/src#<B
+CLASS="command"
+>rm</B
+> -f  linux-2_2_14-ow2_tar.gz           <A
+NAME="rmasrc3"
+><IMG
+SRC="../images/callouts/10.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(10)"></A
+>
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap7sec78.html#copy"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>First we copy the program archive to the <TT
+CLASS="filename"
+>/usr/src</TT
+> directory</DD
+><DT
+><A
+HREF="chap7sec78.html#cdir"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>then we move to the <TT
+CLASS="filename"
+>/usr/src</TT
+> directory</DD
+><DT
+><A
+HREF="chap7sec78.html#dcprss"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+></DT
+><DD
+> decompress the linux-2_2_14ow2_tar.gz archive</DD
+><DT
+><A
+HREF="chap7sec78.html#rbck"
+><IMG
+SRC="../images/callouts/4.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(4)"></A
+><A
+HREF="chap7sec78.html#mvsrc"
+><IMG
+SRC="../images/callouts/5.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(5)"></A
+></DT
+><DD
+>We then move to the new uncompressed Linux patch, move the file linux-2.2.14-ow2.diff containing 
+                  the patch to the <TT
+CLASS="filename"
+>/usr/src</TT
+></DD
+><DT
+><A
+HREF="chap7sec78.html#cdir2"
+><IMG
+SRC="../images/callouts/6.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(6)"></A
+><A
+HREF="chap7sec78.html#aptch"
+><IMG
+SRC="../images/callouts/7.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(7)"></A
+></DT
+><DD
+>return to <TT
+CLASS="filename"
+>/usr/src</TT
+> and patch our kernel with the file linux-2.2.14-ow2.diff</DD
+><DT
+><A
+HREF="chap7sec78.html#rmasrc1"
+><IMG
+SRC="../images/callouts/8.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(8)"></A
+><A
+HREF="chap7sec78.html#rmasrc2"
+><IMG
+SRC="../images/callouts/9.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(9)"></A
+><A
+HREF="chap7sec78.html#rmasrc3"
+><IMG
+SRC="../images/callouts/10.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(10)"></A
+></DT
+><DD
+> Afterwards, we remove all files related to the patch.</DD
+></DL
+></DIV
+>
+             </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+             All security messages related to the linux-2.2.14-ow2 patch, like the non-executable stack part, should be logged to the log file <TT
+CLASS="filename"
+>/var/log/messages</TT
+>.
+             </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;             The step of patching your new kernel is completed. Now follow the rest of this installation to build the Linux kernel and reboot.
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap7sec77.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap7sec79.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Uninstallation and Optimization</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="secopt-kernel.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compilation</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Introduction</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node276.html">Installing the NNTP server</A>
+<B>Up:</B> <A HREF="node274.html">A Description of NNTP</A>
+<B> Previous:</B> <A HREF="node274.html">A Description of NNTP</A>
+<BR> <P>
+<H1><A NAME="SECTION0020100000">Introduction</A></H1>
+<P>
+Due to the different network transport used, NNTP provides for a vastly
+different approach to news exchange from C-news.  NNTP stands for
+``Network News Transfer Protocol'', and is not a particular software
+package, but an Internet Standard.<A HREF="footnode.html#9623"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> It is based on a stream-oriented connection-- usually over TCP--
+between a client anywhere in the network, and a server on a host that keeps
+netnews on disk storage. The stream connection allows the client and server
+to interactively negotiate article transfer with nearly no turnaround
+delay, thus keeping the number of duplicate articles low. Together with the
+Internet's high transfer rates, this adds up to a news transport that
+surpasses the original UUCP networks by far. While some years ago it was
+not uncommon for an article to take two weeks or more before it arrived in
+the last corner of Usenet, this is now often less than two days; on the
+Internet itself, it is even within the range of minutes.
+<P>
+Various commands allow clients to retrieve, send and post articles.
+The difference between sending and posting is that the latter may
+involve articles with incomplete header information.<A HREF="footnode.html#9767"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> Article retrieval may be used by news transfer clients as well as
+newsreaders. This makes NNTP an excellent tool for providing news access to
+many clients on a local network without going through the contortions that
+are necessary when using NFS.
+<P>
+<A NAME="9625"></A>
+<A NAME="9626"></A>
+NNTP also provides for an active and a passive way of news transfer,
+colloquially called ``pushing'' and ``pulling''. Pushing is basically
+the same as the C-news ihave/sendme protocol. The client offers an
+article to the server through the ``IHAVE &lt;varmsgid&gt;''
+command, and the server returns a response code that indicates whether
+it already has the article, or if it wants it. If so, the client sends
+the article, terminated by a single dot on a separate line.
+<P>
+Pushing news has the single disadvantage that it places a heavy load on
+the server system, since it has to search its history database for every
+single article.
+<P>
+The opposite technique is pulling news, in which the client requests a
+list of all (available) articles from a group that have arrived after a
+specified date. This query is performed by the NEWNEWS
+command. From the returned list of message ids, the client selects those
+articles it does not yet have, using the ARTICLE command for
+each of them in turn.
+<P>
+The problem with pulling news is that it needs tight control by the server
+over which groups and distributions it allows a client to request. For
+example, it has to make sure that no confidential material from newsgroups
+local to the site are sent to unauthorized clients.
+<P>
+There are also a number of convenience commands for newsreaders that
+permit them to retrieve the article header and body separately, or even
+single header lines from a range of articles. This lets you keep all
+news on a central host, with all users on the (presumably local) network
+using NNTP-based client programs for reading and posting. This is an
+alternative to exporting the news directories via NFS which is described
+in chapter-<A HREF="node259.html#cnews"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+<A NAME="9631"></A>
+An overall problem of NNTP is that it allows the knowledgeable to insert
+articles into the news stream with false sender specification. This is
+called <em>news faking</em>.<A HREF="footnode.html#9633"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> An extension to NNTP allows to require a user authentication for
+certain commands.
+<P>
+<A NAME="9769"></A>
+<A NAME="9635"></A>
+<A NAME="9636"></A>
+There are a number of NNTP packages available. One of the more widely known
+is the NNTP daemon, also known as the <em>reference implementation</em>.
+Originally, it was written by Stan Barber and Phil Lapsley to illustrate
+the details of RFC-977.  Its most recent version is nntpd-1.5.11,
+which will be described below.  You may either get the sources and compile
+it yourself, or use the nntpd from Fred van-Kempen's net-std
+binary package.  No ready-to-go binaries of nntpd are provided,
+because of various site-specific values that must be compiled in.
+<P>
+The nntpd package consists of a server and two clients for
+pulling and pushing news, respectively, as well as an inews
+replacement. They live in a Bnews environment, but with a little
+tweaking, they will be happy with C-news, too.  However if you plan to
+use NNTP for more than offering newsreaders access to your news server,
+the reference implementation is not really an option.  We will therefore
+discuss only the NNTP daemon contained in the nntpd package, and
+leave out the client programs.
+<P>
+<A NAME="9645"></A>
+<A NAME="9646"></A>
+There is also a package called ``InterNet News'', or INN for short, that was
+written by Rich Salz.  It provides both NNTP and UUCP-based news
+transport, and is more suitable for large news hubs.  When it comes to
+news transport over NNTP, it is definitely better than nntpd.
+INN is currently at version inn-1.4sec.  There is a kit for
+building INN on a  machine from Arjan de Vet; it is available
+from sunsite.unc.edu in the system/Mail directory.  If you
+want to set up INN, please refer to the documentation that comes along
+with the source, as well as the INN-FAQ posted regularly to
+news.software.b.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node276.html">Installing the NNTP server</A>
+<B>Up:</B> <A HREF="node274.html">A Description of NNTP</A>
+<B> Previous:</B> <A HREF="node274.html">A Description of NNTP</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

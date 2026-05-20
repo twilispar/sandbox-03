@@ -1,0 +1,500 @@
+<HTML
+><HEAD
+><TITLE
+>Caching-only name Server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking"
+HREF="soft-netwrkng.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure"
+HREF="chap21sec163.html"><LINK
+REL="NEXT"
+TITLE="Primary master name Server"
+HREF="chap21sec165.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap21sec163.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 21. Software -Networking</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap21sec165.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN10707"
+>21.3. <TT
+CLASS="literal"
+>Caching-only</TT
+> name Server</A
+></H1
+><P
+>&#13; Caching-only name servers are servers not authoritative for any domains except <TT
+CLASS="literal"
+>0.0.127.in-addr.arpa</TT
+>, the localhost. A <TT
+CLASS="literal"
+>caching-only</TT
+> name server can look up names inside and outside 
+ your zone, as can <SPAN
+CLASS="token"
+>primary</SPAN
+> and <SPAN
+CLASS="token"
+>slave</SPAN
+> name servers. The difference is that when a <TT
+CLASS="literal"
+>caching-only</TT
+> name server initially looks up a name within your zone, it ends up asking one 
+ of the <SPAN
+CLASS="token"
+>primary</SPAN
+> or <SPAN
+CLASS="token"
+>slave</SPAN
+> names servers for your zone for the answer.
+ </P
+><P
+>&#13; The necessary files to setup a simple caching name server are:
+ <P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>&#13; <TT
+CLASS="filename"
+>named.conf</TT
+>
+ </P
+></LI
+><LI
+><P
+>&#13; <TT
+CLASS="filename"
+>db.127.0.0</TT
+>
+ </P
+></LI
+><LI
+><P
+>&#13; <TT
+CLASS="filename"
+>db.cache</TT
+>
+ </P
+></LI
+><LI
+><P
+>&#13; <TT
+CLASS="filename"
+>named script</TT
+>
+ </P
+></LI
+></OL
+>
+ </P
+><P
+>&#13; To configure the <TT
+CLASS="filename"
+>/etc/named.conf</TT
+> file for a simple caching name server, use this for all servers that dont act as a <TT
+CLASS="literal"
+>master</TT
+> or <TT
+CLASS="literal"
+>slave</TT
+> name server. Setting up 
+ a simple caching server for local client machines will reduce the load on the network's primary server. Many users on dialup connections may use this configuration along with bind for such a purpose.
+
+ Create the <TT
+CLASS="filename"
+>named.conf</TT
+> file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/named.conf</TT
+> and add the following lines to the file:
+ 
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13; options {
+ directory "/var/named";
+ forwarders { 208.164.186.1; 208.164.186.2; };<A
+NAME="frwdrs1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+ forward only;
+ };
+
+ //
+ // a caching only nameserver config
+ zone "." in {
+ type hint;
+ file "db.cache";
+ };
+
+ zone "0.0.127.in-addr.arpa" in {
+ type master;
+ file "db.127.0.0";
+ };
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap21sec164.html#frwdrs1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13; In the forwarders line, <TT
+CLASS="literal"
+>208.164.186.1</TT
+> and <TT
+CLASS="literal"
+>208.164.186.2</TT
+> are the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses of your <TT
+CLASS="literal"
+>Primary</TT
+> <EM
+>Master</EM
+> and <TT
+CLASS="literal"
+>Secondary</TT
+> <EM
+>Slave</EM
+> 
+ <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>DNS</SPAN
+></SPAN
+> server. They can also be the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses of your <SPAN
+CLASS="acronym"
+>ISP</SPAN
+>s <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> server and another <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> server, respectively. 
+ </DD
+></DL
+></DIV
+>
+ 
+ </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+To improve the security of your BIND/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> server you can stop it from even trying to contact an off-site server if their forwarder is down or doesn't respond. With the 
+ <TT
+CLASS="envar"
+>forward only</TT
+> option set in your <TT
+CLASS="filename"
+>named.conf</TT
+> file, the name server doesn't try to contact other servers to find out information if the forwarder doesn't give 
+ it an answer.
+ </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13; To configure the <TT
+CLASS="filename"
+>/var/named/db.127.0.0</TT
+> file for a simple caching name server,you can use this configuration for all machines on your network that don't act as a <SPAN
+CLASS="token"
+>master</SPAN
+> or <SPAN
+CLASS="token"
+>slave</SPAN
+> name server. 
+ The <TT
+CLASS="filename"
+>db.127.0.0</TT
+> file covers the loopback network. Create the following files in <TT
+CLASS="filename"
+>/var/named/</TT
+>, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/var/named/db.127.0.0</TT
+> and 
+ add the following lines in the file:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13; $TTL 345600
+ @       IN      SOA     localhost. root.localhost.  (
+ 00	; Serial
+ 86400	; Refresh
+ 7200	; Retry
+ 2592000	; Expire
+ 345600 )	; Minimum
+ IN      NS      localhost.
+
+ 1        IN      PTR     localhost.
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+><P
+>&#13; Configure the <TT
+CLASS="filename"
+>/var/named/db.cache</TT
+> file for a simple caching name server before starting your <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> server. You must take a copy of <TT
+CLASS="filename"
+>db.cache</TT
+> file 
+ and copy this file to the <TT
+CLASS="filename"
+>/var/named/</TT
+> directory. The <TT
+CLASS="filename"
+>db.cache</TT
+> tells your server where the servers for the <SPAN
+CLASS="token"
+>root</SPAN
+> zone are.
+ </P
+><P
+>&#13; Use the following commands on another Unix computer in your organization to query a new <TT
+CLASS="filename"
+>db.cache</TT
+> file for your <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Server or pick one from your 
+ Red Hat Linux <SPAN
+CLASS="hardware"
+>CD-ROM</SPAN
+> source distribution: 
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep]# <B
+CLASS="command"
+>dig</B
+> @.aroot-servers.net . ns &#62; db.cache
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ Don't forget to copy the <TT
+CLASS="filename"
+>db.cache</TT
+> file to the <TT
+CLASS="filename"
+>/var/named/</TT
+> directory on your server where you're installing <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> server 
+ after retrieving it over the Internet.
+ </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+ Internal addresses like <TT
+CLASS="literal"
+>192.168.1/24</TT
+> are not included in the <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> configuration files for security reasons. It is very important that <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> doesn't exist between hosts on the corporate network and external hosts.
+ </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap21sec163.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap21sec165.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netwrkng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Primary <TT
+CLASS="literal"
+>master</TT
+> name Server</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

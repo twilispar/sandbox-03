@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Routing through a Gateway</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node69.html">Configuring a Gateway</A>
+<B>Up:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<B> Previous:</B> <A HREF="node67.html">Ethernet Interfaces</A>
+<BR> <P>
+<H2><A NAME="SECTION007730000">Routing through a Gateway</A></H2>
+In the previous section, I covered only the case of setting up a host
+on a single Ethernet. Quite frequently, however, one encounters
+networks connected to one another by gateways. These gateways may
+simply link two or more Ethernets, but may provide a link to the
+outside world, the Internet, as well. In order to use the service of a
+gateway, you have to provide additional routing information to the
+networking layer.
+<P>
+For instance, the Ethernets of the Virtual Brewery and the Virtual
+Winery are linked through such a gateway, namely the host vlager.
+Assuming that vlager has already been configured, we only have to
+add another entry to vstout's routing table that tells the kernel
+it can reach all hosts on the Winery's network through vlager.
+The appropriate incantation of route is shown below; the
+gw keyword tells it that the next argument denotes a gateway.
+<pre>
+           # route add wine-net gw vlager
+ 
+</pre>
+Of course, any host on the Winery network you wish to talk to must have
+a corresponding routing entry for the Brewery's network, otherwise you
+would only be able to send data from vstout to vbardolino,
+but any response returned by the latter would go into the great bit
+bucket.
+<P>
+This example describes only a gateway that switches packets between two
+isolated Ethernets. Now assume that vlager also has a connection
+to the Internet (say, through an additional SLIP link). Then we would
+want datagrams to <em>any</em> destination network other than the Brewery
+to be handed to vlager. This can be accomplished by making it the
+default gateway for vstout:
+<Pre>
+           # route add default gw vlager
+ 
+</pre>
+<A NAME="2808"></A>
+<A NAME="2809"></A>
+The network name default is a shorthand for 0.0.0.0,
+which denotes the default route. You do not have to add this name to
+/etc/networks, because it is built into route.
+<P>
+When you see high packet loss rates when pinging a host behind
+one or more gateways, this may hint at a very congested network.  Packet
+loss is not so much due to technical deficiencies as due to temporary
+excess loads on forwarding hosts, which makes them delay or even drop
+incoming datagrams.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node69.html">Configuring a Gateway</A>
+<B>Up:</B> <A HREF="node65.html">Interface Configuration for IP</A>
+<B> Previous:</B> <A HREF="node67.html">Ethernet Interfaces</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,365 @@
+<HTML
+><HEAD
+><TITLE
+>Install Apache</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Apply mod_perl to Apache source tree "
+HREF="chap29sec242.html"><LINK
+REL="NEXT"
+TITLE="Post install Configuration"
+HREF="chap29sec244.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec242.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec244.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19118"
+>29.7. Install Apache</A
+></H1
+><P
+>&#13;      Now, we must install Apache in the Linux server:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/apache_1.3.12# <B
+CLASS="command"
+>make</B
+> 
+        [root@deep ]/apache_1.3.12# <B
+CLASS="command"
+>make install</B
+> 
+        [root@deep ]/apache_1.3.12# <B
+CLASS="command"
+>rm</B
+> -f  /usr/sbin/apachectl
+        [root@deep ]/apache_1.3.12# <B
+CLASS="command"
+>rm</B
+> -f  /usr/man/man8/apachectl.8
+        [root@deep ]/apache_1.3.12# <B
+CLASS="command"
+>rm</B
+> -rf /home/httpd/icons/
+        [root@deep ]/apache_1.3.12# <B
+CLASS="command"
+>rm</B
+> -rf /home/httpd/htdocs/
+        [root@deep ]/apache_1.3.12# <B
+CLASS="command"
+>cd</B
+> /var/tmp/php-4.0
+        [root@deep ]/php-4.0.0# <B
+CLASS="command"
+>install</B
+> -m 644 php.ini.dist /usr/lib/php.ini
+        [root@deep ]/php-4.0.0# <B
+CLASS="command"
+>rm</B
+> -rf /etc/httpd/conf/ssl.crl/
+        [root@deep ]/php-4.0.0# <B
+CLASS="command"
+>rm</B
+> -rf /etc/httpd/conf/ssl.crt/
+        [root@deep ]/php-4.0.0# <B
+CLASS="command"
+>rm</B
+> -rf /etc/httpd/conf/ssl.csr/
+        [root@deep ]/php-4.0.0# <B
+CLASS="command"
+>rm</B
+> -rf /etc/httpd/conf/ssl.key/
+        [root@deep ]/php-4.0.0# <B
+CLASS="command"
+>rm</B
+> -rf /etc/httpd/conf/ssl.prm/
+        [root@deep ]/php-4.0.0# <B
+CLASS="command"
+>rm</B
+> -f  /etc/httpd/conf/srm.conf srm.conf.default access.conf access.conf.default
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      <P
+></P
+><UL
+><LI
+><P
+>&#13;          The <B
+CLASS="command"
+>make</B
+> command will compile all source files into executable binaries
+        </P
+></LI
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>make install</B
+> will install the binaries and any supporting files into the appropriate locations. 
+        </P
+></LI
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>rm</B
+> -f  command will remove the small script <TT
+CLASS="filename"
+>apachectl</TT
+> responsible to start and stop the Apache daemon since we use a better script named <TT
+CLASS="filename"
+>httpd</TT
+> located 
+        under the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/</TT
+> directory that takes advantage of Linux system V. 
+        </P
+></LI
+><LI
+><P
+>&#13;        We also remove the <TT
+CLASS="filename"
+>/home/httpd/icons</TT
+> directory used under Apache when you use its automatic indexing feature. This feature can bring about a security risk, and for this reason we've disabled 
+        it in the configuration file. Therefore, we can safely remove the directory to make space on the Linux server. The <TT
+CLASS="filename"
+>/home/httpd/htdocs</TT
+> directory handles all documentation files related to Apache, so 
+        after we have finished reading the documentation we can remove it to make space. 
+        </P
+></LI
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>install</B
+> <TT
+CLASS="literal"
+>-m</TT
+> command will install the <TT
+CLASS="filename"
+>php.ini.dist</TT
+> file under the <TT
+CLASS="filename"
+>/etc/httpd/</TT
+> directory, and will rename it <TT
+CLASS="filename"
+>php.ini;</TT
+> 
+        This file controls many aspects of <SPAN
+CLASS="acronym"
+>PHP</SPAN
+>'s behavior. 
+        </P
+></LI
+><LI
+><P
+>&#13;        The <TT
+CLASS="filename"
+>ssl.crl</TT
+>, <TT
+CLASS="filename"
+>ssl.crt</TT
+>, <TT
+CLASS="filename"
+>ssl.csr</TT
+>, <TT
+CLASS="filename"
+>ssl.key</TT
+> and <TT
+CLASS="filename"
+>ssl.prm</TT
+> directories under <TT
+CLASS="filename"
+>/etc/httpd/conf</TT
+> are all of the 
+        directories related to SSL, and handle private and public keys. Since we use another location, <TT
+CLASS="filename"
+>/etc/ssl/</TT
+>, we can remove them safely. 
+        </P
+></LI
+><LI
+><P
+>&#13;        Finally, we remove the unused <TT
+CLASS="filename"
+>srm.conf</TT
+>, <TT
+CLASS="filename"
+>srm.conf.default</TT
+>, <TT
+CLASS="filename"
+>access.conf</TT
+> and <TT
+CLASS="filename"
+>access.conf.default</TT
+> files, whose purposes are now handled by the <TT
+CLASS="filename"
+>httpd.conf</TT
+> 
+        Apache file.
+        </P
+></LI
+></UL
+>
+    </P
+><P
+>&#13;      Please as usual do cleanup later:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+        [root@deep ]/tmp# <B
+CLASS="command"
+>rm</B
+> -rf apache-version/ apache-version.tar.gz mod_ssl-version-version/ mod_ssl-version-version.tar.gz php-version/ php-version.tar.gz mod_perl-version/ mod_perl-version.tar.gz
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      The <B
+CLASS="command"
+>rm</B
+> command will remove all the source files we have used to compile and install Apache, mod_ssl, mod_perl, and php. It will also remove the Apache, mod_ssl, mod_perl, and php compressed 
+      archives from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec242.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec244.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Apply mod_perl to Apache source tree</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Post install Configuration</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

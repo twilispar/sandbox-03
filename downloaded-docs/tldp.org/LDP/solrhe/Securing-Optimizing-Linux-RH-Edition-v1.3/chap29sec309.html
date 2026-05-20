@@ -1,0 +1,839 @@
+<HTML
+><HEAD
+><TITLE
+>Making backups with dump</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Why's and When's of Backup and Restore"
+HREF="whywhen.html"><LINK
+REL="PREVIOUS"
+TITLE="The dump backup program"
+HREF="back-dump.html"><LINK
+REL="NEXT"
+TITLE="Restoring files with dump"
+HREF="chap29sec310.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="back-dump.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 33. Why's and When's of Backup and Restore</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec310.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN23825"
+>33.6. Making backups with dump</A
+></H1
+><P
+>&#13;It's interesting to use the dump backup program if you want to take advantage of its several levels of backup procedures. Given below is a procedure to have a longer backup history and to keep both the backup and restore times to a 
+minimum. In the following example, we assume that the backup is written to a tape drive named <TT
+CLASS="filename"
+>/dev/st0</TT
+> and we backup the home directory <TT
+CLASS="filename"
+>/home</TT
+> of our system.
+</P
+><P
+>&#13;It is important to always start with a level 0 backup, for example:
+</P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Friday 1. </B
+>
+use tape 1 for the first full backup.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -0u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;  DUMP: Date of this level 0 dump: Fri Jan 28 21:25:12 2000
+  DUMP: Date of last level 0 dump: the epoch
+  DUMP: Dumping /dev/sda6 (/home) to /dev/st0
+  DUMP: mapping (Pass I) [regular files]
+  DUMP: mapping (Pass II) [directories]
+  DUMP: estimated 18582 tape blocks on 0.48 tape(s).
+  DUMP: Volume 1 started at: Fri Jan 28 21:25:14 2000
+  DUMP: dumping (Pass III) [directories]
+  DUMP: dumping (Pass IV) [regular files]
+  DUMP: DUMP: 18580 tape blocks on 1 volumes(s)
+  DUMP: finished in 4 seconds, throughput 4645 KBytes/sec
+  DUMP: Volume 1 completed at: Fri Jan 28 21:25:18 2000
+  DUMP: Volume 1 took 0:00:04
+  DUMP: Volume 1 transfer rate: 4645 KB/s
+  DUMP: level 0 dump on Fri Jan 28 21:25:12 2000
+  DUMP: DUMP: Date of this level 0 dump: Fri Jan 28 21:25:12 2000
+  DUMP: DUMP: Date this dump completed:  Fri Jan 28 21:25:18 2000
+  DUMP: DUMP: Average transfer rate: 4645 KB/s
+  DUMP: Closing /dev/st0
+  DUMP: DUMP IS DONE
+  </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+  </P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Monday. </B
+>
+use tape 2 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -3u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Tuesday. </B
+>
+use tape 3 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -2u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Wednesday. </B
+>
+use tape 4 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -5u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Thursday. </B
+>
+use tape 5 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -4u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Friday 2. </B
+>
+use tape 6 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -7u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Monday. </B
+>
+use tape 2 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -3u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Tuesday. </B
+>
+use tape 3 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -2u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Wednesday. </B
+>
+use tape 4 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -5u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Thursday. </B
+>
+use tape 5 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -4u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Friday 3. </B
+>
+use tape 7 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -6u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Monday. </B
+>
+use tape 2 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -3u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Tuesday. </B
+>
+use tape 3 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -2u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Wednesday. </B
+>
+use tape 4 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -5u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Thursday. </B
+>
+use tape 5 for the incremental backups.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -4u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Friday 4. </B
+>
+use tape 8 for the incremental backups only if there have five Fridays in one month.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -9u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Monday. </B
+>
+use tape 2 for the incremental backups only if there have five Fridays in one month.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -3u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Tuesday. </B
+>
+use tape 3 for the incremental backups only if there have five Fridays in one month.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -2u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Wednesday. </B
+>
+use tape 4 for the incremental backups only if there have five Fridays in one month.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -5u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Thursday. </B
+>
+use tape 5 for the incremental backups only if there have five Fridays in one month.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -4u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Month. </B
+>
+use another tape for a new full backup when the month change.
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;[root@deep] /# <B
+CLASS="command"
+>dump</B
+> -0u -f  /dev/st0 /home
+</PRE
+></TD
+></TR
+></TABLE
+>
+</P
+></DIV
+><P
+>&#13;Where
+<P
+></P
+><UL
+><LI
+><P
+>&#13; <TT
+CLASS="literal"
+>-0</TT
+> to <TT
+CLASS="literal"
+>-9</TT
+> is the backup level option you want to use, 
+</P
+></LI
+><LI
+><P
+>&#13;the <TT
+CLASS="literal"
+>u</TT
+> option means to update the file <TT
+CLASS="filename"
+>/etc/dumpdates</TT
+> after a successful dump, 
+</P
+></LI
+><LI
+><P
+>&#13;The  <TT
+CLASS="literal"
+>-f</TT
+>  option to write the backup to file
+</P
+></LI
+></UL
+>
+The file may be a 
+<P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;special device file like <TT
+CLASS="filename"
+>/dev/st0</TT
+>, <EM
+>a tape drive</EM
+>, 
+</P
+></LI
+><LI
+><P
+>&#13;<TT
+CLASS="filename"
+>/dev/rsd1c</TT
+>, <EM
+>a disk drive</EM
+>, 
+</P
+></LI
+><LI
+><P
+>&#13;An ordinary file 
+</P
+></LI
+><LI
+><P
+>&#13;<EM
+>the standard output</EM
+>. 
+</P
+></LI
+></OL
+>
+Finally, you must specify what you want to backup. In our example, it is the <TT
+CLASS="filename"
+>/home</TT
+> directory <TT
+CLASS="filename"
+>/home</TT
+>.
+</P
+><P
+>&#13;You can see that we use the same tapes 2 to 5 for daily backups -<EM
+>Monday to Thursday = 4 tapes</EM
+>, tapes 6, 7, and 8 for weekly backups -<EM
+>other Fridays, 6 + 7 + 8 = 3 tapes</EM
+>. note that there 
+can be five Fridays in one month and tapes 1 and any subsequent new one for monthly backups -<EM
+>first Friday each month, 1 + any subsequent</EM
+> <TT
+CLASS="literal"
+>11 months</TT
+> <EM
+>= 12 tapes</EM
+>. In 
+conclusion, if we use 8 tapes <TT
+CLASS="literal"
+>4 + 3 + 1 = 8</TT
+>, we can have a full backup for one month and repeat the procedure with the 8 tapes to get our subsequent 11 months to come for a total of 1-year individual full backups.
+</P
+><P
+>&#13;The full backup should be done at set intervals, say once a month, and on a set of fresh tapes that are saved forever. With this kind of procedure, you will have 12 tapes for 12 months that handle histories and changes of your 
+system for one year. Later, you can copy the 12 tape backups onto a different computer designated to keep all yearly backups for a long time and be able to reuse them, <EM
+>12 tapes</EM
+>, to repeat the procedure for a new year.
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="back-dump.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec310.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The dump backup program</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="whywhen.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Restoring files with dump</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

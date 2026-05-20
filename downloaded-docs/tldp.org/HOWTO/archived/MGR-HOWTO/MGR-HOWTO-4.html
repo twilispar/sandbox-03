@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The MGR Window System HOWTO: Running MGR</TITLE>
+ <LINK HREF="MGR-HOWTO-5.html" REL=next>
+ <LINK HREF="MGR-HOWTO-3.html" REL=previous>
+ <LINK HREF="MGR-HOWTO.html#toc4" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="MGR-HOWTO-5.html">Next</A>
+<A HREF="MGR-HOWTO-3.html">Previous</A>
+<A HREF="MGR-HOWTO.html#toc4">Contents</A>
+<HR>
+<H2><A NAME="s4">4. Running MGR</A></H2>
+
+<P>The only file <EM>required</EM> in an <B>MGR</B> installation is the server
+itself.  That would give you terminal emulator windows with shells
+running in them and cutting and pasting with the mouse,
+but no nice clocks, extra fonts, fancy graphics,
+etc.  Depending on options, a monochrome server needs about 200K of RAM
+plus dynamic space for windows, bitmaps, etc.
+<P>If <CODE>/usr/mgr/bin</CODE> is in your PATH,
+then just type &quot;<CODE>mgr</CODE>&quot; to start up.
+After enjoying the animated startup screen, press any key.
+When the hatched background and mouse pointer appear, hold down
+the left mouse button, highlight the &quot;new window&quot; menu item, and
+release the button.  Then drag the mouse from corner to corner
+where you want a window to appear.  The window will have your
+default shell running in it.  Hold down the left mouse button over
+an existing window to see another menu for doing things to that
+window.  Left-clicking on an obscured window raises it to the top.
+The menu you saw that pops-up over the empty background
+includes the quit command.
+For people with a two button mouse:
+press both buttons together to emulate the missing middle button
+used by some clients.
+<P>The quit submenu includes the &quot;really quit&quot; option,
+a suspend option which should only be used if you run a
+job-control shell, and a screen saver and locker option, which
+waits for you to type your login password when you come back
+to your machine.
+<P>When trying to run <B>MGR</B>, if you get:
+<DL>
+<DT><B>can't find the screen</B><DD><P>make sure you have a <CODE>/dev</CODE> entry for your display device,
+e.g. on
+a Sun <CODE>/dev/bwtwo0</CODE>.  If not, as root cd to <CODE>/dev</CODE>, and type
+&quot;MAKEDEV bwtwo0&quot;.  Otherwise, you might need the
+<CODE>-S/dev/bwtwo0</CODE>
+or (on Linux) the <CODE>-S640x480</CODE> command line option when starting <CODE>mgr</CODE>.
+On Linux, you might also make sure that <CODE>/usr/mgr/bin/mgr</CODE> was
+installed setuid root.
+<P>
+<DT><B>can't find the mouse</B><DD><P>make sure <CODE>/dev/mouse</CODE> exists, usually as a symbolic link to the
+real device name for your mouse.  If you haven't permission to
+write in <CODE>/dev</CODE>, then something like a <CODE>-m/dev/cua0</CODE>
+option can be
+given when starting <CODE>mgr</CODE>.  Also, make sure you've supplied the
+right mouse protocol choice when you configured <CODE>mgr</CODE>.  The mouse
+may speak Microsoft, even if that is not the brand name.
+<P>
+<DT><B>can't get a pty</B><DD><P>make sure all of <CODE>/dev/[tp]ty[pq]?</CODE>
+are owned by root, mode 666,
+and all programs referenced with the &quot;shell&quot; option in 
+your <CODE>.mgrc</CODE> startup file (if any) exist and are executable.
+<P>
+<DT><B>none but the default font</B><DD><P>make sure <B>MGR</B> is looking in the right
+place for its fonts.  Check the <CODE>Configfile</CODE> in the source or
+see whether a <CODE>-f/usr/mgr/font</CODE> option to <CODE>mgr</CODE> fixes the problem.
+<P>
+<DT><B>completely hung (not even the mouse track moves)</B><DD><P>login to your machine from another terminal (or rlogin) and kill the
+<CODE>mgr</CODE> process.
+A buckey-Q key can quit <B>MGR</B> if the keyboard still works.
+</DL>
+<P>
+<H2><A NAME="ss4.1">4.1 Applications not aware of MGR</A>
+</H2>
+
+<P>Any tty-oriented application can be run in an <B>MGR</B> window
+without further ado.  Screen-oriented applications using
+termcap or curses can get the correct number of lines and
+columns in the window by your using <CODE>shape(1)</CODE>
+to reshape the window or using
+<CODE>set_termcap(1)</CODE> to obtain the correct termcap entry.
+<P>
+<H2><A NAME="ss4.2">4.2 MGR Applications (clients) distributed with the server</A>
+</H2>
+
+<P>
+<DL>
+<DT><B>bdftomgr</B><DD><P>converts some BDF fonts to MGR fonts
+<DT><B>browse</B><DD><P>an icon browser
+<DT><B>bury</B><DD><P>bury this window
+<DT><B>c_menu</B><DD><P>vi menus from C compiler errors
+<DT><B>clock</B><DD><P>digital display of time of day
+<DT><B>clock2</B><DD><P>analog display of time of day
+<DT><B>close</B><DD><P>close this window, iconify
+<DT><B>color</B><DD><P>set the foreground and background color for text in this window
+<DT><B>colormap</B><DD><P>read or write in the color lookup table
+<DT><B>cursor</B><DD><P>change appearance of the character cursor
+<DT><B>cut</B><DD><P>cut text from this window into the cut buffer
+<DT><B>cycle</B><DD><P>display a sequence of icons
+<DT><B>dmgr</B><DD><P>crude ditroff previewer
+<DT><B>fade</B><DD><P>fade a home movie script from one scene to another
+<DT><B>font</B><DD><P>change to a new font in this window
+<DT><B>gropbm</B><DD><P>a groff to PBM driver using Hershey fonts
+<DT><B>hpmgr</B><DD><P>hp 2621 terminal emulator
+<DT><B>ico</B><DD><P>animate an icosahedron or other polyhedron
+<DT><B>iconmail</B><DD><P>notification of mail arrival
+<DT><B>iconmsgs</B><DD><P>message arrival notification
+<DT><B>ify</B><DD><P>iconify and deiconify windows
+<DT><B>loadfont</B><DD><P>load a font from the file system
+<DT><B>maze</B><DD><P>a maze game
+<DT><B>mclock</B><DD><P>micky mouse clock
+<DT><B>menu</B><DD><P>create or select a pop-up menu
+<DT><B>mgr</B><DD><P>bellcore window system server and window manager
+<DT><B>mgrbd</B><DD><P>boulder-dash game
+<DT><B>mgrbiff</B><DD><P>watch mailbox for mail and notify
+<DT><B>mgrload</B><DD><P>graph of system load average
+<DT><B>mgrlock</B><DD><P>lock the console
+<DT><B>mgrlogin</B><DD><P>graphical login controller
+<DT><B>mgrmag</B><DD><P>magnify a part of the screen, optionally dump to file
+<DT><B>mgrmail</B><DD><P>notification of mail arrival
+<DT><B>mgrmode</B><DD><P>set or clear window modes
+<DT><B>mgrmsgs</B><DD><P>message arrival notification
+<DT><B>mgrplot</B><DD><P>Unix &quot;plot&quot; graphics filter
+<DT><B>mgrsclock</B><DD><P>sandclock
+<DT><B>mgrshowfont</B><DD><P>browse through mgr fonts
+<DT><B>mgrsketch</B><DD><P>a sketching/drawing program
+<DT><B>mgrview</B><DD><P>view mgr bitmap images
+<DT><B>mless</B><DD><P>start up less/more in separate window, menu added for less
+<DT><B>mnew</B><DD><P>startup up any program in a separate, independent window
+<DT><B>mphoon</B><DD><P>display the current phase of the moon
+<DT><B>mvi</B><DD><P>start up vi in a separate window, with mouse pointing
+<DT><B>oclose</B><DD><P>(old) close a window
+<DT><B>omgrmail</B><DD><P>(old) notification of mail arrival
+<DT><B>pbmrawtomgr, pgmrawtomgr, ppmrawtomgr</B><DD><P>convert raw PBM/PGM/PPM image files to mgr bitmap format
+<DT><B>pbmstream</B><DD><P>split out a stream of bitmaps
+<DT><B>pbmtoprt</B><DD><P>printer output from PBM
+<DT><B>pgs</B><DD><P>ghostscript patch and front end, a PS viewer
+<DT><B>pilot</B><DD><P>a bitmap browser, or image viewer
+<DT><B>resetwin</B><DD><P>cleanup window state after client crashes messily
+<DT><B>rotate</B><DD><P>rotate a bitmap 90 degrees.
+<DT><B>screendump</B><DD><P>write graphics screen dump to a bitmap file
+<DT><B>set_console</B><DD><P>redirect console messages to this window
+<DT><B>set_termcap</B><DD><P>output an appropriate TERM and TERMCAP setting
+<DT><B>setname</B><DD><P>name a window, for messages and iconifying
+<DT><B>shape</B><DD><P>reshape this window
+<DT><B>square</B><DD><P>square this window
+<DT><B>squeeze</B><DD><P>compress mgr bitmap using run-length encoding
+<DT><B>startup</B><DD><P>produce a skeleton startup file for current window layout
+<DT><B>texmgr</B><DD><P>TeX dvi file previewer
+<DT><B>text2font, font2text</B><DD><P>convert between mgr font format and text dump
+<DT><B>unsqueeze</B><DD><P>uncompress mgr bitmap using run length encoding
+<DT><B>vgafont2mgr, mgrfont2vga</B><DD><P>convert between mgr font format and VGA
+<DT><B>window_print</B><DD><P>print an image of a window
+<DT><B>zoom</B><DD><P>an icon editor
+<DT><B>bounce, grav, grid, hilbert, mgreyes, stringart, walk</B><DD><P>graphics demos
+</DL>
+<P>
+<H2><A NAME="ss4.3">4.3 MGR-aware clients distributed separately, see &quot;SUPPORT&quot; file</A>
+</H2>
+
+<P>
+<DL>
+<DT><B>calctool</B><DD><P>on-screen calculator
+<DT><B>chess</B><DD><P>frontend to <CODE>/usr/games/chess</CODE>
+<DT><B>gnu emacs</B><DD><P>editor with <CODE>lisp/term/mgr.el</CODE> mouse &amp; menu support
+<DT><B>gnuplot</B><DD><P>universal scientific data plotting
+<DT><B>metafont</B><DD><P>font design and creation
+<DT><B>origami</B><DD><P>folding editor
+<DT><B>pbmplus</B><DD><P>portable bitmap format conversions, manipulations
+<DT><B>plplot</B><DD><P>slick scientific data plotting
+</DL>
+<P>The Emacs support in <CODE>misc/mgr.el</CODE> and <CODE>misc/mailcap</CODE>
+includes very usable MIME support, via Rmail and metamail.
+<P>A general image viewer could be cobbled together from <CODE>pilot</CODE>
+and the netPBM filters, but I have not taken the time to do it.
+<P>
+<HR>
+<A HREF="MGR-HOWTO-5.html">Next</A>
+<A HREF="MGR-HOWTO-3.html">Previous</A>
+<A HREF="MGR-HOWTO.html#toc4">Contents</A>
+</BODY>
+</HTML>

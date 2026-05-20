@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Using the Traditional NIS Code</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node140.html">The Network File System</A>
+<B>Up:</B> <A HREF="node130.html">The Network Information System</A>
+<B> Previous:</B> <A HREF="node138.html">Using NIS with Shadow </A>
+<BR> <P>
+<H1><A NAME="SECTION0012900000">Using the Traditional NIS Code</A></H1>
+<P>
+<A NAME="nisoldcode"></A>
+<A NAME="5278"></A>
+<P>
+If you are using the client code that is in the standard libc
+currently, configuring a NIS client is a little different. On one
+hand, it uses a ypbind daemon to broadcast for active servers
+rather than gathering this information from a configuration file.
+You therefore have to make sure to start ypbind at boot
+time. It must be invoked after the NIS domain has been set and the
+RPC portmapper has been started. Invoking ypcat to test the
+server should then work as shown above.
+<P>
+<A NAME="5283"></A>
+Recently, there have been numerous bug reports that NIS fails with
+an error message saying ``clntudp_create: RPC: portmapper
+failure - RPC: unable to receive''. These are due to an incompatible
+change in the way ypbind communicates the binding information
+to the library functions. Obtaining the latest sources for the NIS
+utilities and recompiling them should cure this problem.<A HREF="footnode.html#5348"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="5349"></A>
+<A NAME="5290"></A>
+<A NAME="5291"></A>
+Also, the way traditional NIS decides if and how to merge NIS
+information with that from the local files deviates from that used by
+NYS. For instance, to use the NIS password maps, you have to include
+the following line somewhere in your /etc/passwd map:
+<P>
+<P><P>
+<P>
+<A NAME="5350"></A>
+<A NAME="5296"></A>
+<A NAME="5297"></A>
+<A NAME="5298"></A>
+This marks the place where the password lookup functions ``insert'' the
+NIS maps.  Inserting a similar line (minus the last two colons) into
+/etc/group does the same for the group.* maps.  To use the
+hosts.* maps distributed by NIS, change the order line
+in the host.conf file. For instance, if you want to use NIS, DNS,
+and the /etc/hosts file (in that order), you need to change the
+line to
+<P>
+<P><P>
+<P>
+The traditional NIS implementation does not support any other maps
+at the moment.
+<P>
+<A NAME="5307"></A>
+<P>
+<A NAME="5308"></A>
+<A NAME="5309"></A>
+<A NAME="5310"></A>
+<P>
+%
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node140.html">The Network File System</A>
+<B>Up:</B> <A HREF="node130.html">The Network Information System</A>
+<B> Previous:</B> <A HREF="node138.html">Using NIS with Shadow </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

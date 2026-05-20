@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Detailed Directions</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Using Term to Pierce an Internet Firewall mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="The Basic Procedure"
+HREF="basics.html"><LINK
+REL="NEXT"
+TITLE="Multiple Term Sockets"
+HREF="termsockets.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Using Term to Pierce an Internet Firewall mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="basics.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="termsockets.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="DETAILS"
+></A
+>4. Detailed Directions</H1
+><P
+>First, from a machine inside the firewall, telnet to a target machine
+outside the firewall and log in.</P
+><P
+>Unless you are under linux and will be using the proc filesystem (see
+below) make sure your shell is an sh style shell.  Ie if your default
+shell is a csh variant, invoke telnet by:</P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>setenv SHELL /bin/sh; telnet machine.outside</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>After logging in, on the remote (outside) machine invoke the command:</P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>term -r -n off telnet</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>Now break back to the telnet prompt on the local (inside) machine,
+using <TT
+CLASS="LITERAL"
+>^]</TT
+> or whatever, and use the telnet shell escape command
+<TT
+CLASS="LITERAL"
+>!</TT
+> to invoke term:</P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>telnet&#62; ! term -n on telnet &#62;&#38;3 &#60;&#38;3</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>That's it!</P
+><P
+>If you have a variant telnet, you might have to use some other file
+descriptor than 3; easy to check using strace.  But three seems to
+work on all bsd descendent telnet clients I've tried, under both SunOS
+4.x and the usual linux distributions.</P
+><P
+>Some telnet clients do not have the ! shell escape command.  Eg the
+telnet client distributed with Slackware 3.0 is one such client.  The
+sources that the Slackware telnet client is supposedly built from</P
+><P
+><A
+HREF="ftp://ftp.cdrom.com:/pub/linux/slackware-3.0/source/n/tcpip/NetKit-B-0.05.tar.gz"
+TARGET="_top"
+><I
+CLASS="CITETITLE"
+>ftp://ftp.cdrom.com:/pub/linux/slackware-3.0/source/n/tcpip/NetKit-B-0.05.tar.gz</I
+></A
+></P
+><P
+>A simple solution is therefore to
+obtain these sources and recompile them.  This unfortunately is a task
+I have had no luck with.  Plus, if you are running from inside a SOCKS
+firewall, you will need a SOCKSified telnet client anyway.  To that
+end, I was able to compile a SOCKSified telnet client from:</P
+><P
+><A
+HREF="ftp://ftp.nec.com/pub/security/socks.cstc/socks.cstc.4.2.tar.gz"
+TARGET="_top"
+><I
+CLASS="CITETITLE"
+>ftp://ftp.nec.com/pub/security/socks.cstc/socks.cstc.4.2.tar.gz</I
+></A
+></P
+><P
+>or, if you're outside the USA,</P
+><P
+><A
+HREF="ftp://ftp.nec.com/pub/security/socks.cstc/export.socks.cstc.4.2.tar.gz"
+TARGET="_top"
+><I
+CLASS="CITETITLE"
+>ftp://ftp.nec.com/pub/security/socks.cstc/export.socks.cstc.4.2.tar.gz</I
+></A
+></P
+><P
+>Alternatively, under linux kernels up to 1.2.13, you can pause the
+telnet with <TT
+CLASS="LITERAL"
+>^]^z</TT
+>, figure out its pid, and invoke:</P
+><P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>term -n on -v /proc/&#38;,t;telnetpid&#62;/fd/3 telnet</PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+>This doesn't work with kernels after 1.3.x, which closed some
+mysterious security hole by preventing access to these fd's by
+processes other than the owner process and its children.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="basics.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="termsockets.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The Basic Procedure</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Multiple Term Sockets</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

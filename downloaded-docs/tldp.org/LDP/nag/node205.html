@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Mail Delivery Modes</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node206.html">Miscellaneous config Options</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node204.html">Compiling smail</A>
+<BR> <P>
+<H1><A NAME="SECTION0016400000">Mail Delivery Modes</A></H1>
+<A NAME="smailqueue"></A>
+As noted above, smail is able to deliver messages immediately, or
+queue them for later processing.  If you choose to queue messages,
+smail will store away all mail in the messages directory
+below /var/spool/smail. It will not process them until explicitly told so
+(this is also called ``running the queue'').
+<P>
+You can select one of three delivery modes by setting the
+delivery_mode attribute in the config file to either
+of foreground, background, or queued. These
+select delivery in the foreground (immediate processing of incoming
+messages), in the background, (message is delivered by a child of the
+receiving process, with the parent process exiting immediately after
+forking), and queued. Incoming mail will always be queued regardless
+of this option if the boolean variable queue_only is set
+in the config file.
+<P>
+If you turn on queuing, you have to make sure the queues are
+checked regularly; probably every 10 or 15 minutes.  If you run
+smail in daemon mode, you have to add the option -q10m
+on the command line to process the queue every 10-minutes.
+Alternatively, you can invoke runq from cron at these
+intervals. runq should be a link to smail.
+<P>
+You can display the current mail queue by invoking smail
+with the -bp option. Equivalently, you can make mailq
+a link to smail, and invoke mailq:
+<PRE>
+           $ mailq -v
+           m0pvB1r-00023UB From: root  (in /var/spool/smail/input)
+                           Date: Sun, 24 Apr 94 07:12 MET DST
+                           Args: -oem -oMP sendmail root@vstout.vbrew.com
+           Log of transactions:
+            Xdefer: <root@vstout.vbrew.com> reason: (ERR 148) transport smtp:
+            connect: Connection refused
+</PRE>
+This shows a single message sitting in the message queue. The
+transaction log (which is only displayed if you give mailq the
+-v option) may give an additional reason why it is still
+waiting for delivery.  If no attempt has been made yet to deliver the
+message, no transaction log will be displayed.
+<P>
+Even when you don't use queuing, smail will occasionally put
+messages into the queue when it finds immediate delivery fails for a
+transient reason. For SMTP connections, this may be an unreachable host;
+but messages may also be deferred when the file system is found to be
+full.  You should therefore put in a queue run every hour or so (using
+runq), else any deferred message will stick around the queue
+forever.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node206.html">Miscellaneous config Options</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node204.html">Compiling smail</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

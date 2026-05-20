@@ -1,0 +1,254 @@
+<HTML
+><HEAD
+><TITLE
+>Configuration of the /etc/pam.d/ssh file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securties(commercial)"
+HREF="softsec-com.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure sshd2 to use tcp-wrappers/inetd super server"
+HREF="chap16sec131.html"><LINK
+REL="NEXT"
+TITLE="Ssh2 Per-User Configuration"
+HREF="chap16sec133.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap16sec131.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 16. Software -Securties(commercial)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap16sec133.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN9082"
+>16.6. Configuration of the <TT
+CLASS="filename"
+>/etc/pam.d/ssh</TT
+> file</A
+></H1
+><P
+>&#13;         For better security of your ssh2 server, you can configure it to use pam authentication. To do that, you must create the <TT
+CLASS="filename"
+>/etc/pam.d/ssh</TT
+> file.
+         </P
+><P
+>&#13;         Create the ssh file <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/pam.d/ssh</TT
+> and add or change, if necessary:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         #<TT
+CLASS="prompt"
+>%</TT
+>PAM-1.0
+         auth	        required     /lib/security/pam_pwdb.so shadow
+         auth	        required     /lib/security/pam_nologin.so
+         account	required     /lib/security/pam_pwdb.so
+         password	required     /lib/security/pam_cracklib.so
+         password	required     /lib/security/pam_pwdb.so use_authtok nullok md5 shadow
+         session	required     /lib/security/pam_pwdb.so
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         For Further documentation and more details, there are several man pages you can read:
+         <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh-add2</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;         - adds identities for the authentication agent
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh-agent2</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;         - authentication agent
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh-keygen2</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;         - authentication key pair generation
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh2</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;         - secure shell client <EM
+>remote login program</EM
+>
+         </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>sshd2</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;         - secure shell daemon
+         </P
+></DD
+></DL
+></DIV
+>
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap16sec131.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap16sec133.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure sshd2 to use tcp-wrappers/inetd super server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="softsec-com.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Ssh2 Per-User Configuration</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

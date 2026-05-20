@@ -1,0 +1,646 @@
+<HTML
+><HEAD
+><TITLE
+>Apache in a chroot jail</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="users authentication with .dbmpasswd password file"
+HREF="chap29sec252.html"><LINK
+REL="NEXT"
+TITLE="Apache to use shared libraries"
+HREF="chap29sec255.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec252.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec255.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19679"
+>29.17. Apache in a chroot jail</A
+></H1
+><P
+>&#13;      This part focuses on preventing Apache from being used as a point of break-in to the system hosting it. Apache by default runs as a non-root user, which will limit any damage to what can be done as a normal user with a local shell. 
+      Of course, allowing what amounts to an anonymous guest account falls rather short of the security requirements for most Apache servers, so an additional step can be taken - that is, running Apache in a chroot jail.
+    </P
+><P
+>&#13;      The main benefit of a chroot jail is that the jail will limit the portion of the file system the daemon can see to the root directory of the jail. Additionally, since the jail only needs to support Apache, the programs available in 
+      the jail can be extremely limited. Most importantly, there is no need for setuid-root programs, which can be used to gain root access and break out of the jail.
+    </P
+><DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Apache-Chroot.gif"
+ALT="Proxy Netscape Configuration"
+></IMG
+></P
+></DIV
+><P
+>&#13;    Chrooting apache is no easy task and has a tendency to break things. Before we embark on this, we need to first decide whether it is beneficial for you to do so. Some pros and cons are there, but most certainly not limited to, the following:
+</P
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN19689"
+></A
+><P
+><B
+>Pros and Cons </B
+></P
+><P
+>&#13;        <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;            If apache is ever compromised, the attacker will not have access to the entire file system.
+          </P
+></LI
+><LI
+><P
+>&#13;          Poorly written <SPAN
+CLASS="acronym"
+>CGI</SPAN
+> scripts that may allow someone to access your server will not work.
+          </P
+></LI
+></OL
+>
+      </P
+><P
+>&#13;        <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;            There are extra libraries you'll need to have in the chroot jail for Apache to work.
+          </P
+></LI
+><LI
+><P
+>&#13;            If you use any <SPAN
+CLASS="acronym"
+>Perl/CGI</SPAN
+> features with Apache, you will need to copy the needed binaries, Perl libraries and files to the appropriate spot within the chroot space. The same applies for <SPAN
+CLASS="acronym"
+>SSL</SPAN
+>, <SPAN
+CLASS="acronym"
+>PHP</SPAN
+>, LDAP, 
+            PostgresSQL and other third-party programs.
+          </P
+></LI
+></OL
+>
+      </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;      The chrooted configuration listed below supposes that you've compiled your Apache server with the external program mod_ssl. The differences in what you've compiled with your Apache web server reside in which libraries and binaries 
+      you'll need to copy to the chrooted directory.
+    </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+        Remember that if you've compiled Apache to use mod_perl, you must copy all the related binaries and Perl libraries to the chrooted directory. Perl resides in <TT
+CLASS="filename"
+>/usr/lib/perl5</TT
+> and in case 
+        you use Perl features, copy the Perl directories to <TT
+CLASS="filename"
+>/chroot/httpd/usr/lib/perl5/</TT
+>. Don't forget to create the directory <TT
+CLASS="filename"
+>/chroot/httpd/usr/lib/perl5</TT
+> 
+        in your chrooted structure before copying.
+      </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;        The following are the necessary steps to run Apache Web Server in a chroot jail:
+      </P
+><P
+>&#13;        We must find the shared library dependencies of httpd. These will need to be copied into the chroot jail later.
+        To find the shared library dependencies of httpd, execute the following command:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/# ldd /usr/sbin/httpd
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          libpam.so.0 =&#62;/lib/libpam.so.0 (0x40016000)
+          libm.so.6 =&#62;/lib/libm.so.6 (0x4001f000)
+          libdl.so.2 =&#62;/lib/libdl.so.2 (0x4003b000)
+          libcrypt.so.1 =&#62;/lib/libcrypt.so.1 (0x4003e000)
+          libnsl.so.1 =&#62;/lib/libnsl.so.1 (0x4006b000)
+          libresolv.so.2 =&#62;/lib/libresolv.so.2 (0x40081000)
+          libdb.so.3 =&#62;/lib/libdb.so.3 (0x40090000)
+          libc.so.6 =&#62;/lib/libc.so.6 (0x400cb000)
+          /lib/ld-linux.so.2 =&#62;/lib/ld-linux.so.2 (0x40000000)
+        </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+        Make a note of the files listed above, you will need these later in our steps.
+      </P
+><P
+>&#13;        Add a new <SPAN
+CLASS="acronym"
+>UID</SPAN
+> and a new <SPAN
+CLASS="acronym"
+>GID</SPAN
+> if this is not already done for running Apache httpd. This is important because running it as root defeats the purpose of the jail, and 
+        using a different <SPAN
+CLASS="acronym"
+>UID</SPAN
+> that already exists on the system <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> <TT
+CLASS="literal"
+>nobody</TT
+> can allow your services to access each others' resources. Consider the scenario 
+        where a web server is running as <TT
+CLASS="literal"
+>nobody</TT
+>, or any other overly used <SPAN
+CLASS="acronym"
+>UID/GID</SPAN
+> and compromised. The cracker can now access any other processes running as nobody from within 
+        the chroot.
+      </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;          These are sample <SPAN
+CLASS="acronym"
+>UID/GID</SPAN
+>s. Check the <TT
+CLASS="filename"
+>/etc/passwd</TT
+> and <TT
+CLASS="filename"
+>/etc/group</TT
+> files for a free <SPAN
+CLASS="acronym"
+>UID/GID</SPAN
+> number. In our configuration we'll use 
+          the numeric value <TT
+CLASS="literal"
+>80</TT
+> and <SPAN
+CLASS="acronym"
+>UID/GID</SPAN
+> <TT
+CLASS="literal"
+>www</TT
+>.
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ]/# <B
+CLASS="command"
+>useradd</B
+> -c "Apache Server" -u 80 -s /bin/false -r -d /home/httpd www 2&#62;/dev/null || :
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          The above commands will create the group <TT
+CLASS="literal"
+>www</TT
+> with the numerical <SPAN
+CLASS="acronym"
+>GID</SPAN
+> value <TT
+CLASS="literal"
+>80</TT
+>, and the user <TT
+CLASS="literal"
+>www</TT
+> with the numerical <SPAN
+CLASS="acronym"
+>UID</SPAN
+> value <TT
+CLASS="literal"
+>80</TT
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;          Set up the chroot environment. First we need to create the chrooted Apache structure. We use <TT
+CLASS="filename"
+>/chroot/httpd</TT
+> for the chrooted Apache. The <TT
+CLASS="filename"
+>/chroot/httpd</TT
+> is 
+          just a directory on a different partition where we've decided to put apache for more security.
+          
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep ]/# /etc/rc.d/init.d/httpd stop  <A
+NAME="apchrt1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec254.html#apchrt1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;                Only if Apache is already installed and run on your system.
+              </DD
+></DL
+></DIV
+>
+          
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;            Shutting down http:                                        [  OK  ]
+          </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ]/# <B
+CLASS="command"
+>mkdir</B
+> /chroot/httpd
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+><LI
+><P
+>&#13;          Next, create the rest of directories as follows:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ]/# <B
+CLASS="command"
+>mkdir</B
+> /chroot/httpd/dev
+            [root@deep ]/# <B
+CLASS="command"
+>mkdir</B
+> /chroot/httpd/lib
+            [root@deep ]/# <B
+CLASS="command"
+>mkdir</B
+> /chroot/httpd/etc
+            [root@deep ]/# <B
+CLASS="command"
+>mkdir</B
+> -p /chroot/httpd/usr/sbin
+            [root@deep ]/# <B
+CLASS="command"
+>mkdir</B
+> -p /chroot/httpd/var/run
+            [root@deep ]/# <B
+CLASS="command"
+>mkdir</B
+> -p /chroot/httpd/var/log/httpd
+            [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 750 /chroot/httpd/var/log/httpd/
+            [root@deep ]/# <B
+CLASS="command"
+>mkdir</B
+> -p /chroot/httpd/home/httpd
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+><LI
+><P
+>&#13;          Copy the main configuration directory, the configuration files, the cgi-bin directory, the root directory and the httpd program to the chroot jail:
+
+          [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> -r /etc/httpd /chroot/httpd/etc/
+          [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> -r /home/httpd/cgi-bin /chroot/httpd/home/httpd/
+          [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> -r /home/httpd/your-DocumentRoot /chroot/httpd/home/httpd/
+          [root@deep ]/# <B
+CLASS="command"
+>mknod</B
+> /chroot/httpd/dev/null c 1 3
+          [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 666 /chroot/httpd/dev/null
+          [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /usr/sbin/httpd /chroot/httpd/usr/sbin/
+
+          We need the <TT
+CLASS="filename"
+>/chroot/httpd/etc</TT
+>, <TT
+CLASS="filename"
+>/chroot/httpd/dev</TT
+>, <TT
+CLASS="filename"
+>/chroot/httpd/lib</TT
+>, <TT
+CLASS="filename"
+>/chroot/httpd/usr/sbin</TT
+>
+          <TT
+CLASS="filename"
+>/chroot/httpd/var/run</TT
+>, <TT
+CLASS="filename"
+>/chroot/httpd/home/httpd</TT
+> and <TT
+CLASS="filename"
+>/chroot/httpd/var/log/httpd</TT
+> directories because, from the point of the chroot, 
+          we're sitting at <TT
+CLASS="filename"
+>/</TT
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;
+          If you have compiled your Apache web server with <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> support, you must copy the entire <TT
+CLASS="filename"
+>/etc/ssl</TT
+> directory that handles all private and public keys to the chroot jail.
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> -r /etc/ssl /chroot/httpd/etc/ ß require only if you use mod_ssl feature.
+            [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 600 /chroot/httpd/etc/ssl/certs/ca.crt ß require only if you use mod_ssl feature.
+            [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 600 /chroot/httpd//etc/ssl/certs/server.crt ß require only if you use mod_ssl feature.
+            [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 600 /chroot/httpd/etc/ssl/private/ca.key ß require only if you use mod_ssl feature.
+            [root@deep ]/# <B
+CLASS="command"
+>chmod</B
+> 600 /chroot/httpd/etc/ssl/private/server.key ß require only if you use mod_ssl feature.
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec252.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec255.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>users authentication with <TT
+CLASS="filename"
+>.dbmpasswd</TT
+> password file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Apache to use shared libraries</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

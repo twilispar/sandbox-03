@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Mounting an NFS Volume</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node143.html">The NFS Daemons</A>
+<B>Up:</B> <A HREF="node140.html">The Network File System</A>
+<B> Previous:</B> <A HREF="node141.html">Preparing NFS</A>
+<BR> <P>
+<H1><A NAME="SECTION0013200000">Mounting an NFS Volume</A></H1>
+<A NAME="nfsmountd"></A>
+NFS volumes<A HREF="footnode.html#5430"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> are mounted very much the way usual file systems are mounted. You invoke
+mount using the following syntax:
+<PRE>
+     # mount -t nfs nfs volume local dir options
+</PRE>
+nfs_volume is given as remote_host:remote_dir.
+Since this notation is unique to NFS file systems, you can leave out
+the -t nfs option.
+<P>
+There are a number of additional options that you may specify to
+mount upon mounting an NFS volume. These may either be given
+following the -o switch on the command line, or in the options
+field of the /etc/fstab entry for the volume. In both cases,
+multiple options are separated from each other by commas. Options
+specified on the command line always override those given in the
+fstab file.
+<P>
+A sample entry in /etc/fstab might be
+<PRE>
+     # volume              mount point       type  options
+     news:/usr/spool/news  /usr/spool/news   nfs   timeo=14,intr
+</PRE>
+This volume may then be mounted using
+<PRE>
+     # mount news:/usr/spool/news
+</PRE>
+In the absence of a fstab entry, NFS mount invocations
+look a lot uglier. For instance, suppose you mount your users' home
+directories from a machine named moonshot, which uses a default
+block size of 4K for read/write operations. You might decrease
+block size to 2K to suit ' datagram size limit by issuing
+<PRE>
+     # mount moonshot:/home /home -o rsize=2048,wsize=2048
+</PRE>
+The list of all valid options is described in its entirety in the
+nfs(5) manual page that comes with Rick Sladkey's NFS-aware
+mount tool which can be found in Rik Faith's util-linux
+package).  The following is an incomplete list of those you would
+probably want to use:
+<DL>
+<DT>rsize=n and wsize=n<DD> These specify the datagram  size  used  by  the  NFS
+          clients  on  read  and write requests, respectively. They cur-
+          rently default to 1024 bytes, due to the limit on UDP datagram
+          size described above.
+
+<DT>timeo=n<DD> This sets the time (in tenths of a second) the NFS client will
+          wait for a request to complete. The default values is 0.7 sec-
+          onds.
+
+
+<DT>hard<DD> Explicitly mark this  volume  as hard-mounted. This is on by
+          default.
+
+<DT>soft<DD> Soft-mount the driver (as opposed to hard-mount).
+
+<DT>intr<DD> Allow signals to interrupt an NFS call.  Useful  for  aborting
+          when the server doesn't respond.
+ 
+</DL>
+Except for rsize and wsize, all of these options
+apply to the client's behavior if the server should become inaccessible
+temporarily. They play together in the following way: whenever the
+client sends a request to the NFS server, it expects the operation to
+have finished after a given interval (specified in the timeout
+option). If no confirmation is received within this time, a so-called
+<em>minor timeout</em> occurs, and the operation is retried with the
+timeout interval doubled. After reaching a maximum timeout of 60
+seconds, a <em>major timeout</em> occurs.
+<P>
+<A NAME="5476"></A>
+<A NAME="5477"></A>
+By default, a major timeout will cause the client to print a message to
+the console and start all over again, this time with an initial timeout
+interval twice that of the previous cascade. Potentially, this may go on
+forever. Volumes that stubbornly retry an operation until the server
+becomes available again are called <em>hard-mounted</em>. The opposite
+variety, <em>soft-mounted</em> volumes gerenates an I/O error for the
+calling process whenever a major timeout occurs. Because of the
+write-behind introduced by the buffer cache, this error condition is not
+propagated to the process itself before it calls the write(2)
+function the next time, so a program can never be sure that a write
+operation to a soft-mounted volume has succeeded at all.
+<P>
+Whether you hard- or soft-mount a volume is not simply a question of
+taste, but also has to do with what sort of information you want to
+access from this volume. For example, if you mount your X-programs by
+NFS, you certainly would not want your X-session to go berserk just
+because someone brought the network to a grinding halt by firing up
+seven copies of xv at the same time, or by pulling the Ethernet
+plug for a moment.  By hard-mounting these, you make sure that your
+computer will wait until it is able to re-establish contact with your
+NFS-server.  On the other hand, non-critical data such as NFS-mounted
+news partitions or FTP archives may as well be soft-mounted, so it
+doesn't hang your session in case the remote machine should be
+temporarily unreachable, or down. If your network connection to the
+server is flaky or goes through a loaded router, you may either
+increase the initial timeout using the timeo option, or
+hard-mount the volumes, but allow for signals interrupting the NFS call
+so that you may still abort any hanging file access.
+<P>
+Usually, the mountd daemon will in some way or other keep track
+of which directories have been mounted by what hosts. This information
+can be displayed using the showmount program, which is also
+included in the NFS server package. The  mountd, however,
+does not do this yet.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node143.html">The NFS Daemons</A>
+<B>Up:</B> <A HREF="node140.html">The Network File System</A>
+<B> Previous:</B> <A HREF="node141.html">Preparing NFS</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

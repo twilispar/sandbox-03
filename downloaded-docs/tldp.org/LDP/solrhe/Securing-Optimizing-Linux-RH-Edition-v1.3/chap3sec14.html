@@ -1,0 +1,362 @@
+<HTML
+><HEAD
+><TITLE
+>Disk Druid</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Installation of your Linux Server"
+HREF="installlin.html"><LINK
+REL="PREVIOUS"
+TITLE="Disk Setup- Disk Druid"
+HREF="chap3sec13.html"><LINK
+REL="NEXT"
+TITLE="An example"
+HREF="chap3sec15.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap3sec13.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Installation of your Linux Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap3sec15.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN635"
+>3.5. Disk Druid</A
+></H1
+><P
+>&#13;               Disk Druid Partitions is a program that partitions your hard drive for you. Choose <B
+CLASS="command"
+>Add</B
+> to add a new partition, <B
+CLASS="command"
+><SPAN
+CLASS="guimenu"
+>Edit</SPAN
+></B
+> to edit 
+               a partition, <B
+CLASS="command"
+><SPAN
+CLASS="guimenu"
+>Delete</SPAN
+></B
+> to delete a partition and <B
+CLASS="command"
+><SPAN
+CLASS="guimenu"
+>Reset</SPAN
+></B
+> to reset the partitions to the original state. When you add a new 
+               partition, a new window appears on your screen and gives you parameters to choose. Different parameters are:
+             
+             <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+><B
+CLASS="command"
+>&#13;                 <SPAN
+CLASS="guimenuitem"
+>Mount Point:</SPAN
+></B
+></B
+></DT
+><DD
+><P
+>&#13;                   for where you want to mount your new partition in the filesystem.
+                   </P
+></DD
+><DT
+><B
+>&#13;                   <B
+CLASS="command"
+><SPAN
+CLASS="guimenuitem"
+>Size (Megs):</SPAN
+></B
+></B
+></DT
+><DD
+><P
+>&#13;                   for the size of your new partition in megabytes.
+             </P
+></DD
+><DT
+><B
+>&#13;             <B
+CLASS="command"
+><SPAN
+CLASS="guimenuitem"
+>Partition Type:</SPAN
+></B
+>
+             </B
+></DT
+><DD
+><P
+>&#13;             Linux native for Linux filesystem and Swap for Linux Swap Partition.
+  
+             </P
+></DD
+></DL
+></DIV
+>
+             </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><A
+NAME="ch2scp1"
+></A
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+             If you have a <SPAN
+CLASS="acronym"
+>SCSI</SPAN
+> disk the device name will be <TT
+CLASS="filename"
+>/dev/sda</TT
+> 
+             and if you have an <SPAN
+CLASS="acronym"
+>IDE</SPAN
+> disk it will be <TT
+CLASS="filename"
+>/dev/hda</TT
+>. If you're looking 
+             for high performance and stability, a <SPAN
+CLASS="acronym"
+>SCSI</SPAN
+> disk is highly recommended.
+             Linux refers to disk partitions using a combination of letters and numbers. It uses a naming scheme that 
+             is more flexible and conveys more information than the approach used by other operating systems. 
+             </P
+><P
+>&#13;             Here is a summary:
+             <P
+></P
+><DIV
+CLASS="variablelist"
+><P
+><B
+>Disk naming convention</B
+></P
+><DL
+><DT
+>First Two Letters</DT
+><DD
+><P
+>&#13;              The first two letters of the partition name indicate the type of device on which the 
+             partition resides. You'll normally see either <TT
+CLASS="filename"
+>hd</TT
+> (for <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>IDE</SPAN
+></SPAN
+> 
+             disks), or <TT
+CLASS="filename"
+>sd</TT
+> (for <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>SCSI</SPAN
+></SPAN
+> disks).
+             </P
+></DD
+><DT
+>The Next Letter</DT
+><DD
+><P
+>&#13;              This letter indicates which device the partition is on. For example: <TT
+CLASS="filename"
+>/dev/hda</TT
+> 
+             (the first <SPAN
+CLASS="acronym"
+>IDE</SPAN
+> hard disk) and <TT
+CLASS="filename"
+>/dev/hdb</TT
+> (the second 
+             <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>IDE</SPAN
+></SPAN
+> disk).
+             </P
+></DD
+></DL
+></DIV
+>
+             Keep this information in mind, it will make things easier to understand when you're setting up the partitions 
+             Linux requires.
+                </P
+><P
+>&#13;             
+             Swap partitions are used to support virtual memory. If your computer has 16 MB of <SPAN
+CLASS="acronym"
+>RAM</SPAN
+> or less, you must create 
+             a swap partition. Even if you have more memory, a swap partition is still recommended. The minimum size of your 
+             swap partition should be equal to your computer's <SPAN
+CLASS="acronym"
+>RAM</SPAN
+> or 16 MB (whichever is larger). The 
+             largest useable swap partition is roughly 1 GB, <EM
+>since 2.2 kernel, 1 GB swap file are supported</EM
+> so making a 
+             swap partition larger than that will result in wasted space. Note, however, that you can create and use more than 
+             one swap partition <EM
+>although this is usually only necessary for very large server installations</EM
+>.
+             </P
+><P
+>&#13;             Try to put your swap partitions near the beginning of your drive. The beginning of the drive is physically 
+             located on the outer portion of the cylinder, so the read/write head can cover much more ground per revolution.
+             <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Linux-Partitions.gif"
+ALT="Linux Partitions"
+></IMG
+><DIV
+CLASS="caption"
+><P
+>representation of linux partition</P
+></DIV
+></P
+></DIV
+>
+             </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap3sec13.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap3sec15.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Disk Setup- Disk Druid</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="installlin.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>An example</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

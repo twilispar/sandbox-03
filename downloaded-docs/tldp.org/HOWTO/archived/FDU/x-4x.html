@@ -1,0 +1,1760 @@
+<HTML
+><HEAD
+><TITLE
+>XFree86 4.x</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="TrueType Fonts"
+HREF="truetype.html"><LINK
+REL="NEXT"
+TITLE="Adjusting Fonts in Specific Applications"
+HREF="apps.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XFree86 Font De-uglification HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="truetype.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="apps.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="X-4X">4. XFree86 4.x</H1
+><P
+> <A
+HREF="http://www.xfree86.org/4.0/"
+TARGET="_top"
+>XFree86 4.0</A
+> 
+ introduced native support for TrueType fonts, along with other new
+ features. The enhanced font support is based on xfsft from Juliusz
+ Chroboczek, which in turn is based on the FreeType font library originally
+ from Mark Leisher, so the configuration is similar to xfsft and Red Hat's
+ patched xfs which use the same rendering engine. As of 4.0.2, XFree86 begins
+ to support anti-aliasing which is a technique for smoothing font outlines
+ (see section below).&#13;</P
+><P
+> The <TT
+CLASS="LITERAL"
+>FontPath</TT
+> is still in <TT
+CLASS="FILENAME"
+>XF86Config</TT
+>, as 
+ always. For Red Hat 6/7 using a stock XFree86 4.x (i.e. NOT the Red Hat 7.x
+ supplied version), this will mean moving the Red Hat xfs
+ <TT
+CLASS="LITERAL"
+>FontPath</TT
+> from <TT
+CLASS="FILENAME"
+>/etc/X11/fs/config</TT
+> back
+ to <TT
+CLASS="FILENAME"
+>XF86Config</TT
+>. A separate font server is no longer
+ needed just for TrueType support. You may disable it, unless it is needed to
+ serve fonts to other clients in a network environment. Or you may want to 
+ still use it since there may be a very small performance gain in some 
+ situations (at the cost of more memory utilized). See the section below for
+ Red Hat 7.x specific configuration issues.</P
+><A
+NAME="AEN434"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;Section&nbsp;"Files"<br>
+&nbsp;&nbsp;FontPath&nbsp;"/usr/X11R6/lib/X11/fonts/misc:unscaled"<br>
+&nbsp;&nbsp;FontPath&nbsp;"/usr/X11R6/lib/X11/fonts/100dpi:unscaled"<br>
+&nbsp;&nbsp;FontPath&nbsp;"/usr/X11R6/lib/X11/fonts/75dpi:unscaled"<br>
+&nbsp;&nbsp;FontPath&nbsp;"/usr/X11R6/lib/X11/fonts/misc"<br>
+&nbsp;&nbsp;FontPath&nbsp;"/usr/X11R6/lib/X11/fonts/Type1"<br>
+&nbsp;&nbsp;FontPath&nbsp;"/usr/X11R6/lib/X11/fonts/Speedo"<br>
+&nbsp;&nbsp;FontPath&nbsp;"/usr/share/fonts/default/Type1"<br>
+&nbsp;&nbsp;FontPath&nbsp;"/usr/local/share/fonts/ttfonts"<br>
+&nbsp;&nbsp;FontPath&nbsp;"/usr/X11R6/lib/X11/fonts/100dpi"<br>
+&nbsp;&nbsp;FontPath&nbsp;"/usr/X11R6/lib/X11/fonts/75dpi"<br>
+&nbsp;EndSection<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> In order to use TrueType, you must also specify which font
+ <TT
+CLASS="LITERAL"
+>module</TT
+> the X server should be using in the "Module"
+ section:</P
+><A
+NAME="AEN441"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;Section&nbsp;"Module"<br>
+&nbsp;&nbsp;Load&nbsp;&nbsp;"freetype"<br>
+&nbsp;&nbsp;Load&nbsp;&nbsp;"speedo"<br>
+&nbsp;&nbsp;Load&nbsp;&nbsp;"type1"<br>
+&nbsp;&nbsp;&#60;load&nbsp;other&nbsp;modules....&#62;<br>
+&nbsp;EndSection<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> Note that there can be only one 'Module' section, so include any other 
+ modules here as well. Again, this is the kind of configuration that your 
+ distro should be doing during installation, and may not be
+ necessary, unless you are upgrading, or want to make manual changes
+ yourself.</P
+><P
+> You also must have a <TT
+CLASS="FILENAME"
+>fonts.scale</TT
+> and
+ <TT
+CLASS="FILENAME"
+>fonts.dir</TT
+> file for each TrueType font directory, just like
+ for xfsft and Red Hat's xfs (see Appendix). <B
+CLASS="COMMAND"
+>ttmkfdir</B
+>, 
+ <A
+HREF="http://www.joerg-pommnitz.de/TrueType/ttmkfdir.tar.gz"
+TARGET="_top"
+>http://www.joerg-pommnitz.de/TrueType/ttmkfdir.tar.gz</A
+>, 
+ will come in handy for <TT
+CLASS="FILENAME"
+>fonts.scale</TT
+> if it is not 
+ already installed. See the 
+ <A
+HREF="truetype.html#TTF-CONFIG"
+>Configuration</A
+> section above for more
+ details and examples.</P
+><P
+> <TT
+CLASS="LITERAL"
+>xtt</TT
+> is another available TrueType module that is best known 
+ for supporting ideographic (Oriental) type fonts. You can use either, but only 
+ one at a time.</P
+><P
+> Most X server command line options are still the same as previous versions of X: 
+ </P
+><P
+> <TT
+CLASS="LITERAL"
+> $ startx -- -dpi 100
+ </TT
+></P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="XFT">4.1. Xft and Core Fonts</H2
+><P
+>  As mentioned, the new font handling improvements are the result of the
+  development work behind <A
+HREF="http://www.keithp.com/~keithp/render/Xft.tutorial"
+TARGET="_top"
+>Xft</A
+>. Xft is
+  an on-going effort to improve and modernize X's font handling. The end
+  result will be radically different from the traditional X font handling
+  (known as <SPAN
+CLASS="QUOTE"
+>"core X fonts"</SPAN
+>).
+ </P
+><P
+>  What we have now is essentially two different systems: one that has been
+  around since the dawn of time (or even before :), and one that is radically
+  new and <EM
+>still evolving</EM
+>! I emphasize this, since the
+  <SPAN
+CLASS="QUOTE"
+>"still evolving"</SPAN
+> part is likely to cause some confusion until
+  the dust settles.
+ </P
+><P
+>  The initial release of Xft v1.0 with XFree86 4.0.2 is controlled by its 
+  configuration file, <TT
+CLASS="FILENAME"
+>XftConfig</TT
+>. This changes with later
+  versions, where the font configuration is handled by the 
+  <B
+CLASS="COMMAND"
+>fontconfig</B
+> library, with its main configuration typically located 
+  <TT
+CLASS="FILENAME"
+>/etc/fonts/fonts.conf</TT
+>. Of course, additional
+  development has brought other improvements as well. For more on the 
+  Xft and Fontconfig, see the Fontconfig home page, 
+  <A
+HREF="http://fontconfig.org/"
+TARGET="_top"
+>http://fontconfig.org/</A
+>.
+
+ </P
+><P
+>  What we, as end users, will notice and appreciate most, is the anti-aliasing
+  support and other rendering enhancements we get from Xft. Though this is not
+  the only benefit. 
+ </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AA">4.2. Anti-aliasing</H2
+><P
+> Anti-aliasing is a technique for producing even smoother, crisper looking
+ fonts by subtly softening the sharp, jagged edges. This has long been a
+ feature of Apple and Microsoft font rendering, and is now making it's way
+ into X via the X Rendering Extension specification. The new extensions
+ provide other benefits as well. Distributions that support anti-aliasing with
+ their stable/official versions are now being released.</P
+><P
+> That is the good news. The bad news is that not all drivers support
+ anti-aliasing yet. This is a moving target, so you will have to dig around to
+ find whether your chipset is supported or not. The recently released 4.2
+ should have near universal support. More not-so-good news is that not all
+ applications are actually taking advantage of this yet. We will have 
+ to wait for the various toolkits (TK, Xaw, etc) to catch up. KDE 
+ is an exception, and has had strong AA support via the QT toolkit. The 
+ recently released GNOME-2, has AA support now too.</P
+><P
+> Anti-aliasing is not a cure-all, but is another piece of the font puzzle. 
+ Some point sizes may look better if not anti-aliased, and some systems 
+ just may not handle the various rendering enhancements as well as others.</P
+><P
+> If you are reading this long after the publication date (October 2002),
+ hopefully most of these shortcomings will have been overcome. All hardware will
+ eventually be supported, mainstream distros will have shipped releases that 
+ include the new extensions, and they will be enabled by default. Many apps
+ will look better since they will be <SPAN
+CLASS="QUOTE"
+>"AA"</SPAN
+> aware, and we won't
+ have to jump through any configuration hoops just to make it work. In the
+ meantime, read on ...&#13;</P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN480">4.2.1. Requirements</H3
+><P
+> Minimum requirements for Anti-Aliasing:</P
+><P
+>  <P
+></P
+><UL
+><LI
+><P
+>     XFree86 4.0.2 or later.
+   </P
+></LI
+><LI
+><P
+>     You graphic card's driver has to support anti-aliasing. If
+     4.0.2 (or greater) is already installed, you can get this information 
+     direct from the driver with <B
+CLASS="COMMAND"
+>xdpyinfo</B
+>. Run this and 
+     look for <SPAN
+CLASS="QUOTE"
+>"Number of Extensions:"</SPAN
+>. If this lists <SPAN
+CLASS="QUOTE"
+>"RENDER"</SPAN
+> among them, then you should be good to go. If not, well, it isn't going 
+     to work, and you will have to wait for an updated driver.
+   </P
+></LI
+><LI
+><P
+>     The Freetype2 library available from 
+     <A
+HREF="http://www.freetype.org"
+TARGET="_top"
+>http://www.freetype.org</A
+>, and
+     also now bundled with XFree86. XFree needs to be linked against this, so
+     install and build first if building from scratch. Your distro should have
+     Freetype packages as well. Just make sure it is
+     <TT
+CLASS="FILENAME"
+>freetype-2</TT
+>. 
+   </P
+></LI
+><LI
+><P
+>     TrueType fonts are best for display purposes. Type 1 is also good, 
+     but may not render quite as well. See above sections. 
+   </P
+></LI
+><LI
+><P
+>    For KDE users, KDE supports anti-aliasing as of 2.x. This will require
+    QT-2.3.0 or later, and built with Xft support. A nice font HOWTO from
+    Troll Tech for KDE and QT can be found:  <A
+HREF="http://trolls.troll.no/lars/fonts/qt-fonts-HOWTO.html"
+TARGET="_top"
+>http://trolls.troll.no/lars/fonts/qt-fonts-HOWTO.html</A
+>. 
+   </P
+><P
+>    GNOME 1.x does not support anti-aliasing. 
+    GNOME 2.0 has recently been released and does have native support for
+    anti-aliasing. 
+   </P
+></LI
+><LI
+><P
+>    Applications that <SPAN
+CLASS="QUOTE"
+>"know"</SPAN
+> about anti-aliasing. Not necessarily
+    at the individual application level, but the libraries and toolkits (GTK,
+    TK, etc.) that the application are built against, must be able to use the new
+    features. At this time, not all do. KDE/QT is first out of the
+    box and has good support. Also, <B
+CLASS="COMMAND"
+>xterm</B
+> (yes, 
+    <B
+CLASS="COMMAND"
+>xterm!</B
+>) supports the new
+    extensions. An interesting example scavenged off usenet:
+   </P
+><P
+>    <TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>     
+    From torvalds@penguin.transmeta.com Sun Apr 28 02:09:28 2002
+    From: torvalds@penguin.transmeta.com (Linus Torvalds)
+    Newsgroups: comp.os.linux.x
+    Subject: Re: X font recommendation
+    Organization: Transmeta Corporation
+    Lines: 24
+    Message-ID: &#60;aa4ijq$259$1@penguin.transmeta.com&#62;
+    Cache-Post-Path: palladium.transmeta.com!unknown@penguin.transmeta.com
+    Date: Tue, 23 Apr 2002 21:10:18 +0000 (UTC)
+    X-Trace: news.sjc.globix.net 1019596253 63.209.4.196 (Tue, 23 Apr 2002 14:10:53 PDT)
+    NNTP-Posting-Date: Tue, 23 Apr 2002 14:10:53 PDT
+
+    In article &#60;aa492r$7hc5u$2@ID-99293.news.dfncis.de&#62;,
+    William Park  &#60;opengeometry@NOSPAM.yahoo.ca&#62; wrote:
+    &#62;Peter Karlsson &#60;root@localhost.localdomain&#62; wrote:
+    &#62;&#62; What's wrong with "fixed"? :-)
+    &#62;&#62; 
+    &#62;&#62; xterm -sb -sl 10000 -fg yellow -bg black -geometry 120x40 -fn fixed -bc
+    &#62;
+    &#62;This will load the default 6x13 fonts, aka.
+    &#62;    -misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso8859-1
+    &#62;A bit too small, though it has correct proportions.  If there is bigger
+    &#62;size (8x16, 10x20, 12x24) of that fonts, then that would be ideal.
+
+    If you like anti-aliased fonts, the command line I prefer happens to be
+
+         xterm -geometry 100x40 -fa andale:size=11:charwidth=6
+
+    I think that font is from the MS free fontpack.
+
+    In order for it to work for you, you need to have the anti-aliasing
+    truetype fonts working well, and probably a good monitor (and some
+    people _hate_ that rounded look from anti-aliasing, and find it fuzzy
+    even then).
+
+              Linus
+     
+   </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+  </P
+><P
+>   You might have to experiment with the <TT
+CLASS="LITERAL"
+>size</TT
+> 
+   and <TT
+CLASS="LITERAL"
+>charwidth</TT
+> values to get reasonable 
+   results.
+  </P
+></LI
+><LI
+><P
+>   The new rendering extensions configuration file,
+   <TT
+CLASS="FILENAME"
+>XftConfig</TT
+>, must be configured for the fonts you want
+   to use. Note that as of Xft2, this changes to
+   <TT
+CLASS="FILENAME"
+>/etc/fonts/fonts.conf</TT
+>.
+  </P
+></LI
+><LI
+><P
+>  
+   The new extensions supplant much of what we have been doing with font
+   servers like xfs. <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> and similar
+   configuration files, for instance, are not used for fonts that are 
+   being controlled by the new extensions. Essentially, this gives us 
+   two separate font handling engines: the traditional, <SPAN
+CLASS="QUOTE"
+>"core"</SPAN
+> 
+   font engine, and the new, Xft engine. The core engine is still used 
+   in some situations.
+  </P
+></LI
+></UL
+>
+ </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN520">4.2.2. Installation</H3
+><P
+> Keith Packard has a very brief summary of the steps required for building,
+ installing  and configuring from source at <A
+HREF="http://www.xfree86.org/~keithp/render/aafont.txt"
+TARGET="_top"
+>http://www.xfree86.org/~keithp/render/aafont.txt</A
+>. No need to reprint it here.
+ </P
+><P
+> Newer distro releases are likely to have the foundation support for
+ anti-aliasing available now. Red Hat, for instance, has it available as of
+ Red Hat 7.1. </P
+><P
+> To verify the necessary components, first make sure the
+ <SPAN
+CLASS="QUOTE"
+>"freetype"</SPAN
+> module (and any others) are loaded. Check the X
+ server output:</P
+><P
+CLASS="LITERALLAYOUT"
+><br>
+&nbsp;(II)&nbsp;LoadModule:&nbsp;"freetype"<br>
+&nbsp;(II)&nbsp;Loading&nbsp;/usr/X11R6/lib/modules/fonts/libfreetype.a<br>
+&nbsp;(II)&nbsp;Module&nbsp;freetype:&nbsp;vendor="The&nbsp;XFree86&nbsp;Project"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;compiled&nbsp;for&nbsp;4.0.3,&nbsp;module&nbsp;version&nbsp;=&nbsp;1.1.9<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Module&nbsp;class:&nbsp;XFree86&nbsp;Font&nbsp;Renderer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ABI&nbsp;class:&nbsp;XFree86&nbsp;Font&nbsp;Renderer,&nbsp;version&nbsp;0.2<br>
+&nbsp;(II)&nbsp;Loading&nbsp;font&nbsp;FreeType<br>&#13;</P
+><P
+> Then verify if the <SPAN
+CLASS="QUOTE"
+>"RENDER"</SPAN
+> extension is available, either check 
+ with <B
+CLASS="COMMAND"
+>xdpyinfo</B
+>, or check the X server log, typically 
+ <TT
+CLASS="FILENAME"
+>/var/log/XFree86.0.log</TT
+>:</P
+><P
+CLASS="LITERALLAYOUT"
+>&nbsp;<br>
+&nbsp;(II)&nbsp;Initializing&nbsp;built-in&nbsp;extension&nbsp;MIT-SHM<br>
+&nbsp;(II)&nbsp;Initializing&nbsp;built-in&nbsp;extension&nbsp;XInputExtension<br>
+&nbsp;(II)&nbsp;Initializing&nbsp;built-in&nbsp;extension&nbsp;XTEST<br>
+&nbsp;(II)&nbsp;Initializing&nbsp;built-in&nbsp;extension&nbsp;XKEYBOARD<br>
+&nbsp;(II)&nbsp;Initializing&nbsp;built-in&nbsp;extension&nbsp;LBX<br>
+&nbsp;(II)&nbsp;Initializing&nbsp;built-in&nbsp;extension&nbsp;XC-APPGROUP<br>
+&nbsp;(II)&nbsp;Initializing&nbsp;built-in&nbsp;extension&nbsp;SECURITY<br>
+&nbsp;(II)&nbsp;Initializing&nbsp;built-in&nbsp;extension&nbsp;XINERAMA<br>
+&nbsp;(II)&nbsp;Initializing&nbsp;built-in&nbsp;extension&nbsp;XFree86-Bigfont<br>
+&nbsp;(II)&nbsp;Initializing&nbsp;built-in&nbsp;extension&nbsp;RENDER<br>&#13;</P
+><P
+> If <SPAN
+CLASS="QUOTE"
+>"RENDER"</SPAN
+> is there, anti-aliasing and the other advanced
+ rendering extensions should be available. If not, the system should 
+ gracefully fall back to the core X fonts engine.</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN535">4.2.3. Xft Configuration (XftConfig)</H3
+><P
+> By Danny Tholen <TT
+CLASS="EMAIL"
+>&#60;<A
+HREF="mailto:obiwan@mailmij.org"
+>obiwan@mailmij.org</A
+>&#62;</TT
+></P
+><P
+> Xft is an interface to the freetype rasterizer written by Keith Packard,
+ member of the XFree86 Project, Inc. It allows applications to use fonts from
+ the new X render extension using a unified font naming scheme. In
+ <TT
+CLASS="FILENAME"
+>/etc/X11/XftConfig</TT
+> (or
+ <TT
+CLASS="FILENAME"
+>/usr/X11R6/lib/X11/XftConfig</TT
+>) you will find a
+ configuration file which can be adapted to suit your personal taste. In this
+ section I will explain the syntax and demonstrate some things you can do
+ with this file. </P
+><P
+> The following information is based on 4.0.3. 4.1 is just released, and there
+ may be a few new wrinkles not touched on here. Future versions are sure 
+ to bring even more radical changes.</P
+><P
+> Note that Xft2 makes radical changes to Xft configuration. 
+ <TT
+CLASS="FILENAME"
+>XftConfig</TT
+> is obsoleted and replaced by the new 
+ <A
+HREF="http://fontconfig.org"
+TARGET="_top"
+>fontconfig</A
+> libraries. Red Hat 8.x
+ users should read the <A
+HREF="x-4x.html#RH80"
+>Red Hat 8.0 Differences</A
+>
+ section first. Many of the principles described still apply, but the 
+ configuration is radically different. FYI.</P
+><DIV
+CLASS="SECT4"
+><H4
+CLASS="SECT4"
+><A
+NAME="XFTSTRUCTURE">4.2.3.1. XftConfig Structure</H4
+><P
+> The basic structure revolves around a 'pattern'. A pattern is a set of
+ name/value-list pairs, each value-list contains one or more typed values. A
+ certain application requests a font, for example:</P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;family:&nbsp;"Arial"<br>
+&nbsp;size:&nbsp;12<br>
+&nbsp;encoding:&nbsp;"iso8859-1"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+><P
+> A size 12 arial font in latin-1 encoding. The Xft extension will now try to
+ patch this pattern to all of the fonts available in the system. And
+ selecting the one with the best score. Before the matching is done Xft looks
+ in <TT
+CLASS="FILENAME"
+>XftConfig</TT
+>. The requested pattern can here be extended
+ before use. An example is: </P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Arial"&nbsp;edit&nbsp;antialias&nbsp;=&nbsp;true;<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+> This will enable anti-aliasing for all fonts of the family Arial.</P
+><P
+> Also, the X server is queried to list all of its fonts; the XLFD contains
+ just enough information to match fonts roughly.</P
+><P
+> Here's a list of attributes used in matching fonts (in priority order, this
+ may not be up to date anymore!):</P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;foundry&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font&nbsp;foundry&nbsp;(string,&nbsp;like&nbsp;<SPAN
+CLASS="QUOTE"
+>"monotype"</SPAN
+>)<br>
+&nbsp;encoding&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font&nbsp;encoding&nbsp;(string,&nbsp;like&nbsp;<SPAN
+CLASS="QUOTE"
+>"iso8859-1"</SPAN
+>)<br>
+&nbsp;spacing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font&nbsp;spacing&nbsp;(integers&nbsp;or&nbsp;proportional&nbsp;(0),&nbsp;mono&nbsp;(100),&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;charcell&nbsp;(110))<br>
+&nbsp;bold&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;the&nbsp;font&nbsp;bold?&nbsp;(boolean)<br>
+&nbsp;italic&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;the&nbsp;font&nbsp;italic?&nbsp;(boolean)<br>
+&nbsp;antialias&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;the&nbsp;font&nbsp;anti-aliased?&nbsp;(boolean)<br>
+&nbsp;family&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font&nbsp;family&nbsp;(string)<br>
+&nbsp;size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font&nbsp;size&nbsp;(double)<br>
+&nbsp;style&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font&nbsp;style&nbsp;(string,&nbsp;like&nbsp;"Bold&nbsp;Italic")<br>
+&nbsp;slant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font&nbsp;slant&nbsp;(roman,&nbsp;italic,&nbsp;oblique)<br>
+&nbsp;weight&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font&nbsp;weight&nbsp;(&nbsp;integers&nbsp;or&nbsp;light,&nbsp;medium&nbsp;(100),&nbsp;demi-bold,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bold,&nbsp;black)<br>
+&nbsp;rasterizer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;not&nbsp;yet&nbsp;used&nbsp;(probably&nbsp;"TrueType",&nbsp;"Type1",&nbsp;...)<br>
+&nbsp;outline&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;are&nbsp;outlines&nbsp;available?&nbsp;(boolean)<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+></DIV
+><DIV
+CLASS="SECT4"
+><H4
+CLASS="SECT4"
+><A
+NAME="AEN569">4.2.3.2. XftConfig Syntax</H4
+><P
+><P
+></P
+><UL
+><LI
+><H3
+CLASS="BRIDGEHEAD"
+><A
+NAME="AEN574">dir</H3
+><P
+>   Adds a directory to the list of places Xft will look for fonts. There is no
+   particular order implied by the list; Xft treats all fonts about the same.
+  </P
+></LI
+><LI
+><H3
+CLASS="BRIDGEHEAD"
+><A
+NAME="AEN577">include and includeif</H3
+><P
+>   Cause Xft to load more configuration parameters from the indicated file.
+   "includeif" doesn't elicit a complaint if the file doesn't exist. If the
+   file name begins with a <SPAN
+CLASS="QUOTE"
+>"~"</SPAN
+> character, it refers to a path
+   relative to the home directory of the user. This is useful for
+   user-specific configurations.
+   </P
+></LI
+><LI
+><H3
+CLASS="BRIDGEHEAD"
+><A
+NAME="AEN581">match edit</H3
+><P
+>   If a pattern from an application matches the pattern after
+   <SPAN
+CLASS="QUOTE"
+>"match"</SPAN
+>, it is edited with the instructions in
+   <TT
+CLASS="LITERAL"
+>edit</TT
+>. The pattern match is done as follows:
+  </P
+><P
+>     <P
+CLASS="LITERALLAYOUT"
+>&nbsp;&nbsp;match&nbsp;<TT
+CLASS="LITERAL"
+>qual FIELD-NAME COMPARE CONSTANT</TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+    </P
+><P
+>   
+     where qual is either <TT
+CLASS="LITERAL"
+>any</TT
+> (matches one specific font)
+     or <TT
+CLASS="LITERAL"
+>all</TT
+> (matches all fonts). An example:
+    </P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;match&nbsp;all&nbsp;foundry==¨monotype¨<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+>     which will match (and edit) all fonts belonging to the foundry
+     <SPAN
+CLASS="QUOTE"
+>"monotype"</SPAN
+>. 
+    </P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;match&nbsp;any&nbsp;family==¨arial¨<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+>     will match (and edit) one specific font with the family name
+     <SPAN
+CLASS="QUOTE"
+>"arial"</SPAN
+>. 
+    </P
+><P
+>     <TT
+CLASS="LITERAL"
+>FIELD-NAME</TT
+> is any one of the properties found in the
+     above section <A
+HREF="x-4x.html#XFTSTRUCTURE"
+>Structure</A
+>, or additionally:
+    </P
+><P
+> <TT
+CLASS="LITERAL"
+>  <P
+CLASS="LITERALLAYOUT"
+>&nbsp;pixelsize&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;font&nbsp;size&nbsp;in&nbsp;pixels&nbsp;(integer)<br>
+&nbsp;charspace&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;character&nbsp;space&nbsp;(integer)<br>
+&nbsp;minspace&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minimal&nbsp;spacing&nbsp;(integer)<br>
+&nbsp;rgba&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color&nbsp;hinting&nbsp;(string&nbsp;¨rgb¨&nbsp;or&nbsp;¨bgr¨&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vertical&nbsp;hinting&nbsp;¨vrgb¨&nbsp;¨vbgr¨),&nbsp;aka&nbsp;sub-pixel&nbsp;hinting<br>
+&nbsp;xlfd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;server&nbsp;font&nbsp;(string,&nbsp;type&nbsp;xlsfonts&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;see&nbsp;a&nbsp;list&nbsp;of&nbsp;your&nbsp;xlfd&nbsp;strings)<br>
+&nbsp;file&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;font&nbsp;file&nbsp;(string)<br>
+&nbsp;core&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;X&nbsp;core&nbsp;fonts?&nbsp;(boolean)<br>
+&nbsp;render&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;render&nbsp;fonts?&nbsp;(boolean)<br>
+&nbsp;index&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I&nbsp;have&nbsp;no&nbsp;idea&nbsp;what&nbsp;this&nbsp;does:)<br>
+&nbsp;scalable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;the&nbsp;font&nbsp;scalable&nbsp;(boolean)<br>
+&nbsp;scale&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scale&nbsp;the&nbsp;font&nbsp;(integer)<br>
+&nbsp;charwidth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;character&nbsp;width&nbsp;(integer)<br>
+&nbsp;charheight&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;character&nbsp;height&nbsp;(integer)<br>
+&nbsp;matrix&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no&nbsp;idea&nbsp;(not&nbsp;really&nbsp;at&nbsp;least)<br>
+&nbsp;&nbsp;&nbsp;</P
+>
+ </TT
+></P
+><P
+>     <TT
+CLASS="LITERAL"
+>COMPARE</TT
+> can be <TT
+CLASS="LITERAL"
+>&#60;</TT
+>, 
+     <TT
+CLASS="LITERAL"
+>&#62;</TT
+>, or <TT
+CLASS="LITERAL"
+>==</TT
+>.
+    </P
+><P
+>     <TT
+CLASS="LITERAL"
+>CONSTANT</TT
+> is the value of the field-name in the
+     appropriate type (see above section <A
+HREF="x-4x.html#XFTSTRUCTURE"
+>Structure</A
+>). 
+    </P
+><P
+>     You can use multiple matches before you use the <SPAN
+CLASS="QUOTE"
+>"edit"</SPAN
+>
+     statement: 
+    </P
+><P
+>     <P
+CLASS="LITERALLAYOUT"
+>&nbsp;edit&nbsp;<TT
+CLASS="LITERAL"
+>FIELD-NAME ASSIGN EXPR SEMI</TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+    </P
+><P
+>     Where <TT
+CLASS="LITERAL"
+>ASSIGN</TT
+> can be one of <TT
+CLASS="LITERAL"
+>=</TT
+>, 
+     <TT
+CLASS="LITERAL"
+>+=</TT
+> or <TT
+CLASS="LITERAL"
+>=+</TT
+>. With
+     <TT
+CLASS="LITERAL"
+>=</TT
+>, the matching value in the pattern will be replaced
+     by the given expression. <TT
+CLASS="LITERAL"
+>+=</TT
+> or <TT
+CLASS="LITERAL"
+>=+</TT
+>
+     will prepend/append a new value to the list of values for the indicated
+     field.
+    </P
+><P
+>     <TT
+CLASS="LITERAL"
+>EXPR</TT
+> sets the <TT
+CLASS="LITERAL"
+>FIELD-NAME</TT
+> to a value.
+    </P
+><P
+>     <TT
+CLASS="LITERAL"
+>SEMI</TT
+> is a semicolon (<TT
+CLASS="LITERAL"
+>;</TT
+>). You can
+     use multiple instructions, separated by a semicolon. See below for
+     examples if this is confusing.
+    </P
+></LI
+></UL
+></P
+></DIV
+><DIV
+CLASS="SECT4"
+><H4
+CLASS="SECT4"
+><A
+NAME="AEN637">4.2.3.3. XftConfig Examples</H4
+><P
+> And now I´ll try to list a few useful configurations and explain them. Note
+ that it is configured for my system, and I may use different fonts than you,
+ so try to adapt the examples to your own needs.</P
+><P
+> <P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+> 
+   How do I make fonts available to Xft?
+  </P
+><P
+>   List your Type 1 and TrueType font directories with <SPAN
+CLASS="QUOTE"
+>"dir"</SPAN
+>. On my
+   system (Mandrake 7.2) this becomes:
+  </P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;dir&nbsp;"/usr/X11R6/lib/X11/fonts/Type1"<br>
+&nbsp;dir&nbsp;"/usr/X11R6/lib/X11/fonts/drakfont"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></LI
+><LI
+><P
+>   How do I use a user specific XftConfig file?
+  </P
+><P
+>  
+   Put an <TT
+CLASS="FILENAME"
+>.xftconfig</TT
+> file in your user directory and add: 
+   </P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;includeif&nbsp;&nbsp;&nbsp;"~/.xftconfig"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+><P
+> 
+  to your standard <TT
+CLASS="FILENAME"
+>XftConfig</TT
+>. This will enable a user
+  specific configuration file, but it will not complain if there is no such
+  file.
+ </P
+></LI
+><LI
+><P
+>  How do I make aliases for my fonts?
+ </P
+><P
+>  I noted that my KDE console asks for <SPAN
+CLASS="QUOTE"
+>"mono"</SPAN
+> fonts when it is
+  looking for a fixed font. <SPAN
+CLASS="QUOTE"
+>"console"</SPAN
+> is used when I select
+  <SPAN
+CLASS="QUOTE"
+>"linux"</SPAN
+> in the font menu of the KDE konsole. Therefore, I used
+  two aliases for fonts which are also named <SPAN
+CLASS="QUOTE"
+>"fixed"</SPAN
+>:
+ </P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;match&nbsp;any&nbsp;family&nbsp;==&nbsp;"fixed"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"mono";<br>
+&nbsp;match&nbsp;any&nbsp;family&nbsp;==&nbsp;"console"&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"mono";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></LI
+><LI
+><P
+>  Anti-aliasing my fonts are blurry and makes me dizzy!
+ </P
+><P
+>  Although there is a big fuzz around AA in X, good fonts actually look better
+  if they are not anti-aliased. The anti-aliasing blurs the fonts by adding
+  gray pixels to the edges, and this may strain your eyes if you looking at
+  them for a long time. (Your eyes will try to get the fonts sharper, which
+  of course is not working because they are blurred;) However, for very small
+  fonts, anti-aliasing may increase the readability of the fonts, because with
+  sharp edges, there are too little pixels available for your mind to figure
+  out what it means. And for bigger fonts, the edges become very jagged when
+  not anti-aliased, so here you also might want to have aliased fonts. Of course
+  you can also turn off the anti-aliasing for specific fonts. In other
+  operating systems, most truetype fonts are not anti-aliased between 8 and 12
+  pixels, while only large Type1 fonts are anti-aliased.
+ </P
+><P
+>  Use the following in your <TT
+CLASS="FILENAME"
+>XftConfig</TT
+> to anti-alias only
+  fonts of specific sizes:
+ </P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;size&nbsp;&#62;&nbsp;8&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;size&nbsp;&#60;&nbsp;15&nbsp;<br>
+&nbsp;edit&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antialias&nbsp;=&nbsp;false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></LI
+><LI
+><P
+>  My fixed fonts do not appear or look _very_ wrong in the KDE konsole or
+  similar programs!
+ </P
+><P
+> 
+  I noted that somehow a lot of fixed font do not tell Xft that they are
+  fixed, and thus, mono spaced. Therefore only a part of the font is
+  displayed. We can manually set the spacing for these fonts (this assumes you
+  have fixed aliased with mono as in question 3 above):
+ </P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"mono"&nbsp;<br>
+&nbsp;edit&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spacing&nbsp;=&nbsp;mono;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></LI
+><LI
+><P
+>  My Symbol, Webdings, etc. fonts do not show up!
+ </P
+><P
+>  For some reason some (symbol) fonts are not correctly recognized, and Xft
+  will show your default font, or a font which has the closest match (which
+  is generally not what you mean at all). For Adobe Symbol and MS-webdings I
+  did the following to get them working:
+ </P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"webdings"&nbsp;<br>
+&nbsp;edit&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antialias&nbsp;=&nbsp;false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encoding&nbsp;+=&nbsp;"glyphs-fontspecific";<br>
+<br>
+<br>
+&nbsp;match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"symbol"&nbsp;<br>
+&nbsp;edit&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antialias&nbsp;=&nbsp;false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encoding&nbsp;+=&nbsp;"glyphs-fontspecific";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+><P
+>  A useful way of figuring out these things is to activate debugging with:
+ </P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;export&nbsp;XFT_DEBUG=1024<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+><P
+>  This will generate a lot of output, especially if you have many fonts,
+  because it lists the properties and scores of every font available. You can
+  also use other values. For a nice summary of what happens (requested font,
+  XftConfig substitutions, X server additions and the finally matched font),
+  you can use XFT_DEBUG=2.
+ </P
+></LI
+><LI
+><P
+>  Why do my KDE programs start now soooo slooow?
+ </P
+><P
+>  The Xft mechanism in XFree prior to 4.1 had to parse the
+  <TT
+CLASS="FILENAME"
+>XftConfig</TT
+> file each time a program was started. And the
+  info of all these fonts had to be re-read. As of X 4.1.0, a cache is used
+  and starting applications using Xft is much faster. Especially if you have
+  many fonts this can be very useful. So, upgrading XFree86, and related
+  packages, is a good idea. 
+ </P
+></LI
+><LI
+><P
+> 
+   I have a LCD screen on my laptop, can I use sub-pixel hinting instead of
+   normal anti-aliasing?
+  </P
+><P
+>   Yes you can. Sub-pixel hinting uses colors instead of gray pixels to do the
+   AA. I do not have a LCD screen so I do not have any idea of how it looks
+   but you can play with the <SPAN
+CLASS="QUOTE"
+>"rgba"</SPAN
+> setting. Try:
+ </P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;match&nbsp;edit&nbsp;rgba=bgr;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+><P
+>   or use rgb if you have a different type of monitor. For vertical AA you can
+   try vbgr and vbgr.
+  </P
+></LI
+><LI
+><P
+> 
+   My fonts still look bad!
+  </P
+><P
+>   Good quality fonts are needed to start with. If you do not have some good
+   TrueType fonts, it is worth it to go and look for them on the Internet.
+   Other reasons why your fonts still look bad can be because of your build of
+   freetype2. Snapshots versions before 2.0.2 were compiled with an option
+   that had some patent issues. Therefore, the standard 2.0.2 and 2.0.3
+   compiles without this option. To fix this, download the freetype2 source
+   rpm and change in include/freetype/config/ftoption.h line 314:
+  </P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;&nbsp;#undef&nbsp;TT_CONFIG_OPTION_BYTECODE_INTERPRETER<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+><P
+>   to:
+  </P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;&nbsp;#define&nbsp;TT_CONFIG_OPTION_BYTECODE_INTERPRETER<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+><P
+>   and rebuild with this modified source. See the freetype2
+   <TT
+CLASS="FILENAME"
+>README</TT
+> file for details. Adobe Courier looks terrible
+   on my system, so I made an alias so that Lucida console is displayed
+   instead. If anyone can get it to display nicely I would appreciate knowing
+   about it. 
+  </P
+></LI
+></OL
+></P
+><P
+> This is my <TT
+CLASS="FILENAME"
+>XftConfig</TT
+>:</P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>#<br>
+#&nbsp;XftConfig<br>
+#<br>
+#&nbsp;By:&nbsp;Danny&nbsp;Tholen<br>
+#<br>
+#&nbsp;Use&nbsp;with&nbsp;Type1&nbsp;and&nbsp;TrueType&nbsp;fonts<br>
+#<br>
+<br>
+dir&nbsp;"/usr/X11R6/lib/X11/fonts/Type1"<br>
+dir&nbsp;"/usr/X11R6/lib/X11/fonts/drakfont"<br>
+dir&nbsp;"/usr/share/fonts/default/Type1"&nbsp;<br>
+<br>
+#<br>
+#&nbsp;alias&nbsp;'fixed'&nbsp;and&nbsp;'console'&nbsp;for&nbsp;'mono'<br>
+#&nbsp;(some&nbsp;programs&nbsp;ask&nbsp;for&nbsp;'mono'&nbsp;if&nbsp;they&nbsp;mean&nbsp;'fixed';)<br>
+#<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"fixed"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"mono";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"console"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"mono";<br>
+<br>
+<br>
+#<br>
+#Check&nbsp;users&nbsp;config&nbsp;file<br>
+#<br>
+includeif	&nbsp;&nbsp;&nbsp;&nbsp;"~/.xftconfig"<br>
+<br>
+<br>
+#<br>
+#&nbsp;Use&nbsp;TrueType&nbsp;fonts&nbsp;for&nbsp;defaults<br>
+#&nbsp;Danny:&nbsp;disabled<br>
+#match&nbsp;any&nbsp;family&nbsp;==&nbsp;"serif"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;+=&nbsp;"Times&nbsp;New&nbsp;Roman";<br>
+#match&nbsp;any&nbsp;family&nbsp;==&nbsp;"sans"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;+=&nbsp;"Verdana";<br>
+<br>
+<br>
+#<br>
+#&nbsp;Use&nbsp;lucida&nbsp;console&nbsp;as&nbsp;default&nbsp;fixed&nbsp;type&nbsp;font<br>
+#&nbsp;and&nbsp;set&nbsp;the&nbsp;spacing&nbsp;of&nbsp;"mono"&nbsp;to&nbsp;100,&nbsp;this<br>
+#&nbsp;fixes&nbsp;broken&nbsp;fonts&nbsp;which&nbsp;are&nbsp;fixed,&nbsp;but&nbsp;do&nbsp;not<br>
+#&nbsp;set&nbsp;mono-spacing.<br>
+match<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"mono"&nbsp;<br>
+edit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;family&nbsp;+=&nbsp;"lucida&nbsp;console";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;spacing&nbsp;=&nbsp;100;<br>
+<br>
+<br>
+#<br>
+#&nbsp;Alias&nbsp;between&nbsp;XLFD&nbsp;families&nbsp;and&nbsp;font&nbsp;file&nbsp;family&nbsp;name,&nbsp;prefer&nbsp;local&nbsp;fonts<br>
+#<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Charter"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;+=&nbsp;"Bitstream&nbsp;Charter";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Bitstream&nbsp;Charter"&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"Charter";<br>
+<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Lucidux&nbsp;Serif"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;+=&nbsp;"LuciduxSerif";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"LuciduxSerif"	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"Lucidux&nbsp;Serif";<br>
+<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Lucidux&nbsp;Sans"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;+=&nbsp;"LuciduxSans";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"LuciduxSans"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"Lucidux&nbsp;Sans";<br>
+<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Lucidux&nbsp;Mono"	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;+=&nbsp;"LuciduxMono";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"LuciduxMono"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"Lucidux&nbsp;Mono";<br>
+<br>
+<br>
+#<br>
+#&nbsp;TrueType&nbsp;font&nbsp;aliases<br>
+#<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Comic&nbsp;Sans"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;+=&nbsp;"Comic&nbsp;Sans&nbsp;MS";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Comic&nbsp;Sans&nbsp;MS"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"Comic&nbsp;Sans";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Trebuchet"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;+=&nbsp;"Trebuchet&nbsp;MS";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Trebuchet&nbsp;MS"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"Trebuchet";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Monotype"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"Monotype.com";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Andale&nbsp;Mono"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;+=&nbsp;"Monotype.com";<br>
+match&nbsp;any&nbsp;family&nbsp;==&nbsp;"Monotype.com"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;edit&nbsp;family&nbsp;=+&nbsp;"Andale&nbsp;Mono";<br>
+<br>
+<br>
+#&nbsp;Danny:<br>
+#&nbsp;set&nbsp;the&nbsp;AA&nbsp;for&nbsp;different&nbsp;fonts<br>
+#<br>
+#&nbsp;most&nbsp;TT&nbsp;fonts&nbsp;do&nbsp;not&nbsp;need&nbsp;to&nbsp;be&nbsp;aliased&nbsp;between<br>
+#&nbsp;8&nbsp;and&nbsp;15&nbsp;points,&nbsp;although&nbsp;this&nbsp;might&nbsp;be&nbsp;a&nbsp;matter&nbsp;of&nbsp;taste.<br>
+match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;size&nbsp;&#62;&nbsp;8<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;size&nbsp;&#60;&nbsp;15<br>
+edit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antialias&nbsp;=&nbsp;false;<br>
+<br>
+<br>
+#&nbsp;Danny:&nbsp;Courier&nbsp;looks&nbsp;terrible,&nbsp;and&nbsp;I<br>
+#&nbsp;cannot&nbsp;get&nbsp;most&nbsp;characters&nbsp;to&nbsp;fit&nbsp;nicely<br>
+#&nbsp;in&nbsp;their&nbsp;space.&nbsp;So&nbsp;I&nbsp;use&nbsp;courier&nbsp;10&nbsp;pitch<br>
+match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"courier"&nbsp;<br>
+edit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;family&nbsp;+=&nbsp;"courier&nbsp;10&nbsp;pitch";<br>
+<br>
+<br>
+#&nbsp;these&nbsp;are&nbsp;symbols,&nbsp;and&nbsp;for&nbsp;some&nbsp;reason&nbsp;this&nbsp;needs&nbsp;to&nbsp;be&nbsp;added!:<br>
+<br>
+match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"webdings"&nbsp;<br>
+edit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antialias&nbsp;=&nbsp;false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encoding&nbsp;+=&nbsp;"glyphs-fontspecific";<br>
+<br>
+match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"symbol"&nbsp;<br>
+edit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antialias&nbsp;=&nbsp;false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encoding&nbsp;+=&nbsp;"glyphs-fontspecific";<br>
+<br>
+match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"Standard&nbsp;Symbols&nbsp;L"&nbsp;<br>
+edit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antialias&nbsp;=&nbsp;false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encoding&nbsp;+=&nbsp;"glyphs-fontspecific";<br>
+<br>
+match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"dingbats"&nbsp;<br>
+edit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antialias&nbsp;=&nbsp;false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encoding&nbsp;+=&nbsp;"glyphs-fontspecific";<br>
+<br>
+match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"Cursor"&nbsp;<br>
+edit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antialias&nbsp;=&nbsp;false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encoding&nbsp;+=&nbsp;"glyphs-fontspecific";<br>
+<br>
+<br>
+#&nbsp;maybe&nbsp;arial&nbsp;looks&nbsp;better&nbsp;like&nbsp;this?:<br>
+match&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;family&nbsp;==&nbsp;"Arial"&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;size&nbsp;&#62;&nbsp;7<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;any&nbsp;size&nbsp;&#60;&nbsp;15<br>
+edit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;antialias&nbsp;=&nbsp;false;<br>
+<br>
+<br>
+#&nbsp;end<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></DIV
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="GTKAA">4.2.4. GTK and GNOME</H3
+><P
+> As mentioned above, KDE and QT do have solid anti-aliasing support with 
+ recent releases. GNOME-2 has just recently been released as of this writing 
+ (as of Aug 2002), and does have support for anti-aliasing, though is 
+ not in widespread use (yet).</P
+><P
+> There is also the gdkxft project available at 
+ <A
+HREF="http://sourceforge.net/projects/gdkxft/"
+TARGET="_top"
+>http://sourceforge.net/projects/gdkxft/</A
+>.
+ This will add anti-aliasing support to GTK+ 1.2 applications (only!). This is
+ a stand-alone library and not a patch. It will only effect GTK+ 1.x widgets
+ (many of them but not all). There are some limitations, but mostly it works
+ as advertized. Read the included <TT
+CLASS="FILENAME"
+>README</TT
+> closely, and
+ follow the instructions. An initial installation provides a good starting
+ point. I added some font families to <TT
+CLASS="FILENAME"
+>/etc/gdkxft.conf</TT
+>
+ and I used some of Danny's suggestions above, and it seems to work
+ <SPAN
+CLASS="APPLICATION"
+>mostly</SPAN
+>. It's a bit of a kludge, but quite a nice
+ kludge ;-) Note, sadly this project seems to be no longer maintained.&#13;</P
+><P
+> There is also a couple of ways to get this working with Mozilla! On the same
+ page above is a replacement library that can be substituted for the Mozilla 
+ library of the same name. Just a drop in replacement. But, this did not work
+ here (on Red Hat 7.2), it segfaulted. But building Mozilla from source with
+ the patch listed, did indeed work nicely! This step requires gdkxft to 
+ be working as well. So it's a two step process to get Mozilla working, but
+ worth the effort if you want the best looking pages IMHO. There are also 
+ development versions of Mozilla available from 
+ <A
+HREF="ftp://ftp.mozilla.org/pub/mozilla/nightly/experimental/xft/"
+TARGET="_top"
+>ftp://ftp.mozilla.org/pub/mozilla/nightly/experimental/xft/</A
+>
+ that have Xft/TrueType support (see <A
+HREF="apps.html#MOZILLA"
+>the section 
+ on Mozilla below</A
+>). Native Mozilla Xft support is probably working 
+ its way into mainstream releases. [Note: This should happen with Mozilla
+ 1.2.]&#13;</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN744">4.2.5. Afterword</H3
+><P
+> You've gone through all the steps, and verified that the
+ <SPAN
+CLASS="QUOTE"
+>"RENDER"</SPAN
+> extension is available, but you don't perceive a
+ difference? Well, maybe the applications themselves just aren't there yet,
+ and are not able to utilize these new features. Netscape, for 
+ instance, is not able to take advantage of anti-aliasing.
+ </P
+><P
+> So how to know what does and does not make use of anti-aliasing? A quick test
+ is to use something like xmag, or gimp, and enlarge the text considerably.
+ Look for diagonal lines, and if they are clearly stair-stepped with no
+ softened edges. If so, then while anti-aliasing is technically available, it
+ is not being used. With anti-aliasing you should see gradients instead of
+ well defined sharp edges. You can compare this with xterm and 
+ <SPAN
+CLASS="QUOTE"
+>"AA"</SPAN
+>:</P
+><P
+> <TT
+CLASS="LITERAL"
+> 
+ $ xterm -fa charter -fs 14
+ 
+ </TT
+></P
+><P
+> You can also turn on Xft debugging:&#13;</P
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;$&nbsp;export&nbsp;XFT_DEBUG=2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+><P
+> Then start apps from that same terminal. This will tell if anti-aliasing is 
+ active for each font as its processed. This also gives some insight into 
+ how Xft understands font names and other details.&#13;</P
+><P
+> One final point: anti-aliasing and TrueType are completely separate 
+ issues. One does not depend on the other, though both together can can
+ enhance appearance significantly. Especially, with good quality TrueType
+ fonts! But any font can potentially be anti-aliased.&#13;</P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN759">4.3. Red Hat 7.x and 8.x Differences</H2
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN761">4.3.1. Red Hat 7.x</H3
+><P
+> Red Hat 7.0 introduced some changes to X configuration over previous Red Hat
+ versions. It is also different from the stock XFree86 configuration as 
+ addressed above. Notable differences:</P
+><P
+>  <P
+></P
+><UL
+><LI
+><P
+>    Both XFree86 3.3.6 and 4.x are included. If upgrading you may wind up 
+    with 3.3.6. The X configuration file is <TT
+CLASS="FILENAME"
+>XF86Config</TT
+> for
+    3.3.6 and <TT
+CLASS="FILENAME"
+>XF86Config-4</TT
+> for 4.x. Of course, you'll need
+    to know which is which for editing and configuration purposes. 
+   
+   </P
+></LI
+><LI
+><P
+>    xfs is still handling all font duties. A default Red Hat 7.x installation
+    does not use the 'modules' section of XF86Config-4 for font handling.
+    Instead it relies on xfs, which has this capability built in. This is
+    different from a stock installation of XFree86 4.x where the X server does
+    all the font work -- including TrueType.
+ 
+   </P
+></LI
+><LI
+><P
+>    The socket for xfs is "unix/:7100" with RH 7.x, as opposed to "unix/:-1" in
+    previous versions (i.e. Red Hat 6.x).
+   
+   </P
+></LI
+><LI
+><P
+>    As of Red Hat 7.1, the xfs init script actually runs 
+    <B
+CLASS="COMMAND"
+>mkfontdir</B
+> and <B
+CLASS="COMMAND"
+>ttmkfdir</B
+> on 
+    font directories known to xfs. So this step is not necessary when 
+    new fonts are added. Just restart xfs.
+   </P
+></LI
+></UL
+>
+ </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="RH80">4.3.2. Red Hat 8.0</H3
+><P
+> Red Hat 8.0 still includes XFree86 4.2, but it includes some significant
+ changes! It is not clear at this time whether these are running changes 
+ to 4.2, or Red Hat has ported changes that are scheduled to appear in 
+ the soon to be released XFree86 4.3. Noteworthy changes:</P
+><P
+> <P
+></P
+><UL
+><LI
+><P
+>   XFree86 3.3.6 is no longer bundled.
+  </P
+></LI
+><LI
+><P
+>   <TT
+CLASS="FILENAME"
+>XF86Config-4</TT
+> is deprecated in favor of 
+   <TT
+CLASS="FILENAME"
+>XF86Config</TT
+> (X still uses the former if available
+   though).
+  </P
+></LI
+><LI
+><P
+>   The next generation of Xft is now used: Xft2! This means significant 
+   changes to font configuration, i.e <TT
+CLASS="FILENAME"
+>XftConfig</TT
+> is no
+   longer used in favor of <TT
+CLASS="FILENAME"
+>/etc/fonts/font.conf</TT
+>, which 
+   is now an xml document (with much of the same functionality). See 
+   man fontconfig, and fc-cache.
+  </P
+></LI
+><LI
+><P
+>   The preferred location for fonts is now
+   <TT
+CLASS="FILENAME"
+>/usr/share/fonts/</TT
+> and <TT
+CLASS="FILENAME"
+>~/.fonts/</TT
+>.
+   The system will automatically recognize, and include, any fonts (including
+   TrueType) in these locations. See
+   <TT
+CLASS="FILENAME"
+>/etc/fonts/fonts.conf</TT
+>.
+  </P
+></LI
+><LI
+><P
+>   Red Hat 8.0 of course includes GNOME-2, which has native anti-aliasing 
+   support for GTK apps.
+  </P
+></LI
+><LI
+><P
+>    The xfs font server is still being used. 
+  </P
+></LI
+></UL
+></P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="truetype.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="apps.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>TrueType Fonts</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Adjusting Fonts in Specific Applications</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

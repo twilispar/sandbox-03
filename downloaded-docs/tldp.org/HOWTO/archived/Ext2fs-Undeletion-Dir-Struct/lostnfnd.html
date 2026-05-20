@@ -1,0 +1,234 @@
+<HTML
+><HEAD
+><TITLE
+>If /lost+found not empty</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.57"><LINK
+REL="HOME"
+TITLE="Ext2fs Undeletion of Directory Structures mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Recalculation"
+HREF="recalc.html"><LINK
+REL="NEXT"
+TITLE="Final touch"
+HREF="final.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Ext2fs Undeletion of Directory Structures mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="recalc.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="final.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="LOSTNFND"
+>10. If /lost+found not empty</A
+></H1
+><P
+>      Some of the directory and files may not pop-up at their right places.
+      Instead they will be located in /lost+found with names after their inode
+      numbers.
+    </P
+><P
+>      In this case the pointer at the ".." directory entry probably have been
+      increased and will point to one of the later entrys in the directory (of
+      some reason I do not know, maybe it is a fs bug).
+    </P
+><P
+>      Examine <I
+CLASS="EMPHASIS"
+>pass 3</I
+> (where directory connectivity is
+      checked) of "e2fsck.out". There you will find which directories that are
+      affected. Dump those to disk (as described in <A
+HREF="find.html"
+>Section 4</A
+>).
+    </P
+><P
+>      Run
+      <A
+HREF="http://www.matematik.su.se/~tomase/ext2fs-undeletion/"
+TARGET="_top"
+>      <I
+CLASS="EMPHASIS"
+>e2dirana</I
+></A
+>
+      both with and without the <I
+CLASS="EMPHASIS"
+>p</I
+> parameter (it changes the
+      pointer at the ".." directory entry). Here <I
+CLASS="EMPHASIS"
+>dump</I
+> is
+      the dumped directory.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # e2dirana dump &#62; dump1
+        # e2dirana -p dump &#62; dump2</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Compare the outputs.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # diff dump1 dump2</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      If they are not the same there are missing files in that directory. Then
+      move those files from /lost+found to their right place. Here
+      <I
+CLASS="EMPHASIS"
+>dest</I
+> is a symbolic link to the destination directory.
+      Put the output in a script and run it if you agree.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # diff dump1 dump2 |\
+          tail -n $[`diff dump1 dump2 | wc -l`-1] | cut -b 3- |\
+          sed -e 's/^\([^ ]*\) \(.*\)$/mv lost+found\/#\1 dest\/"\2"/' |\
+          sed -e 's/!/"\\\!"/g'</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Repeat all this until /lost+found is empty.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="recalc.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="final.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Recalculation</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Final touch</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

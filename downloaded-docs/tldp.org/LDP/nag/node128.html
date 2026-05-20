@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Remote Procedure Call</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node129.html">Configuring the r Commands</A>
+<B>Up:</B> <A HREF="node124.html">Various Network Applications</A>
+<B> Previous:</B> <A HREF="node127.html">The services and protocols </A>
+<BR> <P>
+<H1><A NAME="SECTION0011400000">Remote Procedure Call</A></H1>
+
+
+A very general mechanism for client-server applications is provided by
+RPC, the <em>Remote Procedure Call</em> package. RPC was developed by Sun
+Micrsystems, and is a collection of tools and library functions.
+Important applications built on top of RPC are NFS, the Network
+Filesystem, and NIS, the Network Information System, both of which will
+be introduced in later chapters.
+<P>
+<A NAME="4756"></A>
+<A NAME="4883"></A>
+An RPC server consists of a collection of procedures that client may
+call by sending an RPC request to the server, along with the procedure
+parameters. The server will invoke the indicated procedure on behalf of
+the client, handing back the return value, if there is any.  In order to
+be machine-independent, all data exchanged between client and server is
+converted to a so-called <em>External Data Representation</em> format (XDR)
+by the sender, and converted back to the machine-local representation by
+the receiver.
+<P>
+Sometimes, improvements to an RPC application introduce incompatible
+changes in the procedure call interface. Of course, simply changing the
+server would crash all application that still expect the original
+behavior.  Therefore, RPC programs have version numbers assigned to
+them, usually starting with-1, and with each new version of the RPC
+interface this counter will be bumped. Often, a server may offer several
+versions simultaneously; clients then indicate by the version number in
+their requests which implementation of the service they want to use.
+<P>
+<A NAME="4884"></A>
+<A NAME="4760"></A>
+The network communication between RPC servers and clients is somewhat
+peculiar. An RPC server offers one or more collections of procedures;
+each set is being called a <em>program</em>, and is uniquely identified
+by a <em>program number</em>. A list mapping service names to program numbers
+is usually kept in /etc/rpc, an excerpt of which is reproduced below
+in figure-<A HREF="node128.html#rpcfig"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+<P><A NAME="4885"></A><BR>
+<STRONG>Figure:</STRONG> 
+  <A NAME="rpcfig"></A>
+  A sample /etc/rpc file.
+ <BR>
+<P>
+<P>
+In TCP/IP networks, the authors of RPC were faced with  the problem of
+mapping program numbers to generic network services. They
+chose to have each server provide both a TCP and a UDP port for each
+program and each version. Generally, RPC applications will use UDP when
+sending data, and only fall back to TCP when the data to be transferred
+doesn't fit into a single UDP datagram.
+<P>
+<A NAME="4771"></A>
+<A NAME="4772"></A>
+<A NAME="4886"></A>
+Of course, client programs have to have a way to find out which port
+a program number maps to. Using a configuration file for this would be
+too inflexible; since RPC applications don't use reserved ports, there's
+no guarantee that a port originally meant to be used by our database
+application hasn't been taken by some other process. Therefore, RPC
+applications pick any port they can get, and register it with the so-called
+<em>portmapper daemon</em>. The latter acts as a service broker for all
+RPC servers running on its machine: a client that wishes to contact
+a service with a given program number will first query the portmapper
+on the server's host which returns the TCP and UDP port numbers the
+service can be reached at.
+<P>
+<A NAME="4887"></A>
+This method has the particular drawback that it introduces a single point
+of failure, much like the inetd daemon does for the standard
+Berkeley services. However, this case is even a little worse, because
+when the portmapper dies, all RPC port information is lost; this
+usually means you have to restart all RPC servers manually, or reboot
+the entire machine.
+<P>
+On , the portmapper is called rpc.portmap and resides
+in /usr/sbin. Other than making sure it is started form
+rc.inet2, the portmapper doesn't require any configuration work.
+<P>
+<A NAME="4781"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node129.html">Configuring the r Commands</A>
+<B>Up:</B> <A HREF="node124.html">Various Network Applications</A>
+<B> Previous:</B> <A HREF="node127.html">The services and protocols </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

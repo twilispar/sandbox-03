@@ -1,0 +1,375 @@
+<HTML
+><HEAD
+><TITLE
+>Linux Sendmail Server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Mail Network"
+HREF="soser-mailn.html"><LINK
+REL="PREVIOUS"
+TITLE="Software -Server/Mail Network"
+HREF="soser-mailn.html"><LINK
+REL="NEXT"
+TITLE="Compile and optimize"
+HREF="chap22sec174.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="soser-mailn.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 22. Software -Server/Mail Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap22sec174.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN11678"
+>22.1. Linux Sendmail Server</A
+></H1
+><P
+>&#13;         In our configuration and installation we'll provide you two different configurations that you can set up for Sendmail; 
+         <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+>Central Mail Hub Relay,</DT
+><DD
+><P
+>&#13;          The Central Mail Hub Relay Server configuration will be used for your server where the assigned task is to send, receive and relay all mail for all local or neighbor client and server mail machines you may have on your network. 
+          </P
+></DD
+><DT
+>local or neighbor clients and servers.</DT
+><DD
+><P
+>&#13;         A local or neighbor client and server refer to all other local server or client machines on your network that run Sendmail and send all outgoing mail to the Central Mail Hub for future delivery. 
+         This kind of internal client never receives mail directly via the Internet; Instead, all mail from the Internet for those computers is kept on the Mail Hub server. 
+         </P
+></DD
+></DL
+></DIV
+>
+         It is a good idea to run one Central Mail Hub Server for all computers on your network; this architecture will limit the task managements on the server and client machines, and improve the security of your site.
+         </P
+><P
+>&#13;         You can configure the neighbor Sendmail so that it accepts only mail that is generated locally, thus insulating neighbor machines for easier security. The Gateway server outside the firewall, or part of it acts as a 
+         proxy and accepts external mail via its Firewall rules file that is destined for internal delivery from the outside, and forwards it to the Central Mail Hub Server. Also note that the Gateway server is configured like 
+         a neighbor Sendmail server to never accept incoming mail from the outside the <TT
+CLASS="literal"
+>Internet</TT
+>.
+         </P
+><P
+>&#13;         Here is a graphical representation of the Sendmail configuration used in this book, with different settings: 
+
+         <P
+></P
+><UL
+><LI
+><P
+>&#13;         Central Mail Hub Relay, 
+         </P
+></LI
+><LI
+><P
+>&#13;         local or neighbor <EM
+>client and servers</EM
+> on different servers. 
+         </P
+></LI
+></UL
+>
+         Lots of possibilities exist, and depends on your need and network architecture.
+         <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Sendmail-Schema.gif"
+ALT="
+           Sendmail configuration examples
+         "
+></IMG
+></P
+></DIV
+>
+         </P
+><P
+>&#13;         These installation instructions assume
+         <P
+></P
+><UL
+><LI
+><P
+>&#13;         Commands are Unix-compatible.
+         </P
+></LI
+><LI
+><P
+>&#13;         The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>, <EM
+>other paths are possible</EM
+>.
+         </P
+></LI
+><LI
+><P
+>&#13;         Installations were tested on Red Hat Linux 6.1 and 6.2.
+         </P
+></LI
+><LI
+><P
+>&#13;         All steps in the installation will happen in super-user account root.
+         </P
+></LI
+><LI
+><P
+>&#13;         Sendmail version number is 8.10.1
+         </P
+></LI
+></UL
+>
+         </P
+><P
+>&#13;         These are the package(s) you need to download and they are available here
+         <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;         Sendmail Homepage: <A
+HREF="appendixa.html#prtinxfp19"
+>http://www.sendmail.org/</A
+>
+         </TD
+></TR
+><TR
+><TD
+>&#13;         Sendmail FTP Sire: <A
+HREF="appendixa.html#prtinxfp19"
+>204.152.184.34</A
+>
+         </TD
+></TR
+><TR
+><TD
+>&#13;         You must be sure to download: sendmail.8.10.1.tar.gz
+         </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+         </P
+><P
+>&#13;         Before you decompress the tarballs, it is a good idea to make a list of files on the system before you install Sendmail, and one afterwards, and then compare them using diff to find out what file it placed 
+         where. Simply run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Sendmail1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Sendmail2</B
+></TT
+> after you install the software, and 
+         use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>Sendmail1 Sendmail2 &#62; Sendmail-Installed</B
+></TT
+> to get a list of what changed.
+         </P
+><P
+>&#13;         You need to compile, so decompress the tarball (tar.gz). which you have downloaded:d
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>cp</B
+> sendmail.version.tar.gz /var/tmp
+         [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+         [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf sendmail.version.tar.gz
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         Before you compile it is always better to configure to your needs, move into the new Sendmail directory and edit the <TT
+CLASS="filename"
+>smrsh.c</TT
+> file <B
+CLASS="command"
+>vi</B
+> +77 <TT
+CLASS="filename"
+>smrsh/smrsh.c</TT
+> and change the line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         # define CMDDIR         "/usr/adm/sm.bin"
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         # define CMDDIR        "/etc/smrsh"
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         This modification specifies the default search path for commands runs by smrsh program. It allows us to limit the location where these programs may reside.
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="soser-mailn.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap22sec174.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software -Server/Mail Network</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soser-mailn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile and optimize</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

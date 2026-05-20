@@ -1,0 +1,413 @@
+<HTML
+><HEAD
+><TITLE
+>Linux GnuPG</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities/Management & Limitation"
+HREF="soft-limits.html"><LINK
+REL="PREVIOUS"
+TITLE="Software -Securities/Management & Limitation"
+HREF="soft-limits.html"><LINK
+REL="NEXT"
+TITLE="Often used Commands"
+HREF="chap19sec153.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="soft-limits.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 19. Software -Securities/Management &#38; Limitation</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap19sec153.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch19sgpgp"
+>19.1. Linux GnuPG</A
+></H1
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN9993"
+></A
+><P
+><B
+>According to the [<SPAN
+CLASS="citation"
+>official GnuPG README</SPAN
+>] file:</B
+></P
+><P
+>&#13;          GnuPG is GNU's tool for secure communication and data storage. It can be used to encrypt data and to create digital signatures. It includes an advanced key management facility and is compliant with the proposed OpenPGP 
+          Internet standard as described in RFC2440.
+          Because GnuPG does not use any patented algorithm it cannot be compatible with PGP2 versions. PGP 2.x uses only <SPAN
+CLASS="acronym"
+>IDEA</SPAN
+> (which is patented worldwide) and <SPAN
+CLASS="acronym"
+> RSA</SPAN
+> (which is patented in the United 
+          States until Sep 20, 2000).
+          </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;          These installation instructions assume:
+          <P
+></P
+><UL
+><LI
+><P
+>&#13;          Commands are Unix-compatible.
+          </P
+></LI
+><LI
+><P
+>&#13;          The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+> -<EM
+>other paths are possible</EM
+>.
+          </P
+></LI
+><LI
+><P
+>&#13;          Installations were tested on Red Hat Linux 6.1 and 6.2.
+          </P
+></LI
+><LI
+><P
+>&#13;          All steps in the installation will happen in super-user account root.
+          </P
+></LI
+><LI
+><P
+>&#13;          GnuPG version number is 1.0.1
+          </P
+></LI
+></UL
+>
+          </P
+><P
+>&#13;          These are the Package(s) you must be sure to download:
+          <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;          GnuPG Homepage:<A
+HREF="appendixa.html#prtinxfp19er"
+> http://www.gnupg.org/</A
+>
+          </TD
+></TR
+><TR
+><TD
+>&#13;          Package to download: gnupg-1.0.1.tar.gz
+          </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+          </P
+><P
+>&#13;          You must decompress the tarball to compile, it is a good idea to make a list of files on the system before you install it, and one afterwards, and then compare them using diff to find out what file it placed where. Simply 
+          run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; GnuPG1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; GnuPG2</B
+></TT
+> after you install the tarball, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>GnuPG1 GnuPG2 &#62; GnuPG-Installed</B
+></TT
+> 
+          to get a list of what changed.          
+          Decompress the tarball (tar.gz):
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>cp</B
+> gnupg-version.tar.gz /var/tmp
+          [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+          [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf gnupg-version.tar.gz
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;          You need to Compile and Optimize, move into the new GnuPG dir and type the following on your terminal:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          CC="egcs" \
+          CFLAGS="-O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions" \
+          ./configure \
+          --prefix=/usr \
+          --enable-shared
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/gnupg-1.0.1# <B
+CLASS="command"
+>make</B
+>
+          [root@deep ]/gnupg-1.0.1# <B
+CLASS="command"
+>make check</B
+>
+          [root@deep ]/gnupg-1.0.1# <B
+CLASS="command"
+>make install</B
+>
+          [root@deep ]/gnupg-1.0.1# <B
+CLASS="command"
+>strip</B
+> /usr/bin/gpg
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+><P
+>&#13;            <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;          The <B
+CLASS="command"
+>make</B
+> command compiles all source files into executable binaries, 
+          </TD
+></TR
+><TR
+><TD
+>&#13;          The <B
+CLASS="command"
+>make check</B
+> will run any self-tests that come with the package 
+          </TD
+></TR
+><TR
+><TD
+>&#13;          finally, the <B
+CLASS="command"
+>make install</B
+> command installs the binaries and any supporting files into the appropriate locations. 
+          </TD
+></TR
+><TR
+><TD
+>&#13;          The <B
+CLASS="command"
+>strip</B
+> command will reduce the size of the gpg binary for better performance.
+          </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+          </P
+><P
+>&#13;          Cleanup after work
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+          [root@deep ]/tmp# <B
+CLASS="command"
+>rm</B
+> -rf gnupg-version/ gnupg-version.tar.gz
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          The <B
+CLASS="command"
+>rm</B
+> command as used above will remove all the source files we have used to compile and install GnuPG. It will also remove the GnuPG compressed archive from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="soft-limits.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap19sec153.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software -Securities/Management &#38; Limitation</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-limits.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Often used Commands</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

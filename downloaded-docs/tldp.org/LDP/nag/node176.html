@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Providing UUCP Accounts</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node177.html">Protecting Yourself Against Swindlers</A>
+<B>Up:</B> <A HREF="node174.html">Setting up your System </A>
+<B> Previous:</B> <A HREF="node175.html">Setting up getty</A>
+<BR> <P>
+<H2><A NAME="SECTION0014520000">Providing UUCP Accounts</A></H2>
+<A NAME="uucpdialinaccounts"></A>
+Next, you have to set up user accounts that let remote sites log into
+your system and establish a UUCP connection. Generally, you will provide
+a separate login name to each system that polls you.  When setting up an
+account for system pablo, you would probably give it
+Upablo as the user name.
+<P>
+For systems that dial in through the serial port, you usually have to
+add these accounts to the system password file, /etc/passwd. A
+good practice is to put all UUCP logins in a special group such as
+uuguest.  The account's home directory should be set to the public
+spool directory /var/spool/uucppublic; its login shell must be uucico.
+<P>
+If you have the shadow password suite installed, you can do this with
+the useradd command:
+<PRE>
+           # useradd -d /var/spool/uucppublic -G uuguest -s /usr/lib/uucp/uucic
+</PRE>
+If you don't use the shadow password suite, you probably have to edit
+/etc/passwd by hand, adding a line like that shown below, where
+5000 and 150 are the numerical uid and gid assigned to user
+Upablo and group uuguest, respectively.
+<PRE>
+           Upablo:x:5000:150:UUCP Account:/var/spool/uucppublic:/usr/lib/uucp/u
+ </PRE>
+After installing the account, you have to activate it by setting its
+password with the passwd command.
+<P>
+To serve UUCP systems that connect to your site over TCP, you have to
+set up inetd to handle incoming connections on the
+uucp port.  You do this by adding the following line to
+/etc/inetd.conf:<A HREF="footnode.html#6623"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<PRE>
+           uucp   stream  tcp   nowait  root  /usr/sbin/tcpd  /usr/lib/uucp/uuc
+</PRE>
+The -l option makes uucico perform its own login
+authorization. It will prompt for a login name and a password just like the
+standard login program, but will rely on its private password
+database instead of /etc/passwd.  This private password file is
+named /usr/lib/uucp/passwd and contains pairs of login names and
+passwords:
+<PRE>
+           Upablo  IslaNegra
+           Ulorca  co'rdoba
+</PRE>
+Of course, this file must be owned by uucp and have permissions
+of 600.
+<P>
+If this database sounds like such a good idea you would like to use on
+normal serial logins, too, you will be disappointed to hear that this
+isn't possible at the moment without major contortions. First off, you
+need Taylor UUCP-1.05 for this, because it allows getty to pass
+the login name of the calling user to uucico using the
+-u option.<A HREF="footnode.html#6626"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> Then, you have to trick the getty you are using into invoking
+uucico instead of the usual /bin/login. With
+getty_ps, you can do this by setting the LOGIN option in
+the configuration file. However, this disables interactive logins
+altogether.  mgetty, on the other hand, has a nice feature that
+allows you to invoke different login commands based on the name the user
+provided. For instance, you can tell mgetty to use uucico for
+all users that provide a login name beginning with a capital U, but let
+everyone else be handled by the standard login command.
+<P>
+To protect your UUCP users from callers giving a false system name
+and snarfing all their mail, you should add called-login
+commands to each system entry in the sys file. This is
+described in section-<A HREF="#uucpsecuritycalledlogin"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> above.
+<P>
+<A NAME="6386"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node177.html">Protecting Yourself Against Swindlers</A>
+<B>Up:</B> <A HREF="node174.html">Setting up your System </A>
+<B> Previous:</B> <A HREF="node175.html">Setting up getty</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

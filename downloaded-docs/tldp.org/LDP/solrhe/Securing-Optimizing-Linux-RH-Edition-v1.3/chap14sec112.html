@@ -1,0 +1,380 @@
+<HTML
+><HEAD
+><TITLE
+>sXid</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Security/Monitoring"
+HREF="soft-secmonitor.html"><LINK
+REL="PREVIOUS"
+TITLE="Software -Security/Monitoring"
+HREF="soft-secmonitor.html"><LINK
+REL="NEXT"
+TITLE="Configure and Optimize sXid"
+HREF="chap14sec113.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="soft-secmonitor.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 14. Software -Security/Monitoring</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap14sec113.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="prt5ch2s1Xd"
+>14.1. sXid</A
+></H1
+><P
+>&#13;         <SPAN
+CLASS="abbrev"
+>SUID/SGID</SPAN
+> files can be a security hazard. To reduce the risks, we have previously already removed the <TT
+CLASS="literal"
+>s</TT
+> bits from root-owned programs that won't absolutely require such privilege, but future and existing 
+         files may be set with these <TT
+CLASS="literal"
+>s</TT
+> bits enabled without your notification. 
+         </P
+><P
+>&#13;         sXid is an all in one <TT
+CLASS="literal"
+>suid/sgid</TT
+> monitoring program designed to be run from cron on a regular basis. Basically it tracks any changes in 
+         your <TT
+CLASS="literal"
+>s[ug]id</TT
+> files and folders. If there are any new ones, ones that aren't set any more, or they have changed bits or other modes then it reports the changes in an easy to read format via email or on the 
+         command line. sXid will automate the task to find all <SPAN
+CLASS="abbrev"
+>SUID/SGID</SPAN
+> on your server and report them to you. Once installed you can forget it and it will do the job for you.
+         </P
+><P
+>&#13;         These installation instructions assume the following:
+         <P
+></P
+><UL
+><LI
+><P
+>&#13;         Commands are Unix-compatible.
+         </P
+></LI
+><LI
+><P
+>&#13;         The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+> other paths are possible.
+         </P
+></LI
+><LI
+><P
+>&#13;         Installations were tested on Red Hat Linux 6.1 and 6.2.
+         </P
+></LI
+><LI
+><P
+>&#13;         All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+         </P
+></LI
+><LI
+><P
+>&#13;         sXid version number as of this writing is <TT
+CLASS="literal"
+>4.0.1</TT
+> 
+         </P
+></LI
+></UL
+>
+         Packages can be dowloaded from the sXid <SPAN
+CLASS="acronym"
+>FTP</SPAN
+> Site:<A
+HREF="appendixa.html#prtinxfp8"
+>ftp://marcus.seva.net/pub/sxid/</A
+> and You must be sure to download: sxid_4.0.1.tar.gz or whatever the latest version is.
+         </P
+><DIV
+CLASS="warning"
+><P
+></P
+><TABLE
+CLASS="warning"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Warning.gif"
+ALT="Warning"
+></IMG
+></SPAN
+></B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>&#13;         The instructions explained here in this book are applicable to the version number mentioned and you need to consult the <TT
+CLASS="filename"
+>README</TT
+> and/or <TT
+CLASS="filename"
+>INSTALL</TT
+> with in the tarball of the version you have downloaded for any changes, additions and deletions <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+>. 
+         </P
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+         It is a good idea to make a list of files on the system before you install sXid, and one afterwards, and then compare them using diff to find out what file it placed where. Simply run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; sXid1</B
+></TT
+> before 
+         and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; sXid2</B
+></TT
+> after you install the software, and use <TT
+CLASS="userinput"
+><B
+>diff sXid1 sXid2 &#62; sXid-Installed</B
+></TT
+> to get a list of what changed.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>        
+         Decompress the tarball <TT
+CLASS="literal"
+>tar.gz</TT
+>.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>cp</B
+> sxid_version.tar.gz /var/tmp/
+         [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /var/tmp
+         [root@deep ] /tmp#<B
+CLASS="command"
+>tar</B
+> xzpf sxid_version.tar.gz
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         To Compile and Optimize move into the new sXid directory and type the following commands on your terminal:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep tmp]#<B
+CLASS="command"
+>cd</B
+> sxid-4.0.1
+         [root@deep ] /sxid-4.0.1#<B
+CLASS="command"
+>make install</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The above commands will configure the software to ensure your system has the necessary functionality and libraries to successfully compile the package, compile all source files into executable binaries, and then install the binaries and any 
+         supporting files into the appropriate locations. Please do a cleanup later:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /var/tmp
+         [root@deep ] /tmp#<B
+CLASS="command"
+>rm</B
+> -rf sxid-version/ sxid_version_tar.gz
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         The <B
+CLASS="command"
+>rm</B
+> command as used above will remove all the source files we have used to compile and install sXid. It will also remove the sXid compressed archive from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="soft-secmonitor.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap14sec113.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software -Security/Monitoring</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-secmonitor.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure and Optimize sXid</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,301 @@
+<HTML
+><HEAD
+><TITLE
+>Often used Commands</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Set Limits using Qouta"
+HREF="quota.html"><LINK
+REL="PREVIOUS"
+TITLE="Assign quota for a particular group"
+HREF="chap20sec159.html"><LINK
+REL="NEXT"
+TITLE="Software -Networking"
+HREF="soft-netwrkng.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap20sec159.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 20. Set Limits using Qouta</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="soft-netwrkng.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN10481"
+>20.5. Often used Commands</A
+></H1
+><P
+>&#13;              The commands listed below are some that we use often, but many more exist. Check the man page for more details and information.
+            </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Quota. </B
+>
+
+                Quota displays users' disk usage and limits on a file system.
+                To display user disk usage and limits, use the command:
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                  [root@deep] /# <B
+CLASS="command"
+>quota</B
+> -u wahib
+                </PRE
+></TD
+></TR
+></TABLE
+>
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                  Disk quotas for user wahib (uid 501):
+                  Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
+                  /dev/sda6    6001*   6000       0    none       7       0       0
+                </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+              </P
+></DIV
+><P
+>&#13;                To display group quotas for the group of which the user is a member, use the command:
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                  [root@deep] /# <B
+CLASS="command"
+>quota</B
+> -g wahib
+                </PRE
+></TD
+></TR
+></TABLE
+>
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                  Disk quotas for group wahib (gid 501):
+                  Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
+                  /dev/sda6    5995*   5000       0    none       1       0       0
+                </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+                If the group quota is not set for the user specified, you will receive the following message: 
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                  Disk quotas for group wahib (gid 501): none
+                </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+              </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Repquota . </B
+>
+                Repquota produces summarized quota information of the disk usage and quotas for the specified file systems. Also, it prints for each user the current number of files and amount of space used (in kilobytes).
+
+                Here is a sample output repquota gives <EM
+>you results may vary</EM
+>:
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                  [root@deep] /# <B
+CLASS="command"
+>repquota</B
+> -a
+                </PRE
+></TD
+></TR
+></TABLE
+>
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                             Block limits               				File limits
+                  User        	    	used    	soft    	hard  	grace  	used  	soft    	hard		grace
+                  Roo		--	21       	0       	0       4    	0   	0
+                  Named	        --	6               0       	0       5     	0       0
+                  Admin	        --  	388657	        0       	0       21      21      0     		0
+                  Wahib	        --    	6001            0       	0       7     	0     	0
+
+                             Block limits               				File limits
+                  User      	      	used    	soft    	hard  	grace    	used  	soft	hard  	        grace
+                  root      	--      21       	0       	0       4     	        0	0
+                  named     	--      6       	0       	0       5     	        0       0
+                  admin     	--  	388657	        0       	0       2121            0       0
+                  wahib     	--    	6001    	6000       	0   	none            7	0   	0
+                </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+              </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap20sec159.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="soft-netwrkng.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Assign quota for a particular group</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="quota.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Software -Networking</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

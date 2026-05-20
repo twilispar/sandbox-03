@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The inetd Super-Server</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node126.html">The tcpd access control </A>
+<B>Up:</B> <A HREF="node124.html">Various Network Applications</A>
+<B> Previous:</B> <A HREF="node124.html">Various Network Applications</A>
+<BR> <P>
+<H1><A NAME="SECTION0011100000">The inetd Super-Server</A></H1>
+Frequently, services are performed by so-called <em>daemons</em>. A daemon
+is a program that opens a certain port, and waits for incoming
+connections.  If one occurs, it creates a child process which accepts
+the connection, while the parent continues to listen for further
+requests.  This concept has the drawback that for every service offered,
+a daemon has to run that listens on the port for a connection to occur,
+which generally means a waste of system resources like swap space.
+<P>
+Thus, almost all  installations run a ``super-server'' that
+creates sockets for a number of services, and listens on all of them
+simultaneously using the select(2) system call. When a remote
+host requests one of the services, the super-server notices this and
+spawns the server specified for this port.
+<P>
+<A NAME="4856"></A>
+<A NAME="4857"></A>
+<A NAME="4858"></A>
+The super-server commonly used is inetd, the Internet Daemon.
+It is started at system boot time, and takes the list of services it
+is to manage from a startup file named /etc/inetd.conf.  In
+addition to those servers invoked, there are a number of trivial
+services which are performed by inetd itself called <em>internal
+services</em>. They include chargen which simply generates a string of
+characters, and daytime which returns the system's idea of the time
+of day.
+<P>
+An entry in this file consists of a single line made up of the
+following fields:
+<Pre>
+           service type protocol wait user server cmdline
+
+</Pre>
+The meaning of each field is as follows:
+<dl>
+        <dt><b>service</b>  <dd>gives the service name. The service name has to be translated
+                to  a  port number by looking it up in the /etc/services file.
+                This file will be described in section 10.3 below.
+
+
+           <dt><b>type</b><dd> specifies  a  socket  type,  either  stream  (for  connection-
+                oriented  protocols)  or dgram (for datagram protocols).  TCP-
+                based services should therefore always use stream, while  UDP-
+                based services should always use dgram.
+
+
+       <dt><b>protocol</b><dd>   names  the transport protocol used by the service. This must be a valid protocol name found in  the  protocols  file,  also
+                explained below.
+
+          <dt><b>wait</b><dd> This  option  applies  only to dgram sockets. It may be either
+                wait or nowait. If wait is specified, inetd will only  execute
+                one  server  for the specified port at any time. Otherwise, it
+                will immediately continue to listen on the port after  execut-
+                ing the server.
+
+
+                     This  is useful for ``single-threaded'' servers that read
+                all incoming datagrams until no more arrive,  and  then  exit.
+                Most RPC servers are of this type and should therefore specify
+                wait.  The opposite type, ``multi-threaded'' servers, allow an
+                unlimited  number  of  instances  to run concurrently; this is
+                only rarely used. These servers should specify nowait.
+
+
+                     stream sockets should always use nowait.
+
+
+           <dt><b>user</b><dd> This is the login id of  the  user  the  process  is  executed
+                under.   This  will frequently be the root user, but some ser-
+                vices may use different accounts. It is a very  good  idea  to
+                apply the principle of least privilege here, which states that
+                you shouldn't run a command under a privileged account if  the
+                program  doesn't  require  this  for  proper functioning.  For
+                example, the NNTP news server will run as news, while services
+                that  may  pose  a  security risk (such as tftp or finger) are
+                often run as nobody.
+
+
+         <dt><b>server</b><dd> gives the full path name of the server program to be executed.
+                Internal services are marked by the keyword internal.
+
+
+        <dt><b>cmdline </b><dd> This  is  the  command  line  to be passed to the server. This
+                includes argument 0, that is the command name.  Usually,  this
+                will  be  the  program  name of the server, unless the program
+                behaves differently when invoked by a different name.
+
+
+                     This field is empty for internal services.
+
+</dl>
+<P><A NAME="4861"></A>
+<STRONG>Figure:</STRONG> 
+  <A NAME="applfiginetdconf">A sample /etc/inetd.conf file</A>
+<pre>
+                #
+                # inetd services
+                ftp       stream tcp nowait root   /usr/sbin/ftpd    in.ftpd -l
+                telnet    stream tcp nowait root   /usr/sbin/telnetd in.telnetd -b/etc/issue
+                #finger    stream tcp nowait bin    /usr/sbin/fingerd in.fingerd
+                #tftp      dgram  udp wait   nobody /usr/sbin/tftpd   in.tftpd
+                #tftp      dgram  udp wait   nobody /usr/sbin/tftpd   in.tftpd /boot/diskless
+                login     stream tcp nowait root   /usr/sbin/rlogind in.rlogind
+                shell     stream tcp nowait root   /usr/sbin/rshd    in.rshd
+                exec      stream tcp nowait root   /usr/sbin/rexecd  in.rexecd
+                #
+                #       inetd internal services
+                #
+                daytime   stream tcp nowait root internal
+                daytime   dgram  udp nowait root internal
+                time      stream tcp nowait root internal
+                time      dgram  udp nowait root internal
+                echo      stream tcp nowait root internal
+                echo      dgram  udp nowait root internal
+                discard   stream tcp nowait root internal
+                discard   dgram  udp nowait root internal
+                chargen   stream tcp nowait root internal
+                chargen   dgram  udp nowait root internal
+
+</Pre>
+<A NAME="4621"></A>
+<A NAME="4862"></A>
+The finger service is commented out, so that it is not available.
+This is often done for security reasons, because may be used by
+attackers to obtain names of users on your system.
+<P>
+<A NAME="4863"></A>
+<A NAME="4627"></A>
+<A NAME="4864"></A>
+The tftp is shown commented out as well. tftp implements
+the <em>Primitive File Transfer Protocol</em> that allows to transfer any
+world-readable files from your system without password checking etc.
+This is especially harmful with the /etc/passwd file, even more
+so when you don't use shadow password.
+<P>
+TFTP is commonly used by diskless clients and X-terminals to download
+their code from a boot server. If you need to run tftpd for this
+reason, make sure to limit its scope to those directories clients will
+retrieve files from by adding those directory names to tftpd's
+command line. This is shown in the second tftp line in the
+example.
+<A NAME="4865"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node126.html">The tcpd access control </A>
+<B>Up:</B> <A HREF="node124.html">Various Network Applications</A>
+<B> Previous:</B> <A HREF="node124.html">Various Network Applications</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

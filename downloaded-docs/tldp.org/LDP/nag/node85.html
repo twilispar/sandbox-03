@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Resolver Robustness</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node86.html">Running named</A>
+<B>Up:</B> <A HREF="node81.html">The Resolver Library</A>
+<B> Previous:</B> <A HREF="node84.html">Configuring Name Server Lookups-- </A>
+<BR> <P>
+<H2><A NAME="SECTION008140000">Resolver Robustness</A></H2>
+<A NAME="resolvrobustness"></A>
+<A NAME="3378"></A>
+If you are running a LAN inside a larger network, you definitely should
+use central name servers if they are available. The advantage of this is
+that these will develop rich caches, since all queries are forwarded to
+them. This scheme, however has a drawback: when a fire recently
+destroyed the backbone cable at our university, no more work was
+possible on our department's LAN, because the resolver couldn't reach
+any of the name servers anymore. There was no logging in on X-terminals
+anymore, no printing, etc.
+<P>
+Although it is not very common for campus backbones to go down in 
+flames, one might want to take precautions against cases like these.
+<P>
+One option is to set up a local name server that resolves hostnames from
+your local domain, and forwards all queries for other hostnames to the
+main servers. Of course, this is applicable only if you are running
+your own domain.
+<P>
+Alternatively, you can maintain a backup host table for your domain
+or LAN in /etc/hosts. In /etc/host.conf you would then
+include ``order bind hosts'' to make the resolver fall
+back to the hosts file if the central name server is down.
+<HR>
+<ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

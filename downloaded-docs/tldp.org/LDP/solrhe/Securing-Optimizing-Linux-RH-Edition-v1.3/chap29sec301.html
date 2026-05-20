@@ -1,0 +1,416 @@
+<HTML
+><HEAD
+><TITLE
+>Securing FTP</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FTP Server"
+HREF="ftpd.html"><LINK
+REL="PREVIOUS"
+TITLE="FTP Administrative Tools"
+HREF="chap29sec301.html"><LINK
+REL="NEXT"
+TITLE="The special file .notar"
+HREF="chap29sec302.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec301.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 32. Linux <TT
+CLASS="literal"
+>FTP</TT
+> Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec302.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN23250"
+>32.9. Securing <TT
+CLASS="literal"
+>FTP</TT
+></A
+></H1
+><DIV
+CLASS="formalpara"
+><P
+><B
+>The ftpusers file. </B
+>
+        It's important to ensure that you have set up the file <TT
+CLASS="filename"
+>/etc/ftpusers</TT
+> which specifies those users that are NOT allowed to connect to your <TT
+CLASS="literal"
+>FTP</TT
+> server. This should include, as a MINIMUM, the following 
+        entries: <TT
+CLASS="literal"
+>root</TT
+>, bin, daemon, adm, lp, sync, shutdown, halt, mail, news, uucp, operator, games, nobody and ALL other default vendor supplied accounts available in your <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file.
+      </P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>The anonymous <TT
+CLASS="literal"
+>FTP</TT
+> program. </B
+>
+        To disable anonymous <TT
+CLASS="literal"
+>FTP</TT
+>, remove the anonymous user <TT
+CLASS="literal"
+>ftp</TT
+> from your password file and verify that anonftp-version.i386.rpm package is not installed on your system.
+      </P
+></DIV
+><P
+>&#13;      To remove the user <TT
+CLASS="literal"
+>ftp</TT
+> from your password file, use the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>userdel</B
+> ftp
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      To verify that the <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> package of anonymous <TT
+CLASS="literal"
+>FTP</TT
+> program is not installed on your Linux system, use the following command:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>rpm</B
+> -q anonftp
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        package anonftp is not installed
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>The upload command. </B
+>
+        By default, the Wu-ftpd server will grant upload privileges to all users. The upload parameter allow remote clients to load and place files on the <TT
+CLASS="literal"
+>FTP</TT
+> server. For optimal security, we don't want users being able to 
+        upload into <TT
+CLASS="filename"
+>bin</TT
+>, <TT
+CLASS="filename"
+>etc</TT
+>, <TT
+CLASS="filename"
+>dev</TT
+>, and <TT
+CLASS="filename"
+>lib</TT
+> subdirectories in the <TT
+CLASS="filename"
+>/home/ftp</TT
+> 
+        directory. In our <TT
+CLASS="filename"
+>/etc/ftpaccess</TT
+> file we have already chroot'd users to <TT
+CLASS="filename"
+>/home/ftp</TT
+> and they cannot access any area of the filesystem outside that directory structure, but in case something 
+        happens to the permissions on them you should deny upload privileges in your <TT
+CLASS="filename"
+>/etc/ftpaccess</TT
+> file into these areas; <TT
+CLASS="filename"
+>/home/ftp/</TT
+>, <TT
+CLASS="filename"
+>/home/ftp/bin</TT
+>, 
+        <TT
+CLASS="filename"
+>/home/ftp/etc</TT
+>, <TT
+CLASS="filename"
+>/home/ftp/dev</TT
+>, and <TT
+CLASS="filename"
+>/home/ftp/lib</TT
+>.
+      </P
+></DIV
+><P
+>&#13;      Edit the <TT
+CLASS="filename"
+>ftpaccess</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/ftpaccess</TT
+> and add the following lines to deny upload privileges into these areas.
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        # We don't want users being able to upload into these areas.
+        upload /home/ftp/* /    no
+        upload /home/ftp/* /etc no
+        upload /home/ftp/* /dev no
+        upload /home/ftp/* /bin no   <A
+NAME="ftacss1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+        upload /home/ftp/* /lib no   <A
+NAME="ftacss2"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec301.html#ftacss1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;Require only if you are not using the <TT
+CLASS="parameter"
+><I
+>--enable-ls</I
+></TT
+> option.        
+        </DD
+><DT
+><A
+HREF="chap29sec301.html#ftacss2"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;Require only if you are not using the <TT
+CLASS="parameter"
+><I
+>--enable-ls</I
+></TT
+> option.      
+      </DD
+></DL
+></DIV
+>
+      The above lines specify to deny upload into the <TT
+CLASS="filename"
+>/</TT
+>, <TT
+CLASS="filename"
+>/etc</TT
+>, <TT
+CLASS="filename"
+>/dev</TT
+>, <TT
+CLASS="filename"
+>/bin</TT
+> and <TT
+CLASS="filename"
+>/lib</TT
+> 
+      directories of the chroot'd <TT
+CLASS="filename"
+>/home/ftp</TT
+> directory structure.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec301.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec302.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><SPAN
+CLASS="acronym"
+>FTP</SPAN
+> Administrative Tools</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="ftpd.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The special file <TT
+CLASS="filename"
+>.notar</TT
+></TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

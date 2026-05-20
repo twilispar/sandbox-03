@@ -1,0 +1,359 @@
+<HTML
+><HEAD
+><TITLE
+>Compile</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux Webalizer"
+HREF="webalizer.html"><LINK
+REL="NEXT"
+TITLE="Configure the /etc/webalizer.conf file"
+HREF="chap29sec265.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="webalizer.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 30. Optional component to install with Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec265.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN20959"
+>30.2. Compile</A
+></H1
+><P
+>&#13;      Move into the new Webalizer directory and type the following commands on your terminal:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        CC="egcs" \
+        CFLAGS="-O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions" \
+        ./configure \
+        --prefix=/usr
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/webalizer-1.30-04# <B
+CLASS="command"
+>make</B
+>
+        [root@deep ]/webalizer-1.30-04# <B
+CLASS="command"
+>make install</B
+>
+        [root@deep ]/webalizer-1.30-04# <B
+CLASS="command"
+>mkdir</B
+> /home/httpd/usage
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      <P
+></P
+><UL
+><LI
+><P
+>&#13;          The <B
+CLASS="command"
+>make</B
+> command will compile all source files into executable binaries, 
+        </P
+></LI
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>make install</B
+> will install the binaries and any supporting files into the appropriate locations. 
+        </P
+></LI
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>mkdir</B
+> will create a new directory named <TT
+CLASS="literal"
+>usage</TT
+> under the <TT
+CLASS="filename"
+>/home/httpd/</TT
+> directory where we'll handle all related Webalizer files.
+        </P
+></LI
+></UL
+>
+    </P
+><P
+>&#13;      Please do cleanup later:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep /]# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+        [root@deep ]/tmp# <B
+CLASS="command"
+>rm</B
+> -rf webalizer-version/ webalizer-version-src.tgz
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      The <B
+CLASS="command"
+>rm</B
+> command will remove all the source files we have used to compile and install Webalizer. It will also remove the Webalizer compressed archive from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+    </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN20986"
+>30.2.1. Configurations</A
+></H2
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>All the configuration files required for each software described in this book has been provided by us as a gzipped file, <TT
+CLASS="filename"
+>floppy.tgz</TT
+> for your convenience. This can be downloaded from this web address: <A
+HREF="appendixa.html#sc24obecfrs2"
+>http://www.openna.com/books/floppy.tgz</A
+>
+          You can unpack this to any location on your local machine, say for example <TT
+CLASS="filename"
+>/tmp</TT
+>, assuming you have done this your directory structure will be <TT
+CLASS="filename"
+>/tmp/floppy</TT
+>. Within this floppy directory each configuration file has its own directory 
+          for respective software. For example <I
+CLASS="wordasword"
+>Webalizer</I
+> configuration file are organised like this:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;            total 8
+            -rw-r--r--    1 harrypotter     harrypotter          208 Jul 26 18:04 webalizer.conf
+
+          </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+          You can either cut and paste this directly if you are faithfully following our instructions from the begining or manually edit these to modify to your needs. This facility is there though as a convenience but please don't forget ultimately it will be your 
+          responsibility to check, verify, <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+> before you use them whether modified or as it is.
+        </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;        To run Webalizer, the following file is required, and must be created or copied to the appropriate directory on your server.
+        <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;          Copy the webalizer.conf file to the <TT
+CLASS="filename"
+>/etc/</TT
+> directory.
+        </P
+></LI
+></OL
+>
+      </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+          To run Webalizer, the following file from the floppy.tgz archive is required and must be created or copied to the appropriate directory on your server. Copy the sxid.conf file to the <TT
+CLASS="filename"
+>/etc/</TT
+> directory.
+          or alternatively you can copy and paste directly from this book to the concerned file.
+        </P
+></BLOCKQUOTE
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="webalizer.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec265.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux Webalizer</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/webalizer.conf</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

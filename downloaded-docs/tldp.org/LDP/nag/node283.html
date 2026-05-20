@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>nn Configuration</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node284.html">A Null Printer Cable </A>
+<B>Up:</B> <A HREF="node280.html">Newsreader Configuration</A>
+<B> Previous:</B> <A HREF="node282.html">trn Configuration</A>
+<BR> <P>
+<H1><A NAME="SECTION0021300000">nn Configuration</A></H1>
+<A NAME="newsreadersnn"></A>
+nn, written by Kim-F. Storm, claims to be a newsreader whose
+ultimate goal is not to read news. It's name stands for ``No News'', and
+its motto is ``No news is good news. nn is better.''
+<P>
+To achieve this ambitious goal, nn comes along with a large
+assortment of maintenance tools that not only allow generation of
+threads, but also extensive checks on the consistency of these
+databases, accounting, gathering of usage statistics, and access
+restrictions. There is also an administration program called
+nnadmin, which allows you to perform these tasks interactively.
+It is very intuitive, hence we will not dwell on these aspects, and only
+deal with the generation of the index files.
+<P>
+The nn threads database manager is called nnmaster.  It is
+usually run as a daemon, started from the rc.news or
+rc.inet2 script.  It is invoked as
+<PRE>
+           /usr/local/lib/nn/nnmaster -l -r -C
+</PRE>
+This enables threading for all newsgroups present in your active
+file.
+<P>
+Equivalently, you may invoke nnmaster periodically from
+cron, giving it a list of groups to act upon. This list is very
+similar to the subscription list in the sys file, except that it
+uses blanks instead of commas. Instead of the fake group name
+all, an empty argument of  should be used to
+denote all groups.  A sample invocation is
+<PRE>
+           # /usr/local/lib/nn/nnmaster !rec.games.go rec comp
+</PRE>
+Note that the order is significant here: The leftmost group
+specification that matches always wins. Thus, if we had put
+!rec.games.go after rec, all articles from this
+group had been threaded nevertheless.
+<P>
+<A NAME="9903"></A>
+nn offers several methods to remove expired articles from its
+databases.  The first is to update the database by scanning the news
+group directories and discarding the entries whose corresponding article
+is no longer available.  This is the default operation obtained by
+invoking nnmaster with the -E option. It is reasonably
+fast unless you're doing this via NNTP.
+<P>
+Method-2 behaves exactly like a default expiry run of mthreads,
+in that it only removes those entries that refer to articles whose
+number is below the low water mark in the active file. It may be
+enabled using the -e option.
+<P>
+Finally, a third strategy is to discard the entire database and
+recollect all articles. This may be done by giving -E3 to
+nnmaster.
+<P>
+The list of groups to be expired is given by the -F option in
+the same fashion as above.  However, if you have nnmaster running
+as daemon, you must kill it (using -k) before expiry can take
+place, and to re-start it with the original options afterwards.  Thus
+the proper command to run expire on all groups using method-1 is:
+<PRE>
+           # nnmaster -kF ""
+           # nnmaster -lrC
+</PRE>
+There are many more flags that may be used to fine-tune the behavior of
+nn. If you are concerned about removing bad articles or
+digestifying article digests, read the nnmaster manual page.
+<P>
+nnmaster relies on a file named GROUPS, which is located
+in /usr/local/lib/nn. If it does not exist initially, it is
+created.  For each newsgroup, it contains a line that begins with the
+group's name, optionally followed by a time stamp, and flags. You may
+edit these flags to enable certain behavior for the group in question,
+but you may not change the order in which the groups appear.<A HREF="footnode.html#9940"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> The flags allowed and their effects are detailed in the
+nnmaster manual page, too.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node284.html">A Null Printer Cable </A>
+<B>Up:</B> <A HREF="node280.html">Newsreader Configuration</A>
+<B> Previous:</B> <A HREF="node282.html">trn Configuration</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

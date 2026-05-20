@@ -1,0 +1,568 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Note sulla localizzazione italiana</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Italian HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Documentazione"
+HREF="documentazione.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Italian HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="documentazione.html"
+ACCESSKEY="P"
+>Indietro</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+>&nbsp;</TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="localizzazione"
+></A
+>7. Note sulla localizzazione italiana</H1
+><P
+>Ad oggi, tutte le maggiori distribuzioni GNU/Linux permettono un
+  facile utilizzo della tastiera italiana (a volte con la possibilità di
+  scegliere tra diverse tipologie), ma non solo: numerosi programmi sono
+  infatti proposti anche in versione italiana. Qui di seguito verrà
+  brevemente analizzata la situazione dal punto di vista tecnico.</P
+><P
+>Verrà inoltre indicato come gestire la localizzazione nella
+  distribuzione Debian: gli autori saranno lieti di includere nelle prossime
+  edizioni del presente HOWTO gli esempi per altre distribuzioni che
+  verranno loro inviati.</P
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="distribuzioni"
+></A
+>7.1. La localizzazione nelle principali
+  distribuzioni GNU/Linux</H2
+><P
+>Ogni distribuzione propone dei propri strumenti per la gestione
+    della localizzazione. Si ricordi che il codice ISO relativo all'Italia è
+    <EM
+>it_IT</EM
+> (<EM
+>it_CH</EM
+> per la svizzera
+    italiana), nelle sue varianti a seconda della codifica di caratteri
+    scelta: attualmente la scelta migliore come codifica sembra essere la
+    <EM
+>ISO-8859-15</EM
+> (utilizzata come esempio nel paragrafo
+    successivo e riconoscibile per la stringa <TT
+CLASS="literal"
+>@euro</TT
+>),
+    variante comprendente il supporto per l'euro della codifica
+    <EM
+>ISO-8859-1</EM
+> largamente diffusa nelle lingue
+    occidentali, ma in futuro si assisterà progressivamente all'affermarsi
+    della codifica <EM
+>UTF-8</EM
+>.</P
+><P
+>Qualunque sia la distribuzione utilizzata, si può verificare la
+    localizzazione con il comando "<TT
+CLASS="literal"
+>locale</TT
+>", che dovrebbe
+    visualizzare qualcosa di simile a ciò che segue:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>LANG=it_IT@euro
+LC_CTYPE="it_IT@euro"
+LC_NUMERIC="it_IT@euro"
+LC_TIME="it_IT@euro"
+LC_COLLATE="it_IT@euro"
+LC_MONETARY="it_IT@euro"
+LC_MESSAGES="it_IT@euro"
+LC_PAPER="it_IT@euro"
+LC_NAME="it_IT@euro"
+LC_ADDRESS="it_IT@euro"
+LC_TELEPHONE="it_IT@euro"
+LC_MEASUREMENT="it_IT@euro"
+LC_IDENTIFICATION="it_IT@euro"
+LC_ALL=</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Qualora ciò non avvenga e si siano seguiti i passi di seguito
+    descritti, può essere necessario chiudere e quindi riaprire la sessione
+    di lavoro.</P
+><P
+>Invece, per collaudare la localizzazione italiana senza compiere
+    modifiche permanenti al sistema, è sufficiente il comando
+    "<TT
+CLASS="literal"
+>export LANG=it_IT@euro</TT
+>" dato in una console; un
+    programma con un adeguato supporto alla localizzazione italiana avviato
+    dalla medesima console dovrebbe a questo punto "parlare" italiano (ed
+    essere anche in grado di visualizzare correttamente il simbolo
+    dell'euro).</P
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="debian"
+></A
+>7.1.1. Debian GNU/Linux</H3
+><P
+>È possibile impostare la corretta localizzazione italiana in
+      Debian GNU/Linux già in fase di installazione, scegliendo dai menu che
+      vengono via via proposti la tipologia di tastiera, la lingua
+      predefinita per il sistema, ecc.</P
+><P
+>Per riconfigurare all'occorrenza il sistema successivamente
+      all'installazione, si può ricorrere al comando
+      "<TT
+CLASS="literal"
+>dpkg-reconfigure locales</TT
+>", che proporrà
+      successivamente le varie localizzazioni con le opportune codifiche
+      (l'utente italiano sceglierà quelle relative ad
+      <EM
+>it_IT</EM
+>) e la selezione della localizzazione
+      predefinita.</P
+><P
+>È anche possibile modificare direttamente il file
+      <TT
+CLASS="literal"
+>/etc/locale.gen</TT
+> scrivendovi quali localizzazioni
+      devono essere presenti nel sistema, eseguendo successivamente il
+      comando "<TT
+CLASS="literal"
+>locale-gen</TT
+>" e modificando infine il file
+      <TT
+CLASS="literal"
+>/etc/environment</TT
+> per impostarvi la localizzazione
+      scelta come predefinita per il sistema.</P
+><P
+>Per poter utilizzare il simbolo dell'euro in ambiente grafico è
+      inoltre necessario installare i pacchetti
+      <TT
+CLASS="literal"
+>xfonts-base-transcoded</TT
+>,
+      <TT
+CLASS="literal"
+>xfonts-75dpi-transcoded</TT
+> e
+      <TT
+CLASS="literal"
+>xfonts-100dpi-transcoded</TT
+>, in aggiunta a quelli
+      installati normalmente.</P
+><P
+>Si ricorda infine che in numerosi programmi è già integrata la
+      localizzazione italiana, mentre per altri, i più grossi in
+      particolare, è necessario installare i relativi pacchetti, come ad
+      esempio <TT
+CLASS="literal"
+>openoffice.org-l10n-it</TT
+> per OpenOffice.org;
+      il comando "<TT
+CLASS="literal"
+>apt-cache search italian</TT
+>" risulterà
+      senza dubbio importante per delineare quali pacchetti aggiuntivi
+      devono essere scaricati per rendere "italiani" i programmi
+      utilizzati.</P
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="progetti-localizzazione"
+></A
+>7.2. Progetti di
+  localizzazione</H2
+><P
+>Nonostante gli sforzi consistenti della comunità per tradurre in
+    italiano quanto più software possibile, ancora molto rimane da fare e
+    numerosi programmi non dispongono di una localizzazione italiana. Per
+    ovviare a questo e per condividere un po' del proprio tempo a favore del
+    progresso sociale, un utente volenteroso può partecipare ai numerosi
+    progetti di localizzazione italiana esistenti.</P
+><P
+>Analogamente, è possibile collaborare alla traduzione di
+    documentazione tecnica su GNU/Linux e Software Libero, attività in grado
+    di rendere meno complicato l'apprendimento ai nuovi utenti italiani, che
+    spesso conoscono solo parzialmente (o per niente) la lingua
+    inglese.</P
+><P
+>Segue una lista di alcuni tra i più importanti progetti italiani
+    di localizzazione.</P
+><P
+></P
+><UL
+><LI
+><P
+>Translation Project (<A
+HREF="http://www.linux.it/tp/"
+TARGET="_top"
+>http://www.linux.it/tp/</A
+>):
+        anche se si occupa principalmente della traduzione dei messaggi dei
+        programmi GNU, sulla mailing list del progetto
+        (<TT
+CLASS="literal"
+>tp</TT
+>, <A
+HREF="http://lists.linux.it/listinfo/tp/"
+TARGET="_top"
+>http://lists.linux.it/listinfo/tp/</A
+>)
+        si può richiedere assistenza su traduzione e localizzazione di
+        programmi e documentazione relativi a GNU/Linux e Software
+        Libero.</P
+></LI
+><LI
+><P
+>Italian Linux Documentation Project (<A
+HREF="http://it.tldp.org/"
+TARGET="_top"
+>http://it.tldp.org/</A
+> o <A
+HREF="http://ildp.pluto.it/"
+TARGET="_top"
+>http://ildp.pluto.it/</A
+>): progetto
+        nato nel 1994 in seno al <A
+HREF="gruppi.html#pluto"
+>PLUTO</A
+> per
+        tradurre in lingua italiana documentazione relativa a GNU/Linux e
+        Software Libero. In particolare, traduce i documenti del Linux
+        Documentation Project (<A
+HREF="http://tldp.org/"
+TARGET="_top"
+>http://tldp.org/</A
+>). La principale
+        mailing list del progetto è <TT
+CLASS="literal"
+>pluto-ildp</TT
+>: <A
+HREF="http://lists.pluto.it/listinfo/pluto-ildp/"
+TARGET="_top"
+>http://lists.pluto.it/listinfo/pluto-ildp/</A
+>.</P
+></LI
+><LI
+><P
+>GNOME (<A
+HREF="http://www.gnome.org/"
+TARGET="_top"
+>http://www.gnome.org/</A
+>): il
+        progetto di traduzione di GNOME è raggiungibile presso <A
+HREF="http://it.gnome.org/"
+TARGET="_top"
+>http://it.gnome.org/</A
+>; la
+        coordinazione dei lavori avviene tramite la mailing list
+        <TT
+CLASS="literal"
+>gnome-i18n</TT
+> (<A
+HREF="http://lists.it.gnome.org/mailman/listinfo/gnome-i18n/"
+TARGET="_top"
+>http://lists.it.gnome.org/mailman/listinfo/gnome-i18n/</A
+>).
+        Esiste inoltre un canale IRC sul server
+        <TT
+CLASS="literal"
+>calvino.freenode.net</TT
+>, chiamato
+        <TT
+CLASS="literal"
+>#gnome-it</TT
+>.</P
+></LI
+><LI
+><P
+>KDE (<A
+HREF="http://www.kde.org/"
+TARGET="_top"
+>http://www.kde.org/</A
+>): il progetto
+        di localizzazione italiana di KDE (<A
+HREF="http://kde.gulp.linux.it/"
+TARGET="_top"
+>http://kde.gulp.linux.it/</A
+>) è
+        portato avanti dal Gruppo Utenti Linux Pisa (GULP), raggiungibile
+        presso <A
+HREF="http://www.gulp.linux.it/"
+TARGET="_top"
+>http://www.gulp.linux.it/</A
+>.
+        La mailing list di riferimento è <TT
+CLASS="literal"
+>kde-i18n-it</TT
+>:
+        <A
+HREF="https://mail.kde.org/mailman/listinfo/kde-i18n-it/"
+TARGET="_top"
+>https://mail.kde.org/mailman/listinfo/kde-i18n-it/</A
+>.</P
+></LI
+><LI
+><P
+>Mozilla (<A
+HREF="http://www.mozilla.org/"
+TARGET="_top"
+>http://www.mozilla.org/</A
+>): il
+        sito di riferimento per la localizzazione italiana è <A
+HREF="http://www.mozillaitalia.org/"
+TARGET="_top"
+>http://www.mozillaitalia.org/</A
+>
+        e la mailing list è <TT
+CLASS="literal"
+>mozilla-it</TT
+> (<A
+HREF="http://erlug.linux.it/cgi-bin/mailman/listinfo/mozilla-it/"
+TARGET="_top"
+>http://erlug.linux.it/cgi-bin/mailman/listinfo/mozilla-it/</A
+>)
+        presso il sito dell'Emilia Romagna Linux Users Group (ERLUG),
+        raggiungibile su <A
+HREF="http://erlug.linux.it/"
+TARGET="_top"
+>http://erlug.linux.it/</A
+>.</P
+></LI
+><LI
+><P
+>OpenOffice.org (<A
+HREF="http://www.openoffice.org/"
+TARGET="_top"
+>http://www.openoffice.org/</A
+>):
+        il progetto è raggiungibile presso <A
+HREF="http://it.openoffice.org/"
+TARGET="_top"
+>http://it.openoffice.org/</A
+>.
+        Esiste anche un canale IRC, <TT
+CLASS="literal"
+>#openoffice.org-it</TT
+>,
+        raggiungibile presso il server IRC
+        <TT
+CLASS="literal"
+>calvino.freenode.net</TT
+>.</P
+></LI
+><LI
+><P
+>Gimp (<A
+HREF="http://www.gimp.org/"
+TARGET="_top"
+>http://www.gimp.org/</A
+>): il sito di
+        riferimento per la localizzazione italiana è <A
+HREF="http://www.it.gimp.org"
+TARGET="_top"
+>http://www.it.gimp.org/www/</A
+> e
+        la mailing list è <TT
+CLASS="literal"
+>gimp</TT
+> (<A
+HREF="http://erlug.linux.it/cgi-bin/mailman/listinfo/gimp/"
+TARGET="_top"
+>http://erlug.linux.it/cgi-bin/mailman/listinfo/gimp/</A
+>)
+        presso il sito dell'Emilia Romagna Linux Users Group (ERLUG),
+        raggiungibile su <A
+HREF="http://erlug.linux.it/"
+TARGET="_top"
+>http://erlug.linux.it/</A
+>.</P
+></LI
+><LI
+><P
+>TeX e LaTeX: la traduzione in italiano della documentazione
+        relativa a TeX e LaTeX è portata avanti dal progetto Gilda/Guild
+        (<A
+HREF="http://guild.prato.linux.it/"
+TARGET="_top"
+>http://guild.prato.linux.it/</A
+>),
+        ospitato dal Prato Linux Users Group (PLUG): <A
+HREF="http://www.prato.linux.it/"
+TARGET="_top"
+>http://www.prato.linux.it/</A
+>).</P
+></LI
+><LI
+><P
+>Mailman (<A
+HREF="http://www.list.org/"
+TARGET="_top"
+>http://www.list.org/</A
+>): la
+        traduzione di Mailman è portata avanti dal FerraraLUG (<A
+HREF="http://www.ferrara.linux.it/"
+TARGET="_top"
+>http://www.ferrara.linux.it/</A
+>)
+        attraverso la mailing list <TT
+CLASS="literal"
+>mailman-it</TT
+> (<A
+HREF="http://liste.ferrara.linux.it/listinfo/mailman-it"
+TARGET="_top"
+>http://liste.ferrara.linux.it/listinfo/mailman-it</A
+>).</P
+></LI
+><LI
+><P
+>Debian GNU/Linux (<A
+HREF="http://www.debian.org/"
+TARGET="_top"
+>http://www.debian.org/</A
+>): la
+        traduzione di tutto ciò che è inerente alla distribuzione Debian
+        GNU/Linux è effettuata sulla mailing list
+        <TT
+CLASS="literal"
+>debian-l10n-italian</TT
+> (<A
+HREF="http://lists.debian.org/debian-l10n-italian/"
+TARGET="_top"
+>http://lists.debian.org/debian-l10n-italian/</A
+>)
+        di Debian.</P
+></LI
+></UL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="documentazione.html"
+ACCESSKEY="P"
+>Indietro</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Partenza</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Documentazione</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

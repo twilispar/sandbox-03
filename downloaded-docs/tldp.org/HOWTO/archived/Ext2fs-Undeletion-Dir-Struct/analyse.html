@@ -1,0 +1,289 @@
+<HTML
+><HEAD
+><TITLE
+>Analyse of directory dump</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.57"><LINK
+REL="HOME"
+TITLE="Ext2fs Undeletion of Directory Structures mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Finding inodes for deleted directories"
+HREF="find.html"><LINK
+REL="NEXT"
+TITLE="Locating deleted inodes"
+HREF="locate.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Ext2fs Undeletion of Directory Structures mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="find.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="locate.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="ANALYSE"
+>5. Analyse of directory dump</A
+></H1
+><P
+>      View the dumped inode in a readable format.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>        # xxd debugfs-dump | less</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Every entry consist of five fields. For the first two fields the bytes
+      representing the field comes in backward order. That means the first byte
+      is the least significant.
+    </P
+><P
+>      Description of the fields.
+    </P
+><P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>          Four bytes - Inode number.
+        </P
+></LI
+><LI
+><P
+>          Two bytes - Directory entry length.
+        </P
+></LI
+><LI
+><P
+>          One byte - Filename length (1-255).
+        </P
+></LI
+><LI
+><P
+>          One byte - File type (0-7).
+        </P
+><P
+>0 = Unknown</P
+><P
+>1 = Regular file</P
+><P
+>2 = Directory</P
+><P
+>3 = Character device</P
+><P
+>4 = Block device</P
+><P
+>5 = FIFO</P
+><P
+>6 = SOCK</P
+><P
+>7 = Symbolic link</P
+></LI
+><LI
+><P
+>          Filename (1-255 characters).
+        </P
+></LI
+></OL
+><P
+>      If an entry in the directory is to be deleted, then the second field at
+      the entry before will be increased by the value of the deleted entrys
+      second field.
+    </P
+><P
+>      If a filename is renamed to a shorter one, then the third field will be
+      decreased.
+    </P
+><P
+>      The first entry you will see is the directory itself, represented by a
+      dot.
+    </P
+><P
+>      Suppose that we have the following directory entry.
+    </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>         c1 02 0e 00 40 00 05 01 'u' 't' 'i' 'l' 's'</PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>      Then the inode would be e02c1 in hexadecimal representation or 918209 in
+      decimal. The next entry would be located after 64 bytes (40 in hex). We
+      see that the filename consist of 5 bytes ("utils") and the file type (01)
+      is a regular file.
+    </P
+><P
+>      Now recalculate the directories inode numbers in decimal representation.
+    </P
+><P
+>      If you do not like to calculate this by hand I have made a small program
+      in C that will do this for you. The program takes as input a directory
+      dump (created by <I
+CLASS="EMPHASIS"
+>debugfs</I
+> as described in
+      <A
+HREF="find.html"
+>Section 4</A
+>). The output (at stdout) consist of each entrys
+      inode number and filename.
+    </P
+><P
+>      Before you run the program you need to load the dump into a hexeditor and
+      change the <I
+CLASS="EMPHASIS"
+>directory entry length</I
+> field at the entry
+      before the one you want to get back. But it is simple. If we name the
+      field before to <I
+CLASS="EMPHASIS"
+>x</I
+> and the field at the entry you want
+      to get back to <I
+CLASS="EMPHASIS"
+>y</I
+>. Then change <I
+CLASS="EMPHASIS"
+>x</I
+>
+      to <I
+CLASS="EMPHASIS"
+>x - y</I
+>.
+    </P
+><P
+>      The program called <I
+CLASS="EMPHASIS"
+>e2dirana</I
+> (ext2fs directory
+      analyse) can be found at
+      <A
+HREF="http://www.matematik.su.se/~tomase/ext2fs-undeletion/"
+TARGET="_top"
+>      http://www.matematik.su.se/~tomase/ext2fs-undeletion/</A
+>
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="find.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="locate.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Finding inodes for deleted directories</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Locating deleted inodes</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

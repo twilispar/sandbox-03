@@ -1,0 +1,356 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/rc.d/init.d/ldap script file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux OpenLDAP Server"
+HREF="net-oLDAP.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/ldap/slapd.conf file"
+HREF="chap26sec213.html"><LINK
+REL="NEXT"
+TITLE="Securing OpenLDAP"
+HREF="chap26sec215.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap26sec213.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 26. Linux OpenLDAP Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap26sec215.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN16303"
+>26.5. Configure the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/ldap</TT
+> script file</A
+></H1
+><P
+>&#13;               Configure your <TT
+CLASS="filename"
+>/etc/rc.d/init.d/ldap</TT
+> script file to start and stop <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> Server. Create the ldap script file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/rc.d/init.d/ldap</TT
+> and add:
+             </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;               #!/bin/sh
+               #
+               # ldap	This shell script takes care of starting and stopping
+               #	ldap servers (slapd and slurpd).
+               #
+               # chkconfig: - 70 40
+               # description: <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> stands for Lightweight Directory Access Protocol, used \
+               #              for implementing the industry standard directory services.
+               # processname: slapd
+               # config: /etc/openldap/slapd.conf
+               # pidfile: /var/run/slapd.pid
+
+               # Source function library.
+               . /etc/rc.d/init.d/functions
+
+               # Source networking configuration.
+               . /etc/sysconfig/network
+
+               # Check that networking is up.
+               [ ${NETWORKING} = "no" ] &#38;&#38; exit 0
+
+               [ -f /usr/sbin/slapd ] || exit 0
+               [ -f /usr/sbin/slurpd ] || exit 0
+
+               RETVAL=0
+
+               # See how we were called.
+               case "$1" in
+               start)
+               # Start daemons.
+               echo -n "Starting ldap: "
+               daemon slapd
+               RETVAL=$?
+               if [ $RETVAL -eq 0 ]; then
+               if grep -q "^replogfile" /etc/openldap/slapd.conf; then
+               daemon slurpd
+               RETVAL=$?
+               [ $RETVAL -eq 0 ] &#38;&#38; pidof slurpd | cut -f 1 -d " " &#62; /var/run/slurpd
+               fi
+               fi
+               echo
+               [ $RETVAL -eq 0 ] &#38;&#38; touch /var/lock/subsys/ldap
+               ;;
+               stop)
+               # Stop daemons.
+               echo -n "Shutting down ldap: "
+               killproc slapd
+               RETVAL=$?
+               if [ $RETVAL -eq 0 ]; then
+               if grep -q "^replogfile" /etc/openldap/slapd.conf; then
+               killproc slurpd
+               RETVAL=$?
+               fi
+               fi
+               echo
+               if [ $RETVAL -eq 0 ]; then
+               rm -f /var/lock/subsys/ldap
+               rm -f /var/run/slapd.args
+               fi
+               ;;
+               status)
+               status slapd
+               RETVAL=$?
+               if [ $RETVAL -eq 0 ]; then
+               if grep -q "^replogfile" /etc/openldap/slapd.conf; then
+               status slurpd
+               RETVAL=$?
+               fi
+               fi
+               ;;
+               restart)
+               $0 stop
+               $0 start
+               RETVAL=$?
+               ;;
+               reload)
+               killproc -HUP slapd
+               RETVAL=$?
+               if [ $RETVAL -eq 0 ]; then
+               if grep -q "^replogfile" /etc/openldap/slapd.conf; then
+               killproc -HUP slurpd
+               RETVAL=$?
+               fi
+               fi
+               ;;
+               *)
+               echo "Usage: $0 start|stop|restart|status}"
+               exit 1
+               esac
+
+               exit $RETVAL
+             </PRE
+></TD
+></TR
+></TABLE
+><P
+>&#13;               Now, make this script executable and change its default permissions:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>chmod</B
+> 700  /etc/rc.d/init.d/ldap
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               Create the symbolic rc.d links for OpenLDAP with the command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>chkconfig</B
+> --add ldap
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               The OpenLDAP script will not automatically start the slapd daemon when you reboot the server. You can change its defaults by executing the following command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>chkconfig</B
+> --level 345 ldap on
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;             Start your OpenLDAP Server manually with the following command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# /etc/rc.d/init.d/ldap start
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;               Starting ldap:                                             [  OK  ]
+             </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap26sec213.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap26sec215.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/ldap/slapd.conf</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="net-oLDAP.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Securing OpenLDAP</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

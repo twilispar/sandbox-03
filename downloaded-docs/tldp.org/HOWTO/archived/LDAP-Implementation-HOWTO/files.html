@@ -1,0 +1,369 @@
+<HTML
+><HEAD
+><TITLE
+>Example files</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.63
+"><LINK
+REL="HOME"
+TITLE="LDAP Implementation HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Ldap schema's"
+HREF="schemas.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>LDAP Implementation HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="schemas.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+>&nbsp;</TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="FILES"
+>12. Example files</A
+></H1
+><P
+>Here are the example files that can be used to setup an installation as I described here.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="FILE-SCHEMA"
+>12.1. The schema file</A
+></H2
+><P
+></P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+># Unix related and default classes (Modified)
+
+attribute       userpassword                            ces
+attribute       telephonenumber                         tel
+attribute       facsimiletelephonenumber        fax     tel
+attribute       pagertelephonenumberpager               tel
+attribute       homephone                               tel
+attribute       mobiletelephonenumber           mobile  tel
+attribute       member                                  dn
+attribute       owner                                   dn
+attribute       dn                                      dn
+
+objectclass top
+        requires
+                objectClass
+
+objectclass organization
+        requires
+                objectClass,
+                o
+        allows
+                description
+
+objectclass organizationalUnit
+        requires
+                objectClass,
+                ou
+        allows
+                description
+
+objectclass person
+        requires
+                objectClass,
+                cn
+        allows
+                description
+
+objectclass account
+        requires
+                objectClass,
+                uid
+        allows
+                description,
+                host,
+                o,
+                ou
+
+# Samba related classes (Original)
+
+objectclass sambaaccount
+        requires
+                objectclass,
+                uid,
+                uidnumber,
+                ntuid,
+                rid
+        allows
+                gidnumber,
+                grouprid,
+                nickname,
+                userpassword,
+                ou,
+                description,
+                lmpassword,
+                ntpassword,
+                pwdlastset,
+                smbhome,
+                homedrive,
+                script,
+                profile,
+                workstations,
+                acctflags,
+                pwdcanchange,
+                pwdmustchange
+
+objectclass sambagroup
+        requires
+                cn,
+                rid
+        allows
+                ntuid,
+                member,
+                description
+
+objectclass sambaconfig
+        requires
+                id
+        allows
+                nextrid
+
+objectclass sambabuiltin
+        requires
+                cn,
+                sid
+        allows
+                ntuid,
+                rid,
+                member,
+                description
+
+# Sendmail related class (new / modified)
+
+objectclass inetmailrecipient
+	requires
+		objectclass
+	allows
+		mailid,
+		mailacceptinggeneralid,
+		maildrop
+
+objectclass inetmaildomain
+	requires
+		objectclass,
+		sendmailislocalkey
+	allows
+		maildomain,
+		sendmailaccesskey
+
+# Addressbook related classes
+
+objectclass netscapeaddressbook
+        requires
+                objectclass,
+                cn
+        allows
+                cellphone,
+                countryname,
+                description,
+                facsimiletelephonenumber,
+                givenname,
+                homephone,
+                homeurl,
+                locality,
+                mail,
+                nickname,
+                o,
+                ou,
+                pagerphone,
+                postalcode,
+                sn,
+                st,
+                streetaddress,
+                telephonenumber,
+                title,
+                xmozillanickname,
+                xmozillausehtmlmail,
+                xmozillaanyphone
+
+objectclass microsoftaddressbook
+        requires
+                objectclass,
+                cn
+        allows
+                c,
+                department,
+                facsimiletelephonenumber,
+                givenname,
+                homephone,
+                homepostaladdress,
+                info,
+                initials,
+                l,
+                mail,
+                mobile,
+                organizationname,
+                otherfacsimiletelephonenumber,
+                otherpager,
+                physicaldeliveryofficename,
+                postaladdress,
+                postalcode,
+                sn,
+                st,
+                telephonenumber,
+                title,
+                url</PRE
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN1300"
+>12.2. Example base ldif</A
+></H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>dn: dc=yourorg,dc=com
+objectClass: top
+objectClass: organization
+o: YourOrg
+description: This is our organizations base dn. Everything is stored beneath this
+
+dn: ou=Users,dc=yourorg,dc=com
+objectClass: top
+objectClass: organizationalunit
+ou: Users
+description: This is the tree were user accounts are stored
+
+dn: ou=Machines,dc=yourorg,dc=com
+objectClass: top
+objectClass: organizationalunit
+ou: Machines 
+description: This is the tree were machine accounts are stored
+
+dn: ou=Roaming,dc=yourorg,dc=com
+objectClass: top
+objectClass: organizationalunit
+ou: Roaming
+description: This is the tree were netscape roaming profiles are stored
+
+dn: ou=Addressbook,dc=yourorg,dc=com
+objectClass: top
+objectClass: organizationalunit
+ou: Addressbook
+description: This is the tree were addressbook entries are stored&#13;</PRE
+></TD
+></TR
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="schemas.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Ldap schema's</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

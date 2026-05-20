@@ -1,0 +1,315 @@
+<HTML
+><HEAD
+><TITLE
+>Linux Webmail IMP</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Optional component to install with Apache"
+HREF="opt-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Installed files"
+HREF="chap29sec272.html"><LINK
+REL="NEXT"
+TITLE="Set up PHPLib "
+HREF="chap29sec274.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec272.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 30. Optional component to install with Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec274.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch30swmlimp"
+>30.11. Linux Webmail IMP</A
+></H1
+><P
+>&#13;        Webmail IMP allows universal, web-based access to <SPAN
+CLASS="acronym"
+>IMAP/POP3</SPAN
+> servers and provides an address book, <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> directory searches, full support for sending and receiving attachments, and 
+        many other features normally only found in desktop mail clients. If you have installed Apache with <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> support, clients can access and read mail through a secure manner by way of <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> 
+        encryption. By default in this section, we have configured Webmail <SPAN
+CLASS="acronym"
+>IMP</SPAN
+> to use PostgreSQL database and <SPAN
+CLASS="acronym"
+>IMAP</SPAN
+> connections. There is, though, much support for other databases within Webmail IMP. If you prefer, you can use MySQL, Oracle, Sybase, or other well know SQL databases. You may also choose to use POP3 instead of IMAP connection to your clients.
+      </P
+><P
+>&#13;        These installation instructions assume
+        <P
+></P
+><UL
+><LI
+><P
+>&#13;            Commands are Unix-compatible.
+          </P
+></LI
+><LI
+><P
+>&#13;          The source path is <TT
+CLASS="filename"
+>/home/httpd</TT
+>.
+          </P
+></LI
+><LI
+><P
+>&#13;          Installations were tested on Red Hat Linux 6.1 and 6.2.
+          </P
+></LI
+><LI
+><P
+>&#13;          All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+          </P
+></LI
+><LI
+><P
+>&#13;          Horde version number is 1.2.0
+          </P
+></LI
+><LI
+><P
+>&#13;          Webmail <SPAN
+CLASS="acronym"
+>IMP</SPAN
+> version number is 2.2.0
+          </P
+></LI
+><LI
+><P
+>&#13;          PHPLib version number is 7.2b
+          </P
+></LI
+></UL
+>
+      </P
+><P
+>&#13;        These are the Package(s):
+        <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;            Webmail <SPAN
+CLASS="acronym"
+>IMP</SPAN
+> Homepage:<A
+HREF="appendixa.html#prtinxfp35"
+>http://www.horde.org/imp/</A
+> 
+          </TD
+></TR
+><TR
+><TD
+>&#13;            You must be sure to download: horde-1.2.0-pre11.tar.gz
+          </TD
+></TR
+><TR
+><TD
+>&#13;          You must be sure to download: imp-2.2.0-pre11.tar.gz
+          </TD
+></TR
+><TR
+><TD
+>&#13;          PHPLib Homepage:<A
+HREF="appendixa.html#prtinxfp35"
+>http://phplib.netuse.de/index.php3</A
+> 
+          </TD
+></TR
+><TR
+><TD
+>&#13;          You must be sure to download: phplib-7.2b.tar.gz
+          </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+      </P
+><P
+>&#13;        there are some prerequisites youi need to take care of:
+        <P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;          Apache web server should be already installed on your system to be able to use the Webmail IMP software.
+        </P
+></LI
+><LI
+><P
+>&#13;        The PHP4 server-side scripting language support should be already installed on your system to be able to use the Webmail IMP software.
+        </P
+></LI
+><LI
+><P
+>&#13;        Postgresql, or another database server, should be already installed on your system if you intend to use the Webmail IMP software with SQL support.
+        </P
+></LI
+><LI
+><P
+>&#13;        The OpenLDAP directory server should be already installed on your system if you  intend to use the Webmail IMP software with LDAP support.
+        </P
+></LI
+><LI
+><P
+>&#13;        The IMAP/POP server should be already installed on your system to be able to use the Webmail IMP software.
+        </P
+></LI
+><LI
+><P
+>&#13;        The PHPLIB files, 7.2 or greater, should be already installed on your system to be able to use the Webmail IMP software.
+        </P
+></LI
+></OL
+>
+      </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+          For more information on the required software, see the related chapter in this book.
+        </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec272.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec274.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Installed files</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="opt-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Set up PHPLib</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

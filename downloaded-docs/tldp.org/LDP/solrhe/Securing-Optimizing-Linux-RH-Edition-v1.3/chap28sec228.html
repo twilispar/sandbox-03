@@ -1,0 +1,548 @@
+<HTML
+><HEAD
+><TITLE
+>Configure and Optimize</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Proxy Network"
+HREF="netproxy-squid.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux Squid Proxy Server"
+HREF="chap28sec227.html"><LINK
+REL="NEXT"
+TITLE="Improve performance Using GNU malloc library "
+HREF="gnumaloc.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap28sec227.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 28. Software -Server/Proxy Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="gnumaloc.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN17930"
+>28.2. Configure and Optimize</A
+></H1
+><P
+>&#13;               Squid Proxy Server can't run as super-user root, and for this reason we must create a special user with no shell for running Squid Proxy Server.
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>useradd</B
+> -d /cache/ -r -s /dev/null squid &#62;/dev/null 2&#62;&#38;1
+                 [root@deep] /# <B
+CLASS="command"
+>mkdir</B
+> /cache/
+                 [root@deep] /# <B
+CLASS="command"
+>chown</B
+> -R squid.squid /cache/
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               First of all, we add the user <TT
+CLASS="literal"
+>squid</TT
+> to the <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file. Then, we create the <TT
+CLASS="filename"
+>/cache</TT
+> directory if this directory doesn't exist, <EM
+>we repeat only if 
+               it doesn't exist</EM
+>. Finally, we change the owner of the directory <TT
+CLASS="filename"
+>cache</TT
+> to be the user <TT
+CLASS="literal"
+>squid</TT
+>.
+             </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+               Usually we don't need to perform the command, <B
+CLASS="command"
+>mkdir</B
+> <TT
+CLASS="filename"
+>/cache/</TT
+>, because we have already created this directory when we partitioned our hard drive during the installation of Linux. If this 
+               partition doesn't exist, you must execute this command to create the directory.
+             </P
+></BLOCKQUOTE
+></DIV
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;                 Move into the new Squid directory and type the following commands on your terminal:
+               
+                 Edit the <TT
+CLASS="filename"
+>Makefile.in</TT
+> file, <B
+CLASS="command"
+>vi</B
+> +18 <TT
+CLASS="filename"
+>icons/Makefile.in</TT
+> and change the line:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   DEFAULT_ICON_DIR  =  $(sysconfdir)/icons
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 To read:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                   DEFAULT_ICON_DIR  =  $(libexecdir)/icons
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;                 We change the variable, <TT
+CLASS="envar"
+>sysconfdir</TT
+> to be <TT
+CLASS="envar"
+>libexecdir</TT
+>. With this modification, the <TT
+CLASS="filename"
+>icons</TT
+> directory of Squid will be located under the <TT
+CLASS="filename"
+>/usr/lib/squid</TT
+> directory.
+                </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;                     Edit the <TT
+CLASS="filename"
+>Makefile.in</TT
+> file, <B
+CLASS="command"
+>vi</B
+> +34 <TT
+CLASS="filename"
+>src/Makefile.in</TT
+> and change the lines:
+                     <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                       DEFAULT_CACHE_LOG  =  <TT
+CLASS="prompt"
+>$</TT
+>(localstatedir)/logs/cache.log
+                     </PRE
+></TD
+></TR
+></TABLE
+>
+                     To read:
+                     <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                       DEFAULT_CACHE_LOG  =  <TT
+CLASS="prompt"
+>$</TT
+>(localstatedir)/log/squid/cache.log
+                     </PRE
+></TD
+></TR
+></TABLE
+>
+                   </P
+></LI
+><LI
+><P
+>&#13;                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     DEFAULT_ACCESS_LOG  =  <TT
+CLASS="prompt"
+>$</TT
+>(localstatedir)/logs/access.log
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   To read:
+                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     DEFAULT_ACCESS_LOG  =  <TT
+CLASS="prompt"
+>$</TT
+>(localstatedir)/log/squid/access.log
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   </P
+></LI
+><LI
+><P
+>&#13;                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     DEFAULT_STORE_LOG  =  <TT
+CLASS="prompt"
+>$</TT
+>(localstatedir)/logs/store.log
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   To read:
+                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     DEFAULT_STORE_LOG  =  <TT
+CLASS="prompt"
+>$</TT
+>(localstatedir)/log/squid/store.log
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   </P
+></LI
+><LI
+><P
+>&#13;                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     DEFAULT_PID_FILE  =  <TT
+CLASS="prompt"
+>$</TT
+>(localstatedir)/logs/squid.pid
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   To read:
+                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     DEFAULT_PID_FILE  =  <TT
+CLASS="prompt"
+>$</TT
+>(localstatedir)/run/squid.pid
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   </P
+></LI
+><LI
+><P
+>&#13;                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     DEFAULT_SWAP_DIR  =  <TT
+CLASS="prompt"
+>$</TT
+>(localstatedir)/cache
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   To read:
+                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     DEFAULT_SWAP_DIR  =  /cache
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   </P
+></LI
+><LI
+><P
+>&#13;                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     DEFAULT_ICON_DIR  =  <TT
+CLASS="prompt"
+>$</TT
+>(sysconfdir)/icons
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   To read:
+                   <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                     DEFAULT_ICON_DIR  =  <TT
+CLASS="prompt"
+>$</TT
+>(libexecdir)/icons
+                   </PRE
+></TD
+></TR
+></TABLE
+>
+                   We change the default location of <TT
+CLASS="filename"
+>cache.log,</TT
+> <TT
+CLASS="filename"
+>access.log,</TT
+> and <TT
+CLASS="filename"
+>store.log</TT
+> files to be located under <TT
+CLASS="filename"
+>/var/log/squid</TT
+> directory. Then, we put the pid file of Squid under <TT
+CLASS="filename"
+>/var/run</TT
+> 
+                   directory, and finally, locate the <TT
+CLASS="filename"
+>icons</TT
+> directory of Squid under <TT
+CLASS="filename"
+>/usr/lib/squid/icons</TT
+> with the variable <TT
+CLASS="envar"
+>libexecdir</TT
+> above.
+
+                   </P
+></LI
+></OL
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap28sec227.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="gnumaloc.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux Squid Proxy Server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netproxy-squid.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Improve performance Using GNU malloc library</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

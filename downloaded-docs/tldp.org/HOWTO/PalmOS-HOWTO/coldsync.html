@@ -1,0 +1,376 @@
+<HTML
+><HEAD
+><TITLE
+>Coldsync</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="Palm OS Desktop HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="The pilot-link suite"
+HREF="pilotlink.html"><LINK
+REL="NEXT"
+TITLE="Desktop Applications."
+HREF="apps.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Palm OS Desktop HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="pilotlink.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="apps.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="COLDSYNC">4. Coldsync</H1
+><P
+>Coldsync is an alternative to the pilot-link suite for transferring data to
+and from your PalmOS device. Like pilot-link, it can synchronise,
+backup and restore Palm databases.  </P
+><P
+>There are fewer applications available which use coldsync as their backend. That
+ may change, but it seems to reflect a difference in philosophy between coldsync
+and pilot-link. Applications that sync using pilot-link tend to build
+in the functionality for synchronisation. It is therefore the author
+of the application that decides to include pilot-link support.  </P
+><P
+>Coldsync takes a different approach. Conduits can be written to
+use coldsync with almost any application. The synchronisation process
+can be entirely transparent to the application. If the application author
+is not interested in adding PDA support, it does not matter. As long as
+the data format of the application is available, someone else can write
+the conduit.  </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="COLDSYNC-INSTALLING">4.1. Installing coldsync</H2
+><P
+>Some Linux distributions are carrying coldsync, but it is
+not yet as widely available as pilot-link. It is also a younger
+application, so you are more likely to need to compile from source.</P
+><P
+>You can find the latest release of coldsync at <A
+HREF="http://www.ooblick.com/software/coldsync/"
+TARGET="_top"
+>www.ooblick.com/software/coldsync</A
+>.
+As well as the current version, you will find a link to the latest
+CVS snapshot.  </P
+><P
+>Once you have the downloaded the source,
+compile it as follows: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>tar -xvzf
+colsync-2.2.5.tar.gz
+cd coldsync-2.2.5
+./configure
+make
+make install</PRE
+></FONT
+></TD
+></TR
+></TABLE
+> </P
+><P
+>You can run coldsync directly from the
+<TT
+CLASS="COMPUTEROUTPUT"
+>src</TT
+> directory. For more information,
+see the README file that comes with coldsync.  </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="COLDSYNC-USING">4.2. Using coldsync</H2
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN207">4.2.1. The .coldsyncrc file</H3
+><P
+>By default, coldsync reads configuration parameters from a file called
+<TT
+CLASS="COMPUTEROUTPUT"
+>.coldsyncrc</TT
+> in your home directory. The
+<TT
+CLASS="COMPUTEROUTPUT"
+>-f</TT
+> flag overrides the default if
+you need to use an alternative configuration file. In addition, some
+of the parameters in the configuration file can be set or overridden
+on the command line.  </P
+><P
+> The following is an example of
+a <TT
+CLASS="COMPUTEROUTPUT"
+>.coldsyncrc</TT
+> file: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>listen serial {
+	device: "/dev/palm";
+	protocol: default;
+	transient;
+}
+
+pda "My Palm" {
+	snum: "L0PK17C13832-M";
+	username: "Sean";
+	userid: 1234;
+	directory:
+	"/home/sean/m505";
+	default;
+}</PRE
+></FONT
+></TD
+></TR
+></TABLE
+> </P
+><P
+>This example tells coldsync to look for a serial port connection on
+<TT
+CLASS="COMPUTEROUTPUT"
+>/dev/palm</TT
+>. The transient keyword
+tells coldsync that the device may not exist until the user presses
+the Hotsync button. The pda section tells coldsync the serial number
+of the device, the username and id of the user and the directory
+to which the device will be backed up.	</P
+><P
+>The coldsync configuration file is well documented in the man page 
+(<TT
+CLASS="COMPUTEROUTPUT"
+>man coldsync</TT
+>), but it is worth 
+repeating some points:</P
+><P
+><P
+></P
+><UL
+><LI
+><P
+>Do not use a userid of 0 in your PDA section. This can lead to a loss of data 
+if you need to perform a hard reset of your Palm.  </P
+></LI
+><LI
+><P
+>If you have a Palm m505 with a USB cradle under Linux, you
+should not use <TT
+CLASS="COMPUTEROUTPUT"
+>listen usb</TT
+>. Instead
+use <TT
+CLASS="COMPUTEROUTPUT"
+>listen serial</TT
+> with
+<TT
+CLASS="COMPUTEROUTPUT"
+>protocol: simple;</TT
+> </P
+></LI
+></UL
+> </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN229">4.2.2. The p5-Palm Perl modules</H3
+><P
+>P5-Palm is a set of Perl modules for communicating with a Palm device via 
+coldsync, and can be downloaded from the coldsync site. The purpose of the 
+p5-Palm modules is to simplify and speed up the creation of conduits.  </P
+><P
+>You should install p5-Palm if you want to use any of the coldsync conduits.
+You do not need p5-Palm if you will only be using coldsync for simple backups.</P
+><P
+>To install the modules: </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>tar -zxvf p5-Palm-1.2.4.tar.gz
+cd p5-Palm-1.2.4
+perl Makefile.PL
+make
+make install</PRE
+></FONT
+></TD
+></TR
+></TABLE
+> </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN236">4.2.3. Coldsync conduits</H3
+><P
+> A number
+of conduits are available for coldsync. These conduits use
+coldsync to synchronise other applications with your PDA. The
+conduits generally require the p5-Palm Perl modules described
+above.	</P
+><P
+>The list of conduits is available at <A
+HREF="http://www.ooblick.com/software/coldsync/conduits/"
+TARGET="_top"
+>http://www.ooblick.com/software/coldsync/conduits/</A
+>.</P
+><P
+>The conduits require an entry in your .coldsyncrc configuration file. To find 
+out what should be entered, run <TT
+CLASS="COMPUTEROUTPUT"
+>/path/conduit -config</TT
+>, where <TT
+CLASS="COMPUTEROUTPUT"
+>path</TT
+> is the 
+location of the conduit.&#13;</P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pilotlink.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="apps.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The pilot-link suite</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Desktop Applications.</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

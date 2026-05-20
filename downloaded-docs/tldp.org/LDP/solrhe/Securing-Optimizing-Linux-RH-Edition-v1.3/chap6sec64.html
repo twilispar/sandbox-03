@@ -1,0 +1,542 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/profile file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux General Optimization"
+HREF="gen-optim.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux General Optimization"
+HREF="gen-optim.html"><LINK
+REL="NEXT"
+TITLE="Benchmark Results"
+HREF="chap6sec65.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="gen-optim.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. Linux General Optimization</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap6sec65.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4340"
+>6.1. The /etc/profile file</A
+></H1
+><P
+>&#13;               The <TT
+CLASS="filename"
+>/etc/profile</TT
+> file contains system wide environment stuff and startup programs. All customizations that you put in this file will apply for the entire environment variable on your system, so putting optimization 
+               flags in this file is a good choice. To squeeze the most performance from your x86 programs, you can use full optimization when compiling with the <TT
+CLASS="literal"
+>-O9</TT
+> flag. Many programs contain <TT
+CLASS="literal"
+>-O2</TT
+> in 
+               the Makefile. <TT
+CLASS="literal"
+>-O9</TT
+> is the highest level of optimization. It will increase the size of what it produces, but it runs faster.
+               </P
+><P
+>&#13;               Please Note it is not always true that the <TT
+CLASS="literal"
+>-O9</TT
+> flag will make the best performance for your processor. If you have an x686 and above processor, surely, but below x686, not necessarily.
+               </P
+><P
+>&#13;               When compiling, use the <TT
+CLASS="envar"
+>-fomit-frame-pointer</TT
+> switch for any kind of processor you may have. This will use the stack for accessing variables. Unfortunately, debugging is almost impossible with this option. You can also use 
+               the <TT
+CLASS="envar"
+>-mcpu=cpu_type</TT
+> and <TT
+CLASS="envar"
+>-march=cpu_type</TT
+> switch to optimize the program for the <SPAN
+CLASS="acronym"
+>CPU</SPAN
+> listed to the best of <SPAN
+CLASS="acronym"
+>GCC's</SPAN
+> ability. However, the resulting code will only be run able on 
+               the indicated <SPAN
+CLASS="acronym"
+>CPU</SPAN
+> or higher.
+               </P
+><P
+>&#13;               The optimization options apply only when we compile and install a new program in our server. These 
+               optimizations don't play any role in our Linux base system; it just tells our compiler to optimize the new programs that we will install with the optimization flags we have specified in the <TT
+CLASS="filename"
+>/etc/profile</TT
+> file.
+               </P
+><P
+>&#13;                  Below are the optimization flags that we recommend you put in your <TT
+CLASS="filename"
+>/etc/profile</TT
+> file depending on your <SPAN
+CLASS="acronym"
+>CPU</SPAN
+> architecture.
+                  </P
+><DIV
+CLASS="procedure"
+><P
+><B
+>Recommended optimization flags</B
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;               For <SPAN
+CLASS="acronym"
+>CPU</SPAN
+> i686 or <SPAN
+CLASS="hardware"
+>PentiumPro, Pentium II, Pentium III</SPAN
+>
+               In the <TT
+CLASS="filename"
+>/etc/profile</TT
+> file, put this line for a PentiumPro, Pentium II and III Pro Processor family:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               <TT
+CLASS="envar"
+>CFLAGS=-O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions</TT
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+><P
+>&#13;               For <SPAN
+CLASS="acronym"
+>CPU</SPAN
+> <SPAN
+CLASS="hardware"
+>i586</SPAN
+> or Pentium:
+               In the <TT
+CLASS="filename"
+>/etc/profile</TT
+> file, put this line for a Pentium Processor family:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               <TT
+CLASS="envar"
+>CFLAGS=-O3 -march=pentium -mcpu=pentium -ffast-math -funroll-loops -fomit-frame-pointer -fforce-mem -fforce-addr -malign-double -fno-exceptions</TT
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+><P
+>&#13;               For <SPAN
+CLASS="acronym"
+>CPU</SPAN
+> <SPAN
+CLASS="hardware"
+>i486</SPAN
+>:
+               In the <TT
+CLASS="filename"
+>/etc/profile</TT
+> file, put this line for a <SPAN
+CLASS="hardware"
+>i486</SPAN
+> Processor family:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               <TT
+CLASS="envar"
+>CFLAGS=-O3  -funroll-all-loops -malign-double -mcpu=i486 -march=i486 -fomit-frame-pointer -fno-exceptions</TT
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               Now after the selection of your <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>CPU</SPAN
+></SPAN
+> settings <SPAN
+CLASS="hardware"
+>-i686, i586, or i486</SPAN
+> a bit further down in the <TT
+CLASS="filename"
+>/etc/profile</TT
+> file, 
+               add  <TT
+CLASS="envar"
+>CFLAGS LANG LESSCHARSET</TT
+> to the export line:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               <B
+CLASS="command"
+>export</B
+> <TT
+CLASS="envar"
+>PATH PS1 HOSTNAME HISTSIZE HISTFILESIZE USER LOGNAME MAIL INPUTRC CFLAGS LANG LESSCHARSET</TT
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;               Log out and log  back in; after this, the new <TT
+CLASS="envar"
+>CFLAGS</TT
+> environment variable is set, and software and other configure tool will recognize that. 
+               Pentium Pro/II/III optimizations will only work with egcs or pgcc compilers. The egcs compiler is already installed on your Server by default 
+               so you don't need to worry about it.
+               </P
+></LI
+></OL
+></DIV
+><P
+>&#13;               Below is the explanation of the different optimization options we use:
+               <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>&#13;                <TT
+CLASS="envar"
+>-funroll-loops</TT
+>
+               </B
+></DT
+><DD
+><P
+>&#13;               The <TT
+CLASS="envar"
+>-funroll-loops</TT
+> optimization option will perform the optimization of loop unrolling and will do it only for loops whose number of iterations can be 
+               determined at compile time or run time.
+               </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>-funroll-all-loops</TT
+>
+               </B
+></DT
+><DD
+><P
+>&#13;               The <TT
+CLASS="envar"
+>-funroll-all-loops</TT
+> optimization option will also perform the optimization of loop unrolling and is done for all loops.
+               </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>-ffast-math</TT
+>
+                 </B
+></DT
+><DD
+><P
+>&#13;               The <TT
+CLASS="envar"
+>-ffast-math</TT
+> optimization option will allow the GCC compiler, in the interest of optimizing code for speed, to violate 
+               some <SPAN
+CLASS="acronym"
+>ANSI</SPAN
+> or <SPAN
+CLASS="acronym"
+>IEEE</SPAN
+> rules/specifications.
+               </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>-malign-double</TT
+>
+                 </B
+></DT
+><DD
+><P
+>&#13;               The <TT
+CLASS="envar"
+>-malign-double</TT
+> optimization option will control whether the <SPAN
+CLASS="acronym"
+>GCC</SPAN
+> compiler aligns double, long double, and long long variables on a two-word boundary or a one-word 
+               boundary. This will produce code that runs somewhat faster on a Pentium at the expense of more memory.
+               </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>-mcpu=cpu_type</TT
+>
+                 </B
+></DT
+><DD
+><P
+>&#13;               The <TT
+CLASS="envar"
+>-mcpu=cpu_type</TT
+> optimization option will set the default <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>CPU</SPAN
+></SPAN
+> to use for the machine type when scheduling instructions.
+               </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>-fforce-mem</TT
+>
+                 </B
+></DT
+><DD
+><P
+>&#13;               The <TT
+CLASS="envar"
+>-fforce-mem</TT
+> optimization option will produce better code by forcing memory operands to be copied into registers before doing arithmetic on them and by making 
+               all memory references potential common subexpressions.
+               </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>-fforce-addr</TT
+>
+               </B
+></DT
+><DD
+><P
+>&#13;               The <TT
+CLASS="envar"
+>-fforce-addr</TT
+> optimization option will produce better code by forcing memory address constants to be copied into registers before doing arithmetic on them.
+               </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>-fomit-frame-pointer</TT
+>
+               </B
+></DT
+><DD
+><P
+>&#13;               The <TT
+CLASS="envar"
+>-fomit-frame-pointer</TT
+> optimization option, one of the most interesting, will allow the program to not keep the frame pointer in a register for functions that don't need one. This 
+               avoids the instructions to save, set up and restores frame pointers; it also makes an extra register available in many functions and makes debugging impossible on most machines.
+               </P
+></DD
+></DL
+></DIV
+>
+               </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+               All future optimizations that we will describe in this book refer by default to a Pentium II/III <SPAN
+CLASS="acronym"
+>CPU</SPAN
+> family. So you must, if required, adjust the compilation flags for your specific <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>CPU</SPAN
+></SPAN
+> processor type in 
+               the <TT
+CLASS="filename"
+>/etc/profile</TT
+> file and also during your compilation time.
+               </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="gen-optim.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap6sec65.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux General Optimization</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-optim.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Benchmark Results</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,662 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Linux SCSI programming HOWTO: Additional sense codes and additional sense code qualifiers</TITLE>
+ <LINK HREF="SCSI-Programming-HOWTO-23.html" REL=next>
+ <LINK HREF="SCSI-Programming-HOWTO-21.html" REL=previous>
+ <LINK HREF="SCSI-Programming-HOWTO.html#toc22" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="SCSI-Programming-HOWTO-23.html">Next</A>
+<A HREF="SCSI-Programming-HOWTO-21.html">Previous</A>
+<A HREF="SCSI-Programming-HOWTO.html#toc22">Contents</A>
+<HR>
+<H2><A NAME="s22">22. Additional sense codes and additional sense code qualifiers</A></H2>
+
+<P>
+<A NAME="sec-sensecodes"></A> 
+When the status of the executed SCSI command is CHECK_CONDITION,
+sense data is available in the sense buffer. The additional sense
+code and additional sense code qualifier are contained in that
+buffer.
+<P>From the SCSI-2 specification I include two tables. The first is in 
+lexical, the second in numerical order.
+<P>
+<H2><A NAME="ss22.1">22.1 ASC and ASCQ in lexical order</A>
+</H2>
+
+<P>The following table list gives a list of descriptions and device types
+they apply to.
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
++=============================================================================+
+|           D - DIRECT ACCESS DEVICE                                          |
+|           .T - SEQUENTIAL ACCESS DEVICE                                     |
+|           . L - PRINTER DEVICE                                              |
+|           .  P - PROCESSOR DEVICE                                           |
+|           .  .W - WRITE ONCE READ MULTIPLE DEVICE                           |
+|           .  . R - READ ONLY (CD-ROM) DEVICE                                |
+|           .  .  S - SCANNER DEVICE                                          |
+|           .  .  .O - OPTICAL MEMORY DEVICE                                  |
+|           .  .  . M - MEDIA CHANGER DEVICE                                  |
+|           .  .  .  C - COMMUNICATION DEVICE                                 |
+|           .  .  .  .                                                        |
+| ASC ASCQ  DTLPWRSOMC  DESCRIPTION                                           |
+| --- ----              ----------------------------------------------------- |
+| 13h  00h  D   W  O    ADDRESS MARK NOT FOUND FOR DATA FIELD                 |
+| 12h  00h  D   W  O    ADDRESS MARK NOT FOUND FOR ID FIELD                   |
+| 00h  11h       R      AUDIO PLAY OPERATION IN PROGRESS                      |
+| 00h  12h       R      AUDIO PLAY OPERATION PAUSED                           |
+| 00h  14h       R      AUDIO PLAY OPERATION STOPPED DUE TO ERROR             |
+| 00h  13h       R      AUDIO PLAY OPERATION SUCCESSFULLY COMPLETED           |
+| 00h  04h   T    S     BEGINNING-OF-PARTITION/MEDIUM DETECTED                |
+| 14h  04h   T          BLOCK SEQUENCE ERROR                                  |
+| 30h  02h  DT  WR O    CANNOT READ MEDIUM - INCOMPATIBLE FORMAT              |
+| 30h  01h  DT  WR O    CANNOT READ MEDIUM - UNKNOWN FORMAT                   |
+| 52h  00h   T          CARTRIDGE FAULT                                       |
+| 3Fh  02h  DTLPWRSOMC  CHANGED OPERATING DEFINITION                          |
+| 11h  06h      WR O    CIRC UNRECOVERED ERROR                                |
+| 30h  03h  DT          CLEANING CARTRIDGE INSTALLED                          |
+| 4Ah  00h  DTLPWRSOMC  COMMAND PHASE ERROR                                   |
+| 2Ch  00h  DTLPWRSOMC  COMMAND SEQUENCE ERROR                                |
+| 2Fh  00h  DTLPWRSOMC  COMMANDS CLEARED BY ANOTHER INITIATOR                 |
+| 2Bh  00h  DTLPWRSO C  COPY CANNOT EXECUTE SINCE HOST CANNOT DISCONNECT      |
+| 41h  00h  D           DATA PATH FAILURE (SHOULD USE 40 NN)                  |
+| 4Bh  00h  DTLPWRSOMC  DATA PHASE ERROR                                      |
+| 11h  07h      W  O    DATA RESYCHRONIZATION ERROR                           |
+| 16h  00h  D   W  O    DATA SYNCHRONIZATION MARK ERROR                       |
+| 19h  00h  D      O    DEFECT LIST ERROR                                     |
+| 19h  03h  D      O    DEFECT LIST ERROR IN GROWN LIST                       |
+| 19h  02h  D      O    DEFECT LIST ERROR IN PRIMARY LIST                     |
+| 19h  01h  D      O    DEFECT LIST NOT AVAILABLE                             |
+| 1Ch  00h  D      O    DEFECT LIST NOT FOUND                                 |
+| 32h  01h  D   W  O    DEFECT LIST UPDATE FAILURE                            |
+| 40h  NNh  DTLPWRSOMC  DIAGNOSTIC FAILURE ON COMPONENT NN (80H-FFH)          |
+| 63h  00h       R      END OF USER AREA ENCOUNTERED ON THIS TRACK            |
+| 00h  05h   T    S     END-OF-DATA DETECTED                                  |
+| 14h  03h   T          END-OF-DATA NOT FOUND                                 |
+| 00h  02h   T    S     END-OF-PARTITION/MEDIUM DETECTED                      |
+| 51h  00h   T     O    ERASE FAILURE                                         |
+| 0Ah  00h  DTLPWRSOMC  ERROR LOG OVERFLOW                                    |
+| 11h  02h  DT  W SO    ERROR TOO LONG TO CORRECT                             |
+| 03h  02h   T          EXCESSIVE WRITE ERRORS                                |
+| 3Bh  07h    L         FAILED TO SENSE BOTTOM-OF-FORM                        |
+| 3Bh  06h    L         FAILED TO SENSE TOP-OF-FORM                           |
+| 00h  01h   T          FILEMARK DETECTED                                     |
+| 14h  02h   T          FILEMARK OR SETMARK NOT FOUND                         |
+| 09h  02h      WR O    FOCUS SERVO FAILURE                                   |
+| 31h  01h  D L    O    FORMAT COMMAND FAILED                                 |
+| 58h  00h         O    GENERATION DOES NOT EXIST                             |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Table 71: (continued)
++=============================================================================+
+| ASC ASCQ  DTLPWRSOMC  DESCRIPTION                                           |
+| --- ----              ----------------------------------------------------- |
+| 1Ch  02h  D      O    GROWN DEFECT LIST NOT FOUND                           |
+| 00h  06h  DTLPWRSOMC  I/O PROCESS TERMINATED                                |
+| 10h  00h  D   W  O    ID CRC OR ECC ERROR                                   |
+| 22h  00h  D           ILLEGAL FUNCTION (SHOULD USE 20 00, 24 00, OR 26 00)  |
+| 64h  00h       R      ILLEGAL MODE FOR THIS TRACK                           |
+| 28h  01h          M   IMPORT OR EXPORT ELEMENT ACCESSED                     |
+| 30h  00h  DT  WR OM   INCOMPATIBLE MEDIUM INSTALLED                         |
+| 11h  08h   T          INCOMPLETE BLOCK READ                                 |
+| 48h  00h  DTLPWRSOMC  INITIATOR DETECTED ERROR MESSAGE RECEIVED             |
+| 3Fh  03h  DTLPWRSOMC  INQUIRY DATA HAS CHANGED                              |
+| 44h  00h  DTLPWRSOMC  INTERNAL TARGET FAILURE                               |
+| 3Dh  00h  DTLPWRSOMC  INVALID BITS IN IDENTIFY MESSAGE                      |
+| 2Ch  02h        S     INVALID COMBINATION OF WINDOWS SPECIFIED              |
+| 20h  00h  DTLPWRSOMC  INVALID COMMAND OPERATION CODE                        |
+| 21h  01h          M   INVALID ELEMENT ADDRESS                               |
+| 24h  00h  DTLPWRSOMC  INVALID FIELD IN CDB                                  |
+| 26h  00h  DTLPWRSOMC  INVALID FIELD IN PARAMETER LIST                       |
+| 49h  00h  DTLPWRSOMC  INVALID MESSAGE ERROR                                 |
+| 11h  05h      WR O    L-EC UNCORRECTABLE ERROR                              |
+| 60h  00h        S     LAMP FAILURE                                          |
+| 5Bh  02h  DTLPWRSOM   LOG COUNTER AT MAXIMUM                                |
+| 5Bh  00h  DTLPWRSOM   LOG EXCEPTION                                         |
+| 5Bh  03h  DTLPWRSOM   LOG LIST CODES EXHAUSTED                              |
+| 2Ah  02h  DTL WRSOMC  LOG PARAMETERS CHANGED                                |
+| 21h  00h  DT  WR OM   LOGICAL BLOCK ADDRESS OUT OF RANGE                    |
+| 08h  00h  DTL WRSOMC  LOGICAL UNIT COMMUNICATION FAILURE                    |
+| 08h  02h  DTL WRSOMC  LOGICAL UNIT COMMUNICATION PARITY ERROR               |
+| 08h  01h  DTL WRSOMC  LOGICAL UNIT COMMUNICATION TIME-OUT                   |
+| 4Ch  00h  DTLPWRSOMC  LOGICAL UNIT FAILED SELF-CONFIGURATION                |
+| 3Eh  00h  DTLPWRSOMC  LOGICAL UNIT HAS NOT SELF-CONFIGURED YET              |
+| 04h  01h  DTLPWRSOMC  LOGICAL UNIT IS IN PROCESS OF BECOMING READY          |
+| 04h  00h  DTLPWRSOMC  LOGICAL UNIT NOT READY, CAUSE NOT REPORTABLE          |
+| 04h  04h  DTL    O    LOGICAL UNIT NOT READY, FORMAT IN PROGRESS            |
+| 04h  02h  DTLPWRSOMC  LOGICAL UNIT NOT READY, INITIALIZING COMMAND REQUIRED |
+| 04h  03h  DTLPWRSOMC  LOGICAL UNIT NOT READY, MANUAL INTERVENTION REQUIRED  |
+| 25h  00h  DTLPWRSOMC  LOGICAL UNIT NOT SUPPORTED                            |
+| 15h  01h  DTL WRSOM   MECHANICAL POSITIONING ERROR                          |
+| 53h  00h  DTL WRSOM   MEDIA LOAD OR EJECT FAILED                            |
+| 3Bh  0Dh          M   MEDIUM DESTINATION ELEMENT FULL                       |
+| 31h  00h  DT  W  O    MEDIUM FORMAT CORRUPTED                               |
+| 3Ah  00h  DTL WRSOM   MEDIUM NOT PRESENT                                    |
+| 53h  02h  DT  WR OM   MEDIUM REMOVAL PREVENTED                              |
+| 3Bh  0Eh          M   MEDIUM SOURCE ELEMENT EMPTY                           |
+| 43h  00h  DTLPWRSOMC  MESSAGE ERROR                                         |
+| 3Fh  01h  DTLPWRSOMC  MICROCODE HAS BEEN CHANGED                            |
+| 1Dh  00h  D   W  O    MISCOMPARE DURING VERIFY OPERATION                    |
+| 11h  0Ah  DT     O    MISCORRECTED ERROR                                    |
+| 2Ah  01h  DTL WRSOMC  MODE PARAMETERS CHANGED                               |
+| 07h  00h  DTL WRSOM   MULTIPLE PERIPHERAL DEVICES SELECTED                  |
+| 11h  03h  DT  W SO    MULTIPLE READ ERRORS                                  |
+| 00h  00h  DTLPWRSOMC  NO ADDITIONAL SENSE INFORMATION                       |
+| 00h  15h       R      NO CURRENT AUDIO STATUS TO RETURN                     |
+| 32h  00h  D   W  O    NO DEFECT SPARE LOCATION AVAILABLE                    |
+| 11h  09h   T          NO GAP FOUND                                          |
+| 01h  00h  D   W  O    NO INDEX/SECTOR SIGNAL                                |
+| 06h  00h  D   WR OM   NO REFERENCE POSITION FOUND                           |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Table 71: (continued)
++=============================================================================+
+| ASC ASCQ  DTLPWRSOMC  DESCRIPTION                                           |
+| --- ----              ----------------------------------------------------- |
+| 02h  00h  D   WR OM   NO SEEK COMPLETE                                      |
+| 03h  01h   T          NO WRITE CURRENT                                      |
+| 28h  00h  DTLPWRSOMC  NOT READY TO READY TRANSITION, MEDIUM MAY HAVE CHANGED|
+| 5Ah  01h  DT  WR OM   OPERATOR MEDIUM REMOVAL REQUEST                       |
+| 5Ah  00h  DTLPWRSOM   OPERATOR REQUEST OR STATE CHANGE INPUT (UNSPECIFIED)  |
+| 5Ah  03h  DT  W  O    OPERATOR SELECTED WRITE PERMIT                        |
+| 5Ah  02h  DT  W  O    OPERATOR SELECTED WRITE PROTECT                       |
+| 61h  02h        S     OUT OF FOCUS                                          |
+| 4Eh  00h  DTLPWRSOMC  OVERLAPPED COMMANDS ATTEMPTED                         |
+| 2Dh  00h   T          OVERWRITE ERROR ON UPDATE IN PLACE                    |
+| 3Bh  05h    L         PAPER JAM                                             |
+| 1Ah  00h  DTLPWRSOMC  PARAMETER LIST LENGTH ERROR                           |
+| 26h  01h  DTLPWRSOMC  PARAMETER NOT SUPPORTED                               |
+| 26h  02h  DTLPWRSOMC  PARAMETER VALUE INVALID                               |
+| 2Ah  00h  DTL WRSOMC  PARAMETERS CHANGED                                    |
+| 03h  00h  DTL W SO    PERIPHERAL DEVICE WRITE FAULT                         |
+| 50h  02h   T          POSITION ERROR RELATED TO TIMING                      |
+| 3Bh  0Ch        S     POSITION PAST BEGINNING OF MEDIUM                     |
+| 3Bh  0Bh        S     POSITION PAST END OF MEDIUM                           |
+| 15h  02h  DT  WR O    POSITIONING ERROR DETECTED BY READ OF MEDIUM          |
+| 29h  00h  DTLPWRSOMC  POWER ON, RESET, OR BUS DEVICE RESET OCCURRED         |
+| 42h  00h  D           POWER-ON OR SELF-TEST FAILURE (SHOULD USE 40 NN)      |
+| 1Ch  01h  D      O    PRIMARY DEFECT LIST NOT FOUND                         |
+| 40h  00h  D           RAM FAILURE (SHOULD USE 40 NN)                        |
+| 15h  00h  DTL WRSOM   RANDOM POSITIONING ERROR                              |
+| 3Bh  0Ah        S     READ PAST BEGINNING OF MEDIUM                         |
+| 3Bh  09h        S     READ PAST END OF MEDIUM                               |
+| 11h  01h  DT  W SO    READ RETRIES EXHAUSTED                                |
+| 14h  01h  DT  WR O    RECORD NOT FOUND                                      |
+| 14h  00h  DTL WRSO    RECORDED ENTITY NOT FOUND                             |
+| 18h  02h  D   WR O    RECOVERED DATA - DATA AUTO-REALLOCATED                |
+| 18h  05h  D   WR O    RECOVERED DATA - RECOMMEND REASSIGNMENT               |
+| 18h  06h  D   WR O    RECOVERED DATA - RECOMMEND REWRITE                    |
+| 17h  05h  D   WR O    RECOVERED DATA USING PREVIOUS SECTOR ID               |
+| 18h  03h       R      RECOVERED DATA WITH CIRC                              |
+| 18h  01h  D   WR O    RECOVERED DATA WITH ERROR CORRECTION &amp; RETRIES APPLIED|
+| 18h  00h  DT  WR O    RECOVERED DATA WITH ERROR CORRECTION APPLIED          |
+| 18h  04h       R      RECOVERED DATA WITH L-EC                              |
+| 17h  03h  DT  WR O    RECOVERED DATA WITH NEGATIVE HEAD OFFSET              |
+| 17h  00h  DT  WRSO    RECOVERED DATA WITH NO ERROR CORRECTION APPLIED       |
+| 17h  02h  DT  WR O    RECOVERED DATA WITH POSITIVE HEAD OFFSET              |
+| 17h  01h  DT  WRSO    RECOVERED DATA WITH RETRIES                           |
+| 17h  04h      WR O    RECOVERED DATA WITH RETRIES AND/OR CIRC APPLIED       |
+| 17h  06h  D   W  O    RECOVERED DATA WITHOUT ECC - DATA AUTO-REALLOCATED    |
+| 17h  07h  D   W  O    RECOVERED DATA WITHOUT ECC - RECOMMEND REASSIGNMENT   |
+| 17h  08h  D   W  O    RECOVERED DATA WITHOUT ECC - RECOMMEND REWRITE        |
+| 1Eh  00h  D   W  O    RECOVERED ID WITH ECC CORRECTION                      |
+| 3Bh  08h   T          REPOSITION ERROR                                      |
+| 36h  00h    L         RIBBON, INK, OR TONER FAILURE                         |
+| 37h  00h  DTL WRSOMC  ROUNDED PARAMETER                                     |
+| 5Ch  00h  D      O    RPL STATUS CHANGE                                     |
+| 39h  00h  DTL WRSOMC  SAVING PARAMETERS NOT SUPPORTED                       |
+| 62h  00h        S     SCAN HEAD POSITIONING ERROR                           |
+| 47h  00h  DTLPWRSOMC  SCSI PARITY ERROR                                     |
+| 54h  00h     P        SCSI TO HOST SYSTEM INTERFACE FAILURE                 |
+| 45h  00h  DTLPWRSOMC  SELECT OR RESELECT FAILURE                            |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Table 71: (concluded)
++=============================================================================+
+| ASC ASCQ  DTLPWRSOMC  DESCRIPTION                                           |
+| --- ----              ----------------------------------------------------- |
+| 3Bh  00h   TL         SEQUENTIAL POSITIONING ERROR                          |
+| 00h  03h   T          SETMARK DETECTED                                      |
+| 3Bh  04h    L         SLEW FAILURE                                          |
+| 09h  03h      WR O    SPINDLE SERVO FAILURE                                 |
+| 5Ch  02h  D      O    SPINDLES NOT SYNCHRONIZED                             |
+| 5Ch  01h  D      O    SPINDLES SYNCHRONIZED                                 |
+| 1Bh  00h  DTLPWRSOMC  SYNCHRONOUS DATA TRANSFER ERROR                       |
+| 55h  00h     P        SYSTEM RESOURCE FAILURE                               |
+| 33h  00h   T          TAPE LENGTH ERROR                                     |
+| 3Bh  03h    L         TAPE OR ELECTRONIC VERTICAL FORMS UNIT NOT READY      |
+| 3Bh  01h   T          TAPE POSITION ERROR AT BEGINNING-OF-MEDIUM            |
+| 3Bh  02h   T          TAPE POSITION ERROR AT END-OF-MEDIUM                  |
+| 3Fh  00h  DTLPWRSOMC  TARGET OPERATING CONDITIONS HAVE CHANGED              |
+| 5Bh  01h  DTLPWRSOM   THRESHOLD CONDITION MET                               |
+| 26h  03h  DTLPWRSOMC  THRESHOLD PARAMETERS NOT SUPPORTED                    |
+| 2Ch  01h        S     TOO MANY WINDOWS SPECIFIED                            |
+| 09h  00h  DT  WR O    TRACK FOLLOWING ERROR                                 |
+| 09h  01h      WR O    TRACKING SERVO FAILURE                                |
+| 61h  01h        S     UNABLE TO ACQUIRE VIDEO                               |
+| 57h  00h       R      UNABLE TO RECOVER TABLE-OF-CONTENTS                   |
+| 53h  01h   T          UNLOAD TAPE FAILURE                                   |
+| 11h  00h  DT  WRSO    UNRECOVERED READ ERROR                                |
+| 11h  04h  D   W  O    UNRECOVERED READ ERROR - AUTO REALLOCATE FAILED       |
+| 11h  0Bh  D   W  O    UNRECOVERED READ ERROR - RECOMMEND REASSIGNMENT       |
+| 11h  0Ch  D   W  O    UNRECOVERED READ ERROR - RECOMMEND REWRITE THE DATA   |
+| 46h  00h  DTLPWRSOMC  UNSUCCESSFUL SOFT RESET                               |
+| 59h  00h         O    UPDATED BLOCK READ                                    |
+| 61h  00h        S     VIDEO ACQUISITION ERROR                               |
+| 50h  00h   T          WRITE APPEND ERROR                                    |
+| 50h  01h   T          WRITE APPEND POSITION ERROR                           |
+| 0Ch  00h   T    S     WRITE ERROR                                           |
+| 0Ch  02h  D   W  O    WRITE ERROR - AUTO REALLOCATION FAILED                |
+| 0Ch  01h  D   W  O    WRITE ERROR RECOVERED WITH AUTO REALLOCATION          |
+| 27h  00h  DT  W  O    WRITE PROTECTED                                       |
+|                                                                             |
+| 80h  XXh     \                                                              |
+| THROUGH       >       VENDOR SPECIFIC.                                      |
+| FFh  XX      /                                                              |
+|                                                                             |
+| XXh  80h     \                                                              |
+| THROUGH       >       VENDOR SPECIFIC QUALIFICATION OF STANDARD ASC.        |
+| XXh  FFh     /                                                              |
+|                       ALL CODES NOT SHOWN ARE RESERVED.                     |
+|-----------------------------------------------------------------------------|
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>
+<H2><A NAME="ss22.2">22.2 ASC and ASCQ in numerical order</A>
+</H2>
+
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+                       Table 364: ASC and ASCQ Assignments
+
++=============================================================================+
+|           D - DIRECT ACCESS DEVICE                                          |
+|           .T - SEQUENTIAL ACCESS DEVICE                                     |
+|           . L - PRINTER DEVICE                                              |
+|           .  P - PROCESSOR DEVICE                                           |
+|           .  .W - WRITE ONCE READ MULTIPLE DEVICE                           |
+|           .  . R - READ ONLY (CD-ROM) DEVICE                                |
+|           .  .  S - SCANNER DEVICE                                          |
+|           .  .  .O - OPTICAL MEMORY DEVICE                                  |
+|           .  .  . M - MEDIA CHANGER DEVICE                                  |
+|           .  .  .  C - COMMUNICATION DEVICE                                 |
+|           .  .  .  .                                                        |
+| ASC ASCQ  DTLPWRSOMC  DESCRIPTION                                           |
+| --- ----              ----------------------------------------------------- |
+|  00  00   DTLPWRSOMC  NO ADDITIONAL SENSE INFORMATION                       |
+|  00  01    T          FILEMARK DETECTED                                     |
+|  00  02    T    S     END-OF-PARTITION/MEDIUM DETECTED                      |
+|  00  03    T          SETMARK DETECTED                                      |
+|  00  04    T    S     BEGINNING-OF-PARTITION/MEDIUM DETECTED                |
+|  00  05    T    S     END-OF-DATA DETECTED                                  |
+|  00  06   DTLPWRSOMC  I/O PROCESS TERMINATED                                |
+|  00  11   R           AUDIO PLAY OPERATION IN PROGRESS                      |
+|  00  12   R           AUDIO PLAY OPERATION PAUSED                           |
+|  00  13   R           AUDIO PLAY OPERATION SUCCESSFULLY COMPLETED           |
+|  00  14   R           AUDIO PLAY OPERATION STOPPED DUE TO ERROR             |
+|  00  15   R           NO CURRENT AUDIO STATUS TO RETURN                     |
+|  01  00   DW  O       NO INDEX/SECTOR SIGNAL                                |
+|  02  00   DWR OM      NO SEEK COMPLETE                                      |
+|  03  00   DTL W SO    PERIPHERAL DEVICE WRITE FAULT                         |
+|  03  01    T          NO WRITE CURRENT                                      |
+|  03  02    T          EXCESSIVE WRITE ERRORS                                |
+|  04  00   DTLPWRSOMC  LOGICAL UNIT NOT READY, CAUSE NOT REPORTABLE          |
+|  04  01   DTLPWRSOMC  LOGICAL UNIT IS IN PROCESS OF BECOMING READY          |
+|  04  02   DTLPWRSOMC  LOGICAL UNIT NOT READY, INITIALIZING COMMAND REQUIRED |
+|  04  03   DTLPWRSOMC  LOGICAL UNIT NOT READY, MANUAL INTERVENTION REQUIRED  |
+|  04  04   DTL    O    LOGICAL UNIT NOT READY, FORMAT IN PROGRESS            |
+|  05  00   DTL WRSOMC  LOGICAL UNIT DOES NOT RESPOND TO SELECTION            |
+|  06  00   DWR OM  NO  REFERENCE POSITION FOUND                              |
+|  07  00   DTL WRSOM   MULTIPLE PERIPHERAL DEVICES SELECTED                  |
+|  08  00   DTL WRSOMC  LOGICAL UNIT COMMUNICATION FAILURE                    |
+|  08  01   DTL WRSOMC  LOGICAL UNIT COMMUNICATION TIME-OUT                   |
+|  08  02   DTL WRSOMC  LOGICAL UNIT COMMUNICATION PARITY ERROR               |
+|  09  00   DT  WR O    TRACK FOLLOWING ERROR                                 |
+|  09  01       WR O    TRA CKING SERVO FAILURE                               |
+|  09  02       WR O    FOC US SERVO FAILURE                                  |
+|  09  03       WR O    SPI NDLE SERVO FAILURE                                |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Table 364: (continued)
++=============================================================================+
+|           D - DIRECT ACCESS DEVICE                                          |
+|           .T - SEQUENTIAL ACCESS DEVICE                                     |
+|           . L - PRINTER DEVICE                                              |
+|           .  P - PROCESSOR DEVICE                                           |
+|           .  .W - WRITE ONCE READ MULTIPLE DEVICE                           |
+|           .  . R - READ ONLY (CD-ROM) DEVICE                                |
+|           .  .  S - SCANNER DEVICE                                          |
+|           .  .  .O - OPTICAL MEMORY DEVICE                                  |
+|           .  .  . M - MEDIA CHANGER DEVICE                                  |
+|           .  .  .  C - COMMUNICATION DEVICE                                 |
+|           .  .  .  .                                                        |
+| ASC ASCQ  DTLPWRSOMC  DESCRIPTION                                           |
+| --- ----              ----------------------------------------------------- |
+|  0A  00   DTLPWRSOMC  ERROR LOG OVERFLOW                                    |
+|  0B  00                                                                     |
+|  0C  00    T     S    WRITE ERROR                                           |
+|  0C  01   D   W  O    WRITE ERROR RECOVERED WITH AUTO REALLOCATION          |
+|  0C  02   D   W  O    WRITE ERROR - AUTO REALLOCATION FAILED                |
+|  0D  00                                                                     |
+|  0E  00                                                                     |
+|  0F  00                                                                     |
+|  10  00   D   W  O    ID CRC OR ECC ERROR                                   |
+|  11  00   DT  WRSO    UNRECOVERED READ ERROR                                |
+|  11  01   DT  W SO    READ RETRIES EXHAUSTED                                |
+|  11  02   DT  W SO    ERROR TOO LONG TO CORRECT                             |
+|  11  03   DT  W SO    MULTIPLE READ ERRORS                                  |
+|  11  04   D   W  O    UNRECOVERED READ ERROR - AUTO REALLOCATE FAILED       |
+|  11  05       WR O    L-EC UNCORRECTABLE ERROR                              |
+|  11  06       WR O    CIRC UNRECOVERED ERROR                                |
+|  11  07       W  O    DATA RESYCHRONIZATION ERROR                           |
+|  11  08    T          INCOMPLETE BLOCK READ                                 |
+|  11  09    T          NO GAP FOUND                                          |
+|  11  0A   DT     O    MISCORRECTED ERROR                                    |
+|  11  0B   D   W  O    UNRECOVERED READ ERROR - RECOMMEND REASSIGNMENT       |
+|  11  0C   D   W  O    UNRECOVERED READ ERROR - RECOMMEND REWRITE THE DATA   |
+|  12  00   D   W  O    ADDRESS MARK NOT FOUND FOR ID FIELD                   |
+|  13  00   D   W  O    ADDRESS MARK NOT FOUND FOR DATA FIELD                 |
+|  14  00   DTL WRSO    RECORDED ENTITY NOT FOUND                             |
+|  14  01   DT  WR O    RECORD NOT FOUND                                      |
+|  14  02    T          FILEMARK OR SETMARK NOT FOUND                         |
+|  14  03    T          END-OF-DATA NOT FOUND                                 |
+|  14  04    T          BLOCK SEQUENCE ERROR                                  |
+|  15  00   DTL WRSOM   RANDOM POSITIONING ERROR                              |
+|  15  01   DTL WRSOM   MECHANICAL POSITIONING ERROR                          |
+|  15  02   DT  WR O    POSITIONING ERROR DETECTED BY READ OF MEDIUM          |
+|  16  00   DW     O    DATA SYNCHRONIZATION MARK ERROR                       |
+|  17  00   DT  WRSO    RECOVERED DATA WITH NO ERROR CORRECTION APPLIED       |
+|  17  01   DT  WRSO    RECOVERED DATA WITH RETRIES                           |
+|  17  02   DT  WR O    RECOVERED DATA WITH POSITIVE HEAD OFFSET              |
+|  17  03   DT  WR O    RECOVERED DATA WITH NEGATIVE HEAD OFFSET              |
+|  17  04       WR O    RECOVERED DATA WITH RETRIES AND/OR CIRC APPLIED       |
+|  17  05   D   WR O    RECOVERED DATA USING PREVIOUS SECTOR ID               |
+|  17  06   D   W  O    RECOVERED DATA WITHOUT ECC - DATA AUTO-REALLOCATED    |
+|  17  07   D   W  O    RECOVERED DATA WITHOUT ECC - RECOMMEND REASSIGNMENT   |
+|  17  08   D   W  O    RECOVERED DATA WITHOUT ECC - RECOMMEND REWRITE        |
+|  18  00   DT  WR O    RECOVERED DATA WITH ERROR CORRECTION APPLIED          |
+|  18  01   D   WR O    RECOVERED DATA WITH ERROR CORRECTION &amp; RETRIES APPLIED|
+|  18  02   D   WR O    RECOVERED DATA - DATA AUTO-REALLOCATED                |
+|  18  03        R      RECOVERED DATA WITH CIRC                              |
+|  18  04        R      RECOVERED DATA WITH LEC                               |
+|  18  05   D   WR O    RECOVERED DATA - RECOMMEND REASSIGNMENT               |
+|  18  06   D   WR O    RECOVERED DATA - RECOMMEND REWRITE                    |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Table 364: (continued)
++=============================================================================+
+|           D - DIRECT ACCESS DEVICE                                          |
+|           .T - SEQUENTIAL ACCESS DEVICE                                     |
+|           . L - PRINTER DEVICE                                              |
+|           .  P - PROCESSOR DEVICE                                           |
+|           .  .W - WRITE ONCE READ MULTIPLE DEVICE                           |
+|           .  . R - READ ONLY (CD-ROM) DEVICE                                |
+|           .  .  S - SCANNER DEVICE                                          |
+|           .  .  .O - OPTICAL MEMORY DEVICE                                  |
+|           .  .  . M - MEDIA CHANGER DEVICE                                  |
+|           .  .  .  C - COMMUNICATION DEVICE                                 |
+|           .  .  .  .                                                        |
+| ASC ASCQ  DTLPWRSOMC  DESCRIPTION                                           |
+| --- ----              ----------------------------------------------------- |
+|  19  00   D      O    DEFECT LIST ERROR                                     |
+|  19  01   D      O    DEFECT LIST NOT AVAILABLE                             |
+|  19  02   D      O    DEFECT LIST ERROR IN PRIMARY LIST                     |
+|  19  03   D      O    DEFECT LIST ERROR IN GROWN LIST                       |
+|  1A  00   DTLPWRSOMC  PARAMETER LIST LENGTH ERROR                           |
+|  1B  00   DTLPWRSOMC  SYNCHRONOUS DATA TRANSFER ERROR                       |
+|  1C  00   D      O    DEFECT LIST NOT FOUND                                 |
+|  1C  01   D      O    PRIMARY DEFECT LIST NOT FOUND                         |
+|  1C  02   D      O    GROWN DEFECT LIST NOT FOUND                           |
+|  1D  00   D   W  O    MISCOMPARE DURING VERIFY OPERATION                    |
+|  1E  00   D   W  O    RECOVERED ID WITH ECC                                 |
+|  1F  00                                                                     |
+|  20  00   DTLPWRSOMC  INVALID COMMAND OPERATION CODE                        |
+|  21  00   DT  WR OM   LOGICAL BLOCK ADDRESS OUT OF RANGE                    |
+|  21  01           M   INVALID ELEMENT ADDRESS                               |
+|  22  00   D           ILLEGAL FUNCTION (SHOULD USE 20 00, 24 00, OR 26 00)  |
+|  23  00                                                                     |
+|  24  00   DTLPWRSOMC  INVALID FIELD IN CDB                                  |
+|  25  00   DTLPWRSOMC  LOGICAL UNIT NOT SUPPORTED                            |
+|  26  00   DTLPWRSOMC  INVALID FIELD IN PARAMETER LIST                       |
+|  26  01   DTLPWRSOMC  PARAMETER NOT SUPPORTED                               |
+|  26  02   DTLPWRSOMC  PARAMETER VALUE INVALID                               |
+|  26  03   DTLPWRSOMC  THRESHOLD PARAMETERS NOT SUPPORTED                    |
+|  27  00   DT  W  O    WRITE PROTECTED                                       |
+|  28  00   DTLPWRSOMC  NOT READY TO READY TRANSITION(MEDIUM MAY HAVE CHANGED)|
+|  28  01           M   IMPORT OR EXPORT ELEMENT ACCESSED                     |
+|  29  00   DTLPWRSOMC  POWER ON, RESET, OR BUS DEVICE RESET OCCURRED         |
+|  2A  00   DTL WRSOMC  PARAMETERS CHANGED                                    |
+|  2A  01   DTL WRSOMC  MODE PARAMETERS CHANGED                               |
+|  2A  02   DTL WRSOMC  LOG PARAMETERS CHANGED                                |
+|  2B  00   DTLPWRSO C  COPY CANNOT EXECUTE SINCE HOST CANNOT DISCONNECT      |
+|  2C  00   DTLPWRSOMC  COMMAND SEQUENCE ERROR                                |
+|  2C  01         S     TOO MANY WINDOWS SPECIFIED                            |
+|  2C  02         S     INVALID COMBINATION OF WINDOWS SPECIFIED              |
+|  2D  00    T          OVERWRITE ERROR ON UPDATE IN PLACE                    |
+|  2E  00                                                                     |
+|  2F  00   DTLPWRSOMC  COMMANDS CLEARED BY ANOTHER INITIATOR                 |
+|  30  00   DT  WR OM   INCOMPATIBLE MEDIUM INSTALLED                         |
+|  30  01   DT  WR O    CANNOT READ MEDIUM - UNKNOWN FORMAT                   |
+|  30  02   DT  WR O    CANNOT READ MEDIUM - INCOMPATIBLE FORMAT              |
+|  30  03   DT          CLEANING CARTRIDGE INSTALLED                          |
+|  31  00   DT  W  O    MEDIUM FORMAT CORRUPTED                               |
+|  31  01   D L    O    FORMAT COMMAND FAILED                                 |
+|  32  00   D   W  O    NO DEFECT SPARE LOCATION AVAILABLE                    |
+|  32  01   D   W  O    DEFECT LIST UPDATE FAILURE                            |
+|  33  00    T          TAPE LENGTH ERROR                                     |
+|  34  00                                                                     |
+|  35  00                                                                     |
+|  36  00     L         RIBBON, INK, OR TONER FAILURE                         |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Table 364: (continued)
++=============================================================================+
+|           D - DIRECT ACCESS DEVICE                                          |
+|           .T - SEQUENTIAL ACCESS DEVICE                                     |
+|           . L - PRINTER DEVICE                                              |
+|           .  P - PROCESSOR DEVICE                                           |
+|           .  .W - WRITE ONCE READ MULTIPLE DEVICE                           |
+|           .  . R - READ ONLY (CD-ROM) DEVICE                                |
+|           .  .  S - SCANNER DEVICE                                          |
+|           .  .  .O - OPTICAL MEMORY DEVICE                                  |
+|           .  .  . M - MEDIA CHANGER DEVICE                                  |
+|           .  .  .  C - COMMUNICATION DEVICE                                 |
+|           .  .  .  .                                                        |
+| ASC ASCQ  DTLPWRSOMC  DESCRIPTION                                           |
+| --- ----              ----------------------------------------------------- |
+|  37  00   DTL WRSOMC  ROUNDED PARAMETER                                     |
+|  38  00                                                                     |
+|  39  00   DTL WRSOMC  SAVING PARAMETERS NOT SUPPORTED                       |
+|  3A  00   DTL WRSOM   MEDIUM NOT PRESENT                                    |
+|  3B  00    TL         SEQUENTIAL POSITIONING ERROR                          |
+|  3B  01    T          TAPE POSITION ERROR AT BEGINNING-OF-MEDIUM            |
+|  3B  02    T          TAPE POSITION ERROR AT END-OF-MEDIUM                  |
+|  3B  03     L         TAPE OR ELECTRONIC VERTICAL FORMS UNIT NOT READY      |
+|  3B  04     L         SLEW FAILURE                                          |
+|  3B  05     L         PAPER JAM                                             |
+|  3B  06     L         FAILED TO SENSE TOP-OF-FORM                           |
+|  3B  07     L         FAILED TO SENSE BOTTOM-OF-FORM                        |
+|  3B  08    T          REPOSITION ERROR                                      |
+|  3B  09         S     READ PAST END OF MEDIUM                               |
+|  3B  0A         S     READ PAST BEGINNING OF MEDIUM                         |
+|  3B  0B         S     POSITION PAST END OF MEDIUM                           |
+|  3B  0C         S     POSITION PAST BEGINNING OF MEDIUM                     |
+|  3B  0D           M   MEDIUM DESTINATION ELEMENT FULL                       |
+|  3B  0E           M   MEDIUM SOURCE ELEMENT EMPTY                           |
+|  3C  00                                                                     |
+|  3D  00   DTLPWRSOMC  INVALID BITS IN IDENTIFY MESSAGE                      |
+|  3E  00   DTLPWRSOMC  LOGICAL UNIT HAS NOT SELF-CONFIGURED YET              |
+|  3F  00   DTLPWRSOMC  TARGET OPERATING CONDITIONS HAVE CHANGED              |
+|  3F  01   DTLPWRSOMC  MICROCODE HAS BEEN CHANGED                            |
+|  3F  02   DTLPWRSOMC  CHANGED OPERATING DEFINITION                          |
+|  3F  03   DTLPWRSOMC  INQUIRY DATA HAS CHANGED                              |
+|  40  00   D           RAM FAILURE (SHOULD USE 40 NN)                        |
+|  40  NN   DTLPWRSOMC  DIAGNOSTIC FAILURE ON COMPONENT NN (80H-FFH)          |
+|  41  00   D           DATA PATH FAILURE (SHOULD USE 40 NN)                  |
+|  42  00   D           POWER-ON OR SELF-TEST FAILURE (SHOULD USE 40 NN)      |
+|  43  00   DTLPWRSOMC  MESSAGE ERROR                                         |
+|  44  00   DTLPWRSOMC  INTERNAL TARGET FAILURE                               |
+|  45  00   DTLPWRSOMC  SELECT OR RESELECT FAILURE                            |
+|  46  00   DTLPWRSOMC  UNSUCCESSFUL SOFT RESET                               |
+|  47  00   DTLPWRSOMC  SCSI PARITY ERROR                                     |
+|  48  00   DTLPWRSOMC  INITIATOR DETECTED ERROR MESSAGE RECEIVED             |
+|  49  00   DTLPWRSOMC  INVALID MESSAGE ERROR                                 |
+|  4A  00   DTLPWRSOMC  COMMAND PHASE ERROR                                   |
+|  4B  00   DTLPWRSOMC  DATA PHASE ERROR                                      |
+|  4C  00   DTLPWRSOMC  LOGICAL UNIT FAILED SELF-CONFIGURATION                |
+|  4D  00                                                                     |
+|  4E  00   DTLPWRSOMC  OVERLAPPED COMMANDS ATTEMPTED                         |
+|  4F  00                                                                     |
+|  50  00    T          WRITE APPEND ERROR                                    |
+|  50  01    T          WRITE APPEND POSITION ERROR                           |
+|  50  02    T          POSITION ERROR RELATED TO TIMING                      |
+|  51  00    T     O    ERASE FAILURE                                         |
+|  52  00    T          CARTRIDGE FAULT                                       |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Table 364: (continued)
++=============================================================================+
+|           D - DIRECT ACCESS DEVICE                                          |
+|           .T - SEQUENTIAL ACCESS DEVICE                                     |
+|           . L - PRINTER DEVICE                                              |
+|           .  P - PROCESSOR DEVICE                                           |
+|           .  .W - WRITE ONCE READ MULTIPLE DEVICE                           |
+|           .  . R - READ ONLY (CD-ROM) DEVICE                                |
+|           .  .  S - SCANNER DEVICE                                          |
+|           .  .  .O - OPTICAL MEMORY DEVICE                                  |
+|           .  .  . M - MEDIA CHANGER DEVICE                                  |
+|           .  .  .  C - COMMUNICATION DEVICE                                 |
+|           .  .  .  .                                                        |
+| ASC ASCQ  DTLPWRSOMC  DESCRIPTION                                           |
+| --- ----              ----------------------------------------------------- |
+|  53  00   DTL WRSOM   MEDIA LOAD OR EJECT FAILED                            |
+|  53  01    T          UNLOAD TAPE FAILURE                                   |
+|  53  02   DT  WR OM   MEDIUM REMOVAL PREVENTED                              |
+|  54  00      P        SCSI TO HOST SYSTEM INTERFACE FAILURE                 |
+|  55  00      P        SYSTEM RESOURCE FAILURE                               |
+|  56  00                                                                     |
+|  57  00        R      UNABLE TO RECOVER TABLE-OF-CONTENTS                   |
+|  58  00     O         GENERATION DOES NOT EXIST                             |
+|  59  00     O         UPDATED BLOCK READ                                    |
+|  5A  00   DTLPWRSOM   OPERATOR REQUEST OR STATE CHANGE INPUT (UNSPECIFIED)  |
+|  5A  01   DT  WR OM   OPERATOR MEDIUM REMOVAL REQUEST                       |
+|  5A  02   DT  W  O    OPERATOR SELECTED WRITE PROTECT                       |
+|  5A  03   DT  W  O    OPERATOR SELECTED WRITE PERMIT                        |
+|  5B  00   DTLPWRSOM   LOG EXCEPTION                                         |
+|  5B  01   DTLPWRSOM   THRESHOLD CONDITION MET                               |
+|  5B  02   DTLPWRSOM   LOG COUNTER AT MAXIMUM                                |
+|  5B  03   DTLPWRSOM   LOG LIST CODES EXHAUSTED                              |
+|  5C  00   D   O       RPL STATUS CHANGE                                     |
+|  5C  01   D   O       SPINDLES SYNCHRONIZED                                 |
+|  5C  02   D   O       SPINDLES NOT SYNCHRONIZED                             |
+|  5D  00                                                                     |
+|  5E  00                                                                     |
+|  5F  00                                                                     |
+|  60  00         S     LAMP FAILURE                                          |
+|  61  00         S     VIDEO ACQUISITION ERROR                               |
+|  61  01         S     UNABLE TO ACQUIRE VIDEO                               |
+|  61  02         S     OUT OF FOCUS                                          |
+|  62  00         S     SCAN HEAD POSITIONING ERROR                           |
+|  63  00        R      END OF USER AREA ENCOUNTERED ON THIS TRACK            |
+|  64  00        R      ILLEGAL MODE FOR THIS TRACK                           |
+|  65  00                                                                     |
+|  66  00                                                                     |
+|  67  00                                                                     |
+|  68  00                                                                     |
+|  69  00                                                                     |
+|  6A  00                                                                     |
+|  6B  00                                                                     |
+|  6C  00                                                                     |
+|  6D  00                                                                     |
+|  6E  00                                                                     |
+|  6F  00                                                                     |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+Table 364: (concluded)
++=============================================================================+
+|           D - DIRECT ACCESS DEVICE                                          |
+|           .T - SEQUENTIAL ACCESS DEVICE                                     |
+|           . L - PRINTER DEVICE                                              |
+|           .  P - PROCESSOR DEVICE                                           |
+|           .  .W - WRITE ONCE READ MULTIPLE DEVICE                           |
+|           .  . R - READ ONLY (CD-ROM) DEVICE                                |
+|           .  .  S - SCANNER DEVICE                                          |
+|           .  .  .O - OPTICAL MEMORY DEVICE                                  |
+|           .  .  . M - MEDIA CHANGER DEVICE                                  |
+|           .  .  .  C - COMMUNICATION DEVICE                                 |
+|           .  .  .  .                                                        |
+| ASC ASCQ  DTLPWRSOMC  DESCRIPTION                                           |
+| --- ----              ----------------------------------------------------- |
+|  70  00                                                                     |
+|  71  00                                                                     |
+|  72  00                                                                     |
+|  73  00                                                                     |
+|  74  00                                                                     |
+|  75  00                                                                     |
+|  76  00                                                                     |
+|  77  00                                                                     |
+|  78  00                                                                     |
+|  79  00                                                                     |
+|  7A  00                                                                     |
+|  7B  00                                                                     |
+|  7C  00                                                                     |
+|  7D  00                                                                     |
+|  7E  00                                                                     |
+|  7F  00                                                                     |
+|                                                                             |
+|  80  xxh \                                                                  |
+|   THROUGH >  VENDOR SPECIFIC.                                               |
+|  FF  xxh /                                                                  |
+|                                                                             |
+|  xxh 80 \                                                                   |
+|  THROUGH >  VENDOR SPECIFIC QUALIFICATION OF STANDARD ASC.                  |
+|  xxh FF /                                                                   |
+|               ALL CODES NOT SHOWN OR BLANK ARE RESERVED.                    |
++=============================================================================+
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<HR>
+<A HREF="SCSI-Programming-HOWTO-23.html">Next</A>
+<A HREF="SCSI-Programming-HOWTO-21.html">Previous</A>
+<A HREF="SCSI-Programming-HOWTO.html#toc22">Contents</A>
+</BODY>
+</HTML>

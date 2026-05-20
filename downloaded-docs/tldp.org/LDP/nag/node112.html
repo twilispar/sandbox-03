@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Dialing out with chat</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node113.html">Debugging Your PPP Setup</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node111.html">Using Options Files</A>
+<BR> <P>
+<H1><A NAME="SECTION0010500000">Dialing out with chat</A></H1>
+<A NAME="4177"></A>
+<A NAME="4178"></A>
+<A NAME="4179"></A>
+One of the things that may have struck you as inconvenient in the above
+example is that you had to establish the connection manually before you
+could fire up pppd.  Unlike dip, pppd does not have
+its own scripting language for dialing the remote system and logging in,
+but rather relies on some external program or shell script to do this.
+The command to be executed can be given to pppd with the
+connect command line option.  pppd will redirect the
+command's standard input and output to the serial line.  One useful
+program for this is expect, written by Don Libes.  It has a very
+powerful language based on Tcl, and was designed exactly for this sort
+of application.
+<P>
+<A NAME="4545"></A>
+<A NAME="4188"></A>
+The pppd package comes along with a similar program called
+chat, which lets you specify a UUCP-style chat script.
+Basically, a chat script consists of an alternating sequence of
+strings that we expect to receive from the remote system, and the
+answers we are to send. We will call the expect and send strings,
+respectively.  This is a typical excerpt from a chat script;
+<Pre>
+           ogin: b1ff ssword: s3kr3t
+
+
+</pre>
+This tells chat to wait for the remote system to send the login
+prompt, and return the login name b1ff. We only wait for
+ogin: so that it doesn't matter if the login prompt starts with
+an uppercase or lowercase l, or if it arrives garbled.  The following
+string is an expect-string again that makes chat wait for the
+password prompt, and send our password in response.
+<P>
+This is basically all that chat scripts are about. A complete script to
+dial up a PPP server would, of course, also have to include the appropriate
+modem commands. Assume your modem understands the Hayes command set, and
+the server's telephone number was 318714. The complete chat
+invocation to establish a connection with c3po would then be
+<Pre>
+          $ chat -v '' ATZ OK ATDT318714 CONNECT '' ogin: ppp word: GaGariN
+ 
+</Pre>
+By definition, the first string must be an expect string, but as the
+modem won't say anything before we have kicked it, we make chat
+skip the first expect by specifying an empty string.  We go on and send
+ATZ, the reset command for Hayes-compatible modems, and wait for
+its response (OK). The next string sends the dial command along
+with the phone number to chat, and expects the CONNECT
+message in response.  This is followed by an empty string again, because
+we don't want to send anything now, but rather wait for the login
+prompt. The remainder of the chat script works exactly as described
+above.
+<P>
+The -v option makes chat log all activities to the
+syslog daemon's local2 facility.<A HREF="footnode.html#4546"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="4212"></A>
+Specifying the chat script on the command line bears a certain risk,
+because users can view a process' command line with the ps
+command.  You can avoid this by putting the chat script in a file, say
+dial-c3po.  You make chat read the script from the file
+instead of the command line by giving it the -f option, followed
+by the file name.  The complete pppd incantation would now look like
+this:
+<Pre>
+           # pppd connect "chat -f dial-c3po" /dev/cua3 38400 -detach \
+             crtscts modem defaultroute
+ 
+</Pre>
+Beside the connect option that specifies the dial-up script,
+we have added two more options to the command line: -detach,
+which tells pppd not to detach from the console and become a
+background process. The modem keyword makes it perform some
+modem-specific actions on the serial device, like hanging up the line
+before and after the call. If you don't use this keyword, pppd
+will not monitor the port's DCD line, and will therefore not detect if
+the remote end hangs up unexpectedly.
+<P>
+The examples shown above were rather simple; chat allows for much
+more complex chat scripts.  One very useful feature is the ability to
+specify strings on which to abort the chat with an error.  Typical abort
+strings are messages like BUSY, or NO CARRIER, that your
+modem usually generates when the called number is busy, or doesn't pick
+up the phone.  To make chat recognize these immediately, rather
+than timing out, you can specify them at the beginning of the script
+using the ABORT keyword:
+<Pre>
+           $ chat -v ABORT BUSY ABORT 'NO CARRIER' '' ATZ OK ...
+
+ 
+</Pre>
+In a similar fashion, you may change the timeout value for parts of the
+chat scripts by inserting TIMEOUT options. For details, please
+check the chat(8) manual page.
+<P>
+Sometimes, you'd also want to have some sort of conditional execution
+of parts of the chat script. For instance, when you don't receive the
+remote end's login prompt, you might want to send a BREAK, or a carriage
+return. You can achieve this by appending a sub-script to an expect
+string.  It consists of a sequence of send- and expect-strings, just
+like the overall script itself, which are separated by hyphens. The
+sub-script is executed whenever the expected string they are appended to
+is not received in time.  In the example above, we would modify the chat
+script as follows:
+<Pre>
+           ogin:-BREAK-ogin: ppp ssword: GaGariN
+ 
+</Pre>
+Now, when chat doesn't see the remote system send the login
+prompt, the sub-script is executed by first sending a BREAK, and then
+waiting for the login prompt again. If the prompt now appears, the
+script continues as usual, otherwise it will terminate with an error.
+<P>
+<A NAME="4237"></A>
+<A NAME="4547"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node113.html">Debugging Your PPP Setup</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node111.html">Using Options Files</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

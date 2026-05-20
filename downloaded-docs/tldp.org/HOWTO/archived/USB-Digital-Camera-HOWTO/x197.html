@@ -1,0 +1,252 @@
+<HTML
+><HEAD
+><TITLE
+>What is Happening while the script is running</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="USB Digital Camera HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="The Script Files"
+HREF="c176.html"><LINK
+REL="PREVIOUS"
+TITLE="Make it Executable"
+HREF="executable.html"><LINK
+REL="NEXT"
+TITLE="Exploring and Fine Tuning"
+HREF="c225.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>USB Digital Camera HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="executable.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 4. The Script Files</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c225.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="AEN197">4.4. What is Happening while the script is running</H1
+><P
+>When you run the script, it will create a subject matter directory. <TT
+CLASS="varname"
+>DIRPATH</TT
+> should describe the pictures and is entered at the prompt. If <TT
+CLASS="filename"
+>your_script_file_name</TT
+> = <TT
+CLASS="filename"
+>getcamJ</TT
+>,(J for getting the pictures with .jpg extensions) the command sequence would 
+look like this:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+>&#13;[bash]$ getcamJ
+Please enter a directory name for the pictures.
+bash]$ something
+Password: 
+[bash]$ your root password
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>If you run this script file in superuser mode the rest of this paragraph does 
+not apply. You have to be superuser to run this. Consequently, the 'su' command. 
+The <TT
+CLASS="parameter"
+><I
+>-c</I
+></TT
+> flag will let you execute one command and return to your present working directory. The quotation marks allow you to enter more that one command. 
+And the semicolon allows one command to execute right after the last.</P
+><P
+><TT
+CLASS="filename"
+>/sbin/modprobe usb-storage</TT
+>:  <B
+CLASS="command"
+>modprobe</B
+> will install the USB mass storage module along with any other modules or drivers needed. Mainly the SCSI driver. 
+Make sure that you have in your /dev directory the following entries. <SPAN
+CLASS="systemitem"
+>sda0, 
+sda1, sda2, sda3, sda4, sdb0, sdb1, sdb2, sdb3, sdb4</SPAN
+>. Set <SPAN
+CLASS="systemitem"
+>sda1</SPAN
+> to the appropriate device if you have other SCSI devices mounted, probably <SPAN
+CLASS="systemitem"
+>sdb1</SPAN
+>.</P
+><P
+>Mount your SCSI driver: <TT
+CLASS="userinput"
+><B
+>mount -t vfat /dev/sda1 /mnt/camera</B
+></TT
+></P
+><P
+>Start your USB: <TT
+CLASS="userinput"
+><B
+>/etc/rc.d/init.d/usb start</B
+></TT
+></P
+><P
+>Move your pictures from your camera to your hard drive.  <B
+CLASS="command"
+>mv</B
+> will also remove your pictures from your camera: <TT
+CLASS="userinput"
+><B
+>mv /mnt/camera/dcim/100msdcf/*.jpg picture/$DIRPATH;</B
+></TT
+></P
+><P
+>Unmount your SCSI driver: <TT
+CLASS="userinput"
+><B
+>umount /mnt/camera</B
+></TT
+></P
+><P
+>Then: <TT
+CLASS="userinput"
+><B
+>chown -R your_login_name picture/$DIRPATH</B
+></TT
+>.  When you do something as 
+superuser (su) or root, root owns those files/pictures. Some of the things you 
+may want to do to these files/pictures may give you a <SPAN
+CLASS="errorname"
+>permission denied</SPAN
+> error. 
+This allows the user to work without those errors. Read the manual for more information.</P
+><P
+>My system is set up with no USB or SCSI compiled into the kernel. All this 
+was compiled as modules. This script file assumes your system is the same. If 
+not, you will have to make some modifications. Please read the manuals and 
+HOWTOs. Or ask on one of the Linux newsgroups.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="executable.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c225.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Make it Executable</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c176.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Exploring and Fine Tuning</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

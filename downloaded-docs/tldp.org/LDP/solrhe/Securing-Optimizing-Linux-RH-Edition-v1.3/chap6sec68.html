@@ -1,0 +1,378 @@
+<HTML
+><HEAD
+><TITLE
+>The bdflush parameters</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux General Optimization"
+HREF="gen-optim.html"><LINK
+REL="PREVIOUS"
+TITLE="Benchmark results -i486
+               "
+HREF="chap6sec67.html"><LINK
+REL="NEXT"
+TITLE="The buffermem parameters"
+HREF="chap6sec69.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap6sec67.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. Linux General Optimization</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap6sec69.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4516"
+>6.5. The bdflush parameters</A
+></H1
+><P
+>&#13;          The bdflush file is closely related to the operation of the virtual memory <SPAN
+CLASS="acronym"
+>VM</SPAN
+> subsystem of the Linux kernel and has a little influence on disk usage. This 
+          file <TT
+CLASS="filename"
+>/proc/sys/vm/bdflush</TT
+> controls the operation of the bdflush kernel daemon. We generally tune this file to improve file system performance. By changing some 
+          values from the default as shown below, the system seems more responsive; e.g. it waits a little more to write to disk and thus avoids some disk access contention.
+          </P
+><P
+>&#13;          The default setup for the bdflush parameters under Red Hat Linux is:
+          <TT
+CLASS="computeroutput"
+>"40 500 64 256 500 3000 500 1884 2"</TT
+>
+
+          To change the values of bdflush, type the following command on your terminal:
+
+          <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.1.gif"
+ALT="Version 6.1 only"
+></IMG
+></P
+></DIV
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>echo</B
+> "100 1200 128 512 15 5000 500 1884 2"&#62;/proc/sys/vm/bdflush
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          You may add the above commands to the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> script file and you'll not have to type it again the 
+          next time you reboot your system.
+          </P
+><P
+>&#13;          <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+          Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following line:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          # Improve file system performance
+          vm.bdflush = 100 1200 128 512 15 5000 500 1884 2
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          
+          You must restart your network for the change to take effect. The command to manually restart the network is the following:
+
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          Setting network parameters	 [  OK  ]
+          Bringing up interface lo	 [  OK  ]
+          Bringing up interface eth0	 [  OK  ]
+          Bringing up interface eth1	 [  OK  ]
+          </TT
+></P
+>
+          
+          </P
+><P
+>&#13;          In our example above, according to <TT
+CLASS="filename"
+>the/usr/src/linux/Documentation/sysctl/vm.txt</TT
+> file- 
+          <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>The first parameter 100 %</B
+></DT
+><DD
+><P
+>&#13;          governs the maximum number of 
+          dirty buffers in the buffer cache. Dirty means that the contents of the buffer still have to be written to disk as opposed to a clean buffer, which can just be 
+          forgotten about. Setting this to a high value means that Linux can delay disk writes for a long time, but it also means that it will have to do a lot of I/O at once 
+          when memory becomes short. A low value will spread out disk I/O more evenly.
+          </P
+></DD
+><DT
+><B
+>The second parameter 1200 <EM
+>ndirty</EM
+></B
+></DT
+><DD
+><P
+>&#13;          This gives the maximum number of dirty buffers that bdflush can write to the disk in one time. A high value will mean delayed, bursty I/O, while a small value can 
+          lead to memory shortage when bdflush isn't woken up often enough.
+          </P
+></DD
+><DT
+><B
+>The third parameter 128 <EM
+>nrefill</EM
+></B
+></DT
+><DD
+><P
+>&#13;          This is the number of buffers that bdflush will add to the list of free buffers when refill_freelist() is called. It is necessary to allocate free buffers 
+          beforehand, since the buffers often are of a different size than memory pages and some bookkeeping needs to be done beforehand. The higher the number, the 
+          more memory will be wasted and the less often refill_freelist() will need to run.
+          </P
+></DD
+><DT
+><B
+><EM
+>refill_freelist()</EM
+> 512</B
+></DT
+><DD
+><P
+>&#13;          When this comes across more than nref_dirt dirty buffers, it will wake up bdflush.
+          </P
+></DD
+><DT
+><B
+><EM
+>age_buffer</EM
+> <TT
+CLASS="literal"
+>50*HZ</TT
+>, <EM
+>age_super</EM
+> parameters <TT
+CLASS="literal"
+>5*HZ</TT
+></B
+></DT
+><DD
+><P
+>&#13;          Finally, the <EM
+>age_buffer</EM
+> <TT
+CLASS="literal"
+>50*HZ</TT
+> and <EM
+>age_super</EM
+> parameters <TT
+CLASS="literal"
+>5*HZ</TT
+> govern the maximum time Linux waits before writing out a dirty buffer to disk. The value is expressed 
+          in jiffies (clockticks); the number of jiffies per second is 100. <EM
+>Age_buffer</EM
+> is the maximum age for data blocks, while <EM
+>age_super</EM
+> is for file system metadata.
+          </P
+></DD
+><DT
+><B
+>&#13;          The fifth 15 and the last two parameters 1884 and 2
+          </B
+></DT
+><DD
+><P
+>&#13;          These are unused by the system so we don't need to change the default ones.
+          </P
+></DD
+></DL
+></DIV
+>
+          </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+          Look at <TT
+CLASS="filename"
+>/usr/src/linux/Documentation/sysctl/vm.txt</TT
+> for more information on how to improve kernel parameters related to virtual memory.
+          </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap6sec67.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap6sec69.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Benchmark results -i486</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-optim.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The buffermem parameters</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

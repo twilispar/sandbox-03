@@ -1,0 +1,334 @@
+<HTML
+><HEAD
+><TITLE
+>Configure of the /etc/squid/squid.conf file -/proxy-caching mode</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Proxy Network"
+HREF="netproxy-squid.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/squid/squid.conf file -in httpd-accelerator mode"
+HREF="chap28sec231.html"><LINK
+REL="NEXT"
+TITLE="Configure the /etc/rc.d/init.d/squid script file -/all configurations"
+HREF="chap28sec233.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap28sec231.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 28. Software -Server/Proxy Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap28sec233.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN18345"
+>28.7. Configure of the <TT
+CLASS="filename"
+>/etc/squid/squid.conf</TT
+> file -/proxy-caching mode</A
+></H1
+><P
+>&#13;               With some minor modification to the <TT
+CLASS="filename"
+>squid.conf</TT
+> file we have defined above to run in <TT
+CLASS="literal"
+>httpd-accelerator</TT
+> mode, we can run Squid as a proxy-caching server. With a proxy cache server, all users 
+               in your corporate network use Squid to access the Internet. With this configuration, you can have complete control, and apply special policies on what can be viewed, accessed, and downloaded. You can also control bandwidth 
+               usage, connection time, and so on. A proxy cache server can be configured to run as stand-alone server for your corporation, or to use and share caches hierarchically with other proxy servers around the Internet.
+               <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Squid-Stand-Alone-Schema.gif"
+ALT="Squid-StandAlone"
+></IMG
+></P
+></DIV
+>
+             </P
+><P
+>&#13;               With the first example below we show you how to configure Squid as a stand-alone server, and then speak a little bit about a cache hierarchy configuration, where two or more proxy-cache servers cooperate by serving documents to each other.
+               Edit the <TT
+CLASS="filename"
+>squid.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/squid/squid.conf</TT
+> and add/change the following options for proxy cache that run as a stand-alone server:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 http_port 8080
+                 icp_port 0
+                 acl QUERY urlpath_regex cgi-bin \?
+                 no_cache deny QUERY
+                 cache_mem 16 MB
+                 cache_dir ufs /cache 200 16 256
+                 redirect_rewrites_host_header off
+                 replacement_policy GDSF
+                 acl localnet src 192.168.1.0/255.255.255.0
+                 acl localhost src 127.0.0.1/255.255.255.255
+                 acl Safe_ports port 80 443 210 119 70 21 1025-65535
+                 acl CONNECT method CONNECT
+                 acl all src 0.0.0.0/0.0.0.0
+                 http_access allow localnet
+                 http_access allow localhost
+                 http_access deny !Safe_ports
+                 http_access deny CONNECT
+                 http_access deny all
+                 cache_mgr admin@openna.com
+                 cache_effective_user squid
+                 cache_effective_group squid
+                 log_icp_queries off
+                 cachemgr_passwd my-secret-pass all
+                 buffered_logs on
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               The big difference with the <TT
+CLASS="literal"
+>httpd-accellerator</TT
+> mode configuration is the use of access control lists (ACL). This feature allows you to restrict access based on source <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address (src), destination 
+               <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address (dst), source domain, destination domain, time, and so on. Many types exist with this feature, and you should consult the <TT
+CLASS="filename"
+>Squid.conf</TT
+> file for a complete list. The four most used types 
+               are as follows:
+               <P
+CLASS="literallayout"
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;acl	&nbsp;name&nbsp;&nbsp;&nbsp;type&nbsp;&nbsp;&nbsp;&nbsp;data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|	&nbsp;&nbsp;&nbsp;&nbsp;|	&nbsp;&nbsp;&nbsp;|	&nbsp;&nbsp;&nbsp;|<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;acl&nbsp;some-name&nbsp;src&nbsp;a.b.c.d/e.f.g.h&nbsp;	#&nbsp;ACL&nbsp;restrict&nbsp;access&nbsp;based&nbsp;on&nbsp;source&nbsp;IP&nbsp;address&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;acl&nbsp;some-name&nbsp;dst&nbsp;a.b.c.d/e.f.g.h&nbsp;	#&nbsp;ACL&nbsp;restrict&nbsp;access&nbsp;based&nbsp;on&nbsp;destination&nbsp;IP&nbsp;address&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;acl&nbsp;some-name&nbsp;srcdomain&nbsp;foo.com&nbsp;	#&nbsp;ACL&nbsp;restrict&nbsp;access&nbsp;based&nbsp;on&nbsp;source&nbsp;domain&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;acl&nbsp;some-name&nbsp;dstdomain&nbsp;foo.com&nbsp;	#&nbsp;ACL&nbsp;restrict&nbsp;access&nbsp;based&nbsp;on&nbsp;destination&nbsp;domain<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+             </P
+><P
+>&#13;               As an example, to restrict access to your Squid proxy server to only your internal clients, and to a specific range of designated ports, something like the following will make the job:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 acl localnet src 192.168.1.0/255.255.255.0
+                 acl localhost src 127.0.0.1/255.255.255.255
+                 acl Safe_ports port 80 443 210 119 70 21 1025-65535
+                 acl CONNECT method CONNECT
+                 acl all src 0.0.0.0/0.0.0.0
+                 http_access allow localnet
+                 http_access allow localhost
+                 http_access deny !Safe_ports
+                 http_access deny CONNECT
+                 http_access deny all
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;             This acl configuration will allow all internal clients from the private class C 192.168.1.0 to access the proxy server; it's also recommended that you allow the localhost IP (a special IP address used by your own server) to access 
+             the proxy. After we choose a range of ports (80=http, 443=https, 210=wais, 119=nntp, 70=gopher, and 21=ftp) which our internal clients can use to access the Internet, we deny the <TT
+CLASS="envar"
+>CONNECT</TT
+> method to prevent outside people 
+             from trying to connect to the proxy server, and finally, we deny all source IP address and ports on the proxy server.
+             </P
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN18371"
+></A
+><P
+><B
+>Multi-level Web Caching</B
+></P
+><P
+>&#13;                 The second method of proxy cache is the so-called <I
+CLASS="wordasword"
+>Multi-level Web Caching</I
+> where you choose to share and cooperate with more proxy-cache servers on the Internet. With this method, your organization uses the cache 
+                 of many others proxy cache servers, and to compensate, the other cache server can use yours. It's important to note that in this situation, the proxy cache can play two different roles in the hierarchy. It can be configured to be a sibling 
+                 cache, and be able to only serve documents it already has, or it can be configured as a parent cache, and be able to get documents from another cache or from the source directly.
+<SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Squid-Hierarchy-Schema.gif"
+ALT="Squid-Hierarchy"
+></IMG
+></SPAN
+>
+               </P
+></DIV
+></TD
+></TR
+></TABLE
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+               A good strategy to avoid generating more network traffic than without web caching is to choose to have several sibling caches and only a small number of parent caches.
+               </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap28sec231.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap28sec233.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/squid/squid.conf</TT
+> file -in <TT
+CLASS="literal"
+>httpd-accelerator mode</TT
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netproxy-squid.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/squid</TT
+> script file -/all configurations</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>PPP on </TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node110.html">Running pppd</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node108.html">Untangling the P's</A>
+<BR> <P>
+<H1><A NAME="SECTION0010200000">PPP on </A></H1>
+<P>
+<A NAME="4091"></A>
+<A NAME="4092"></A>
+<A NAME="4093"></A>
+<A NAME="4538"></A>
+<P>
+On , PPP functionality is split up in two parts, a low-level HDLC
+driver located in the kernel, and the user space pppd daemon
+that handles the various control protocols.  The current release of PPP
+for  is linux-ppp-1.0.0, and contains the kernel PPP
+module, pppd, and a program named chat used to dial up the
+remote system.
+<P>
+The PPP kernel driver was written by Michael Callahan.  pppd was
+derived from a free PPP implementation for Sun and 386BSD machines,
+which was written by Drew Perkins and others, and is maintained by Paul
+Mackerras. It was ported to  by Al Longyear.<A HREF="footnode.html#4540"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="4105"></A>
+<A NAME="4106"></A>
+Just like SLIP, PPP is implemented by means of a special line discipline.
+To use some serial line as a PPP link, you first establish the connection
+over your modem as usual, and subsequently convert the line to PPP mode.
+In this mode, all incoming data is passed to the PPP driver, which checks
+the incoming HDLC frames for validity (each HDLC frame carries a 16-bit
+checksum), and unwraps and dispatches them.  Currently, it is able to
+handle IP datagrams, optionally using Van-Jacobson header compression.
+As soon as  supports IPX, the PPP driver will be extended to
+handle IPX packets, too.
+<P>
+The kernel driver is aided by pppd, the PPP daemon, which performs
+the entire initialization and authentication phase that is necessary before
+actual network traffic can be sent across the link.  pppd's behavior
+may be fine-tuned using a number of options.  As PPP is rather complex, it
+is impossible to explain all of them in a single chapter.  This book
+therefore cannot cover all aspects of pppd, but only give you an
+introduction. For more information, refer to the manual pages and
+READMEs in the pppd source distribution, which should help
+you sort out most questions this chapter fails to discuss.  If your
+problems persist even after reading all documentation, you should turn to
+the newsgroup comp.protocols.ppp for help, which is the place where
+you will reach most of the people involved in the development of
+pppd.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node110.html">Running pppd</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node108.html">Untangling the P's</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

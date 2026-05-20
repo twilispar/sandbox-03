@@ -1,0 +1,247 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/logrotate.d/apache file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/httpd/conf/httpd.conf file"
+HREF="chap29sec245.html"><LINK
+REL="NEXT"
+TITLE="Configure the /etc/rc.d/init.d/httpd script file"
+HREF="chap29sec247.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec245.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec247.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19392"
+>29.10. Configure the <TT
+CLASS="filename"
+>/etc/logrotate.d/apache</TT
+> file</A
+></H1
+><P
+>&#13;      Configure your <TT
+CLASS="filename"
+>/etc/logrotate.d/apache</TT
+> file to rotate each week your Apache log files automatically.
+      Create the <TT
+CLASS="filename"
+>apache</TT
+> file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/logrotate.d/apache</TT
+> and add:
+    </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;      /var/log/httpd/access_log {
+      missingok
+      postrotate
+      /usr/bin/killall -HUP httpd
+      endscript
+      }
+
+      /var/log/httpd/error_log {
+      missingok
+      postrotate
+      /usr/bin/killall -HUP httpd
+      endscript
+      }
+
+      /var/log/httpd/ssl_request_log {
+      missingok
+      postrotate
+      /usr/bin/killall -HUP httpd
+      endscript
+      }
+
+      /var/log/httpd/ssl_engine_log {
+      missingok
+      postrotate
+      /usr/bin/killall -HUP httpd
+      endscript
+      }
+    </PRE
+></TD
+></TR
+></TABLE
+><DIV
+CLASS="caution"
+><P
+></P
+><TABLE
+CLASS="caution"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Caution.gif"
+ALT="CAution"
+></IMG
+></SPAN
+></B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>&#13;        Lines to automatically rotate the <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> log files named <TT
+CLASS="filename"
+>ssl_request_log</TT
+> and <TT
+CLASS="filename"
+>ssl_engine_log</TT
+> are included in this file. If you 
+        intend to run Apache without <SPAN
+CLASS="acronym"
+>SSL</SPAN
+> support, you must remove the lines related to <SPAN
+CLASS="acronym"
+>SSL</SPAN
+>.
+      </P
+></TD
+></TR
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec245.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec247.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/httpd/conf/httpd.conf</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/httpd</TT
+> script file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

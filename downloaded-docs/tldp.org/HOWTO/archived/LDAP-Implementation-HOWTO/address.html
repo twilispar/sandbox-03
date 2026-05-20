@@ -1,0 +1,204 @@
+<HTML
+><HEAD
+><TITLE
+>Address books</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.63
+"><LINK
+REL="HOME"
+TITLE="LDAP Implementation HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Mail Transfer Agents"
+HREF="sendmail.html"><LINK
+REL="NEXT"
+TITLE="Netscape roaming access"
+HREF="roaming.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>LDAP Implementation HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="sendmail.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="roaming.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="ADDRESS"
+>7. Address books</A
+></H1
+><P
+>A very useful feature of an Ldap database on a linuxserver is that when you have an internal network in your organization, you can have a single place to store all your external contacts. You could even divide it in groups, or departments. It is no longer neccesary to give each employee a seperate address book. Apart from using Ldap, this could also be done with Microsoft Exchange Server, Lotus Domino, and Netscape Active Directory.</P
+><P
+>To use Microsoft Address Book and programs that rely on it, such as Microsoft Outlook, Microsoft Outlook Express and Microsoft Outlook 2000 there is no need to change the basic ldap configuration. There are two things that need to be modified though.</P
+><P
+>At first, you have to create a directory tree to store your addresses and relevant data. In <A
+HREF="schemas.html"
+>Section 11</A
+> will be shown which entries will be used in this tree.</P
+><P
+>Second, you have to make sure that all hosts on your local network have read access to this tree. This will be dealt with in the chapter 'security' which is not finished yet.</P
+><P
+>All Microsoft Email programs can use the Ldap Directory Services. If you want to search for people, you have to use the Address Book. When composing a new email message, a name can be automatically matched to an email address. To do this, the <EM
+>cn</EM
+>,<EM
+>sn</EM
+>,<EM
+>givenname</EM
+> and <EM
+>mail</EM
+> fields are searched. When you want to configure your Microsoft email program to use an Ldap server as your address book, or to look up email addresses, you need to do the following:<P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>Start your favorite email program and open the address book. This can be done by selecting <SPAN
+CLASS="GUIMENU"
+>Tools, Addressbook</SPAN
+> from within the program, or via the start menu by selecting <SPAN
+CLASS="GUIMENU"
+>Start,Programs,Accessories,Address Book</SPAN
+>.</P
+></LI
+><LI
+><P
+>Click on Tools,Accounts to open the Internet Account window.</P
+></LI
+><LI
+><P
+>Click <SPAN
+CLASS="GUIBUTTON"
+>Add</SPAN
+>, now you get an Internet Connection Wizard window, type the ip address or hostname of your Ldap server, and click <SPAN
+CLASS="GUIBUTTON"
+>OK</SPAN
+>.</P
+></LI
+><LI
+><P
+>On the next window, answer Yes to confirm you want to check your adresses using this directory, or No if you don't want do not want that. Now click Next and click Finish.</P
+></LI
+><LI
+><P
+>Now you're back at the Internet Account window. Select your newly-added account and click Properties.</P
+></LI
+><LI
+><P
+>On the properties window, click the Advanced tab.</P
+></LI
+><LI
+><P
+>In the Search Base field, enter the base of the tree where your adresses will be stored. An example could be <EM
+>ou=Addressbook,dc=yourorg,dc=com.</EM
+></P
+></LI
+><LI
+><P
+>Press OK to close the window and click Close to close the Internet Account window. You should have returned to the main Address Book window now.</P
+></LI
+></OL
+></P
+><P
+>Now, when you enter a name in the to: field, the email address is looked up in the Ldap Directory, and automagically filled in for you. If an entry is not found, a window is presented, and any typos can be corrected, or a new search can be done.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sendmail.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="roaming.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Mail Transfer Agents</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Netscape roaming access</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

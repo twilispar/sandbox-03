@@ -1,0 +1,543 @@
+<HTML
+><HEAD
+><TITLE
+>Configure and Optimize Logcheck</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Security/Monitoring"
+HREF="soft-secmonitor.html"><LINK
+REL="PREVIOUS"
+TITLE="Logcheck"
+HREF="chap14sec114.html"><LINK
+REL="NEXT"
+TITLE="PortSentry"
+HREF="chap14sec116.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap14sec114.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 14. Software -Security/Monitoring</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap14sec116.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN7569"
+>14.4. Configure and Optimize Logcheck</A
+></H1
+><P
+>&#13;         You need to configure the <TT
+CLASS="filename"
+>/usr/bin/logcheck.sh</TT
+> script file, Since we are using an alternate path for the files <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> <EM
+>not</EM
+> <TT
+CLASS="filename"
+>/usr/local/etc</TT
+>, we need to change the path 
+         entries for <TT
+CLASS="filename"
+>logcheck.hacking</TT
+>, <TT
+CLASS="filename"
+>logcheck.violations</TT
+>, <TT
+CLASS="filename"
+>logcheck.ignore</TT
+>, <TT
+CLASS="filename"
+>logcheck.violations.ignore</TT
+>, and <TT
+CLASS="filename"
+>logtail</TT
+> in the main <TT
+CLASS="filename"
+>logcheck.sh</TT
+> 
+         script. The script file for Logcheck <TT
+CLASS="filename"
+>/usr/bin/logcheck.sh</TT
+> allows you to set these options that modify the path entries and operation of the program. It is well commented and very basic.
+         </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;         Edit the logcheck.sh file <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/usr/bin/logcheck.sh</TT
+> and change the following:
+         </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         LOGTAIL=/usr/local/bin/logtail
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         LOGTAIL=/usr/bin/logtail
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         TMPDIR=/usr/local/etc/tmp
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         TMPDIR=/etc/logcheck/tmp
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         HACKING_FILE=/usr/local/etc/logcheck.hacking
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         HACKING_FILE=/etc/logcheck/logcheck.hacking
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         VIOLATIONS_FILE=/usr/local/etc/logcheck.violations
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         VIOLATIONS_FILE=/etc/logcheck/logcheck.violations
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         VIOLATIONS_IGNORE_FILE=/usr/local/etc/logcheck.violations.ignore
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         VIOLATIONS_IGNORE_FILE=/etc/logcheck/logcheck.violations.ignore
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         IGNORE_FILE=/usr/local/etc/logcheck.ignore
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         IGNORE_FILE=/etc/logcheck/logcheck.ignore
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;         
+         After installing Logcheck, place an entry into root's crontabs to make Logcheck run as a cronjob, you should edit your local crontab file for root and set Logcheck to run once per hour recommended, although you 
+         can do it more frequently, or less frequently. To add Logcheck in your cronjob you must edit the crontab and add the following line as root:
+         
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>crontab</B
+> -e
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         # Hourly check Log files for security violations and unusual activity.
+         00 * * * * /usr/bin/logcheck.sh
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         Remember, Logcheck does not report anything via email if it has nothing useful to say.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         These are the files Installed by the program Logcheck on your sytem, for your future referance.
+         <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;          /etc/logcheck
+          </TT
+></TD
+><TD
+><TT
+CLASS="filename"
+>&#13;          /usr/bin/logcheck.sh
+          </TT
+></TD
+></TR
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;          /etc/logcheck/tmp
+          </TT
+></TD
+><TD
+><TT
+CLASS="filename"
+>&#13;          /usr/bin/logtail
+          </TT
+></TD
+></TR
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;          /etc/logcheck/logcheck.hacking
+          </TT
+></TD
+><TD
+><TT
+CLASS="filename"
+>&#13;          /var/log/messages.offset
+          </TT
+></TD
+></TR
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;          /etc/logcheck/logcheck.violations
+          </TT
+></TD
+><TD
+><TT
+CLASS="filename"
+>&#13;          /var/log/secure.offset
+          </TT
+></TD
+></TR
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;          /etc/logcheck/logcheck.violations.ignore
+          </TT
+></TD
+><TD
+><TT
+CLASS="filename"
+>&#13;          /var/log/maillog.offset
+          </TT
+></TD
+></TR
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;          /etc/logcheck/logcheck.ignore
+          </TT
+></TD
+><TD
+>&nbsp;</TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap14sec114.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap14sec116.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Logcheck</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-secmonitor.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>PortSentry</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

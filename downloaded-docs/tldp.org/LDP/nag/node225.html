@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Defining the Local Mailer</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node226.html">Dealing with Bounced Mail</A>
+<B>Up:</B> <A HREF="node223.html">Typically Used sendmail.m4 Parameters</A>
+<B> Previous:</B> <A HREF="node224.html">Items that Define Paths</A>
+<BR> <P>
+<H3><A NAME="SECTION0017322000">Defining the Local Mailer</A></H3>
+<P>
+<A NAME="8402"></A>
+<A NAME="8403"></A>
+<P>
+<P><P>
+<P>
+Most operating systems provide a program to handle local delivery of mail.
+Typical programs for many of the major variants of Unix are already built into
+the sendmail binary.
+<P>
+In , it is necessary to explicitly define the appropriate local mailer
+since a local delivery program is not necessarily present in the distribution
+you've installed.  This is done by specifying LOCAL_MAILER_DEF in the
+sendmail.m4 file.
+<P>
+<A NAME="8404"></A>
+For example, to have the commonly used deliver program<A HREF="footnode.html#8405"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> provide this service, you would set LOCAL_MAILER_DEF to
+mailers.linux.
+<P>
+The following file should then be installed as mailers.linux in
+the directory pointed to by LIBDIR.  It explicitly defines the
+deliver program in the internal Mlocal mailer with the
+proper parameters to result in sendmail correctly delivering mail
+targeted for the local system.  Unless you are a sendmail expert, you
+probably do not want to alter the following example.
+<P>
+<P><P>
+<P>
+There is a also built-in default for deliver in the Sendmail.mc
+file that gets included into the sendmail.cf file.
+To specify it, you would not use the mailers.linux file and would
+instead define the following in your sendmail.m4 file:
+<P>
+<P><P>
+<P>
+Unfortunately, Sendmail.mc assumes deliver is installed in
+/bin, which is not the case with Slackware1.1.1 (which installs
+it in /usr/bin).  In that case you'd need to either fake it with
+a link or rebuild deliver from sources so that it resides in
+/bin.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

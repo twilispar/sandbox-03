@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>If You Don't Get Through...</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node204.html">Compiling smail</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node202.html">Running smail</A>
+<BR> <P>
+<H1><A NAME="SECTION0016300000">If You Don't Get Through...</A></H1>
+If something goes wrong with your installation, there are a number of
+features that may help you to find what's at the root of the problem.
+The first place to check are smail's log files. They are
+kept in /var/spool/smail/log, and are named logfile
+and paniclog, respectively. The former lists all transactions,
+while the latter is only for error messages related to configuration
+errors and the like.
+<P>
+A typical entry in logfile looks like this:
+<PRE>
+           04/24/94 07:12:04: [m0puwU8-00023UB] received
+           |            from: root
+           |         program: sendmail
+           |            size: 1468 bytes
+           04/24/94 07:12:04: [m0puwU8-00023UB] delivered
+           |             via: vstout.vbrew.com
+           |              to: root@vstout.vbrew.com
+           |         orig-to: root@vstout.vbrew.com
+           |          router: smart host
+           |       transport: smtp
+</PRE> 
+This shows that a message from root to
+root@vstout.vbrew.com has been properly delivered to host
+vstout over SMTP.
+<P>
+Messages smail could not deliver generate a similar entry in
+the log file, but with an error message instead of the delivered
+part:
+<PRE>
+           04/24/94 07:12:04: [m0puwU8-00023UB] received
+           |            from: root
+           |         program: sendmail
+           |            size: 1468 bytes
+           04/24/94 07:12:04: [m0puwU8-00023UB] root@vstout.vbrew.com ... defer
+            (ERR 148) transport smtp: connect: Connection refused
+</PRE>
+The above error is typical for a situation in which smail
+properly recognizes that the message should be delivered to
+vstout but was not able to connect to the SMTP service on
+vstout. If this happens, you either have a configuration problem,
+or TCP support is missing from your smail binaries.
+<P>
+<A NAME="7798"></A>
+This problem is not as uncommon as one might think. There have been
+pre-compiled smail binaries around, even in some 
+distributions, without support for TCP/IP networking. If this is the
+case for you, you have to compile smail yourself. Having
+installed smail, you can check if it has TCP networking support
+by telnetting to the SMTP port on your machine. A successful connect to
+the SMTP server is shown below (your input is marked like this):
+<PRE>
+           $ telnet localhost smtp
+           Trying 127.0.0.1...
+           Connected to localhost.
+           Escape character is '^]'.
+           220 monad.swb.de Smail3.1.28.1 #6 ready at Sun, 23 Jan 94
+           19:26 MET
+           QUIT
+           221 monad.swb.de closing connection
+</PRE>
+If this test doesn't produce the SMTP banner (the line starting with
+the 220 code), first make sure that your configuration is <em>really</em>
+correct before you go through compiling smail yourself, which 
+is described below.
+<P>
+If you encounter a problem with smail that you are unable to
+locate from the error message smail generates, you may want to
+turn on debugging messages. You can do this using the -d flag,
+optionally followed by a number specifying the level of verbosity (you
+may not have any space between the flag and the numerical argument).
+smail will then print a report of its operation to the screen,
+which may give you more hints about what is going wrong.
+<P>
+<B>[Don't know,...Maybe people don't find this funny:]</B>
+If nothing else helps, you may want to invoke smail in Rogue mode
+by giving the -bR option on the command line. The manpage says
+on this option: ``Enter the hostile domain of giant mail messages, and
+RFC standard scrolls. Attempt to make it down to protocol level 26 and
+back.'' Although this option won't solve your problems, it may provide
+you some comfort and consolation.<A HREF="footnode.html#7423"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<BR> <HR>
+<UL> 
+<LI> <A HREF="node204.html#SECTION0016310000">Compiling smail</A>
+</UL>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node204.html">Compiling smail</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node202.html">Running smail</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

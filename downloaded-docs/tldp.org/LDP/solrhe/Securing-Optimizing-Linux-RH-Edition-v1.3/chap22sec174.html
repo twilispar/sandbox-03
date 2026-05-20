@@ -1,0 +1,708 @@
+<HTML
+><HEAD
+><TITLE
+>Compile and optimize</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Mail Network"
+HREF="soser-mailn.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux Sendmail Server"
+HREF="chap22sec173.html"><LINK
+REL="NEXT"
+TITLE="Configurations"
+HREF="chap22sec175.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap22sec173.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 22. Software -Server/Mail Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap22sec175.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN11743"
+>22.2. Compile and optimize</A
+></H1
+><P
+>&#13;         The Build script of Sendmail uses by default a site configuration file that correspond to your operating system type to get information about definitions for system installation and various compilation values. This 
+         file is located under the subdirectory named <TT
+CLASS="filename"
+>devtools/OS</TT
+> and if you're running a Linux system, it'll be named <TT
+CLASS="literal"
+>Linux</TT
+>. We'll rebuild this site configuration file 
+         to suit our Linux system installation and put it in the default <TT
+CLASS="filename"
+>devtools/OS</TT
+> sub-directory of the  Sendmail source distribution since the Build script will look for the default 
+         site configuration file in this directory during compile time of Sendmail.
+         </P
+><P
+>&#13;         Move into the new Sendmail directory, edit the Linux file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>devtools/OS/Linux</TT
+>, and remove all predefined lines then add the following lines inside the file:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         define(`confENVDEF', `-DPICKY_QF_NAME_CHECK -DXDEBUG=0')
+         define(`confCC', `egcs')
+         define(`confOPTIMIZE', `-O9 -funroll-loops -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions')
+         define(`confLIBS', `-lnsl')
+         define(`confLDOPTS', `-s')
+         define(`confMANROOT', `/usr/man/man')
+         define(`confMANOWN', `root')
+         define(`confMANGRP', `root')
+         define(`confMANMODE', `644')
+         define(`confMAN1SRC', `1')
+         define(`confMAN5SRC', `5')
+         define(`confMAN8SRC', `8')
+         define(`confDEPEND_TYPE', `CC-M')
+         define(`confNO_HELPFILE_INSTALL)
+         define(`confSBINGRP', `root')
+         define(`confSBINMODE', `6755')
+         define(`confUBINOWN', `root')
+         define(`confUBINGRP', `root')
+         define(`confEBINDIR', `/usr/sbin')
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         This tells Linux file to set itself up for this particular configuration setup with:
+          <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>define(`confENVDEF', `-DPICKY_QF_NAME_CHECK -DXDEBUG=0')</B
+></DT
+><DD
+><P
+>&#13;         This macro option is used primarily to specify code that should either be specially included or excluded. With <TT
+CLASS="envar"
+>-DPICKY_QF_NAME_CHECK</TT
+> defined, Sendmail will log an error if the name of the <TT
+CLASS="filename"
+>qf</TT
+> file 
+         is incorrectly formed and will rename the <TT
+CLASS="filename"
+>qf</TT
+> file into a <TT
+CLASS="filename"
+>Qf</TT
+> file. The  <TT
+CLASS="literal"
+>-DXDEBUG=0</TT
+> argument disables the step of additional internal checking during compile time.
+         </P
+></DD
+><DT
+><B
+>define(`confCC', `egcs')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the C compiler to use for compilation of Sendmail. In our case we use the egcs C compiler for better optimization.
+         </P
+></DD
+><DT
+><B
+>define(`confOPTIMIZE', `-O9 -funroll-loops -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the flags passed to CC for optimization related to our specific CPU architecture.
+         </P
+></DD
+><DT
+><B
+>define(`confLIBS', `-lnsl')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the  -l flags passed to ld.
+         </P
+></DD
+><DT
+><B
+>define(`confLDOPTS', `-s')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the linker options passed to ld.
+         </P
+></DD
+><DT
+><B
+>define(`confMANROOT', `/usr/man/man')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the location to install the Sendmail man pages.
+         </P
+></DD
+><DT
+><B
+>define(`confMANOWN', `root')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the owner for all Sendmail installed man pages.
+         </P
+></DD
+><DT
+><B
+>define(`confMANGRP', `root')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the group for all Sendmail installed man pages.
+         </P
+></DD
+><DT
+><B
+>define(`confMANMODE', `644')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the mode for all Sendmail installed man pages.
+         </P
+></DD
+><DT
+><B
+>define(`confMAN1SRC', `1')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the source for man pages installed in confMAN1.
+         </P
+></DD
+><DT
+><B
+>define(`confMAN5SRC', `5')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the source for man pages installed in confMAN5.
+         </P
+></DD
+><DT
+><B
+>define(`confMAN8SRC', `8')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the source for man pages installed in confMAN8.
+         </P
+></DD
+><DT
+><B
+>define(`confDEPEND_TYPE', `CC-M')</B
+></DT
+><DD
+><P
+>&#13;         This macro option specifies how to build dependencies with Sendmail.
+         </P
+></DD
+><DT
+><B
+>define(`confNO_HELPFILE_INSTALL')</B
+></DT
+><DD
+><P
+>&#13;         This macro option specifies to not install the Sendmail help file by default. Some experienced administrators recommend it, for better security.
+         </P
+></DD
+><DT
+><B
+>define(`confSBINGRP', `root')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the group for all Sendmail setuid binaries.
+         </P
+></DD
+><DT
+><B
+>define(`confSBINMODE', `6755')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the mode for all Sendmail setuid binaries.
+         </P
+></DD
+><DT
+><B
+>define(`confUBINOWN', `root')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the owner for Sendmail binaries.
+         </P
+></DD
+><DT
+><B
+>define(`confUBINGRP', `root')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines the group for Sendmail binaries.
+         </P
+></DD
+><DT
+><B
+>define(`confEBINDIR', `/usr/sbin')</B
+></DT
+><DD
+><P
+>&#13;         This macro option defines where to install binaries executed from other binaries. On Red Hat Linux the path must be set to the <TT
+CLASS="filename"
+>/usr/sbin</TT
+> directory.
+         </P
+></DD
+></DL
+></DIV
+>
+         </P
+><P
+>&#13;         Now we must compile and install Sendmail in the server:
+         
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/sendmail-8.10.1# <B
+CLASS="command"
+>cd</B
+> sendmail
+         [root@deep ]/sendmail# <B
+CLASS="command"
+>sh Build</B
+>
+         [root@deep ]/sendmail# <B
+CLASS="command"
+>sh Build install</B
+>
+         [root@deep ]/sendmail# <B
+CLASS="command"
+>cd</B
+> ..
+         [root@deep ]/sendmail-8.10.1# <B
+CLASS="command"
+>cd</B
+> mailstats
+         [root@deep ]/mailstats# <B
+CLASS="command"
+>sh Build install</B
+>
+         [root@deep ]/mailstats# <B
+CLASS="command"
+>cd</B
+> ..
+         [root@deep ]/sendmail-8.10.1# <B
+CLASS="command"
+>cd</B
+> smrsh
+         [root@deep ]/smrsh# <B
+CLASS="command"
+>sh Build install</B
+>
+         [root@deep ]/smrsh# <B
+CLASS="command"
+>cd</B
+> ..
+         [root@deep ]/sendmail-8.10.1# <B
+CLASS="command"
+>cd</B
+> makemap <A
+NAME="sndmmp"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+> 
+         [root@deep ]/makemap# <B
+CLASS="command"
+>sh Build install</B
+>   <A
+NAME="sndmmpbi"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+> 
+         [root@deep ]/makemap# <B
+CLASS="command"
+>cd</B
+> ..
+         [root@deep ]/sendmail-8.10.1# <B
+CLASS="command"
+>cd</B
+> praliases <A
+NAME="sndpral"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+>
+         [root@deep ]/praliases# <B
+CLASS="command"
+>sh Build install</B
+> <A
+NAME="sndpralbi"
+><IMG
+SRC="../images/callouts/4.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(4)"></A
+>
+         [root@deep ]/praliases# <B
+CLASS="command"
+>cd</B
+> ..
+         [root@deep ]/sendmail-8.10.1# <B
+CLASS="command"
+>ln</B
+> -fs /usr/sbin/sendmail /usr/lib/sendmail
+         [root@deep ]/sendmail-8.10.1# <B
+CLASS="command"
+>chmod</B
+> 511 /usr/sbin/smrsh
+         [root@deep ]/sendmail-8.10.1# <B
+CLASS="command"
+>install</B
+> -d -m 755 /var/spool/mqueue
+         [root@deep ]/sendmail-8.10.1# <B
+CLASS="command"
+>chown</B
+> root.mail /var/spool/mqueue
+         [root@deep ]/sendmail-8.10.1# <B
+CLASS="command"
+>mkdir</B
+> /etc/smrsh
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap22sec174.html#sndmmp"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;            Required only for Mail Hub configuration
+         </DD
+><DT
+><A
+HREF="chap22sec174.html#sndmmpbi"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;         Required only for Mail Hub configuration
+         </DD
+><DT
+><A
+HREF="chap22sec174.html#sndpral"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+></DT
+><DD
+>&#13;         Required only for Mail Hub configuration
+         </DD
+><DT
+><A
+HREF="chap22sec174.html#sndpralbi"
+><IMG
+SRC="../images/callouts/4.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(4)"></A
+></DT
+><DD
+>&#13;         Required only for Mail Hub configuration
+         </DD
+></DL
+></DIV
+>
+         
+         </P
+><P
+>&#13;           <P
+></P
+><UL
+><LI
+><P
+>&#13;         The <B
+CLASS="command"
+>sh Build</B
+> command would build and make the necessary dependencies for the different binary files required by Sendmail before installation on your system.
+         </P
+></LI
+><LI
+><P
+>&#13;         The <B
+CLASS="command"
+>sh Build install</B
+> command would install sendmail, mailstats, makemap, praliases, smrsh binaries as well as the corresponding man pages on your system if compiled with this command.
+         </P
+></LI
+><LI
+><P
+>&#13;         The <B
+CLASS="command"
+>ln</B
+> -fs command would make a symbolic link of the sendmail binary to the <TT
+CLASS="filename"
+>/usr/lib</TT
+> directory. This is required, since 
+         some programs hope to find the sendmail binary in this directory <TT
+CLASS="filename"
+>/usr/lib</TT
+>.
+         </P
+></LI
+><LI
+><P
+>&#13;         The <B
+CLASS="command"
+>install</B
+> command would create the directory <TT
+CLASS="filename"
+>mqueue</TT
+> with permission 755 under <TT
+CLASS="filename"
+>/var/spool</TT
+>. A mail message 
+         can be temporarily undeliverable for a wide variety of reasons. To ensure that such messages are eventually delivered, Sendmail stores them in its queue directory until they can be delivered successfully.
+         </P
+></LI
+><LI
+><P
+>&#13;         The <B
+CLASS="command"
+>chown</B
+> command would set <SPAN
+CLASS="acronym"
+>UID</SPAN
+> root and <SPAN
+CLASS="acronym"
+>GID</SPAN
+> mail for the <TT
+CLASS="filename"
+>mqueue</TT
+> directory.
+         </P
+></LI
+><LI
+><P
+>&#13;         The <B
+CLASS="command"
+>mkdir</B
+> command would create the <TT
+CLASS="filename"
+>/etc/smrsh</TT
+> directory on your system. This directory is where we'll put all program mailers that we allow Sendmail 
+         to be able to run.
+         </P
+></LI
+></UL
+>
+         </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         The programs <B
+CLASS="command"
+>makemap</B
+>, and <B
+CLASS="command"
+>praliases</B
+> must only be installed on the Central Mail Hub Server. makemap permits you to create a database map like the <TT
+CLASS="filename"
+>/etc/mail/aliases.db</TT
+> 
+         or <TT
+CLASS="filename"
+>/etc/mail/access.db</TT
+> files, for Sendmail. The praliases display the system mail aliases, the content of <TT
+CLASS="filename"
+>/etc/mail/aliases file</TT
+>. Since it is better to only have one 
+         place like our Central Mail Hub to handle and manage all the <TT
+CLASS="filename"
+>db</TT
+> files in our network, then it is not necessary to use the makemap, and praliases programs and build <TT
+CLASS="filename"
+>db</TT
+> files 
+         on your other hosts in the network.
+         </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap22sec173.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap22sec175.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux Sendmail Server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soser-mailn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configurations</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

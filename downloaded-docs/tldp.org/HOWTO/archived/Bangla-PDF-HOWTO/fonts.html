@@ -1,0 +1,1221 @@
+<HTML
+><HEAD
+><TITLE
+>Fonts</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Bangla PDF HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Introduction"
+HREF="introduction.html"><LINK
+REL="NEXT"
+TITLE="Keyboard"
+HREF="keyboard.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bangla PDF HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="introduction.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="keyboard.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="fonts"
+></A
+>2. Fonts</H1
+><P
+> While creating PDFs, <SPAN
+CLASS="application"
+>KWord</SPAN
+>
+      gives the best result if Type1 fonts are used. But 
+      Bangla Type1 fonts are quite rare, so converting TrueType 
+      fonts to Type1 is a good option. This conversion is done with       
+      the <SPAN
+CLASS="application"
+>ttf2pt1</SPAN
+>
+      package. This package has some useful programs to carry out the 
+      conversion properly. After downloading and uncompression, the 
+      <SPAN
+CLASS="application"
+>ttf2pt1</SPAN
+>
+      package can be installed using the following commands: </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+<TT
+CLASS="prompt"
+>	$</TT
+><TT
+CLASS="userinput"
+><B
+> make all </B
+></TT
+>
+<TT
+CLASS="prompt"
+>	$</TT
+><TT
+CLASS="userinput"
+><B
+> make install </B
+></TT
+>
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> The last command needs to be executed as root. The 
+      <TT
+CLASS="filename"
+>README</TT
+> of <SPAN
+CLASS="application"
+>ttf2pt1</SPAN
+>
+      has some better descriptions of these.</P
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="conversion"
+></A
+>2.1. TrueType to Type1 Conversion</H2
+><P
+> The following steps describe converting TrueType Bijoy fonts to 
+        Type1, suitable for PDF creation:</P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+> Instead of creating a Type1 font directly from 
+            <TT
+CLASS="filename"
+>sutom___.ttf</TT
+> (TrueType font file of SutonnyMJ 
+            font), create an interim file <TT
+CLASS="filename"
+>sutonnymj.t1a</TT
+>:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+<TT
+CLASS="prompt"
+>	$</TT
+><TT
+CLASS="userinput"
+><B
+> ttf2pt1 sutom___.ttf sutonnymj</B
+></TT
+>
+          </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></LI
+><LI
+><P
+> Perform some correction to <TT
+CLASS="filename"
+>sutonnymj.t1a</TT
+>
+            using <B
+CLASS="command"
+>forceiso</B
+>, a <SPAN
+CLASS="acronym"
+>PERL</SPAN
+> script supplied with the 
+            <SPAN
+CLASS="application"
+>ttf2pt1</SPAN
+> package, and create 
+            <TT
+CLASS="filename"
+>sutonnymj2.t1a</TT
+>:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+<TT
+CLASS="prompt"
+>	$</TT
+><TT
+CLASS="userinput"
+><B
+> cat sutonnymj.t1a | /usr/local/share/ttf2pt1/scripts/forceiso \ 
+                    "U00%x" &#62; sutonnymj2.t1a</B
+></TT
+>
+          </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> This correction is needed because some glyphs of Bijoy fonts 
+            have no name. <B
+CLASS="command"
+>forceiso</B
+> solves this problem by
+            assigning proper names to those otherwise nameless glyphs.
+          </P
+></LI
+><LI
+><P
+> Finally, create the Type1 version of SutonnyMJ from 
+            <TT
+CLASS="filename"
+>sutonnymj2.t1a</TT
+> using <B
+CLASS="command"
+>t1asm</B
+>, 
+            another program supplied with the <SPAN
+CLASS="application"
+>ttf2pt1</SPAN
+>
+            package:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+<TT
+CLASS="prompt"
+>	$</TT
+><TT
+CLASS="userinput"
+><B
+> cat sutonnymj2.t1a | /usr/local/libexec/ttf2pt1/t1asm \ 
+                     &#62; sutonnymj.pfa</B
+></TT
+>
+          </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> The last two steps can also be done in one go:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+ <TT
+CLASS="prompt"
+>	$</TT
+><TT
+CLASS="userinput"
+><B
+> cat sutonnymj.t1a | /usr/local/share/ttf2pt1/scripts/forceiso \ 
+              "U00%x" | /usr/local/libexec/ttf2pt1/t1asm &#62; sutonnymj.pfa
+</B
+></TT
+>
+          </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></LI
+></OL
+></DIV
+><P
+> The final product, in this case <TT
+CLASS="filename"
+>sutonnymj.pfa</TT
+>,
+        is the actual Type1 font file. The first step also produces  
+        <TT
+CLASS="filename"
+>sutonnymj.afm</TT
+>
+        which can be ignored through the rest of the text.</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="font-installation"
+></A
+>2.2. Font Installation</H2
+><P
+> There are some programs that automate font installation, such as 
+        <SPAN
+CLASS="application"
+>type1inst</SPAN
+> for Type1, 
+        <SPAN
+CLASS="application"
+>ttmkfdir</SPAN
+>
+        for TrueType, KDE's own font installer for both types and some others. When 
+        these are used, the font encoding can be wrong and needs hand-editing of the 
+        <TT
+CLASS="filename"
+>fonts.scale</TT
+> file.
+        If any of the font installing programs were used, <B
+CLASS="command"
+>mkfontdir</B
+>
+        must be executed after editing <TT
+CLASS="filename"
+>font.scale</TT
+>
+        by hand. For Type1 fonts, the encoding is <SPAN
+CLASS="QUOTE"
+>"adobe-fontspecific"</SPAN
+> 
+        and not <SPAN
+CLASS="QUOTE"
+>"iso8859-1."</SPAN
+> For TrueType fonts, the encoding is 
+        <SPAN
+CLASS="QUOTE"
+>"apple-roman"</SPAN
+> and not <SPAN
+CLASS="QUOTE"
+>"iso8859-1"</SPAN
+>. Besides, 
+        anti-aliasing must be stopped for these TrueType fonts to show up.</P
+><P
+> Alternatively, the next three sections can be considered to 
+        install fonts manually. This is a bit cumbersome but when things go 
+        wrong, it is easier to debug, as the user has a clear idea about the 
+        whole thing.  </P
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="type1-installation"
+></A
+>2.2.1. Type1 Font Installation</H3
+><P
+> The following steps describe manual installation of Type1 
+          fonts: </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+> Create a new directory, 
+              <TT
+CLASS="filename"
+>/usr/local/share/fonts/type1/bijoy/</TT
+>, and copy the Type1 font there: </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+<TT
+CLASS="prompt"
+>&#13;	$</TT
+><TT
+CLASS="userinput"
+><B
+> mkdir -p /usr/local/share/fonts/type1/bijoy/ </B
+></TT
+>
+<TT
+CLASS="prompt"
+>&#13;	$</TT
+><TT
+CLASS="userinput"
+><B
+> cp sutonnymj.pfa /usr/local/share/fonts/type1/bijoy/ </B
+></TT
+>
+            </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></LI
+><LI
+><P
+> Create the file <TT
+CLASS="filename"
+>fonts.scale</TT
+>
+              and place it inside <TT
+CLASS="filename"
+>/usr/local/share/fonts/type1/bijoy/</TT
+>. The <TT
+CLASS="filename"
+>fonts.scale's</TT
+> creation process will be described later in <A
+HREF="fonts.html#fonts.scale"
+>Section 2.2.2</A
+>.  </P
+></LI
+><LI
+><P
+> Create another file <TT
+CLASS="filename"
+>fonts.dir</TT
+>
+              using <B
+CLASS="command"
+>mkfontdir</B
+>: </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+<TT
+CLASS="prompt"
+>&#13;	$</TT
+><TT
+CLASS="userinput"
+><B
+> cd /usr/local/share/fonts/type1/bijoy/ </B
+></TT
+>
+<TT
+CLASS="prompt"
+>&#13;	$</TT
+><TT
+CLASS="userinput"
+><B
+> mkfontdir </B
+></TT
+>
+            </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> If the <TT
+CLASS="filename"
+>fonts.scale</TT
+>
+              was created correctly then <TT
+CLASS="filename"
+>fonts.dir</TT
+>
+              will be created, otherwise some error messages will appear 
+              after executing <B
+CLASS="command"
+>mkfontdir</B
+>.</P
+></LI
+><LI
+><P
+> Open <TT
+CLASS="filename"
+>XF86Config</TT
+> and add 
+              <TT
+CLASS="filename"
+>/usr/local/share/fonts/type1/bijoy/</TT
+>
+              as a new fontpath in the <SPAN
+CLASS="QUOTE"
+>"Files"</SPAN
+> section:</P
+><P
+> <TT
+CLASS="userinput"
+><B
+>FontPath     "/usr/local/share/fonts/type1/bijoy/" </B
+></TT
+></P
+><P
+> The <TT
+CLASS="filename"
+>XF86Config</TT
+> file is generally found inside 
+              <TT
+CLASS="filename"
+>/etc/X11/</TT
+>.
+              If it's not present there then use <B
+CLASS="command"
+>find</B
+>
+              to get the path:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+<TT
+CLASS="prompt"
+>&#13;	$</TT
+><TT
+CLASS="userinput"
+><B
+> find / -name XF86Config </B
+></TT
+>
+            </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></LI
+><LI
+><P
+> Restart X server by pressing 
+              <B
+CLASS="keycap"
+>Ctrl</B
+>+<B
+CLASS="keycap"
+>Alt</B
+>+<B
+CLASS="keycap"
+>Bksp</B
+>.
+              The font will be installed.  </P
+></LI
+><LI
+><P
+> Check whether the font has really been installed by using 
+              <B
+CLASS="command"
+>xlsfonts</B
+>. This program shows the 
+              <A
+HREF="fonts.html#xlfd"
+><SPAN
+CLASS="acronym"
+>XLFD</SPAN
+></A
+> of every font that is available to the X server. 
+              <B
+CLASS="command"
+>grep</B
+> can be used to find the desired font from 
+              <B
+CLASS="command"
+>xlsfonts'</B
+> output:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+<TT
+CLASS="prompt"
+>&#13;	$</TT
+><TT
+CLASS="userinput"
+><B
+> xlsfonts | grep sutonnymj </B
+></TT
+>
+            </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>If <SPAN
+CLASS="QUOTE"
+>"sutonnymj"</SPAN
+> is unavailable to X then grep will give no output. Otherwise the output will be the <SPAN
+CLASS="acronym"
+>XLFD</SPAN
+> of <SPAN
+CLASS="QUOTE"
+>"sutonnymj"</SPAN
+>:
+            </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+>&#13;      -altsys-sutonnymj-medium-r-normal--0-0-0-0-p-0-adobe-fontspecific
+            </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> If more than one font were installed then 
+              <B
+CLASS="command"
+>grep altsys</B
+>
+              will show them all (if present in xlsfonts' output).</P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="fonts.scale"
+></A
+>2.2.2. Creating <TT
+CLASS="filename"
+>fonts.scale</TT
+></H3
+><P
+> The <TT
+CLASS="filename"
+>fonts.scale</TT
+>
+          file contains various information about the fonts in a directory 
+          where that <TT
+CLASS="filename"
+>fonts.scale</TT
+>
+          itself is placed. This means every directory which has any font 
+          file can have its own <TT
+CLASS="filename"
+>fonts.scale</TT
+>
+          (non-scalable fonts like Bitmap fonts do not need a 
+          <TT
+CLASS="filename"
+>fonts.scale</TT
+> file). <A
+NAME="xlfd"
+></A
+>The 
+ information that every line of a <TT
+CLASS="filename"
+>fonts.scale</TT
+> contains 
+ (preceded by the name of the font file itself) is called <SPAN
+CLASS="acronym"
+>XLFD
+ </SPAN
+> (X Logical Font Definition). An example line from a <TT
+CLASS="filename"
+>&#13; fonts.scale</TT
+> file is:</P
+><P
+> sutonny.pfa -altsys-SutonnyMJ-medium-r-normal--0-0-0-0-p-0-adobe-fontspecific
+        </P
+><P
+>The only difference is the very first line of 
+          <TT
+CLASS="filename"
+>fonts.scale</TT
+>, which has only a
+          number instead of the usual font-file name followed by the 
+          corresponding <SPAN
+CLASS="acronym"
+>XLFD</SPAN
+>. This number is the total 
+          number of XLFDs listed in that <TT
+CLASS="filename"
+>fonts.scale</TT
+>
+          file.</P
+><P
+> The structure of a <TT
+CLASS="filename"
+>fonts.scale</TT
+>
+          is like this: </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;
+ Line 1: Total number of XLFD
+ Line 2: FontFileName1 XLFD
+ Line 3: FontFileName2 XLFD
+ ....
+ ....
+ ....
+        </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> The following is a suitable XLFD for Type1 Bijoy fonts: </P
+><P
+>&#13;              -altsys-SutonnyMJ-medium-r-normal--0-0-0-0-p-0-adobe-fontspecific
+        </P
+><P
+> Please note that in the above string, <SPAN
+CLASS="QUOTE"
+>"SutonnyMJ"</SPAN
+> 
+        is the actual fontname. This name needs to be changed accordingly for 
+        other fonts.
+        </P
+><P
+> An example <TT
+CLASS="filename"
+>fonts.scale</TT
+>
+          file for two Type1 Bijoy fonts can be like this (Where 
+          sutonnymj.pfa and rinkymj.pfa are the actual Type1 font files for   
+          the fonts Sutonnymj and Rinkymj respectively): </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;
+2
+sutonnymj.pfa -altsys-SutonnyMJ-medium-r-normal--0-0-0-0-p-0-adobe-fontspecific
+rinkymj.pfa -altsys-RinkyMJ-medium-r-normal--0-0-0-0-p-0-adobe-fontspecific
+
+        </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> It's better not to press <B
+CLASS="keycap"
+>Return</B
+> after writing the 
+          XLFD in the last line. This sometimes create problem with the total 
+          number of XLFD lines and the file is taken as having bad structure by
+          <B
+CLASS="command"
+>mkfontdir</B
+>. If <TT
+CLASS="filename"
+>fonts.scale</TT
+>
+          is not created properly, the <B
+CLASS="command"
+>mkfontdir</B
+>
+          command will give error message. Otherwise <TT
+CLASS="filename"
+>fonts.dir</TT
+>
+          will be created.</P
+><P
+> The <SPAN
+CLASS="QUOTE"
+>"adobe-fontspecific"</SPAN
+> substring found at the end of every XLFD for Type1 Bijoy fonts is the encoding of that font. If <SPAN
+CLASS="QUOTE"
+>"iso8859-1"</SPAN
+> encoding is required, this can be done too by creating another file <TT
+CLASS="filename"
+>fonts.alias</TT
+>. Every line of <TT
+CLASS="filename"
+>fonts.alias</TT
+> contains two XLFDs. The first XLFD is the alias and the second one is the original. Unlike <TT
+CLASS="filename"
+>fonts.scale</TT
+> and <TT
+CLASS="filename"
+>fonts.dir</TT
+>, there is no number at the first line of <TT
+CLASS="filename"
+>fonts.alias</TT
+>. An example <TT
+CLASS="filename"
+>fonts.alias's</TT
+>
+<EM
+>structure</EM
+> looks like this: </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;
+Line 1: -altsys-SutonnyMJ-medium-r-normal--0-0-0-0-p-0-iso8859-1
+ -altsys-SutonnyMJ-medium-r-normal--0-0-0-0-p-0-adobe-fontspecific
+Line 2: -altsys-RinkyMJ-medium-r-normal--0-0-0-0-p-0-iso8859-1
+ -altsys-RinkyMJ-medium-r-normal--0-0-0-0-p-0-adobe-fontspecific
+
+        </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> Generally, some subdirectories under <TT
+CLASS="filename"
+>/usr/X11R6/lib/X11/fonts/</TT
+> contain many font files and some <TT
+CLASS="filename"
+>fonts.scale</TT
+> files, <TT
+CLASS="filename"
+>fonts.dir</TT
+> and <TT
+CLASS="filename"
+>fonts.alias</TT
+> as well. A browse through these files can make it easier to create new ones. One thing to notice is that the content of both <TT
+CLASS="filename"
+>fonts.scale</TT
+> and <TT
+CLASS="filename"
+>fonts.dir</TT
+> are same but both are still needed.
+        </P
+></DIV
+><DIV
+CLASS="sect3"
+><H3
+CLASS="sect3"
+><A
+NAME="ttf-installation"
+></A
+>2.2.3. TrueType Font Installation</H3
+><P
+> The Bijoy font's TrueType installation method is quite similar 
+          to that of Type1. Just keep a separate directory for the fonts, like,</P
+><P
+>&#13;          <TT
+CLASS="filename"
+>/usr/local/share/fonts/ttfonts/bijoy/</TT
+>
+        </P
+><P
+>and change the XLFD to:</P
+><P
+>&#13;          -altsys-SutonnyMJ-medium-r-normal--0-0-0-0-p-0-apple-roman
+        </P
+><P
+> In the example, the font encoding is <SPAN
+CLASS="QUOTE"
+>"apple-roman"</SPAN
+> 
+          instead of <SPAN
+CLASS="QUOTE"
+>"adobe-fontspecific."</SPAN
+> Also to use these fonts 
+          anti-aliasing must be stopped, and this is where <SPAN
+CLASS="QUOTE"
+>"Xft"</SPAN
+> 
+          comes into business.In your <TT
+CLASS="filename"
+>$HOME
+          </TT
+> directory, create a hidden file <TT
+CLASS="filename"
+>~/.xftconfig
+          </TT
+> and write the following lines in it ( the file may be 
+          already present, in that case just add these lines):</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;
+dir "/usr/local/share/fonts/ttfonts/bijoy/"
+
+match any family == "sutonnymj"
+edit antialias = false; encoding = "apple-roman";
+
+        </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> The <TT
+CLASS="literal"
+>match any family == "sutonnymj"</TT
+> and the next line 
+          prevents anti-aliasing for sutonnymj only. If there are other Bijoy 
+          fonts in use, more similar lines must be added.  </P
+><P
+> The presence of only <TT
+CLASS="filename"
+>~/.xftconfig</TT
+>
+          is enough to make a TrueType font available to KWord. There is no
+          need to create <TT
+CLASS="filename"
+>fonts.scale</TT
+> and
+          <TT
+CLASS="filename"
+>fonts.dir</TT
+>. Even the fontpath needs not be added 
+          in <TT
+CLASS="filename"
+>XF86Config</TT
+>. So these steps can be skipped if 
+          wished. </P
+><P
+>Newer systems(like RH 8.0) use Xft 2.0 instead of Xft 1.0 . 
+          Xft 2.0 doesn't use <TT
+CLASS="filename"
+>~/xftconfig</TT
+>. Instead it uses 
+          <TT
+CLASS="filename"
+>~/.fonts </TT
+>. This file can be modified by <B
+CLASS="command"
+>&#13;          fontconfig </B
+>. Here also, <SPAN
+CLASS="QUOTE"
+>"antialias"</SPAN
+> must be 
+          stopped and <SPAN
+CLASS="QUOTE"
+>"encoding"</SPAN
+> remains <SPAN
+CLASS="QUOTE"
+>"apple-roman"</SPAN
+>
+          . </P
+></DIV
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="using-ttf"
+></A
+>2.3. On Using TrueType</H2
+><P
+>&#13;        <SPAN
+CLASS="application"
+> KWord </SPAN
+>
+        can't create PDFs perfectly using TrueType fonts, so there is no
+        reason to use TrueType fonts for creating PDFs. But TrueType is useful 
+        for creating PDFs from files written in <SPAN
+CLASS="application"
+>MS Word</SPAN
+>
+        (i.e. *.doc files). Even then these PDFs are defective (due to the use 
+        of Type3 fonts inside the PDFs) and so are not transferable to other 
+        computers; they can be used for printing only. So the only suggested 
+        use of TrueType is to create PDFs from <SPAN
+CLASS="application"
+>MS Word</SPAN
+>
+        files for printing. Again, these PDFs are of low quality, so if it 
+        is not urgently needed, TrueType should be avoided completely for 
+        PDF creation.</P
+><P
+> To open an <SPAN
+CLASS="application"
+>MS Word</SPAN
+> file in 
+        <SPAN
+CLASS="application"
+> KWord </SPAN
+>, the encoding of the relevant font(s) should be changed from 
+        <SPAN
+CLASS="QUOTE"
+>"apple-roman"</SPAN
+> to <SPAN
+CLASS="QUOTE"
+>"iso8859-1"</SPAN
+> in the <TT
+CLASS="filename"
+>~/.xftconfig</TT
+>, for example:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;
+match any family == "sutonnymj"
+    edit antialias = false; encoding = "apple-roman";
+ 
+      </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>will become:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;
+match any family == "sutonnymj"
+    edit antialias = false; encoding = "iso8859-1";
+
+      </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> Type1 and TrueType versions of a font should not be used 
+        together. To stop using TrueType fonts, the corresponding FontPath must 
+        be commented out from the <SPAN
+CLASS="QUOTE"
+>"Files"</SPAN
+> section of 
+        <TT
+CLASS="filename"
+>XF68Config</TT
+>. The relevant entries for the font in 
+        <TT
+CLASS="filename"
+>~/.xftconfig</TT
+> must also be commented out. In both cases, 
+        a <SPAN
+CLASS="QUOTE"
+>"#"</SPAN
+> as the first character on any line comments out the whole 
+        line. Given below is an example <TT
+CLASS="filename"
+>~/.xftconfig</TT
+>,
+        where entry for a font has been commented out:</P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;
+# dir "/usr/local/share/fonts/ttfonts/"
+
+# match any family == "sutonnymj"
+#           edit antialias = false; encoding = "apple-roman";
+
+      </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="introduction.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="keyboard.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Introduction</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Keyboard</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

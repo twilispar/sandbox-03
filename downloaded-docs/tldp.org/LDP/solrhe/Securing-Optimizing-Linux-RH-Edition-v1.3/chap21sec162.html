@@ -1,0 +1,460 @@
+<HTML
+><HEAD
+><TITLE
+>Linux DNS and BIND Server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking"
+HREF="soft-netwrkng.html"><LINK
+REL="PREVIOUS"
+TITLE="Software -Networking"
+HREF="soft-netwrkng.html"><LINK
+REL="NEXT"
+TITLE="Configure"
+HREF="chap21sec163.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="soft-netwrkng.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 21. Software -Networking</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap21sec163.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch7sc1dbs"
+>21.1. Linux <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> and <SPAN
+CLASS="acronym"
+>BIND</SPAN
+> Server</A
+></H1
+><DIV
+CLASS="highlights"
+><A
+NAME="AEN10516"
+></A
+><P
+>&#13;          
+          Setting up a caching server for client local machines will reduce the load on the site's primary server. A caching only name server will find the answer to name queries and remember the answer the next time we 
+          need it. This will shorten the waiting time the next time significantly. For security reasons, it is very important that <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> doesn't exist between hosts on the corporate network and external hosts; it is far 
+          safer to simply use <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses to connect to external machines from the corporate network and vice-versa.
+          </P
+></DIV
+><P
+>&#13;          In our configuration and installation we'll run <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> as non root-user and in a chrooted environment. We also provide you three different configurations; 
+          <P
+></P
+><UL
+><LI
+><P
+>&#13;          one for a simple caching name server only <I
+CLASS="wordasword"
+>client</I
+> 
+          </P
+></LI
+><LI
+><P
+>&#13;          one for a slave <I
+CLASS="wordasword"
+>secondary server</I
+> 
+          </P
+></LI
+><LI
+><P
+>&#13;          one for a master name server <I
+CLASS="wordasword"
+>primary server</I
+>.
+          </P
+></LI
+></UL
+>
+          </P
+><P
+>&#13;          The simple <TT
+CLASS="literal"
+>caching</TT
+> name server configuration will be used for your servers that don't act as a <SPAN
+CLASS="token"
+>master</SPAN
+> or <SPAN
+CLASS="token"
+>slave</SPAN
+> name server, and the <SPAN
+CLASS="token"
+>slave</SPAN
+> and <SPAN
+CLASS="token"
+>master</SPAN
+> configurations 
+          will be used for your servers that act as a <SPAN
+CLASS="token"
+>master</SPAN
+> name server and <SPAN
+CLASS="token"
+>slave</SPAN
+> name server. Usually one of your servers acts as <SPAN
+CLASS="token"
+>master</SPAN
+>, another one acts as <SPAN
+CLASS="token"
+>slave</SPAN
+> and the rest act as simple <TT
+CLASS="literal"
+>caching</TT
+> client 
+          name server.
+          </P
+><P
+>&#13;          This is a graphical representation of the <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> configuration we use in this book. We try to show you different settings 
+          <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/DNS-Schema.gif"
+ALT="DNS caching name server"
+></IMG
+></P
+></DIV
+>
+          <P
+></P
+><UL
+><LI
+><P
+>&#13;          Caching Only <SPAN
+CLASS="acronym"
+>DNS</SPAN
+>
+          </P
+></LI
+><LI
+><P
+>&#13;          Master <SPAN
+CLASS="acronym"
+>DNS</SPAN
+>
+          </P
+></LI
+><LI
+><P
+>&#13;          Slave <SPAN
+CLASS="acronym"
+>DNS</SPAN
+>
+          </P
+></LI
+></UL
+>
+          on different servers. A lot of possibilities exist, and depend on your needs, and network architecture.
+          </P
+><P
+>&#13;          These installation instructions assume
+          <P
+></P
+><UL
+><LI
+><P
+>&#13;          Commands are Unix-compatible.
+          </P
+></LI
+><LI
+><P
+>&#13;          The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>. <EM
+>other paths are possible</EM
+>.
+          </P
+></LI
+><LI
+><P
+>&#13;          Installations were tested on Red Hat Linux 6.1 and 6.2.
+          </P
+></LI
+><LI
+><P
+>&#13;          All steps in the installation will happen in super-user account root.
+          </P
+></LI
+><LI
+><P
+>&#13;          ISC <SPAN
+CLASS="acronym"
+>BIND</SPAN
+> version number is 8.2.2-patchlevel5
+          </P
+></LI
+></UL
+>
+          </P
+><P
+>&#13;          These are the Package(s) required:
+          <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;          ISC <SPAN
+CLASS="acronym"
+>BIND</SPAN
+> Homepage:<A
+HREF="appendixa.html#prtinxfp18"
+>http://www.isc.org/</A
+> 
+          </TD
+></TR
+><TR
+><TD
+>&#13;          ISC <SPAN
+CLASS="acronym"
+>BIND</SPAN
+> FTP Site: <A
+HREF="appendixa.html#prtinxfp18"
+><TT
+CLASS="literal"
+>204.152.184.27</TT
+></A
+>
+          </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+          You must be sure to download: <TT
+CLASS="filename"
+>bind-contrib.tar.gz, bind-doc.tar.gz, bind-src.tar.gz</TT
+>
+          </P
+><P
+>&#13;          Before you decompress Tarballs and install, it is a good idea to make a list of files on the system before you install <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>, and one afterwards, and then compare them using diff to find out what file it placed where. Simply 
+          run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; DNS1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; DNS2</B
+></TT
+> after you install the software, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>DNS1 DNS2 &#62; DNS-Installed</B
+></TT
+> to 
+          get a list of what changed.
+          </P
+><P
+>&#13;          Compile and Decompress the tarball (tar.gz).
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>mkdir</B
+> /var/tmp/bind
+          [root@deep] /# <B
+CLASS="command"
+>cp</B
+> bind-contrib.tar.gz /var/tmp/bind/
+          [root@deep] /# <B
+CLASS="command"
+>cp</B
+> bind-doc.tar.gz /var/tmp/bind/
+          [root@deep] /# <B
+CLASS="command"
+>cp</B
+> bind-src.tar.gz /var/tmp/bind/
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          We create a directory named bind to handle the tar archives and copy them to this new directory.
+          </P
+><P
+>&#13;          Move into the new bind directory <B
+CLASS="command"
+>cd</B
+> <TT
+CLASS="filename"
+>/var/tmp/bind</TT
+> and decompress the tar files:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/bind# <B
+CLASS="command"
+>tar</B
+> xzpf bind-contrib.tar.gz
+          [root@deep ]/bind# <B
+CLASS="command"
+>tar</B
+> xzpf bind-doc.tar.gz
+          [root@deep ]/bind# <B
+CLASS="command"
+>tar</B
+> xzpf bind-src.tar.gz
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="soft-netwrkng.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap21sec163.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software -Networking</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netwrkng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

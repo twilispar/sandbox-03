@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>UUCP Over TCP</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node169.html">Using a Direct Connection</A>
+<B>Up:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<B> Previous:</B> <A HREF="node167.html">How to Dial a </A>
+<BR> <P>
+<H2><A NAME="SECTION0014390000">UUCP Over TCP</A></H2>
+<P>
+<A NAME="6200"></A>
+<A NAME="6201"></A>
+<P>
+Absurd as it may sound at the first moment, using UUCP to transfer data
+over TCP not that bad an idea, especially when transferring large
+amount of data such as Usenet news.  On TCP-based links, news is
+generally exchanged using the NNTP protocol, where articles are
+requested and sent individually, without compression or any other
+optimization.  Although adequate for large sites with several concurrent
+news-feeds, this technique is very unfavorable for small sites that
+receive their news over a slow connection such as ISDN.  These sites
+will usually want to combine the qualities of TCP with the advantages of
+sending news in large batches, which can be compressed and thus
+transferred with very low overhead. A standard way to transfer these
+batches is to use UUCP over TCP.
+<P>
+In sys, you would specify a system to be called via TCP
+in the following way:
+<P>
+<P><P>
+<P>
+The address command gives the IP address of the host, or its
+fully qualified domain name.  The corresponding port entry would
+read:
+<P>
+<P><P>
+<P>
+The entry states that a TCP connection should be used when a sys
+entry references tcp-conn, and that uucico should
+attempt to connect to the TCP network port 540 on the remote host.  This
+is the default port number of the UUCP service. Instead of the port
+number, you may also give a symbolic port name to the service
+command. The port number corresponding to this name will be looked up
+in /etc/services. The common name for the UUCP service is
+uucpd.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

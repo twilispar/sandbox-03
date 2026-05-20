@@ -1,0 +1,542 @@
+<HTML
+><HEAD
+><TITLE
+>Adjusting Fonts in Specific Applications</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="XFree86 Font De-uglification HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="XFree86 4.x"
+HREF="x-4x.html"><LINK
+REL="NEXT"
+TITLE="Odds and Ends"
+HREF="end.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>XFree86 Font De-uglification HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x-4x.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="end.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="APPS">5. Adjusting Fonts in Specific Applications</H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN804">5.1. Netscape</H2
+><P
+> Note that Netscape 4.x should be considered obsolete these days. There 
+ are much better choices including Mozilla, Galeon and Konqueror. This 
+ section is being maintained for historical reasons; for those users 
+ who may have to use older Netscapes for one reason or another; and 
+ because it may have relevance to other applications.&#13;</P
+><P
+> Let's face it, Netscape is an important application in Linux. We all use it,
+ and we all need it, so let's look at it specifically for a minute. An out of
+ the box Netscape installation is prone to the font problems we've discussed --
+ large fonts that get pixelized, splotchy looking fonts, fonts so small they
+ are unreadable. In short, ugly. Maybe this is why you are here?&#13;</P
+><P
+> Hopefully, at this point you have followed the above suggestions. These steps
+ can help greatly. TrueType font availability is almost a necessity. Many web
+ pages specify font families -- like Arial -- that are not typically available
+ to Linux users. This is bad design, but having some of the basic TrueType
+ fonts available will help greatly in overcoming the short-sightedness of some
+ designers. Microsoft -- can't live with 'em, can't live without 'em.&#13;</P
+><P
+> Assuming you have TrueType working, from the Netscape menu select
+ <TT
+CLASS="LITERAL"
+>Edit -&#62; Preferences -&#62; Fonts</TT
+>.  Open the <TT
+CLASS="LITERAL"
+>Variable
+ Width Font</TT
+> droplist on the right side of the window. Your TrueTypes
+ should be there along with other fonts. Choose which ever one suits your fancy
+ as the default. Check the <TT
+CLASS="LITERAL"
+>Allow Scaling</TT
+> checkbox too. If
+ the available point sizes are 0 and 12, you can go down and, and enter your
+ desired point size in the box to the right and click on the
+ <TT
+CLASS="LITERAL"
+>OK</TT
+> button. The down-side to this is that Netscape will not
+ remember these settings, and you will have to do this each time you start
+ Netscape. <EM
+>Unless</EM
+> -- you have
+ <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> set up already.  Then this will solve these
+ problems. See <A
+HREF="truetype.html#FALIAS"
+>Section 3.5</A
+> for more on <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+>.&#13;</P
+><P
+> You might consider experimenting with some <TT
+CLASS="FILENAME"
+>~/.Xdefaults</TT
+> (or 
+ perhaps it's<TT
+CLASS="FILENAME"
+>~/.Xresources</TT
+> on your system) settings too:</P
+><A
+NAME="AEN821"><BLOCKQUOTE
+CLASS="BLOCKQUOTE"
+><P
+>  <TT
+CLASS="LITERAL"
+>   <P
+CLASS="LITERALLAYOUT"
+>&nbsp;Netscape*DocumentFonts.sizeIncrement:&nbsp;10<br>
+&nbsp;Netscape*documentFonts.maximumPoints:&nbsp;240<br>
+&nbsp;Netscape*documentFonts.xResolution*iso-8859-1:&nbsp;120<br>
+&nbsp;Netscape*documentFonts.yResolution*iso-8859-1:&nbsp;120<br>
+&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+  </TT
+>
+ </P
+></BLOCKQUOTE
+><P
+> The 'sizeIncrement' controls how much of a jump Netscape makes when different
+ 'basefont' sizes are specified ala:&#13;</P
+><P
+> <TT
+CLASS="LITERAL"
+> &#60;basefont size=7&#62;
+ </TT
+></P
+><P
+> for instance. The default is '20', which is a pretty good jump. Changing this
+ can help Netscape from scaling to too large and too small of a font. The x and
+ y resolutions are roughly equivalent to 'dpi' settings. Any random number
+ within reason can be used here. Experiment. Note: Mozilla does not use 
+ this kind of configuration!&#13;</P
+><P
+> Then run: </P
+><P
+> <TT
+CLASS="LITERAL"
+> $ xrdb -merge ~/.Xdefaults
+ </TT
+></P
+><P
+> (or <TT
+CLASS="FILENAME"
+>.Xresources</TT
+> as the case may be) and restart Netscape.
+ There are many settings that can be tweaked or altered this way. Look at the
+ <TT
+CLASS="FILENAME"
+>Netscape.ad</TT
+> (app defaults) file that should be included
+ with Netscape packages.</P
+><P
+> If this approach does not get the job done as far as the 'tiny fonts' problem
+ in Netscape, then see the <TT
+CLASS="FILENAME"
+>fonts.alias</TT
+> section above. You
+ can really fine tune many things with this approach. &#13;</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="MOZILLA">5.2. Mozilla</H2
+><P
+> Mozilla configuration should be roughly the same in many respects, but 
+ it does not use the Xresources type X configuration. You might find, however,
+ that Mozilla does a much better job of handling fonts, and pages will look
+ better overall. Highly recommended! The only caveat is, it seems to need a
+ fairly fast system. It may be pretty sluggish on older hardware.&#13;</P
+><P
+> Also, some user preferences can be stored in
+ <SPAN
+CLASS="QUOTE"
+>"<TT
+CLASS="FILENAME"
+>user.js</TT
+>"</SPAN
+> and
+ <SPAN
+CLASS="QUOTE"
+>"<TT
+CLASS="FILENAME"
+>unix.js</TT
+>"</SPAN
+>. Not to be confused with
+ <SPAN
+CLASS="QUOTE"
+>"<TT
+CLASS="FILENAME"
+>prefs.js</TT
+>"</SPAN
+>. <TT
+CLASS="FILENAME"
+>user.js</TT
+>
+ will likely have to be created by hand. Put
+ it in whatever <TT
+CLASS="FILENAME"
+>.mozilla</TT
+> sub-directory you find
+ <TT
+CLASS="FILENAME"
+>prefs.js</TT
+> in (this is not a consistent location, but
+ typically ends like <TT
+CLASS="FILENAME"
+>*.slt</TT
+>). Attempt to set a minimum
+ font size:&#13;</P
+><P
+> <TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>&#13; // Don't ever show me a font smaller than this: some samples.
+ user_pref("font.min-size.variable.", 12);
+ user_pref("font.min-size.variable.x-western", 12);
+ user_pref("font.min-size.fixed.x-western", 12);
+
+ </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> Other customizations can be made in <TT
+CLASS="FILENAME"
+>userChrome.css</TT
+> 
+ and <TT
+CLASS="FILENAME"
+>userContent.css</TT
+>. Again, both should be placed in 
+ the same directory as <TT
+CLASS="FILENAME"
+>prefs.js</TT
+>. These files control 
+ much of the <SPAN
+CLASS="QUOTE"
+>"UI"</SPAN
+> (the skin outside the browser window).&#13;</P
+><P
+> More info is available from the Mozilla developers:
+ <A
+HREF="http://www.mozilla.org/unix/customizing.html"
+TARGET="_top"
+>http://www.mozilla.org/unix/customizing.html</A
+>.&#13;</P
+><P
+> It is also possbible to have anti-aliasing of fonts with Mozilla now. This
+ might be a bit of work to get going at this time (Aug 2002), but it is
+ possible. See the next section. </P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="MOZ-XFT">5.2.1. Mozilla with Xft</H3
+><P
+> As mentioned above, the Xft extensions that give us anti-aliasing, and
+ improved font handling, are slowly being rolled into Mozilla development.
+ Such packages are often labeled as <SPAN
+CLASS="QUOTE"
+>"TrueType"</SPAN
+> enabled. The 
+ reasoning being that they include native support for TrueType from within
+ Mozilla. Note, that seems to be a bit of misnomer since properly installed
+ TrueType fonts work quite well, even with ancient versions of Mozilla (though
+ no anti-aliasing). The difference being that Mozilla does some of its own 
+ TrueType work.</P
+><P
+> There are many builds of Mozilla available, and it is not so easy to know
+ which have Xft support. There are tips for knowing if your installed version
+ does have this support, and then how to enable it here: <A
+HREF="http://www.mozilla.org/projects/fonts/unix/enabling_truetype.html"
+TARGET="_top"
+>http://www.mozilla.org/projects/fonts/unix/enabling_truetype.html</A
+>.
+ Worse comes to worse, you can download experimental versions from: <A
+HREF="ftp://ftp.mozilla.org/pub/mozilla/nightly/experimental/xft/"
+TARGET="_top"
+>ftp://ftp.mozilla.org/pub/mozilla/nightly/experimental/xft/</A
+>.</P
+><P
+> For whatever reason, Mozilla has its own Xft configuration, that is
+ independent of other system components. You must turn it on, and configure 
+ it (unless your vendor has done this already)! I know what you are saying, 
+ <SPAN
+CLASS="QUOTE"
+>"one more place to configure fonts, sigh ..."</SPAN
+>.</P
+><P
+> The above page explains rather tersely how to do this. The highlights:</P
+><P
+> Requirements:</P
+><P
+> <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>      ·  XFree86 4.x with Xft support.
+  </TD
+></TR
+><TR
+><TD
+>      ·  FreeType2 libraries.
+  </TD
+></TR
+><TR
+><TD
+>      ·  Mozilla with Xft support.
+  </TD
+></TR
+><TR
+><TD
+>      ·  TrueType fonts.
+  </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+></P
+><P
+> Configuration:</P
+><P
+> You will need to hand edit the relevant <TT
+CLASS="FILENAME"
+>unix.js</TT
+> 
+ file, which is typically installed as
+ <TT
+CLASS="FILENAME"
+>/usr/lib/mozilla-*/defaults/pref/unix.js</TT
+>, or 
+ a similar location.</P
+><P
+> You will need to enable <TT
+CLASS="LITERAL"
+>FreeType2</TT
+> (and possibly 
+ define the version), and then list the directories that contain your TrueType
+ fonts (each listing must be uniquely identified, see example). Sample
+ excerpt:</P
+><P
+>  <TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+> // TrueType ///////////////////////////////////////////
+ pref("font.FreeType2.enable", true);
+ pref("font.freetype2.shared-library", "libfreetype.so.6");
+ 
+ // if libfreetype was built without hinting compiled in
+ // it is best to leave hinting off. try it both ways to see.
+ pref("font.FreeType2.autohinted", true);
+ pref("font.FreeType2.unhinted", false);
+ 
+ // below a certian pixel size anti-aliased fonts produce poor results
+ pref("font.antialias.min",        10);
+ pref("font.embedded_bitmaps.max", 1000000);
+ pref("font.scale.tt_bitmap.dark_text.min", 64);
+ pref("font.scale.tt_bitmap.dark_text.gain", "0.8");
+ 
+ // sample prefs for TrueType font dirs
+ //pref("font.directory.truetype.1", "/u/sam/tt_font");
+ //pref("font.directory.truetype.2", "/u/sam/other/tt_font");
+ pref("font.directory.truetype.1", "/usr/share/fonts/truetype");
+  </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> The <TT
+CLASS="LITERAL"
+>//</TT
+> characters are comments. Then restart 
+ Mozilla. You should see it processing each font in the directories 
+ you specified (if started from the command line). You then need to 
+ go into the Mozilla font configuration (Edit -&#62; Preferences 
+ -&#62; Appearance -&#62; Fonts), and select the appropriate fonts &#8212; these
+ must be the ones that are listed with <EM
+>the first letter as upper
+ cased</EM
+>:</P
+><P
+> <TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>  Afga-monotype-arial-iso8859-1
+ </PRE
+></FONT
+></TD
+></TR
+></TABLE
+></P
+><P
+> This should now give you TrueType fonts <EM
+>with</EM
+>
+ anti-aliasing! Quite nice!</P
+><P
+> You should experiment with the <SPAN
+CLASS="QUOTE"
+>"hinting"</SPAN
+> preferences. Having 
+ hinting enabled made a significant improvement here.</P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x-4x.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="end.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>XFree86 4.x</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Odds and Ends</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

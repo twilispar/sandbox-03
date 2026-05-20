@@ -1,0 +1,311 @@
+<HTML
+><HEAD
+><TITLE
+>Compile ans Install</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux OpenLDAP Server"
+HREF="net-oLDAP.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux OpenLDAP Server"
+HREF="net-oLDAP.html"><LINK
+REL="NEXT"
+TITLE="Compile and Optimize"
+HREF="chap26sec211.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="net-oLDAP.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 26. Linux OpenLDAP Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap26sec211.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch26sccmi"
+>26.1. Compile ans Install</A
+></H1
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN16047"
+></A
+><P
+><B
+>As per in the [<SPAN
+CLASS="citation"
+>OpenLDAP web site</SPAN
+>]:</B
+></P
+><P
+>&#13;                 <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> -Lightweight Directory Access Protocol is an open-standard protocol for accessing information services. The protocol runs over Internet transport protocols, such as <SPAN
+CLASS="acronym"
+>TCP</SPAN
+>, and can be used to access 
+                 stand-alone directory servers or X.500 directories.
+               </P
+></DIV
+></TD
+></TR
+></TABLE
+><DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/LDAP-Schema.gif"
+ALT="LDAP"
+></IMG
+></P
+></DIV
+><P
+>&#13;               These installation instructions assume
+               <P
+></P
+><UL
+><LI
+><P
+>&#13;                   Commands are Unix-compatible.
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>, <EM
+>other paths are possible</EM
+>.
+                 </P
+></LI
+><LI
+><P
+>&#13;                 Installations were tested on Red Hat Linux 6.1 and 6.2.
+                 </P
+></LI
+><LI
+><P
+>&#13;                 All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+                 </P
+></LI
+><LI
+><P
+>&#13;                 OpenLDAP version number is 1.2.10
+                 </P
+></LI
+></UL
+>
+             </P
+><P
+>&#13;               The Package(s) required are and available at:
+               <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;                   OpenLDAP Homepage:<A
+HREF="appendixa.html#prtinxfp25"
+>http://www.openldap.org/</A
+>
+                 </TD
+></TR
+><TR
+><TD
+>&#13;                 OpenLDAP FTP Site: <A
+HREF="appendixa.html#prtinxfp25"
+>204.152.186.57</A
+>
+                 </TD
+></TR
+><TR
+><TD
+>&#13;                 You must be sure to download: openldap-1.2.10.tgz
+                 </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+             </P
+><P
+>&#13;               Before you decompress tarballs, it is a good idea to make a list of files on the system before you install OpenLDAP, and one afterwards, and then compare them using diff to find out what file it placed where. Simply 
+               run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; OpenLDAP1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; OpenLDAP2</B
+></TT
+> after you install the software, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>OpenLDAP1 OpenLDAP2 &#62; OpenLDAP-Installed</B
+></TT
+> 
+               to get a list of what changed.
+             </P
+><P
+>&#13;               Compile and decompress the tarball, <TT
+CLASS="literal"
+>tar.gz</TT
+>.
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>cp</B
+> openldap-version.tgz /var/tmp
+                 [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp/
+                 [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf openldap-version.tgz
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="net-oLDAP.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap26sec211.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux OpenLDAP Server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="net-oLDAP.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile and Optimize</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Debugging Your PPP Setup</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node114.html">IP Configuration Options</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node112.html">Dialing out with chat</A>
+<BR> <P>
+<H1><A NAME="SECTION0010600000">Debugging Your PPP Setup</A></H1>
+<A NAME="4240"></A>
+<A NAME="4241"></A>
+<A NAME="4548"></A>
+<A NAME="4243"></A>
+By default, pppd will log any warnings and error messages to
+syslog's daemon facility.  You have to add an entry
+to syslog.conf that redirects this to a file, or even the
+console, otherwise syslog simply discards these messages. The
+following entry sends all messages to /var/log/ppp-log:
+<Pre>
+           daemon.*                /var/log/ppp-log
+
+ 
+</Pre>
+If your PPP setup doesn't work at once, looking into this log file
+should give you a first hint of what goes wrong. If this doesn't help,
+you can also turn on extra debugging output using the debug
+option. This makes pppd log the contents of all control packets
+sent or received to syslog.  All messages will go to the
+daemon facility.
+<P>
+Finally, the most drastic feature is to enable kernel-level debugging
+by invoking pppd with the kdebug option.  It is
+followed by a numeric argument that is the bitwise OR of the following
+values: 1 for general debug messages, 2 for printing the contents of
+all incoming HDLC frames, and 4 to make the driver print all outgoing
+HDLC frames. To capture kernel debugging messages, you must either run
+a syslogd daemon that reads the /proc/kmsg file, or the
+klogd daemon. Either of them directs kernel debugging to
+syslog's kernel facility.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

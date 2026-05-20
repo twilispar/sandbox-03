@@ -1,0 +1,225 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/nsswitch.conf file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux General Optimization"
+HREF="gen-optim.html"><LINK
+REL="PREVIOUS"
+TITLE="The ip_local_port_range parameters"
+HREF="chap6sec70.html"><LINK
+REL="NEXT"
+TITLE="
+          The file-max parameter
+            "
+HREF="chap6sec72.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap6sec70.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. Linux General Optimization</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap6sec72.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4674"
+>6.8. The <TT
+CLASS="filename"
+>/etc/nsswitch.conf</TT
+> file</A
+></H1
+><P
+>&#13;            The <TT
+CLASS="filename"
+>/etc/nsswitch.conf</TT
+> file is used to configure which services are to be used to determine information such 
+          as hostnames, password files, and group files. The last two ones, <TT
+CLASS="filename"
+>password</TT
+> files, and <TT
+CLASS="filename"
+>group</TT
+> 
+          files in our case are not used, since we don't use <SPAN
+CLASS="acronym"
+>NIS</SPAN
+> services on our server. Thus, we will focus on the hosts line in this file.
+          </P
+><P
+>&#13;          Edit the <TT
+CLASS="filename"
+>nsswitch.conf</TT
+> file vi <TT
+CLASS="filename"
+>/etc/nsswitch.conf</TT
+> and change the hosts line to read:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          "hosts:      dns files"
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          Which means, for programs that want to resolve an address. They should use the dns feature first, and the <TT
+CLASS="filename"
+>/etc/hosts</TT
+> 
+          file if the <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> servers are not available or can't resolve the address.
+          </P
+><P
+>&#13;          Also, we would recommend deleting all instances of <SPAN
+CLASS="acronym"
+>NIS</SPAN
+> services from each line of this file unless you are 
+          using <SPAN
+CLASS="acronym"
+>NIS!</SPAN
+> The result should look like this:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            passwd:files
+            shadow:files
+            group:files
+            hosts:dns files
+            bootparams:files
+            ethers:files
+            netmasks:files
+            networks:files
+            protocols:files
+            rpc:files
+            services:files
+            automount:files
+            aliases:files           
+          </PRE
+></TD
+></TR
+></TABLE
+>
+
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap6sec70.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap6sec72.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The ip_local_port_range parameters</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-optim.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The file-max parameter</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

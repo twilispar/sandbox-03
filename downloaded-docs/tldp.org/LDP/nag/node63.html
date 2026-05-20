@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Assigning IP-Addresses</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node64.html">Writing hosts and networks </A>
+<B>Up:</B> <A HREF="node58.html">Configuring TCP/IP Networking</A>
+<B> Previous:</B> <A HREF="node62.html">Setting the Hostname</A>
+<BR> <P>
+<H1><A NAME="SECTION007500000">Assigning IP-Addresses</A></H1>
+
+If you configure the networking software on your host for standalone
+operation (for instance, to be able to run the INN netnews software),
+you can safely skip this section, because you will need an IP-address
+just for the loopback interface, which is always 127.0.0.1.
+<P>
+Things are a little more complicated with real networks like Ethernets.
+If you want to connect your host to an existing network, you have to ask
+its administrators to give you an IP-address on this network.  When
+setting up the network all by yourself, you have to assign IP-addresses
+yourself as described below.
+<P>
+Hosts within a local network should usually share addresses from the
+same logical IP-network. Hence you have to assign an IP-network address.
+If you have several physical networks, you either have to assign them
+different network numbers, or use sub-netting to split your IP-address
+range into several subnetworks.
+<P>
+If your network is not connected to the Internet, you are free to choose
+any (legal) network address. You only have to make sure to choose one from
+classes A, B, or C, else things will most likely not work properly.
+However, if you intend to get on the Internet in the near future, you
+should obtain an official IP-address <em>now</em>. The best way to proceed is
+to ask your network service provider to help you.  If you want to obtain a
+network number just in case you might get on the Internet someday, request
+a Network Address Application Form from hostmaster@internic.net.
+<p>
+To operate several Ethernets (or other networks, once a driver is
+available), you have to split your network into subnets. Note that
+sub-netting is required only if you have more than one <em>broadcast
+network</em>; point-to-point links don't count. For instance, if you have
+one Ethernet, and one or more SLIP links to the outside world, you
+don't need to subnet your network. The reason for this will be
+explained in chapter-<A HREF="node92.html#slip"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+As an example, the brewery's network manager applies to the NIC for a
+class B network number, and is given 191.72.0.0.  To accommodate
+the two Ethernets, she decides to use eight bits of the host part as
+additional subnet bits. This leaves another eight bits for the host
+part, allowing for 254 hosts on each of the subnets. She then assigns
+subnet number 1 to the brewery, and gives the winery number 2. Their
+respective network addresses are thus 191.72.1.0 and
+191.72.2.0. The subnet mask is 255.255.255.0.
+<P>
+vlager, which is the gateway between the two networks, is assigned a
+host number of 1 on both of them, which gives it the IP-addresses
+191.72.1.1 and 191.72.2.1, respectively.
+Figure-<A HREF="node64.html#interfacefigsubnet"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> shows the two subnets, and the gateway.
+<P>
+Note that in this example I am using a class B network to keep things
+simple; a class C network would be more realistic.  With the new networking
+code, sub-netting is not limited to byte boundaries, so even a class C
+network may be split into several subnets. For instance, you could use 2
+bits of the host part for the netmask, giving you four possible subnets
+with 64 hosts on each.<A HREF="footnode.html#2589"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node64.html">Writing hosts and networks </A>
+<B>Up:</B> <A HREF="node58.html">Configuring TCP/IP Networking</A>
+<B> Previous:</B> <A HREF="node62.html">Setting the Hostname</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

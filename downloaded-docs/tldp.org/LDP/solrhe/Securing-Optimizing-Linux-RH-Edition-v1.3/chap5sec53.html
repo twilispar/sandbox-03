@@ -1,0 +1,271 @@
+<HTML
+><HEAD
+><TITLE
+>&#13;            The kernel tunable parameters</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="General System Security"
+HREF="gen-syssecured.html"><LINK
+REL="PREVIOUS"
+TITLE="
+            Bits from root-owned programs
+              "
+HREF="chap5sec52.html"><LINK
+REL="NEXT"
+TITLE="Refuse responding to broadcasts request"
+HREF="chap5sec54.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap5sec52.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. General System Security</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap5sec54.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4022"
+>5.24. The kernel tunable parameters</A
+></H1
+><P
+>&#13;            With the new version of Red Hat Linux 6.2 all kernel parameters available under the /proc/sys subdirectory of Linux can be configured at runtime. You can now use the 
+            new <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file under Red Hat Linux 6.2 to modify and set kernel parameters at runtime. The sysctl.conf file is read and loaded each time the system reboots. All 
+            settings are now stored in the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file. All modifications to /proc/sys should be made through /etc/sysctl.conf, because they offer better for control, and 
+            are executed before rc.local or any other users scripts. We have shown you the networking security options that you must configure on your server for both Red Hat Linux 
+            version 6.1 and 6.2 below.
+            </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN4027"
+>5.24.1. Prevent your system responding to Ping</A
+></H2
+><P
+>&#13;             <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.1.gif"
+ALT="Version 6.1 only"
+></IMG
+></P
+></DIV
+>
+            Preventing your system for responding to ping request can be a big improvement in your network security since no one can ping on your server and receive an answer. The TCP/IP 
+            protocol suite has a number of loopholes that allows an attacker to leverage techniques in the form of covert channels to surreptitiously pass data in otherwise benign 
+            packets. Preventing your server from responding to ping requests can help to minimize this problem.
+            An...
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep] /#<B
+CLASS="command"
+>echo</B
+> 1 &#62; /proc/sys/net/ipv4/icmp_echo_ignore_all
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            ... should do the job such that your system won't respond to ping on any interface. You can add this line in your /etc/rc.d/rc.local file so the command will be automatically set if your system reboots. Not responding to pings would at least keep most "crackers" out because they would never even know it's there.
+            To turn it backs on, simply do this:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep] /#<B
+CLASS="command"
+>echo</B
+> 0 &#62; /proc/sys/net/ipv4/icmp_echo_ignore_all
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            You can add this line in your <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> file so the command will be automatically set if your system reboots.
+            </P
+><P
+>&#13;            <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+            Edit the /etc/sysctl.conf file and add the following line:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;            # Enable ignoring ping request
+            net.ipv4.icmp_echo_ignore_all = 1
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            
+            You must restart your network for the change to take effect. The command to restart the network is the following:
+            To restart all network devices manually on your system, use the following command:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep] /# /etc/rc.d/init.d/network restart
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;            Setting network parameters		[  OK  ]
+            Bringing up interface lo		[  OK  ]
+            Bringing up interface eth0	        [  OK  ]
+            Bringing up interface eth1	        [  OK  ]
+            </TT
+></P
+>
+            </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap5sec52.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap5sec54.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Bits from root-owned programs</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-syssecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Refuse responding to broadcasts request</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

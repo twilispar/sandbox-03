@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Loopback Root Filesystem HOWTO: Principles of Loopback Devices and Ramdisks</TITLE>
+ <LINK HREF="Loopback-Root-FS-3.html" REL=next>
+ <LINK HREF="Loopback-Root-FS-1.html" REL=previous>
+ <LINK HREF="Loopback-Root-FS.html#toc2" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Loopback-Root-FS-3.html">Next</A>
+<A HREF="Loopback-Root-FS-1.html">Previous</A>
+<A HREF="Loopback-Root-FS.html#toc2">Contents</A>
+<HR>
+<H2><A NAME="s2">2. Principles of Loopback Devices and Ramdisks</A></H2>
+
+<P>First I will describe some of the general principles that are used in the
+setting up of a loopback filesystem as the root device.
+<P>
+<P>
+<H2><A NAME="ss2.1">2.1 Loopback Devices</A>
+</H2>
+
+<P>A <B>loopback device</B> in Linux is a virtual device that can be used like any
+other media device.
+<P>
+<P>Examples of normal media devices are hard disk partitions like
+<CODE>/dev/hda1</CODE>, <CODE>/dev/hda2</CODE>, <CODE>/dev/sda1</CODE>, or entire disks like
+the floppy disk <CODE>/dev/fd0</CODE> etc.  They are all devices that can be used to
+hold a files and directory structures.  They can be formatted with the
+filesystem that is required (ext2fs, msdos, ntfs etc.) and then mounted.
+<P>
+<P>The loopback filesystem associates a file on another filesystem as a complete
+device.  This can then be formatted and mounted just like any of the other
+devices listed above.  To do this the device called <CODE>/dev/loop0</CODE> or
+<CODE>/dev/loop1</CODE> etc is associated with the file and then this new virtual
+device is mounted.
+<P>
+<P>
+<H2><A NAME="ss2.2">2.2 Ramdisk Devices</A>
+</H2>
+
+<P>In Linux it is also possible to have another type of virtual device mounted as a
+filesystem, this is the <B>ramdisk device</B>.
+<P>
+<P>In this case the device does not refer to any physical hardware, but to a
+portion of memory that is set aside for the purpose.  The memory that is
+allocated is never swapped out to disk, but remains in the disk cache.
+<P>
+<P>A ramdisk can be created at any time by writing to the ramdisk device
+<CODE>/dev/ram0</CODE> or <CODE>/dev/ram1</CODE> etc.  This can then be formatted and
+mounted in the same way that the loopback device is.
+<P>
+<P>When a ramdisk is used to boot from (as is often done on Linux installation
+disks or rescue disks) then the disk image (the entire contents of the disk as a
+single file) can be stored on the boot floppy in a compressed form.  This is
+automatically recognised by the kernel when it boots and is uncompressed into
+the ramdisk before it is mounted.
+<P>
+<P>
+<H2><A NAME="ss2.3">2.3 The Initial Ramdisk Device</A>
+</H2>
+
+<P>The <B>initial ramdisk</B> device in Linux is another important mechanism that
+we need to be able to use a loopback device as a the root filesystem.
+<P>
+<P>When the initial ramdisk is used the filesystem image is copied into memory and
+mounted so that the files on it can be accessed.  A program on this ramdisk
+(called <CODE>/linuxrc</CODE>) is run and when it is finished a different device is
+mounted as the root filesystem.  The old ramdisk is still present though and is
+mounted on the directory <CODE>/initrd</CODE> if present or available through the
+device <CODE>/dev/initrd</CODE>.
+<P>
+<P>This is unusual behaviour since the normal boot sequence boots from the
+designated root partition and keeps on running.  With the initial ramdisk option
+the root partition is allowed to change before the main boot sequence is
+started.
+<P>
+<P>
+<H2><A NAME="ss2.4">2.4 The Root Filesystem</A>
+</H2>
+
+<P>The root filesystem is the device that is mounted first so that it appears as
+the directory called <CODE>/</CODE> after booting.
+<P>
+<P>There are a number of complications about the root filesystem that are due to
+the fact that it contains all files.  When booting the <CODE>rc</CODE> scripts are
+run, these are either the files in <CODE>/etc/rc.d</CODE> or <CODE>/etc/rc?.d</CODE>
+depending on the version of the <CODE>/etc/init</CODE> program.
+<P>
+<P>When the system has booted it is not possible to unmount the root partition or
+change it since all programs will be using it to some extent.  This is why the
+initial ramdisk is so useful because it can be used so that the final root
+partition is not the same as the one that is loaded at boot time.
+<P>
+<P>
+<H2><A NAME="ss2.5">2.5 The Linux Boot Sequence</A>
+</H2>
+
+<P>To show how the initial ramdisk operates in the boot sequence, the order of
+events is listed below.
+<P>
+<P>
+<OL>
+<LI>The kernel is loaded into memory, this is performed by <CODE>LILO</CODE> or
+<CODE>LOADLIN</CODE>.  You can see the <CODE>Loading...</CODE> message as this happens.</LI>
+<LI>The ramdisk image is loaded into memory, again this is performed by
+<CODE>LILO</CODE> or <CODE>LOADLIN.</CODE> You can see the <CODE>Loading...</CODE> message
+again as this happens.</LI>
+<LI>The kernel is initialised, including parsing the command line options and
+setting of the ramdisk as the root device.</LI>
+<LI>The program <CODE>/linuxrc</CODE> is run on the initial ramdisk.</LI>
+<LI>The root device is changed to that specified in the kernel parameter.</LI>
+<LI>The init program <CODE>/etc/init</CODE> is run which will perform the user
+configurable boot sequence.</LI>
+</OL>
+<P>This is just a simplified version of what happens, but is sufficient to explain
+how the kernel starts up and where the initial ramdisk is used.
+<P>
+<P>
+<HR>
+<A HREF="Loopback-Root-FS-3.html">Next</A>
+<A HREF="Loopback-Root-FS-1.html">Previous</A>
+<A HREF="Loopback-Root-FS.html#toc2">Contents</A>
+</BODY>
+</HTML>

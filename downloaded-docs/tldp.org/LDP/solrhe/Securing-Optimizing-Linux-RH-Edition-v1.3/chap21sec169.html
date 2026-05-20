@@ -1,0 +1,622 @@
+<HTML
+><HEAD
+><TITLE
+>Clean-up and Test the new chrooted jail</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking"
+HREF="soft-netwrkng.html"><LINK
+REL="PREVIOUS"
+TITLE="The syslog daemon"
+HREF="chap21sec168.html"><LINK
+REL="NEXT"
+TITLE="DNS Administrative Tools"
+HREF="chap21sec170.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap21sec168.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 21. Software -Networking</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap21sec170.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN11242"
+>21.8. Clean-up and Test the new chrooted jail</A
+></H1
+><P
+>&#13; Remove the unnecessary files and directory.
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>rm</B
+> -f  /usr/sbin/named
+ [root@deep] /# <B
+CLASS="command"
+>rm</B
+> -f  /usr/sbin/named-xfer
+ [root@deep] /# <B
+CLASS="command"
+>rm</B
+> -f  /etc/named.conf
+ [root@deep] /# <B
+CLASS="command"
+>rm</B
+> -rf /var/named/
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ We remove the <TT
+CLASS="literal"
+>named</TT
+> and <TT
+CLASS="literal"
+>named-xfer</TT
+> binaries from the <TT
+CLASS="filename"
+>/usr/sbin</TT
+> directory, since the ones we'll work with now on a daily basis are located under the 
+ chroot directory. The same applies for the <TT
+CLASS="filename"
+>named.conf</TT
+> file and <TT
+CLASS="filename"
+>/var/named</TT
+> directory.
+ </P
+><P
+>&#13; We must test the new chrooted jail configuration of our <SPAN
+CLASS="acronym"
+>ISC</SPAN
+> <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> software.
+
+ </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;   The first thing to do is to restart our syslogd daemon with the following command:
+  <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# /etc/rc.d/init.d/syslog <B
+CLASS="command"
+>restart</B
+>
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13; Shutting down kernel logger:                               	[  OK  ]
+ Shutting down system logger:                               	[  OK  ]
+ Starting system logger:                                    	[  OK  ]
+ Starting kernel logger:                               		[  OK  ]
+ </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+></LI
+><LI
+><P
+>&#13; Now, start the new chrooted jail <SPAN
+CLASS="acronym"
+>ISC</SPAN
+> <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> with the following command:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# /etc/rc.d/init.d/named start
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13; Starting named:                                            		[  OK  ]
+ </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+ </P
+></LI
+><LI
+><P
+>&#13; Make sure it's running as user <TT
+CLASS="literal"
+>named</TT
+> and with the new arguments.
+
+ To verify that <SPAN
+CLASS="acronym"
+>ISC</SPAN
+> <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+> is running as user <TT
+CLASS="literal"
+>named</TT
+> with the new arguments, use the following command:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>ps</B
+> auxw | <B
+CLASS="command"
+>grep</B
+> named
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13; named 11446 0.0 1.2 2444 1580 ? S 23:09 0:00 /chroot/named/usr/sbin/named -t /chroot/named/ -unamed -gnamed
+ </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+ The first column should be <TT
+CLASS="literal"
+>named</TT
+>, which is the <SPAN
+CLASS="acronym"
+>UID</SPAN
+> named daemon is running under. The end of the line should be <B
+CLASS="command"
+>named</B
+> -t /chroot/named/ -unamed -gnamed, which 
+ are the new arguments.
+ </P
+></LI
+><LI
+><P
+>&#13; Please dont forget to cleanup:
+ <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13; [root@deep] /# <B
+CLASS="command"
+>rm</B
+> -rf /var/tmp/src bind-src.tar.gz
+ </PRE
+></TD
+></TR
+></TABLE
+>
+ This will remove the source file and tar archive we used to compile and install <SPAN
+CLASS="acronym"
+>ISC</SPAN
+> <SPAN
+CLASS="acronym"
+>BIND</SPAN
+>/<SPAN
+CLASS="acronym"
+>DNS</SPAN
+>.
+ </P
+></LI
+></OL
+></DIV
+><P
+>&#13; Further documentation, for more details there are several man pages you can read:
+ <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>dnsdomainname</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;  - show the system's <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> domain name
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>dnskeygen</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;  - generate public, private, and shared secret keys for <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Security
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>dnsquery</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;  - query domain name servers using resolver
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>named</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;  - Internet domain name server <SPAN
+CLASS="acronym"
+>DNS</SPAN
+>
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>hesiod_to_bind [hesiod]</SPAN
+>(3)</SPAN
+></DT
+><DD
+><P
+>&#13;  - Hesiod name server interface library
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldconfig</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;  - determine run-time link bindings
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>lesskey</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;  - specify key bindings for less
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>raw</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;  - bind a Linux raw character device
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>mkfifo</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;  - make FIFOs <EM
+>named pipes</EM
+>
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>named-bootconf</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;  - convert name server configuration files
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>named-xfer</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;  - ancillary agent for inbound zone transfers
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>named.conf [named]</SPAN
+>(5)</SPAN
+></DT
+><DD
+><P
+>&#13;  - configuration file for
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>Opcode</SPAN
+>(3)</SPAN
+></DT
+><DD
+><P
+>&#13;  - Disable named opcodes when compiling perl code
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>dig</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;  - send domain name query packets to name servers
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>nslookup</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;  - query Internet name servers interactively
+  </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ndc</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;  - name daemon control program
+  </P
+></DD
+></DL
+></DIV
+>
+ </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap21sec168.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap21sec170.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The syslog daemon</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netwrkng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>DNS Administrative Tools</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

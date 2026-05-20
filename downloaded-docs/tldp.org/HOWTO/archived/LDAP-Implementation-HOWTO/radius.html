@@ -1,0 +1,381 @@
+<HTML
+><HEAD
+><TITLE
+>Radius authentication using LDAP</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.63
+"><LINK
+REL="HOME"
+TITLE="LDAP Implementation HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="LDAP authentication using pam_ldap and
+nss_ldap"
+HREF="pamnss.html"><LINK
+REL="NEXT"
+TITLE="Samba"
+HREF="samba.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>LDAP Implementation HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="pamnss.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="samba.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="RADIUS"
+>3. Radius authentication using LDAP</A
+></H1
+><P
+>A Radius Server, is a daemon for un*x operating systems which allows one
+to set up (guess what!) a radius protocol server, which is usually used for
+authentication and accounting of dial-up users. To use server, you also need a
+correctly setup client which will talk to it, usually a terminal server or a PC
+with appropriate which emulates it (PortSlave, radiusclient etc). [From the
+freeradius FAQ] </P
+><P
+>Radius has its own database of users, anyway, since this information is
+already contained in LDAP, it will be more convenient to use it!</P
+><P
+>There are several freeware Radius servers, the one that has good support
+for LDAP is the FreeRadius server (<A
+HREF="http://www.freeradius.org"
+TARGET="_top"
+>http://www.freeradius.org</A
+>), it is still
+a development version, anyway the LDAP module works fine.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN352"
+>3.1. FreeRadius Radiusd configuration</A
+></H2
+><P
+>Once you have installed the server you have to configure it using the
+configuration files, that are located under <TT
+CLASS="FILENAME"
+>/etc/raddb</TT
+> (or
+<TT
+CLASS="FILENAME"
+>/usr/local/etc/raddb</TT
+>) </P
+><P
+>In the <TT
+CLASS="FILENAME"
+>radiusd.conf</TT
+> file edit : </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>[...omissis]
+# Uncomment this if you want to use ldap (Auth-Type = LDAP)
+# Also uncomment it in the authenticate{} block below
+        ldap {
+                server   = ldap.yourorg.com
+                #login    = "cn=admin,o=My Org,c=US"
+                #password = mypass
+                basedn   = "ou=users,dc=yourorg,dc=com"
+                filter   = "(posixAccount)(uid=%u))"
+        }
+
+[...omissis]
+
+# Authentication types, Auth-Type = System and PAM for now.
+authenticate {
+        pam
+        unix
+#       sql
+#       sql2  
+# Uncomment this if you want to use ldap (Auth-Type = LDAP)
+        ldap
+}
+[...omissis]</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>Also edit the <TT
+CLASS="FILENAME"
+>dictionary</TT
+> file:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>[...omissis]
+#
+#       Non-Protocol Integer Translations
+#
+
+VALUE           Auth-Type               Local                   0
+VALUE           Auth-Type               System                  1
+VALUE           Auth-Type               SecurID                 2
+VALUE           Auth-Type               Crypt-Local             3
+VALUE           Auth-Type               Reject                  4
+VALUE           Auth-Type               ActivCard               4
+VALUE           Auth-Type               LDAP                    5
+[...omissis]</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+> And the <TT
+CLASS="FILENAME"
+>users</TT
+> file to have a default authorization
+entry:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>[...omissis]
+DEFAULT        	Auth-Type := LDAP
+		Fall-Through = 1
+[...omissis]</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>If you alreay set up an LDAP server for Un*x accounts management, this
+is enough.</P
+><P
+>On the LDAP server ensure also that the radius server can read the all
+the posixAccount attributes (expecially <TT
+CLASS="FILENAME"
+>uid</TT
+> and
+<TT
+CLASS="FILENAME"
+>userpassword</TT
+>).</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN373"
+>3.2. Testing Radius Authentication</A
+></H2
+><P
+>To test everything server start <TT
+CLASS="FILENAME"
+>radiusd</TT
+> in debugging
+mode:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>/usr/local/sbin/radiusd  -X -A</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>Then use the <TT
+CLASS="FILENAME"
+>radtest</TT
+> program whith a syntax like</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>radtest username "password" radius.yourorg.com 1 testing123 </PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>If everything went fine you should receive an Acces-Accept packet from the
+Radius server.</P
+><P
+>You can also use stunnel in client mode to provide SSL in the connection
+between the Radius server and the LDAPS server. For details on SSL refer to
+<A
+HREF="ssl.html"
+>Section 10</A
+>.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN386"
+>3.3. Sample CISCO IOS Configuration</A
+></H2
+><P
+>Just for completeness, here is a sample Cisco IOS configuration. Anyway,
+this is outside the purpose of the HOWTO so it may not suit your needs.</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>[...omissis]
+aaa new-model
+aaa authentication login default radius enable
+aaa authentication ppp default radius
+aaa authorization network radius
+[...omissis]
+radius-server host 192.168.10.1
+radius-server timeout 10
+radius-server key cisco
+[...omissis]</PRE
+></TD
+></TR
+></TABLE
+></P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>Almost all NAS use port 1645 for radius, check it out and configure
+the server appropriately.</P
+></BLOCKQUOTE
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="pamnss.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="samba.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>LDAP authentication using pam_ldap and
+nss_ldap</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Samba</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

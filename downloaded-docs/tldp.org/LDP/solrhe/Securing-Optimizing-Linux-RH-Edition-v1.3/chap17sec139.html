@@ -1,0 +1,509 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /usr/TSS/policy/twpol.txt file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities/System Integrity"
+HREF="sysintegrity.html"><LINK
+REL="PREVIOUS"
+TITLE="Configuration files"
+HREF="chap17sec138.html"><LINK
+REL="NEXT"
+TITLE="Securing Tripwire for Linux"
+HREF="chap17sec140.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap17sec138.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 17. Software -Securities/System Integrity</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap17sec140.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN9454"
+>17.4. Configure the <TT
+CLASS="filename"
+>/usr/TSS/policy/twpol.txt</TT
+> file</A
+></H1
+><P
+>&#13;           The <TT
+CLASS="filename"
+>/usr/TSS/policy/twpol.txt</TT
+> is the text policy file of Tripwire where you specify what files and directories, to check. Note that extensive testing and experience are necessary when editing this policy file 
+           before you get a working file report. The following is a working example from where you can start your own customization.
+           </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;           You must modify the default policy file, or create your own. The <TT
+CLASS="filename"
+>policyguide.txt</TT
+> file under <TT
+CLASS="filename"
+>/usr/TSS/policy</TT
+> directory can help you. Open the policy 
+           file <TT
+CLASS="filename"
+>twpol.txt</TT
+> with a text editor, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/usr/TSS/policy/twpol.txt</TT
+> and change it to fit your needs:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;           @@section GLOBAL
+           TWROOT="/usr";
+           TWBIN="/usr/bin";
+           TWPOL="/usr/TSS/policy";
+           TWDB="/usr/TSS/db";
+           TWSKEY="/usr/TSS/key";
+           TWLKEY="/usr/TSS/key";
+           TWREPORT="/usr/TSS/report";
+           HOSTNAME=deep.openna.com;
+
+           @@section FS
+           SEC_CRIT      	= $(IgnoreNone)-SHa;	# Critical files - we can't afford to miss any changes.
+           SEC_SUID      	= $(IgnoreNone)-SHa;	# Binaries with the SUID or SGID flags set.
+           SEC_TCB       	= $(ReadOnly);	# Members of the Trusted Computing Base.
+           SEC_BIN       	= $(ReadOnly);	# Binaries that shouldn't change
+           SEC_CONFIG	= $(Dynamic);	# Config files that are changed infrequently but accessed often.
+           SEC_LOG       	= $(Growing);	# Files that grow, but that should never change ownership.
+           SEC_INVARIANT = +pug;	# Directories that should never change permission or ownership.
+           SIG_LOW       	= 33;	# Non-critical files that are of minimal security impact
+           SIG_MED       	= 66;	# Non-critical files that are of significant security impact
+           SIG_HI        	= 100;	# Critical files that are significant points of vulnerability
+
+
+           # Tripwire Binaries
+           (emailto = admin@openna.com, rulename = "Tripwire Binaries", severity = $(SIG_HI))
+           {
+           $(TWBIN)/siggen   	-&#62; $(ReadOnly);
+           $(TWBIN)/tripwire 	-&#62; $(ReadOnly);
+           $(TWBIN)/twadmin  	-&#62; $(ReadOnly);
+           $(TWBIN)/twprint  	-&#62; $(ReadOnly);
+           }
+
+           # Tripwire Data Files - Configuration Files, Policy Files, Keys, Reports, Databases
+           (emailto = admin@openna.com, rulename = "Tripwire Data Files", severity = $(SIG_HI))
+           {
+           # NOTE: Removing the inode attribute because when Tripwire creates a backup
+           # it does so by renaming the old file and creating a new one (which will
+           # have a new inode number).  Leaving inode turned on for keys, which shouldn't
+           # ever change.
+
+           # NOTE: this rule will trigger on the first integrity check after database
+           # initialization, and each integrity check afterward until a database update 
+           # is run, since the database file will not exist before that point.
+           $(TWDB)                           		-&#62; $(Dynamic) -i;
+           $(TWPOL)/tw.pol                   		-&#62; $(SEC_BIN) -i;
+           $(TWBIN)/tw.cfg                   		-&#62; $(SEC_BIN) -i;
+           $(TWLKEY)/$(HOSTNAME)-local.key   -&#62; $(SEC_BIN) ;
+           $(TWSKEY)/site.key                		-&#62; $(SEC_BIN) ;
+
+           #don't scan the individual reports
+           $(TWREPORT)		-&#62; $(Dynamic) (recurse=0);  
+           }
+
+           # These files are critical to a correct system boot.
+           (emailto = admin@openna.com, rulename = "Critical system boot files", severity = 100)
+           {
+           /boot                                 		-&#62; $(SEC_CRIT)  ;
+           !/boot/System.map			;
+           !/boot/module-info			;
+           }
+
+           # These files change the behavior of the root account
+           (emailto = admin@openna.com, rulename = "Root config files", severity = 100)
+           {
+           /root                                 		-&#62; $(SEC_CRIT)   ;
+           /root/.bash_history		-&#62; $(SEC_LOG)    ;
+           }
+
+           # Commonly accessed directories that should remain static with regards to owner and group
+           (emailto = admin@openna.com, rulename = "Invariant Directories", severity = $(SIG_MED))
+           {
+           /       						-&#62; $(SEC_INVARIANT) (recurse = 0);
+           /home   						-&#62; $(SEC_INVARIANT) (recurse = 0); 
+           /etc    						-&#62; $(SEC_INVARIANT) (recurse = 0);
+           /chroot 						-&#62; $(SEC_INVARIANT) (recurse = 0);
+           /cache						-&#62; $(SEC_INVARIANT) (recurse = 0);
+           }
+
+           (emailto = admin@openna.com, rulename = "Shell Binaries")
+           {
+           /bin/bsh            		-&#62; $(SEC_BIN);
+           /bin/csh            		-&#62; $(SEC_BIN);
+           /bin/sh             		-&#62; $(SEC_BIN);
+           }
+
+           # Rest of critical system binaries
+           (emailto = admin@openna.com, rulename = "OS executables and libraries", severity = $(SIG_HI))
+           {
+           /bin                                  		-&#62; $(ReadOnly)   ;
+           /lib                                  		-&#62; $(ReadOnly)   ;
+           }
+
+           # Local files
+           (emailto = admin@openna.com, rulename = "User binaries", severity = $(SIG_MED))
+           {
+           /sbin                       		-&#62; $(SEC_BIN) (recurse = 1);
+           /usr/sbin                   		-&#62; $(SEC_BIN) (recurse = 1);
+           /usr/bin                    		-&#62; $(SEC_BIN) (recurse = 1);
+           }
+
+           # Temporary directories
+           (emailto = admin@openna.com, rulename = "Temporary directories", recurse = false, severity = $(SIG_LOW))
+           {
+           /usr/tmp                    		-&#62; $(SEC_INVARIANT);
+           /var/tmp                    		-&#62; $(SEC_INVARIANT);
+           /tmp                        		-&#62; $(SEC_INVARIANT);
+           }
+
+           # Libraries
+           (emailto = admin@openna.com, rulename = "Libraries", severity = $(SIG_MED))
+           {
+           /usr/lib 						-&#62; $(SEC_BIN);
+           }
+
+           # Include
+           (emailto = admin@openna.com, rulename = "OS Development Files", severity = $(SIG_MED))
+           {
+           /usr/include 					-&#62; $(SEC_BIN);
+           }
+
+           # Shared
+           (emailto = admin@openna.com, rulename = "OS Shared Files", severity = $(SIG_MED))
+           {
+           /usr/share 					-&#62; $(SEC_BIN);
+           }
+
+           # Kernel headers files
+           (emailto = admin@openna.com, rulename = "Kernel Headers Files", severity = $( SIG_HI))
+           {
+           /usr/src/linux-2.2.14 				-&#62; $(SEC_BIN);
+           }
+
+           # setuid/setgid root programs
+           (emailto = admin@openna.com, rulename = "setuid/setgid", severity = $(SIG_HI))
+           {
+           /bin/su 						-&#62; $(SEC_SUID);
+           /sbin/pwdb_chkpwd 			-&#62; $(SEC_SUID);
+           /sbin/dump 					-&#62; $(SEC_SUID);
+           /sbin/restore 					-&#62; $(SEC_SUID);
+           /usr/bin/at 					-&#62; $(SEC_SUID);
+           /usr/bin/passwd 				-&#62; $(SEC_SUID);
+           /usr/bin/suidperl 				-&#62; $(SEC_SUID);
+           /usr/bin/crontab 				-&#62; $(SEC_SUID);
+           /usr/sbin/sendmail 				-&#62; $(SEC_SUID);
+           /usr/bin/man 					-&#62; $(SEC_SUID);
+           /usr/bin/sperl5.00503 			-&#62; $(SEC_SUID);
+           /usr/bin/slocate 				-&#62; $(SEC_SUID);
+           /usr/sbin/utempter 				-&#62; $(SEC_SUID);
+           /sbin/netreport 				-&#62; $(SEC_SUID);
+           }
+
+           (emailto = admin@openna.com, rulename = "Configuration Files")
+           {
+           /etc/hosts                 		-&#62; $(SEC_CONFIG);
+           /etc/inetd.conf            		-&#62; $(SEC_CONFIG);
+           /etc/initlog.conf		-&#62; $(SEC_CONFIG);
+           /etc/inittab               		-&#62; $(SEC_CONFIG);
+           /etc/resolv.conf           		-&#62; $(SEC_CONFIG);
+           /etc/syslog.conf           		-&#62; $(SEC_CONFIG);
+           }
+
+           (emailto = admin@openna.com, rulename = "Security Control")
+           {
+           /etc/group                		-&#62; $(SEC_CRIT);
+           /etc/security/            		-&#62; $(SEC_CRIT);
+           /lib/security/            		-&#62; $(SEC_CRIT);
+           /var/spool/cron           		-&#62; $(SEC_CRIT);
+           }
+
+           (emailto = admin@openna.com, rulename = "Login Scripts")
+           {
+           /etc/csh.login                         		-&#62; $(SEC_CONFIG);
+           /etc/profile                           		-&#62; $(SEC_CONFIG);
+           }
+
+           # These files change every time the system boots
+           (emailto = admin@openna.com, rulename = "System boot changes", severity = $(SIG_HI))
+           {
+           /dev/log                              		-&#62; $(Dynamic)   ;
+           /dev/cua0                             		-&#62; $(Dynamic)   ;
+           /dev/console                          		-&#62; $(Dynamic)   ;
+           /dev/tty2                             		-&#62; $(Dynamic)   ; # tty devices
+           /dev/tty3                             		-&#62; $(Dynamic)   ; # are extremely
+           /dev/tty4                             		-&#62; $(Dynamic)   ; # variable
+           /dev/tty5                             		-&#62; $(Dynamic)   ;
+           /dev/tty6                             		-&#62; $(Dynamic)   ;
+           /dev/urandom                          		-&#62; $(Dynamic)   ;
+           /dev/initctl                          		-&#62; $(Dynamic)   ;
+           /var/lock/subsys                      		-&#62; $(Dynamic)   ;
+           /var/run                              		-&#62; $(Dynamic)   ; # daemon PIDs
+           /var/log                              		-&#62; $(Dynamic)   ;
+           /etc/ioctl.save                       		-&#62; $(Dynamic)   ;
+           /etc/.pwd.lock                        		-&#62; $(Dynamic)   ;
+           /etc/mtab                             		-&#62; $(Dynamic)   ;
+           /lib/modules                          		-&#62; $(Dynamic)   ;
+           }
+
+           # Critical configuration files
+           (emailto = admin@openna.com, rulename = "Critical configuration files", severity = $(SIG_HI))
+           {
+           /etc/conf.modules                    	 	-&#62; $(ReadOnly)   ;
+           /etc/crontab                          		-&#62; $(ReadOnly)   ;
+           /etc/cron.hourly                      		-&#62; $(ReadOnly)   ;
+           /etc/cron.daily                       		-&#62; $(ReadOnly)   ;
+           /etc/cron.weekly                      		-&#62; $(ReadOnly)   ;
+           /etc/cron.monthly                     		-&#62; $(ReadOnly)   ;
+           /etc/default                          		-&#62; $(ReadOnly)   ;
+           /etc/fstab                            		-&#62; $(ReadOnly)   ;
+           /etc/group-         		-&#62; $(ReadOnly) 	  ;  # changes should be infrequent
+           /etc/host.conf                        		-&#62; $(ReadOnly)   ;
+           /etc/hosts.allow                      		-&#62; $(ReadOnly)   ;
+           /etc/hosts.deny                       		-&#62; $(ReadOnly)   ;
+           /etc/lilo.conf		-&#62; $(ReadOnly)   ;
+           /etc/logrotate.conf		-&#62; $(ReadOnly)   ;
+           /etc/pwdb.conf		-&#62; $(ReadOnly)   ;
+           /etc/securetty		-&#62; $(ReadOnly)   ;
+           /etc/sendmail.cf		-&#62; $(ReadOnly)   ;
+           /etc/protocols                        		-&#62; $(ReadOnly)   ;
+           /etc/services                         		-&#62; $(ReadOnly)   ;
+           /etc/rc.d/init.d                      		-&#62; $(ReadOnly)   ;
+           /etc/rc.d                             		-&#62; $(ReadOnly)   ;
+           /etc/motd                             		-&#62; $(ReadOnly)   ;
+           /etc/passwd                           		-&#62; $(ReadOnly)   ;
+           /etc/passwd-                          		-&#62; $(ReadOnly)   ;
+           /etc/profile.d                        		-&#62; $(ReadOnly)   ;
+           /etc/rpc                              		-&#62; $(ReadOnly)   ;
+           /etc/sysconfig                        		-&#62; $(ReadOnly)   ;
+           /etc/shells		-&#62; $(ReadOnly)   ;
+           /etc/nsswitch.conf                    		-&#62; $(ReadOnly)   ;
+           }
+
+           # Critical devices
+           (emailto = admin@openna.com, rulename = "Critical devices", severity = $(SIG_HI), recurse = false)
+           {
+           /dev/kmem                             		-&#62; $(Device)   ;
+           /dev/mem                              		-&#62; $(Device)   ;
+           /dev/null                             		-&#62; $(Device)   ;
+           /dev/zero                             		-&#62; $(Device)   ;
+           /proc/devices                         		-&#62; $(Device)   ;
+           /proc/net                             		-&#62; $(Device)   ;
+           /proc/tty		-&#62; $(Device)   ;
+           /proc/sys                             		-&#62; $(Device)   ;
+           /proc/cpuinfo                         		-&#62; $(Device)   ;
+           /proc/modules                         		-&#62; $(Device)   ;
+           /proc/mounts                          		-&#62; $(Device)   ;
+           /proc/dma                             		-&#62; $(Device)   ;
+           /proc/filesystems                     		-&#62; $(Device)   ;
+           /proc/ide		-&#62; $(Device)   ;
+           /proc/interrupts                      		-&#62; $(Device)   ;
+           /proc/ioports                         		-&#62; $(Device)   ;
+           /proc/scsi                            		-&#62; $(Device)   ;
+           /proc/kcore                           		-&#62; $(Device)   ;
+           /proc/self                            		-&#62; $(Device)   ;
+           /proc/kmsg                            		-&#62; $(Device)   ;
+           /proc/stat                            		-&#62; $(Device)   ;
+           /proc/ksyms                           		-&#62; $(Device)   ;
+           /proc/loadavg                         		-&#62; $(Device)   ;
+           /proc/uptime                          		-&#62; $(Device)   ;
+           /proc/locks                           		-&#62; $(Device)   ;
+           /proc/version                         		-&#62; $(Device)   ;
+           /proc/meminfo                         		-&#62; $(Device)   ;
+           /proc/cmdline                         		-&#62; $(Device)   ;
+           /proc/misc                            		-&#62; $(Device)   ;
+           }
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+           This is an example policy file we provide you; of course, you must modify this file to fit your system files and specific needs.
+           </P
+></BLOCKQUOTE
+></DIV
+>
+          </P
+></LI
+><LI
+><P
+>&#13;             Once you are ready to use your policy file for the first time, install it with the following command:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>twadmin</B
+> --create-polfile /usr/TSS/policy/twpol.txt
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;           Please enter your site passphrase:
+           Wrote policy file: /usr/TSS/policy/tw.pol
+           </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap17sec138.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap17sec140.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configuration files</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="sysintegrity.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Securing Tripwire for Linux</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

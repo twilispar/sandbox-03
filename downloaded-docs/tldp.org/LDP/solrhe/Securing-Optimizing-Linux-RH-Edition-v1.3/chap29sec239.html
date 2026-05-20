@@ -1,0 +1,458 @@
+<HTML
+><HEAD
+><TITLE
+>Linux Apache Web Server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Compile"
+HREF="chap29sec238.html"><LINK
+REL="NEXT"
+TITLE="Compile and Optimize"
+HREF="chap29sec240.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec238.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec240.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="prt6ch29sapws"
+>29.3. Linux Apache Web Server</A
+></H1
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN18819"
+></A
+><P
+></P
+><P
+>&#13;      Apache is the most widely used HTTP-server in the world today. It surpasses all free and commercial competitors on the market, and provides a myriad of features; more than the nearest cmpetitor could give you on a UNIX variant. 
+      It is also the most used web server for a Linux system. A web server like Apache, in its simplest function, is software that displays and serves HTML pages hosted on a server to a client browser that understands the HTML code. 
+      Mixed with third party modules and programs, it can become powerful software, which will provide strong and useful services to a client browser.
+    </P
+><P
+></P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;      I expect that most of the users that read this book will be especially interested in knowing how to install the Apache web server in the most secure, and optimized, way. In its base install, Apache is no more difficult to install 
+      then the other software we have installed on our Linux server. The process can become tricky when we want to add some third party modules or programs. There are a lot of possibilities, variants and options for installing Apache. 
+    </P
+><P
+>&#13;      we have provided some step-by-step examples where you can see how to build Apache with other third-party modules and programs like mod_ssl, mod_perl, PHP4, LDAP connectivity, etc. Of course, the building of these programs is 
+      optional, and you are free to compile only what you want, <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> you may want to compile Apache with support for PHP4, but without SSL or PostgreSQL database connectivity <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+> To simplify matters
+      we assume some prerequisites for each example. If these don't fit your needs, simply modify the steps to suit your needs.
+    </P
+><P
+>&#13;      In this section, we explain and cover some of the basic ways in which you can adjust the configuration to improve the server's performance. Also, for the interested, we'll provide a procedure to be able to run Apache as a non 
+      root-user and in a chrooted environment for optimal security.
+    </P
+><DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Apache-Schema.gif"
+ALT="Apache web server"
+></IMG
+></P
+></DIV
+><P
+>&#13;      These installation instructions assume
+      <P
+></P
+><UL
+><LI
+><P
+>&#13;          Commands are Unix-compatible.
+        </P
+></LI
+><LI
+><P
+>&#13;        The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>, <EM
+>other paths are possible</EM
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;        Installations were tested on Red Hat Linux 6.1 and 6.2.
+        </P
+></LI
+><LI
+><P
+>&#13;        All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+        </P
+></LI
+><LI
+><P
+>&#13;        Apache version number is 1.3.12
+        </P
+></LI
+><LI
+><P
+>&#13;        Mod_SSL version number is 2.6.4-1.3.12
+        </P
+></LI
+><LI
+><P
+>&#13;        Mod_Perl version number is 1.24
+        </P
+></LI
+><LI
+><P
+>&#13;        Mod_PHP version number is 4.0.0
+        </P
+></LI
+></UL
+>
+    </P
+><P
+>&#13;      Packages
+      <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;          Apache Homepage: <A
+HREF="appendixa.html#prtinxfp30"
+>http://www.apache.org/</A
+>
+        </TD
+><TD
+>&#13;        Mod_Perl Homepage: <A
+HREF="appendixa.html#prtinxfp30"
+>http://perl.apache.org/</A
+>
+        </TD
+></TR
+><TR
+><TD
+>&#13;        Apache FTP Site: <A
+HREF="appendixa.html#prtinxfp30"
+>63.211.145.10</A
+>
+        </TD
+><TD
+>&#13;        Mod_Perl FTP Site: <A
+HREF="appendixa.html#prtinxfp30"
+>63.211.145.10</A
+>
+        </TD
+></TR
+><TR
+><TD
+>&#13;        You must be sure to download: apache_1.3.12.tar.gz
+        </TD
+><TD
+>&#13;        You must be sure to download: mod_perl-1.24.tar.gz
+        </TD
+></TR
+><TR
+><TD
+>&#13;        Mod_SSL Homepage: <A
+HREF="appendixa.html#prtinxfp30"
+>http://www.modssl.org/</A
+>
+        </TD
+><TD
+>&#13;        Mod_PHP Homepage: <A
+HREF="appendixa.html#prtinxfp30"
+>http://www.php.net/</A
+>
+        </TD
+></TR
+><TR
+><TD
+>&#13;        Mod_SSL FTP Site: <A
+HREF="appendixa.html#prtinxfp30"
+>129.132.7.171</A
+>
+        </TD
+><TD
+>&#13;        You must be sure to download: php-4.0.0.tar.gz
+        </TD
+></TR
+><TR
+><TD
+>&#13;        You must be sure to download: mod_ssl-2.6.4-1.3.12.tar.gz
+        </TD
+><TD
+>&nbsp;</TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+    </P
+><P
+>&#13;      And don't forget that these are the prerequisites if you are following the steps described by us exactly.
+      <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;          OpenSSL should be already installed on your system if you want Apache and SSL encryption support.
+        </P
+></LI
+><LI
+><P
+>&#13;        PosgreSQL should be already installed on your system if you want Apache and PostgreSQL database connectivity support.
+        </P
+></LI
+><LI
+><P
+>&#13;        MM should be already installed on your system if you want Apache and MM high-performance RAM-based session cache support.
+        </P
+></LI
+><LI
+><P
+>&#13;        OpenLDAP should be already installed on your system if you want Apache and LDAP directory connectivity support.
+        </P
+></LI
+><LI
+><P
+>&#13;        IMAP &#38; POP should be already installed on your system if you want Apache and IMAP &#38; POP capability.
+        </P
+></LI
+></OL
+>
+    </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+      For more information on the required software, see the related chapter(s) in this book.
+    </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;      Before you decompress the tarballs, It is a good idea to make a list of files on the system before you install Apache, and one afterwards, and then compare them using diff to find out what file it placed where. Simply 
+      run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Apache1</B
+></TT
+> before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; Apache2</B
+></TT
+> after you install the software, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>Apache1 Apache2 &#62; Apache-Installed</B
+></TT
+> 
+      to get a list of what changed.
+    </P
+><P
+>&#13;      To compile, decompress the tarballs (tar.gz).
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;      [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> apache_version.tar.gz /var/tmp
+      [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> mod_ssl-version-version.tar.gz /var/tmp
+      [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> mod_perl-version.tar.gz /var/tmp
+      [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> php-version.tar.gz /var/tmp
+      [root@deep ]/# <B
+CLASS="command"
+>cd</B
+> /var/tmp/
+      [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf apache_version.tar.gz
+      [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf mod_ssl-version-version.tar.gz
+      [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf mod_perl-version.tar.gz
+      [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf php-version.tar.gz
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec238.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec240.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Compile</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile and Optimize</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<!--updated Sun Jul 14 17:45:48 MET DST 1996 by:        
+Tony den Haan (tony@iaehv.nl)  ftp://ftp.IAEhv.nl/pub/users/tony-->
+<HTML>
+<HEAD>
+<TITLE>Installation</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node262.html">The sys file</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node260.html">Delivering News</A>
+<BR> <P>
+<H1><A NAME="SECTION0019200000">Installation</A></H1>
+<P>
+To install C-News, untar the files into their proper places if you
+haven't done so yet, and edit the configuration files listed below.
+They are all located in /usr/lib/news.  Their formats will be described in
+the following sections.
+<PRE>
+      1. There may be a difference between the groups  that  exist
+         at  your  site,  and  those  that your site is willing to
+         receive. For example, the subscription list  may  specify
+         comp.all,  which  means  all  newsgroups  below  the comp
+         hierarchy, but at your site, only a number of comp groups
+         are  listed  in  active.  articles posted to those groups
+         will be moved to junk.
+      2. Note that this should be the crontab of  news,  in  order
+         not to mangle file permissions.
+</PRE>
+ 
+ <H3> Figure 22.   News flow through relaynews.</H3>
+<UL>
+<DT>sys<DD>  You probably have to modify the ME line that  describes  your
+                system,  although using all/all is always a safe bet. You also
+                have to add a line for each site you feed news to.
+
+
+                     If you are a leaf site, you only need a line  that  sends
+                all locally generated articles to your feed.  Assume your feed
+                is moria, then your sys file should look like this:
+
+<PRE>
+                     ME:all/all::
+                     moria/moria.orcnet.org:all/all,!local:f:
+</PRE>
+<P>
+<DT>organization<DD> Your organization's name. For example,  ``Virtual  Brewery,
+                Inc.''.  On your home machine, enter ``private site'', or any-
+                thing else you like.  Most people  will  not  call  your  site
+                properly configured if you haven't customized this file.
+
+
+<DT>mailname<DD> Your site's mail name, e.g. vbrew.com.
+
+
+<DT>whoami<DD> Your site's name for news purposes. Quite often, the UUCP site
+                name is used, for example vbrew.
+
+
+ <DT>explist<DD> You should probably edit this file to reflect  your  preferred
+                expiry  times for some special newsgroups. Disk space may play
+                an important role in it.
+
+
+To create an initial hierarchy of newsgroups, obtain an active
+and a newsgroups file from the site that feeds you, and install
+them in /usr/lib/news, making sure they are owned by news and have a mode of
+644. Remove all to.* groups from the active file, and add
+to.mysite and to.feedsite, as well as
+junk and control. The to.* groups are normally used
+for exchanging ihave/sendme messages, but you should create them
+regardless of whether you plan to use ihave/sendme or not.  Next,
+replace all article numbers in the second and third field of
+active using the following command:
+<PRE>
+           # cp active active.old
+           # sed 's/ [0-9]* [0-9]* / 0000000000 00001 /' active.old > active
+           # rm active.old
+</PRE>
+<P>
+The second command is an invocation of sed(1), one of my
+favorite  commands. This invocation replaces two strings of digits
+with a string of zeroes and the string 000001, respectively.
+<P>
+Finally, create the news spool directory and the subdirectories used for
+incoming and outgoing news:
+<PRE>
+           # cd /var/spool
+           # mkdir news news/in.coming news/out.going
+           # chown -R news.news news
+           # chmod -R 755 news
+</PRE><P>
+If you're using a later release of C-News, you may also have to create
+the out.master directory in the news spool directory.
+<P>
+If you're using newsreaders from a different distribution than the C-News
+you have running, you may find that some expect the news spool on
+/usr/spool/news rather than in /var/spool/news. If your
+newsreader doesn't seem to find any articles, create a symbolic
+from /usr/spool/news to /var/spool/news.
+<P>
+Now, you are ready to receive news. Note that you don't have to create
+any directories other than those shown above, because each time C-News
+receives an article from a group for which there's no spool directory
+yet, it will create it.
+<P>
+In particular, this happens to <em>all</em> groups an article has
+been cross-posted to. So, after a while, you will find your news spool
+cluttered with directories for newsgroups you have never subscribed
+to, like alt.lang.teco. You may prevent this by either removing
+all unwanted groups from active, or by regularly running a
+shell script which removes all empty directories below /var/spool/news
+(except out.going and in.coming, of course).
+<P>
+C-News needs a user to send error messages and status reports to.  By
+default, this is usenet. If you use the default, you have to set
+up an alias for it which forwards all of its mail to one or more
+responsible persons.  (Chapters-<A HREF="node198.html#smail"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> and-<A HREF="node218.html#sendmail"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> explain
+how to do so for smail and sendmail).  You may also
+override this behavior by setting the environment variable
+NEWSMASTER to the appropriate name.  You have to do so in
+news' crontab file, as well as every time you invoke an
+administrative tool manually, so installing an alias is probably easier.
+<P>
+While you're hacking /etc/passwd, make sure that every user has 
+her real name in the pw_gecos field of the password file (this
+is the fourth field). It is a question of Usenet netiquette that the
+sender's real name appears in the From: field of the article.
+Of course, you will want to do so anyway when you use mail.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node262.html">The sys file</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node260.html">Delivering News</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

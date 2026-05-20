@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Running in Server Mode</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B>Up:</B> <A HREF="node92.html">Serial Line IP</A>
+<B> Previous:</B> <A HREF="node105.html">mode and default</A>
+<BR> <P>
+<H1><A NAME="SECTION009400000">Running in Server Mode</A></H1>
+<A NAME="slipserver"></A>
+<A NAME="4017"></A>
+<A NAME="3960"></A>
+Setting up your SLIP client was the hard part. Doing the opposite,
+namely configuring your host to act as a SLIP server, is much easier.
+<P>
+One way to do this is to to use dip in server mode, which can
+be achieved by invoking it as diplogin. Its main configuration
+file is /etc/diphosts, which associates login names with the
+address this host is assigned.  Alternatively, you can also use
+sliplogin, a BSD-derived tool that features a more flexible
+configuration scheme that lets you execute shell scripts whenever a
+host connects and disconnects. It is currently at Beta.
+<P>
+<A NAME="3965"></A>
+Both programs require that you set up one login account per SLIP
+client. For instance, assume you provide SLIP service to Arthur Dent
+at dent.beta.com, you might create an account named dent
+by adding the following line to your passwd file:
+<P>
+<pre>
+           dent:*:501:60:Arthur Dent's SLIP account:/tmp:/usr/sbin/diplogin
+</pre>
+<P>
+Afterwards, you would set dent's password using the
+passwd utility.
+<P>
+<A NAME="4018"></A>
+Now, when dent logs in, dip will start up as a server.
+To find out if he is indeed permitted to use SLIP, it will look
+up the user name in /etc/diphosts. This file details the access
+rights and connection parameter for each SLIP user. A sample entry for
+dent could look like this:
+<P>
+<PRE>
+</PRE>
+           dent::dent.beta.com:Arthur Dent:SLIP,296
+<P>
+<A NAME="3980"></A>
+The first of the colon-separated fields is the name the user
+must log in as. The second field may contain an additional
+password (see below). The third is the hostname or IP-address
+of the calling host. Next comes an informational field without
+any special meaning (yet). The last field describes the connection
+parameters. This is a comma-separated list specifying the
+protocol (currently one of SLIP or CSLIP),
+followed by the MTU.
+<P>
+When dent logs in, diplogin extracts the information on
+him from the diphosts file, and, if the second field is not
+empty, prompts for an ``external security password''. The string
+entered by the user is compared to the (unencrypted) password from
+diphosts. If they do not match, the login attempt is rejected.
+<P>
+Otherwise, diplogin proceeds by flipping the serial line to CSLIP
+or SLIP mode, and sets up the interface and route. This connection
+remains established until the user disconnects and the modem drops the
+line. diplogin will then return the line to normal line
+discipline, and exit.
+<P>
+<A NAME="3989"></A>
+<A NAME="3990"></A>
+diplogin requires super-user privilege.  If you don't have
+dip running setuid root, you should make diplogin a
+separate copy of dip instead of a simple link. diplogin
+can then safely be made setuid, without affecting the status of
+dip itself.
+<P>
+<A NAME="4019"></A>
+<A NAME="3999"></A>
+<A NAME="4000"></A>
+<P>
+%
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B>Up:</B> <A HREF="node92.html">Serial Line IP</A>
+<B> Previous:</B> <A HREF="node105.html">mode and default</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

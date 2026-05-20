@@ -1,0 +1,317 @@
+<HTML
+><HEAD
+><TITLE
+>RedHat Peculiarities</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Bangla PDF HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Printing as PDF"
+HREF="printing-pdf.html"><LINK
+REL="NEXT"
+TITLE="PDF from Unicode"
+HREF="unicode.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Bangla PDF HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="printing-pdf.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="unicode.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="redhat"
+></A
+>5. RedHat Peculiarities</H1
+><P
+> In some places, the previous descriptions are not applicable to 
+      RedHat. These differences are described below: </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+> While installing new font(s), the fontpath was supposed to be 
+          included in the <SPAN
+CLASS="QUOTE"
+>"Files"</SPAN
+> section of <TT
+CLASS="filename"
+>XF86Config</TT
+>.
+          In the case of RedHat this is not needed at all. There is a script called  
+          <B
+CLASS="command"
+>chkfontpath</B
+> to do this. With <B
+CLASS="command"
+>chkfontpath</B
+>,
+          add a fontpath like this: </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+<TT
+CLASS="prompt"
+>&#13;	$</TT
+><TT
+CLASS="userinput"
+><B
+> chkfontpath -a /usr/local/share/fonts/ttfonts/bijoy/ </B
+></TT
+>
+        </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> And remove a fontpath like this: </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+> 
+<TT
+CLASS="prompt"
+>&#13;	$</TT
+><TT
+CLASS="userinput"
+><B
+> chkfontpath -r /usr/local/share/fonts/ttfonts/bijoy/ </B
+></TT
+>
+        </PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+> If <B
+CLASS="command"
+>chkfontpath</B
+> doesn't show any error messages then the font(s) become
+          available or unavailable just after executing it. But even for RedHat, there 
+          is no need to add a TrueType fontpath as <SPAN
+CLASS="QUOTE"
+>"Xft"</SPAN
+> itself makes the fonts 
+          avilable to <SPAN
+CLASS="application"
+>KWord</SPAN
+>. So use of <B
+CLASS="command"
+>chkfontpath</B
+>
+          for TrueType is optional.</P
+><DIV
+CLASS="note"
+><P
+></P
+><TABLE
+CLASS="note"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TH
+ALIGN="LEFT"
+VALIGN="CENTER"
+><B
+>Note</B
+></TH
+></TR
+><TR
+><TD
+>&nbsp;</TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+> Just for reference, in the case of RedHat, the fontpaths are added in
+            <TT
+CLASS="filename"
+>/etc/X11/fs/config</TT
+> and not in <TT
+CLASS="filename"
+>XF86Config</TT
+>
+            or <TT
+CLASS="filename"
+>XF86Config-4</TT
+>.</P
+></TD
+></TR
+></TABLE
+></DIV
+></LI
+><LI
+><P
+> To use the Bijoy keyboard, the <SPAN
+CLASS="QUOTE"
+>"InputDevice"</SPAN
+> section of 
+          <TT
+CLASS="filename"
+>XF86Config</TT
+> needs editing. For RedHat it's a different file, 
+          <TT
+CLASS="filename"
+>XF86Config-4</TT
+> (i.e. <TT
+CLASS="filename"
+>/etc/X11/XF86Config-4</TT
+>).
+          </P
+></LI
+><LI
+><P
+> The only use of TrueType was stated as low quality PDF creation 
+          from <SPAN
+CLASS="application"
+>MS Word</SPAN
+> files, for printing only. Unfortunately
+          <SPAN
+CLASS="application"
+> KWord </SPAN
+> failed to open any <SPAN
+CLASS="application"
+>MS Word</SPAN
+>
+          files in RedHat, let alone create PDFs. Don't know why.  </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="printing-pdf.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="unicode.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Printing as PDF</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>PDF from Unicode</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

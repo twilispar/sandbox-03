@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>ISP-Connectivity-mini-HOWTO: Connecting to the Outside World</TITLE>
+ <LINK HREF="ISP-Connectivity-3.html" REL=next>
+ <LINK HREF="ISP-Connectivity-1.html" REL=previous>
+ <LINK HREF="ISP-Connectivity.html#toc2" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="ISP-Connectivity-3.html">Next</A>
+<A HREF="ISP-Connectivity-1.html">Previous</A>
+<A HREF="ISP-Connectivity.html#toc2">Contents</A>
+<HR>
+<H2><A NAME="s2">2. Connecting to the Outside World</A></H2>
+
+<P>In this document, we'll explain how to do this using PPP (Point
+to Point Protocol), a popular protocol nearly always used over the
+Internet. It allows your modem to <CODE>speak</CODE> to the outside
+world. This is what applications like Trumpet Winsock in Windows
+3.x did, and many other programs that you've probably have never
+seen.
+<P>In Linux, we use a thing called chat to do the dialing up to the
+ISP and then use a utility called pppd to 'use' the connection. In
+a sense, chat is your dialer, and pppd is your protocol. We'll 
+describe how to setup both below.
+<H2><A NAME="ss2.1">2.1 Talking and Communicating with pppd and chat</A>
+</H2>
+
+<P>Probably the easiest way to go about things is to make a shell
+script in root's home directory called <CODE>ppp-connect</CODE> and
+involke the script whenever you wish to make your connection. We'll
+discuss this method.
+<P>Open up your favourite editor as root on &nbsp;/ppp-connect. You'll
+then have to decide on your parameters.
+<P><I>pppd connect 'chat -v "" "your_init_string" "" ATDTisp_number
+CONNECT "" ogin: your_username word: your_passwd' /dev/tty(0/1/2) speed
+modem</I>
+<P>pppd involkes /usr/sbin/pppd on my system, then loads up chat to do the
+dialing. Chat sends <I>your_init_string</I> to the modem, then
+dials <I>isp_number</I>. It then waits for CONNECT, then waits for
+ogin: (l removed as the first character is sometimes lost), sends 
+<I>your_passwd</I>, chat then terminates and hands the show over to
+pppd.
+<P>The last of the command specifies your modem port (mine's /dev/ttyS1). In
+most cases it will be ttyS1 (COM2: in DOS), ttyS0 (COM1: in DOS), or if
+your using Slackware, cua1 or cua0. The speed is the speed of the modem. I
+use 115200 for my modem (a 33.6k). If you have got a fairly recent
+computer (one with a 16550 UART), then I wouldn't go any lower than 57600.
+Otherwise, for 14.4k 38400. Modem just tells pppd that it's a serial/modem
+based connection. Remove the -v option if you don't want verbose logging
+to your logfiles.
+<P>The scenario below is one of a person who dials up an ISP that
+automatically starts PPP for them, ie; they don't have a shell that
+actually starts. This is his command in his &nbsp;/ppp-connect:
+<P><I>pppd connect 'chat "" "ATZ" "" ATDT555-1800
+CONNECT "" ogin: johnny word: blackjak' /dev/ttyS1 115200
+modem</I>
+<P>But for some people, they're ISP starts up a shell and doesn't
+automatically start PPP this may be a problem. Luckily, chat can deal with
+that too. You just add another command to your chat script. For example,
+below this johnny character is using an ISP that just dumps him to a
+shell, requiring him to type ppp to get a ppp connection. His shell prompt
+ends with a $.
+<I>pppd connect 'chat "" "ATZ" "" ATDT555-1800
+CONNECT "" ogin: johnny word: blackjak $ ppp' /dev/ttyS1 115200
+modem</I>
+<P>If it's more than one word, ensure you quote it. I hope you can see the
+drift of this, and are able to create your own script up to suit your
+connection. Simply modify either the first johnny or the second johnny
+script to suit your taste, port, server, etc and save the file.
+<P>Now you've made your file, ensure that only root can execute, read or
+write to it. This is extreemly important. Also make sure nobody can
+read your logfiles, if you decide to leave the -v option in, as your
+password is seen in cleartext in the logs (I don't see much need for -v,
+if you don't know what I'm talking about, leave -v out).
+<H2><A NAME="ss2.2">2.2 IP's, Domain Names and Subnets</A>
+</H2>
+
+<P>For most people using the options above, a changing IP address won't
+bother them. These people include basic, easy going users, that just have
+dialup accounts, and aren't very technically minded. For those people,
+skim read this section, I'll come to important things you need to do to
+setup your system properly. Newbies, skip the sections dealing with
+permanent IP, Domain Names, Subnets, and just read the last bit of this
+section.
+<P>Getting a permanent IP address might be free for your ISP, so if in doubt
+ask them. Personally, I'd pay for a permanent IP address. It lets you send
+e-mail to and from using a unique IP or domain, etc. If you want to get
+yourself a permanent IP, write an e-mail to root@yourisp.com, and ask him
+nicely if he can arrange a permanent IP for you.
+<P>When you get your permanent IP address, grep through your /etc directory
+to find where your old IP addresses are. I had to change files in my
+sendmail directory and /etc/hosts. There are some other key files that you
+will only discover with grepping. Open up /etc/hosts, and add your new IP
+address in the standard format. Reboot your computer, and you should be
+ready to go.
+<P>You'll now need to change your chat script to reflect your new settings.
+If you are forced into PPP as soon as you start your connection, you'll
+need to tell your System Administrator of your ISP to ensure their PPP
+system recognises that you have a permanent IP address and allocates you
+that instead of a changing one. If you get dumped at a shell prompt, and
+you need to type ppp or something to start the connection, instead of
+typing that, change your &nbsp;/ppp-connect script to send this instead of just
+ppp or whatever when it sees $ or whatever your shell prompt is.
+<P><I>/usr/sbin/pppd :Your_IP_Address</I>
+<P>Substitute your IP address for the IP address your ISP gave to you. Be
+sure you encapsulate the thing in " " marks when you put it into your chat
+script. If this doesn't work, consult your ISP where your PPP daemon is
+located, and ask him for the command to give. You could just try leaving
+it as is and seeing if the server will recognise you and give you your
+rightful address.
+<P>The next thing probably to do is to get yourself a domain name. I know
+that in Australia, .asn.au and .org.au are free. In the United States, you
+can get a .us domain for free, but they tend to be long. If your in
+Australia, you must go to 
+<A HREF="http://www.aunic.net/">http://www.aunic.net/</A>
+to register your domains. In the United States, it is
+<A HREF="http://www.internic.net/">http://www.internic.net/</A> .
+<P>To register domains you need to be able to provide DNS services, and gorey
+stuff like that. If your ISP can't provide these, throw out an official
+.asn.au or whatever domain out the window, and get a Monolith Internet
+Domain. 
+<P>Monolith offer free domains to anybody and anyone all around the world.
+Everything is done without human interaction, via a web forms interface
+with your browser. Your domain comes in the form of Your_Choice.ml.org.
+Monolith will then host the DNS locally for you. If you want to send and
+receive mail from that domain, ask your ISP to become a mail exchanger for
+you. 
+<P>Go to 
+<A HREF="http://www.ml.org/">http://www.ml.org/</A>
+and fill out an application, enter the NIC with your username and
+password, and make a FREED domain. You'll need to enter your IP address,
+so have that ready. Your domain will be in the DNS in a couple of days.
+<P>Okay now, we'll move onto the newbies section, or for those people who
+can't get a permanent IP address or a domain name. All you have to do is
+edit /etc/hosts as root, call your site something that won't clash, give
+it a 10.10.10 or something for an IP address and reboot your computer. 
+<P>There you go, you've just setup your computer with pppd and chat in just
+ten minutes. Now let's move onto the next section, which deals with
+Electronic Mail.
+<HR>
+<A HREF="ISP-Connectivity-3.html">Next</A>
+<A HREF="ISP-Connectivity-1.html">Previous</A>
+<A HREF="ISP-Connectivity.html#toc2">Contents</A>
+</BODY>
+</HTML>

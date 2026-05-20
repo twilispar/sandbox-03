@@ -1,0 +1,214 @@
+<HTML
+><HEAD
+><TITLE
+>Basics</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Game Server HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Introduction"
+HREF="intro.html"><LINK
+REL="NEXT"
+TITLE="QuakeWorld"
+HREF="quakeworld.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Game Server HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="intro.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="quakeworld.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="BASICS"
+></A
+>2. Basics</H1
+><P
+>Game servers can consume a lot of CPU and bandwidth (depending on the game and the number of connected players). If you don't own the machine and want to run a server from your account, ask the system administrator first.
+ </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PERMISSIONS"
+></A
+>2.1. Security and permissions</H2
+><P
+> All dedicated servers are strongly recommended to be run from another user than root. I recommend that you create a new user that handles all the game servers. You may not have permission to create certain directories mentioned in this document as a normal user, for example <TT
+CLASS="FILENAME"
+>/usr/local/games/quake3</TT
+>. If so, create it as root and then <TT
+CLASS="LITERAL"
+>chown user:group /usr/local/games/quake</TT
+>, where user is your username and group your group, or simply create it in your home directory.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="KEEPRUNNING"
+></A
+>2.2. Keeping the server running</H2
+><P
+>If your game server crashes, a shell script like the one below might come in handy so you won't have to restart it manually. It can easily be modified for whatever server(s) you're running. 
+ </P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>#!/bin/sh
+
+quake3dir="/usr/local/games/quake3"
+process=`ps auxw | grep linuxq3ded | grep -v grep | awk '{print $11}'`
+
+if [ -z "$process" ]; then
+
+  echo "Couldn't find Quake3 running, restarting it."
+  cd "$quake3dir"
+  nohup ./linuxq3ded +exec ffa.cfg &#38;
+  echo ""
+
+fi</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Put the script somewhere, name it sv_up or whatever you like, and make cron run it every 5-10 minutes:</P
+><TABLE
+BORDER="1"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="SCREEN"
+>*/10 * * * * /usr/local/games/quake3/sv_up.sh &#62;/dev/null 2&#62;&#38;1</PRE
+></FONT
+></TD
+></TR
+></TABLE
+><P
+>Put this in crontab (crontab -e). It will execute sv_up.sh (the shell script above) every 10 minutes and its output is sent to /dev/null (in other words, it disappears instead of being mailed to you).</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="intro.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="quakeworld.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Introduction</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>QuakeWorld</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

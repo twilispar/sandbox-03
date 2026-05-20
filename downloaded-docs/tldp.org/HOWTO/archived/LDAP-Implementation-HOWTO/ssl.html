@@ -1,0 +1,470 @@
+<HTML
+><HEAD
+><TITLE
+>SSL/TLS and SSL/TLS wrappers for LDAP</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.63
+"><LINK
+REL="HOME"
+TITLE="LDAP Implementation HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Publishing digital certificates with LDAP"
+HREF="certificates.html"><LINK
+REL="NEXT"
+TITLE="Ldap schema's"
+HREF="schemas.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>LDAP Implementation HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="certificates.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="schemas.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="SSL"
+>10. SSL/TLS and SSL/TLS wrappers for LDAP</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN856"
+>10.1. A Brief description of SSL</A
+></H2
+><P
+>The Secure Socket Layer (SSL) is an application layer protocol that
+provides a secure transmission channel between parties. It stands between
+TCP/IP and application level protocols, such as HTTP, LDAP, SMTP etc... It is
+based on public key cryptography systems (various ciphers can be used) and on
+X.509 certificates.</P
+><P
+>SSL was initially a Netscape protocol, then it has gone trough a
+standardization process and now is called TLS (Transmission Layer Security).
+It is commonly referred as SSL/TLS.</P
+><P
+>The SSL/TLS protocol provides: </P
+><P
+></P
+><UL
+><LI
+><P
+>Data encryption: Client/server session is
+encrypted</P
+></LI
+><LI
+><P
+>Server authentication: Client can verify the server
+identity</P
+></LI
+><LI
+><P
+>Message integrity: Data is not modified during transmission;
+this prevents "man in the middle" attacks.</P
+></LI
+><LI
+><P
+>Client authentication: Server can verify the client
+identity</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN870"
+>10.2. SSL/TLS availability for OpenLDAP</A
+></H2
+><P
+> Since OpenLDAP 2.0.x, that is an LDAP V3 toolkit, SSL/TLS is provided by
+the server. OpenLDAP 2.0.x needs to be compiled using the OpenSSL library to
+add SSL/TLS. It also has Start-TLS support.</P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>Start-TLS allows to enable TLS if the client requests it. This way
+it is possible to use only an LDAP port for both secure and insecure
+connections.</P
+></BLOCKQUOTE
+></DIV
+><P
+>OpenLDAP 1.2.x, instead, is an LDAP V2 protocol implementation and does
+not provide SSL/TLS.</P
+><P
+>Valuable information on SSL/TLS on OpenLDAP 2.0.x can be found on the
+OpenLDAP web site, here we will focus how to use an SSL tunnel to secure LDAP
+parties that are not SSL/TLS aware</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN877"
+>10.3. How to use stunnel to provide SSL/TLS to an LDAP V2
+server</A
+></H2
+><P
+>If you use OpenLDAP 1.2.x you need a general purpose SSL wrapper to add
+SSL capabilities to the server. Stunnel (<A
+HREF="http://www.stunnel.org"
+TARGET="_top"
+>www.stunnel.org</A
+>) has been found to be
+stable and suitable for this application. </P
+><P
+>Installing it is quite simple, but first you have to install OpenSSL
+(<A
+HREF="http://www.OpenSSL.org"
+TARGET="_top"
+>www.OpenSSL.org</A
+>) to have the
+required library and tools. </P
+><P
+>OpenSSL, is an open source implementation of the SSL protocol that
+provides the SSL library and a set of cryptography tools.</P
+><P
+>To install OpenSSL you have to type the following commands:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>$ ./config
+$ make
+$ make test
+# make install</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>usually, everything will be installed in
+<TT
+CLASS="FILENAME"
+>/usr/local/ssl</TT
+>.</P
+><P
+>If OpenSSL is correctly installed the only command needed to compile and
+install stunnel are:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>$ ./configure
+$ make
+# make install</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>Stunnel uses a server certificate for SSL, this can be a self signed
+certificate, or, better, a certificate signed by your own Certification
+Authority (the SSL client has to trust the CA too).</P
+><P
+>A commonly used place used to store such certificate is:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>/usr/local/ssl/certs/stunnel.pem</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>If having a Certification Authority is not a concern, a self signed
+certificate can be produced using the tools provided by the OpenSSL
+suite.</P
+><P
+>In the stunnel directory (to use the configuration file
+<TT
+CLASS="FILENAME"
+>stunnel.cnf</TT
+>) type the following commands:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>$ openssl req -new -x509 -days 365 -nodes -config stunnel.cnf \
+            -out stunnel.pem -keyout stunnel.pem
+$ openssl gendh 512 &#62;&#62; stunnel.pem</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>This will produce a self signed certificate, valid for a year, in the
+file <TT
+CLASS="FILENAME"
+>stunnel.pem</TT
+>.</P
+><P
+>Once stunnel is installed, you can start up first the LDAP server on port
+389 (the default LDAP port):</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>#/usr/local/libexec/slapd</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>Then stunnel on port 636 (the port used by LDAPS client): </P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+># /usr/local/sbin/stunnel  -r ldap  -d 636 \
+ -p /usr/local/ssl/certs/stunnel.pem</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>For debugging you can start <TT
+CLASS="FILENAME"
+>stunnel</TT
+> in foreground
+with the following syntax:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+># /usr/local/sbin/stunnel  -r ldap  -d 636 \
+ -D 7 -f -p /usr/local/ssl/certs/stunnel.pem</PRE
+></TD
+></TR
+></TABLE
+></P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN913"
+>10.4. How to use stunnel to provide SSL to LDAP clients</A
+></H2
+><P
+>Many LDAP client are not SSL aware, anyway, it is possible using stunnel
+in client mode, to provide SSL to these clients.</P
+><P
+>This is quite simple. You can start stunnel on the client host, using the
+LDAPS port, and forward requests to this port to the actual LDAP server:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+># stunnel -c -d 636 -r  ldapserver.yourorg.com:636</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>Now LDAP clients must be configured using
+<TT
+CLASS="FILENAME"
+>localhost:636</TT
+> as the LDAPS server to use.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN921"
+>10.5. How to use stunnel to provide SSL for slurpd replication</A
+></H2
+><P
+>At the moment slurpd (slapd replication daemon) hasn't SSL capabilities,
+anyway you can use stunnel in client mode to have this job done.</P
+><P
+>Using stunnel in client mode on the master, you can forward a local  
+port to a remote port:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+># stunnel -c -d 9636 -r  ldapreplica.yourorg.com:636</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>and have on the master LDAP server in <TT
+CLASS="FILENAME"
+>slapd.conf</TT
+></P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>replica host=localhost:9636</PRE
+></TD
+></TR
+></TABLE
+></P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="certificates.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="schemas.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Publishing digital certificates with LDAP</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Ldap schema's</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,412 @@
+<HTML
+><HEAD
+><TITLE
+>Rules used in the Firewall script files</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Networking -Firewall"
+HREF="soft-netfirew.html"><LINK
+REL="PREVIOUS"
+TITLE="Build a kernel with IPCHAINS Firewall support"
+HREF="chap10sec99.html"><LINK
+REL="NEXT"
+TITLE="Source Address Filtering"
+HREF="chap10sec101.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap10sec99.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 10. Networking -Firewall</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap10sec101.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN6448"
+>10.4. Rules used in the Firewall script files</A
+></H1
+><P
+>&#13;          The following is an explanation of a few of the rules that will be used in the Firewalling examples below. This is shown just as a reference, the firewall scripts are well commented and very easy to modify.
+          Constants are used, in the firewall scripts files  for most values. The most basic constants are:
+          <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>EXTERNAL_INTERFACE</TT
+></B
+></DT
+><DD
+><P
+>&#13;          This is the name of the external network interface to the Internet. It's defined as eth0 in the examples.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>LOCAL_INTERFACE_1</TT
+>
+          </B
+></DT
+><DD
+><P
+>&#13;          This is the name of the internal network interface to the LAN, if any. It's defined as eth1 in the examples.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>LOOPBACK_INTERFACE</TT
+>
+          </B
+></DT
+><DD
+><P
+>&#13;          This is the name of the loopback interface. It's defined as lo in the examples.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>IPADDR</TT
+></B
+></DT
+><DD
+><P
+>&#13;          This is the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address of your external interface. It's either a static <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address registered with InterNIC, or else a dynamically assigned address from your <SPAN
+CLASS="acronym"
+>ISP</SPAN
+> (usually via DHCP).
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>LOCALNET_1</TT
+></B
+></DT
+><DD
+><P
+>&#13;          This is your LAN network address, if any - the entire range of <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses used by the machines on your LAN. These may be statically assigned, or you might run a local DHCP server to assign them. In these examples, the range is 192.168.1.0/24, part of the Class C private address range.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>ANYWHERE</TT
+></B
+></DT
+><DD
+><P
+>&#13;          Anywhere is a label for an address used by ipchains to match any (non-broadcast) address. Both programs provide any/0 as a label for this address, which is 0.0.0.0/0.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>NAMESERVER_1</TT
+></B
+></DT
+><DD
+><P
+>&#13;          This is the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address of your Primary <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Server from your network or your <SPAN
+CLASS="acronym"
+>ISP</SPAN
+>.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>NAMESERVER_2</TT
+></B
+></DT
+><DD
+><P
+>&#13;          This is the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address of your Secondary <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> Server from your network or your <SPAN
+CLASS="acronym"
+>ISP</SPAN
+>.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>MY_ISP</TT
+></B
+></DT
+><DD
+><P
+>&#13;          This is your <SPAN
+CLASS="acronym"
+>ISP</SPAN
+> &#38; <SPAN
+CLASS="acronym"
+>NOC</SPAN
+> address range. The value you specify here is used by the firewall to allow <SPAN
+CLASS="acronym"
+>ICMP</SPAN
+> ping request and traceroute. If you don't specify an <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address 
+          range, then you will not be able to ping the Internet from your internal network.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>LOOPBACK</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The loopback address range is <TT
+CLASS="literal"
+>127.0.0.0/8</TT
+>. The interface itself is addressed as <TT
+CLASS="literal"
+>127.0.0.1</TT
+> in <TT
+CLASS="filename"
+>/etc/hosts</TT
+>.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>PRIVPORTS</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The privileged ports, 0 through 1023, are usually referenced in total.
+          </P
+></DD
+><DT
+><B
+>&#13;          <TT
+CLASS="literal"
+>UNPRIVPORTS</TT
+></B
+></DT
+><DD
+><P
+>&#13;          The unprivileged ports, 1024 through 65535, are usually referenced in total. They are addresses dynamically assigned to the client side of a connection.
+            </P
+></DD
+></DL
+></DIV
+>
+          
+          Please Note a firewall has a default policy and a collection of actions to take in response to specific message types. This means that if a given packet has not been selected by any other rule, then the default policy rule will be applied.
+          
+          </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+          People with dynamically assigned IPs from an <SPAN
+CLASS="acronym"
+>ISP</SPAN
+> may include the following two lines in their declarations for the firewall. The lines will determine the ppp0 <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address, and the network of the remote ppp server.
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          
+          IPADDR=`/sbin/ifconfig | grep -A 4 ppp0 | awk '/inet/ { print $2 } ' | sed -e s/addr://`
+          MY_ISP=`/sbin/ifconfig | grep -A 4 ppp0 | awk '/P-t-P/ { print $3 } ' | sed -e s/P-t-P:// | cut -d '.' -f 1-3`.0/24
+          
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;          You need to Enable Local Traffic since the default policies for all example firewall rule script files in this book are to deny everything, some of these rules must be unset. Local network services do not 
+          go through the external network interface. They go through a special, private interface called the loopback interface. None of your local network programs will work until loopback traffic is allowed.
+          </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          
+          # Unlimited traffic on the loopback interface.
+          ipchains -A input  -i $LOOPBACK_INTERFACE -j ACCEPT
+          ipchains -A output -i $LOOPBACK_INTERFACE -j ACCEPT
+          
+          </PRE
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap10sec99.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap10sec101.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Build a kernel with <TT
+CLASS="literal"
+>IPCHAINS</TT
+> Firewall support</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netfirew.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Source Address Filtering</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

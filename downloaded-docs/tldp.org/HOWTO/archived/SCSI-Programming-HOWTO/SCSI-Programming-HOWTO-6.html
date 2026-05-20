@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Linux SCSI programming HOWTO: Overview Of Device Programming</TITLE>
+ <LINK HREF="SCSI-Programming-HOWTO-7.html" REL=next>
+ <LINK HREF="SCSI-Programming-HOWTO-5.html" REL=previous>
+ <LINK HREF="SCSI-Programming-HOWTO.html#toc6" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="SCSI-Programming-HOWTO-7.html">Next</A>
+<A HREF="SCSI-Programming-HOWTO-5.html">Previous</A>
+<A HREF="SCSI-Programming-HOWTO.html#toc6">Contents</A>
+<HR>
+<H2><A NAME="s6">6. Overview Of Device Programming</A></H2>
+
+<P>The header file <CODE>include/scsi/sg.h</CODE> 
+contains a description of the interface (this is based on kernel
+version 1.3.98):
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+struct sg_header
+ {
+  int pack_len;
+                   /* length of incoming packet (including header) */
+  int reply_len;   /* maximum length of expected reply */
+  int pack_id;     /* id number of packet */
+  int result;      /* 0==ok, otherwise refer to errno codes */
+  unsigned int twelve_byte:1;
+               /* Force 12 byte command length for group 6 &amp; 7 commands  */
+  unsigned int other_flags:31;                  /* for future use */
+  unsigned char sense_buffer[16]; /* used only by reads */
+  /* command follows then data for command */
+ };
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>This structure describes how a SCSI command is to be processed and has
+room to hold the results of the execution of the command.  The
+individual structure components will be discussed later in
+section 
+<A HREF="SCSI-Programming-HOWTO-8.html#sec-header">sec-header</A>
+.
+<P>The general way of exchanging data with the generic driver is as
+follows: to send a command to an opened generic device, <CODE>write()</CODE> a
+block containing these three parts to it:
+<P>
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+struct sg_header
+SCSI command
+data to be sent with the command
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>To obtain the result of a command, <CODE>read()</CODE> a block with this
+(similar) block structure:
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+struct sg_header
+data coming from the device
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>This is a general overview of the process. The following sections
+describe each of the steps in more detail.
+<P>NOTE: Up to recent kernel versions, it is necessary to block the
+SIGINT signal between the <CODE>write()</CODE> and the corresponding 
+<CODE>read()</CODE> call (i.e. via <CODE>sigprocmask()</CODE>). A return after the
+<CODE>write()</CODE> part without any <CODE>read()</CODE> to fetch the results
+will block on subsequent accesses. This signal blocking has not
+yet been included in the example code. So better do not issue
+SIGINT (a la ^C) when running these examples.
+<P>
+<HR>
+<A HREF="SCSI-Programming-HOWTO-7.html">Next</A>
+<A HREF="SCSI-Programming-HOWTO-5.html">Previous</A>
+<A HREF="SCSI-Programming-HOWTO.html#toc6">Contents</A>
+</BODY>
+</HTML>

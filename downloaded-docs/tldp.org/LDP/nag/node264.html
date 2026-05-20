@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+
+<HTML>
+<!-- updated   Sun Jul 14 17:45:48 MET DST 1996 by:
+    Tony den Haan (tony@iaehv.nl)  ftp://ftp.IAEhv.nl/pub/users/tony-->
+<HEAD>
+<TITLE>Article Batching</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node265.html">Expiring News</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node263.html">The active file</A>
+<BR> <P>
+<H1><A NAME="SECTION0019500000">Article Batching</A></H1>
+<A NAME="cnewsbatcher"></A>
+
+News-batches follow a particular format which is the same for
+Bnews, C-News, and INN. Each article is preceded by a line like this:
+<PRE>
+           #! rnews count
+</PRE><P>
+where count is the number of bytes in the article. When batch
+compression is used, the resulting file is compressed as a whole, and
+preceded by another line, indicated by the message to be used for
+unpacking. The standard compression tool is compress,
+which is marked by
+<PRE>
+           #! cunbatch
+</PRE><P>
+
+Sometimes, when having to send batches via mail software that
+removes the eighth bit from all data, a compressed batch may be
+protected using what is called c7-encoding; these batches will be
+marked by c7unbatch.
+<P>
+When a batch is fed to rnews on the remote site, it checks for
+these markers and processes the batch appropriately.  Some sites also
+use other compression tools, like gzip, and precede their gzipped
+files with zunbatch instead.  C-News does not recognize
+non-standard headers like these; you have to modify the source to
+support them.
+<P>
+In C-News, article batching is performed by /usr/lib/news/bin/batch/sendbatches,
+which takes a list of articles from the site/togo file, and
+puts them into several newsbatches.  It should be executed once per hour
+or even more frequently, depending on the volume of traffic.
+<P>
+Its operation is controlled by the batchparms file in /usr/lib/news.
+This file describes the maximum batch size allowed for each site, the
+batching and optional compression program to be used, and the transport
+for delivering it to the remote site. You may specify batching parameters
+on a per-site basis, as well as a set of default parameters for
+sites not explicitly mentioned.
+<P>
+To perform batching for a specific site, you invoke it as
+<PRE>
+           # su news -c "/usr/lib/news/bin/batch/sendbatches site"
+</PRE><P>
+When invoked without arguments, sendbatches handles all batch
+queues. The interpretation of ``all'' depends on the presence of a
+default entry in batchparms. If one is found, all directories in
+/var/spool/news/out.going are checked, otherwise, it cycles through
+all entries in batchparms.  Note that sendbatches, when
+scanning the out.going directory, takes only those directories
+that contain no dot or at sign-(@) as site names.
+<P>
+When installing C-News, you will most likely find a batchparms
+file in your distribution which contains a reasonable default entry,
+so there's a good chance that you wouldn't have to touch the file.
+Just in case, we describe its format nevertheless. Each line consists
+of six fields, separated by spaces or tabs:
+<PRE>
+           site size max batcher muncher transport
+</PRE><P>
+The meaning of these fields is as follows:
+<DL>
+<DT>site<DD> is the name of the site the entry applies to. The togo
+file for this site must reside in out.going/togo below the news
+spool. A site name of /default/ denotes the default entry.
+<DT>size<DD> is the maximum size of article batches created (before
+compression). For single articles larger than this, C-News makes an
+exception and puts them in a single batch by themselves.
+<P>
+max is the maximum number of batches created and scheduled
+for transfer before batching stalls for this particular site. This
+is useful in case the remote site should be down for a long time,
+because it prevents C-News from cluttering your UUCP spool directories 
+with zillions of newsbatches.
+<P>
+C-News determines the number of queued batches using the queulen
+script in /usr/lib/news/bin. Vince Skahan's newspak release should contain
+a script for BNU-compatible UUCPs. If you use a different flavor of spool
+directories, for example, Taylor UUCP, you might have to write your
+own.<A HREF="footnode.html#9513"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="9174"></A>
+The batcher field contains the command used for producing a
+batch from the list of articles in the togo file. For regular feeds,
+this is usually batcher. For other purposes, alternative
+batchers may be provided. For instance, the ihave/sendme protocol
+requires the article list to be turned into ihave or sendme control
+messages, which are posted to the newsgroup to.site.
+This is performed by batchih and batchsm.
+<P>
+The muncher field specifies the command used for compression.
+Usually, this is compcun, a script that produces a compressed
+batch.<A HREF="footnode.html#9515"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> Alternatively, you might provide a muncher that uses gzip, say
+gzipcun (to be clear: you have to write it yourself).  You have
+to make sure that uncompress on the remote site is patched to
+recognize files compressed with gzip.
+<P>
+If the remote site does not have an uncompress command, you may
+specify nocomp which does not do any compression.
+<P>
+The last field, transport, describes the transport to be used.
+A number of standard commands for different transports are available
+whose names begin with via. sendbatches passes them
+the destination site name on the command line.  If the batchparms
+entry was not /default/, it derives the site name from the
+site field by stripping of anything after and including the first
+dot or slash.  If entry was /default/, the directory names in
+out.going are used.
+<P>
+There are two commands that use uux to execute rnews on
+the remote system; viauux and viauuxz. The latter sets the
+-z flag for (older versions of) uux to keep it from
+returning success messages for each article delivered. Another command,
+viamail, sends article batches to the user rnews on the
+remote system via mail. Of course, this requires that the remote system
+somehow feeds all mail for rnews to their local news system.  For
+a complete list of these transports, refer to the newsbatch(8)
+manual page.
+<P>
+All commands from the last three fields must be located in either of
+out.going/site or /usr/lib/news/bin/batch.  Most of them are
+scripts, so that you may easily tailor new tools for your personal
+needs. They are invoked as a pipe. The list of articles is fed to the
+batcher on standard input, which produces the batch on standard output.
+This is piped into the muncher, and so on.
+<P>
+A sample file is given below.
+<PRE>
+           # batchparms file for the brewery
+           # site        | size   |max    |batcher  |muncher    |transport
+           #-------------+--------+-------+---------+-----------+-----------
+           /default/       100000  22      batcher   compcun     viauux
+           swim             10000  10      batcher   nocomp      viauux
+</PRE>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node265.html">Expiring News</A>
+<B>Up:</B> <A HREF="node259.html">C-News</A>
+<B> Previous:</B> <A HREF="node263.html">The active file</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

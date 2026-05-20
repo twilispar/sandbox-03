@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>mailertable</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node236.html">uucpxtable</A>
+<B>Up:</B> <A HREF="node234.html">A Tour of Sendmail+IDA </A>
+<B> Previous:</B> <A HREF="node234.html">A Tour of Sendmail+IDA </A>
+<BR> <P>
+<H2><A NAME="SECTION0017410000">mailertable</A></H2>
+<P>
+<A NAME="8420"></A>
+<A NAME="8421"></A>
+<P>
+The mailertable defines special treatment for specific hosts or domains
+based on the remote host or network name.  It is frequently used on Internet
+sites to select an intermediate mail relay host or gateway to reach a remote
+network through, and to specify a particular protocol (UUCP or SMTP) to be used.
+UUCP sites will generally not need to use this file.
+<P>
+Order is important.  Sendmail reads the file top-down and processes the message
+according to the first rule it matches. So it is generally wise to place the
+most explicit rules at the top of the file and the more generic rules below.
+<P>
+Suppose you want to forward all mail for the Computer Science department
+at Groucho Marx University via UUCP to a relay host ada.    To
+do so, you would have a mailertable entry that looked like the
+following:
+<P>
+<P><P>
+<P>
+Suppose you want all mail to the larger groucho.edu domain to go to a
+different relay-host big-hub for address resolution and delivery.  The
+expanded mailertable entries would look quite similar.
+<P>
+<P><P>
+<P>
+As mentioned above, order is important.  Reversing the order of the two rules
+shown above will result in all mail to .cs.groucho.edu going through the
+more generic big-hub path instead of the explicit ada path that is
+really desired.
+<P>
+<P><P>
+<P>
+In the mailertable examples above, the UUCP-A mailer makes
+sendmail use UUCP delivery with domainized headers.
+<P>
+The comma between the mailer and remote system tells it to forward the message
+to ada for address resolution and delivery.
+<P>
+Mailertable entries are of the format:
+<P>
+<P><P>
+<P>
+There are a number of possible mailers.  The differences are generally in how
+they treat addresses.  Typical mailers are TCP-A (TCP/IP with
+Internet-style addresses), TCP-U (TCP/IP with UUCP-style
+addresses), and UUCP-A (UUCP with Internet-style addresses).
+<P>
+The character that separates the mailer from the host portion on the
+left-hand-side of a mailertable line defines how the address is modified by
+the mailertable.  The important thing to realize is that this only rewrites
+the envelope (to get the mail into the remote system).  Rewriting anything
+other than the envelope is generally frowned upon due to the high probability
+of breaking the mail configuration.
+<P>
+<P><P><HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node236.html">uucpxtable</A>
+<B>Up:</B> <A HREF="node234.html">A Tour of Sendmail+IDA </A>
+<B> Previous:</B> <A HREF="node234.html">A Tour of Sendmail+IDA </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

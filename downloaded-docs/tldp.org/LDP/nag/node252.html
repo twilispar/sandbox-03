@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Reporting Mail Statistics</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node253.html">Mixing and Matching Binary </A>
+<B>Up:</B> <A HREF="node246.html">Administrivia and Stupid Mail </A>
+<B> Previous:</B> <A HREF="node251.html">Running the Sendmail Queue </A>
+<BR> <P>
+<H2><A NAME="SECTION0017660000">Reporting Mail Statistics</A></H2>
+<P>
+<A NAME="8477"></A>
+<P>
+Many site administrators (and the persons they work for) are interested in the
+volume of mail passing to, from, and through the local site.  There are a
+number of ways to quantify mail traffic.
+<P>
+<UL><LI>
+	Sendmail comes with a utility called mailstats that reads a
+	file called /usr/local/lib/mail/sendmail.st and reports
+	the number of messages and number of bytes transferred by each
+	of the mailers used in the sendmail.cf file.   This
+	file must be created by the local administrator manually for
+	sendmail logging to occur. The running totals are cleared by
+	removing and recreating the sendmail.st file.  One way
+	is to do the following:
+<P>
+	<P><P><LI>
+	Probably the best way to do quality reporting regarding who uses mail
+	and how much volume passes to, from, and through the local system is
+	to turn on mail debugging with syslogd(8).  Generally, this
+	means running the /etc/syslogd daemon from your system startup
+	file (which you should be doing anyway), and adding a line to
+	/etc/syslog.conf(5) that looks something like the following:
+<P>
+	<P><P>
+<P>
+	If you use mail.debug and get any medium to high mail
+	volume, the syslog output can get quite large.  Output files from
+	syslogd generally need to be rotated or purged on a routine
+	basis from crond(8).
+<P>
+	There are a number of commonly available utilities that can summarize
+	the output of mail logging from syslogd.  One of the more well known
+	utilities is syslog-stat.pl, a perl script that is
+	distributed with the sendmail+IDA sources.
+<P>
+</UL><BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

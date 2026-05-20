@@ -1,0 +1,772 @@
+<HTML
+><HEAD
+><TITLE
+>Commands -often used</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Networking/Encryption"
+HREF="netencrypt.html"><LINK
+REL="PREVIOUS"
+TITLE="Create the /usr/bin/sign.sh program file"
+HREF="chap24sec195.html"><LINK
+REL="NEXT"
+TITLE="Securing OpenSSL"
+HREF="chap24sec197.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap24sec195.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 24. Software -Networking/Encryption</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap24sec197.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN13874"
+>24.6. Commands -often used</A
+></H1
+><P
+>&#13;         The commands listed below are some that we use often, but many more exist. Check the man pages and documentation for more details and information.
+         As an example, we'll show you how to create certificates for your Apache Web Server and/or your own <SPAN
+CLASS="acronym"
+>CA</SPAN
+> Certifying Authority to sign your Certificate Signing Request yourself.
+         </P
+><DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+         All commands listed below are assumed to be made in the <TT
+CLASS="filename"
+>/etc/ssl/</TT
+> directory.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         Create a RSA private key protected with a passphrase for your Apache Server.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/ssl#<B
+CLASS="command"
+>openssl</B
+> genrsa -des3 -out server.key 1024
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Generating RSA private key, 1024 bit long modulus
+         ......................+++++
+         .....+++++
+         e is 65537 (0x10001)
+         Enter PEM pass phrase:
+         Verifying password - Enter PEM pass phrase:
+
+         Please backup this server.key file and remember the pass-phrase you had to enter at a secure location.
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         Generate a Certificate Signing Request <SPAN
+CLASS="acronym"
+>CSR</SPAN
+> with the server <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private key.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/ssl# <B
+CLASS="command"
+>openssl</B
+> req -new -key server.key -out server.csr
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Using configuration from /etc/ssl/openssl.cnf
+         Enter PEM pass phrase:
+         You are about to be asked to enter information that will be incorporated
+         into your certificate request.
+         What you are about to enter is what is called a Distinguished Name or a DN.
+         There are quite a few fields but you can leave some blank
+         For some fields there will be a default value,
+         If you enter '.', the field will be left blank.
+         -----
+         Country Name (2 letter code) [CA]:
+         State or Province Name (full name) [Quebec]:
+         Locality Name (eg, city) [Montreal]:
+         Organization Name (eg, company) [Open Network Architecture]:
+         Organizational Unit Name (eg, section) [Internet Department]:
+         Common Name (eg, YOUR name) [www.openna.com]:
+         Email Address [admin@openna.com]:
+
+         Please enter the following 'extra' attributes
+         to be sent with your certificate request
+         A challenge password []:.
+         An optional company name []:.
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+         Make sure you enter the <SPAN
+CLASS="acronym"
+>FQDN</SPAN
+>, Fully Qualified Domain Name of the server when OpenSSL prompts you for the <TT
+CLASS="literal"
+>CommonName</TT
+>, i.e. when you generate a <SPAN
+CLASS="acronym"
+>CSR</SPAN
+> for a website which will be 
+         later accessed via <TT
+CLASS="literal"
+>https://www.mydomain.com/</TT
+>, enter <TT
+CLASS="literal"
+>www.mydomain.com</TT
+> here.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         After generation of your Certificate Signing Request; <SPAN
+CLASS="acronym"
+>CSR</SPAN
+>, you have two choices: 
+         <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;         the first is to send this certificate to a commercial Certifying Authority (<SPAN
+CLASS="acronym"
+>CA</SPAN
+>) like Verisign or Thawte for signing. You usually have to post the <SPAN
+CLASS="acronym"
+>CSR</SPAN
+> into a web form, pay for the signing, await the signed Certificate and store 
+         it into a <TT
+CLASS="filename"
+>server.crt</TT
+>  file. The result is then a real Certificate, which can be used for Apache.
+         </P
+></LI
+><LI
+><P
+>&#13;         Second, you can use your own <SPAN
+CLASS="acronym"
+>CA</SPAN
+> and now have to sign the <SPAN
+CLASS="acronym"
+>CSR</SPAN
+> yourself by this <SPAN
+CLASS="acronym"
+>CA</SPAN
+>. This solution is economical, and allows an organization to host their own <SPAN
+CLASS="acronym"
+>CA</SPAN
+> server and generate as many 
+         certificates as they need for internal use without paying any cent to a commercial <SPAN
+CLASS="acronym"
+>CA</SPAN
+>. Unfortunately. using your own <SPAN
+CLASS="acronym"
+>CA</SPAN
+> to generate certificates cause problems in electronic commerce, because customers need to have some trust 
+         in your organization by the use of recognized commercial <SPAN
+CLASS="acronym"
+>CA</SPAN
+>. 
+         </P
+></LI
+></OL
+>
+         See below on how to sign a <SPAN
+CLASS="acronym"
+>CSR</SPAN
+> with your <SPAN
+CLASS="acronym"
+>CA</SPAN
+> yourself.
+         </P
+><P
+>&#13;         Create a <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> private key for your <SPAN
+CLASS="acronym"
+>CA</SPAN
+>.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/ssl# <B
+CLASS="command"
+>openssl</B
+> genrsa -des3 -out ca.key 1024
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Generating RSA private key, 1024 bit long modulus
+         ...........................+++++
+         ............................................+++++
+         e is 65537 (0x10001)
+         Enter PEM pass phrase:
+         Verifying password - Enter PEM pass phrase:
+
+         Please backup this ca.key file and remember the pass-phrase you had to enter at a secure location.
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         Create a self-signed <SPAN
+CLASS="acronym"
+>CA</SPAN
+> certificate <TT
+CLASS="literal"
+>x509</TT
+> structure with the <SPAN
+CLASS="acronym"
+>RSA</SPAN
+> key of the <SPAN
+CLASS="acronym"
+>CA</SPAN
+>.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/ssl# <B
+CLASS="command"
+>openssl</B
+> req -new -x509 -days 365 -key ca.key -out ca.crt
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Using configuration from /etc/ssl/openssl.cnf
+         Enter PEM pass phrase:
+         You are about to be asked to enter information that will be incorporated
+         into your certificate request.
+         What you are about to enter is what is called a Distinguished Name or a DN.
+         There are quite a few fields but you can leave some blank
+         For some fields there will be a default value,
+         If you enter '.', the field will be left blank.
+         -----
+         Country Name (2 letter code) [CA]:
+         State or Province Name (full name) [Quebec]:
+         Locality Name (eg, city) [Montreal]:
+         Organization Name (eg, company) [Open Network Architecture]:
+         Organizational Unit Name (eg, section) [Internet Department]:CA Marketing
+         Common Name (eg, YOUR name) [www.openna.com]:
+         Email Address [admin@openna.com]:
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/ssl# <B
+CLASS="command"
+>mv</B
+> server.key private/
+         [root@deep ]/ssl# <B
+CLASS="command"
+>mv</B
+> ca.key private/
+         [root@deep ]/ssl# <B
+CLASS="command"
+>mv</B
+> ca.crt certs/
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+        The <B
+CLASS="command"
+>req</B
+> command creates a self-signed certificate when the <TT
+CLASS="parameter"
+><I
+>-x509</I
+></TT
+> switch is used.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         Signing a certificate request. We create and use our own Certificate Authority -<SPAN
+CLASS="acronym"
+>CA</SPAN
+>,
+
+         Prepare the script for signing which is needed because the <B
+CLASS="command"
+>openssl ca</B
+> command has some strange requirements, and the default OpenSSL config doesn't allow one easily to use <B
+CLASS="command"
+>openssl ca</B
+> 
+         directly. The script named <TT
+CLASS="filename"
+>sign.sh</TT
+> is distributed with the floppy disk under the openssl directory. Use this script for signing.
+
+         Now you can use this <SPAN
+CLASS="acronym"
+>CA</SPAN
+> to sign server <SPAN
+CLASS="acronym"
+>CSR</SPAN
+>'s in order to create real SSL Certificates for use inside an Apache Webserver assuming you already have a server.csr at hand:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/ssl# /usr/bin/sign.sh server.csr
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         CA signing: server.csr -&#62; server.crt:
+         Using configuration from ca.config
+         Enter PEM pass phrase:
+         Check that the request matches the signature
+         Signature ok
+         The Subjects Distinguished Name is as follows
+         countryName           	:PRINTABLE:'CA'
+         stateOrProvinceName   	:PRINTABLE:'Quebec'
+         localityName          	:PRINTABLE:'Montreal'
+         organizationName      	:PRINTABLE:'Open Network Architecture'
+         organizationalUnitName	:PRINTABLE:'Internet Department'
+         commonName            	:PRINTABLE:'www.openna.com'
+         emailAddress          	:IA5STRING:'admin@openna.com'
+         Certificate is to be certified until Dec  1 14:59:29 2000 GMT (365 days)
+         Sign the certificate? [y/n]:y
+
+
+         1 out of 1 certificate requests certified, commit? [y/n]y
+         Write out database with 1 new entries
+         Data Base Updated
+         CA verifying: server.crt &#60;-&#62; CA cert
+         server.crt: OK
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         This signs the <SPAN
+CLASS="acronym"
+>CSR</SPAN
+> and results in a server.crt file.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/ssl# <B
+CLASS="command"
+>mv</B
+> server.crt certs/
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         Now you have two files: <TT
+CLASS="filename"
+>server.key</TT
+> and <TT
+CLASS="filename"
+>server.crt.</TT
+> These can now, for example, be used as follows, inside your Apache server's <TT
+CLASS="filename"
+>httpd.conf</TT
+> file:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         SSLCertificateFile    /etc/ssl/certs/server.crt	 <A
+NAME="srpu"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+> 
+         SSLCertificateKeyFile /etc/ssl/private/server.key	 <A
+NAME="srprv"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+> 
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap24sec196.html#srpu"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;         Our web server public key
+         </DD
+><DT
+><A
+HREF="chap24sec196.html#srprv"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;         Our web server private key
+         </DD
+></DL
+></DIV
+>
+         The <TT
+CLASS="filename"
+>server.csr</TT
+> file is no longer needed.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep ]/ssl# <B
+CLASS="command"
+>rm</B
+> -f server.csr
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+         If you receive error message during signature of the certificate, it's probably because you've entered the wrong <SPAN
+CLASS="acronym"
+>FQDN</SPAN
+>, Fully Qualified Domain Name for the server when OpenSSL prompted you for 
+         the <TT
+CLASS="literal"
+>CommonName</TT
+>; the <TT
+CLASS="literal"
+>CommonName</TT
+> must be something like <TT
+CLASS="literal"
+>my.domain.com</TT
+> and not <TT
+CLASS="literal"
+>domain.com</TT
+>. Also, since you generate both the certificate 
+         and the <SPAN
+CLASS="acronym"
+>CA</SPAN
+> certificate, it's important that at least one piece of information differs between both files, or you may encounter problems during the signature of the certificate request.
+         </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap24sec195.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap24sec197.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Create the <TT
+CLASS="filename"
+>/usr/bin/sign.sh</TT
+> program file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netencrypt.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Securing OpenSSL</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

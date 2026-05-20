@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>A Sample Script</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node97.html">A dip Reference</A>
+<B>Up:</B> <A HREF="node95.html">Using dip</A>
+<B> Previous:</B> <A HREF="node95.html">Using dip</A>
+<BR> <P>
+<H2><A NAME="SECTION009310000">A Sample Script</A></H2>
+<A NAME="slipdipsample"></A>
+<P><A NAME="4008"></A><BR>
+<STRONG>Figure:</STRONG> 
+ <A NAME="slipfigscript">A sample dip script</A>
+<pre>
+            # Sample dip script for dialing up cowslip
+            # Set local and remote name and address
+            get $local vlager
+            get $remote cowslip
+
+            port cua3                # choose a serial port
+            speed 38400              # set speed to max
+            modem HAYES              # set modem type
+            reset                    # reset modem and tty
+            flush                    # flush out modem response
+
+            # Prepare for dialing.
+            send ATQ0V1E1X1\r
+            wait OK 2
+            if $errlvl != 0 goto error
+            dial 0123456789
+            if $errlvl != 0 goto error
+            wait CONNECT 60
+            if $errlvl != 0 goto error
+
+            # Okay, we're connected now
+            sleep 3
+            send \r\n\r\n
+            wait ogin: 10
+            if $errlvl != 0 goto error
+            send Cvlager\r
+            wait ssword: 5
+            if $errlvl != 0 goto error
+		#better not leave your password in ascii (thanx noud)
+	    password
+            wait running 30
+            if $errlvl != 0 goto error
+	#to set up your remote and local IP
+        get $remote remote
+        print remote = $remote
+   	if $errlvl != 0 goto error
+       	wait to 3
+   	get $local remote
+        print local = $local
+   	if $errlvl != 0 goto error
+
+
+        # We have logged in, and the remote side is firing up CSLIP.
+        print Connected to $remote with address $rmtip
+        default                  # Make this link our default route
+        mode CSLIP                # We go to CSLIP mode, too
+        # fall through in case of error
+        error:
+        print CSLIP to $remote failed.
+</pre>
+<BR>
+<P>
+
+A sample script is produced in figure-<A HREF="node96.html#slipfigscript"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>. It can be
+used to connect to cowslip by invoking dip with the script
+name as argument:
+<pre>
+           # dip cowslip.dip
+           DIP: Dialup IP Protocol Driver version 3.3.7 (12/13/93)
+           Written by Fred N. van Kempen, MicroWalt Corporation.
+
+           connected to cowslip.moo.com with addr 193.174.7.129
+           #
+ 
+</pre>
+After connecting to cowslip and enabling CSLIP, dip will
+detach from the terminal and go to the background. You can then start
+using the normal networking services on the CSLIP link. To terminate the
+connection, simply invoke dip with the -k option. This
+sends a hangup signal to dip process, using the process id
+dip records in /etc/dip.pid:<A HREF="footnode.html#4009"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<pre>
+           # kill -k
+ 
+</pre>
+In dip's scripting language, keywords prefixed with a dollar
+symbol denote variable names.  dip has a predefined set of
+variables which will be listed below.  $remote and
+$local, for instance, contain the hostnames of the local and
+remote host involved in the SLIP link.
+<P>
+The first two statements in the sample script are get commands,
+which is dip's way to set a variable. Here, the local and remote
+hostname are set to vlager and cowslip, respectively.
+<P>
+<A NAME="3834"></A>
+The next five statements set up the terminal line and the modem.  The
+reset sends a reset string to the modem; for Hayes-compatible
+modems, this is the ATZ command.  The next statement flushes
+out the modem response, so that the login chat in the next few lines
+will work properly. This chat is pretty straight-forward: it simply
+dials 41988, the phone number of cowslip, and logs into the
+account Svlager using the password hey-jude. The
+wait command makes dip wait for the string given as its
+first argument; the number given as second argument make the wait time
+out after that many seconds if no such string is received.  The
+if commands interspersed in the login procedure check that no
+error has occurred while executing the command.
+<P>
+The final commands executed after logging in are default,
+which makes the SLIP link the default route to all hosts, and
+mode, which enables SLIP mode on the line and configures the
+interface and routing table for you.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node97.html">A dip Reference</A>
+<B>Up:</B> <A HREF="node95.html">Using dip</A>
+<B> Previous:</B> <A HREF="node95.html">Using dip</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

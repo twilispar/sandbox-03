@@ -1,0 +1,414 @@
+<HTML
+><HEAD
+><TITLE
+>Configure and apply PHP4 to Apache source</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Compile and Optimize"
+HREF="chap29sec240.html"><LINK
+REL="NEXT"
+TITLE="Apply mod_perl to Apache source tree "
+HREF="chap29sec242.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec240.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec242.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN18970"
+>29.5. Configure and apply <SPAN
+CLASS="acronym"
+>PHP4</SPAN
+> to Apache source</A
+></H1
+><P
+>&#13;    Now, move into the new php4 directory <B
+CLASS="command"
+>cd</B
+> <TT
+CLASS="filename"
+>../php-4.0</TT
+> and type the following commands on your terminal:
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        Edit the <TT
+CLASS="filename"
+>php_pgsql.h</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>ext/pgsql/php_pgsql.h</TT
+> and change the lines:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          #include <TT
+CLASS="filename"
+>libpq-fe.h</TT
+>
+          #include <TT
+CLASS="filename"
+>libpq/libpq-fs.h</TT
+>
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        To read:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          #include <TT
+CLASS="filename"
+>/usr/include/pgsql/libpq-fe.h</TT
+>
+          #include <TT
+CLASS="filename"
+>/usr/include/pgsql/libpq/libpq-fs.h</TT
+>
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        These modifications in the <TT
+CLASS="filename"
+>php_pgsql.h</TT
+> file are necessary to indicate the location of our <TT
+CLASS="filename"
+>libpq-fe.h</TT
+>, and <TT
+CLASS="filename"
+>libpq-fs.h</TT
+> header files of 
+        PostgreSQL database during configure of PHP4. In Red Hat Linux, the libraries of PostgreSQL are located under <TT
+CLASS="filename"
+>/usr/include/pgsql.</TT
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        Now, we must configure and install <SPAN
+CLASS="acronym"
+>PHP4</SPAN
+> in the Linux server:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          CC="egcs" \
+          CFLAGS="-O9 -funroll-loops -ffast-math -malign-double -mcpu=pentiumpro -march=pentiumpro -fomit-frame-pointer -fno-exceptions -I/usr/include/openssl" \
+          ./configure \
+          --prefix=/usr \
+          --with-exec-dir=/usr/bin \
+          --with-apache=../apache_1.3.12 \
+          --with-config-file-path=/etc/httpd \
+          --disable-debug \
+          --enable-safe-mode \
+          --with-imap \                <A
+NAME="php4imp"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+          --with-ldap \                <A
+NAME="php4ldp"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+          --with-pgsql \               <A
+NAME="php4psq"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+>
+          --with-mm \
+          --enable-inline-optimization \
+          --with-gnu-ld \
+          --enable-memory-limit
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec241.html#php4imp"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;              If you want IMAP &#38; POP support.
+            </DD
+><DT
+><A
+HREF="chap29sec241.html#php4ldp"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;            If you want LDAP database light directory support.
+          </DD
+><DT
+><A
+HREF="chap29sec241.html#php4psq"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+></DT
+><DD
+>&#13;            if you want PostgreSQL database support.
+          </DD
+></DL
+></DIV
+>
+       
+        This tells <SPAN
+CLASS="acronym"
+>PHP</SPAN
+>4 to set itself up for this particular hardware setup with:
+        <P
+></P
+><UL
+><LI
+><P
+>&#13;            Compile without debugging symbols.
+          </P
+></LI
+><LI
+><P
+>&#13;          Enable safe mode by default.
+          </P
+></LI
+><LI
+><P
+>&#13;          Include IMAP &#38; POP support.
+          </P
+></LI
+><LI
+><P
+>&#13;          Include <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> directory support.
+          </P
+></LI
+><LI
+><P
+>&#13;          Include PostgresSQL database support.
+          </P
+></LI
+><LI
+><P
+>&#13;          Include mm support to improve performance of Memory Library.
+          </P
+></LI
+><LI
+><P
+>&#13;          Enable inline-optimization for better performance.
+          </P
+></LI
+><LI
+><P
+>&#13;          Compile with memory limit support.
+          </P
+></LI
+><LI
+><P
+>&#13;          Assume the C compiler uses GNU ld.
+          </P
+></LI
+></UL
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ]/php-4.0# <B
+CLASS="command"
+>make</B
+> 
+        [root@deep ]/php-4.0# <B
+CLASS="command"
+>make install</B
+> 
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec240.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec242.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Compile and Optimize</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Apply mod_perl to Apache source tree</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

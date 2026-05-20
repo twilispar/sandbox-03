@@ -1,0 +1,358 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/ldap/slapd.conf file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux OpenLDAP Server"
+HREF="net-oLDAP.html"><LINK
+REL="PREVIOUS"
+TITLE="Configurations"
+HREF="chap26sec212.html"><LINK
+REL="NEXT"
+TITLE="Configure the /etc/rc.d/init.d/ldap script file"
+HREF="chap26sec214.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap26sec212.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 26. Linux OpenLDAP Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap26sec214.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN16241"
+>26.4. Configure the <TT
+CLASS="filename"
+>/etc/ldap/slapd.conf</TT
+> file</A
+></H1
+><P
+>&#13;               The <TT
+CLASS="filename"
+>/etc/openldap/slapd.conf</TT
+> file is the main configuration file for the stand-alone <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> daemon. Options like: 
+               permission, password, database type, database location and so on can be configured in this file and will apply to the <TT
+CLASS="literal"
+>slapd</TT
+> 
+               daemon as a whole. In the example below we configure the <TT
+CLASS="filename"
+>slapd.conf</TT
+> file for an <SPAN
+CLASS="acronym"
+>LDBM</SPAN
+> backend database.
+             </P
+><P
+>&#13;               Edit the <TT
+CLASS="filename"
+>slapd.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/openldap/slapd.conf</TT
+> and add/adjust the following information:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 #
+                 # See slapd.conf(5) for details on configuration options.
+                 # This file should NOT be world readable.
+                 #
+                 include	/etc/openldap/slapd.at.conf
+                 include	/etc/openldap/slapd.oc.conf
+                 schemacheck	off
+                 #referral	ldap://ldap.itd.umich.edu
+
+                 pidfile	/var/run/slapd.pid
+                 argsfile	/var/run/slapd.args
+
+                 #######################################################################
+                 # ldbm database definitions
+                 #######################################################################
+
+                 database	ldbm
+                 suffix	"o=openna, c=com"
+                 directory	/var/ldap
+                 rootdn	"cn=admin, o=openna, c=com"
+                 rootpw	secret
+                 # cleartext passwords, especially for the rootdn, should
+                 # be avoid.  See slapd.conf(5) for details.
+
+                 # ldbm indexed attribute definitions
+                 index cn,sn,uid
+                 index objectclass pres,eq
+                 index default none
+                 # ldbm access control definitions
+                 defaultaccess read
+                 access to attr=userpassword
+                 by self write
+                 by dn="cn=admin, o=openna, c=com" write
+                 by * compare
+               </PRE
+></TD
+></TR
+></TABLE
+>               
+             </P
+><P
+>&#13;               You should be sure to set the following options in your <TT
+CLASS="filename"
+>slapd.conf</TT
+> file above before starting the slapd daemon program:
+               <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>suffix	o=openna, c=com</B
+></DT
+><DD
+><P
+>&#13;                   This option specifies the DN of the root of the sub tree you are trying to create. In other words, it indicates what entries are to be held by this database.
+                 </P
+></DD
+><DT
+><B
+>directory	/var/ldap</B
+></DT
+><DD
+><P
+>&#13;                 This option specifies the directory where the database and associated indexes files of <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> should reside. We must set this to <TT
+CLASS="filename"
+>/var/ldap</TT
+> because we created this directory 
+                 earlier in the installation stage specifically to handle the backend database of <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+>.
+               </P
+></DD
+><DT
+><B
+>rootdn	cn=admin, o=openna, c=com</B
+></DT
+><DD
+><P
+>&#13;                 This option specifies the DN of an entry allowed to do anything on the <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> directory. The name entered here can be one that doesn't actually exist in your password file <TT
+CLASS="filename"
+>/etc/passwd</TT
+>.
+                 </P
+></DD
+><DT
+><B
+>rootpw	secret</B
+></DT
+><DD
+><P
+>&#13;                 This option specifies the password that can be used to authenticate the <TT
+CLASS="literal"
+>super-user</TT
+> entry of the database. This is the password for the rootdn option above. Its important to not use clear text 
+                 passwords here and to use a crypto password instead.
+               </P
+></DD
+><DT
+><B
+>index cn,sn,uid | index objectclass pres,eq | index default none</B
+></DT
+><DD
+><P
+>&#13;                 These options specify the index definitions you want to build and maintain in the database definition. The options we specifies in our <TT
+CLASS="filename"
+>slapd.conf</TT
+> file example above, cause all indexes to be maintained for 
+                 the <TT
+CLASS="literal"
+>cn</TT
+>, <TT
+CLASS="literal"
+>sn</TT
+>, and <TT
+CLASS="literal"
+>uid</TT
+> attributes; -<TT
+CLASS="literal"
+>index cn,sn,uid</TT
+>, presence and an equality indexes for the objectclass attribute -<TT
+CLASS="literal"
+>index objectclass pres,eq</TT
+>, 
+                 and no indexes for all remaining attributes -<TT
+CLASS="literal"
+>index default none</TT
+>. See your user manual for more information.
+               </P
+></DD
+></DL
+></DIV
+>
+             </P
+><P
+>&#13;               The last options in the file <TT
+CLASS="filename"
+>slapd.conf</TT
+> relate to access control in <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> directory.
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;                 defaultaccess read
+                 access to attr=userpassword
+                 by self write
+                 by dn="cn=admin, o=openna, c=com" write
+                 by * compare
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               This example applies to entries in the <TT
+CLASS="literal"
+>o=openna, c=com</TT
+> sub tree. Read access is granted to everyone, and the entry itself can write all attributes, except for userpassword. The userpassword attribute is writable only by 
+               the specified <TT
+CLASS="literal"
+>cn</TT
+> entry; <TT
+CLASS="literal"
+>admin</TT
+>, and comparable by everybody else. See your user manual for more information.
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap26sec212.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap26sec214.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configurations</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="net-oLDAP.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/ldap</TT
+> script file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

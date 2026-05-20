@@ -1,0 +1,292 @@
+<HTML
+><HEAD
+><TITLE
+>Improve performance Using GNU malloc library </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Proxy Network"
+HREF="netproxy-squid.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure and Optimize"
+HREF="chap28sec228.html"><LINK
+REL="NEXT"
+TITLE="Compile and Optimize"
+HREF="chap28sec229.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap28sec228.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 28. Software -Server/Proxy Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap28sec229.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN18014"
+>28.3. Improve performance Using GNU malloc library</A
+></H1
+><P
+>&#13;               If you're suffering from memory limitations on your system, the cache performance of Squid will be affected. To reduce this problem, you can link Squid with an external malloc library such as GNU malloc. To make 
+               Squid use GNU malloc as an external library, follows these simple steps:
+             </P
+><P
+>&#13;               These are the Package(s) required:
+               <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;                 GNU malloc Homepage:<A
+HREF="appendixa.html#prtinxfp28"
+> http://www.gnu.org/order/ftp.html</A
+>
+               </TD
+></TR
+><TR
+><TD
+>&#13;               You must be sure to download: malloc.tar.gz
+               </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+             </P
+><P
+>&#13;               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>cp</B
+> malloc.tar.gz /var/tmp
+                 [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+                 [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf malloc.tar.gz
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;                 Compile and install GNU malloc on your system by executing the following commands:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                   [root@deep ]/tmp# <B
+CLASS="command"
+>cd</B
+> malloc
+                   [root@deep ]/malloc# <B
+CLASS="command"
+>export</B
+> CC=egcs
+                   [root@deep ]/malloc# <B
+CLASS="command"
+>make</B
+>
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;
+                 Copy the <TT
+CLASS="filename"
+>libmalloc.a</TT
+> file to your system library directory and be sure to name it <TT
+CLASS="filename"
+>libgnumalloc.a</TT
+>
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                   [root@deep ]/malloc# <B
+CLASS="command"
+>cp</B
+> libmalloc.a /usr/lib/libgnumalloc.a
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+               </P
+></LI
+><LI
+><P
+>&#13;                 Copy the <TT
+CLASS="filename"
+>malloc.h</TT
+> file to your system's include directory and be sure to name it <TT
+CLASS="filename"
+>gnumalloc.h</TT
+>
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                   [root@deep ]/malloc# <B
+CLASS="command"
+>cp</B
+> malloc.h /usr/include/gnumalloc.h
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 With the files <TT
+CLASS="filename"
+>libgnumalloc.a</TT
+> and <TT
+CLASS="filename"
+>gnumalloc.h</TT
+> installed on your system, Squid will detect them automatically during its compile time, and will use them to improve its cache performance.
+               </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap28sec228.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap28sec229.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure and Optimize</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netproxy-squid.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile and Optimize</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

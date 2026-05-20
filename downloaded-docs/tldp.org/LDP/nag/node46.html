@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>A Tour of  Network Devices</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node47.html">Ethernet Installation</A>
+<B>Up:</B> <A HREF="node41.html">Configuring the Networking Hardware</A>
+<B> Previous:</B> <A HREF="node45.html">Kernel Options in  1.1.14 </A>
+<BR> <P>
+<H1><A NAME="SECTION005300000">A Tour of  Network Devices</A></H1>
+<P>
+The  kernel supports a number of hardware drivers for various
+types of equipment. This section gives a short overview of the driver
+families available, and the interface names used for them.
+<P>
+<A NAME="1999"></A>
+There are a number of standard names for interfaces in , which
+are listed below. Most drivers support more than one interface, in
+which case the interfaces are numbered, as in eth0,
+eth1, etc.
+<dl>
+<dt><b>lo</b><dd>  The local loopback interface. It is  used  for  testing  pur-
+                poses,  as  well as a couple of network applications. It works
+                like a closed circuit in that any datagram written to it  will
+                be  immediately  returned  to  the  host's  networking  layer.
+                There's always one loopback device present in the kernel,  and
+                there's little sense in having fewer or more.
+
+<dt><b>ethn</b><dd>The  n-th  Ethernet card. This is the generic interface name
+                for most Ethernet boards.
+
+
+<dt><b>dln</b><dd>  These interfaces  access  a  D-Link  DE-600  pocket  adapter,
+                another  Ethernet  device.  It is a little special in that the
+                DE-600 is driven through a parallel port.
+
+<dt><b>sln</b><dd>  The n-th SLIP interface. SLIP interfaces are associated  with
+                serial  lines  in  the  order  in which they are allocated for
+                SLIP; i.e., the first serial line being  configured  for  SLIP
+                becomes  sl0,  etc. The kernel supports up to four SLIP inter-
+                faces.
+
+
+ <dt><b>pppn</b><dd>  The n-th PPP interface. Just  like  SLIP  interfaces,  a  PPP
+                interface  is  associated  with  a serial line once it is con-
+                verted to PPP mode. At the moment, up to four  interfaces  are
+                supported.
+
+
+<dt><b>plipn</b><dd>   The  n-th  PLIP interface. PLIP transports IP datagrams over parallel lines. Up to three  PLIP  interfaces  are  supported. They are allocated by the PLIP driver at system boot time and are mapped onto parallel ports.
+
+</dl>
+For other interface drivers that may be added in the future, like ISDN,
+or AX.25, other names will be introduced. Drivers for IPX (Novell's
+networking protocol), and AX.25 (used by ham radio amateurs) are under
+development, but are at alpha stage still.
+<P>
+During the following sections, we will discuss the details of using
+the drivers described above.
+
+<HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Serial Hardware</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node58.html">Configuring TCP/IP Networking</A>
+<B>Up:</B> <A HREF="node53.html">Setting up the Serial </A>
+<B> Previous:</B> <A HREF="node56.html">Accessing Serial Devices</A>
+<BR> <P>
+<H1><A NAME="SECTION006400000">Serial Hardware</A></H1>
+<A NAME="serialhardware"></A>
+ currently supports a wide variety of serial boards which use
+the RS-232 standard.  RS-232 is currently the most common standard for
+serial communications in the PC world. It uses a number of circuits for
+transmitting single bits as well as for synchronization. Additional
+lines may be used for signaling the presence of a carrier (used by
+modems), and handshake.
+<P>
+Although hardware handshake is optional, it is very useful. It allows
+either of the two stations to signal whether it is ready to receive more
+data, or if the other station should pause until the receiver is done
+processing the incoming data.  The lines used for this are called
+``Clear to Send'' (CTS) and ``Ready to Send'' (RTS), respectively, which
+accounts for the colloquial name of hardware handshake, namely
+``RTS/CTS''.
+<P>
+In PCs, the RS-232 interface is usually driven by a UART chip derived
+from the National Semiconductor-16450 chip, or a newer version thereof,
+the NSC-16550A<A HREF="footnode.html#2360"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>. Some brands (most notably internal modems equipped with the Rockwell
+chipset) also use completely different chips that have been programmed
+to behave as if they were 16550's.
+<P>
+The main difference between 16450's and 16550's that the latter have a
+FIFO buffer of 16 Bytes, while the former only have a 1-Byte buffer.
+This makes 16450's suitable for speeds up to 9600-Baud, while higher
+speeds require a 16550-compatible chip.  Besides these chips, 
+also supports the 8250 chip, which was the original UART for the PC-AT.
+<P>
+In the default configuration, the kernel checks the four standard
+serial ports COM1 through COM4. These will be
+assigned device minor numbers 64 through 67, as described above.
+<P>
+If you want to configure your serial ports properly, you should install
+Ted Tso's setserial command along with the rc.serial
+script.  This script should be invoked from /etc/rc at system
+boot time. It uses setserial to configure the kernel serial
+devices. A typical rc.serial script looks like this:
+<pre>
+           # /etc/rc.serial - serial line configuration script.
+           #
+           # Do wild interrupt detection
+           /sbin/setserial -W /dev/cua*
+
+           # Configure serial devices
+           /sbin/setserial /dev/cua0 auto irq skip test autoconfig
+           /sbin/setserial /dev/cua1 auto irq skip test autoconfig
+           /sbin/setserial /dev/cua2 auto irq skip test autoconfig
+           /sbin/setserial /dev/cua3 auto irq skip test autoconfig
+
+           # Display serial device configuration
+           /sbin/setserial -bg /dev/cua*
+ </pre>
+
+Please refer to the documentation that comes along with setserial
+for an explanation of the parameters.
+<P>
+If your serial card is not detected, or the setserial -bg command
+shows an incorrect setting, you will have to force the configuration
+by explicitly supplying the correct values. Users with internal modems equipped
+with the Rockwell chipset are reported to experience this problem. If,
+for example, the UART chip is reported to be a NSC-16450, while in fact
+it is NSC-16550-compatible, you have to change the configuration command
+for the offending port to
+<pre>
+           /sbin/setserial  /dev/cua1  auto irq skip test autoconfig
+           uart 16550
+ </pre>
+Similar options exist to force COM port, base address, and IRQ
+setting. Please refer to the setserial(8) manual page.
+<P>
+If your modem supports hardware handshake, you should make sure to
+enable it. Surprising as it is, most communication programs do not
+attempt to enable this by default; you have to set it manually instead.
+This is best performed in the rc.serial script, using the
+stty command:
+<pre>
+           $ stty crtscts < /dev/cua1
+</pre>
+To check if hardware handshake is in effect, use
+<pre>
+           $ stty -a < /dev/cua1
+ </pre>
+This gives you the status of all flags for that device; a flag
+shown with a preceding minus as in -crtscts means that the
+flag has been turned off.
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node58.html">Configuring TCP/IP Networking</A>
+<B>Up:</B> <A HREF="node53.html">Setting up the Serial </A>
+<B> Previous:</B> <A HREF="node56.html">Accessing Serial Devices</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

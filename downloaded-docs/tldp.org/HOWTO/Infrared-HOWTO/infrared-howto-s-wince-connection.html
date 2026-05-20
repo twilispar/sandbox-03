@@ -1,0 +1,432 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Connecting from Linux to WinCE 2.11</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Specific Connections and IrDA - Protocols"
+HREF="infrared-howto-c-specific-connections.html"><LINK
+REL="PREVIOUS"
+TITLE="Psion 5 Connection"
+HREF="infrared-howto-s-psion5-connection.html"><LINK
+REL="NEXT"
+TITLE="Connecting from Linux to WinCE 3.0 (aka PocketPC)"
+HREF="infrared-howto-s-pocketpc-connection.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-psion5-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Specific Connections and IrDA - Protocols</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-pocketpc-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-wince-connection"
+></A
+>3.8. Connecting from Linux to WinCE 2.11</H1
+><P
+>&#13;   Submitted by Arthur Tyde and Bryan Abshier of Linuxcare Inc.
+</P
+><P
+>&#13;   This will tell you how to set up a masqueraded PPP connection via.
+   IrDA from WinCE to a Linux based notebook computer. Once you are IP
+   connected, the rest is up to you. We put this together as a guide for
+   Sony notebook users with Casio E-100/105 PDA's, though the procedure
+   should work for any WinCE 2.11 device with infrared capabilities
+   talking to any notebook. Do all the Linux side testing signed on as
+   root, standard warnings apply.
+</P
+><P
+>&#13;Configure WinCE
+
+   Configure a network connection for your WinCE device. Go into
+   "Connections" and create a "Direct Connection" Name it something
+   meaningful, for device select "Infrared Port". Go into settings and
+   change the baud rate to 115200, this is the max for WinCE. Go to
+   TCP/IP settings and check "Use server-assigned IP address," and "Use
+   software compression," and "Use IP header compression" Make sure "Use
+   Slip," is unchecked. For Name Servers, make sure "Use server-assigned
+   addresses" is checked. Go to Start, Settings, Communications,
+   Identification and enter something for the Device Name. (I used
+   "cetoy") You most likely already have these values set if you have
+   synced with a Win9x desktop using Activesynch.
+</P
+><P
+>&#13;Configure Linux/IrDA
+
+   Set up IrDA support on your notebook (described elsewhere) and get to
+   the point where your notebook will discover an IrDA compliant device.
+   A good sign is the irda0 device will show up when you execute
+   ifconfig. It will not have an IP address, this is ok.
+</P
+><P
+>&#13;Setup the Connection
+
+   Test the discovery by setting an IrDA device in range of your IR port,
+   wait 5 seconds, and;
+</P
+><P
+>&#13;   <B
+CLASS="command"
+>cat /proc/net/irda/discovery</B
+>
+</P
+><P
+>&#13;   For example, the Ericsson I888 World Phone with IR port enabled should
+   immediately show something like this;
+</P
+><P
+>&#13;
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;"name:I 888 WORLD   ,hint:0x9104,saddr:0x838470e5,daddr:0x152dceaa"
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   Your WinCE machine will not be discovered unless it's actively looking
+   for a connection. So, if you want to test with WinCE position your
+   device and double tap on the network icon you created in step 2, you
+   should see something like this:
+</P
+><P
+>&#13;
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;"name:mytoy,hint:0x8204,saddr:0x838470e5,daddr:0x00000b72"
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   The name displayed will be whatever value you have entered into the
+   Start, Settings, Communications, Identification as the Device Name. At
+   this point, with basic IrDA functioning- we can move on to
+   establishing a PPP connection for WinCE. These scripts can also be
+   used for serial cable connects. Create the following files and copy
+   them into the directory indicated.
+</P
+><P
+>&#13;   <B
+CLASS="command"
+>/usr/sbin/cebox.sh</B
+> - make it executable
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;#!/bin/sh
+pppd call cebox
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   Because Microsoft likes to break standards, you need the following
+   chat script. This will feed WinCE the proper ASCII keywords it wants
+   before allowing a PPP connection.
+</P
+><P
+>&#13;   <B
+CLASS="command"
+>/etc/ppp/cebox.chat</B
+>
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;TIMEOUT 3600
+"CLIENT"    "CLIENT\c"
+""      "SERVER\c"
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   The following file will allow you to specify the IP addresses, IR (or
+   serial port if using a cable) device, DNS and so forth. I do not
+   recommend you change the 192.IP addresses below. WinCE really has an
+   affection for 192.168.55.100 because all the MS synch tools seem to
+   have it hardcoded. DNS can be whatever you normally use.
+</P
+><P
+>&#13;   /etc/ppp/peers/cebox
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;/dev/ircomm0 115200 crtscts
+connect '/usr/sbin/chat -v -f /etc/ppp/cebox.chat'
+noauth
+local
+192.168.55.101:192.168.55.100
+ms-dns 10.2.0.1
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;Testing the connection
+
+   Ok, now you can test the connection to make sure it all works. Reboot
+   your machine, run irattach /dev/ttyS2 -s (/dev/ttyS2 being the
+   serial port your BIOS sees the IR device as, if irattach is not
+   running, start it) Align the IR ports, at the Linux command prompt
+   type /usr/sbin/cebox.sh, and simultaneously press return to start
+   cebox and double tap your connection icon in WinCE. You should get a
+   happy message from WinCE reporting Connecting to Host, Device
+   Connected, Authenticating User, User Authenticated and finally
+   Connected. You should see something like this when you are connected:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;irda0     Link encap:IrLAP  HWaddr 06:89:d0:58
+      UP RUNNING NOARP  MTU:2048  Metric:1
+      RX packets:246 errors:0 dropped:0 overruns:0 frame:0
+      TX packets:251 errors:0 dropped:0 overruns:0 carrier:0
+      collisions:0 txqueuelen:8
+
+ppp0      Link encap:Point-to-Point Protocol
+      inet addr:192.168.55.101 P-t-P:192.168.55.100 Mask:255.255.255.255
+      UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+      RX packets:10 errors:0 dropped:0 overruns:0 frame:0
+      TX packets:10 errors:0 dropped:0 overruns:0 carrier:0
+      collisions:0 txqueuelen:10
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   The following script sets up IrDA, establishes a ppp connection with
+   WinCE, and then sets up IP masquerading. It is provided as an example
+   of how you can tie this all together. This is more or less a manual
+   approach. You can get creative, start irattach at boot and stick a
+   line in inittab to constantly look for a WinCE connection on the IR
+   port. This will however, run down your batteries and limit your
+   ability to access other IR gadgets. I just use the script below.
+   Position the device, run wince and start communications on your PDA
+   when the script tells you to.
+</P
+><P
+>&#13;   <TT
+CLASS="filename"
+>/usr/local/bin/wince</TT
+> - make this executable
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;#!/usr/bin/perl
+use strict;
+#
+# Enable IrDA, start ppp0 and set up WinCE masquerading
+# A. Tyde - Linuxcare Inc.
+#
+print "\n-&#62; Setting up IR infrastructure...\n";
+system("killall irattach 2&#62;/dev/null");
+sleep 1;
+system("/usr/sbin/cebox.sh");
+print "   Start WinCE Serial or IR networking now!\n";
+open(ECHO,"&#62;/proc/sys/net/ipv4/ip_forward") or die "Can not open /proc/sys/net/
+ipv4/ip_forward";
+print ECHO "1";
+close (ECHO);
+print "   Serving 192.168.55.100 to WinCE device...\n\n";
+system("ipchains -F");
+sleep 5;
+system("ipchains -P forward DENY");
+system("ipchains -A forward -s 192.168.55.100/32 -j MASQ");
+exit 0;
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-psion5-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-pocketpc-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Psion 5 Connection</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-specific-connections.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Connecting from Linux to WinCE 3.0 (aka PocketPC)</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

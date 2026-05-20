@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Restricting NNTP Access</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node278.html">NNTP Authorization</A>
+<B>Up:</B> <A HREF="node274.html">A Description of NNTP</A>
+<B> Previous:</B> <A HREF="node276.html">Installing the NNTP server</A>
+<BR> <P>
+<H1><A NAME="SECTION0020300000">Restricting NNTP Access</A></H1>
+<A NAME="nntpaccess"></A>
+
+Access to NNTP resources is governed by the file nntp_access in
+/usr/lib/news. Lines in the file describe the access rights granted to
+foreign hosts.  Each line has the following format:
+<PRE>
+           site   read|xfer|both|no    post|no      [!exceptgroups]
+</PRE>
+If a client connects to the NNTP port, nntpd attempts to obtain the
+host's fully qualified domain name from its IP-address by reverse lookup.
+The client's hostname and IP-address are checked against the site
+field of each entry in the order in which they appear in the file.
+Matches may be either partial or exact. If an entry matches exactly, it
+applies; if the match is partial, it only applies if there is no other
+match following which is at least as good.  site may be specified
+in one of the following ways:
+<DL>	<DT>hostname<DD> This is a fully qualified domain  name  of  a  host.  If  this
+                matches  the  client's canonical hostname literally, the entry
+                applies, and all following entries are ignored.
+
+	<DT>IP address<DD> This is an IP  address  in  dotted  quad  notation.   If  the
+                client's  IP  address matches this, the entry applies, and all
+                following entries are ignored.
+
+	<DT>domain<DD> name This is  a  domain  name,  specified  as  *.domain.  If  the client's  hostname matches the domain name, the entry matches.
+
+	<DT>network name<DD> This  is  the  name  of   a   network   as   specified   in
+                /etc/networks.   If  the  network  number  of  the client's IP
+                address matches the network number associated with the network
+                name, the entry matches.
+	<DT>default<DD> The default matches any client.
+</DL>
+
+
+Entries with a more general site specification should be specified earlier,
+because any matches by these will be overridden by later, more exact
+matches.
+<P>
+The second and third field describe the access rights granted to the
+client. The second details the permissions to retrieve news by pulling
+(read), and transmit news by pushing (xfer).  A
+value of both enables both, no denies access
+altogether. The third field grants the client the right to post
+articles, that is, deliver articles with incomplete header information
+which is completed by the news software.  If the second field contains
+no, the third field is ignored.
+<P>
+The fourth field is optional, and contains a comma-separated list of
+groups the client is denied access to.
+<P>
+A sample nntp_access file is shown below:
+<PRE>
+           #
+           # by default, anyone may transfer news, but not read or post
+           default                 xfer            no
+           #
+           # public.vbrew.com offers public access via modem, we allow
+           # them to read and post to any but the local.* groups
+           public.vbrew.com        read            post    !local
+           #
+           # all other hosts at the brewery may read and post
+           *.vbrew.com             read            post
+</PRE>
+<HR><P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

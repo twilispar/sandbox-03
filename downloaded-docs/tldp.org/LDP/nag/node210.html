@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Delivering Messages to Local Addresses</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node211.html">Local Users</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node209.html">The paths database</A>
+<BR> <P>
+<H1><A NAME="SECTION0016800000">Delivering Messages to Local Addresses</A></H1>
+<P>
+<A NAME="smaildirectors"></A>
+<A NAME="7829"></A>
+<P>
+Most commonly, a local address is just a user's login name, in which case
+the message is delivered to her mailbox, /var/spool/mail/user.
+Other cases include aliases and mailing list names, and mail forwarding
+by the user. In these cases, the local address expands to a new list
+of addresses, which may be either local or remote.
+<P>
+Apart from these ``normal'' addresses, smail can handle other
+types of local message destinations, like file names, and pipe commands.
+These are not addresses in their own right, so you can't send mail
+to, say, /etc/passwd@vbrew.com; they are only valid if they have 
+been taken from forwarding or alias files.
+<P>
+<A NAME="7831"></A>
+<A NAME="7602"></A>
+<A NAME="7603"></A>
+A <em>file name</em> is anything that begins with a slash (/) or a
+tilde ().  The latter refers to the user's home directory, and
+is possible only if the filename was taken from a .forward file
+or a forwarding entry in the mailbox (see below).  When delivering to a
+file, smail appends the messages to the file, creating it if
+necessary.
+<P>
+<A NAME="7832"></A>
+<A NAME="7610"></A>
+<A NAME="7611"></A>
+A <em>pipe command</em> may be any  command preceded by the pipe
+symbol (|). This causes smail to hand the command to the
+shell along with its arguments, but without the leading `|'.  The
+message itself is fed to this command on standard input.
+<P>
+For example, to gate a mailing list into a local newsgroup,
+you might use a shell script named gateit, and set up
+a local alias which delivers all messages from this mailing list
+to the script using &quot;|gateit&quot;.
+<P>
+If the invocation contains white space, it has to be enclosed
+in double quotes. Due to the security issues involved, care is taken not
+to execute the command if the address has been obtained in a somewhat
+dubious way (for example, if the alias file from which the address was
+taken was writable by everyone).
+<P>
+<BR> <HR>
+<UL> 
+<LI> <A HREF="node211.html#SECTION0016810000">Local Users</A>
+<LI> <A HREF="node212.html#SECTION0016820000">Forwarding</A>
+<LI> <A HREF="node213.html#SECTION0016830000">Alias Files</A>
+<LI> <A HREF="node214.html#SECTION0016840000">Mailing Lists</A>
+</UL>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node211.html">Local Users</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node209.html">The paths database</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

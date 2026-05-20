@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<!-- updated   Sun Jul 14 18:50:48 MET DST 1996 by:
+    Tony den Haan (tony@iaehv.nl)  ftp://ftp.IAEhv.nl/pub/users/tony-->
+<HEAD>
+<TITLE>nntpd Interaction with C-News</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node280.html">Newsreader Configuration</A>
+<B>Up:</B> <A HREF="node274.html">A Description of NNTP</A>
+<B> Previous:</B> <A HREF="node278.html">NNTP Authorization</A>
+<BR> <P>
+<H1><A NAME="SECTION0020500000">nntpd Interaction with C-News</A></H1>
+<A NAME="nntpinteract"></A>
+When receiving an article, nntpd has to deliver it to the news
+subsystem. Depending on whether it was received as a result of an
+IHAVE or POST command, the article is handed to
+rnews or inews, respectively. Instead of invoking
+rnews, you may also configure it (at compile time) to batch the
+incoming articles and move the resulting batches to
+/var/spool/news/in.coming, where they are left for relaynews to
+pick them up at the next queue run.
+<P>
+To be able to properly perform the ihave/sendme protocol, nntpd
+has to be able to access the history file. At compile time, you
+therefore have to make sure the path is set correctly.  You should also
+make sure that C-news and nntpd agree on the format of your
+history file. C-news uses dbm hashing functions to access it;
+however, there are quite a number of different and slightly incompatible
+implementations of the dbm library.  If C-news has been linked
+with the a different dbm library than you have in your standard
+libc, you have to link nntpd with this library, too.
+<P>
+<A NAME="9741"></A>
+A typical symptom of nntpd and C-news disagreeing on the database
+format are error messages in the system log that nntpd could not
+open it properly, or duplicate articles received via NNTP.  A good test
+is to pick an article from your spool area, telnet to the nntp
+port, and offer it to nntpd as shown in the example below (your
+input is marked like this).  Of course, you have to replace
+&lt;msg@id&gt; with the message-ID of the article you want to feed
+to nntpd again.
+<PRE>
+           $ telnet localhost nntp
+           Trying 127.0.0.1...
+           Connected to localhost
+           Escape characters is '^]'.
+           201 vstout NNTP[auth] server version 1.5.11t (16 November
+           1991) ready at Sun Feb 6 16:02:32 1194 (no posting)
+           IHAVE <msg@id>
+           435 Got it.
+           QUIT
+</PRE>
+
+This conversation shows the proper reaction of nntpd; the message
+``Got it'' tells you that it already has this article. If you get
+a message of ``335 Ok'' instead, the lookup in the history file
+failed for some reason. Terminate the conversation by typing Ctrl-D.
+You can check what has gone wrong by checking the system log;
+nntpd logs all kinds of messages to the daemon facility
+of syslog.  An incompatible dbm library usually manifests
+itself in a message complaining that dbminit failed.
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node280.html">Newsreader Configuration</A>
+<B>Up:</B> <A HREF="node274.html">A Description of NNTP</A>
+<B> Previous:</B> <A HREF="node278.html">NNTP Authorization</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,511 @@
+<HTML
+><HEAD
+><TITLE
+>Pre-Install</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Configuring and Building a Secure, Optimized Kernel"
+HREF="secopt-kernel.html"><LINK
+REL="PREVIOUS"
+TITLE="Configuring and Building a Secure, Optimized Kernel"
+HREF="secopt-kernel.html"><LINK
+REL="NEXT"
+TITLE=" Uninstallation and Optimization"
+HREF="chap7sec77.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="secopt-kernel.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. Configuring and Building a Secure, Optimized Kernel</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap7sec77.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="prt3ch3sc1pi"
+>7.1. Pre-Install</A
+></H1
+><P
+>&#13;               In our configuration and compilation we will build a monolithic kernel. Monolithic kernel means to only answer <TT
+CLASS="userinput"
+><B
+>Yes</B
+></TT
+> or <TT
+CLASS="userinput"
+><B
+>No</B
+></TT
+> to the 
+               questions, <EM
+>don't make anything modular and omit the steps</EM
+>:
+               <P
+></P
+><UL
+COMPACT="COMPACT"
+><LI
+STYLE="list-style-type: disc"
+><P
+>&#13;               make_modules
+               </P
+></LI
+><LI
+STYLE="list-style-type: disc"
+><P
+>&#13;               make_modules_install. 
+               </P
+></LI
+></UL
+>
+               Also, we will patch our new kernel with the buffer overflow protection from kernel patches. Patches for the Linux kernel exist, like Solar Designer's non-executable stack patch, which disallows the execution of 
+               code on the stack, making a number of buffer overflow attacks harder - and defeating completely a number of current exploits used by "script kiddies" worldwide.
+               <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+               Remember to only answer <TT
+CLASS="userinput"
+><B
+>Yes</B
+></TT
+> or <TT
+CLASS="userinput"
+><B
+>No</B
+></TT
+> to the questions when configuring your new kernel if you're intending to build a monolithic kernel. If you intend to use firewall masquerading functions or a dial-up ppp connection, you 
+               cannot build a monolithic kernel, since these function require the build of some modules, by default. Build, instead, a modularized kernel.
+               </P
+></BLOCKQUOTE
+></DIV
+>
+               </P
+><P
+>&#13;               A new kernel is very specific to your computer hardware, in the kernel configuration part; <EM
+>we are using the following hardware for our example</EM
+>. Of course you must change them to fit your system components.
+               <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+> 
+               1 Pentium II 400 MHz (i686) processor</TD
+></TR
+><TR
+><TD
+>&#13;               1 Motherboard <SPAN
+CLASS="acronym"
+>SCSI</SPAN
+></TD
+></TR
+><TR
+><TD
+>&#13;               1 Hard Disk <SPAN
+CLASS="acronym"
+>SCSI</SPAN
+></TD
+></TR
+><TR
+><TD
+>&#13;               1 <SPAN
+CLASS="acronym"
+>SCSI</SPAN
+> Controler Adaptec AIC 7xxx</TD
+></TR
+><TR
+><TD
+>&#13;               1 CD-ROM ATAPI <SPAN
+CLASS="acronym"
+>IDE</SPAN
+></TD
+></TR
+><TR
+><TD
+>&#13;               1 Floppy Disk</TD
+></TR
+><TR
+><TD
+>&#13;               2 Ethernet Cards Intel EtherExpressPro 10/100</TD
+></TR
+><TR
+><TD
+>&#13;               1 Mouse PS/2</TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+               </P
+><P
+>&#13;               These installation instructions assume
+               <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;               Commands are Unix-compatible.</TD
+></TR
+><TR
+><TD
+>&#13;               The source path is <TT
+CLASS="filename"
+>/usr/src.</TT
+></TD
+></TR
+><TR
+><TD
+>&#13;               Installations were tested on Red Hat Linux 6.1 and 6.2.</TD
+></TR
+><TR
+><TD
+>&#13;               All steps in the installation will happen in super-user account root.</TD
+></TR
+><TR
+><TD
+>&#13;               Latest Kernel version number is 2.2.14</TD
+></TR
+><TR
+><TD
+>&#13;               Latest Secure Linux Kernel Patches version number is 2_2_14-ow2</TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+               </P
+><P
+>&#13;               All these below mentioned Packages were available in the following sites as of this writing but we suggest you can get additional information regarding mirror 
+               sites by searching on their respective home pages.
+               <P
+></P
+><UL
+><LI
+><P
+>&#13;               Kernel Homepage:<A
+HREF="appendixa.html#prtinxfp7"
+>http://www.kernelnotes.org/</A
+>
+               </P
+><P
+>&#13;               Be sure to download: linux-2_2_14_tar.gz
+               </P
+><P
+>&#13;               Kernel <SPAN
+CLASS="acronym"
+>FTP</SPAN
+> Site: 139.142.90.113
+               </P
+></LI
+><LI
+><P
+>&#13;               Secure Linux Kernel Patches Homepage:<A
+HREF="appendixa.html#prtinxfp71"
+>http://www.openwall.com/linux/</A
+>
+               </P
+><P
+>&#13;               You must be sure to download: linux-2_2_14-ow2_tar.gz
+               </P
+><P
+>&#13;               Secure Linux Kernel Patches <SPAN
+CLASS="acronym"
+>FTP</SPAN
+> Site: 195.42.162.180
+               </P
+></LI
+></UL
+>
+               </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN5018"
+>7.1.1. Make an emergency boot floppy</A
+></H2
+><P
+>&#13;                 The first of the pre-install step is to make an emergency boot floppy. Linux has a small utility named mkbootdisk to simply do this. The first step is to find out what kernel version, you are currently using. Check 
+                 out your <TT
+CLASS="filename"
+>/etc/lilo.conf</TT
+> file and see which image was booted from and from this image, we can find the kernel version we need to make our emergency boot floppy. 
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /#<B
+CLASS="command"
+>cat</B
+> /etc/lilo.conf
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 </P
+><P
+>&#13;                   In 
+                 my example, I have the following in the <TT
+CLASS="filename"
+>lilo.conf</TT
+> file:
+                   <DIV
+CLASS="informalexample"
+><A
+NAME="AEN5026"
+></A
+><P
+></P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>                       
+                 boot=/dev/sda
+                 map=/boot/map
+                 install=/boot/boot.b
+                 prompt
+                 timeout=50
+                 image=/boot/vmlinuz-2.2.12-20	  <A
+NAME="lilcnf1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>	 
+                 label=linux	 		  <A
+NAME="lilcnf2"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>	 
+                 root=/dev/sda6
+                 initrd=/boot/initrd-2.2.12-20.img
+                 read-only
+                 </PRE
+></TD
+></TR
+></TABLE
+><DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap7sec76.html#lilcnf1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;                 <EM
+>the kernel version</EM
+>
+                 </DD
+><DT
+><A
+HREF="chap7sec76.html#lilcnf2"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;                 <EM
+>the image we booted from</EM
+>
+                 </DD
+></DL
+></DIV
+><P
+></P
+></DIV
+>
+                 </P
+><P
+>&#13;                 Now you'll need to find the image that you booted from. On a standard new first install, it will be the one-labeled linux. In the above example we show that the machine booted using 
+                 the <TT
+CLASS="filename"
+>/boot/vmlinuz-2.2.12-20</TT
+> original kernel version of the system. Now we simply need to put a formatted 1.44 floppy in our system and execute the following command as root:
+                 <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /#<B
+CLASS="command"
+>mkbootdisk</B
+> --device /dev/fd0 2.2.12-20
+                 </PRE
+></TD
+></TR
+></TABLE
+>
+                 <P
+CLASS="literallayout"
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<TT
+CLASS="computeroutput"
+>&#13;                 Insert a disk in /dev/fd0. Any information on the disk will be lost.
+                 Press &#60;Enter&#62; to continue or <B
+CLASS="keycap"
+>^C</B
+> to abort:
+                 </TT
+><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P
+>
+                 Following these guidelines, you will now have a boot floppy with a known working kernel in case of problems with the upgrade. I recommend rebooting the system with the floppy to 
+                 make sure that the floppy works correctly.
+                 </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="secopt-kernel.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap7sec77.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configuring and Building a Secure, Optimized Kernel</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="secopt-kernel.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Uninstallation and Optimization</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

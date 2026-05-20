@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Protocol Overview</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node182.html">Tuning the Transmission Protocol</A>
+<B>Up:</B> <A HREF="node180.html">UUCP Low-Level Protocols</A>
+<B> Previous:</B> <A HREF="node180.html">UUCP Low-Level Protocols</A>
+<BR> <P>
+<H2><A NAME="SECTION0014610000">Protocol Overview</A></H2>
+<P>
+<A NAME="6452"></A>
+<P>
+As UUCP is used over different types of connections, such as serial
+lines or TCP, or even X.25, specific low-level protocols are needed. In
+addition, several implementations of UUCP have introduced different
+protocols that do roughly the same thing.
+<P>
+Protocols can be divided into two categories: streaming and
+packet-oriented protocols. Protocols of the latter variety transfer a
+file as a whole, possibly computing a checksum over it. This is nearly
+free of any overhead, but requires a reliable connection, because any
+error will cause the whole file to be retransmitted. These protocols
+are commonly used over TCP connections, but are not suitable for use
+over telephone lines.  Although modern modems do quite a good job at
+error correction, they are not perfect, nor is there any error
+detection between your computer and the modem.
+<P>
+On the other hand, packet protocols split up the file into several
+chunks of equal size. Each packet is sent and received separately, a
+checksum is computed, and an acknowledgement is returned to the sender.
+To make this more efficient, sliding-window protocols were invented,
+which allow for a limited number (a window) of outstanding
+acknoledgements at any time.  This greatly reduces the amount of time
+uucico has to wait during a transmission.  Still, the relatively
+large overhead compared to a streaming protocol make packet protocols
+inefficient for use over TCP.
+<P>
+The width of the data path also makes a difference. Sometimes, sending
+eight-bit characters over a serial connection is impossible, for
+instance if the connection goes through a stupid terminal server.  In
+this case, characters with the eighth bit set have to be quoted on
+transmission.  When you transmit eight-bit characters over a seven-bit
+connection, they have to be Under worst-case assumptions, this doubles
+the amount of data to be transmitted, although compression done by the
+hardware may compensate for this.  Lines that can transmit arbitrary
+eight-bit characters are usually called eight-bit clean. This is the
+case for all TCP connections, as well as for most modem connections.
+<P>
+The following protocols are available with Taylor UUCP 1.04:
+<P>
+<P><P><HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node182.html">Tuning the Transmission Protocol</A>
+<B>Up:</B> <A HREF="node180.html">UUCP Low-Level Protocols</A>
+<B> Previous:</B> <A HREF="node180.html">UUCP Low-Level Protocols</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

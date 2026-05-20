@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Anonymous UUCP</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node180.html">UUCP Low-Level Protocols</A>
+<B>Up:</B> <A HREF="node174.html">Setting up your System </A>
+<B> Previous:</B> <A HREF="node178.html">Be Paranoid-- Call Sequence </A>
+<BR> <P>
+<H2><A NAME="SECTION0014550000">Anonymous UUCP</A></H2>
+<P>
+<A NAME="6425"></A>
+<A NAME="6426"></A>
+<P>
+If you want to provide anonymous UUCP access to your system, you first
+have to set up a special account for it as described above.  A common
+practice is to give it a login name and a password of uucp.
+<P>
+In addition, you have to set a few of the security options for unknown
+systems. For instance, you may want to prohibit them from executing any
+commands on your system. However, you cannot set these parameters in a
+sys file entry, because the system command requires the
+system's name, which you don't have. Taylor UUCP solves this dilemma
+through the unknown command. unknown can be used in
+the config file to specify any command that can usually appear in
+a system entry:
+<P>
+<P><P>
+<P>
+This will restrict unknown systems to downloading files from below the
+pub directory and uploading files to the incoming
+directory below /var/spool/uucppublic. The next line will make uucico
+ignore any requests from the remote system to turn on debugging
+locally.  The last two lines permit unknown systems to execute
+rmail; but the command path specified makes uucico look
+for the rmail command in a private directory named
+anon-bin only. This allows you to provide some special
+rmail that, for instance, forwards all mail to the super-user
+for examination. This allows anonymous users to reach the maintainer
+of the system, but prevents them at the same time from injecting any
+mail to other sites.
+<P>
+To enable anonymous UUCP, you must specify at least one unknown
+statement in config. Otherwise uucico will reject any unknown
+systems.
+<P>
+<A NAME="6446"></A>
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

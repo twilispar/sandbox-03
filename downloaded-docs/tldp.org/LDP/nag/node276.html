@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<!-- updated   Sun Jul 14 18:40:48 MET DST 1996 by:
+    Tony den Haan (tony@iaehv.nl)  ftp://ftp.IAEhv.nl/pub/users/tony-->
+ 
+<HEAD>
+<TITLE>Installing the NNTP server</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node277.html">Restricting NNTP Access</A>
+<B>Up:</B> <A HREF="node274.html">A Description of NNTP</A>
+<B> Previous:</B> <A HREF="node275.html">Introduction</A>
+<BR> <P>
+<H1><A NAME="SECTION0020200000">Installing the NNTP server</A></H1>
+<A NAME="nntpnntpd"></A>
+The NNTP server is called nntpd, and may be compiled in two ways,
+depending on the expected load on the news system.  There are no compiled
+versions available, because of some site-specific defaults that are
+hard-coded into the executable.  All configuration is done through
+macro definines in common/conf.h.
+<P>
+nntpd may be configured as either a standalone server that is
+started at system boot time from rc.inet2, or a daemon managed by
+inetd.  In the latter case you have to have the following entry in
+/etc/inetd.conf:
+<PRE>
+           nntp    stream  tcp nowait      news    /usr/etc/in.nntpd    nntpd
+</PRE>
+
+If you configure nntpd as standalone, make sure that any such
+line in inetd.conf is commented out. In either case, you have to
+make sure there's the following line in /etc/services:
+<PRE>
+           nntp    119/tcp   readnews untp    # Network News Transfer Protocol
+</PRE>
+To temporarily store any incoming articles, etc, nntpd also needs
+a .tmp directory in your news spool. You should create it using
+<PRE>
+           # mkdir /var/spool/news/.tmp
+           # chown news.news /var/spool/news/.tmp
+</PRE>
+<HR><P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,334 @@
+<HTML
+><HEAD
+><TITLE
+>Assign quota for a particular group</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Set Limits using Qouta"
+HREF="quota.html"><LINK
+REL="PREVIOUS"
+TITLE="edquota "
+HREF="chap20sec158.html"><LINK
+REL="NEXT"
+TITLE="Often used Commands"
+HREF="chap20sec161.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap20sec158.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 20. Set Limits using Qouta</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap20sec161.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN10411"
+>20.4. Assign quota for a particular group</A
+></H1
+><P
+>&#13;              Consider, for example, you have a group with the <SPAN
+CLASS="token"
+>group id webusers</SPAN
+> on your system. The following command takes you into the vi editor to edit quotas for the <SPAN
+CLASS="token"
+>group webusers</SPAN
+> on each partition that has 
+              quotas enabled:
+
+              To edit and modify quota for group webusers, use the following command:
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                [root@deep] /# <B
+CLASS="command"
+>edquota</B
+> -g webusers
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                Quotas for group webusers:
+                /dev/sda6: blocks in use: 6, limits (soft = 0, hard = 0)
+                inodes in use: 6, limits (soft = 0, hard = 0)
+              </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+              The procedure is the same as for assigning quotas for a particular user; as described above, you must modify the parameter of <TT
+CLASS="literal"
+>soft =</TT
+> and save your change.
+            </P
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN10421"
+>20.4.1. Assign quota for groups of users with the same value</A
+></H2
+><P
+>&#13;
+                The edquota program has a special option  -p that assign quotas for groups of users with the same value assigned to an initial user. Assuming that you want to assign users starting 
+                at <TT
+CLASS="literal"
+>UID 500</TT
+> on the system the same value as the user <I
+CLASS="wordasword"
+>wahib</I
+>, we would first edit and set wahib's quota information, then execute:
+                To assign quota for group of users with the same value, use the following command:
+                <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                  [root@deep] /# <B
+CLASS="command"
+>edquota</B
+> -p wahib `awk -F: '$3 &#62; 499 {print $1}' /etc/passwd`
+                </PRE
+></TD
+></TR
+></TABLE
+>
+                The edquota program will duplicate the quota that we have set for the user wahib to all users in the <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file that begin after <TT
+CLASS="literal"
+>UID 499</TT
+>.
+              </P
+><P
+>&#13;              Further documentation for more details, please consult man pages:
+              <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>edquota</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;              - edit user quotas
+              </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>quota</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;               - display disk usage and limits
+               </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>quotacheck</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;               - scan a file system for disk usages
+               </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>quotactl</SPAN
+>(2)</SPAN
+></DT
+><DD
+><P
+>&#13;               - manipulate disk quotas
+               </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>quotaon, quotaoff</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;               - turn file system quotas on and off
+               </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>repquota</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;               - summarize quotas for a file system
+               </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>rquota</SPAN
+>(3)</SPAN
+></DT
+><DD
+><P
+>&#13;               - implement quotas on remote machines
+               </P
+></DD
+></DL
+></DIV
+>
+               </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap20sec158.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap20sec161.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>edquota</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="quota.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Often used Commands</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

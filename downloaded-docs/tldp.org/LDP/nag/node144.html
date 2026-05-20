@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The exports File</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node145.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A HREF="node140.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A HREF="node143.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node145.html">The  Automounter</A>
+<B>Up:</B> <A HREF="node140.html">The Network File System</A>
+<B> Previous:</B> <A HREF="node143.html">The NFS Daemons</A>
+<BR> <P>
+<H1><A NAME="SECTION0013400000">The exports File</A></H1>
+<A NAME="nfsexports"></A>
+While the above options applied to the client's NFS configuration,
+there is a different set of options on the server side that configure
+its per-client behavior. These options must be set in the
+/etc/exports file.
+<P>
+By default, mountd will not allow anyone to mount directories
+from the local host, which is a rather sensible attitude. To permit
+one or more hosts to NFS-mount a directory, it must <em>exported</em>, that
+is, must be specified in the exports file. A sample file may
+look like this:
+<PRE>
+     # exports file for vlager
+     /home             vale(rw) vstout(rw) vlight(rw)
+     /usr/X386         vale(ro) vstout(ro) vlight(ro)
+     /usr/TeX          vale(ro) vstout(ro) vlight(ro)
+     /                 vale(rw,no root squash)
+     /home/ftp         (ro)
+</PRE>
+Each line defines a directory, and the hosts allowed to mount it.  A
+host name is usually a fully qualified domain name, but may additionally
+contain the * and ? wildcard, which act the way they
+do with the Bourne shell. For instance, lab*.foo.com matches
+lab01.foo.com as well as laber.foo.com.  If no host name
+is given, as with the /home/ftp directory in the example above,
+any host is allowed to mount this directory.
+<P>
+When checking a client host against the exports file,
+mountd will look up the client's hostname using the
+gethostbyaddr(2) call. With DNS, this call returns the client's
+canonical hostname, so you must make sure not to use aliases in
+exports.  Without using DNS, the returned name is the first
+hostname found in the hosts file that matches the client's
+address.
+<P>
+The host name is followed by an optional, comma-separated list of flags,
+enclosed in brackets. These flags may take the following values:
+<DL>
+<DT>insecure<DD> Permit non-authenticated access from this machine.
+
+<DT>unix-rpc<DD> Require  UNIX-domain  RPC  authentication  from  this machine.
+          This simply requires that requests originate from  a  reserved
+          internet port (i.e. the port number has to be less than 1024).
+          This option is on by default.
+
+<DT>secure-rpc<DD> Require secure RPC authentication from this machine. This has
+          not  been  implemented  yet. See Sun's documentation on Secure
+          RPC.
+
+<DT>kerberos<DD> Require Kerberos authentication on accesses from this machine.
+          This  has not been implemented yet.  See the MIT documentation
+          on the Kerberos authentication system.
+
+<DT>root squash<DD>  This is a security feature that denies the  super  user  on
+          the  specified  hosts  any  special  access  rights by mapping
+          requests from uid 0 on the client to uid  65534  (-2)  on  the
+          server.  This uid should be associated with the user nobody.
+
+<DT>no root squash<DD> Don't  map  requests  from  uid  0.  This option is on by
+          default.
+
+<DT>ro<DD>  Mount  file  hierarchy  read-only.   This  option  is  on  by
+          default.
+
+<DT>rw<DD> Mount file hierarchy read-write.
+
+<DT>link relative<DD> Convert absolute symbolic links (where the link contents
+          start with a slash) into relative links by prepending the nec-
+          essary  number  of  ../'s to get from the directory containing
+          the link to the root on the server.  This  option  only  makes
+          sense  when  a host's entire file system is mounted, else some
+          of the links might point to nowhere, or even worse, files they
+          were never meant to point to.
+
+<P>           This option is on by default.
+
+
+<DT>link absolute<DD> Leave  all  symbolic link as they are (the normal behavior
+          for Sun-supplied NFS servers).
+ <DT>map daemon<DD> This option tells the NFS server to assume  that  client  and
+          server  do  not  share the same uid/gid space.  nfsd will then
+          build a list mapping id's between client and server by  query-
+          ing the client's ugidd daemon.
+
+
+ 
+
+</DL>
+An error parsing the exports file is reported to syslogd's
+daemon facility at level notice whenever nfsd or
+mountd is started up.
+<P>
+Note that host names are obtained from the client's IP-address by
+reverse mapping, so you have to have the resolver configured properly.
+If you use BIND and are very security-conscious, you should enable spoof
+checking in your host.conf file.
+<P>
+<HR><A HREF="node145.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node145.html">The  Automounter</A>
+<B>Up:</B> <A HREF="node140.html">The Network File System</A>
+<B> Previous:</B> <A HREF="node143.html">The NFS Daemons</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Multiple Instances</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Specific Connections and IrDA - Protocols"
+HREF="infrared-howto-c-specific-connections.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux to Linux Connection"
+HREF="infrared-howto-s-linux-linux-connection.html"><LINK
+REL="NEXT"
+TITLE="Connection to Docking Station"
+HREF="infrared-howto-s-docking-station-connection.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-linux-linux-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Specific Connections and IrDA - Protocols</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-docking-station-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-multiple-instances"
+></A
+>3.14. Multiple Instances</H1
+><P
+>&#13;   Dag Brattli wrote: "The IrLAP layer has been enhanced to allow more
+   than one instance (so I can use IrLAN on my built-in ir-port, and
+   communicate with the Pilot over the IrDA dongle at the same time) ...
+   So how do you make two Linux/IrDA connections? Well, you just fire up
+   <B
+CLASS="command"
+>irattach</B
+> for each of the IrDA ports you have like this:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;irattach /dev/ttyS0         # (my ESI dongle)
+irattach /dev/ttyS2         # (my builtin IrDA port)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   Also work with FIR devices like this :
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;irattach irda0 -s
+irattach irda1 -s
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+   They will not see each other if you run them on the same machine,
+   since they will initiate discovery exactly at the same time. You
+   should however be able to use them against two other laptops. I can
+   run a dongle, builtin IrDA port and a IrDA PCMCIA card at the same
+   time with three other IrDA devices without any problems.
+</P
+><P
+>&#13;   You should notice that if the devices can interfere with each other
+   then it might be difficult to obtain a connection, since a device is
+   not allowed to transmit if the media is busy. I sometimes have to put
+   a book between them."
+</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-linux-linux-connection.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-docking-station-connection.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux to Linux Connection</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-specific-connections.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Connection to Docking Station</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

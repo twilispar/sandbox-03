@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Getting Acquainted with NIS</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node132.html">NIS versus NIS+</A>
+<B>Up:</B> <A HREF="node130.html">The Network Information System</A>
+<B> Previous:</B> <A HREF="node130.html">The Network Information System</A>
+<BR> <P>
+<H1><A NAME="SECTION0012100000">Getting Acquainted with NIS</A></H1>
+<P>
+<A NAME="4949"></A>
+<A NAME="4950"></A>
+<P>
+NIS keeps database information is in so-called <em>maps</em> containing
+key-value pairs. Maps are stored on a central host running the NIS
+server, from which clients may retrieve the information through various
+RPC calls. Quite frequently, maps are stored in DBM files.<A HREF="footnode.html#5321"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="5322"></A>
+<A NAME="5323"></A>
+<A NAME="5324"></A>
+<A NAME="5325"></A>
+The maps themselves are usually generated from master text files such as
+/etc/hosts or /etc/passwd. For some files, several maps
+are created, one for each search key type. For instance, you may search
+the hosts file for a host name as well as for an IP-address.
+Accordingly, two NIS maps are derived from it, called hosts.byname
+and hosts.byaddr, respectively.  Table-<A HREF="node131.html#nistablemaps"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> lists
+common maps and the files they are generated form.
+<P>
+<P><A NAME="5326"></A><BR>
+<STRONG>Table:</STRONG> 
+  <A NAME="nistablemaps"></A>
+  Some standard NIS maps and the corresponding files.
+ <BR>
+<P>
+<P>
+There are other files and maps you may find support for in some NIS
+package or other. These may contain information for applications not
+discussed in this book, such as the bootparams map that may used
+by some BOOTP servers, or which currently don't have any function in
+ (like the ethers.byname and ethers.byaddr maps).
+<P>
+<A NAME="4999"></A>
+<A NAME="5327"></A>
+<A NAME="5001"></A>
+<A NAME="5002"></A>
+For some maps, people commonly use <em>nicknames</em>, which are shorter
+and therefore easier to type. To obtain a full list of nicknames
+understood by your NIS tools, run the following command:
+<P>
+<P><P>
+<P>
+<A NAME="5006"></A>
+<A NAME="5007"></A>
+<A NAME="5328"></A>
+<A NAME="5329"></A>
+<A NAME="5010"></A>
+The NIS server is traditionally called ypserv. For an average
+network, a single server usually suffices; large networks may choose to
+run several of these on different machines and different segments of the
+network to relieve the load on the server machines and routers.  These
+servers are synchronized by making one of them the <em>master server</em>,
+and the others <em>slave servers</em>. Maps will be created only on the
+master server's host. From there, they are distributed to all slaves.
+<P>
+<A NAME="5014"></A>
+<A NAME="5015"></A>
+You will have noticed that we have been talking about ``networks''
+very vaguely all the time; of course there's a distinctive concept in
+NIS that refers to such a network, that is the collection of all hosts
+that share part of their system configuration data through NIS: the
+<em>NIS domain</em>.  Unfortunately, NIS domains have absolutely nothing in
+common with the domains we encountered in DNS. To avoid any ambiguity
+throughout this chapter, I will therefore always specify which type of
+domain I mean.
+<P>
+<A NAME="5017"></A>
+<A NAME="5018"></A>
+<A NAME="5330"></A>
+NIS domains have a purely administrative function only. They are mostly
+invisible to users, except for the sharing of passwords between all
+machines in the domain. Therefore, the name given to a NIS domain is
+relevant only to the administrators. Usually, any name will do, as long
+as it is different from any other NIS domain name on your local network.
+For instance, the administrator at the Virtual Brewery may choose to
+create two NIS domains, one for the Brewery itself, and one for the
+Winery, which she names brewery and winery, respectively.
+Another quite common scheme is to simply use the DNS domain name for NIS
+as well. To set and display the NIS domain name of your host, you can
+use the domainname command. When invoked without any argument, it
+prints the current NIS domain name; to set the domain name, you must
+become super user and type:
+<P>
+<P><P>
+<P>
+NIS domains determine which NIS server an application will query. For
+instance, the login program on a host at the Winery should, of
+course, only query the Winery's NIS server (or one of them, if there
+were several) for a user's password information; while an application on
+a Brewery host should stick with the Brewery's server.
+<P>
+<A NAME="5026"></A>
+<A NAME="5331"></A>
+One mystery now remains to be solved, namely how a client finds out
+which server to connect to. The simplest approach would be to have
+a configuration file that names the host on which to find the server.
+However, this approach is rather inflexible, because it doesn't allow
+clients to use different servers (from the same domain, of course), 
+depending on their availability. Therefore, traditional NIS
+implementations rely on a special daemon called ypbind to detect
+a suitable NIS server in their NIS domain. Before being able to perform
+any NIS queries, any application first finds out from ypbind
+which server to use.
+<P>
+ypbind probes for servers by broadcasting to the local IP-network;
+the first to respond is assumed to be the potentially fastest one and
+will be used in all subsequent NIS queries. After a certain interval has
+elapsed, or if the server becomes unavailable, ypbind will
+probe for active servers again.
+<P>
+Now, the arguable point about dynamic binding is that you rarely need
+it, and that it introduces a security problem: ypbind
+blindly believes whoever answers, which could be a humble NIS server
+as well as a malicious intruder. Needless to say this becomes especially
+troublesome if you manage your password databases over NIS.  To guard
+against this, NYS does <em>not</em> use ypbind by default, but
+rather picks up the server host name from a configuration file.
+<P>
+<A NAME="5035"></A>
+<A NAME="5036"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node132.html">NIS versus NIS+</A>
+<B>Up:</B> <A HREF="node130.html">The Network Information System</A>
+<B> Previous:</B> <A HREF="node130.html">The Network Information System</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

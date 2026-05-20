@@ -1,0 +1,351 @@
+<HTML
+><HEAD
+><TITLE
+>Database installation using superuser account</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux PostgreSQL Database Server"
+HREF="datab-pSQL.html"><LINK
+REL="PREVIOUS"
+TITLE="Compile and Optimize"
+HREF="chap27sec221.html"><LINK
+REL="NEXT"
+TITLE="Configuration files"
+HREF="chap27sec223.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap27sec221.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 27. Linux PostgreSQL Database Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap27sec223.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN17277"
+>27.3. Database installation using superuser account</A
+></H1
+><P
+>&#13;
+               Once PostgreSQL is installed on your Linux server, it's important to create the database installation before starting your PostgreSQL server.
+               To create the database installation, use the following command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>su</B
+> postgres
+                 [postgres@deep /]$ <B
+CLASS="command"
+>initdb</B
+> --pglib=/usr/lib/pgsql --pgdata=/var/lib/pgsql
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               We are initializing the database system with username postgres <TT
+CLASS="literal"
+>uid=40</TT
+>.
+               This user will own all the files and must also own the server process.
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                 Creating Postgres database system directory /var/lib/pgsql/base
+
+                 Creating template database in /var/lib/pgsql/base/template1
+
+                 Creating global classes in /var/lib/pgsql/base
+
+                 Adding template1 database to pg_database...
+
+                 Vacuuming template1
+                 Creating public pg_user view
+                 Creating view pg_rules
+                 Creating view pg_views
+                 Creating view pg_tables
+                 Creating view pg_indexes
+                 Loading pg_description
+               </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [postgres@deep /]$ <B
+CLASS="command"
+>chmod</B
+> 640 /var/lib/pgsql/pg_pwd
+                 [postgres@deep /]$ <B
+CLASS="command"
+>exit</B
+>
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                 exit
+               </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /#
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               The  <TT
+CLASS="literal"
+>--pglib</TT
+> command will specify where the library directory of PostgreSQL resides in the system, and the  <TT
+CLASS="literal"
+>--pgdata</TT
+> command will specify where the database files must reside 
+               for this installation on Linux.
+             </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>               
+               Do not create the database installation as <TT
+CLASS="literal"
+>root!</TT
+> This would be a major security hole.
+             </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;               Please don't foreget to Cleanup later:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+                 [root@deep ]/tmp# <B
+CLASS="command"
+>rm</B
+> -rf postgresql-version/ postgresql-version.tar.gz
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               Remove the egcs-c++-version.i386.rpm package to save space.
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>rpm</B
+> -e egcs-c++
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <P
+></P
+><UL
+><LI
+><P
+>&#13;                 The <B
+CLASS="command"
+>rm</B
+> command will remove all the source files we have used to compile and install PostgreSQL. It will also remove the PostgreSQL compressed archive from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+               </P
+></LI
+><LI
+><P
+>&#13;               The <B
+CLASS="command"
+>rpm</B
+> <TT
+CLASS="literal"
+>-e</TT
+> command will remove the egcs-c++ package we installed to compile the PosgreSQL Server. Note that the egcs-c++ package is required only for compiling programs like 
+               PostgreSQL and can be uninstalled safely after successful compilation of PostgreSQL.
+               </P
+></LI
+></UL
+>
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap27sec221.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap27sec223.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Compile and Optimize</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="datab-pSQL.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configuration files</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

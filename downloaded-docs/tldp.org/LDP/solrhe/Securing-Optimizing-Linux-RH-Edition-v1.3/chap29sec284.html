@@ -1,0 +1,912 @@
+<HTML
+><HEAD
+><TITLE
+>Configuration of the /etc/smb.conf file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="PREVIOUS"
+TITLE="Configurations"
+HREF="chap29sec283.html"><LINK
+REL="NEXT"
+TITLE="Configure the /etc/lmhosts file"
+HREF="chap29sec285.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec283.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 31. Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec285.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN22007"
+>31.5. Configuration of the <TT
+CLASS="filename"
+>/etc/smb.conf</TT
+> file</A
+></H1
+><P
+>&#13;      The <TT
+CLASS="filename"
+>/etc/smb.conf</TT
+> file is the main configuration file for the Samba server, in which you can specify which directory you want to access from Windows machines, which <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses are authorized, 
+      and so on. The first few lines of the file under the <TT
+CLASS="filename"
+><TT
+CLASS="replaceable"
+><I
+>[global]</I
+></TT
+></TT
+> line contain global configuration directives, which are common to all shares, <EM
+>unless they are over-ridden on a 
+      per-share basis</EM
+>, followed by share sections. A lot of options exist, and it's important to read the documentation that comes with Samba for more information on each of the different settings and parameters.
+    </P
+><P
+>&#13;      The following configuration example is a minimal working configuration file for Samba with encrypted password support. Also, it's important to note that we comment in this Samba configuration only parameters that relate to security 
+      and optimization, and left other posiblities for you to explore.
+    </P
+><P
+>&#13;      In our example we have created just one directory, <TT
+CLASS="filename"
+><TT
+CLASS="replaceable"
+><I
+>[tmp]</I
+></TT
+></TT
+> and have allowed only <I
+CLASS="wordasword"
+>class C</I
+> machine <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address ranges to connect on the 
+      Samba server. Also, we don't use print-sharing capability between Samba and Windows on this server.
+      Edit the <TT
+CLASS="filename"
+>smb.conf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/smb.conf</TT
+> and add/change the following parameters:
+    </P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;      [global]
+
+      workgroup = OPENNA
+      server string = R&#38;D of Open Network Architecture Samba Server
+      encrypt passwords = True
+      security = user
+      smb passwd file = /etc/smbpasswd
+      log file = /var/log/samba/log.%m
+      socket options = IPTOS_LOWDELAY TCP_NODELAY
+      domain master = Yes
+      local master = Yes
+      preferred master = Yes
+      os level = 65
+      dns proxy = No
+      name resolve order = lmhosts host bcast
+      bind interfaces only = True
+      interfaces = eth0 192.168.1.1
+      hosts deny = ALL
+      hosts allow = 192.168.1.4 127.0.0.1
+      debug level = 1
+      create mask = 0644
+      directory mask = 0755
+      level2 oplocks = True
+      read raw = no
+      write cache size = 262144
+
+      [homes]
+      comment = Home Directories
+      browseable = no
+      read only = no
+      invalid users = root bin daemon nobody named sys tty disk mem kmem users
+
+      [tmp]
+      comment = Temporary File Space
+      path = /tmp
+      read only = No
+      valid users = admin
+      invalid users = root bin daemon nobody named sys tty disk mem kmem users
+    </PRE
+></TD
+></TR
+></TABLE
+><P
+>&#13;      This tells the <TT
+CLASS="filename"
+>smb.conf</TT
+> file to set itself up for this particular configuration setup with:
+    </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+><TT
+CLASS="filename"
+><TT
+CLASS="replaceable"
+><I
+>[global]</I
+></TT
+></TT
+>. </B
+>
+        <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+><TT
+CLASS="envar"
+>workgroup = OPENNA</TT
+></B
+></DT
+><DD
+><P
+>&#13;              The option <TT
+CLASS="envar"
+>workgroup</TT
+> specifies the workgroup your server will appear to be in when queried by clients. It's important to have the same workgroup name on both clients and servers.
+            </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>server string = R&#38;D of Open Network Architecture Samba Server</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>server string</TT
+> specifies the string that you wish to show to your users in the printer comment box in print manager, or to the <SPAN
+CLASS="acronym"
+>IPC</SPAN
+> connection in the <TT
+CLASS="literal"
+>net view</TT
+> 
+            command under Windows machines.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>encrypt passwords = True</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>encrypt passwords</TT
+> if set to <TT
+CLASS="envar"
+>True</TT
+> instructs Samba to use encrypted passwords instead of plain text password when negotiating with the client. Sniffer program will not be able to 
+            detect your password when it is encrypted. This option always must be set to <TT
+CLASS="envar"
+>True</TT
+> for security reasons.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>security = user</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>security</TT
+>, if set to <TT
+CLASS="envar"
+>user</TT
+>, specifies that a client must first <TT
+CLASS="literal"
+>log-on</TT
+> with a valid username and password, or the connection will be refused. This means that a 
+            valid username and password for the client must exit in your <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file on the Linux server and in the <TT
+CLASS="filename"
+>/etc/smbpasswd</TT
+> file of the Samba server, or the connection from 
+            the client will fail. See <A
+HREF="chap29sec292.html#pr6ch31ssmb"
+>Securing samba</A
+> in this chapter for more information about the <TT
+CLASS="filename"
+>smbpasswd</TT
+> file.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>smb passwd file = /etc/smbpasswd</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>smb passwd file</TT
+> specifies the path to the encrypted <TT
+CLASS="filename"
+>smbpasswd</TT
+> file. The <TT
+CLASS="filename"
+>smbpasswd</TT
+> file is a copy of the <TT
+CLASS="filename"
+>/etc/passwd</TT
+> file of the 
+            Linux system containing valid usernames and passwords of clients allowed to connect to the Samba server. The Samba software reads this file, <TT
+CLASS="filename"
+>smbpasswd</TT
+> when a connection is requested.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>log file = /var/log/samba/log.%m</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>log file</TT
+> specifies the locations and names of Samba log files. With the name extension <TT
+CLASS="envar"
+>%m</TT
+>, it allows you to have separate log files for each user or machine that logs on your 
+            Samba server <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> <TT
+CLASS="literal"
+>log.machine1</TT
+>.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>socket options = IPTOS_LOWDELAY TCP_NODELAY</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>socket options</TT
+> specifies parameters that you can include in your Samba configuration to tune and improve your samba server for optimal performance. By default we chose to tune the connection 
+            for a local network, and improve the performance of the Samba server for transferring files.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>domain master = Yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>domain master</TT
+> specifies to set <TT
+CLASS="envar"
+>nmbd</TT
+>, the Samba server daemon, as a domain master browser for its given workgroup. This option usually must be set to <TT
+CLASS="envar"
+>Yes</TT
+> only on 
+            one Samba server for all other Samba servers on the same network and workgroup.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>local master = Yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>local master</TT
+> allows <TT
+CLASS="envar"
+>nmbd</TT
+>, the Samba server daemon, to try to become a local master browser on a subnet. Like the above, usually this option must be set to <TT
+CLASS="envar"
+>Yes</TT
+> only 
+            on one Samba server that acts as a local master on a subnet for all the other Samba servers on your network.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>preferred master = Yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>preferred master</TT
+> specifies and controls if <TT
+CLASS="envar"
+>nmbd</TT
+> the Samba server daemon, is a preferred master browser for its workgroup. Once again, this must usually be set to <TT
+CLASS="envar"
+>Yes</TT
+> 
+            on one server for all the others on your network.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>os level = 65</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>os level</TT
+> specifies by its value whether <TT
+CLASS="envar"
+>nmbd</TT
+>, the Samba server daemon, has a chance of becoming a local master browser for the Workgroup in the local broadcast area. The number 65 will 
+            win against any NT Server. If you have an NT Server on your network, and want to set your Linux Samba server to be a local master browser for the Workgroup in the local broadcast area then you must set the <TT
+CLASS="envar"
+>os level</TT
+> 
+            option to 65. Also, this option must be set only on one Linux Samba server, and must be disabled on all other Linux Samba servers you may have on your network.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>dns proxy = No</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>dns proxy</TT
+> if set to <TT
+CLASS="envar"
+>Yes</TT
+> specifies that <TT
+CLASS="envar"
+>nmbd</TT
+>, the Samba server daemon, when acting as a WINS server and finding that a Net BIOS name has not been registered, should treat the 
+            Net BIOS name word-for-word as a DNS name and do a lookup with the DNS server for that name on behalf of the name-querying client. Since we have not configured the Samba server to act as a WINS server, we don't need to set this 
+            option to <TT
+CLASS="envar"
+>Yes</TT
+>. Also, setting this option to <TT
+CLASS="envar"
+>Yes</TT
+> will degrade your Samba performance.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>name resolve order = lmhosts host bcast</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>name resolve order</TT
+> specifies what naming services to use in order to resolve host names to <SPAN
+CLASS="acronym"
+>IP</SPAN
+> addresses, and in what order. The parameters we chose cause the local <TT
+CLASS="filename"
+>lmhosts</TT
+> 
+            file of samba to be examined first, followed by the rest.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>bind interfaces only = True</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>bind interfaces only</TT
+> if set to <TT
+CLASS="envar"
+>True</TT
+>, allows you to limit what interfaces will serve <TT
+CLASS="literal"
+>smb</TT
+> requests. This is a security feature. The configuration option <TT
+CLASS="envar"
+>interfaces = eth0 192.168.1.1</TT
+> 
+            below completes this option.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>interfaces = eth0 192.168.1.1</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>interfaces</TT
+> allows you to override the default network interface list that Samba will use for browsing, name registration and other NBT traffic. By default, Samba will query the kernel for the list of all active interfaces and use 
+            any interface, except <TT
+CLASS="literal"
+>127.0.0.1</TT
+>, that is broadcast capable. With this option, Samba will only listen on interface <TT
+CLASS="literal"
+>eth0</TT
+> on the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address <TT
+CLASS="literal"
+>192.168.1.1</TT
+>. This is a security feature, 
+            and completes the above configuration option <TT
+CLASS="envar"
+>bind interfaces only = True</TT
+>.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>hosts deny = ALL</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>hosts deny</TT
+> specifies the list of hosts that are <EM
+>not</EM
+> permitted access to Samba services unless the specific services have their own lists to override this one. For simplicity, we 
+            deny access to all hosts by default, and allow specific hosts in the <TT
+CLASS="envar"
+>hosts allow =</TT
+> option below.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>hosts allow = 192.168.1.4 127.0.0.1</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>hosts allow</TT
+> specifies which hosts are permitted to access a Samba service. By default, we allow hosts from <SPAN
+CLASS="acronym"
+>IP</SPAN
+> class C <TT
+CLASS="literal"
+>192.168.1.4</TT
+> and our localhost <TT
+CLASS="literal"
+>127.0.0.1</TT
+> 
+            to access the Samba server. Note that the localhost must always be set or you will receive some error messages.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>debug level = 1</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>debug level</TT
+> allows the logging level to be specified in the <TT
+CLASS="filename"
+>smb.conf</TT
+> file. If you set the debug level higher than 2 then you may suffer a large drop in performance. This is because 
+            the server flushes the log file after each operation, which can be very expensive.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>create mask = 0644</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>create mask</TT
+> specifies and sets the necessary permissions according to the mapping from DOS modes to UNIX permissions. With this option set to <TT
+CLASS="literal"
+>0644</TT
+>, all file copying or creating from a 
+            Windows system to the Unix system will have a permission of <TT
+CLASS="literal"
+>0644</TT
+> by default.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>directory mask = 0755</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>directory mask</TT
+> specifies and set the octal modes, which are used when converting DOS modes to UNIX modes when creating UNIX directories. With this option set to <TT
+CLASS="literal"
+>0755</TT
+>, all directory copying 
+            or creating from a Windows system to the Unix system will have a permission of <TT
+CLASS="literal"
+>0755</TT
+> by default.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>level2 oplocks = True</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>level2 oplocks</TT
+>, if set to <TT
+CLASS="envar"
+>True</TT
+>, will increase the performance for many accesses of files that are not commonly written, <EM
+>such as .EXE application files</EM
+>.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>read raw = no</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>read raw</TT
+> controls whether or not the server will support the raw read SMB requests when transferring data to clients. Note that memory mapping is not used by the <TT
+CLASS="literal"
+>read raw</TT
+> operation. Thus, you 
+            may find memory mapping is more effective if you disable <TT
+CLASS="literal"
+>read raw</TT
+> using <TT
+CLASS="envar"
+>read raw = no</TT
+>, like we do.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>write cache size = 262144</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>write cache size</TT
+> allows Samba to improve performance on systems where the disk subsystem is a bottleneck. The value of this option is specified in bytes, and a size of 262,144 represent a 256k cache size per file.
+          </P
+></DD
+></DL
+></DIV
+>
+      </P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+><TT
+CLASS="filename"
+><TT
+CLASS="replaceable"
+><I
+>[tmp]</I
+></TT
+></TT
+>. </B
+>
+        <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+><TT
+CLASS="envar"
+>comment = Temporary File Space</TT
+></B
+></DT
+><DD
+><P
+>&#13;              The option <TT
+CLASS="envar"
+>comment</TT
+> allows you to specify a comment that will appear next to a share when a client does queries to the server.
+            </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>path = /tmp</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>path</TT
+> specifies a directory to which the user of the service is to be given access. In our example this is the <TT
+CLASS="filename"
+>tmp</TT
+> directory of the Linux server.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>read only = No</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>read only</TT
+> specifies if users should be allowed to only read files or not. In our example, since this is a configuration for the <TT
+CLASS="filename"
+>tmp</TT
+> directory of the Linux server, users 
+            can do more than just read files.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>valid users = admin</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>valid users</TT
+> specifies a list of users that should be allowed to login to this service. In our example only the user <TT
+CLASS="literal"
+>admin</TT
+> is allowed to access the service.
+          </P
+></DD
+><DT
+><B
+><TT
+CLASS="envar"
+>invalid users = root bin daemon nobody named sys tty disk mem kmem users</TT
+></B
+></DT
+><DD
+><P
+>&#13;            The option <TT
+CLASS="envar"
+>invalid users</TT
+> specifies a list of users that should not be allowed to login to this service. This is really a <TT
+CLASS="literal"
+>paranoid</TT
+> check to absolutely ensure an improper setting does not breach your 
+            security. It is recommended that you include all default users that run daemons on the server.
+          </P
+></DD
+></DL
+></DIV
+>
+      </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec283.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec285.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configurations</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/lmhosts</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

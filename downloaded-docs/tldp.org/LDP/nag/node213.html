@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Alias Files</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node214.html">Mailing Lists</A>
+<B>Up:</B> <A HREF="node210.html">Delivering Messages to Local </A>
+<B> Previous:</B> <A HREF="node212.html">Forwarding</A>
+<BR> <P>
+<H2><A NAME="SECTION0016830000">Alias Files</A></H2>
+smail is able to handle alias files compatible with those known by
+Berkeley's sendmail. Entries in the alias file may have the form
+<PRE>
+           alias: recipients
+</PRE>
+recipients is a comma-separated list of addresses that will be
+substituted for the alias. The recipient list may be continued across
+newlines if the next line begins with a TAB.
+<P>
+There is a special feature that allows smail to handle mailing lists
+from the alias file: if you specify ``:include:filename''
+as recipient, smail will read the file specified, and substitute
+its contents as a list of recipients.
+<P>
+The main aliases file is /usr/lib/aliases. If you choose to make
+this file world-writable, smail will not deliver any messages to
+shell commands given in this file. A sample file is shown below:
+<PRE>
+           # vbrew.com /usr/lib/aliases file
+           hostmaster: janet
+           postmaster: janet
+           usenet: phil
+           # The development mailing list.
+           development: joe, sue, mark, biff
+                   /var/mail/log/development
+           owner-development: joe
+           # Announcements of general interest are mailed to all
+           # of the staff
+           announce: :include: /usr/lib/smail/staff,
+                   /var/mail/log/announce
+           owner-announce: root
+           # gate the foobar mailing list to a local newsgroup
+           ppp-list: "|/usr/local/lib/gateit local.lists.ppp"
+</PRE>
+If an error occurs while delivering to an address generated from the
+aliases file, smail will attempt to send a copy of the
+error message to the ``alias owner''. For example, if delivery to
+biff fails when delivering a message to the development
+mailing list, a copy of the error message will be mailed to the sender,
+as well as to postmaster and owner-development.  If the
+owner address does not exist, no additional error message will be
+generated.
+<P>
+When delivering to files or when invoking programs given in the
+aliases file, smail will become the nobody user to
+avoid any security hassles. Especially when delivering to files, this
+can be a real nuisance. In the file given above, for instance, the log
+files must be owned and writable by nobody, or delivery to them
+will fail.
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

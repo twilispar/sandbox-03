@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>So Which Entries are Really Required?</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node234.html">A Tour of Sendmail+IDA </A>
+<B>Up:</B> <A HREF="node223.html">Typically Used sendmail.m4 Parameters</A>
+<B> Previous:</B> <A HREF="node232.html">The Master Sendmail.mc File</A>
+<BR> <P>
+<H3><A NAME="SECTION00173210000">So Which Entries are Really Required?</A></H3>
+<P>
+<A NAME="8415"></A>
+<P>
+When not using any of the optional dbm tables, sendmail+IDA delivers mail via
+the DEFAULT_MAILER (and possibly RELAY_HOST and
+RELAY_MAILER) defined in the sendmail.m4 file used to
+generate sendmail.cf.  It is easily possible to override this behavior
+through entries in the domaintable or uucpxtable.
+<P>
+<A NAME="8416"></A>
+<A NAME="8417"></A>
+A generic site that is on Internet and speaks Domain Name Service, or one
+that is UUCP-only and forwards all mail via UUCP through a smart
+RELAY_HOST, probably does not need any specific table entries at
+all.
+<P>
+Virtually all systems should set the DEFAULT_HOST and
+PSEUDONYMS macros, which define the canonical site name and aliases
+it is known by, and DEFAULT_MAILER. If all you have is a relay
+host and relay mailer, you don't need to set these defaults since it works
+automagically.
+<P>
+UUCP hosts will probably also need to set UUCPNAME to their
+official UUCP name.  They will also probably set RELAY_MAILER, and
+RELAY_HOST which enable smart-host routing through a mail relay.
+The mail transport to be used is defined in RELAY_MAILER and
+should usually be UUCP-A for UUCP sites.
+<P>
+If your site is SMTP-only and talks `Domain Name Service', you would change
+the DEFAULT_MAILER to TCP-A and probably delete the
+RELAY_MAILER and RELAY_HOST lines.
+<P>
+<A NAME="8418"></A>
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

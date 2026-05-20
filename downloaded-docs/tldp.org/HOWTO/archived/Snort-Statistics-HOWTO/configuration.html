@@ -1,0 +1,2805 @@
+<HTML
+><HEAD
+><TITLE
+>Configuration</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="Snort-Setup for Statistics HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Technical Overview"
+HREF="technicaloverview.html"><LINK
+REL="NEXT"
+TITLE="Security Issues"
+HREF="security-issues.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Snort-Setup for Statistics HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="technicaloverview.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="security-issues.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="CONFIGURATION">4. Configuration</H1
+><P
+>   This chapter describes the various configuration tasks to get snort and the
+   tools up and running.
+  </P
+><P
+>   Since I am using RedHat linux 7.x all the given pathnames and configuration
+   options are eventually RedHat specific while there should be no big problem to
+   transfer it to any other distribution.
+  </P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PRE-SNORT-CONFIG">4.1. Setting up Linux for Snort</H2
+><P
+>    Instead of doing the work twice I only provide a link to a document
+    describing the various tasks of compiling/installing MySQL, Apache, ACID
+    etc. by Jason Lewis: <A
+HREF="http://www.packetnexus.com/docs/packetnexus/"
+TARGET="_top"
+>http://www.packetnexus.com/docs/packetnexus/</A
+>
+   </P
+><P
+>    Please keep in mind that I'm not the author of either the document or the
+    scripts mentioned there. I didn't even test the scripts so please don't ask
+    me about them ;)
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="SNORT-CONFIG">4.2. Configuring Snort</H2
+><P
+>    You can start installing snort by getting the actual tarball from <A
+HREF="http://www.snort.org/"
+TARGET="_top"
+>http://www.snort.org/</A
+>
+    and compile it yourself or try to find precompiled binaries for your
+    distribution.
+   </P
+><P
+>    For version 1.8.3 you can find precompiled binaries for rpm based linux
+    distributions, FreeBSD, Solaris and Windows at <A
+HREF="http://www.snort.org/"
+TARGET="_top"
+>www.snort.org</A
+>.
+   </P
+><P
+>    I'm no longer maintaining my own RPMS since work hasn't to be done more than
+    once. But I will offer you my adjusted <EM
+>snortd.multi</EM
+>
+    initscript at <A
+HREF="http://www.lug-burghausen.org/projects/Snort-Statistics/snortd.multi"
+TARGET="_top"
+>http://www.lug-burghausen.org/projects/Snort-Statistics/snortd.multi</A
+>.
+   </P
+><P
+>    My old 1.8.1 RPMS with MySQL support (but without PostgreSQL support!) can
+    still be found at <A
+HREF="http://www.lug-burghausen.org/projects/Snort-Statistics/snort-1.8.1-4.i386.rpm"
+TARGET="_top"
+>http://www.lug-burghausen.org/projects/Snort-Statistics/snort-1.8.1-4.i386.rpm</A
+>.
+    To create a postgreSQL enabled version, download the <A
+HREF="http://www.lug-burghausen.org/projects/Snort-Statistics/snort-1.8.1-4.src.rpm"
+TARGET="_top"
+>Source
+RPM</A
+>, edit the spec file and rebuild the RPM. If you are not familiar
+    with creating RPMs you should have a look on the <A
+HREF="http://www.linuxdoc.org/HOWTO/RPM-HOWTO.html"
+TARGET="_top"
+><EM
+>RPM-HOWTO</EM
+></A
+> or <A
+HREF="http://www.rpm.org/"
+TARGET="_top"
+>http://www.rpm.org/</A
+> where
+    <EM
+>Maximum RPM</EM
+> is located, a downloadable book about RPM
+    along with other good sources about RPM.
+   </P
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="SNORT.CONF">4.2.1. /etc/snort/snort.conf</H3
+><P
+>     After installing the RPM we have to edit
+     <EM
+>/etc/snort/snort.conf</EM
+> to reflect our needs. Martin
+     Roesch created the Snort Users Manual which is shipped with the snort
+     tarball and the RPMS as a PDF version. You should have a look on it to see
+     which options you would like to use as not all but only the ones needed for
+     our configuration here will be covered in this document.
+    </P
+><P
+>     Also the example configuration <EM
+>/etc/snort/snort.conf</EM
+>
+     shipped with the tarball/RPM is a good place to start because of the
+     detailed remarks.    
+    </P
+><DIV
+CLASS="SECT4"
+><H4
+CLASS="SECT4"
+><A
+NAME="SNORT-VARS">4.2.1.1. Snort Variables</H4
+><P
+>     First we define various variables like HOME_NET, EXTERNAL_NET and
+     DNS_SERVERS to reflect our network topology. Make sure you use the right
+     addresses or you get weird, or worse, no alarms.
+    </P
+><P
+>     When using snort in a complex environment, let's say one sensor with
+     multiple interfaces to watch, the definition of HOME_NET and EXTERNAL_NET
+     may be hard or at least results in a very long list, you can set both
+     variables to <EM
+>any</EM
+>. You loose some kind of pre-filtering
+     for the sake of not having to put in dozens of network ranges in a large
+     internal network. And you minimize the performance impact of having snort
+     run through a huge list of addresses for each packet.
+    </P
+><P
+>     To get rid of some nasty messages of (false) portscans define the variable
+     DNS_SERVERS to hold all ip addresses of dns-servers along with other nodes
+     like network management stations triggering snort's portscan module. This
+     is an ongoing process.
+    </P
+><P
+>     You also can define your own variables here which you can refer to in your
+     own rules. This is helpful e.g. if using <EM
+>pass rules</EM
+> to
+     suite your environment.
+    </P
+><P
+>     Define all other variables to appropriate values or as in the shipped
+     <EM
+>/etc/snort/snort.conf</EM
+> to $HOME_NET.
+    </P
+><P
+>     <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>      var HOME_NET any
+      var EXTERNAL_NET any
+      # DNS_SERVERS holds the addresses of "noisy" computers like DNS or NWM
+      # to be ignored from portscans
+      var DNS_SERVERS [1.1.1.1/32,2.2.2.2/32]
+      var SMTP_SERVERS $HOME_NET
+      ...
+     </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+    </P
+></DIV
+><DIV
+CLASS="SECT4"
+><H4
+CLASS="SECT4"
+><A
+NAME="SNORT-PREPROCESSORS">4.2.1.2. Snort Preprocessors</H4
+><P
+>     Next we have to set up the preprocessors to be used. While the more
+     preprocessors you use you get more triggers for alarms but for the cost of
+     performance. So be careful in choosing preprocessors.
+    </P
+><P
+>     You should also have a look on Marty's <EM
+>Snort Users
+     Manual</EM
+> because some preprocessors are deprecated. For those you
+     should use the new introduced ones.
+    </P
+><P
+>     The preprocessors <EM
+>minfrag</EM
+> and
+     <EM
+>stream</EM
+> are depricated in favor of
+     <EM
+>stream4</EM
+>, and <EM
+>defrag</EM
+> is deprecated
+     by <EM
+>frag2</EM
+>.
+    </P
+><P
+>     <EM
+>frag2</EM
+> is the new IP defragmentation processor
+     introduced in snort v1.8 which should be more memory efficient than
+     <EM
+>defrag/minfrag</EM
+>.
+    </P
+><P
+>     From the Snort Users Manual:
+     <EM
+>The stream4 module provides TCP stream reassembly and stateful
+     analysis capabilities to Snort. Robust stream reassembly capabilities allow
+     Snort to ignore ''stateless'' attacks such as stick and snot
+     produce.Stream4 also gives large scale users the ability to track more than
+     256 simultaneous TCP streams. Stream4 should be able to scale to handle
+     64,000 simultaneous TCP connections.</EM
+>
+    </P
+><P
+>     The <EM
+>stream4</EM
+> module consists of two preprocessors
+     called <EM
+>stream4</EM
+> and
+     <EM
+>stream4_reassemble</EM
+>, which both have to be used.
+    </P
+><P
+>     There are various options for both preprocessors while we will use only -
+     for <EM
+>stream4</EM
+> - <EM
+>detect_scans</EM
+> for
+     getting alarms for portscan events and
+     <EM
+>detect_state_problems</EM
+> to be informed when stream 
+     events like evasive RST packets, data on SYN packets and out of window
+     sequence numbers occur.
+    </P
+><P
+>     With <EM
+>stream4_reassemble</EM
+> we use the option
+     <EM
+>ports all</EM
+> what makes the reassembly catch all ports
+     instead of only some predefined ones. To be honest, this is some kind of
+     paranoic and impacts the cpu utilization of the snort sensor, but since I
+     didn't get any bad results listening on a Pentium III 800 MHz on three 100
+     Mbit/s full duplex lines with average to low utilization I think it's the
+     better solution.
+    </P
+><P
+>     Two other preprocessors we will use are <EM
+>portscan</EM
+> and
+     <EM
+>portscan-ignorehosts</EM
+> which are responsible for
+     portscan detection (<EM
+>portscan</EM
+>) and for which hosts
+     portscan detection has to be ignored
+     (<EM
+>portscan-ignorehosts</EM
+>).
+    </P
+><P
+>     For <EM
+>portscan</EM
+> we define to look for every network using
+     the form <EM
+>0.0.0.0/0</EM
+>, set the number of port numbers to
+     be accessed in the also to be defined detection period in seconds.
+     Additionally we have to provide the complete path to the portscan logfile.
+    </P
+><P
+>     With <EM
+>portscan-ignorehosts</EM
+> we get rid of some weird
+     alarms from hosts which talk too much and trigger portscan detection like
+     name servers and network management stations (see variable
+     <EM
+>DNS_SERVERS</EM
+> above).
+    </P
+><P
+>     Some preprocessors which are not (yet) mentioned in Marty's Users Manual
+     but we will use are <EM
+>unidecode</EM
+> which is a replacement
+     of <EM
+>http_decode</EM
+> and normalizes http and UNICODE
+     attacks, <EM
+>rpc_decode</EM
+> to normalize rpc traffic on a
+     given port, <EM
+>bo</EM
+> to check for back orifice traffic and
+     <EM
+>telnet_decode</EM
+> to normalize telnet negotiation strings.
+    </P
+><P
+>     Other preprocessors like SPADE are not yet covered here but may be in a
+     future version. Contributions are very welcome &#62;;)
+    </P
+><P
+>     After all that theoretical stuff here is the preprocessor part of
+     <EM
+>/etc/snort/snort.conf</EM
+>:
+    </P
+><P
+>     <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>      preprocessor frag2
+      preprocessor stream4: detect_scans detect_state_problems
+      preprocessor stream4_reassemble: ports all
+      preprocessor unidecode: 80 8080
+      preprocessor rpc_decode: 111
+      preprocessor bo: -nobrute
+      preprocessor telnet_decode
+      preprocessor portscan: 0.0.0.0/0 6 3 /var/log/snort/portscan.log
+      preprocessor portscan-ignorehosts: $DNS_SERVERS
+     </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+    </P
+></DIV
+><DIV
+CLASS="SECT4"
+><H4
+CLASS="SECT4"
+><A
+NAME="SNORT-OUTPUT-MODULES">4.2.1.3. Snort Output Modules</H4
+><P
+>      The next part is the configuration of the output modules of which we will
+      use the syslog module <EM
+>alert_syslog</EM
+> to send alerts to
+      syslog and <EM
+>database</EM
+> to additionally log to a MySQL
+      database.
+     </P
+><P
+>      The <EM
+>alert_syslog</EM
+> module requires some options for what
+      has to be logged. If like in my case you are using SnortSnarf to analyse
+      the logfile you'll have to add the option <EM
+>LOG_PID</EM
+> else
+      SnortSnarf has problems.
+     </P
+><P
+>      As stated before we will use ACID and thus we need to set up snort to log
+      to a database. I chose MySQL for no particular reason (well, I've heard more
+      from MySQL than from postgreSQL but that's all).
+     </P
+><P
+>      The <EM
+>database</EM
+> output module requires the following
+      parameters:
+     </P
+><P
+>      <P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>log | alert</DT
+><DD
+><P
+>          Log to the <EM
+>alert</EM
+> facility. Also possible would be
+	  the <EM
+>log</EM
+> facility. If you would like to get
+	  portscan alerts into the database you have to use
+	  <EM
+>alert</EM
+> here.
+         </P
+></DD
+><DT
+>mysql|postgrsql|odbc|oracle|mssql</DT
+><DD
+><P
+>This is the type of database.</P
+></DD
+><DT
+>user=&#60;username&#62;</DT
+><DD
+><P
+>Here you define the username to be used with the database.</P
+></DD
+><DT
+>password=&#60;password&#62;</DT
+><DD
+><P
+>The required password for the given user.</P
+></DD
+><DT
+>dbname=&#60;databasename&#62;</DT
+><DD
+><P
+>The name of the database to be used for logging into.</P
+></DD
+><DT
+>host=&#60;hostname&#62;</DT
+><DD
+><P
+>          Here you define the host on which the database is running. Use
+          localhost if the database is running on the snort sensor itself.
+         </P
+></DD
+><DT
+>sensor_name=&#60;sensor name&#62;</DT
+><DD
+><P
+>          Here you put in a unique name which is used to differentiate
+          between various sensors if more than one is logging into a single
+          database.
+         </P
+></DD
+></DL
+></DIV
+>
+
+     </P
+><P
+>      Now let's take a look on the output module part of
+      <EM
+>/etc/snort/snort.conf</EM
+>:
+     </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>       output alert_syslog: LOG_AUTH LOG_ALERT LOG_PID
+       output database: alert, mysql, user=snort password=mypassword dbname=snort host=localhost sensor_name=mysensor 
+      </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+     </P
+><P
+>      If you are using more than one physical snort sensor and would log to a
+      database I would recommend using a central database on a separate machine.
+      You then can correlate alert data with a single console getting a better
+      overview when attacks are found.
+     </P
+></DIV
+><DIV
+CLASS="SECT4"
+><H4
+CLASS="SECT4"
+><A
+NAME="SNORT-RULES">4.2.1.4. Snort Rule Sets</H4
+><P
+>      The rules are the vital part of snort. There are various categories of
+      rules shipped with snort. They can be found in
+      <EM
+>/etc/snort/</EM
+>, ending with
+      <EM
+>*.rules</EM
+>. The format in version 1.8+ has changed to
+      reflect the classification types. In addition priority settings of the
+      classtypes can also be defined.
+     </P
+><P
+>      If you're using the original snort tarball I suggest copying all rule
+      files and <EM
+>classification.config</EM
+> into it.
+     </P
+><P
+>      The configuration of classification types is done in
+      <EM
+>/etc/snort/classification.config</EM
+>. Normally you
+      don't have to touch it since it is preconfigured for the shipped snort
+      rules. But if you (again like me) are using Max Vision's
+      <EM
+>vision.rules</EM
+> you'll have to add some lines because
+      the classtypes are different. Just copy and paste all <EM
+>config
+      classification:</EM
+> lines from <EM
+>vision.conf</EM
+> to
+      <EM
+>/etc/snort/classification.config</EM
+>. And remember
+      to take the <EM
+>vision.rules</EM
+> for snort 1.8 (called
+      <EM
+>vision18.rules</EM
+> and
+      <EM
+>vision18.conf</EM
+> on <A
+HREF="http://www.whitehats.com/"
+TARGET="_top"
+>http://www.whitehats.com/</A
+>) as the
+      older ones are not prepared for the new format introduced in snort 1.8!
+     </P
+><P
+>      Here's the <EM
+>/etc/snort/classification.config</EM
+> I
+      used with <EM
+>vision.rules</EM
+>:
+     </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>       #
+       # config classification:shortname,short description,priority
+       #
+       #config classification: not-suspicious,Not Suspicious Traffic,0
+       config classification: unknown,Unknown Traffic,1
+       config classification: bad-unknown,Potentially Bad Traffic, 2
+       config classification: attempted-recon,Attempted Information Leak,3
+       config classification: successful-recon-limited,Information Leak,4
+       config classification: successful-recon-largescale,Large Scale Information Leak,5
+       config classification: attempted-dos,Attempted Denial of Service,6
+       config classification: successful-dos,Denial of Service,7
+       config classification: attempted-user,Attempted User Privilege Gain,8
+       config classification: unsuccessful-user,Unsuccessful User Privilege Gain,7
+       config classification: successful-user,Successful User Privilege Gain,9
+       config classification: attempted-admin,Attempted Administrator Privilege Gain,10
+       config classification: successful-admin,Successful Administrator Privilege Gain,11
+
+       # added from vision18.conf
+       # classification for use with a management interface
+       # low risk
+       config classification: not-suspicious,policy traffic that is not suspicious,0
+       config classification: suspicious,suspicious miscellaneous traffic,1
+       config classification: info-failed,failed information gathering attempt,2
+       config classification: relay-failed,failed relay attempt,3
+       config classification: data-failed,failed data integrity attempt,4
+       config classification: system-failed,failed system integrity attempt,5
+       config classification: client-failed,failed client integrity attempt,6
+       # med risk
+       config classification: denialofservice,denial of service,7
+       config classification: info-attempt,information gathering attempt,8
+       config classification: relay-attempt,relay attempt,9
+       config classification: data-attempt,data integrity attempt,10
+       config classification: system-attempt,system integrity attempt,11
+       config classification: client-attempt,client integrity attempt,12
+       config classification: data-or-info-attempt,data integrity or information gathering attempt,13
+       config classification: system-or-info-attempt,system integrity or information gathering attempt,14
+       config classification: relay-or-info-attempt,relay of information gathering attempt,15
+       # high risk
+       config classification: info-success,successful information gathering attempt,16
+       config classification: relay-success,successful relay attempt,17
+       config classification: data-success,successful data integrity attempt,18
+       config classification: system-success,successful system integrity attempt,19
+       config classification: client-success,successful client integrity attempt,20
+      </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+     </P
+><P
+>      The classification and rule files are included in
+      <EM
+>/etc/snort/snort.conf</EM
+>. Some rule files used here have
+      been copied from the CVS, e.g. <EM
+>virus.rules</EM
+> because
+      they were not shipped with the standard distribution.
+     </P
+><P
+>      As stated before the <EM
+>vision.rules</EM
+> file will be
+      fetched via the tool <EM
+>arachnids_upd</EM
+> which is discussed
+      later.
+     </P
+><P
+>      Arachnids_upd changes the name from <EM
+>vision18.rules</EM
+> to
+      <EM
+>vision.rules</EM
+> but the rules are of course the ones
+      prepared for snort 1.8+.
+     </P
+><P
+>      Since the variable definitions for INTERNAL and EXTERNAL in
+      <EM
+>vision.rules</EM
+> are not the same as with the snort rules
+      I use a script to change these names. Take a look at the
+      <EM
+>arachnids_upd</EM
+> section below.
+     </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>       # Include classification &#38; priority settings
+       include /etc/snort/classification.config
+       
+       include /etc/snort/exploit.rules
+       include /etc/snort/scan.rules
+       include /etc/snort/finger.rules
+       include /etc/snort/ftp.rules
+       include /etc/snort/telnet.rules
+       include /etc/snort/smtp.rules
+       include /etc/snort/rpc.rules
+       include /etc/snort/rservices.rules
+       include /etc/snort/backdoor.rules
+       include /etc/snort/dos.rules
+       include /etc/snort/ddos.rules
+       include /etc/snort/dns.rules
+       include /etc/snort/netbios.rules
+       include /etc/snort/web-cgi.rules
+       include /etc/snort/web-coldfusion.rules
+       include /etc/snort/web-frontpage.rules
+       include /etc/snort/web-iis.rules
+       include /etc/snort/web-misc.rules
+       include /etc/snort/sql.rules
+       include /etc/snort/x11.rules
+       include /etc/snort/icmp.rules
+       include /etc/snort/shellcode.rules
+       include /etc/snort/misc.rules
+       include /etc/snort/policy.rules
+       include /etc/snort/info.rules
+       #include /etc/snort/icmp-info.rules
+       include /etc/snort/virus.rules
+       include /etc/snort/local.rules
+     
+       # vision.rules will be catched by arachnids_upd
+       include /etc/snort/vision.rules
+     </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>     When you are done with setting up
+     <EM
+>/etc/snort/snort.conf</EM
+> you should start snort by
+     calling <EM
+>/etc/rc.d/init.d/snortd start</EM
+> and correct any
+     errors you get in the log file <EM
+>/var/log/messages</EM
+>
+     (ignore any database related messages since the database has not been set
+     up at this time, you also may have to document out the output module
+     database). If everything is ok you can go on with configuring the other
+     parts.
+    </P
+></DIV
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="SNORTD-INITSCRIPT">4.2.2. /etc/rc.d/init.d/snortd</H3
+><P
+>    In <EM
+>/etc/rc.d/init.d/snortd</EM
+> you should edit at least the
+    line with the interface to be "snort'ed". Replace the definition of
+    <EM
+>INTERFACE="eth0"</EM
+> with the interface you use. This can
+    be another ethernet (<EM
+>ethx</EM
+>) but also a
+    <EM
+>pppx</EM
+> or <EM
+>ipppx</EM
+> interface, e.g. if
+    you are using ISDN your definition should be like
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>     INTERFACE="ippp0"
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    If your snort sensor is only listening on one interface it's sufficient to
+    use the shipped snortd initscript. But if you have more than one interface
+    you may be interested in having a look onto the script I extended for
+    exactly that case. Even when you only have one interface but wish to use
+    swatch the way I do you could copy the swatch parts to the shipped snortd
+    script (see the contrib section of the RPM's documentation).
+   </P
+><P
+>    Next you find the mentioned snortd initscript I extended for snort to listen
+    on more than one interface. One could now say that you can also use
+    <EM
+>any</EM
+> as an interface name since the underlying
+    <EM
+>libpcap</EM
+> makes this possible, but that's not what I
+    intended to use because I'm not interested in "snorting" the local network
+    where the snort sensor is set up. This should - in a secure environment - be
+    a separate network segment with additional security set up, e.g. a firewall
+    for that segment, so sniffing does not make much sense except if you want
+    to sniff attacks targeted to the snort network itself. Even then, if you use
+    more than one sensor concentrated in that segment you only need to set up
+    one but not all of the sensors for protecting the segment.
+   </P
+><P
+>    I added a new function <EM
+>daemonMult</EM
+> derived from RedHat's
+    <EM
+>daemon</EM
+> function found in
+    <EM
+>/etc/rc.d/init.d/functions</EM
+> which is capable of starting
+    a program more than once. I sent RedHat a patch for their
+    <EM
+>daemon</EM
+> function to introduce a new option
+    <EM
+>--mult</EM
+> which eventually will be added. If that happens
+    the <EM
+>daemonMult</EM
+> function will be obsolete and the call
+    to snort would change from <EM
+>daemonMult ...</EM
+> to
+    <EM
+>daemon --mult ...</EM
+>. Let's wait and see.
+   </P
+><P
+>    I also changed the subsystem name from snort to snortd to get rid of error
+    messages when rebooting (the killall script on a redhat box depends on the
+    correct name), just a little typo.
+   </P
+><P
+>    With my script you can now define multiple interfaces to be watched on,
+    just use a space separated list with the <EM
+>INTERFACE</EM
+>
+    variable, like in the listing shown below.
+   </P
+><P
+>    Some sanity checks are also included to see if the interface to listen on is
+    already up and if there is an IP address defined. If there is an IP address
+    defined the correspondig config which on a RedHat linux box is found in
+    <EM
+>/etc/sysconfig/network-scripts/ifcfg-&#60;interface
+    name&#62;</EM
+> will be used, else the interface is set up as IP-less in
+    promiscuous mode.
+   </P
+><P
+>    THIS HAS NOT YET BEEN TESTED WITH ANYTHING ELSE THAN ETHERNET INTERFACES! I
+    WILL HOPEFULLY SOON REVIEW IT WITH ISDN INTERFACES AND REPORT HOW THE
+    DIFFERENCES ARE!
+   </P
+><P
+>    A single snort process is then started on each interface, and also
+    <EM
+>swatch</EM
+> will be started to check for errors when
+    restarting snort for rule updates (see the <EM
+>swatch</EM
+>
+    section below).
+   </P
+><P
+>    When shutting down snort all IP-less interfaces will be shut down but not
+    any interfaces with existing IP configurations because that could last to
+    inaccessability if the "snort'ed" interface is vital for the snort sensor
+    (learned that the hard way &#62;;)
+   </P
+><P
+>    Maybe a better solution would be to check the interface's config file for an
+    entry like
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>     ONBOOT=yes
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    and only if there is not <EM
+>yes</EM
+> then the interface will be
+    shut down. But that's not yet implemented.
+   </P
+><P
+>    Now here is the extended snort initscript:
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>#!/bin/sh
+#
+# snortd         Start/Stop the snort IDS daemon.
+#
+# chkconfig: 2345 40 60
+# description:  snort is a lightweight network intrusion detection tool that
+#               currently detects more than 1100 host and network
+#               vulnerabilities, portscans, backdoors, and more.
+#
+# June 10, 2000 -- Dave Wreski Dave Wreski &#60;dave at linuxsecurity.com&#62;
+#   - initial version
+# July 08, 2000 Dave Wreski &#60;&#60;dave at guardiandigital.com&#62;
+#   - added snort user/group
+#   - support for 1.6.2
+# April 11, 2001 Sandro Poppi &#60;spoppi at gmx.de&#62;
+#   - added multiple interfaces option for use with dial up lines
+#     or more than one sniffer interface
+#     I don't think the libpcap option to use "-i any" is a good choice,
+#     because snort would be set up to monitor one or more ip-less interfaces
+#     while leaving the monitor interface "unprotected"
+#   - changed the subsystem name from snort to snortd to get rid of error messages
+#     when rebooting (the killall script on a redhat box depends on the correct name)
+#   - added a function daemonMult derived from the function daemon in /etc/rc.d/init.d/functions
+#     to allow starting multiple instances of snort with the convenience of the daemon function
+#     (eventually this could be integrated into the normal daemon function of redhat, have to get
+#     in touch with the author)
+# January 01, 2002 Sandro Poppi &#60;spoppi at gmx.de&#62;
+#   - added check if swatch is installed
+#   - added check for interfaces other than ethernet since only those are expected to work with ifconfig
+#
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# A function to start a program even more than once
+# rewritten version of the daemon function in /etc/rc.d/init.d/functions
+daemonMult() {
+        # Test syntax.
+        gotbase=
+        user=
+        nicelevel=0
+        while [ "$1" != "${1##-}" -o "$1" != "${1##+}" ]; do
+          case $1 in
+            '')    echo '$0: Usage: daemon [+/-nicelevel] {program}'
+                   return 1;;
+            --check)
+                   shift
+                   base=$1
+                   gotbase="yes"
+                   shift
+                   ;;
+            --user)
+                   shift
+                   daemon_user=$1
+                   shift
+                   ;;
+            -*|+*) nicelevel=$1
+                   shift
+                   ;;
+             *)    nicelevel=0
+                   ;;
+          esac
+        done
+
+        # Save basename.
+        [ -z $gotbase ] &#38;&#38; base=`basename $1`
+
+        # make sure it doesn't core dump anywhere; while this could mask
+        # problems with the daemon, it also closes some security problems
+        ulimit -S -c 0 &#62;/dev/null 2&#62;&#38;1
+
+        # Echo daemon
+        [ "$BOOTUP" = "verbose" ] &#38;&#38; echo -n " $base"
+
+        # And start it up.
+        if [ -z "$daemon_user" ]; then
+           nice -n $nicelevel initlog $INITLOG_ARGS -c "$*" &#38;&#38; success "$base startup" || failure "$base startup"
+        else
+           nice -n $nicelevel initlog $INITLOG_ARGS -c "su $daemon_user -c \"$*\"" &#38;&#38; success "$base startup" || failure "$base startup"
+        fi
+}
+
+# Specify your network interface(s) here
+INTERFACE="eth1 eth2"
+
+# See how we were called.
+case "$1" in
+start)
+        if [ -x /usr/bin/swatch ] ; then
+          echo -n "Starting swatch: "
+          # inserted poppi to make use of swatch
+          # starting it before snort to get hints on startup errors of snort
+          # if using the snort option -s use /var/log/secure,
+          # if using output alert_syslog: in snort.conf use /var/log/messages
+          /usr/bin/swatch --daemon --tail /var/log/messages --config-file /etc/swatch/swatchrc &#38;
+          touch /var/lock/subsys/swatch
+          echo "done."
+          echo
+        fi
+
+        # added multiple interfaces option
+        for i in `echo "$INTERFACE"` ; do
+          echo -n "Starting snort on interface $i: "
+          # inserted to implement ip-less sniffer interface for snort at startup
+          # if the interface is not yet loaded or if the interface isn't up yet
+          if [ `/sbin/ifconfig $i 2&#62;&#38;1 | /bin/grep -c "Device not found"` = "0" \
+               -o `/sbin/ifconfig $i 2&#62;&#38;1 | /bin/grep -c "UP"` = "0" ] ; then
+
+            # check for interfaces other than ethernet!
+            if [ `echo $i | /bin/grep -c "^eth"` = "1" ] ; then
+              # check if there is a config for the given interface
+              # normally this should be omitted for security reasons for a sniffer interface
+              if [ -s "/etc/sysconfig/network-scripts/ifcfg-$i" ]; then
+                # use the config
+                /sbin/ifup $i
+              else
+                # ip less sniffer interface
+                /sbin/ifconfig $i up promisc
+              fi
+            fi
+          fi
+          # call the rewritten daemon function from above
+          daemonMult /usr/sbin/snort -u snort -g snort -d -D \
+                 -i $i -I -l /var/log/snort -c /etc/snort/snort.conf
+          echo
+        done
+
+        touch /var/lock/subsys/snortd
+
+        ;;
+  stop)
+        echo -n "Stopping snort: "
+        killproc snort
+        rm -f /var/lock/subsys/snortd
+
+        # inserted Poppi
+        if [ -x /usr/bin/swatch ] ; then
+          echo
+          echo -n "Stopping swatch: "
+          kill `ps x|grep "/usr/bin/swatch"|grep -v grep|awk '{ print $1 }'`
+          rm -f /var/lock/subsys/swatch
+        fi
+
+        # shutdown interface if and only if it has NO ip address
+        # and if it is a ethernet interface
+        # this is done because we don't want to shutdown interfaces still needed
+        for i in `echo "$INTERFACES"`; do
+          if [`echo $i | /bin/grep -c "^eth"` = "1" -a \
+              `/sbin/ifconfig $i 2&#62;&#38;1 | /bin/grep -c "inet addr:"` = "0" ] ; then
+            /sbin/ifconfig $i down
+          fi
+        done
+        echo
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        ;;
+  status)
+        status snort
+        #status swatch
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+esac
+exit 0
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="SNORT-CHECK">4.2.3. /etc/snort/snort-check</H3
+><P
+>     This shell script is used to generate winpopups via
+     <EM
+>smbclient</EM
+> or sending emails to given persons. It was
+     inspired by Bill Richardson's script published on the snort homepage.
+    </P
+><P
+>     The winpopup part may be obsoleted by the <EM
+>smb</EM
+> output
+     module introduced in snort 1.8 but I haven't tested it yet.
+    </P
+><P
+>     <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>#!/bin/sh
+
+# Script to be run from within swatch to send alerts in multiple formats
+# inspired from script on www.snort.org by Bill Richardson
+# extended to read a file called "hosts" with names of
+# workstation to send a winpopup, syntax is the same as with snortd option -M
+# Poppi, 02.05.2001
+
+# Prerequisites:
+# Samba set up correctly
+# Change the following variables according to your system (for RedHat 7.x user it should be ok)
+
+# hostfile holds the name of the file containing the workstation for winpopups
+hostfile="/etc/snort/hosts"
+
+# recipientfile holds the addresses of all recipients in a single file,
+# seperated by newline
+recipientfile="/etc/snort/recipients"
+
+# if a recipient file exists
+if [ -s "$recipientfile" ] ; then
+  # generate the recipientlist with email adresses.
+  for i in `cat $recipientfile` ; do
+    recipients="$recipients "$i
+  done
+
+  echo "$*" | mail -s "Snort-Alert!!!" "$recipients"
+fi
+
+# if a hostfile exists, send winpopups
+if [ -s "$hostfile" ] ; then
+  for i in `cat $hostfile` ; do
+    echo "Snort-Alert! $*" | smbclient -M $i &#62; /dev/null 2&#62;&#38;1
+  done
+fi
+     </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+    </P
+><DIV
+CLASS="SECT4"
+><H4
+CLASS="SECT4"
+><A
+NAME="SNORT-CHECK-HOSTS">4.2.3.1. /etc/snort/hosts</H4
+><P
+>      In this file you put in all the workstation names of the hosts which
+      should get the snort message, one per line:
+     </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>       ws001
+       ws002
+       ws003
+      </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+     </P
+></DIV
+><DIV
+CLASS="SECT4"
+><H4
+CLASS="SECT4"
+><A
+NAME="SNORT-CHECK-RECIPIENTS">4.2.3.2. /etc/snort/recipients</H4
+><P
+>      In <EM
+>/etc/snort/recipients</EM
+> you put in email addresses
+      of recipients who wish (or are urged to ;) receive your snort alarms, one
+      address per line:
+     </P
+><P
+>      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>       jane@internal.local.com
+       henk@snort.info
+       sandro@snort.info
+      </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+     </P
+><P
+>      If any of these two files is omitted then the corresponding feature is
+      disabled.
+     </P
+></DIV
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="SNORT-INT-STAT">4.2.4. Snort internal Statistics</H3
+><P
+>     Snort has the ability built in to print out some internal statistics. This
+     can be achieved using the following command:
+    </P
+><P
+>     <B
+CLASS="COMMAND"
+>      /bin/kill -SIGUSR1 &#60;pid of snort&#62;
+     </B
+>
+    </P
+><P
+>     or if you have more than one snort process running on the same machine and
+     want to get info about all at once:
+    </P
+><P
+>     <B
+CLASS="COMMAND"
+>      /bin/killall -USR1 snort
+     </B
+>
+    </P
+><P
+>     With either of these commands you get internal statistics in the following
+     way in your syslog (<EM
+>/var/log/messages</EM
+> with RedHat):
+    </P
+><P
+>     <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>Sep 29 07:51:48 ids01 snort[8000]:   ===============================================================================
+Sep 29 07:51:48 ids01 snort[8000]: Snort analyzed 27316 out of 27316 packets,
+Sep 29 07:51:48 ids01 snort[8000]: dropping 0(0.000%) packets
+Sep 29 07:51:48 ids01 snort[8000]: Breakdown by protocol:                Action Stats:
+Sep 29 07:51:48 ids01 snort[8000]:     TCP: 27152      (99.400%)         ALERTS: 0
+Sep 29 07:51:48 ids01 snort[8000]:     UDP: 0          (0.000%)          LOGGED: 0
+Sep 29 07:51:48 ids01 snort[8000]:    ICMP: 164        (0.600%)          PASSED: 0
+Sep 29 07:51:48 ids01 snort[8000]:     ARP: 0          (0.000%)
+Sep 29 07:51:48 ids01 snort[8000]:    IPv6: 0          (0.000%)
+Sep 29 07:51:48 ids01 snort[8000]:     IPX: 0          (0.000%)
+Sep 29 07:51:48 ids01 snort[8000]:   OTHER: 0          (0.000%)
+Sep 29 07:51:48 ids01 snort[8000]: DISCARD: 0          (0.000%)
+Sep 29 07:51:48 ids01 snort[8000]: ===============================================================================
+Sep 29 07:51:48 ids01 snort[8000]: Fragmentation Stats:
+Sep 29 07:51:48 ids01 snort[8000]: Fragmented IP Packets: 0          (0.000%)
+Sep 29 07:51:48 ids01 snort[8000]:     Fragment Trackers: 0
+Sep 29 07:51:48 ids01 snort[8000]:    Rebuilt IP Packets: 0
+Sep 29 07:51:48 ids01 snort[8000]:    Frag elements used: 0
+Sep 29 07:51:48 ids01 snort[8000]: Discarded(incomplete): 0
+Sep 29 07:51:48 ids01 snort[8000]:    Discarded(timeout): 0
+Sep 29 07:51:48 ids01 snort[8000]:   Frag2 memory faults: 0
+Sep 29 07:51:48 ids01 snort[8000]: ===============================================================================
+Sep 29 07:51:48 ids01 snort[8000]: TCP Stream Reassembly Stats:
+Sep 29 07:51:48 ids01 snort[8000]:         TCP Packets Used: 27152      (99.400%)
+Sep 29 07:51:48 ids01 snort[8000]:          Stream Trackers: 1
+Sep 29 07:51:48 ids01 snort[8000]:           Stream flushes: 0
+Sep 29 07:51:48 ids01 snort[8000]:            Segments used: 0
+Sep 29 07:51:48 ids01 snort[8000]:    Stream4 Memory Faults: 0
+Sep 29 07:51:48 ids01 snort[8000]: ===============================================================================
+     </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>     But remember: With versions prior to 1.8.3 you have to restart snort to get
+     new statistics, so always combine the <B
+CLASS="COMMAND"
+>kill -SIGUSR1</B
+> with
+     a snort restart if not using the actual version!
+    </P
+><P
+>     You first should have a look on the first 2 lines. If snort tells you that
+     there are dropped packets you have to take a very close look on your
+     configuration of the snort box itself not only (but including) the snort
+     configuration.
+    </P
+><P
+>     E.g. stop all unnecessary services which are not vital for the box. And
+     take a look on the output of the <B
+CLASS="COMMAND"
+>top</B
+> command. If the
+     idle counter is very low you should figure out which processes eat up all
+     of your cpu time and eventually outsource the corresponding program
+     packets. This is e.g. true when using ACID and the underlying database and
+     snort on the same machine with less memory and/or cpu.
+    </P
+><P
+>     The other statistical data lines give you an overview of some of the
+     preprocessors and their work. You should also have a look on the memory
+     faults sections. If the number is not 0 you should have a look on your
+     memory usage and eventually configure the preprocessors to use more memory
+     (take a look to the appropriate section in
+     <EM
+>/etc/snort/snort.conf</EM
+>).
+    </P
+><P
+>     Now a short script which I was inspired by Greg Sarsons to get snort's
+     internal statistics, save them to a file and restart snort.
+    </P
+><P
+>     The statistics file will be archived to
+     <EM
+>/var/log/snort/archive</EM
+> so you have to create that
+     directory first ;)
+    </P
+><P
+>     <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>#!/bin/bash
+# Script to generate and extract snort statistics from syslog or given file
+# generated after kill -USR1 &#60;snort-pid&#62;
+#
+# This script assumes that the pid is logged into the logfile!
+# This can be obtained using  the following line in snort.conf:
+# output alert_syslog: LOG_AUTH LOG_ALERT LOG_PID
+#
+# (c) Sandro Poppi 2001
+# Released under GPL
+
+echo "Starting gathering snort internal statistics. Please be patient..."
+
+if [ "$1." == "." -o ! -e "$1" ] ; then
+  # no or unexistent file given, using default
+  log_file="/var/log/messages"
+
+else
+  # when using non-standard logfile location make sure snort uses this logfile
+  # when sending signal USR1 else this script won't work!
+  log_file="$1"
+fi
+
+# find out snort pids
+snort_pid=`/sbin/pidof snort`
+
+# get internal statistics for all snort processes
+# not using killall to get already sorted output
+for i in `echo $snort_pid` ; do
+  kill -USR1 $i
+  
+  # sleep for 2 secs to let snort time to send statistics to syslog ;)
+  sleep 2
+done
+  
+# immediately restart snort after sending signal USR1
+# this may be ommitted when using CVS version of snort after about 01.11.2001
+# or any version from 1.8.2 or higher
+/etc/rc.d/init.d/snortd restart
+
+for i in `echo $snort_pid` ; do
+  # process logfile
+
+  filename=/var/log/snort/archive/snort.`date "+%Y-%m-%d"`.$i.log
+    
+  # check for existing file and rename it if existing
+  if [ -e "$filename" ] ; then
+    mv "$filename" "$filename.bak"
+  fi
+  
+  egrep "snort\[$i\]:" $log_file &#62; "$filename"
+  
+  # check if there are dropped packets using lines like
+  # Oct 22 18:02:06 xbgh17183 snort[573]: dropping 0(0.000%) packets 
+  if [ "`egrep "dropping" $filename | awk -F "[ (]" '{ print $7 }'`" != "0" -a \
+       "`egrep -c "dropping" $filename`" != "0" ] ; then
+    echo "Snort's dropping packets!!! Take a look on the configuration and/or the system's performance!!!"
+  fi 
+  
+done
+
+echo "Gathering snort internal statistics finished..."
+     </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+    </P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="SNORT-TEST">4.2.5. Testing Snort</H3
+><P
+>     To test snort you should edit <EM
+>/etc/rc.d/init.d/snortd</EM
+>
+     and make the interface listen on the loopback device
+     <EM
+>lo</EM
+>. For people with a network card installed you can
+     use <EM
+>eth0</EM
+> instead but you have to use a second pc to
+     run snot because no packet is sent over the interface if snot and snort are
+     run on the same machine!
+    </P
+><P
+>     Probably the simplest way to test snort is to use <EM
+>snot</EM
+>
+     which can be found on <A
+HREF="http://www.sec33.com/sniph/"
+TARGET="_top"
+>http://www.sec33.com/sniph/</A
+>.
+    </P
+><P
+>     You have to have libnet installed for snot. Since on RedHat 7.x there is no
+     RPM available you could use <EM
+>libnet-1.0.2-6mdk.i586.rpm</EM
+>
+     from Mandrake Soft, which can be found on <A
+HREF="http://rpmfind.net/"
+TARGET="_top"
+>http://rpmfind.net/</A
+> and of course on
+     Mandrake's site <A
+HREF="http://www.mandrake.com/"
+TARGET="_top"
+>http://www.mandrake.com/</A
+>. Most
+     Mandrake RPMs could be used with no problem on a RedHat system. But be
+     warned: Mandrake does not provide <EM
+>i386</EM
+> RPMs so you
+     can't use them with a processor less than an old Pentium P5. In such a case
+     you have to get the sources from <A
+HREF="http://www.packetfactory.net/projects/libnet"
+TARGET="_top"
+>http://www.packetfactory.net/projects/libnet</A
+>
+and compile it from scratch yourself.
+    </P
+><P
+>     To compile snot you only have to untar the tarball, cd into the snot
+     directory and call <EM
+>make</EM
+>. If compilation exits without
+     an error snot is ready to use, if not you are almost always missing some
+     development packages.
+    </P
+><P
+>     To prepare snot you should first copy
+     <EM
+>/etc/snort/snort.conf</EM
+> into the snot directory and
+     <EM
+>cat</EM
+> one or more rule files to the end of the copied
+     <EM
+>snort.conf</EM
+> using e.g.:
+    </P
+><P
+>     <B
+CLASS="COMMAND"
+>      cat /etc/snort/backdoor.rules &#62;&#62; snort.conf
+     </B
+>
+    </P
+><P
+>     Then on one console you should call <B
+CLASS="COMMAND"
+>tail -f
+     /var/log/messages</B
+>, while on another you should try to run the
+     tests. 
+    </P
+><P
+>     Snot can then be called the following way assuming you used
+     <EM
+>lo</EM
+> as the interface name in the snortd initscript:
+    </P
+><P
+>     <B
+CLASS="COMMAND"
+>      ./snot -r snort.conf -d localhost -n 5
+     </B
+>
+    </P
+><P
+>     With that command you tell snot to use the copied
+     <EM
+>snort.conf</EM
+>, the destination
+     is <EM
+>localhost</EM
+> and for not triggering too many alerts
+     restrict it to a maximum of 5.
+    </P
+><P
+>     You'll probably get some messages saying ignoring additional parameters
+     because snot can not handle yet the new parameters introduced in snort 1.8.
+     Don't panic, just ignore the messages, snot works fine though.
+    </P
+><P
+>     In <EM
+>/var/log/messages</EM
+> you should now see some snort
+     alerts, e.g.:
+    </P
+><P
+>     <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>Sep 10 18:22:33 ids01 snort[1536]: &#60;lo&#62; GateCrasher access: 192.168.213.151:6969 -&#62; 127.0.0.1:3170
+Sep 10 18:22:33 ids01 snort[1536]: &#60;lo&#62; GateCrasher access: 192.168.213.151:6969 -&#62; 127.0.0.1:3170
+Sep 10 18:22:33 ids01 snort[1536]: &#60;lo&#62; GateCrasher access: 192.168.155.231:6969 -&#62; 127.0.0.1:57580
+Sep 10 18:22:33 ids01 snort[1536]: &#60;lo&#62; GateCrasher access: 192.168.155.231:6969 -&#62; 127.0.0.1:57580
+Sep 10 18:22:33 ids01 snort[1536]: &#60;lo&#62; Deep Throat access: 192.168.170.42:2140 -&#62; 127.0.0.1:60521
+     </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>     If you get similiar alerts it's ok, if not please take again a look on your
+     configuration until you get this far.
+    </P
+><P
+>     Now it's time to edit <EM
+>/etc/snort/snort.conf</EM
+> again and
+     put in the correct value to the <EM
+>INTERFACE</EM
+> variable,
+     restart snort and get a cup of coffee. You have deserved it!
+    </P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="MYSQL-CONFIG">4.3. Configuring MySQL</H2
+><P
+>    To allow Snort to send alerts to MySQL you first have to install MySQL. With
+    most linux distributions there are MySQL packages available so you should
+    use them. If not you'll probably have to compile and install it from scratch
+    by downloading the tarball from <A
+HREF="http://www.mysql.org/"
+TARGET="_top"
+>http://www.mysql.org/</A
+>. Take a look at
+    the documentation shipped with MySQL to set it up.
+   </P
+><P
+>    When you have a running MySQL daemon (with RedHat after installing the RPMs
+    run <B
+CLASS="COMMAND"
+>/etc/rc.d/init.d/mysql start</B
+>) you have to initialize
+    a snort database. This is documented in the next section.
+   </P
+><P
+>    Since there should be a password set for each account you'll have to use the
+    <EM
+>-p</EM
+> option on the mysql commandline.
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>[root@ids01 /root]# mysql -u root -p
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 133 to server version: 3.23.32
+
+Type 'help;' or '\h' for help. Type '\c' to clear the buffer
+
+mysql&#62;create database snort;
+Query OK, 1 row affected (0.00 sec)
+
+mysql&#62; connect snort
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Connection id:    139
+Current database: snort
+
+mysql&#62; status
+--------------
+mysql  Ver 11.12 Distrib 3.23.32, for redhat-linux-gnu (i386)
+
+Connection id:          139
+Current database:       snort
+Current user:           root@localhost
+Current pager:          stdout
+Using outfile:          ''
+Server version:         3.23.32
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Client characterset:    latin1
+Server characterset:    latin1
+UNIX socket:            /var/lib/mysql/mysql.sock
+Uptime:                 1 day 2 hours 6 min 21 sec
+
+Threads: 14  Questions: 4272  Slow queries: 0  Opens: 58  Flush tables: 1  Open tables: 18 Queries per second avg: 0.045
+--------------
+
+mysql&#62; grant CREATE,INSERT,SELECT,DELETE,UPDATE on snort.* to snort@localhost;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&#62; flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&#62; exit
+Bye
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    To generate the required table structure of the database use the
+    <EM
+>create_mysql</EM
+> script which can be found in the contrib
+    section of the original tarball or my RPM.
+   </P
+><P
+>    <B
+CLASS="COMMAND"
+>     [root@ids01 /root]# mysql -u root -p snort &#60; ./contrib/create_mysql
+    </B
+>
+   </P
+><P
+>    You'll have to add a userid/password pair for the database, remember to
+    change <EM
+>xxxx</EM
+> to a password suitable for your
+    environment!
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>[root@ids01 /root]# mysql -u root -p mysql
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 148 to server version: 3.23.32
+
+Type 'help;' or '\h' for help. Type '\c' to clear the buffer
+
+mysql&#62; insert into user (User,Password) values('snort',PASSWORD('xxxx'));
+Query OK, 1 row affected (0.00 sec)
+
+mysql&#62; exit
+Bye
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    Now add some extra tables for your convenience shipped in the contrib
+    section of the snort tarball and my RPM using the command
+   </P
+><P
+>    <B
+CLASS="COMMAND"
+>     zcat snortdb-extra.gz | mysql -u root -p snort
+    </B
+>
+   </P
+><P
+>    If you wish to use the archiving feature of ACID you'll have to create
+    another database <EM
+>snort_archive</EM
+> (or any other name you
+    prefer) exactly the same way as you defined the <EM
+>snort</EM
+>
+    database.
+   </P
+><P
+>    From now on the database is ready to be used for logging with the database
+    output module of snort which you could now activate in
+    <EM
+>/etc/snort/snort.conf</EM
+>.
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="ADODB-CONFIG">4.4. Configuring ADODB</H2
+><P
+>    ADODB is a required part for ACID. It delivers database connection support
+    for PHP based programs like ACID.
+   </P
+><P
+>    Install ADODB in a directory available for your webserver. On a RedHat box
+    this usually is <EM
+>/var/www/html/adodb/</EM
+>.
+   </P
+><P
+>    In ADODB version 1.31 there is a bug in <EM
+>adodb.inc.php</EM
+>
+    which may still exist in newer versions. You'll have to change the path in
+    line 40 to reflect your local requirements. It's vital to delete the command
+    <B
+CLASS="COMMAND"
+>dirname()</B
+> completely so that it looks like this:
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+> if (!defined('_ADODB_LAYER')) {
+        define('_ADODB_LAYER',1);
+
+        define('ADODB_FETCH_DEFAULT',0);
+        define('ADODB_FETCH_NUM',1);
+        define('ADODB_FETCH_ASSOC',2);
+        define('ADODB_FETCH_BOTH',3);
+
+        GLOBAL
+                $ADODB_vers,            // database version
+                $ADODB_Database,        // last database driver used
+                $ADODB_COUNTRECS,       // count number of records returned - slows down query
+                $ADODB_CACHE_DIR,       // directory to cache recordsets
+                $ADODB_FETCH_MODE;      // DEFAULT, NUM, ASSOC or BOTH. Default follows native driver default...
+
+        $ADODB_FETCH_MODE = ADODB_FETCH_DEFAULT;
+        /**
+         * SET THE VALUE BELOW TO THE DIRECTORY WHERE THIS FILE RESIDES
+         * ADODB_RootPath has been renamed ADODB_DIR
+         */
+        if (!defined('ADODB_DIR')) define('ADODB_DIR','/var/www/html/adodb');
+
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    That's all what has to be done with ADODB.
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="PHPLOT-CONFIG">4.5. Configuring PHPlot</H2
+><P
+>    After downloading PHPlot just tar the package into a directory visible for
+    your webserver. On a RedHat box this usually is
+    <EM
+>/var/www/html/phplot/</EM
+>. Nothing to configure here.
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="ACID-CONFIG">4.6. Configuring ACID</H2
+><P
+>    As stated before ACID needs a couple of additional programs installed to
+    work correctly. While a database system like MySQL version 3.23+, a
+    webserver with PHP 4.0.2+ support like <EM
+>apache</EM
+> with the
+    PHP module <EM
+>mod_php</EM
+> and ADODB version 0.93+ are
+    required, the graphics library <EM
+>gd</EM
+> version 1.8+ and
+    PHPlot version 4.4.6+ are optional but recommended. Since
+    <EM
+>apache</EM
+>, the PHP module and 
+    <EM
+>gd</EM
+> are almost always included and installed with any
+    linux distribution they are not covered in this document.
+   </P
+><P
+>    For snort 1.8+ you'll need at least ACID 0.9.6b13. ACID is shipped with my
+    RPM in the contrib section but may be an outdated version since ACID is
+    developed rapidly. So you should always have a look at ACID's homepage if a
+    newer version exists.
+   </P
+><P
+>    Install ACID into a directory visible to your webserver like
+    <EM
+>/var/www/html/acid/</EM
+>.
+   </P
+><P
+>    In <EM
+>/var/www/html/acid/acid_conf.php</EM
+> you'll have to edit
+    some variables to suit your environment.
+   </P
+><P
+>    First of all define the database type in the variable
+    <EM
+>DBtype</EM
+>. Next define all <EM
+>alert_*</EM
+>
+    and <EM
+>archive_*</EM
+> variables.
+   </P
+><P
+>    In <EM
+>ChartLib_path</EM
+> you define the path to PHPlot, in our
+    case <EM
+>/var/www.html/phplot</EM
+>.
+   </P
+><P
+>    The last variable you have to define is <EM
+>portscan_file</EM
+>
+    where you put in the complete path and filename of snort's portscan logfile.
+   </P
+><P
+>    All other variables should be sufficient for now. You can edit them to suit
+    your needs.
+   </P
+><P
+>    Here's the config I use:
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>&#60;?php
+
+$ACID_VERSION = "0.9.6b15";
+
+/* Path to the DB abstraction library
+ *  (Note: DO NOT include a trailing backslash after the directory)
+ *   e.g. $foo = "/tmp"      [OK]
+ *        $foo = "/tmp/"     [OK]
+ *        $foo = "c:\tmp"    [OK]
+ *        $foo = "c:\tmp\"   [WRONG]
+ */
+$DBlib_path = "/var/www/html/adodb";
+
+/* The type of underlying alert database
+ *
+ *  MySQL       : "mysql"
+ *  PostgresSQL : "postgres"
+ */
+$DBtype = "mysql";
+
+/* Alert DB connection parameters
+ *   - $alert_dbname   : MySQL database name of Snort alert DB
+ *   - $alert_host     : host on which the DB is stored
+ *   - $alert_port     : port on which to access the DB
+ *   - $alert_user     : login to the database with this user
+ *   - $alert_password : password of the DB user
+ *
+ *  This information can be gleaned from the Snort database
+ *  output plugin configuration.
+ */
+$alert_dbname   = "snort";
+$alert_host     = "localhost";
+$alert_port     = "";
+$alert_user     = "snort";
+$alert_password = "xxxx";
+
+/* Archive DB connection parameters */
+$archive_dbname   = "snort_archive";
+$archive_host     = "localhost";
+$archive_port     = "";
+$archive_user     = "snort";
+$archive_password = "xxxx";
+
+/* Type of DB connection to use
+ *   1  : use a persistant connection (pconnect)
+ *   2  : use a normal connection (connect)
+ */
+$db_connect_method = 1;
+
+/* Path to the graphing library
+ *  (Note: DO NOT include a trailing backslash after the directory)
+ */
+$ChartLib_path = "/var/www/html/phplot";
+
+/* File format of charts ('png', 'jpeg', 'gif') */
+$chart_file_format = "png";
+
+/* Chart default colors - (red, green, blue)
+ *    - $chart_bg_color_default    : background color of chart
+ *    - $chart_lgrid_color_default : gridline color of chart
+ *    - $chart_bar_color_default   : bar/line color of chart
+ */
+$chart_bg_color_default     = array(255,255,255);
+$chart_lgrid_color_default  = array(205,205,205);
+$chart_bar_color_default    = array(190, 5, 5);
+
+/* Maximum number of rows per criteria element */
+$MAX_ROWS = 20;
+
+/* Number of rows to display for any query results */
+$show_rows = 50;
+
+/* Number of items to return during a snapshot
+ *  Last _X_ # of alerts/unique alerts/ports/IP
+ */
+$last_num_alerts = 15;
+$last_num_ualerts = 15;
+$last_num_uports = 15;
+$last_num_uaddr = 15;
+
+/* Number of items to return during a snapshot
+ *  Most Frequent unique alerts/IPs/ports
+ */
+$freq_num_alerts = 5;
+$freq_num_uaddr = 15;
+$freq_num_uports = 15;
+
+/* Number of scroll buttons to use when displaying query results */
+$max_scroll_buttons = 12;
+
+/* Debug mode     - how much debugging information should be shown
+ * Timing mode    - display timing information
+ * SQL trace mode - log SQL statements
+ *   0 : no extra information
+ *   1 : debugging information
+ *   2 : extended debugging information
+ *
+ * HTML no cache - whether a no-cache directive should be sent
+ *                 to the browser (should be = 1 for IE)
+ *
+ * SQL trace file - file to log SQL traces
+ */
+$debug_mode = 0;
+$debug_time_mode = 1;
+$html_no_cache = 1;
+$sql_trace_mode = 0;
+$sql_trace_file = "";
+
+/* Auto-Screen refresh
+ * - Refresh_Stat_Page - Should certain statistics pages refresh?
+ * - Stat_Page_Refresh_Time - refresh interval (in seconds)
+ */
+$refresh_stat_page = 1;
+$stat_page_refresh_time = 180;
+
+/* Display First/Previous/Last timestamps for alerts or
+ * just First/Last on the Unique Alert listing.
+ *    1: yes
+ *    0: no
+ */
+$show_previous_alert = 1;
+
+/* Sets maximum execution time (in seconds) of any particular page.
+ * Note: this overrides the PHP configuration file variable
+ *       max_execution_time.  Thus script can run for a total of
+ *       ($max_script_runtime + max_execution_time) seconds
+ */
+$max_script_runtime = 180;
+
+/* How should the IP address criteria be entered in the Search screen?
+ *   1 : each octet is a separate field
+ *   2 : entire address is as a single field
+ */
+$ip_address_input = 2;
+
+/* Resolve IP to FQDN (on certain queries?)
+ *    1 : yes
+ *    0 : no
+ */
+$resolve_IP = 0;
+
+/* Should summary stats be calculated on every Query Results page
+ * (Enabling this option will slow page loading time)
+ */
+$show_summary_stats = 1;
+
+/* DNS cache lifetime (in minutes) */
+$dns_cache_lifetime = 20160;
+
+/* Whois information cache lifetime (in minutes) */
+$whois_cache_lifetime = 40320;
+
+/* Snort spp_portscan log file */
+$portscan_file = "/var/log/snort/portscan.log";
+
+/* Event cache Auto-update
+ *
+ *  Should the event cache be verified and updated on every
+ *  page log?  Otherwise, the cache will have to be explicitly
+ *  updated from the 'cache and status' page.
+ *
+ *  Note: enabling this option could substantially slow down
+ *  the page loading time when there are many uncached alerts.
+ *  However, this is only a one-time penalty.
+ *
+ *   1 : yes
+ *   0 : no
+ */
+$event_cache_auto_update = 1;
+
+/* Link to external Whois query */
+$external_whois_link = "http://www.samspade.org/t/ipwhois?a=";
+
+?&#62;
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    You wonder why I use <EM
+>xxxx</EM
+> as password? Well, do you
+    like your password to be available for everyone in the world? j/k &#62;8)
+   </P
+><P
+>    When first calling ACID via your browser you'll get a hint that you have to
+    install ACID support in the chosen database. Click on
+    <EM
+>Setup</EM
+> and ACID should create the required entries in
+    the database. If everything is set up correctly you'll get all informations
+    which are currently in the database, normally nothing at this time ;)
+   </P
+><P
+>    Try to trigger some snort rules with <EM
+>snot</EM
+> (see section
+    above) or e.g. <EM
+>nmap</EM
+> (see <A
+HREF="http://www.nmap.org/"
+TARGET="_top"
+>http://www.nmap.org/</A
+>, a portscanner with
+    many more capabilities) or <EM
+>nessus</EM
+> (see <A
+HREF="http://www.nessus.org/"
+TARGET="_top"
+>http://www.nessus.org/</A
+>, a security
+    scanner to find vulnerabilities of a system).
+   </P
+><P
+>    Now you should get all alarms right the time they happen with ACID.
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="SNORTSNARF-CONFIG">4.7. Configuring SnortSnarf</H2
+><P
+>    SnortSnarf is another tool which analyses snort's logfile instead of a
+    database.
+   </P
+><P
+>    Install SnortSnarf by taring it into a directory you like, I use
+    <EM
+>/opt/SnortSnarf/</EM
+>.
+   </P
+><P
+>    Copy <EM
+>/opt/SnortSnarf/Time-modules/lib/Time</EM
+> to
+    <EM
+>/opt/SnortSnarf/include/SnortSnarf/Time</EM
+> to make the
+    required perl modules available for SnortSnarf .
+   </P
+><P
+>    Copy the following files to the webserver's <EM
+>cgi-bin</EM
+>
+    directory (e.g. <EM
+>/var/www.cgi-bin/</EM
+>):
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>     /opt/SnortSnarf/cgi/*
+     /opt/SnortSnarf/include/ann_xml.pl
+     /opt/SnortSnarf/include/web_utils.pl
+     /opt/SnortSnarf/include/xml_help.pl
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    If you would like to use the annotation feature with which you can create
+    notes to an incident in SnortSnarf you first have to create the directory
+    <EM
+>/var/www/html/SnortSnarf/annotations</EM
+>, copy
+    <EM
+>/opt/SnortSnarf/new-annotation-base.xml</EM
+> to
+    <EM
+>/var/www/html/SnortSnarf/annotations</EM
+> and call
+   </P
+><P
+>    <B
+CLASS="COMMAND"
+>./setup_anns_dir.pl -g apache /var/www/html/SnortSnarf/annotations</B
+>
+   </P
+><P
+>    in <EM
+>/opt/SnortSnarf/utilities</EM
+>.
+   </P
+><P
+>    Check the rights in
+    <EM
+>/var/www/html/SnortSnarf/annotations</EM
+> and make them look
+    like this:
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>[root@ids01 SnortSnarf]# ll -a /var/www/html/SnortSnarf/annotations/
+total 16
+drwxrwx---    2 root     apache       4096 May 23 14:31 .
+drwxr-xr-x    8 root     root         4096 May 23 14:17 ..
+-rw-r--r--    1 apache   apache        478 May 23 14:31 new-annotation-base.xml
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    I created a wrapper script called
+    <EM
+>/opt/SnortSnarf/snortsnarf.sh</EM
+> to get rid of the nasty
+    @INC errors (someone with better perl know-how could give me a hint how to
+    get rid of the errors, thx). I'm calling
+    <EM
+>/opt/SnortSnarf/snortsnarf.sh</EM
+> via cron every hour from
+    6 am to 6 pm.
+   </P
+><P
+>    My crontab enrty looks like this:
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+># generate SnortSnarf statistics every hour from 6am to 6pm
+0 6,7,8,9,10,11,12,13,14,15,16,17,18 * * * /opt/SnortSnarf/snortsnarf.sh
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    SnortSnarf is called to analyse five logfiles
+    <EM
+>/var/log/messages*</EM
+>, put the generated HTML files into
+    <EM
+>/var/www/html/SnortSnarf</EM
+> and make use of the annotation
+    feature which is described above.
+   </P
+><P
+>    Here's the <EM
+>/opt/SnortSnarf/snortsnarf.sh</EM
+> listing:
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>#!/bin/sh
+# wrapper for use with crontab to get rid of the @INC problem
+# Poppi, 22.05.2001
+cd /opt/SnortSnarf
+./snortsnarf.pl -d /var/www/html/SnortSnarf -db /var/www/html/SnortSnarf/annotations/new-annotation-base.xml -dns -rulesfile /etc/snort/snort.conf -ldir "file://var/log/snort/" /var/log/messages /var/log/messages.1 /var/log/messages.2 /var/log/messages.3 /var/log/messages.4
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    Test SnortSnarf by calling <EM
+>snortsnarf.sh</EM
+> and take a
+    look with your browser to <EM
+>/var/www/html/SnortSnarf/</EM
+>.
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="ARACHNIDSUPD-CONFIG">4.8. Configuring Arachnids_upd</H2
+><P
+>    Be warned: Automatic updating the rules without any encryption or
+    athentication can create backdoors because the rules could be compromised to
+    allow an attacker to be hidden from your IDS! So use that with care!
+   </P
+><P
+>    Another issue is that www.whitehats.com is often offline so no rules can be
+    downloaded.
+   </P
+><P
+>    Untar the arachnids_upd package to a directory of your choice, I choose
+    <EM
+>/opt/arachnids_upd/</EM
+>.
+   </P
+><P
+>    For snort 1.8+ you'll have to edit
+    <EM
+>/opt/arachnids_upd/arachnids_upd.pl</EM
+> and change the
+    filename of the file to download to:
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>     my $url = "http://www.whitehats.com/ids/vision18.rules.gz";   # Default URL.
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    Since Arachnids_upd makes use of <EM
+>wget</EM
+> it should be
+    installed on your system and configured to work with your internet
+    connection.
+   </P
+><P
+>    An example version of ~.wgetrc is shown here for connecting via a proxy
+    server with user authentication:
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>     proxy_user = user
+     proxy_passwd = xxxx
+     http_proxy = &#60;proxy&#62;:&#60;port&#62;
+     ftp_proxy = &#60;proxy&#62;:&#60;port&#62;
+     use_proxy = on
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    Replace &#60;proxy&#62; with the name or ip address of your proxy and
+    &#60;port&#62; with the port number the proxy uses. If you don't use a proxy
+    you don't need any of these entries.
+   </P
+><P
+>    Again I created a shell script to get new rules, change the variable names
+    of <EM
+>vision.rules</EM
+> to suite the definition in
+    <EM
+>/etc/snort/snort.conf</EM
+> and restart snort for the new
+    rules to take effect.
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>#!/bin/sh
+# Script to generate the correct updates of vision.rules using arachnids_upd.pl
+# Poppi 22.05.2001
+
+# get new rules (requires ~/.wgetrc to be set up to access internet)
+/opt/arachnids_upd/arachnids_upd.pl -o /opt/arachnids_upd/vision.rules -b /opt/arachnids_upd/rules.backup/ -c
+
+# change the variable names according to the ones used in /etc/snort/snort.conf and copy the new file to the right place
+cat /opt/arachnids_upd/vision.rules | sed s/EXTERNAL/EXTERNAL_NET/g | sed s/INTERNAL/HOME_NET/g &#62; /etc/snort/vision.rules
+
+# restart snort for the rules to take effect
+/etc/rc.d/init.d/snortd restart
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    As arachnids_upd is also capable of deleting rules in
+    <EM
+>vision.rules</EM
+> while downloading you can if you like
+    edit <EM
+>/opt/arachnids_upd/arachnids.ignore</EM
+> and put in the
+    IDS numbers which should be ignored.
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>     # Put the IDS numbers of the rules that should be disabled in here.
+     # One number per line.
+
+     # Examples:
+
+     1      # Ignore IDS1
+     2      # Ignore IDS2
+     3      # Ignore ISD3
+     
+     # I think you get it now :)
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="SWATCH-CONFIG">4.9. Configuring Swatch</H2
+><P
+>    Swatch is an excellent package to take care for any logfile. It can be
+    configured using regular expressions to alert if anything bad is logged in
+    the logfile.
+   </P
+><P
+>    Swatch requires the following perl modules to be installed:
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+>     perl-TimeDate
+     perl-Date-Calc
+     perl-Time-HiRes
+     perl-File-Tail
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    Swatch is available as an RPM from <A
+HREF="http://www.lug-burghausen.org/projects/Snort-Statistics/swatch-3.0.2-1.noarch.rpm"
+TARGET="_top"
+>http://www.lug-burghausen.org/projects/Snort-Statistics/swatch-3.0.2-1.noarch.rpm</A
+>
+    along with the source RPM I created <A
+HREF="http://www.lug-burghausen.org/projects/Snort-Statistics/swatch-3.0.2-1.src.rpm"
+TARGET="_top"
+>http://www.lug-burghausen.org/projects/Snort-Statistics/swatch-3.0.2-1.src.rpm</A
+>.
+   </P
+><P
+>    Swatch is configured via a single config file
+    <EM
+>/etc/swatch/swatch.conf</EM
+>.
+   </P
+><P
+>    I'm shipping it with a demo <EM
+>swatch.conf</EM
+> containing two
+    rules for snort messages and snort errors shown below along with some other
+    examples from the original swatch package.
+   </P
+><P
+>    <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="PROGRAMLISTING"
+># global swatch.conf file
+# * Poppi, 30.04.2001
+# - initial version
+#
+# * Poppi, 08.06.2001
+# - added error support; make sure to start swatch BEFORE snort ;)
+#
+# Poppi, 19.09.2001
+# - added throttle for not getting too much alarms of the same incident
+
+# normal snort messages (with PID)
+# get rid of double alerts for 10 secs, e.g. pings
+watchfor /snort\[/
+        bell
+        exec /etc/snort/snort-check $0
+        throttle 00:00:10
+
+# snort error messages could be with or without the [!] indicator
+watchfor /snort: (\[\!\])* ERROR/
+        bell
+        exec /etc/snort/snort-check $0
+    </PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+   </P
+><P
+>    The first rule is for getting all alerts generated via the output module
+    <EM
+>alert_syslog</EM
+>, the second for getting any error messages
+    snort generates at startup if anything went wrong (like errors in a rule
+    file).
+   </P
+><P
+>    Both rules do ring the pc bell (well, if the sensor is used in a room
+    without operators in sight this does not make much sense ;) and make use of
+    the <EM
+>snort-check</EM
+> script described before to alert the
+    given persons. In <EM
+>$0</EM
+> swatch gives you the complete line
+    of the logfile entry which triggered swatch.
+   </P
+><P
+>    Swatch has to be started prior to snort. Instead of generating an own swatch
+    initscript with the correct <EM
+>chkconfig</EM
+> dates I chose to
+    include it in <EM
+>/etc/rc.d/init.d/snortd</EM
+> because the
+    dependencies of my use of swatch are such that I - again for me - decided to
+    do that. I know that's not the "fine english way", and the swatch part can
+    be put into an own initscript relatively easy. Maybe I will change this in
+    the future.
+   </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="technicaloverview.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="security-issues.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Technical Overview</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Security Issues</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

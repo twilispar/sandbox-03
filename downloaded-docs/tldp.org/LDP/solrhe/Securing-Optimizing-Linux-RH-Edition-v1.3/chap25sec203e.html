@@ -1,0 +1,617 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/ipsec.conf file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux FreeS/WAN VPN"
+HREF="fSWAn.html"><LINK
+REL="PREVIOUS"
+TITLE="Automatic or Manual Key connections"
+HREF="chap25sec203.html"><LINK
+REL="NEXT"
+TITLE="The /etc/ipsec.secrets file"
+HREF="chap25sec204.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap25sec203.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 25. Linux FreeS/WAN VPN</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap25sec204.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN14792"
+>25.6. The <TT
+CLASS="filename"
+>/etc/ipsec.conf</TT
+> file</A
+></H1
+><P
+>&#13;We must edit the <TT
+CLASS="filename"
+>ipsec.conf</TT
+> file <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/ipsec.conf</TT
+> and change the default values to fit our specifications for <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> configuration 
+and communication. Currently there are two types of section in this file <TT
+CLASS="filename"
+>/etc/ipsec.conf</TT
+>:
+<P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;A <TT
+CLASS="literal"
+>config</TT
+> section which specifies general configuration information for <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+>, 
+</P
+></LI
+><LI
+><P
+>&#13;A <TT
+CLASS="literal"
+>conn</TT
+> section which specifies an <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> connection. Its contents are not security-sensitive unless manual keying is being done, <EM
+>recall, manual keying is not recommended for security reasons</EM
+>.
+</P
+></LI
+></OL
+>
+<P
+></P
+><UL
+><LI
+><P
+>&#13;The first section type, called <TT
+CLASS="literal"
+>config</TT
+> setup, is the only config section known to the <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> software containing overall setup parameters for <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> that apply to all connections, and information 
+used when the software is being started.
+</P
+></LI
+><LI
+><P
+>&#13;The second type, called <TT
+CLASS="literal"
+>conn</TT
+>, contains a connection specification defining a network connection to be made using <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+>. The name it is given is arbitrary, and is simply used to identify 
+the connection to <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ipsec_auto</SPAN
+>(8)</SPAN
+> and <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ipsec_manual</SPAN
+>(8)</SPAN
+>.
+</P
+></LI
+></UL
+>
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;# /etc/ipsec.conf - FreeS/WAN <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> configuration file
+
+# More elaborate and more varied sample configurations can be found
+# in doc/examples.
+
+# basic configuration
+config setup
+        interfaces="ipsec0=eth0"
+        klipsdebug=none
+        plutodebug=none
+        plutoload=%search
+        plutostart=%search
+
+# sample connection
+conn deep-mail
+        left=208.164.186.1
+        leftsubnet=192.168.1.0/24
+        leftnexthop=205.151.222.250
+        right=208.164.186.2
+        rightsubnet=192.168.1.0/24
+        rightnexthop=205.151.222.251
+        keyingtries=0
+        auth=ah
+        auto=start
+        </PRE
+></TD
+></TR
+></TABLE
+>
+</P
+><P
+>             
+This tells <TT
+CLASS="filename"
+>ipsec.conf</TT
+> file to set itself up for this particular configuration setup with:
+<DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>interfaces="<TT
+CLASS="literal"
+>ipsec0</TT
+>=<TT
+CLASS="literal"
+>eth0</TT
+>"</B
+></DT
+><DD
+><P
+>&#13;This option specifies which appropriate virtual and physical interfaces for <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> to use. The default setting, <TT
+CLASS="envar"
+>interfaces=%defaultroute</TT
+>, will look for your default connection 
+to the Internet, or your corporate network. Also, you can name one or more specific interfaces to be used by FreeS/WAN. For example:
+</P
+></DD
+><DT
+><B
+>interfaces="<TT
+CLASS="literal"
+>ipsec0</TT
+>=<TT
+CLASS="literal"
+>eth0</TT
+>"
+interfaces="<TT
+CLASS="literal"
+>ipsec0</TT
+>=<TT
+CLASS="literal"
+>eth0</TT
+> ipsec1=ppp0"</B
+></DT
+><DD
+><P
+>&#13;Both set the <TT
+CLASS="literal"
+>eth0</TT
+> interface as <TT
+CLASS="literal"
+>ipsec0</TT
+>. The second one, however, also supports <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> over a <SPAN
+CLASS="acronym"
+>PPP</SPAN
+> interface. If the default setting <TT
+CLASS="envar"
+>interfaces=%defaultroute</TT
+> 
+is not used, then the specified interfaces will be the only ones this gateway machine can use to communicate with other <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> gateways.
+</P
+></DD
+><DT
+><B
+>klipsdebug=none</B
+></DT
+><DD
+><P
+>&#13;This option specifies the debugging output for <SPAN
+CLASS="acronym"
+>KLIPS</SPAN
+> -the kernel <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> code. The default value none, means no debugging output and the value all means full output.
+</P
+></DD
+><DT
+><B
+>plutodebug=none</B
+></DT
+><DD
+><P
+>&#13;This option specifies the debugging output for the Pluto key. The default value, none, means no debugging output, and the value all means full output.
+</P
+></DD
+><DT
+><B
+>plutoload=%search</B
+></DT
+><DD
+><P
+>&#13;This option specifies which connections (by name) to load automatically into memory when Pluto starts. The default is none and the value %search loads all connections with auto=add or auto=start.
+</P
+></DD
+><DT
+><B
+>plutostart=%search</B
+></DT
+><DD
+><P
+>&#13;This option specifies which connections (by name) to automatically negotiate when Pluto starts. The default is none and the value %search starts all connections with auto=start.
+</P
+></DD
+><DT
+><B
+>conn deep-mail</B
+></DT
+><DD
+><P
+>&#13;This option specifies the name given to identify the connection specification to be made using <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+>. It's a good convention to name connections by their ends to avoid mistakes. For example, the link 
+between <TT
+CLASS="literal"
+>deep.openna.com</TT
+> and <TT
+CLASS="literal"
+>mail.openna.com</TT
+> gateways server can be named  <TT
+CLASS="literal"
+>deep-mail</TT
+>, or the link between your Montreal and Paris offices, <TT
+CLASS="literal"
+>montreal-paris</TT
+>.
+<DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+Note that the names <TT
+CLASS="literal"
+>deep-mail</TT
+> or whatever you have chosen should be the same in the <TT
+CLASS="filename"
+>ipsec.conf</TT
+> file on both gateways. In other words, the only change you should make in 
+the <TT
+CLASS="filename"
+>/etc/ipsec.conf</TT
+> file on the second gateway is changing the <TT
+CLASS="envar"
+>interfaces=</TT
+> line to match the interface the second gateway uses for <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> connection, if, 
+of course, it's different from the first gateway. For example, if the interface <TT
+CLASS="literal"
+>eth0</TT
+> is used on the both gateways for <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> communication, you don't need to change the line <TT
+CLASS="envar"
+>interfaces=</TT
+> 
+on the second gateway. On the other hand, if the first gateway use <TT
+CLASS="literal"
+>eth0</TT
+> and the second use eth1, you must change the line <TT
+CLASS="envar"
+>interfaces=</TT
+> on the second gateway to match the interface eth1.
+</P
+></BLOCKQUOTE
+></DIV
+>
+</P
+></DD
+><DT
+><B
+>left=208.164.186.1</B
+></DT
+><DD
+><P
+>&#13;This option specifies the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address of the gateway's external interface used to talk to the other gateway.
+</P
+></DD
+><DT
+><B
+>leftsubnet=192.168.1.0/24</B
+></DT
+><DD
+><P
+>&#13;This option specifies the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> network or address of the private subnet behind the gateway.
+</P
+></DD
+><DT
+><B
+>leftnexthop=205.151.222.250</B
+></DT
+><DD
+><P
+>&#13;This option specifies the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address of the first router in the appropriate direction or <SPAN
+CLASS="acronym"
+>ISP</SPAN
+> router.
+</P
+></DD
+><DT
+><B
+>right=208.164.186.2</B
+></DT
+><DD
+><P
+>&#13;This is the same explanation as <TT
+CLASS="envar"
+>left=</TT
+> but for the right destination.
+</P
+></DD
+><DT
+><B
+>rightsubnet=192.168.1.0/24</B
+></DT
+><DD
+><P
+>&#13;This is the same explanation as <TT
+CLASS="envar"
+>leftsubnet=</TT
+> but for the right destination.
+</P
+></DD
+><DT
+><B
+>rightnexthop=205.151.222.251</B
+></DT
+><DD
+><P
+>&#13;This is the same explanation as <TT
+CLASS="envar"
+>leftnexthop=</TT
+> but for the right destination.
+</P
+></DD
+><DT
+><B
+>keyingtries=0</B
+></DT
+><DD
+><P
+>&#13;This option specifies how many attempts (an integer) should be made in (re)keying negotiations. The default value 0 (retry forever) is recommended.
+</P
+></DD
+><DT
+><B
+>auth=ah</B
+></DT
+><DD
+><P
+>&#13;This option specifies whether authentication should be done separately using AH (Authentication Header), or be included as part of the <SPAN
+CLASS="acronym"
+>ESP</SPAN
+> -Encapsulated Security Payload service. This is preferable when the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> headers are exposed to prevent 
+man-in-the-middle attacks.
+</P
+></DD
+><DT
+><B
+>auto=start</B
+></DT
+><DD
+><P
+>&#13;This option specifies whether automatic startup operations should be done at <SPAN
+CLASS="acronym"
+>IPSEC</SPAN
+> startup.
+</P
+></DD
+></DL
+></DIV
+>
+</P
+><DIV
+CLASS="caution"
+><P
+></P
+><TABLE
+CLASS="caution"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Caution.gif"
+ALT="Caution"
+></IMG
+></SPAN
+></B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>&#13;A data mismatch anywhere in this configuration <TT
+CLASS="filename"
+>ipsec.conf</TT
+> will cause FreeS/WAN to fail and to log various error messages.
+</P
+></TD
+></TR
+></TABLE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap25sec203.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap25sec204.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Automatic or Manual Key connections</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="fSWAn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/ipsec.secrets</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

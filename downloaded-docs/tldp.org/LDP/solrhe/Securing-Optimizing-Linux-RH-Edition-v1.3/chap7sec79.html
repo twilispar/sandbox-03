@@ -1,0 +1,308 @@
+<HTML
+><HEAD
+><TITLE
+>Compilation</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Configuring and Building a Secure, Optimized Kernel"
+HREF="secopt-kernel.html"><LINK
+REL="PREVIOUS"
+TITLE="Securing the kernel"
+HREF="chap7sec78.html"><LINK
+REL="NEXT"
+TITLE='Kernel configuration -Part "A"'
+HREF="chap7sec80.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap7sec78.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 7. Configuring and Building a Secure, Optimized Kernel</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap7sec80.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN5235"
+>7.4. Compilation</A
+></H1
+><P
+>&#13;             It is important to be sure that your <TT
+CLASS="filename"
+>/usr/include/asm</TT
+>, and <TT
+CLASS="filename"
+>/usr/include/linux</TT
+> subdirectories are just symlinks to the kernel sources.
+             </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;             The asm, and linux subdirectories are a soft link to the real include kernel source header directories needed for our Linux architecture, for example <TT
+CLASS="filename"
+>/usr/src/linux/include/asm-i386</TT
+> for asm. Type the following
+             commands on your terminal:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep ]/src#<B
+CLASS="command"
+>cd</B
+> /usr/include/
+             [root@deep ] /include#<B
+CLASS="command"
+>rm</B
+> -rf  asm linux
+             [root@deep ] /include#<B
+CLASS="command"
+>ln</B
+> -s  /usr/src/linux/include/asm-i386 asm
+             [root@deep ] /include#<B
+CLASS="command"
+>ln</B
+> -s  /usr/src/linux/include/linux  linux
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             This is a very important part of the configuration; we remove the asm, and linux directories under <TT
+CLASS="filename"
+></TT
+>/usr/include then build a new links that point to the same name directories 
+             under the new Linux kernel source version directory. The include directory contains important header files needed by your Linux kernel and programs to be able to compile on your system.                       
+             </P
+></LI
+><LI
+><P
+>&#13;             Make sure you have no stale .o files and dependencies lying around.
+
+             Type the following commands on your terminal:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep ] /include#<B
+CLASS="command"
+>cd</B
+> /usr/src/linux/
+             [root@deep ] /linux#<B
+CLASS="command"
+>make</B
+> mrproper
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             <DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+             These two steps above simply clean up anything that might have accidentally been left in the source tree by the development team.
+             </P
+></BLOCKQUOTE
+></DIV
+>
+             You should now have the sources correctly installed. You can configure the Linux kernel in one of three ways. 
+             <P
+></P
+><UL
+><LI
+><P
+>&#13;             The first method is to use the <B
+CLASS="command"
+>make config</B
+> command. It provides you with a text-based interface for answering all the 
+             configuration options. You are prompted for all the options you need to set up your kernel.
+             </P
+></LI
+><LI
+><P
+>&#13;             The second method is to use the <B
+CLASS="command"
+>make menuconfig</B
+> command, which provides all the kernel options in an easy-to-use menu. 
+             </P
+></LI
+><LI
+><P
+>&#13;             The third is to use the <B
+CLASS="command"
+>make xconfig</B
+> command, which provides a full graphical interface to all the kernel options.
+             </P
+></LI
+></UL
+>
+             </P
+></LI
+><LI
+><P
+>&#13;             For configuration, you will use the <B
+CLASS="command"
+>make config</B
+> command because we have not installed the XFree86 window Interface on our Linux server.
+             Type the following commands on your terminal to load the kernel configuration:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /usr/src/linux/ (if you are not already in this directory).
+             [root@deep ] /linux#<B
+CLASS="command"
+>make</B
+> config
+             rm -f include/asm
+             ( cd include ; ln -sf asm-i386 asm)
+             /bin/sh scripts/Configure arch/i386/config.in
+             #
+             # Using defaults found in arch/i386/defconfig
+             #
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap7sec78.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap7sec80.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Securing the kernel</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="secopt-kernel.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Kernel configuration -Part "A"</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

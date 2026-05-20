@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Running pppd</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node111.html">Using Options Files</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node109.html">PPP on </A>
+<BR> <P>
+<H1><A NAME="SECTION0010300000">Running pppd</A></H1>
+<A NAME="4116"></A>
+<A NAME="4542"></A>
+When you want to connect to the Internet through a PPP link, you have to
+set up basic networking capabilities such as the loopback device, and
+the resolver.  Both have been covered in the previous chapters.  There
+are some things to be said about using DNS over a serial link; please
+refer to the SLIP chapter for a discussion of this.
+<P>
+As an introductory example of how to establish a PPP connection with
+pppd, assume you are at vlager again. You have already
+dialed up the PPP server, c3po, and logged into the ppp
+account.  c3po has already fired up its PPP driver.  After
+exiting the communications program you used for dialing, you execute
+the following command:
+<pre>
+           # pppd /dev/cua3 38400 crtscts defaultroute
+
+</pre>
+<A NAME="4125"></A>
+<A NAME="4126"></A>
+This will flip the serial line cua3 to PPP mode and establish
+an IP-link to c3po. The transfer speed used on the serial port
+will be 38400bps.  The crtscts option turns on hardware
+handshake on the port, which is an absolute must at speeds above
+9600-bps.
+<P>
+The first thing pppd does after starting up is to negotiate
+several link characteristics with the remote end, using LCP. Usually,
+the default set of options pppd tries to negotiate will work,
+so we won't go into this here.  We will return to LCP in more detail in
+some later section.
+<P>
+For the time being, we also assume that c3po doesn't require
+any authentication from us, so that the configuration phase is
+completed successfully.
+<P>
+<A NAME="4133"></A>
+<A NAME="4134"></A>
+<A NAME="4135"></A>
+pppd will then negotiate the IP parameters with its peer using
+IPCP, the IP control protocol. Since we didn't specify any particular
+IP-address to pppd above, it will try to use the address obtained
+by having the resolver look up the local hostname.  Both will then
+announce their address to each other.
+<P>
+Usually, there's nothing wrong with these defaults. Even if your
+machine is on an Ethernet, you can use the same IP-address for both
+the Ethernet and the PPP interface.  Nevertheless, pppd allows
+you to use a different address, or even to ask your peer to use some
+specific address.  These options are discussed in a later section.
+<P>
+<A NAME="4139"></A>
+<A NAME="4140"></A>
+<A NAME="4141"></A>
+<A NAME="4142"></A>
+After going through the IPCP setup phase, pppd will prepare
+your host's networking layer to use the PPP link. It first configures
+the PPP network interface as a point-to-point link, using ppp0
+for the first PPP link that is active, ppp1 for the second, and
+so on.  Next, it will set up a routing table entry that points to the
+host at the other end of the link. In the example shown above,
+pppd will make the default network route point to c3po,
+because we gave it the defaultroute option.<A HREF="footnode.html#4149"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> This causes all datagrams to hosts not on your local network to be
+sent to c3po. There are a number of different routing schemes
+pppd supports, which we will cover in detail later in this
+chapter.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node111.html">Using Options Files</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node109.html">PPP on </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,291 @@
+<HTML
+><HEAD
+><TITLE
+>&#13;          The file-max parameter
+            </TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux General Optimization"
+HREF="gen-optim.html"><LINK
+REL="PREVIOUS"
+TITLE="The /etc/nsswitch.conf file"
+HREF="chap6sec71.html"><LINK
+REL="NEXT"
+TITLE="The ulimit parameter"
+HREF="x4733.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap6sec71.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. Linux General Optimization</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x4733.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4692"
+>6.9. The file-max parameter</A
+></H1
+><P
+>&#13;          The file-max file <TT
+CLASS="filename"
+>/proc/sys/fs/file-max</TT
+> sets the maximum number of file-handles that the Linux kernel will allocate. We generally 
+          tune this file to improve the number of open files by increasing the value of <TT
+CLASS="filename"
+>/proc/sys/fs/file-max</TT
+> to something reasonable 
+          like 256 for every 4M of <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>RAM</SPAN
+></SPAN
+> we have: i.e. for a machine with 128 MB of <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>RAM</SPAN
+></SPAN
+>, set it to 8192 - 128/4=32 32*256=8192.
+          </P
+><P
+>&#13;          The default setup for the file-max parameter under Red Hat Linux is:
+          <TT
+CLASS="computeroutput"
+> "4096"</TT
+>
+          To adjust the value of file-max to 128 MB of <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>RAM</SPAN
+></SPAN
+>, type the following on your terminal:
+          <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.1.gif"
+ALT="Version 6.1 only"
+></IMG
+></P
+></DIV
+>
+          
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>echo</B
+> "8192" &#62;/proc/sys/fs/file-max
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          Add the above commands to the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> script file and you'll not have to type it again the next time your server reboots.
+          </P
+><P
+>&#13;            <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2 only"
+></IMG
+></P
+></DIV
+>
+          
+          Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following line:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          # Improve the number of open files
+          fs.file-max = 8192
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          You must restart your network for the change to take effect. The command to manually restart the network is the following:
+                                                                                                                                    
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <P
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          Setting network parameters	  [  OK  ]
+          Bringing up interface lo	  [  OK  ]
+          Bringing up interface eth0	  [  OK  ]
+          Bringing up interface eth1	  [  OK  ]
+          </TT
+></P
+>
+          
+          </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+          When you regularly receive from your server a lot of messages with errors about running out of open files, you might want to raise this 
+          limit. The default value is 4096. A file server or web server needs a lot of open files.
+          </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap6sec71.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x4733.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The <TT
+CLASS="filename"
+>/etc/nsswitch.conf</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-optim.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>The ulimit parameter</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,270 @@
+<HTML
+><HEAD
+><TITLE
+>Tuning the buffermem</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="PREVIOUS"
+TITLE="Optimizing Samba"
+HREF="chap29sec287.html"><LINK
+REL="NEXT"
+TITLE="Further documentation"
+HREF="chap29sec290.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec287.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 31. Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec290.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN22401"
+>31.9. Tuning the buffermem</A
+></H1
+><P
+>&#13;      Another helpful tuning hint is to tell Linux the following: Use a minimum of 60 percent of memory for the buffer cache; only prune when the percentage of memory used for the buffer cache gets over 10 percent (this parameter is now unused); 
+      and allow the buffer cache to grow to 60 percent of all memory (this parameter is also unused now).
+    </P
+><P
+>&#13;      The default setup for the <TT
+CLASS="literal"
+>buffermem</TT
+> parameters under Red Hat Linux is:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        "2 10 60"
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      Under 
+      <SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Version6.1.gif"
+ALT="Version 6.1"
+></IMG
+></SPAN
+>
+
+      To change the values of buffermem, type the following command on your terminal:
+
+      
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# echo "60 10 60" &#62;/proc/sys/vm/buffermem
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      You can put the above command in the <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> script file and avoid typing it again the next time your system reboots. You can find full details in the 2.2 kernel documentation in the file <TT
+CLASS="filename"
+>linux/Documentation/sysctl/vm.txt</TT
+> a
+      nd also, you can check  <A
+HREF="gen-optim.html"
+>General System Optimization</A
+>, for more information.
+    </P
+><P
+>&#13;       Under 
+      <SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Version6.2.gif"
+ALT="Version 6.2"
+></IMG
+></SPAN
+>     
+      Edit the <TT
+CLASS="filename"
+>/etc/sysctl.conf</TT
+> file and add the following line:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        # Improve virtual memory performance
+        vm.buffermem = 60 10 60
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><P
+>&#13;      You must restart your network for the change to take effect. The command to restart the network is the following:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# /etc/rc.d/init.d/network <B
+CLASS="command"
+>restart</B
+>
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;        Setting network parameters		[  OK  ]
+        Bringing up interface lo		[  OK  ]
+        Bringing up interface eth0	        [  OK  ]
+        Bringing up interface eth1	        [  OK  ]
+      </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+      Recall that the last two parameters, 10 and 60 are unused by the system so we don't need to change the default ones.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec287.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec290.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Optimizing Samba</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Further documentation</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

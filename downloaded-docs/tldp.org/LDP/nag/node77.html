@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Displaying Connections</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node78.html">Checking the ARP Tables</A>
+<B>Up:</B> <A HREF="node74.html">Checking with netstat</A>
+<B> Previous:</B> <A HREF="node76.html">Displaying Interface Statistics</A>
+<BR> <P>
+<H2><A NAME="SECTION007930000">Displaying Connections</A></H2>
+
+Netstat supports a set of options to display active or passive
+sockets. The options -t, -u, -w, and
+-x show active TCP, UDP, RAW, or UNIX socket connections.
+If you provide the -a flag in addition, sockets that are
+waiting for a connection (i.e. listening) are displayed as well.
+This will give you a list of all servers that are currently running
+on your system.
+<P>
+Invoking netstat -ta on vlager produces:
+<pre>
+           $ netstat -ta
+           Active Internet connections
+           Proto Recv-Q Send-Q Local Address    Foreign Address    (State)
+           tcp        0      0 *:domain         *:*                LISTEN
+           tcp        0      0 *:time           *:*                LISTEN
+           tcp        0      0 *:smtp           *:*                LISTEN
+           tcp        0      0 vlager:smtp      vstout:1040        ESTABLISHED
+           tcp        0      0 *:telnet         *:*                LISTEN
+           tcp        0      0 localhost:1046   vbardolino:telnet  ESTABLISHED
+           tcp        0      0 *:chargen        *:*                LISTEN
+           tcp        0      0 *:daytime        *:*                LISTEN
+           tcp        0      0 *:discard        *:*                LISTEN
+           tcp        0      0 *:echo           *:*                LISTEN
+           tcp        0      0 *:shell          *:*                LISTEN
+           tcp        0      0 *:login          *:*                LISTEN
+
+</pre>
+This shows most servers simply waiting for an incoming connection. However,
+the fourth line shows an incoming SMTP connection from vstout, and
+the sixth line tells you there is an outgoing telnet connection
+to vbardolino.<A HREF="footnode.html#3193"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+Using the -a flag all by itself will display all sockets
+from all families.
+
+
+<HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

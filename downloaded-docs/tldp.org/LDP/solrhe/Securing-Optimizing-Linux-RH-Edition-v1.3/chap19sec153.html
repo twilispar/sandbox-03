@@ -1,0 +1,290 @@
+<HTML
+><HEAD
+><TITLE
+>Often used Commands</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities/Management & Limitation"
+HREF="soft-limits.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux GnuPG"
+HREF="chap19sec152.html"><LINK
+REL="NEXT"
+TITLE="Importing keys"
+HREF="chap19sec154.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap19sec152.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 19. Software -Securities/Management &#38; Limitation</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap19sec154.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN10052"
+>19.2. Often used Commands</A
+></H1
+><P
+>&#13;          The commands listed below are some that we use often, but many more exist. Check the man page for more details and information.
+          </P
+><P
+>&#13;          First of all, we must create a new key-pair (public and private) if this is a first use of the GnuPG software to be able to use its encryption features.
+          </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;          To create a new key-pair, use the following command:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /# <B
+CLASS="command"
+>gpg</B
+> --gen-key
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;          gpg (GnuPG) 1.0.1; Copyright (C) 1999 Free Software Foundation, Inc.
+          This program comes with ABSOLUTELY NO WARRANTY.
+          This is free software, and you are welcome to redistribute it
+          under certain conditions. See the file COPYING for details.
+
+          gpg: /root/.gnupg: directory created
+          gpg: /root/.gnupg/options: new options file created
+          gpg: you have to start GnuPG again, so it can read the new options file
+          This asks some questions and then starts key generation.
+          </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;            We start GnuPG again with the following command:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep] /# <B
+CLASS="command"
+>gpg</B
+> --gen-key
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>              
+          gpg (GnuPG) 1.0.1; Copyright (C) 1999 Free Software Foundation, Inc.
+          This program comes with ABSOLUTELY NO WARRANTY.
+          This is free software, and you are welcome to redistribute it
+          under certain conditions. See the file COPYING for details.
+
+          gpg: /root/.gnupg/secring.gpg: keyring created
+          gpg: /root/.gnupg/pubring.gpg: keyring created
+          Please select what kind of key you want:
+          (1) DSA and ElGamal (default)
+          (2) DSA (sign only)
+          (4) ElGamal (sign and encrypt)
+          Your selection? 1
+          DSA keypair will have 1024 bits.
+          About to generate a new ELG-E keypair.
+          minimum keysize is  768 bits
+          default keysize is 1024 bits
+          highest suggested keysize is 2048 bits
+          What keysize do you want? (1024) 2048
+          Do you really need such a large keysize? y
+          Requested keysize is 2048 bits
+          Please specify how long the key should be valid.
+          0 = key does not expire
+          &#60;n&#62;  = key expires in n days
+            &#60;n&#62;w = key expires in n weeks
+              &#60;n&#62;m = key expires in n months
+                &#60;n&#62;y = key expires in n years
+                  Key is valid for? (0) 0
+                  correct (y/n)? y
+
+                  You need a User-ID to identify your key; the software constructs the user id
+                  from Real Name, Comment and Email Address in this form:
+                  "Heinrich Heine (Der Dichter) &#60;heinrichh@duesseldorf.de&#62;"
+
+                  Real name: Gerhard Mourani
+                  Email address: gmourani@videotron.ca
+                  Comment: [Press Enter]
+                  You selected this USER-ID:
+                  "Gerhard Mourani &#60;gmourani@videotron.ca&#62;"
+
+                  Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
+                  You need a Passphrase to protect your secret key.
+
+                  We need to generate a lot of random bytes. It is a good idea to perform
+                  some other action (type on the keyboard, move the mouse, utilize the
+                  disks) during the prime generation; this gives the random number
+                  generator a better chance to gain enough entropy.
+                  +++++..+++++++++++++++..+++++.++++++++++++++++++++++++++++++++++++++++..+++++++
+                  +++.+++++++++++++++++++++++++.+++++++++++++++...+++++++++++++++++++++++++.+++++
+                  ..+++++&#62;+++++...+++++++++++++++&#62;+++++.......&#62;+++++.......&#62;+++++................
+                  ..........+++++^^^^
+                  public and secret key created and signed.
+                  </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+                  </P
+></LI
+></OL
+></DIV
+><P
+>&#13;                  A new key-pair is created (secret and public key) in the root home directory <TT
+CLASS="filename"
+>~/root</TT
+>.
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap19sec152.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap19sec154.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux GnuPG</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-limits.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Importing keys</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,265 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>FTP Tutorial and Site List</TITLE>
+<META NAME="description" CONTENT="FTP Tutorial and Site List">
+<META NAME="keywords" CONTENT="app-ftp">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="app-ftp.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html19" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="../next_motif.gif"></A> <A NAME="tex2html17" HREF="app-ftp.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="../up_motif.gif"></A> <A NAME="tex2html11" HREF="app-ftp.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="../previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html20" HREF="node2.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html18" HREF="app-ftp.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html12" HREF="app-ftp.html">No Title</A>
+<BR> <P>
+<H1><A NAME="SECTION00100000000000000000">FTP Tutorial and Site List</A></H1>
+<A NAME="appftplistnum">&#160;</A>
+<P>
+<A NAME="appftp">&#160;</A>
+<P>
+<A NAME="6">&#160;</A>
+<P>
+The File Transfer Protocol (FTP) is the set of programs used for
+transferring files between systems on the Internet. Most Unix,
+VMS, and MS-DOS systems on the Internet have a program called <TT>ftp</TT>
+which you use to transfer these files, and if you have Internet access, the
+best way to download the Linux software is by using <TT>ftp</TT>. This appendix
+covers basic <TT>ftp</TT> usage--of course, there are many more functions and
+uses of <TT>ftp</TT> than are given here.
+<P>
+At the end of this appendix there is a listing of FTP sites where 
+Linux software can be found. Also, if you don't have direct Internet
+access but are able to exchange electronic mail with the Internet,
+information on using the <TT>ftpmail</TT> service is included below.
+<P>
+If you're using an MS-DOS, Unix, or VMS system to download files from the
+Internet, then <TT>ftp</TT> is a command-driven program. However, there are 
+other implementations of <TT>ftp</TT> out there, such as the Macintosh version
+(called <TT>Fetch</TT>) with a nice menu-driven interface, which is quite
+self-explanatory. Even if you're not using the command-driven version of 
+<TT>ftp</TT>, the information given here should help.
+<P>
+<P><P>
+<TT>ftp</TT> can be used to both upload (send) or download (receive) files
+from other Internet sites. In most situations, you're going to be downloading
+software. On the Internet there are a large number of publicly-available
+<B>FTP archive sites</B>, machines which allow anyone to <TT>ftp</TT> to them and
+download free software. One such archive site is <TT>sunsite.unc.edu</TT>, which
+has a lot of Sun Microsystems software, and acts as one of the main Linux
+sites. In addition, FTP archive sites <B>mirror</B> software to each 
+other--that is, software uploaded to one site will be automatically copied 
+over to a number of other sites. So don't be surprised if you see the exact
+same files on many different archive sites.
+<P>
+<H1><A NAME="SECTION00110000000000000000">Starting <TT>ftp</TT></A></H1>
+<P>
+Note that in the example ``screens'' printed
+below I'm only showing the most important information, and what you see may
+differ. Also, commands in <EM>italics</EM> represent commands that you type;
+everything else is screen output.
+<P>
+To start <TT>ftp</TT> and connect to a site, simply use the command
+<BR><BR>
+where hostname is the name of the
+site you are connecting to.
+For example, to connect to the mythical site
+<TT>shoop.vpizza.com</TT> we can use the command
+<BR><BR><H1><A NAME="SECTION00120000000000000000">Logging In</A></H1>
+<P>
+When <TT>ftp</TT> starts up we should see something like
+<BR><BR>
+Here, <TT>ftp</TT> is asking us to give the username that we want to login as
+on <TT>shoop.vpizza.com</TT>. The default here is <TT>mdw</TT>, which is my username
+on the system I'm using FTP from. Since I don't have an account on 
+<TT>shoop.vpizza.com</TT> I can't login as myself. Instead, to access 
+publicly-available software on an FTP site you login as <TT>anonymous</TT>, and
+give your Internet e-mail address (if you have one) as the password.
+So, we would type
+<BR><IMG WIDTH=152 HEIGHT=22 ALIGN=BOTTOM ALT="tscreen40" SRC="img4.gif"><BR>
+Of course, you should give your e-mail address, instead of mine, and it
+won't echo to the screen as you're typing it (since it's technically a
+``password''). <TT>ftp</TT> should allow us to login and we'll be ready to
+download software.
+<P>
+<H1><A NAME="SECTION00130000000000000000">Poking Around</A></H1>
+<P>
+Okay, we're in. <TT>ftp&gt;</TT> is our prompt, and the <TT>ftp</TT> program is
+waiting for commands. There are a few basic commands you need to know about. 
+First, the commands
+<BR><BR>
+and
+<BR><BR>
+both give file listings (where file 
+is an optional argument
+specifying a particular file name to list). The difference is that <TT>ls</TT>
+usually gives a short listing and <TT>dir</TT> gives a longer listing (that
+is, with more information on the sizes of the files, dates of modification,
+and so on).
+<P>
+The command
+<BR><BR>
+will move to the given directory (just like the <TT>cd</TT> command on Unix or
+MS-DOS systems). You can use the command
+<BR><BR>
+to change to the parent directory<A NAME="tex2html2" HREF="footnode.html#63"><IMG  ALIGN=BOTTOM ALT="gif" SRC="../foot_motif.gif"></A>.
+<P>
+The command 
+<BR><BR>
+will give help on the given <TT>ftp</TT> command 
+(such as <TT>ls</TT> or
+<TT>cd</TT>). If no command is specified, <TT>ftp</TT> will list all of the 
+available commands.
+<P>
+If we type <TT>dir</TT> at this point we'll see an initial directory
+listing of where we are. 
+<BR><IMG WIDTH=488 HEIGHT=107 ALIGN=BOTTOM ALT="tscreen73" SRC="img10.gif"><BR>
+<P>
+Each of these entries is a directory, not an individual file which we can 
+download (specified by the <TT>d</TT> in the first column of the listing).
+On most FTP archive sites, the publicly available software is under the
+directory <TT>/pub</TT>, so let's go there.
+<P>
+<BR><IMG WIDTH=565 HEIGHT=201 ALIGN=BOTTOM ALT="tscreen78" SRC="img11.gif"><BR>
+<P>
+Here we can see a number of (interesting?) files, one of which is called
+<TT>README</TT>, which we should download (most FTP sites have a <TT>README</TT>
+file in the <TT>/pub</TT> directory).
+<P>
+<H1><A NAME="SECTION00140000000000000000">Downloading files</A></H1>
+<P>
+Before downloading files, there are a few things that you need to take care
+of. 
+<UL>
+<LI> <B>Turn on hash mark printing.</B> <EM>Hash marks</EM> are printed to the
+screen as files are being transferred; they let you know how far along the
+transfer is, and that your connection hasn't hung up (so you don't sit
+for 20 minutes, thinking that you're still downloading a file). In general,
+a hash mark appears as a pound sign (<TT>#</TT>), and one is printed for every 
+1024 or 8192 bytes transferred, depending on your system.
+<P>
+To turn on hash mark printing, give the command <TT>hash</TT>.
+<BR><IMG WIDTH=32 HEIGHT=11 ALIGN=BOTTOM ALT="tscreen91" SRC="img12.gif"><BR>
+<LI> <B>Determine the type of file which you are downloading.</B>
+As far as FTP is concerned, files come in two flavors: <EM>binary</EM> and
+<EM>text</EM>. Most of the files which you'll be downloading are binary files:
+that is, programs, compressed files, archive files, and so on. However,
+many files (such as <TT>README</TT>s and so on) are text files.
+<P>
+Why does the file type matter? Only because on some systems (such as MS-DOS
+systems), certain characters in a text file, such as carriage returns, need to
+be converted so that the file will be readable. While transferring in
+binary mode, no conversion is done--the file is simply transferred 
+byte after byte.
+<P>
+The commands <TT>bin</TT> and <TT>ascii</TT> set the transfer mode to binary and
+text, respectively. <EM>When in doubt, always use binary mode to transfer 
+files</EM>.
+If you try to transfer a binary file in text mode, you'll corrupt the file
+and it will be unusable. (This is one of the most common mistakes made
+when using FTP.) However, you can use text mode for plain text files (whose
+file names often end in <TT>.txt</TT>).
+<P>
+For our example, we're downloading the file <TT>README</TT>, which is
+most likely a text file, so we use the command
+<BR><IMG WIDTH=30 HEIGHT=11 ALIGN=BOTTOM ALT="tscreen103" SRC="img13.gif"><BR>
+<LI> <B>Set your local directory.</B> Your <EM>local directory</EM> is the
+directory on your system where you want the downloaded files to end up. 
+Whereas the <TT>cd</TT> command changes the remote directory (on the remote
+machine which you're FTPing to), the <TT>lcd</TT> command changes the local
+directory.
+<P>
+For example, to set the local directory to <TT>/home/db/mdw/tmp</TT>, use
+the command
+<BR><IMG WIDTH=173 HEIGHT=16 ALIGN=BOTTOM ALT="tscreen111" SRC="img14.gif"><BR></UL>
+<P>
+Now you're ready to actually download the file. The command
+<BR><BR>
+is used for this, where remote-name 
+is the name of the
+file on the remote machine, and local-name 
+is the name
+that you wish to give the file on your local machine. The 
+local-name argument is optional; by default, 
+the local file name is
+the same as the remote one. However, if for example you're downloading
+the file <TT>README</TT>, and you already have a <TT>README</TT> in your local
+directory, you'll want to give a different 
+local-filename 
+so that
+the first one isn't overwritten.
+<P>
+For our example, to download the file <TT>README</TT>, we simply use
+<BR><IMG WIDTH=99 HEIGHT=16 ALIGN=BOTTOM ALT="tscreen126" SRC="img16.gif"><BR><H1><A NAME="SECTION00150000000000000000">Quitting FTP</A></H1>
+<P>
+To end your FTP session, simply use the command
+<BR><BR>
+The command
+<BR><BR>
+can be used to close the connection with the current remote FTP site;
+the <TT>open</TT> command can then be used to start a session with another
+site (without quitting the FTP program altogether).
+<P>
+<BR><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="tscreen135" SRC="img19.gif"><BR><H1><A NAME="SECTION00160000000000000000">Using <TT>ftpmail</TT></A></H1>
+<P>
+<A NAME="175">&#160;</A>
+<TT>ftpmail</TT> is a service which allows you to obtain files from FTP
+archive sites via Internet electronic mail. If you don't have direct
+Internet access, but are able to send mail to the Internet (from a service
+such as CompuServe, for example), <TT>ftpmail</TT> is a good way to get
+files from FTP archive sites. Unfortunately, <TT>ftpmail</TT> can be
+slow, especially when sending large jobs. Before attempting to download
+large amounts of software using <TT>ftpmail</TT>, be sure that your 
+mail spool will be able to handle the incoming traffic. Many systems
+keep quotas on incoming electronic mail, and may delete your account
+if your mail exceeds this quota. Just use common sense.
+<P>
+<TT>sunsite.unc.edu</TT>, one of the major Linux FTP archive sites, 
+is home to an <TT>ftpmail</TT> server. To use this service, send
+electronic mail to
+<BR><BR>
+with a message body containing only the word:
+<BR><BR>
+This will send you back a list of <TT>ftpmail</TT> commands and a brief
+tutorial on using the system.
+<P>
+For example, to get a listing of Linux
+files found on <TT>sunsite.unc.edu</TT>, send mail to the above address
+containing the text
+<BR><BR>
+<P>
+You may use the <TT>ftpmail</TT> service to connect to any FTP archive
+site; you are not limited to <TT>sunsite.unc.edu</TT>. The next section lists 
+a number of Linux FTP archives.
+<P>
+<H1><A NAME="SECTION00170000000000000000">Linux FTP Site List</A></H1>
+<P>
+<A NAME="158">&#160;</A>
+The table on page&nbsp;<A HREF="node1.html#tableftpsites"><IMG  ALIGN=BOTTOM ALT="gif" SRC="../cross_ref_motif.gif"></A> is a listing of the most
+well-known FTP archive sites which carry the Linux software. Keep in
+mind that many other sites mirror these, and more than likely you'll
+run into Linux on a number of sites not on this list.
+<P>
+<P><A NAME="165">&#160;</A><A NAME="tableftpsites">&#160;</A><BR>
+<STRONG>Table:</STRONG> Linux FTP Sites<BR>
+<P>
+<P>
+<TT>tsx-11.mit.edu</TT>, <TT>sunsite.unc.edu</TT>, and <TT>nic.funet.fi</TT> are
+the ``home sites'' for the Linux software, where most of the new software
+is uploaded. Most of the other sites on the list mirror some combination of
+these three. To reduce network traffic, choose a site that is geographically
+closest to you.
+<P>
+<A NAME="172">&#160;</A>
+<HR><A NAME="tex2html19" HREF="node2.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="../next_motif.gif"></A> <A NAME="tex2html17" HREF="app-ftp.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="../up_motif.gif"></A> <A NAME="tex2html11" HREF="app-ftp.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="../previous_motif.gif"></A>   <BR>
+<B> Next:</B> <A NAME="tex2html20" HREF="node2.html">  About this document </A>
+<B>Up:</B> <A NAME="tex2html18" HREF="app-ftp.html">No Title</A>
+<B> Previous:</B> <A NAME="tex2html12" HREF="app-ftp.html">No Title</A>
+<P><ADDRESS>
+<I>Clarica Grove <BR>
+Fri Feb 20 04:53:33 PST 1998</I>
+</ADDRESS>
+</BODY>
+</HTML>

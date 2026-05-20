@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Gateways</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node31.html">The Routing Table</A>
+<B>Up:</B> <A HREF="node27.html">IP Routing</A>
+<B> Previous:</B> <A HREF="node29.html">Subnetworks</A>
+<BR> <P>
+<H2><A NAME="SECTION004430000">Gateways</A></H2>
+<A NAME="tcpiproutinggateway"></A>
+Subnetting is not only an organizational benefit, it is frequently a
+natural consequence of hardware boundaries.  The viewpoint of a host on
+a given physical network, such as an Ethernet, is a very limited one:
+the only hosts it is able to talk to directly are those of the network
+it is on.  All other hosts can be accessed only through so-called
+<em>gateways</em>.  A gateway is a host that is connected to two or more
+physical networks simultaneously and is configured to switch packets
+between them.
+<P>
+For IP to be able to easily recognize if a host is on a local physical
+network, different physical networks have to belong to different
+IP-networks. For example the network number 149.76.4.0 is
+reserved for hosts on the mathematics LAN. When sending a datagram to
+quark, the network software on erdos immediately sees from
+the IP-address, 149.76.12.4, that the destination host is on a
+different physical network, and therefore can be reached only through
+a gateway (sophus by default).
+<P>
+sophus itself is connected to two distinct subnets: the
+Mathematics Department, and the campus backbone. It accesses each
+through a different interface, eth0 and fddi0,
+respectively.  Now, what IP-address do we assign it? Should we give it
+one on subnet 149.76.1.0, or on 149.76.4.0?
+<P>
+The answer is: both. When talking to a host on the Maths LAN,
+sophus should use an IP-address of 149.76.4.1, and when
+talking to a host on the backbone, it should use 149.76.1.4.
+<P>
+Thus, a gateway is assigned one IP-address per network it is on.  These
+addresses--- along with the corresponding netmask--- are tied to the
+interface the subnet is accessed through. Thus, the mapping of
+interfaces and addresses for sophus would look like this:
+<P>
+<pre>
+	----------------------------------------
+	+-------+-------------+----------------+
+	|iface  |    address  |       netmask  |
+	+-------+-------------+----------------+
+	+-------+-------------+----------------+
+	|eth0   | 149.76.4.1  | 255.255.255.0  |
+	|fddi0  | 149.76.1.4  | 255.255.255.0  |
+	|lo     |  127.0.0.1  |     255.0.0.0  |
+	+-------+-------------+----------------+
+	+-------+-------------+----------------+
+
+	The last entry describes the loopback interface lo, which was
+	introduced above.
+</pre>
+<P>
+Figure-<A HREF="node30.html#introfigip"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> shows a part of the network topology at
+Groucho Marx University (GMU).  Hosts that are on two subnets at the
+same time are shown with both addresses.
+<P>
+<STRONG>Figure:</STRONG> 
+  <A NAME="introfigip"></A>
+  A part of the net topology at Groucho Marx Univ.
+ <BR>
+<P>
+<P>
+Generally, you can ignore the subtle difference between attaching an
+address to a host or its interface. For hosts that are on one network
+only, like erdos, you would generally refer of the host as
+having this-and-that IP-address although strictly speaking, it's the Ethernet
+interface that has this IP-address. However, this distinction is only
+really important when you refer to a gateway.
+<P>
+<A NAME="1139"></A>
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node31.html">The Routing Table</A>
+<B>Up:</B> <A HREF="node27.html">IP Routing</A>
+<B> Previous:</B> <A HREF="node29.html">Subnetworks</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

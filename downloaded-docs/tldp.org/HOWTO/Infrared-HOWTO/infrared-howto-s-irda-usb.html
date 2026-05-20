@@ -1,0 +1,994 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>IrDA and USB</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Hardware Supported by Linux/IrDA"
+HREF="infrared-howto-c-hardware-supported.html"><LINK
+REL="PREVIOUS"
+TITLE="IrDA Hardware"
+HREF="infrared-howto-s-irda-hardware.html"><LINK
+REL="NEXT"
+TITLE="Linux PDAs: Agenda, iPAQ, Yopy, Zaurus"
+HREF="infrared-howto-s-irda-pda.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-irda-hardware.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 4. Hardware Supported by Linux/IrDA</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-irda-pda.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-irda-usb"
+></A
+>4.6. IrDA and USB</H1
+><P
+>&#13;   The IrDA USB driver is included in recent 2.4 kernels. It's not as 
+   efficient as    other FIR hardware, but at least is supported and 
+   is relatively easy to get working. Also, all the current 
+   products are based on the same hardware, and we know most of its bugs.
+</P
+><P
+>&#13;   As far as I know the Actisys 2000U and Extended System ESI-9685
+   dongles seem to be based on the same hardware.
+   Both USB dongles work fine with the Linux driver. It's possible to
+   have multiple USB dongles in a box (for now, only up to 4).
+</P
+><P
+>&#13;   The latest version of the driver has been tested with 
+   <B
+CLASS="command"
+>usb-uhci</B
+> and <B
+CLASS="command"
+>usb-ohci</B
+>.
+   see also driver infos in src e.g. USB 2.0
+</P
+><P
+>&#13;   There is an USB IrDA Bridge Device spec at Rev 0.9B , it's being
+   adopted as an USB class specification. You can find it at under 0.9
+   Class Specification header at
+   <A
+HREF="http://www.usb.org"
+TARGET="_top"
+>USB.org</A
+>
+   .
+</P
+><P
+>&#13;   Recently a new type of USB dongle from SigmaTel has appeared on
+   the market which is _not_ compliant with the IrDA-USB
+   specification, and therefore doesn't work with this driver. On the
+   other hand, SigmaTel has made available the 
+   <A
+HREF="http://www.sigmatel.com/technical_docs.htm#wireless"
+TARGET="_top"
+>full technical specification</A
+>
+   , so writing a driver for it is possible.
+
+
+</P
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1158"
+></A
+>4.6.1. Environment</H2
+><P
+>&#13;   I have checked this chapter with this environment:
+   <A
+HREF="http://www.actisys.com"
+TARGET="_top"
+>ACTiSYS</A
+>
+   ACT-IR2000U FIR-USB Adapter (but it should work for any 
+   other USB dongle except the one mentioned above), 
+   Kernel 2.4.19, irda-utils 0.9.14 and
+   <A
+HREF="http://www.debian.org"
+TARGET="_top"
+>Debian GNU/Linux</A
+> 3.0 Woody.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1163"
+></A
+>4.6.2. Prerequisites</H2
+><P
+>&#13;   You need a kernel with appropriate IrDA and USB support and the standard
+   entries in 
+   <TT
+CLASS="filename"
+>/etc/modprobe.conf</TT
+> (kernel 2.6)
+   <TT
+CLASS="filename"
+>/etc/modules.conf</TT
+> (kernel 2.4)
+   and devices in
+   <TT
+CLASS="filename"
+>/dev/ir*</TT
+> as described in the chapters above.
+   And a second IrDA device whether with Linux inside or not, e.g. a
+   laptop, a printer or a cell phone with IrDA port.
+</P
+><P
+>&#13;   You need a working USB controller. Check whether the appropriate module
+   is already inserted with <B
+CLASS="command"
+>lsmod</B
+>. If not you may insert
+   it with <B
+CLASS="command"
+>modprobe usb-uhci</B
+> (for Intel/Via USB controllers)
+   or <B
+CLASS="command"
+>modprobe usb-ohci</B
+> (for other USB controllers)
+</P
+><P
+>&#13;   Note: this driver has NOT been tested with the <B
+CLASS="command"
+>usb-ehci</B
+>
+   driver (for USB 2.0 controllers). This driver WON'T WORK with the 
+   <B
+CLASS="command"
+>uhci</B
+> driver (alternate/JE driver for Intel/Via USB controllers).
+</P
+><DIV
+CLASS="warning"
+><P
+></P
+><TABLE
+CLASS="warning"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/warning.gif"
+HSPACE="5"
+ALT="Warning"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>&#13;   Note that there is another USB IrDA driver ( provided by the
+   <A
+HREF="http://www.linux-usb.org"
+TARGET="_top"
+>Linux USB Project</A
+>)
+   for those devices called
+   <B
+CLASS="command"
+>ir-usb</B
+>. This module is NOT compatible with the IrDA stack
+   and conflicts with <B
+CLASS="command"
+>irda-usb</B
+>. Because it
+   always loads first, you have to remove <B
+CLASS="command"
+>ir-usb</B
+> completely.
+</P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>&#13;   If you are not familiar with routing issues, I dare to recommend to
+   shut down all external network interfaces with <B
+CLASS="command"
+>ifconfig</B
+>
+   during the first set up. Then check with <B
+CLASS="command"
+>route -n</B
+>. Also
+   netfiltering (iptables) may cause problems, so if you are not connected
+   to a network you may disable it.
+</P
+><P
+>&#13;   I have described the process in every detail, to make every caveat
+   as clear as possible. The actual configuration is much shorter and easier. 
+   During configuration I will choose to open three different
+   terminal windows to watch the log messages from different programs.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1186"
+></A
+>4.6.3. Plugging in the Dongle</H2
+><P
+>&#13;   Now plug the dongle in and check the Kernel messages with
+   <B
+CLASS="command"
+>dmesg</B
+>:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;hub.c: USB new device connect on bus1/1, assigned device number 2
+usb.c: USB device 2 (vend/prod 0x50f/0x180) is not claimed by any active driver.
+usb.c: registered new driver irda-usb
+IRDA-USB found at address 2, Vendor: 50f, Product: 180
+irda_usb_parse_endpoints(), And our endpoints are : in=02, out=01 (64), int=03
+irda_usb_init_qos(), dongle says speed=0x13E, size=0x20, window=0x2, bofs=0x4, turn=0x2
+IrDA: Registered device irda1
+USB IrDA support registered
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   If you have already some other IrDA hardware configured on the PC, the
+   driver won't load as <TT
+CLASS="filename"
+>irda0</TT
+>, so to check the message log 
+   as shown above is important (the driver can manage up to 4 IrDA-USB
+   dongles per PC, that can be increased in the source).
+</P
+><P
+>&#13;   In this example the device is <TT
+CLASS="filename"
+>irda1</TT
+>.
+
+   You may check this with <B
+CLASS="command"
+>ifconfig</B
+>, too:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;irda1     Link encap:IrLAP  HWaddr 2c:52:61:ec
+          EtherTalk Phase 2 addr:140/191
+          UP RUNNING NOARP  MTU:2048  Metric:1
+          RX packets:2278 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:844 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0
+          RX bytes:33848 (33.0 KiB)  TX bytes:15116 (14.7 KiB)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1197"
+></A
+>4.6.4. Attaching the Driver</H2
+><P
+>&#13;   Now you are ready to attach the Linux/IrDA service to the dongle
+   With <B
+CLASS="command"
+>irattach irda1 -s</B
+> (note the device name
+   from the step before).
+</P
+><P
+>&#13;   The green LED on the adapter should blink now, approximately
+   every three seconds. And with <B
+CLASS="command"
+>dmesg</B
+> you
+   may see this message:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;irlap_change_speed(), setting speed to 9600
+irlap_recv_discovery_xid_cmd(), discovery frame to short!
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   Now start <B
+CLASS="command"
+>irdadump</B
+>, you should see all 
+   IrDA devices in range. Or at least
+   this one, here "japh" (the other IrDA device in this example is
+   named "Olga"). For diagnostic purposes leave 
+   <B
+CLASS="command"
+>irdadump</B
+> running in this 
+   terminal window and switch to another window for the next steps.
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;07:58:40.889590 xid:cmd ffffffff &#60; 4fe026d8 S=6 s=3 (14)
+07:58:40.979575 xid:cmd ffffffff &#60; 4fe026d8 S=6 s=4 (14)
+07:58:40.979679 xid:rsp 2c5261ec &#62; 4fe026d8 S=6 s=4 japh hint=0400 [ Computer ] (20)
+07:58:41.069571 xid:cmd ffffffff &#60; 4fe026d8 S=6 s=5 (14)
+07:58:41.166552 xid:cmd ffffffff &#60; 4fe026d8 S=6 s=* Olga hint=0400 [ Computer ] (20)
+07:58:43.620104 xid:cmd ffffffff &#60; 4fe026d8 S=6 s=0 (14)
+07:58:43.709078 xid:cmd ffffffff &#60; 4fe026d8 S=6 s=1 (14)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1208"
+></A
+>4.6.5. Loading the IrCOMM Modules</H2
+><P
+>&#13;   Now load the IrCOMM modules (note this is usually done automagically by 
+   the kernel daemon <B
+CLASS="command"
+>kmod</B
+> if you start PPP or 
+   printing via IrDA, but for the first time we do things by hand). 
+   So do <B
+CLASS="command"
+>modprobe ircomm</B
+> and 
+   <B
+CLASS="command"
+>modprobe ircomm-tty</B
+> .
+</P
+><P
+>&#13;   The <B
+CLASS="command"
+>dmesg</B
+> will show now:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;IrCOMM protocol (Dag Brattli)
+ircomm_open_lsap()
+ircomm_tty_attach_cable()
+ircomm_tty_ias_register()
+ircomm_tty_close()
+ircomm_tty_shutdown()
+ircomm_tty_detach_cable()
+ircomm_close()
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   And with <B
+CLASS="command"
+>lsmod</B
+> you may see:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;Module                  Size  Used by    Tainted: P  
+ircomm-tty             30080   0  (autoclean)
+ircomm                 13164   0  (autoclean) [ircomm-tty]
+irda-usb               13776   1 
+...
+irtty                   7264   0  (autoclean)
+irda                  141648   1  (autoclean) [ircomm-tty ircomm irda-usb irtty]
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1220"
+></A
+>4.6.6. Setting up a Network (PPP)</H2
+><P
+>&#13;   You may start <B
+CLASS="command"
+>pppd</B
+> with commandline options, but
+   for me it's more convenient to have a configuration file
+   <TT
+CLASS="filename"
+>/etc/ppp/peers/irda</TT
+>. 
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;connect /bin/true
+noauth
+persist
+debug
+kdebug 7
+nodetach
+115200
+local
+/dev/ircomm0
+192.168.0.2:192.168.0.3
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   Some note about the configuration: Yes the device name is correct, 
+   don't choose an USB device here. If the other IrDA device is a Linux laptop
+   you may use the same configuration file and the same PPP options,
+   without the last line, which sets
+   the LOCAL and REMOTE IP address. The following entries are for debugging purposes
+   and can be commented out when everything works fine:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;persist
+debug
+kdebug 7
+nodetach
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+</P
+><P
+>&#13;   Now start PPP with <B
+CLASS="command"
+>pppd call irda</B
+>. 
+   For diagnostic purposes leave the messages running in this 
+   terminal window and switch to another window for the next steps.
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;Serial connection established.
+using channel 3
+Using interface ppp0
+Connect: ppp0 &#60;--&#62; /dev/ircomm0
+sent [LCP ConfReq id=0x1 &#60;asyncmap 0x0&#62; &#60;magic 0x4592a46e&#62; &#60;pcomp&#62; &#60;accomp&#62;]
+sent [LCP ConfReq id=0x1 &#60;asyncmap 0x0&#62; &#60;magic 0x4592a46e&#62; &#60;pcomp&#62; &#60;accomp&#62;]
+...
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   Now start PPP on the remote IrDA device and you should see:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;sent [LCP EchoReq id=0x0 magic=0x3c8803b1]
+sent [IPCP ConfReq id=0x1 &#60;addr 192.168.0.2&#62; &#60;compress VJ 0f 01&#62;]
+sent [CCP ConfReq id=0x1 &#60;deflate 15&#62; &#60;deflate(old#) 15&#62; &#60;bsd v1 15&#62;]
+rcvd [LCP ConfAck id=0x1 &#60;asyncmap 0x0&#62; &#60;magic 0x3c8803b1&#62; &#60;pcomp&#62; &#60;accomp&#62;]
+rcvd [LCP ConfAck id=0x1 &#60;asyncmap 0x0&#62; &#60;magic 0x3c8803b1&#62; &#60;pcomp&#62; &#60;accomp&#62;]
+rcvd [LCP EchoReq id=0x0 magic=0xa922f0e8]
+sent [LCP EchoRep id=0x0 magic=0x3c8803b1]
+rcvd [IPCP ConfReq id=0x1 &#60;addr 0.0.0.0&#62; &#60;compress VJ 0f 01&#62;]
+sent [IPCP ConfNak id=0x1 &#60;addr 192.168.0.3&#62;]
+rcvd [CCP ConfReq id=0x1 &#60;deflate 15&#62; &#60;deflate(old#) 15&#62; &#60;bsd v1 15&#62;]
+sent [CCP ConfAck id=0x1 &#60;deflate 15&#62; &#60;deflate(old#) 15&#62; &#60;bsd v1 15&#62;]
+rcvd [LCP EchoRep id=0x0 magic=0xa922f0e8]
+rcvd [IPCP ConfAck id=0x1 &#60;addr 192.168.0.2&#62; &#60;compress VJ 0f 01&#62;]
+rcvd [CCP ConfAck id=0x1 &#60;deflate 15&#62; &#60;deflate(old#) 15&#62; &#60;bsd v1 15&#62;]
+Deflate (15) compression enabled
+rcvd [IPCP ConfReq id=0x2 &#60;addr 192.168.0.3&#62; &#60;compress VJ 0f 01&#62;]
+sent [IPCP ConfAck id=0x2 &#60;addr 192.168.0.3&#62; &#60;compress VJ 0f 01&#62;]
+Cannot determine ethernet address for proxy ARP
+local  IP address 192.168.0.2
+remote IP address 192.168.0.3
+Script /etc/ppp/ip-up started (pid 3975)
+Script /etc/ppp/ip-up finished (pid 3975), status = 0x1
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   And in the window running <B
+CLASS="command"
+>irdadump</B
+> you see 
+   the IrDA traffic:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;08:17:11.179260 i:rsp  &#62; ca=08 pf=1 nr=1 ns=2 LM slsap=00 dlsap=19 CONN_RSP (6)
+08:17:11.199127 i:cmd  &#60; ca=08 pf=1 nr=3 ns=1 LM slsap=00 dlsap=1d CONN_RSP (6)
+08:17:11.199226 i:rsp  &#62; ca=08 pf=1 nr=2 ns=3 LM slsap=1d dlsap=00 GET_VALUE_BY_CLASS: "IrLPT" "IrDA:IrLMP:LsapSel" (30)
+08:17:11.219123 i:cmd  &#60; ca=08 pf=1 nr=4 ns=2 LM slsap=00 dlsap=1c CONN_RSP (6)
+08:17:11.219207 i:rsp  &#62; ca=08 pf=1 nr=3 ns=4 LM slsap=1c dlsap=00 GET_VALUE_BY_CLASS: "IrDA:IrCOMM" "Parameters" (28)
+08:17:11.241117 i:cmd  &#60; ca=08 pf=1 nr=5 ns=3 LM slsap=19 dlsap=00 GET_VALUE_BY_CLASS: "IrDA:IrCOMM" "Parameters" (28)
+08:17:11.241213 i:rsp  &#62; ca=08 pf=1 nr=4 ns=5 LM slsap=00 dlsap=19 GET_VALUE_BY_CLASS: Success N/A (19)
+08:17:11.259114 i:cmd  &#60; ca=08 pf=1 nr=6 ns=4 LM slsap=00 dlsap=1d GET_VALUE_BY_CLASS: No such class (11)
+08:17:11.259216 i:rsp  &#62; ca=08 pf=1 nr=5 ns=6 LM slsap=1d dlsap=00 DISC (6)
+08:17:11.280107 i:cmd  &#60; ca=08 pf=1 nr=7 ns=5 LM slsap=00 dlsap=1c GET_VALUE_BY_CLASS: Success N/A (19)
+08:17:11.280281 i:rsp  &#62; ca=08 pf=0 nr=6 ns=7 LM slsap=1c dlsap=00 DISC (6)
+08:17:11.282124 i:rsp  &#62; ca=08 pf=1 nr=6 ns=0 LM slsap=1e dlsap=00 CONN_CMD (6)
+08:17:11.299104 i:cmd  &#60; ca=08 pf=1 nr=1 ns=6 LM slsap=19 dlsap=00 DISC (6)
+08:17:11.299204 rr:rsp &#62; ca=08 pf=1 nr=7 (2)
+08:17:11.319102 i:cmd  &#60; ca=08 pf=1 nr=1 ns=7 LM slsap=1a dlsap=00 CONN_CMD (6)
+08:17:11.319209 i:rsp  &#62; ca=08 pf=1 nr=0 ns=1 LM slsap=00 dlsap=1a CONN_RSP (6)
+08:17:11.339100 i:cmd  &#60; ca=08 pf=1 nr=2 ns=0 LM slsap=00 dlsap=1e CONN_RSP (6)
+08:17:11.339197 i:rsp  &#62; ca=08 pf=1 nr=1 ns=2 LM slsap=1e dlsap=00 GET_VALUE_BY_CLASS: "IrDA:IrCOMM" "IrDA:TinyTP:LsapSel" (37)
+08:17:11.361096 i:cmd  &#60; ca=08 pf=1 nr=3 ns=1 LM slsap=1a dlsap=00 GET_VALUE_BY_CLASS: "IrDA:IrCOMM" "IrDA:TinyTP:LsapSel" (37)
+08:17:11.361191 i:rsp  &#62; ca=08 pf=1 nr=2 ns=3 LM slsap=00 dlsap=1a GET_VALUE_BY_CLASS: Success Integer: 14 (15)
+08:17:11.380092 i:cmd  &#60; ca=08 pf=1 nr=4 ns=2 LM slsap=00 dlsap=1e GET_VALUE_BY_CLASS: Success Integer: 14 (15)
+08:17:11.380214 i:rsp  &#62; ca=08 pf=0 nr=3 ns=4 LM slsap=1e dlsap=00 DISC (6)
+08:17:11.382104 i:rsp  &#62; ca=08 pf=1 nr=3 ns=5 LM slsap=14 dlsap=14 CONN_CMD TTP credits=0(7)
+08:17:11.399090 i:cmd  &#60; ca=08 pf=1 nr=6 ns=3 LM slsap=1a dlsap=00 DISC (6)
+08:17:11.399190 rr:rsp &#62; ca=08 pf=1 nr=4 (2)
+08:17:11.419082 i:cmd  &#60; ca=08 pf=1 nr=6 ns=4 LM slsap=14 dlsap=14 CONN_CMD TTP credits=0(7)
+08:17:11.419159 rr:rsp &#62; ca=08 pf=1 nr=5 (2)
+08:17:11.438080 rr:cmd &#60; ca=08 pf=1 nr=6 (2)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   Switch to another terminal and check the PPP device with
+   <B
+CLASS="command"
+>ifconfig</B
+> :
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;ppp0      Link encap:Point-to-Point Protocol
+          inet addr:192.168.0.2  P-t-P:192.168.0.3  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:9 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0
+          RX bytes:318 (318.0 b)  TX bytes:708 (708.0 b)
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   With <B
+CLASS="command"
+>ps aux | grep irda</B
+> you should now see these
+   Processes:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;root      3534  0.0  0.2  1272  464 ?        S    06:51   0:00 irattach irda1 -s
+root      3579  0.3  0.2  1400  476 tty1     S    06:55   0:06 irdadump
+root      4312  0.1  0.4  2088  948 tty2     S    07:18   0:00 pppd call irda
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   With <B
+CLASS="command"
+>route -n</B
+> you may now see this PPP devices:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+192.168.0.3     0.0.0.0         255.255.255.255 UH    0      0        0 ppp0
+0.0.0.0         192.168.0.3     0.0.0.0         UG    0      0        0 ppp0
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   And it should be possible to do a <B
+CLASS="command"
+>ping 192.168.0.3</B
+>
+   to the remote host:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;PING 192.168.0.3 (192.168.0.3): 56 data bytes
+64 bytes from 192.168.0.3: icmp_seq=0 ttl=64 time=290.7 ms
+64 bytes from 192.168.0.3: icmp_seq=1 ttl=64 time=146.6 ms
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;   Now you may use TCP/IP applications. For example <B
+CLASS="command"
+>ssh</B
+> 
+   (note it will take some time to establish the connection be patient):
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;ssh -v USER@192.168.0.3
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1251"
+></A
+>4.6.7. Setting up a Printer Connection (IrLPT)</H2
+><P
+>&#13;   Instead of using TCP/IP connections the dongle works for
+   printer connections, too. The device name is
+   <TT
+CLASS="filename"
+>/dev/irlpt0</TT
+>. For details about IrDA printer
+   connections see the appropriate chapter above.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1255"
+></A
+>4.6.8. Cleaning Up</H2
+><P
+>&#13;   You may now finetune your settings, e.g. to solve routing issues. It may
+   also possible to set up higher speeds, but I haven't tried that yet.
+   If everything works fine, you may now choose to make the
+   configuration permanent. You may edit <TT
+CLASS="filename"
+>/etc/irda.conf</TT
+>
+   and configure the system V init scripts (for IrDA, network, ..). But the 
+   way to do it right depends on your Linux distribution.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1259"
+></A
+>4.6.9. Remaining Problems</H2
+><P
+>&#13;   I encountered a strange problem. When inserting the IrDA-USB dongle,
+   I got a slight and constant noise from the beeper.
+
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-irda-hardware.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-irda-pda.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>IrDA Hardware</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-hardware-supported.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Linux PDAs: Agenda, iPAQ, Yopy, Zaurus</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

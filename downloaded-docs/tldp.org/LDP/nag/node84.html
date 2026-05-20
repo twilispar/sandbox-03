@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Configuring Name Server Lookups-- resolv.conf</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node85.html">Resolver Robustness</A>
+<B>Up:</B> <A HREF="node81.html">The Resolver Library</A>
+<B> Previous:</B> <A HREF="node83.html">Resolver Environment Variables</A>
+<BR> <P>
+<H2><A NAME="SECTION008130000">Configuring Name Server Lookups-- resolv.conf</A></H2>
+
+When configuring the resolver library to use the BIND name service for
+host lookups, you also have to tell it which name servers to use.
+There is a separate file for this, called resolv.conf.
+If this file does not exist or is empty, the resolver assumes the
+name server is on your local host.
+<P>
+If you run a name server on your local host, you have to set it up
+separately, as will be explained in the following section.
+If your are on a local network and have the opportunity to use an
+existing nameserver, this should always be preferred.
+<P>
+The most important option in resolv.conf is nameserver,
+which gives the IP-address of a name server to use. If you specify
+several name servers by giving the nameserver option several
+times, they are tried in the order given. You should therefore put the
+most reliable server first.  Currently, up to three name servers are
+supported.
+<P>
+If no nameserver option is given, the resolver attempts
+to connect to the name server on the local host.
+<p>
+Two other options, domain and search deal with default
+domains that are tacked onto a hostname if BIND fails to resolve it
+with the first query. The search option specifies a list of
+domain names to be tried. The list items are separated by spaces
+or tabs.
+<P>
+If no search option is given, a default search list is constructed
+from the local domain name by using the domain name itself, plus all
+parent domains up to the root. The local domain name may be given using
+the domain statement; if none is given, the resolver obtains
+it through the getdomainname(2) system call.
+<P>
+If this sounds confusing to you, consider this sample resolv.conf
+file for the Virtual Brewery:
+<pre>
+           # /etc/resolv.conf
+           # Our domain
+           domain         vbrew.com
+           #
+           # We use vlager as central nameserver:
+           nameserver     191.72.1.1
+
+</pre>
+When resolving the name vale, the resolver would look up
+vale, and failing this, vale.vbrew.com, and
+vale.com.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node85.html">Resolver Robustness</A>
+<B>Up:</B> <A HREF="node81.html">The Resolver Library</A>
+<B> Previous:</B> <A HREF="node83.html">Resolver Environment Variables</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

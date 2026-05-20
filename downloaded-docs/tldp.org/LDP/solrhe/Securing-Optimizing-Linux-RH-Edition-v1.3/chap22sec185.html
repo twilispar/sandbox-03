@@ -1,0 +1,435 @@
+<HTML
+><HEAD
+><TITLE
+>Sendmail Administrative Tools</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Mail Network"
+HREF="soser-mailn.html"><LINK
+REL="PREVIOUS"
+TITLE="Limit queue processing to root"
+HREF="chap22sec184.html"><LINK
+REL="NEXT"
+TITLE="Installed  files: Sendmail -Central Mail Hub"
+HREF="chap22sec186.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap22sec184.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 22. Software -Server/Mail Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap22sec186.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN12780"
+>22.13. Sendmail Administrative Tools</A
+></H1
+><P
+>&#13;         The commands listed below are some that we use often, but many more exist. Check the man page and documentation for more details and information.
+         </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>newaliases. </B
+>
+         The purpose of the <TT
+CLASS="filename"
+>newaliases</TT
+> program utility of Sendmail is to rebuild and update the random access database for the mail aliases file <TT
+CLASS="filename"
+>/etc/mail/aliases</TT
+>. It must be 
+         run each time you change the contents of this file in order for the changes to take effect.
+         
+         To update the aliases file with the <TT
+CLASS="filename"
+>newaliases</TT
+> utility, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /usr/bin/newaliases
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>makemap. </B
+>
+         The purpose of the <B
+CLASS="command"
+>makemap</B
+> program utility is to create the database maps in Sendmail. The <B
+CLASS="command"
+>makemap</B
+> command must be used only when you need to create a new database for file like 
+         <TT
+CLASS="filename"
+>aliases, access</TT
+>, or <TT
+CLASS="filename"
+>domaintable, mailertable</TT
+>, and <TT
+CLASS="filename"
+>virtusertable</TT
+>.
+         
+         To run makemap to create a new database for access, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# makemap hash /etc/mail/access.db &#60; /etc/mail/access
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <P
+></P
+><UL
+><LI
+><P
+>&#13;         Where &#60;hash&#62; is the database format, makemap can handles up to three different database formats;  they may be <TT
+CLASS="literal"
+>hash</TT
+>, <TT
+CLASS="literal"
+>btree</TT
+> or <TT
+CLASS="literal"
+>dbm</TT
+>. 
+         </P
+></LI
+><LI
+><P
+>&#13;         The <TT
+CLASS="filename"
+>/etc/mail/access.db</TT
+> is the location and the name of the new database that will be created. 
+         </P
+></LI
+><LI
+><P
+>&#13;         The <TT
+CLASS="filename"
+>/etc/mail/access</TT
+> is the location of the file from where makemap will read from the standard input file. 
+         </P
+></LI
+></UL
+>
+         In our example, we have created a new <TT
+CLASS="filename"
+>access.db</TT
+> file with the makemap command above. To create a database for other files like <TT
+CLASS="filename"
+>aliases, domaintable, mailertable</TT
+>, and <TT
+CLASS="filename"
+>virtusertable</TT
+>, 
+         you must indicate the location and name of the corresponding file in the <B
+CLASS="command"
+>makemap</B
+> command.
+         </P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>mailq. </B
+>
+         The purpose of the <B
+CLASS="command"
+>mailq</B
+> program utility is to print a summary of the mail messages queued for future delivery.
+         
+         To print a summary of the mail messages queued, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>mailq</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Mail queue is empty
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></DIV
+><DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN12823"
+>22.13.1. Sendmail Users Tools</A
+></H2
+><P
+>&#13;         The commands listed below are some that we use often, but many more exist. Check the man page and documentation for more details and information.
+         </P
+><DIV
+CLASS="formalpara"
+><P
+><B
+>mailstats. </B
+>
+         The purpose of the <B
+CLASS="command"
+>mailstats</B
+> program utility is to displays contents of the current mail statistics.
+         
+         To displays the current mail statistics, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>mailstats</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Statistics from Tue Dec 14 20:31:48 1999
+         M   msgsfr  bytes_from   msgsto    bytes_to  msgsrej msgsdis  Mailer
+         5        0          0K        1          3K        0       0  esmtp
+         8     1259      19618K     1259      19278K        0       0  local
+         =============================================================
+         T     1259      19618K     1260      19281K        0       0
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>praliases. </B
+>
+         The purpose of the <B
+CLASS="command"
+>praliases</B
+> program utility is to display one per line, in no particular order the contents of the current system mail aliases.
+         
+         To displays the current system aliases, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>praliases</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         postmaster:root
+         daemon:root
+         root:admin
+         @:@
+         mailer-daemon:postmaster
+         bin:root
+         nobody:root
+         webadmin:admin
+         www:root
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap22sec184.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap22sec186.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Limit queue processing to <TT
+CLASS="literal"
+>root</TT
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soser-mailn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Installed  files: Sendmail -Central Mail Hub</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

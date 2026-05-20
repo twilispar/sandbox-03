@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Linux SCSI programming HOWTO: The Header Structure</TITLE>
+ <LINK HREF="SCSI-Programming-HOWTO-9.html" REL=next>
+ <LINK HREF="SCSI-Programming-HOWTO-7.html" REL=previous>
+ <LINK HREF="SCSI-Programming-HOWTO.html#toc8" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="SCSI-Programming-HOWTO-9.html">Next</A>
+<A HREF="SCSI-Programming-HOWTO-7.html">Previous</A>
+<A HREF="SCSI-Programming-HOWTO.html#toc8">Contents</A>
+<HR>
+<H2><A NAME="s8">8. The Header Structure</A></H2>
+
+<P>
+<P>
+<A NAME="sec-header"></A> 
+The header structure <CODE>struct sg_header</CODE> serves as a controlling 
+layer between the application and the kernel driver.
+We now discuss its components in detail.
+<P>
+<P>
+<DL>
+<DT><B>int pack_len</B><DD><P>defines the size of the block written to the driver.
+This is defined within the kernel for internal use.
+<DT><B>int reply_len</B><DD><P>defines the size of the block to be accepted at reply.
+This is defined from the application side.
+<P>
+<DT><B>int pack_id</B><DD><P>This field helps to assign replies to requests. The application
+can supply a unique id for each request. Suppose you have written several
+commands (say 4) to one device. They may work in
+parallel, one being the fastest. When getting replies via 4 reads, the replies
+do not have to have the order of the requests. To identify the correct reply
+for a given request one can use the <CODE>pack_id</CODE> field. Typically its value
+is incremented after each request (and wraps eventually). The maximum
+amount of outstanding requests is limited by the kernel to SG_MAX_QUEUE (eg 4).
+<P>
+<DT><B>int result</B><DD><P>the result code of a <CODE>read</CODE> or <CODE>write</CODE> call.
+This is (sometimes) defined from the generic driver (kernel) side.
+It is safe to set it to null before the <CODE>write</CODE> call.
+These codes are defined in <CODE>errno.h</CODE> (0 meaning no error).
+<P>
+<DT><B>unsigned int twelve_byte:1</B><DD><P>This field is necessary only when
+using non-standard vendor specific commands (in the range 0xc0 - 0xff).
+When these commands have a command length of 12 bytes instead of 10,
+this field has to be set to one before the write call. Other command
+lengths are not supported. This is defined from the application side.
+<P>
+<DT><B>unsigned char sense_buffer[16]</B><DD><P>This buffer is set after a
+command is completed (after a <CODE>read()</CODE> call) and contains the
+SCSI sense code. Some command results have to be read from here (e.g. for 
+<CODE>TESTUNITREADY</CODE>). Usually it contains just zero bytes.
+The value in this field is set by the generic driver (kernel) side.
+</DL>
+<P>
+<P>
+<P>The following example function interfaces directly with the generic
+kernel driver. It defines the header structure, sends the command via
+<CODE>write</CODE>, gets the result via <CODE>read</CODE> and does some (limited)
+error checking.  The sense buffer data is available in the output
+buffer (unless a NULL pointer has been given, in which case it's in
+the input buffer). We will use it in the examples which follow.
+<P>Note: Set the value of <CODE>DEVICE</CODE> to your device descriptor.
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+#define DEVICE "/dev/sgc"
+
+/* Example program to demonstrate the generic SCSI interface */
+#include &lt;stdio.h>
+#include &lt;unistd.h>
+#include &lt;string.h>
+#include &lt;fcntl.h>
+#include &lt;errno.h>
+#include &lt;scsi/sg.h>
+
+
+#define SCSI_OFF sizeof(struct sg_header)
+static unsigned char cmd[SCSI_OFF + 18];      /* SCSI command buffer */
+int fd;                               /* SCSI device/file descriptor */
+
+/* process a complete SCSI cmd. Use the generic SCSI interface. */
+static int handle_SCSI_cmd(unsigned cmd_len,         /* command length */
+                           unsigned in_size,         /* input data size */
+                           unsigned char *i_buff,    /* input buffer */
+                           unsigned out_size,        /* output data size */
+                           unsigned char *o_buff     /* output buffer */
+                           )
+{
+    int status = 0;
+    struct sg_header *sg_hd;
+
+    /* safety checks */
+    if (!cmd_len) return -1;            /* need a cmd_len != 0 */
+    if (!i_buff) return -1;             /* need an input buffer != NULL */
+#ifdef SG_BIG_BUFF
+    if (SCSI_OFF + cmd_len + in_size > SG_BIG_BUFF) return -1;
+    if (SCSI_OFF + out_size > SG_BIG_BUFF) return -1;
+#else
+    if (SCSI_OFF + cmd_len + in_size > 4096) return -1;
+    if (SCSI_OFF + out_size > 4096) return -1;
+#endif
+
+    if (!o_buff) out_size = 0;      /* no output buffer, no output size */
+
+    /* generic SCSI device header construction */
+    sg_hd = (struct sg_header *) i_buff;
+    sg_hd->reply_len   = SCSI_OFF + out_size;
+    sg_hd->twelve_byte = cmd_len == 12;
+    sg_hd->result = 0;
+#if     0
+    sg_hd->pack_len    = SCSI_OFF + cmd_len + in_size; /* not necessary */
+    sg_hd->pack_id;     /* not used */
+    sg_hd->other_flags; /* not used */
+#endif
+
+    /* send command */
+    status = write( fd, i_buff, SCSI_OFF + cmd_len + in_size );
+    if ( status &lt; 0 || status != SCSI_OFF + cmd_len + in_size || 
+                       sg_hd->result ) {
+        /* some error happened */
+        fprintf( stderr, "write(generic) result = 0x%x cmd = 0x%x\n",
+                    sg_hd->result, i_buff[SCSI_OFF] );
+        perror("");
+        return status;
+    }
+    
+    if (!o_buff) o_buff = i_buff;       /* buffer pointer check */
+
+    /* retrieve result */
+    status = read( fd, o_buff, SCSI_OFF + out_size);
+    if ( status &lt; 0 || status != SCSI_OFF + out_size || sg_hd->result ) {
+        /* some error happened */
+        fprintf( stderr, "read(generic) status = 0x%x, result = 0x%x, "
+                         "cmd = 0x%x\n", 
+                         status, sg_hd->result, o_buff[SCSI_OFF] );
+        fprintf( stderr, "read(generic) sense "
+                "%x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x\n", 
+                sg_hd->sense_buffer[0],         sg_hd->sense_buffer[1],
+                sg_hd->sense_buffer[2],         sg_hd->sense_buffer[3],
+                sg_hd->sense_buffer[4],         sg_hd->sense_buffer[5],
+                sg_hd->sense_buffer[6],         sg_hd->sense_buffer[7],
+                sg_hd->sense_buffer[8],         sg_hd->sense_buffer[9],
+                sg_hd->sense_buffer[10],        sg_hd->sense_buffer[11],
+                sg_hd->sense_buffer[12],        sg_hd->sense_buffer[13],
+                sg_hd->sense_buffer[14],        sg_hd->sense_buffer[15]);
+        if (status &lt; 0)
+            perror("");
+    }
+    /* Look if we got what we expected to get */
+    if (status == SCSI_OFF + out_size) status = 0; /* got them all */
+
+    return status;  /* 0 means no error */
+}
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>While this may look somewhat complex at first appearance, most of the
+code is for error checking and reporting (which is useful even after
+the code is working).
+<P><CODE>Handle_SCSI_cmd</CODE> has a generalized form for all SCSI commands
+types, falling into each of these categories:
+<P>
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+       Data Mode              | Example Command
+===============================================
+neither input nor output data | test unit ready
+ no input data, output data   | inquiry, read
+ input data, no output data   | mode select, write
+   input data, output data    | mode sense
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>
+<P>
+<HR>
+<A HREF="SCSI-Programming-HOWTO-9.html">Next</A>
+<A HREF="SCSI-Programming-HOWTO-7.html">Previous</A>
+<A HREF="SCSI-Programming-HOWTO.html#toc8">Contents</A>
+</BODY>
+</HTML>

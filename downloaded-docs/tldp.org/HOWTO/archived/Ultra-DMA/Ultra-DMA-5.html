@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Linux Ultra-DMA Mini-Howto: Offboard PCI UDMA interfaces</TITLE>
+ <LINK HREF="Ultra-DMA-6.html" REL=next>
+ <LINK HREF="Ultra-DMA-4.html" REL=previous>
+ <LINK HREF="Ultra-DMA.html#toc5" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Ultra-DMA-6.html">Next</A>
+<A HREF="Ultra-DMA-4.html">Previous</A>
+<A HREF="Ultra-DMA.html#toc5">Contents</A>
+<HR>
+<H2><A NAME="pci"></A> <A NAME="s5">5. Offboard PCI UDMA interfaces</A></H2>
+
+<P>
+<P>These are UDMA interfaces on PCI cards that can be used to add UDMA
+support to an existing computer without replacing the motherboard, or
+for adding support for an additional four drives to a machine which has
+had its onboard interfaces filled. They can also be found preinstalled
+in some computers, especially Gateway 2000 and Dell machines.
+<P>Most of them are not supported by the old stable kernels (2.0.x), but many should
+work with a 2.2.x kernel - the Red Hat 6.0 and SuSE 6.1 distributions are
+based on 2.2.x kernels, as are the most recent versions of most other distros.
+However some of the latest cards (the Promise Ultra66 for instance) won't
+work even with the current 2.2.x kernels, if you have this or can't get a
+newer distribution then you must apply a kernel patch or upgrade to a newer
+kernel version.
+If you need to install Linux onto a hard drive on one of these interfaces
+in this case, you will need to use a few odd tricks.
+<P>
+<H2><A NAME="promise"></A> <A NAME="ss5.1">5.1 Promise Ultra33</A>
+</H2>
+
+<P>
+<P>This is a PCI card that has two UDMA channels on it, supporting up to four
+drives total. You can look up specifications &amp; pricing at
+<A HREF="http://www.promise.com">http://www.promise.com</A>.
+This card shipped in early model Gateway 2000 Pentium II systems.
+<P>Kernels 2.0.35 and later and all 2.2.x kernels support the Ultra33 and
+you should have no trouble installing a distribution that uses these kernels.
+However, the older stable kernels (2.0.34 and below) do not, and
+since most older Linux distributions include these older kernels it can
+be a little difficult to get Linux installed if you can't or don't want
+to use a newer version (for instance if you are standardized on a particular
+version of a distribution throughout your organization).
+<P><B>Installing Linux with the Ultra33</B>
+<P>Although there is a patch for the Ultra33 interface,
+it is not very easy to apply a patch and recompile your kernel if you have
+not installed Linux yet! So, here is a workaround which allows you to
+install. Thanks to Gadi Oxman for the following information on getting the
+interface settings:
+<P>
+<BLOCKQUOTE><CODE>
+<PRE>
+If we can access the console with the installation disk, we can also
+use "cat /proc/pci" to display the Promise interface settings:
+
+    RAID bus interface: Promise Technology Unknown device (rev 1).
+      Vendor id=105a. Device id=4d33.
+      Medium devsel.  IRQ 12.  Master Capable.  Latency=32.
+      I/O at 0xe000.   (a)
+      I/O at 0xd804.   (b)
+      I/O at 0xd400.   (c)
+      I/O at 0xd004.   (d)
+      I/O at 0xc800.   (e)
+
+and pass "ide2=a,b+2 ide3=c,d+2" as a command line parameter to the kernel.
+</PRE>
+</CODE></BLOCKQUOTE>
+<P>Note that the numbers probably are not the same as what you will have.
+Just as an example, the parameters to use for the above set of numbers
+would be ``<CODE>ide2=0xe000,0xd806 ide3=0xd400,0xd006</CODE>''.
+If you are only using the first channel on the Ultra33 (for
+instance, if you only have one drive, or two if they are master and slave on
+the same channel), then you won't need to specify <CODE>ide3</CODE>.
+<P><B>Red Hat 5.1:</B> Boot with the boot diskette and press enter when prompted.
+The kernel will load, and then you will be asked for a language, keyboard
+type, and installation method. You may be prompted for additional information
+about the source media; it doesn't matter right now what you tell it as long
+as you can get to the next step. Next you should see a screen titled
+``Select Installation Path''; press Alt-F2 now to get to a command prompt.
+Run ``<CODE>cat /proc/pci</CODE>'', write down
+the numbers as above, and reboot from the boot disk. This time, type
+``<CODE>linux ide2=</CODE> <EM>(this is where you put the numbers like shown
+above)</EM><CODE> ide3=</CODE><EM>(more numbers)</EM>''. It should now be able to install
+onto your hard disk without difficulty, however LILO will probably not be able to
+install; instead make a boot floppy and boot it with the same parameters
+until you can patch LILO and and the kernel.
+<P><B>Red Hat 5.0</B> and <B>Slackware 3.4:</B> These are similar, but with the wrinkle
+that the setup programs ignore <CODE>/dev/hde-h</CODE> (the drives on <CODE>ide2</CODE> and <CODE>ide3</CODE>).
+In order to install to or from these drives it is necessary to override one or 
+both of the onboard interface's channels. However be sure not to override a
+device that you need to install; for instance if you are installing from a CD-ROM drive on
+<CODE>/dev/hdd</CODE> (<CODE>ide1</CODE> - onboard interface) to a hard drive on <CODE>/dev/hde</CODE>
+(<CODE>ide2</CODE> - the Ultra33), you should override the non-essential <CODE>ide0</CODE> with
+<CODE>ide2</CODE> and leave <CODE>ide1</CODE> intact. Assuming the numbers above you would boot with
+``<CODE>ide0=0xe000,0xd806</CODE>''. Red Hat 5.0 will give you a shell prompt if you use
+the rescue disk capability, and Slackware includes a shell in the regular installation
+process. However Red Hat 5.0 is difficult to boot after installation; if you have
+problems you could try downloading a Slackware boot disk from 
+<A HREF="ftp://ftp.cdrom.com/pub/linux/slackware-3.5/bootdsks.144/">ftp://ftp.cdrom.com/pub/linux/slackware-3.5/bootdsks.144/</A>
+and using that to boot.
+<P>With another Linux distribution you will have to improvise a bit, but the
+process should be about the same as the above.
+<P><B><EM>IMPORTANT:</EM></B> Without the patch (discussed in the
+section 
+<A HREF="Ultra-DMA-7.html#unified">Unified IDE</A>), the
+kernel <B>needs</B> these boot parameters in order to access your hard
+disk! Therefore it is very important that when you configure LILO, either on
+the hard disk or on a boot floppy, that you give it the <B>exact same
+parameters</B> that you gave when installing. Otherwise your system won't
+boot! It should be possible to give them to LILO when you boot (ie, press
+Shift, type in ``<CODE>linux ide2=</CODE><EM>.....</EM>'' each time you boot), but only
+if you kept the numbers! It is recommended that you patch your kernel as soon
+as possible so you will not have to worry about that anymore; once you are
+booting with a patched kernel, you can get rid of the boot parameters. Also,
+as far as I know there is no way to pass boot parameters to a plain kernel
+boot floppy (as made with ``<CODE>make zdisk</CODE>''), you <B>must</B> use LILO or
+another loader (such as LOADLIN) that lets you pass boot parameters.
+<P>However, unpatched kernels and installation programs often have a difficult
+time actually using ide2 and ide3, even if the drives are detected properly.
+So if you can't get Linux to install using the above technique, try
+specifying ide0 or ide1 instead of ide2 or ide3 (thanks to Martin Gaitan for
+this technique). This essentially replaces the on-board interface
+with the Promise Ultra33 as far as the kernel is concerned, and you can
+follow the directions in the next section as if you had physically moved it.
+Note that if you're using an IDE CD-ROM drive connected to your on-board
+interface to install from, you will want to make sure that you do not take
+over the interface that the CD is on or you will not be able to install! If
+the CD is hda or hdb, use ide1 for your hard drive, and if it is hdc or hdd,
+then use ide0.
+<P><B>Installing Linux Around the Ultra33</B>
+<P>If you cannot get the software workaround to work, you will have to try a
+more brute force approach. Here's an alternative method that is virtually
+guaranteed to work, but  will require you to open up your computer and mess
+about in it. <B>NOTE:</B> If you are not familiar with the process of
+connecting and disconnecting IDE drives, <B>read the manuals</B> that came
+with your computer, your hard drive, and/or the Promise Ultra33 before
+attempting this! If you screw something up and don't know how to put it
+back, you could end up being sorry!
+<P>That being said, it's all really quite simple. Most motherboards these days 
+have built-in EIDE interfaces. Disconnect your hard drive from the Ultra33 
+and connect it to the onboard interface. If you have other IDE devices,
+such as a CD-ROM, tape, or ZIP drive, on your oboard interface, it is 
+easiest if you either add the hard drive on an unused channel (the secondary
+instead of the primary) or temporarily displace a device that you don not
+need immediately (such as ZIP or tape). Install Linux. Download and apply 
+the Promise UDMA patch (see next section).
+<P>Now you are ready to move the drive back onto the Promise... almost. To be
+safe, make a kernel-image boot floppy (<CODE>cd /usr/src/linux ; make
+zdisk</CODE>), which you  will be able to use to boot your system in case LILO
+doesn't work. Actually, to be <EM>very</EM> safe, make two and put one away for
+now.
+<P>Okay, now it is time
+to think a little... if you have just one hard drive and it is going to be on
+the Promise, then it will most likely be <CODE>/dev/hde</CODE> (<CODE>a</CODE> and 
+<CODE>b</CODE> are for the primary
+onboard interface, <CODE>c</CODE> and <CODE>d</CODE> for the secondary onboard interface).
+If you are going to put any other drives on it, then the slave of the
+Promise's first channel will be <CODE>/dev/hdf</CODE>, the master of the second
+will be <CODE>/dev/hdg</CODE>, and the slave of the second will be
+<CODE>/dev/hdh</CODE>. 
+<P>Edit <CODE>/etc/fstab</CODE>, and change all the partitions of the hard drives
+you are moving from the onboard drives (<CODE>/dev/hda</CODE>, <CODE>hdb</CODE>,
+etc) to their new locations  on the Promise (<CODE>/dev/hde</CODE>, <CODE>hdf</CODE>,
+etc). If you had to displace any devices (such as a CD-ROM or ZIP drive)
+that you want to leave on the onboard interface, then change them to their
+new locations as well. For instance, if your CD-ROM was originally the
+master on the primary channel (<CODE>/dev/hda</CODE>), but you put your hard disk
+there and had to bump the CD to the slave  (<CODE>/dev/hdb</CODE>) or to the
+secondary channel (<CODE>/dev/hdc</CODE>), and now you want to put  it back, then
+change it to <CODE>/dev/hda</CODE>.
+<P>If you are using LILO, reconfigure LILO to use the new location of the drive
+(LILO configuration is beyond the scope of this document, if you do not know
+how, read the 
+<A HREF="http://www.linuxdoc.org/HOWTO/mini/LILO.html">LILO mini-HOWTO</A>),
+or else it probably will not be able to boot unless you use that boot floppy
+I had you make, which you will also want to configure to boot off the new 
+partition. This is done using the <CODE>rdev</CODE> command. Put the floppy in the 
+drive and type ``<CODE>rdev /dev/fd0 /dev/hde1</CODE>''. Of course that's assuming
+your root partition is the first on your first UDMA drive. If not (mine is 
+<CODE>/dev/hde7</CODE>, for instance), then obviously use the appropriate 
+partition number!
+<P>Reboot. Your system should now work fine.
+<P><B>Patching for the Ultra33</B>
+<P>Kernels 2.0.35 and later support the Promise Ultra33 natively; download an upgrade
+from your Linux distribution or from 
+<A HREF="http://www.kernel.org">http://www.kernel.org</A>.
+<P>For instructions on how to compile the kernel, read the 
+<A HREF="http://www.linuxdoc.org/HOWTO/Kernel­HOWTO.html">Kernel HOWTO</A>.
+<P><B>Using two Ultra33 cards in one machine</B>
+<P>This is currently not working correctly... don't do it right now unless you're
+willing to fiddle with the kernel to try to get things to work.
+<P>
+<H2><A NAME="promise66"></A> <A NAME="ss5.2">5.2 Promise Ultra66</A>
+</H2>
+
+<P>This is essentially the same as the Ultra33 with support for the new UDMA mode 4
+66 MB/sec transfer speed. Unfortunately it is not yet supported by 2.2.x
+kernels.
+<P>There is a patch for 2.0.x and 2.2.x kernels availabe at
+<A HREF="http://www.kernel.org/pub/linux/kernel/people/hedrick">http://www.kernel.org/pub/linux/kernel/people/hedrick</A>, and support is
+included in the 2.3.x development kernel series at least as of 2.3.3.
+<P>However to get far enough to patch or upgrade the kernel you'll have to pull
+the same dirty tricks as for the Ultra33 as in the section above, or else
+use a boot disk image 
+<A HREF="http://www.promise.com/latest/latedrivers.htm#linuxu66">provided by Promise</A><P>
+<H2><A NAME="artop"></A> <A NAME="ss5.3">5.3 Artop ATP850UF</A>
+</H2>
+
+<P>
+<P>This card is supported by the unified IDE code. Installation of Linux onto a system
+with one of these as the interface for the target disk may be similar to the
+workarounds for the Promise Ultra33.
+<P>
+<H2><A NAME="ss5.4">5.4 Adding device files</A>
+</H2>
+
+<P>
+<P>The tertiary and quaternary IDE interfaces (ide2 and ide3) use device files of
+the form <CODE>/dev/hde*</CODE> through <CODE>/dev/hdh*</CODE>. On older kernels these
+devices were not automatically created, so you may need to add them manually
+for things to work properly.
+<P>This can be done easily if you have a current copy of the Linux kernel source
+installed; simply run <CODE>/usr/src/linux/scripts/MAKEDEV.ide</CODE> and it will create
+all relevant device files.
+<P>
+<HR>
+<A HREF="Ultra-DMA-6.html">Next</A>
+<A HREF="Ultra-DMA-4.html">Previous</A>
+<A HREF="Ultra-DMA.html#toc5">Contents</A>
+</BODY>
+</HTML>

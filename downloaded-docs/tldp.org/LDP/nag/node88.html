@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The DNS Database Files</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node89.html">Writing the Master Files</A>
+<B>Up:</B> <A HREF="node86.html">Running named</A>
+<B> Previous:</B> <A HREF="node87.html">The named.boot File</A>
+<BR> <P>
+<H2><A NAME="SECTION008220000">The DNS Database Files</A></H2>
+Master files included by named, like named.hosts, always
+have a domain associated with them, which is called the <em>origin</em>.
+This is the domain name specified with the cache and
+primary commands. Within a master file, you are allowed to
+specify domain and host names relative to this domain.  A name given in
+a configuration file is considered <em>absolute</em> if it ends in a single
+dot, otherwise it is considered relative to the origin.  The origin all
+by itself may be referred to using ``@''.
+<P>
+All data contained in a master file is split up in <em>resource
+records</em>, or RRs for short. They make up the smallest unit of
+information available through DNS. Each resource record has a type. A
+records, for instance, map a hostname to an IP-address, and a CNAME
+record associates an alias for a host with its official hostname. As
+an example, take a look at figure-<A HREF="node89.html#resolvfignamedhosts"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> on
+page-<A HREF="node89.html#resolvfignamedhosts"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>, which shows the
+named.hosts master file for the virtual brewery.
+<P>
+Resource record representations in master files share a
+common format, which is
+<pre>
+	          [domain] [ttl] [class] type rdata
+</pre>
+Fields are separated by spaces or tabs. An entry may be continued
+across several lines if an opening brace occurs before the first newline,
+and the last field is followed by a closing brace. Anything
+between a semicolon and a newline is ignored.
+<dl>
+         <dt>domain <dd>This  is  the  domain  name  to which the entry applies. If no
+                domain name is given, the RR is assumed to apply to the domain
+                of the previous RR.
+
+
+         <dt>   ttl <dd>  In  order  to force resolvers to discard information after a
+                certain time, each RR is associated a ``time to live'', or ttl
+                for  short.  The  ttl  field specifies the time in seconds the
+                information is valid after it  has  been  retrieved  from  the
+                server. It is a decimal number with at most eight digits.
+
+
+                     If no ttl value is given, it defaults to the value of the
+                minimum field of the preceding SOA record.
+
+
+          <dt>class <dd>This is an address class, like IN for IP addresses, or HS  for
+                objects  in  the Hesiod class. For TCP/IP networking, you have
+                to make this IN.
+
+
+                     If no class field is given, the class of the preceding RR
+                is assumed.
+
+
+          <dt> type<dd> This  describes  the type of the RR. The most common types are
+                A, SOA, PTR, and NS.  The following sections describe the var-
+                ious types of RR's.
+
+
+          <dt>rdata <dd> This holds the data associated with the RR. The format of this
+                field depends on the  type  of  the  RR.  Below,  it  will  be
+                described for each RR separately.
+</dl>
+<p>
+The following is an incomplete list of RRs to be used in DNS master
+files. There are a couple more of them, which we will not explain.
+They are experimental, and of little use generally.
+<dl>            SOA<dd>This  describes a zone of authority (SOA means ``Start of
+                Authority''). It signals that the records following the SOA RR
+                contain authoritative information for the domain. Every master
+                file included by a  primary  statement  must  contain  an  SOA
+                record for this zone. The resource data contains the following
+                fields:
+
+
+
+
+ <dt>origin <dd>This is the canonical hostname of the  primary  name
+                          server  for  this  domain. It is usually given as an
+                          absolute name.
+
+ <dt>contact <dd>This is the email address of the person  responsible
+                          for  maintaining  the domain, with the `@' character
+                          replaced by a dot. For instance, if the  responsible
+                          person  at  the  Virtual Brewery is janet, then this
+                          field would contain janet.vbrew.com.
+
+
+<dt> serial <dd>This  is  the  version  number  of  the  zone  file,
+                          expressed  as a single decimal number. Whenever data
+                          is changed in the zone file, this number  should  be
+                          incremented.
+
+
+                               The  serial  number  is  used by secondary name
+                          servers  to  recognize  when  zone  information  has
+                          changed.  To  stay  up  to  date,  secondary servers
+                          request the primary server's SOA record  at  certain
+                          intervals,  and compare the serial number to that of
+                          the cached SOA record.  If the number  has  changed,
+                          the  secondary  servers  transfers  the  whole  zone
+                          database from the primary server.
+
+
+<dt>refresh<dd> This specifies the interval in seconds that the sec-
+                          ondary  servers should wait between checking the SOA
+                          record of the primary server. Again, this is a deci-
+                          mal number with at most eight digits.
+
+
+                               Generally,  the network topology doesn't change
+                          too often, so that this  number  should  specify  an
+                          interval  of  roughly a day for larger networks, and
+                          even more for smaller ones.
+<dt>retry<dd> This number determines the intervals at which a sec-
+                          ondary  server  should  retry contacting the primary
+                          server if a request or a zone refresh fails. It must
+                          not  be  too low, or else a temporary failure of the
+                          server or a network problem may cause the  secondary
+                          server  to  waste  network  resources.  One hour, or
+                          perhaps one half hour, might be a good choice.
+
+
+ <dt>expire<dd> This specifies the time in seconds after  which  the
+                          server  should  finally  discard all zone data if it
+                          hasn't been able to contact the primary  server.  It
+                          should  normally be very large.  Craig Hunt ([ GETST
+                          "hunt-tcpip" ]) recommends 42 days.
+
+
+ <dt>minimum<dd> This is the default ttl value for  resource  records
+                          that  do  not  explicitly specify one. This requires
+                          other name servers to discard the RR after a certain
+                          amount  of  time.  It has however nothing to do with
+                          the time after which a  secondary  server  tries  to
+                          update the zone information.
+
+
+                               minimum should be a large value, especially for
+                          LANs  where  the  network  topology   almost   never
+                          changes.   A  value  of  around a week or a month is
+                          probably a good choice. In the case that single  RRs
+                          may  change  more  frequently,  you can still assign
+                          them different ttl's.
+
+<dt>A<dd>     This associates  an  IP  address  with  a  hostname.  The
+                resource  data field contains the address in dotted quad nota-
+                tion.
+
+
+                      For each host, there must be  only  one  A  record.  The
+                hostname  used  in this A record is considered the official or
+                canonical hostname.  All other hostnames are aliases and  must
+                be mapped onto the canonical hostname using a CNAME record.
+
+
+<dt> NS<dd>     This  points  to  a  master  name server of a subordinate
+                zone. For an explanation why one has to have NS  records,  see
+                section 3.6.  The resource data field contains the hostname of
+                the name server. To resolve  the  hostname,  an  additional  A
+                record  is  needed,  the so-called glue record which gives the
+                name server's IP address.
+
+
+<dt>CNAME<dd>   This associates an alias for a host  with  its  canonical
+                hostname.   The  canonical hostname is the one the master file
+                provides an A record for; aliases are simply  linked  to  that
+                name  by  a  CNAME record, but don't have any other records of
+                their own.
+
+
+<dt>PTR<dd>     This type of record is used to associate names in the in-
+                addr.arpa domain with hostnames. This is used for reverse map-
+                ping of IP addresses to hostnames. The hostname given must  be
+                the canonical hostname.
+
+
+ <dt>MX<dd>   This RR announces a mail exchanger for a domain. The rea-
+                sons to have mail exchangers are discussed in  section  14.4.1
+                in chapter 14..  The syntax of an MX record is
+
+<pre>
+                     [domain] [ttl] [class] MX preference host
+</pre>
+
+
+
+                     host names the mail  exchanger  for  domain.  Every  mail
+                exchanger  has  an  integer  preference associated with it.  A
+                mail transport agent who desires to  deliver  mail  to  domain
+                will try all hosts who have an MX record for this domain until
+                it succeeds. The one with the lowest preference value is tried
+                first,  then  the  others  in  order  of increasing preference
+                value.
+
+
+ <dt>HINFO<dd> This record provides information on the system's hardware  and
+                software. Its syntax is
+
+<pre>
+                     [domain] [ttl] [class] HINFO hardware software
+</pre>
+
+
+
+                     The hardware field identifies the hardware used  by  this
+                host.   There  are special conventions to specify this. A list
+                of valid names is  given  in  the  ``Assigned  Numbers''  (RFC
+                1340).  If  the field contains any blanks, it must be enclosed
+                in double quotes.  The software field names the operating sys-
+                tem  software used by the system. Again, a valid name from the
+                ``Assigned Numbers'' RFC should be chosen.
+
+</dl><hr><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The services and protocols Files</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node128.html">Remote Procedure Call</A>
+<B>Up:</B> <A HREF="node124.html">Various Network Applications</A>
+<B> Previous:</B> <A HREF="node126.html">The tcpd access control </A>
+<BR> <P>
+<H1><A NAME="SECTION0011300000">The services and protocols Files</A></H1>
+
+The port numbers on which certain ``standard'' services are offered are
+defined in the ``Assigned Numbers'' RFC. To enable server and client
+programs to convert service names to these numbers, at least a part of
+the list is kept on each host; it is stored in a file called
+/etc/services.  An entry is made up like this:
+<pre>
+           service port/protocol   [aliases]
+
+</pre>
+Here, service specifies the service name, port defines the
+port the service is offered on, and protocol defines which
+transport protocol is used. Commonly, this is either udp or
+tcp. It is possible for a service to be offered for more
+than one protocol, as well as offering different services on the same
+port, as long as the protocols are different. The aliases field
+allows to specify alternative names for the same service.
+<P>
+Usually, you don't have to change the services file that comes along
+with the network software on your  system. Nevertheless, we
+give a small excerpt from that file below.
+<pre>
+           # The services file:
+           #
+           # well-known services
+           echo           7/tcp                 # Echo
+           echo           7/udp                 #
+           discard        9/tcp  sink null      # Discard
+           discard        9/udp  sink null      #
+           daytime       13/tcp                 # Daytime
+           daytime       13/udp                 #
+           chargen       19/tcp  ttytst source  # Character Generator
+           chargen       19/udp  ttytst source  #
+           ftp-data      20/tcp                 # File Transfer Protocol (Data)
+           ftp           21/tcp                 # File Transfer Protocol (Contr
+           telnet        23/tcp                 # Virtual Terminal Protocol
+           smtp          25/tcp                 # Simple Mail Transfer Protocol
+           nntp         119/tcp  readnews       # Network News Transfer Protoco
+           #
+            # UNIX services
+           exec         512/tcp                 # BSD rexecd
+           biff         512/udp  comsat         # mail notification
+           login        513/tcp                 # remote login
+           who          513/udp  whod           # remote who and uptime
+           shell        514/tcp  cmd            # remote command, no passwd use
+           syslog       514/udp                 # remote system logging
+           printer      515/tcp  spooler        # remote print spooling
+           route        520/udp  router routed  # routing information protocol
+ 
+</pre>
+Note that, for example, the echo service is offered on
+port 7 for both TCP and UDP, and that port 512 is used for two different
+services, namely the COMSAT daemon (which notifies users of newly
+arrived mail, see xbiff(1x)), over UDP, and for remote
+execution (rexec(1)), using TCP.
+<P>
+<A NAME="4743"></A>
+Similar to the services file, the networking library needs a way to
+translate protocol names--- for example, those used in the services
+file--- to protocol numbers understood by the IP layer on other hosts.
+This is done by looking up the name in the /etc/protocols file.
+It contains one entry per line, each containing a protocol name, and the
+associated number. Having to touch this file is even more unlikely than
+having to meddle with /etc/services. A sample file is given 
+below:
+</pre>
+           #
+           # Internet (IP) protocols
+           #
+           ip      0       IP              # internet protocol, pseudo protocol
+           icmp    1       ICMP            # internet control message protocol
+           igmp    2       IGMP            # internet group multicast protocol
+           tcp     6       TCP             # transmission control protocol
+           udp     17      UDP             # user datagram protocol
+           raw     255     RAW             # RAW IP interface
+
+ 
+<pre>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node128.html">Remote Procedure Call</A>
+<B>Up:</B> <A HREF="node124.html">Various Network Applications</A>
+<B> Previous:</B> <A HREF="node126.html">The tcpd access control </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

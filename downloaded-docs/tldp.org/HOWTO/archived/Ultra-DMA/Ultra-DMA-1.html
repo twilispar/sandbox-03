@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Linux Ultra-DMA Mini-Howto: Introduction and Disclaimer</TITLE>
+ <LINK HREF="Ultra-DMA-2.html" REL=next>
+
+ <LINK HREF="Ultra-DMA.html#toc1" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Ultra-DMA-2.html">Next</A>
+Previous
+<A HREF="Ultra-DMA.html#toc1">Contents</A>
+<HR>
+<H2><A NAME="main-intro"></A> <A NAME="s1">1. Introduction and Disclaimer</A></H2>
+
+<P>
+<P>This document is intended to explain how to use Ultra-DMA aka Ultra-ATA
+aka Ultra33 and Ultra66 hard drives and interfaces with Linux. In many cases there is 
+no difficulty in using them, but some tweaking can increase performance. In 
+other cases, you need to go to extraordinary lengths simply to access your 
+hard drives.
+<P>
+<H2><A NAME="disclaimer"></A> <A NAME="ss1.1">1.1 Disclaimer</A>
+</H2>
+
+<P>
+<P>The information in this is document is, to the best of my knowledge, correct, and
+should work. However, there may be typos, there may be mysterious 
+transmission errors, and there may be strange incompatibilities within your 
+own system that prevent the techniques described herein from working 
+properly. So... before you go fiddling around with you hard drive, <B>BACK
+UP ANY DATA YOU WANT TO KEEP!</B> If you are not already performing regular
+backups, please start doing so for your own good.
+<P>
+<H2><A NAME="credits"></A> <A NAME="ss1.2">1.2 Credits</A>
+</H2>
+
+<P>
+<P>
+<A HREF="mailto:giovanni@sudfr.com">Michel Aubry</A> - UDMA-enabled
+VIA-related patch for &lt;=2.0.33
+&amp; more info, grand unified UDMA patch for 2.0.34+
+<P>
+<A HREF="mailto:andrebalsa@altern.org">Andrew Balsa</A> - Provided
+some general UDMA info and the udma-generic patch for Intel TX, SiS, and VP1
+on &lt;=2.0.33; also the grand unified UDMA patch for 2.0.34+
+<P>Maxime Baudin - French translation
+<P>Bokonon - ``Controller'' vs. ``interface''
+<P>
+<A HREF="mailto:prefect@ipass.net">John G.</A> -
+VIA VP2 patch for &lt;=2.0.33 &amp; info
+<P>Martin Gaitan - Promise Ultra33 ide0/ide1 installation workaround
+<P>
+<A HREF="mailto:andre@suse.com">Andre M. Hedrick</A> -
+current Linux IDE subsystem maintainer
+<P>H&aring;vard Tautra Knutsen - Norwegian translation
+<P>Norman Jacobowitz - Bugged me to add info on the VP3
+<P>John Levon - Info on TX Pro mobos
+<P>Peter Monta - Info on using two Ultra33 cards
+<P>Masayoshi Nakano - Japanese translation
+<P>
+<A HREF="mailto:gadio@netvision.net.il">Gadi Oxman</A> - The
+Promise Ultra33 patch for &lt;=2.0.34 &amp; finding the secret
+numbers for the workaround
+<P>Andy Pearce - Suggested adding info on the additional device files for hde-h
+<P>
+<A HREF="mailto:pink@roedu.net">Andrei Pitis</A> - LILO patch
+<P>
+<A HREF="mailto:brion@pobox.com">Brion Vibber</A> - The document itself
+<P>
+<H2><A NAME="history"></A> <A NAME="ss1.3">1.3 Document History</A>
+</H2>
+
+<P>
+<P>v3.01, 6 December 2001: Relicensed under 
+<A HREF="http://www.gnu.org/copyleft/fdl.html">GNU Free Documentation License</A>; no content changes.
+<P>v3.0, 9 November 1999: Finally found time to update some key changes such as
+the relocation of the IDE patch archive to the 
+<A HREF="http://www.kernel.org/pub/linux/kernel/people/hedrick">Kernel.org archives</A>... pesky school!
+Updated all sunsite links to new 
+<A HREF="ftp://metalab.unc.edu">metalab.unc.edu</A> or 
+<A HREF="http://www.linuxdoc.org">www.linuxdoc.org</A><P>v2.1, 27 May 1999: Corrects some minor omissions and errors from 2.0 and adds
+information on the Promise Ultra66 and 2.2/2.3 kernels.
+<P>v2.0, 7 August 1998: Major updates and almost total restructuring of the
+document into onboard (motherboard) and offboard (add-in cards) interfaces;
+the Grand Unified UDMA patch(a part of the Jumbo patch)
+for 2.0.35. Put credits in alphabetical order by last name. Changed
+``controller'' to ``interface'' in many cases to be more technically
+correct. Added info on enabling/disabling UDMA, the blacklist, and more!
+<P>v1.45, 6 July 1998: Minor updates - Red Hat 5.1 and 2.0.34 patch for
+Promise Ultra33, LILO patch for booting off of PCI interfaces such as
+the Promise Ultra33
+<P>v1.41, 3 May 1998: Fixed a couple of typos, added translators to credits.
+<P>v1.4, 28 April 1998: UDMA-Generic patch, some more general info. Copying
+section added.
+<P>v1.3, 5 March 1998: VIA VP3 info, better patching instructions,
+pointer to more recent Promise patch.
+<P>v1.2, 27 January 1998: Additional Promise workaround info.
+<P>v1.1, 21 January 1998: New info about VIA chipset, installing <EM>around</EM> 
+the Promise Ultra33, and enabling Bus Master &amp; UDMA transfer modes.
+<P>v1.0, 19 January 1998: More or less complete, first version done in SGML.
+<P>
+<H2><A NAME="copying"></A> <A NAME="ss1.4">1.4 Copying</A>
+</H2>
+
+<P>
+<P>Copyright (c) 1998-2001 Brion L. Vibber
+<P>Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1
+or any later version published by the Free Software Foundation;
+with the Invariant Sections being &quot;Introduction and Disclaimer&quot;, with no
+Front-Cover Texts, and with no Back-Cover Texts.
+<P>You should have received a copy of the GNU Free Documentation License
+along with this document; if you did not, you may find it at
+<A HREF="http://www.gnu.org/copyleft/fdl.html">http://www.gnu.org/copyleft/fdl.html</A>.
+<P>
+<HR>
+<A HREF="Ultra-DMA-2.html">Next</A>
+Previous
+<A HREF="Ultra-DMA.html#toc1">Contents</A>
+</BODY>
+</HTML>

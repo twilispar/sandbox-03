@@ -1,0 +1,427 @@
+<HTML
+><HEAD
+><TITLE
+>Use RPM command to uninstall.</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Post-Install"
+HREF="linpostinstall.html"><LINK
+REL="PREVIOUS"
+TITLE="Software that must be uninstalled"
+HREF="chap4sec22.html"><LINK
+REL="NEXT"
+TITLE="Software that must be installed"
+HREF="chap4sec24.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap4sec22.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 4. Post-Install</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap4sec24.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN1832"
+>4.2. Use <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> command to uninstall.</A
+></H1
+><P
+>&#13;         The command to uninstall software is:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#<B
+CLASS="command"
+>rpm</B
+> -e &#60;softwarename(s)&#62;
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         Where &#60;softwarename&#62; is the name of the software you want to uninstall e.g. (foo).
+         </P
+><P
+>&#13;         Since Programs like apmd, kudzu, and sendmail are daemons that run as process. It is better to stop those processes before uninstalling them from the 
+         system.To stop those processes, use the following commands:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /etc/rc.d/init.d/apmd <B
+CLASS="command"
+>stop</B
+>
+         [root@deep] /# /etc/rc.d/init.d/sendmail <B
+CLASS="command"
+>stop</B
+>
+         [root@deep] /# /etc/rc.d/init.d/kudzu <B
+CLASS="command"
+>stop</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;             <SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="images/Version6.1.gif"
+ALT="Version 6.1 only"
+></IMG
+></SPAN
+>
+             Now you can uninstall them safely, and all other packages, as shown below:
+             Remove the specified packages for Red Hat Linux version 6.1 (Cartman).
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /# <B
+CLASS="command"
+>rpm</B
+> -e --nodeps pump mt-st eject mailcap apmd kernel-pcmcia-cs linuxconf getty_ps 
+             setconsole isapnptools setserial kudzu raidtools gnupg redhat-logos redhat-release gd pciutils rmt</PRE
+></TD
+></TR
+></TABLE
+>
+
+             <SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="images/Version6.2.gif"
+ALT="Version 6.2. only"
+></IMG
+></SPAN
+> Remove the specified packages for Red Hat Linux version 6.2 (Zoot).
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /# <B
+CLASS="command"
+>rpm</B
+> -e --nodeps pump mt-st eject mailcap apmd kernel-pcmcia-cs linuxconf getty_ps 
+             isapnptools setserial kudzu raidtools gnupg redhat-logos redhat-release gd pciutils rmt</PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+><LI
+><P
+>&#13;         <SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="images/VersionAll.gif"
+ALT="Version All"
+></IMG
+></SPAN
+>
+         Remove the linux.conf-installed file manually.
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>rm</B
+> -f /etc/conf.linuxconf-installed
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></LI
+></OL
+></DIV
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+           This is a configuration file related to linuxconf software that must be removed manually.                  
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         The program hdparm is needed by <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>IDE</SPAN
+></SPAN
+> hard disk but not <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>SCSI</SPAN
+></SPAN
+> hard disks. If you have an <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>IDE</SPAN
+></SPAN
+> disk on your system you must keep 
+         this program (hdparm), but if you don't have an <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>IDE</SPAN
+></SPAN
+> hard disk you can remove it safely from your system.
+
+         To remove hdparm from your system, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>rpm</B
+> -e hdparm
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         Use the programs <SPAN
+CLASS="application"
+> kbdconfig, mouseconfig, timeconfig, authconfig, ntsysv,</SPAN
+> and <SPAN
+CLASS="application"
+>setuptool</SPAN
+> in order 
+         to set your keyboard language and type, your mouse type, your default time zone, your <SPAN
+CLASS="acronym"
+>NIS</SPAN
+> and shadow passwords, your numerous symbolic links in <TT
+CLASS="filename"
+>/etc/rc.d</TT
+> 
+         directory, and text mode menu utility which allow you to access all of these features. After those configurations have been set during the installation stage 
+         of your Linux server it's rare that you would need to change them again. So, you can uninstall them, and if in future you need to change your keyboard, 
+         mouse, default time, etc again via test mode menu, all you have to do is to install the program with the <SPAN
+CLASS="acronym"
+>RPM</SPAN
+> from your original <SPAN
+CLASS="hardware"
+>CD-ROM.</SPAN
+>
+
+         To remove all the above programs from your system, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>rpm</B
+> -e kbdconfig mouseconfig timeconfig authconfig ntsysv setuptool
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         Even if you are not intending to install a mail server on your Linux system, the program Sendmail is always needed on your servers for potential messages sent to the root user 
+         by different software services installed on your machine.
+         </P
+><P
+>&#13;         Sendmail is a Mail Transport Agent -<SPAN
+CLASS="acronym"
+>MTA</SPAN
+> program that sends mail from one machine to another. It can be configured in different manners; it can serve as an 
+         internal delivery mail system to a Mail Hub Server, or can be configured to be a Central Mail Hub Server for all Sendmail machines on your network. So depending on what you 
+         want to do with Sendmail, you must configure it to respond to your specific needs. For this reason you must uninstall Sendmail 
+         and see the relevant sections in this book that is related to <A
+HREF="soser-mailn.html"
+>Sendmail</A
+> configuration and installation.
+         </P
+><P
+>&#13;         To remove Sendmail from your system, use the following command:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>rpm</B
+> -e sendmail
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap4sec22.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap4sec24.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software that must be uninstalled</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="linpostinstall.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Software that must be installed</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

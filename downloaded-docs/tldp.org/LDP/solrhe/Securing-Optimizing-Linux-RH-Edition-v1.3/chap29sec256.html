@@ -1,0 +1,557 @@
+<HTML
+><HEAD
+><TITLE
+>The /chroot/etc directory</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Apache to use shared libraries"
+HREF="chap29sec255.html"><LINK
+REL="NEXT"
+TITLE="Test the new chrooted jail"
+HREF="chap29sec257.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec255.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec257.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19849"
+>29.19. The <TT
+CLASS="filename"
+>/chroot/etc</TT
+> directory</A
+></H1
+><P
+>&#13;      You will also need <TT
+CLASS="filename"
+>/etc/resolv.conf</TT
+>, <TT
+CLASS="filename"
+>/etc/nsswitch.conf</TT
+> and <TT
+CLASS="filename"
+>/etc/hosts</TT
+> files in your chroot jail.
+
+      [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /etc/resolv.conf /chroot/httpd/etc/
+      [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /etc/hosts /chroot/httpd/etc/
+      [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /etc/nsswitch.conf /chroot/httpd/etc/
+    </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;        Now we must set some files in the chroot jail directory immutable for better security.
+        </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;            Set the immutable bit on <TT
+CLASS="filename"
+>passwd</TT
+> file:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep ]/# <B
+CLASS="command"
+>cd</B
+> /chroot/httpd/etc/
+              [root@deep ]/# <B
+CLASS="command"
+>chattr</B
+>  +i passwd
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;          Set the immutable bit on <TT
+CLASS="filename"
+>group</TT
+> file:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ]/# <B
+CLASS="command"
+>cd</B
+> /chroot/httpd/etc/
+            [root@deep ]/# <B
+CLASS="command"
+>chattr</B
+>  +i group
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;            Set the immutable bit on <TT
+CLASS="filename"
+>httpd.conf</TT
+> file:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep ]/# <B
+CLASS="command"
+>cd</B
+> /chroot/httpd/etc/httpd/conf/
+              [root@deep ]/# <B
+CLASS="command"
+>chattr</B
+>  +i httpd.conf
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;            Set the immutable bit on <TT
+CLASS="filename"
+>resolv.conf</TT
+> file:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;              [root@deep ]/# <B
+CLASS="command"
+>cd</B
+> /chroot/httpd/etc/
+              [root@deep ]/# <B
+CLASS="command"
+>chattr</B
+>  +i resolv.conf
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;          Set the immutable bit on <TT
+CLASS="filename"
+>hosts</TT
+> file:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;            [root@deep ]/# <B
+CLASS="command"
+>cd</B
+> /chroot/httpd/etc/
+            [root@deep ]/# <B
+CLASS="command"
+>chattr</B
+>  +i hosts
+          </PRE
+></TD
+></TR
+></TABLE
+>
+        
+          Set the immutable bit on <TT
+CLASS="filename"
+>nsswitch.conf</TT
+> file:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/# <B
+CLASS="command"
+>cd</B
+> /chroot/httpd/etc/
+          [root@deep ]/# <B
+CLASS="command"
+>chattr</B
+>  +i nsswitch.conf
+          </PRE
+></TD
+></TR
+></TABLE
+>
+            </P
+></LI
+></OL
+></LI
+><LI
+><P
+>&#13;        Copy the <TT
+CLASS="filename"
+>localtime</TT
+> file to the jail so that log entries are adjusted for your local timezone properly:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/# <B
+CLASS="command"
+>cp</B
+> /etc/localtime /chroot/httpd/etc/
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+><LI
+><P
+>&#13;
+        Remove unnecessary Apache files and directories:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep ]/# <B
+CLASS="command"
+>rm</B
+> -rf /var/log/httpd/
+          [root@deep ]/# <B
+CLASS="command"
+>rm</B
+> -rf /etc/httpd/
+          [root@deep ]/# <B
+CLASS="command"
+>rm</B
+> -rf /home/httpd/
+          [root@deep ]/# <B
+CLASS="command"
+>rm</B
+> -f  /usr/sbin/httpd
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        We can remove safely all of the above files and directories since they are now located under our chroot jail directory.
+      </P
+></LI
+><LI
+><P
+>&#13;        Normally, processes talk to syslogd through <TT
+CLASS="filename"
+>/dev/log</TT
+>. As a result of the chroot jail, this won't be possible, so syslogd needs to be told to listen to <TT
+CLASS="filename"
+>/chroot/httpd/dev/log</TT
+>. 
+        To do this, edit the <TT
+CLASS="filename"
+>syslog</TT
+> startup script, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/rc.d/init.d/syslog</TT
+> to specify additional places to listen.
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          daemon syslogd -m 0
+        </PRE
+></TD
+></TR
+></TABLE
+>
+        To read:
+        <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          daemon syslogd -m 0 -a /chroot/httpd/dev/log
+        </PRE
+></TD
+></TR
+></TABLE
+>
+      </P
+></LI
+><LI
+><P
+>&#13;        The default <TT
+CLASS="filename"
+>httpd</TT
+> script file of Apache starts the daemon <TT
+CLASS="literal"
+>httpd</TT
+> outside the chroot jail. We must change it to now start httpd from the chroot jail. 
+        </P
+><OL
+CLASS="SUBSTEPS"
+TYPE="a"
+><LI
+><P
+>&#13;Edit the <TT
+CLASS="filename"
+>httpd</TT
+> script file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/rc.d/init.d/httpd</TT
+> and change the line:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              daemon httpd
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            To read:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              /usr/sbin/chroot /chroot/httpd/ /usr/sbin/httpd -DSSL
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              <B
+CLASS="command"
+>rm</B
+> -f  /var/run/httpd.pid
+            </PRE
+></TD
+></TR
+></TABLE
+>
+            To read:
+            <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;              <B
+CLASS="command"
+>rm</B
+> -f  /chroot/httpd/var/run/httpd.pid
+            </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+></OL
+></LI
+></OL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec255.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec257.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Apache to use shared libraries</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Test the new chrooted jail</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

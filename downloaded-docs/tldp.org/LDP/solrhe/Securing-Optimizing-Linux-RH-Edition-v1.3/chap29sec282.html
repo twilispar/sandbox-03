@@ -1,0 +1,453 @@
+<HTML
+><HEAD
+><TITLE
+>Compile and optimize</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/File Sharing-Network"
+HREF="soft-fileshrng.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure Samba"
+HREF="chap29sec281.html"><LINK
+REL="NEXT"
+TITLE="Configurations"
+HREF="chap29sec283.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec281.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 31. Software -Server/File Sharing-Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec283.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN21889"
+>31.3. Compile and optimize</A
+></H1
+><P
+>&#13;      Type the following commands on your terminal:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        CC="egcs" \
+        ./configure \
+        --prefix=/usr \
+        --libdir=/etc \
+        --with-lockdir=/var/lock/samba \
+        --with-privatedir=/etc \
+        --with-swatdir=/usr/share/swat \
+        --with-pam \
+        --with-mmap \
+        --without-sambabook
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+><DIV
+CLASS="caution"
+><P
+></P
+><TABLE
+CLASS="caution"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Caution.gif"
+ALT="Caution"
+></IMG
+></SPAN
+></B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>&#13;        The option  <TT
+CLASS="literal"
+>--with-mmap</TT
+> can give a large performance boost on some machines, while on others it makes no difference at all, and on some it may reduce performance.
+      </P
+></TD
+></TR
+></TABLE
+></DIV
+><P
+>&#13;      This tells Samba to set itself up for this particular hardware setup with:
+      <P
+></P
+><OL
+TYPE="i"
+><LI
+><P
+>&#13;          Include PAM password database support for better security.
+        </P
+></LI
+><LI
+><P
+>&#13;        Include experimental MMAP support to improve Samba performance.
+        </P
+></LI
+><LI
+><P
+>&#13;        Don't install the book help that come with Samba distribution.
+        </P
+></LI
+></OL
+>
+    </P
+><P
+>&#13;      Now, we must install Samba in the Linux server:
+
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /source# <B
+CLASS="command"
+>make</B
+> all
+        [root@deep ] /source# <B
+CLASS="command"
+>make install</B
+>
+        [root@deep ] /source# <B
+CLASS="command"
+>install</B
+> -m 755 script/mksmbpasswd.sh  /usr/bin/
+        [root@deep ] /source# <B
+CLASS="command"
+>rm</B
+> -rf /usr/share/swat/      <A
+NAME="smsqco1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+        [root@deep ] /source# <B
+CLASS="command"
+>rm</B
+> -f  /usr/sbin/swat
+        [root@deep ] /source# <B
+CLASS="command"
+>rm</B
+> -f  /usr/man/man8/swat.8
+        [root@deep ] /source# <B
+CLASS="command"
+>mkdir</B
+> -p /var/lock/samba
+        [root@deep ] /source# <B
+CLASS="command"
+>mkdir</B
+> -p /var/spool/samba    <A
+NAME="smsqco2"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+        [root@deep ] /source# <B
+CLASS="command"
+>chmod</B
+> 1777 /var/spool/samba/ <A
+NAME="smsqco3"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+>
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap29sec282.html#smsqco1"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>&#13;            If like me, you don't like to configure Samba in HTML.
+          </DD
+><DT
+><A
+HREF="chap29sec282.html#smsqco2"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>&#13;            Only require if you are the intention to use printer sharing.
+          </DD
+><DT
+><A
+HREF="chap29sec282.html#smsqco3"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+></DT
+><DD
+>&#13;            Only require if you are the intention to use printer sharing.
+          </DD
+></DL
+></DIV
+>
+
+      <P
+></P
+><UL
+><LI
+><P
+>&#13;          The <B
+CLASS="command"
+>install</B
+> command will install the script <TT
+CLASS="filename"
+>mksmbpasswd.sh</TT
+> under <TT
+CLASS="filename"
+>/usr/bin/</TT
+> directory. This script is needed to setup Samba users allowed to connect on our server 
+          via the <TT
+CLASS="filename"
+>smbpasswd</TT
+> file. See later in this documentation for how to setup and use Samba password.
+        </P
+></LI
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>rm</B
+> command will remove the <TT
+CLASS="filename"
+>/usr/share/swat</TT
+> directory and all the files under it, and it will also remove the <B
+CLASS="command"
+>swat</B
+> binary program under 
+        <TT
+CLASS="filename"
+>/usr/sbin/</TT
+>. The <SPAN
+CLASS="acronym"
+>SWAT</SPAN
+> program is a web-based configuration utility that permits you to configure the <TT
+CLASS="filename"
+>smb.conf</TT
+> file of Samba via a web 
+        browser interface. Of course, in order to use the <SPAN
+CLASS="acronym"
+>SWAT</SPAN
+> utility you will need to have a web server running, such as Apache. The SWAT utility can open a security breach on your server and for this 
+        reason I recommend that you remove and not use it.
+        </P
+></LI
+><LI
+><P
+>&#13;        The <B
+CLASS="command"
+>mkdir</B
+> command will create a <TT
+CLASS="filename"
+>/var/spool/samba/</TT
+> directory on your system for all print sharing jobs you may have. Of course this directory is only necessary 
+        if you intend to use Samba print sharing over your LAN. Since we have not configured our Samba server to use print sharing, we do not need to create this directory, <TT
+CLASS="filename"
+>/var/spool/samba/</TT
+> 
+        on our server, and we do not need to use the command <B
+CLASS="command"
+>chmod</B
+> to change the <TT
+CLASS="literal"
+>sticky</TT
+> bit in <TT
+CLASS="filename"
+>/var/spool/samba</TT
+> so only the file's owner can delete a 
+        given file in this directory.
+        </P
+></LI
+></UL
+>
+    </P
+><P
+>&#13;      Please do cleanup later:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;        [root@deep ] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+        [root@deep ]/tmp# <B
+CLASS="command"
+>rm</B
+> -rf samba-version/ samba-version.tar.gz
+      </PRE
+></TD
+></TR
+></TABLE
+>
+      The <B
+CLASS="command"
+>rm</B
+> command will remove all the source files we have used to compile and install Samba. It will also remove the Samba compressed archive from the <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory.
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec281.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec283.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure Samba</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-fileshrng.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configurations</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,658 @@
+<HTML
+><HEAD
+><TITLE
+>The /etc/mail/aliases file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Server/Mail Network"
+HREF="soser-mailn.html"><LINK
+REL="PREVIOUS"
+TITLE="Secure Sendmail using smrsh"
+HREF="chap22sec182.html"><LINK
+REL="NEXT"
+TITLE="Limit queue processing to root"
+HREF="chap22sec184.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap22sec182.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 22. Software -Server/Mail Network</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap22sec184.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN12577"
+>22.11. The <TT
+CLASS="filename"
+>/etc/mail/aliases</TT
+> file</A
+></H1
+><P
+>&#13;         A poorly or carelessly administered <TT
+CLASS="filename"
+>aliases</TT
+> file can easily be used to gain privileged status. For example, many vendors ship systems with a <TT
+CLASS="literal"
+>decode</TT
+> alias in the <TT
+CLASS="filename"
+>/etc/mail/aliases</TT
+>
+         file. The intention is to provide an easy way for users to transfer binary files using mail. At the sending site the user converts the binary to <SPAN
+CLASS="acronym"
+>ASCII</SPAN
+> with <TT
+CLASS="literal"
+>uuencode</TT
+>, then mails the result to the <TT
+CLASS="literal"
+>decode</TT
+> 
+         alias at the receiving site. That alias pipes the mail message through the <TT
+CLASS="filename"
+>/usr/bin/uuencode</TT
+> program, which converts the <SPAN
+CLASS="acronym"
+>ASCII</SPAN
+> back into the original binary file.
+         </P
+><P
+>&#13;         Remove the <TT
+CLASS="envar"
+>decode</TT
+> alias line from your <TT
+CLASS="filename"
+>/etc/mail/aliases</TT
+> file. Similarly, every alias that executes a program that you did not place there yourself and check completely should be 
+         questioned and probably removed.
+
+         Edit the <TT
+CLASS="filename"
+>aliases</TT
+> file <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/mail/aliases</TT
+> and remove the following lines:
+         
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         # Basic system aliases -- these MUST be present.
+         MAILER-DAEMON:  postmaster
+         postmaster:	root
+
+         # General redirections for pseudo accounts.
+         bin:			root
+         daemon:		root
+         games:		        root  <A
+NAME="gmsrt"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+         ingres:		root  <A
+NAME="inrt"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+         nobody:		root
+         system:		root  <A
+NAME="sysrt"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+>
+         toor:			root  <A
+NAME="trtgr"
+><IMG
+SRC="../images/callouts/4.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(4)"></A
+>
+         uucp:		        root  <A
+NAME="uugr"
+><IMG
+SRC="../images/callouts/5.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(5)"></A
+>
+
+         # Well-known aliases.
+         manager:		root  <A
+NAME="mngr"
+><IMG
+SRC="../images/callouts/6.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(6)"></A
+>
+         dumper:		root  <A
+NAME="dmgr"
+><IMG
+SRC="../images/callouts/7.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(7)"></A
+>
+         operator:		root  <A
+NAME="opgr"
+><IMG
+SRC="../images/callouts/8.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(8)"></A
+>
+
+         # trap decode to catch security attacks
+         decode:		root  <A
+NAME="dcgr"
+><IMG
+SRC="../images/callouts/9.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(9)"></A
+>
+
+         # Person who should get root's mail
+         #root:		marc
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap22sec183.html#gmsrt"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+><A
+HREF="chap22sec183.html#inrt"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+><A
+HREF="chap22sec183.html#sysrt"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+><A
+HREF="chap22sec183.html#trtgr"
+><IMG
+SRC="../images/callouts/4.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(4)"></A
+><A
+HREF="chap22sec183.html#uugr"
+><IMG
+SRC="../images/callouts/5.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(5)"></A
+><A
+HREF="chap22sec183.html#mngr"
+><IMG
+SRC="../images/callouts/6.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(6)"></A
+><A
+HREF="chap22sec183.html#dmgr"
+><IMG
+SRC="../images/callouts/7.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(7)"></A
+><A
+HREF="chap22sec183.html#opgr"
+><IMG
+SRC="../images/callouts/8.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(8)"></A
+><A
+HREF="chap22sec183.html#dcgr"
+><IMG
+SRC="../images/callouts/9.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(9)"></A
+></DT
+><DD
+>Remove all these lines</DD
+></DL
+></DIV
+>
+         
+         </P
+><P
+>&#13;         For the changes to take effect you will need to run:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /usr/bin/newaliases
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         You need to prevent your Sendmail being abused by unauthorized users, Sendmail now includes powerful Anti-Spam features, which can help prevent your mail server from being abused by unauthorized users. To do 
+         this, make a change to the configuration file to block off spammers. Edit the <TT
+CLASS="filename"
+>sendmail.cf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/mail/sendmail.cf</TT
+> and change the line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         O PrivacyOptions=authwarnings
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         O PrivacyOptions=authwarnings,goaway
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         Setting the <TT
+CLASS="envar"
+>goaway</TT
+> option causes Sendmail to disallow all <SPAN
+CLASS="acronym"
+>SMTP</SPAN
+> <B
+CLASS="command"
+>EXPN</B
+> commands, it also causes it to reject all <SPAN
+CLASS="acronym"
+>SMTP</SPAN
+> <B
+CLASS="command"
+>VERB</B
+> commands and to 
+         disallow all <SPAN
+CLASS="acronym"
+>SMTP</SPAN
+> <B
+CLASS="command"
+>VRFY</B
+> commands. These changes prevent spammers from using the <B
+CLASS="command"
+>EXPN</B
+> and <B
+CLASS="command"
+>VRFY</B
+> commands in Sendmail.
+         </P
+><P
+>&#13;         You have to restrict who can examine the queues contents, ordinarily, anyone may examine the mail queue's contents by using the <B
+CLASS="command"
+>mailq</B
+> command. To restrict who may examine the queues contents, you 
+         must specify the <TT
+CLASS="envar"
+>restrictmailq</TT
+> option in the <TT
+CLASS="filename"
+>/etc/mail/sendmail.cf</TT
+> file. With this option, Sendmail allows only users who are in the same group as the group ownership of the queue 
+         directory <TT
+CLASS="literal"
+>root</TT
+> to examine the contents. This allows the queue directory to be fully protected with mode <TT
+CLASS="literal"
+>0700</TT
+>, while selected users are still able to see the contents.
+         </P
+><P
+>&#13;         Edit the <TT
+CLASS="filename"
+>sendmail.cf</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/mail/sendmail.cf</TT
+> and change the line:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         O PrivacyOptions=authwarnings,goaway
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         To read:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         O PrivacyOptions=authwarnings,goaway,restrictmailq
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         Now we change the mode of our queue directory to be fully protected:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# <B
+CLASS="command"
+>chmod</B
+> 0700 /var/spool/mqueue
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><P
+>&#13;         Now re-start the sendmail process manually for the change to take effect:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /# /etc/rc.d/init.d/sendmail <B
+CLASS="command"
+>restart</B
+>
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         Shutting down sendmail:                                    	[  OK  ]
+         Starting sendmail:                                    		[  OK  ]
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+         We have already added the <TT
+CLASS="envar"
+>goaway</TT
+> option to the line <TT
+CLASS="envar"
+>PrivacyOptions=</TT
+> in <TT
+CLASS="filename"
+>sendmail.cf</TT
+> file. Now we can just add the <TT
+CLASS="envar"
+>restrictmailq</TT
+> option to this line.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         Any non-privileged user who attempts to examine the mail queue content will get this message:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [user@deep /]$ /usr/bin/mailq
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;         You are not permitted to see the queue
+         </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap22sec182.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap22sec184.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Secure Sendmail using <B
+CLASS="command"
+>smrsh</B
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soser-mailn.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Limit queue processing to <TT
+CLASS="literal"
+>root</TT
+></TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

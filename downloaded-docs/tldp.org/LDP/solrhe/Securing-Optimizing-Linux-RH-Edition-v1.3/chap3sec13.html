@@ -1,0 +1,617 @@
+<HTML
+><HEAD
+><TITLE
+>Disk Setup- Disk Druid</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Installation of your Linux Server"
+HREF="installlin.html"><LINK
+REL="PREVIOUS"
+TITLE="Installation Class and Method (Install Type)"
+HREF="chap3sec12.html"><LINK
+REL="NEXT"
+TITLE="Disk Druid"
+HREF="chap3sec14.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap3sec12.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 3. Installation of your Linux Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap3sec14.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN536"
+>3.4. Disk Setup- Disk Druid</A
+></H1
+><P
+>&#13;                <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="images/VersionAll.gif"
+ALT="Versian All"
+></IMG
+></P
+></DIV
+> We 
+                assume that you are installing your new Linux server to a new hard drive, with no other existing file system or operating system previously 
+                installed. A good partition strategy is to create a separate partition for each major file system. This enhances security and prevents accidental 
+                denial of service or exploit of <SPAN
+CLASS="acronym"
+>SUID</SPAN
+> programs.
+                </P
+><P
+>Creating multiple partitions offers you the following advantages:
+                  <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;                  Protection against denial of service attack.
+                  </TD
+></TR
+><TR
+><TD
+>&#13;                  Protection against <SPAN
+CLASS="acronym"
+>SUID</SPAN
+> programs.
+                  </TD
+></TR
+><TR
+><TD
+>&#13;                  Faster booting.
+                  </TD
+></TR
+><TR
+><TD
+>&#13;                  Easy backup and upgrade management.
+                  </TD
+></TR
+><TR
+><TD
+>&#13;                  Ability for better control of mounted file system.
+                  </TD
+></TR
+><TR
+><TD
+>&#13;                  Limit each file system's ability to grow.
+                  </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+                </P
+><DIV
+CLASS="warning"
+><P
+></P
+><TABLE
+CLASS="warning"
+BORDER="1"
+WIDTH="100%"
+><TR
+><TD
+ALIGN="CENTER"
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Warning.gif"
+ALT="Warning"
+></IMG
+></SPAN
+></B
+></TD
+></TR
+><TR
+><TD
+ALIGN="LEFT"
+><P
+>&#13;                    If previous file system or operating system exist on the hard drive and computer where you 
+                    want to install your Linux system, we highly recommend, that you make a backup of your current 
+                    system before proceeding with the disk partitioning.
+                  </P
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="formalpara"
+><P
+><B
+>Step 1. </B
+>
+                  For performance, stability and security reasons you must create something like the following partitions 
+                  listed below on your computer. We suppose for this partition configuration the fact that you have a <SPAN
+CLASS="acronym"
+>SCSI</SPAN
+> 
+                  hard drive of 3.2 GB. Of course you will need to adjust partition sizes according to your own needs and 
+                  disk size.
+                  Partitions that must be created on your system:
+                 
+                   
+
+                      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;
+                      /boot	   5MB		<A
+NAME="boot"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+>
+                      /usr	 512MB		<A
+NAME="usr"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+>
+                      /home	1146MB		<A
+NAME="home"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+>
+                      /chroot	 256MB		<A
+NAME="chroot"
+><IMG
+SRC="../images/callouts/4.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(4)"></A
+>
+                      /cache	 256MB		<A
+NAME="cache"
+><IMG
+SRC="../images/callouts/5.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(5)"></A
+>
+                      /var	 256MB		<A
+NAME="var"
+><IMG
+SRC="../images/callouts/6.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(6)"></A
+>
+                   &#60;Swap&#62;	 128MB		<A
+NAME="swap"
+><IMG
+SRC="../images/callouts/7.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(7)"></A
+>
+                      /tmp	 256MB		<A
+NAME="tmp"
+><IMG
+SRC="../images/callouts/8.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(8)"></A
+>
+                      /		 256MB		<A
+NAME="root"
+><IMG
+SRC="../images/callouts/9.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(9)"></A
+>
+                      </PRE
+></TD
+></TR
+></TABLE
+>                    
+                    <DIV
+CLASS="calloutlist"
+><DL
+COMPACT="COMPACT"
+><DT
+><A
+HREF="chap3sec13.html#boot"
+><IMG
+SRC="../images/callouts/1.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(1)"></A
+></DT
+><DD
+>All Kernel images are kept here.
+                        </DD
+><DT
+><A
+HREF="chap3sec13.html#usr"
+><IMG
+SRC="../images/callouts/2.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(2)"></A
+></DT
+><DD
+>Must be large, since all Linux binaries programs are installed here.
+                        </DD
+><DT
+><A
+HREF="chap3sec13.html#home"
+><IMG
+SRC="../images/callouts/3.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(3)"></A
+></DT
+><DD
+>Proportional to the number of users you intend to host <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> 10MB per users 
+                          multiplied by the number of users 114 = 1140MB.
+                        </DD
+><DT
+><A
+HREF="chap3sec13.html#chroot"
+><IMG
+SRC="../images/callouts/4.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(4)"></A
+></DT
+><DD
+>If you want to install programs in chroot jail environment <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> DNS.
+                        </DD
+><DT
+><A
+HREF="chap3sec13.html#cache"
+><IMG
+SRC="../images/callouts/5.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(5)"></A
+></DT
+><DD
+>This is the cache partition of a proxy server <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> Squid.
+                        </DD
+><DT
+><A
+HREF="chap3sec13.html#var"
+><IMG
+SRC="../images/callouts/6.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(6)"></A
+></DT
+><DD
+>Contains files that change when the system run normally <SPAN
+CLASS="abbrev"
+>i.e.</SPAN
+> Log files.
+                        </DD
+><DT
+><A
+HREF="chap3sec13.html#var"
+><IMG
+SRC="../images/callouts/6.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(6)"></A
+></DT
+><DD
+>Our swap partition. The virtual memory of the Linux operating system.
+                        </DD
+><DT
+><A
+HREF="chap3sec13.html#tmp"
+><IMG
+SRC="../images/callouts/8.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(8)"></A
+></DT
+><DD
+>Our temporary files partition.
+                        </DD
+><DT
+><A
+HREF="chap3sec13.html#root"
+><IMG
+SRC="../images/callouts/9.gif"
+HSPACE="0"
+VSPACE="0"
+BORDER="0"
+ALT="(9)"></A
+></DT
+><DD
+>Our root partition.
+                        </DD
+></DL
+></DIV
+>
+
+                    </P
+></DIV
+><P
+>&#13;               We have made two more special partitions:
+               <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><TT
+CLASS="filename"
+>/chroot</TT
+></DT
+><DD
+><P
+>&#13;               The <TT
+CLASS="filename"
+>/chroot</TT
+> partition can be used for DNS server chrooted, Apache server chrooted and other chrooted future programs. 
+               </P
+></DD
+><DT
+><TT
+CLASS="filename"
+>/cache</TT
+></DT
+><DD
+><P
+>&#13;               The <TT
+CLASS="filename"
+>/cache</TT
+> partition can be used for a Squid Proxy server. 
+               </P
+></DD
+></DL
+></DIV
+>
+               If you are not intending to install Squid Proxy server you don't need to create the <TT
+CLASS="filename"
+>/cache</TT
+> partition.
+               </P
+><P
+>&#13;               Keeping <TT
+CLASS="filename"
+>/tmp</TT
+> and <TT
+CLASS="filename"
+>/home</TT
+> on separate partitions is pretty much mandatory if users have shell access 
+               to the server- protection against <TT
+CLASS="envar"
+>SUID</TT
+> programs; splitting these off into separate partitions also 
+               prevent users from filling up any critical file system -denial of service attack.
+               The same applies to  <TT
+CLASS="filename"
+>/var</TT
+>, and <TT
+CLASS="filename"
+>/usr</TT
+> on separate partitions is also a very good idea. By isolating the <TT
+CLASS="filename"
+>/var</TT
+> partition, you protect 
+               your root partition from overfilling -denial of service attack.
+
+               </P
+><P
+>&#13;               In our partition configuration we'll reserve 256 MB of disk space for chrooted programs like Apache, 
+               DNS and other software. This is necessary because Apache <TT
+CLASS="filename"
+>DocumentRoot</TT
+> files and other binaries, programs 
+               related to Apache will be installed in this partition if you decide to run Apache web server in a chrooted 
+               jail. 
+               </P
+><P
+>&#13;               Take note that the size of the Apache chrooted directory on the chrooted partition is proportional 
+               to the size of your <TT
+CLASS="filename"
+>DocumentRoot</TT
+> files. If you're not intending to install and use Apache on your server, 
+               you can reduce the size of this partition to something like 10 MB for <SPAN
+CLASS="acronym"
+>DNS</SPAN
+> server that you always need in 
+               a chrooted jail environment for security reasons.
+               </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></P
+></DIV
+><P
+><B
+>Minimum size of partitions: </B
+>
+              For information purposes only, this is the minimum size in megabytes, which a Linux installation must have to function properly. The sizes of partitions 
+              listed below are really small. This configuration can fit into a very old hard disk of 512MB in size that you might find in old x486 computers. We show 
+              you this partition just to get an idea of the minimum requirements.
+              <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;
+              /	         35MB
+              /boot	  5MB
+              /chroot	 10MB
+              /home	100MB
+              /tmp	 30MB
+              /usr	232MB
+              /var	 25MB
+              </PRE
+></TD
+></TR
+></TABLE
+>
+              </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap3sec12.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap3sec14.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Installation Class and Method (Install Type)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="installlin.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Disk Druid</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

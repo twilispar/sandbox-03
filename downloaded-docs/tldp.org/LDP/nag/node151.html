@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Inner Workings of uucico</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node152.html">uucico Command Line Options</A>
+<B>Up:</B> <A HREF="node149.html">Introduction</A>
+<B> Previous:</B> <A HREF="node150.html">Layout of UUCP Transfers </A>
+<BR> <P>
+<H2><A NAME="SECTION0014220000">The Inner Workings of uucico</A></H2>
+<P>
+<A NAME="uucicoconnect"></A>
+<A NAME="5796"></A>
+<P>
+To understand why uucico needs to know certain things, a quick
+description of how it actually connects to a remote system might be in
+order here.
+<P>
+When you execute uucico -s system from the command line, it
+first has to connect physically. The actions taken depend on the type of
+connection to open-- e.g. when using telephone line, it has to find a
+modem, and dial out. Over TCP, it has to call gethostbyname(3) to
+convert the name to a network address, find out which port to open, and
+bind the address to the corresponding socket.
+<P>
+<A NAME="5677"></A>
+<A NAME="5678"></A>
+After this connection has been established, an authorization procedure
+has to be passed. It generally consists of the remote system asking for
+a login name, and possibly a password. This is commonly called the
+<em>login chat</em>. The authorization procedure is performed either by the
+usual getty/login suite, or-- on TCP sockets-- by
+uucico itself.  If authorization succeeds, the remote end fires
+up uucico. The local copy of uucico which initiated the
+connection is referred to as <em>master</em>, the remote copy as <em>slave</em>.
+<P>
+<A NAME="5687"></A>
+<A NAME="5688"></A>
+<A NAME="5689"></A>
+Next follows the <em>handshake phase</em>: the master now sends its
+hostname, plus several flags.  The slave checks this hostname for
+permission to log in, send and receive files, etc.  The flags describe
+(among other things) the maximum grade of spool files to transfer. If
+enabled, a conversation count, or <em>call sequence number</em> check
+takes place here. With this feature, both sites maintain a count of
+successful connections, which are compared. If they do not match, the
+handshake fails. This is useful to protect yourself against impostors.
+<P>
+Finally, the two uucico's try to agree on a common <em>transfer
+protocol</em>. This protocol governs the way data is transferred, checked for
+consistency, and retransmitted in case of an error. There is a need for
+different protocols because of the differing types of connections
+supported. For example, telephone lines require a ``safe'' protocol which
+is pessimistic about errors, while TCP transmission is inherently reliable
+and can use a more efficient protocol that foregoes most extra error
+checking.
+<P>
+After the handshake is complete, the actual transmission phase begins.
+Both ends turn on the selected protocol driver. The drivers possibly
+perform a protocol-specific initialization sequence.
+<P>
+First, the master sends all files queued for the remote system whose
+spool grade is high enough. When it has finished, it informs the slave
+that it is done, and that the slave may now hang up. The slave now can
+either agree to hang up, or take over the conversation.  This is a
+change of roles: now the remote system becomes master, and the local one
+becomes slave. The new master now sends its files.  When done, both
+uucico's exchange termination messages, and close the connection.
+<P>
+We will not go into this in greater detail: please refer to either the
+sources or any good book on UUCP for this. There is also a really
+antique article floating around the net, written by David A.-Novitz,
+which gives a detailed description of the UUCP protocol.  The Taylor
+UUCP FAQ also discusses some details of the way UUCP is implemented.
+It is posted to comp.mail.uucp regularly.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node152.html">uucico Command Line Options</A>
+<B>Up:</B> <A HREF="node149.html">Introduction</A>
+<B> Previous:</B> <A HREF="node150.html">Layout of UUCP Transfers </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,415 @@
+<HTML
+><HEAD
+><TITLE
+>Configure OpenSSH to use TCP-Wrappers/inetd super server</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities"
+HREF="soft-netsecured.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/ssh/sshd_config file"
+HREF="chap15sec122.html"><LINK
+REL="NEXT"
+TITLE="OpenSSH Per-User Configuration"
+HREF="chap15sec124.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap15sec122.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 15. Software -Securities</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap15sec124.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN8326"
+>15.5. Configure OpenSSH to use TCP-Wrappers/inetd super server</A
+></H1
+><P
+>&#13;          Tcp-Wrappers should be enabled to start and stop our OpenSSH server. Upon execution, inetd reads its configuration information from a configuration file which, by default, is <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+>. There must 
+          be an entry for each field of the configuration file, with entries for each field separated by a tab or a space.
+          </P
+><DIV
+CLASS="procedure"
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;          
+          Edit the <TT
+CLASS="filename"
+>inetd.conf</TT
+> file <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/inetd.conf</TT
+> and add the line:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          ssh	stream	tcp	nowait	root	/usr/sbin/tcpd	sshd -i
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          <DIV
+CLASS="important"
+><BLOCKQUOTE
+CLASS="important"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Important.gif"
+ALT="Important"
+></IMG
+></SPAN
+>: </B
+>
+         
+          The  -i parameter is important since it's specifies that sshd is being run from inetd. Also, update your <TT
+CLASS="filename"
+>inetd.conf</TT
+> file by sending a <B
+CLASS="command"
+>SIGHUP</B
+> signal <B
+CLASS="command"
+>killall</B
+><TT
+CLASS="userinput"
+><B
+>-HUP inetd</B
+></TT
+> after 
+          adding the above line to the file.
+          </P
+></BLOCKQUOTE
+></DIV
+>
+          To update your <TT
+CLASS="filename"
+>inetd.conf file</TT
+>, use the following command:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;          [root@deep] /#<B
+CLASS="command"
+>killall</B
+> -HUP inetd
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          </P
+></LI
+><LI
+><P
+>&#13;                   
+          Edit the <TT
+CLASS="filename"
+>hosts.allow</TT
+> file, <B
+CLASS="command"
+>vi</B
+> <TT
+CLASS="filename"
+>/etc/hosts.allow</TT
+> and add the line:
+          <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;          sshd: 192.168.1.4 win.openna.com
+          </PRE
+></TD
+></TR
+></TABLE
+>
+          Which mean client <SPAN
+CLASS="acronym"
+>IP</SPAN
+> <TT
+CLASS="literal"
+>192.168.1.4</TT
+> with host name <TT
+CLASS="literal"
+>win.openna.com</TT
+> is allowed to ssh in to the server.
+          </P
+></LI
+></OL
+></DIV
+><P
+>&#13;          These daemon strings for tcp-wrappers are in use by sshd:
+          <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+>sshdfwd-X11</DT
+><DD
+><P
+>&#13;          if you want to allow/deny X11-forwarding
+          </P
+></DD
+><DT
+>sshdfwd-&#60;port-number&#62;</DT
+><DD
+><P
+>for tcp-forwarding</P
+></DD
+><DT
+>sshdfwd-&#60;port-name&#62;</DT
+><DD
+><P
+>port-name defined in <TT
+CLASS="filename"
+>/etc/services</TT
+>. Used in tcp-forwarding</P
+></DD
+></DL
+></DIV
+>
+          </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+          If you do decide to switch to using ssh, make sure you install and use it on all your servers. Having ten secure servers and one insecure is a waste of time.
+          </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;          For more details, there are several man pages you can read:
+          <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>OpenSSH secure shell client <EM
+>remote login program</EM
+></P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh [slogin]</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>OpenSSH secure shell client <EM
+>remote login program</EM
+></P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh-add</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>adds identities for the authentication agent</P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh-agent</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>authentication agent</P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ssh-keygen</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>authentication key generation</P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>sshd</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>secure shell daemon</P
+></DD
+></DL
+></DIV
+>
+          </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap15sec122.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap15sec124.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/ssh/sshd_config file</TT
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-netsecured.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>OpenSSH Per-User Configuration</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

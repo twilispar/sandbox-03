@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Mixing UUCP and RFC-822</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node194.html">Pathalias and Map File </A>
+<B>Up:</B> <A HREF="node190.html">How does Mail Routing </A>
+<B> Previous:</B> <A HREF="node192.html">Mail Routing in the </A>
+<BR> <P>
+<H2><A NAME="SECTION0015430000">Mixing UUCP and RFC-822</A></H2>
+The best cure against the problems of mail routing in UUCP networks so
+far is the adoption of the domain name system in UUCP networks. Of
+course, you can't query a name server over UUCP. Nevertheless, many
+UUCP sites have formed small domains that coordinate their routing
+internally. In the Maps, these domains announce one or two host as
+their mail gateways, so that there doesn't have to be a map entry for
+each host in the domain. The gateways handle all mail that flows into
+and out of the domain. The routing scheme inside the domain is completely
+invisible to the outside world.
+<P>
+This works very well with the smart-host routing scheme described
+above.  Global routing information is maintained by the gateways only;
+minor hosts within a domain will get along with only a small
+hand-written paths file that lists the routes inside their
+domain, and the route to the mail hub.  Even the mail gateways
+do not have to have routing information for every single UUCP host in
+the world anymore.  Beside the complete routing information for the
+domain they serve, they only need to have routes to entire domains in
+their databases now. For instance, the pathalias entry shown below
+will route all mail for sites in the sub.org domain to
+smurf:
+<PRE>
+            .sub.org        swim!smurf!%s
+</PRE>
+Any mail addressed to claire@jones.sub.org will be sent to
+swim with an envelope address of smurf!jones!claire.
+<P>
+The hierarchical organization of the domain name space allows mail
+servers to mix more specific routes with less specific ones. For
+instance, a system in France may have specific routes for subdomains
+of fr, but route any mail for hosts in the us domain
+toward some system in the U.S.  In this way, domain-based routing (as
+this technique is called) greatly reduces the size of routing databases
+as well as the administrative overhead needed.
+<P>
+The main benefit of using domain names in a UUCP environment, however,
+is that compliance with RFC-822 permits easy gatewaying between UUCP
+networks and the Internet.  Many UUCP domains nowadays have a link
+with an Internet gateway that acts as their smart-host.  Sending
+messages across the Internet is faster, and routing information is
+much more reliable because Internet hosts can use DNS instead of the
+Usenet Maps.
+<P>
+In order to be reachable from the Internet, UUCP-based domains usually
+have their Internet gateway announce an MX record for them (MX records
+were described above). For instance, assume that moria belongs
+to the orcnet.org domain.  gcc2.groucho.edu acts as
+their Internet gateway. moria would therefore use gcc2
+as its smart-host, so that all mail for foreign domains is delivered
+across the Internet.  On the other hand, gcc2 would announce an
+MX record for orcnet.org, and deliver all incoming mail for
+orcnet sites to moria.
+<P>
+The only remaining problem is that the UUCP transport programs can't
+deal with fully qualified domain names.  Most UUCP suites were
+designed to cope with site names of up to eight characters, some even
+less, and using non-alphanumeric characters such as dots is completely
+out of the question for most.
+<P>
+Therefore, some mapping between RFC-822 names and UUCP hostnames is
+needed.  The way this mapping is done is completely
+implementation-dependent. One common way of mapping FQDNs to UUCP
+names is to use the pathalias file for this:
+<PRE>
+           moria.orcnet.org  ernie!bert!moria!%s
+ 
+</PRE>
+This will produce a pure UUCP-style bang path from an address that
+specifies a fully qualified domain name. Some mailers provide a
+special files for this; sendmail, for instance, uses the
+uucpxtable for this.
+<P>
+The reverse transformation (colloquially called domainizing)  is
+sometimes required when sending mail from a UUCP network to the
+Internet.  As long as the mail sender uses the fully qualified domain
+name in the destination address, this problem can be avoided by not
+removing the domain name from the envelope address when forwarding the
+message to the smart-host. However, there are still some UUCP sites
+that are not part of any domain.  They are usually domainized by
+appending the pseudo-domain uucp.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node194.html">Pathalias and Map File </A>
+<B>Up:</B> <A HREF="node190.html">How does Mail Routing </A>
+<B> Previous:</B> <A HREF="node192.html">Mail Routing in the </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

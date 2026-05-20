@@ -1,0 +1,388 @@
+<HTML
+><HEAD
+><TITLE
+>Install PostgreSQL</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux PostgreSQL Database Server"
+HREF="datab-pSQL.html"><LINK
+REL="PREVIOUS"
+TITLE="Linux PostgreSQL Database Server"
+HREF="datab-pSQL.html"><LINK
+REL="NEXT"
+TITLE="Compile and Optimize"
+HREF="chap27sec221.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="datab-pSQL.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 27. Linux PostgreSQL Database Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap27sec221.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="pr6ch27scpsql"
+>27.1. Install PostgreSQL</A
+></H1
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN17116"
+></A
+><P
+><B
+>As per the [<SPAN
+CLASS="citation"
+>PostgreSQL web site</SPAN
+>]:</B
+></P
+><P
+>&#13;                 PostgreSQL is a sophisticated Object-Relational <SPAN
+CLASS="acronym"
+>DBMS</SPAN
+>, supporting almost all <SPAN
+CLASS="acronym"
+>SQL</SPAN
+> constructs, including subselects, transactions, and user-defined types and functions. It is the most advanced 
+                 open-source database available anywhere.
+                 <DIV
+CLASS="mediaobject"
+><P
+><IMG
+SRC="./images/SQL-Schema.gif"
+ALT="
+                       PostgresSQL
+                     "
+></IMG
+></P
+></DIV
+>
+
+               </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;               These installation instructions assume
+               <P
+></P
+><UL
+><LI
+><P
+>&#13;                   Commands are Unix-compatible.
+                 </P
+></LI
+><LI
+><P
+>&#13;                 The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+>, <EM
+>other paths are possible</EM
+>.
+                 </P
+></LI
+><LI
+><P
+>&#13;                   Installations were tested on Red Hat Linux 6.1 and 6.2.
+                 </P
+></LI
+><LI
+><P
+>&#13;                 All steps in the installation will happen in super-user account <TT
+CLASS="literal"
+>root</TT
+>.
+                 </P
+></LI
+><LI
+><P
+>&#13;                 PostgreSQL version number is 6.5.3
+                 </P
+></LI
+></UL
+>
+             </P
+><P
+>&#13;               These are the Package(s) and available here:
+               <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;                 PostgreSQL Homepage: <A
+HREF="appendixa.html#prtinxfp27"
+>http://www.postgresql.org/</A
+>
+               </TD
+></TR
+><TR
+><TD
+>&#13;               PostgreSQL FTP Site:<A
+HREF="appendixa.html#prtinxfp27"
+>216.126.84.28</A
+>
+               </TD
+></TR
+><TR
+><TD
+>&#13;               You must be sure to download: postgresql-6.5.3.tar.gz
+               </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+             </P
+><P
+>&#13;               There are certain prerequisites before compiling the PostgreSQL program, you must verify that <TT
+CLASS="literal"
+>egcs-c++-version.i386.rpm</TT
+> package is installed on your system. The <TT
+CLASS="literal"
+>egcs-c++-version.i386.rpm</TT
+> package 
+               is located in you Red Hat Linux CD-ROM under <TT
+CLASS="filename"
+>RedHat/RPMS</TT
+> subdirectory. After compilation and installation of PostgreSQL you can remove this package from your system.
+               To verify that egcs-c++-version.i386.rpm is already installed, use the following command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>rpm</B
+> -q egcs-c++
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               To install egcs-c++-version.i386.rpm, use the following command:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>mount</B
+> /dev/cdrom /mnt/cdrom
+                 [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /mnt/cdrom/RedHat/RPMS
+                 [root@deep ]/RPMS# <B
+CLASS="command"
+>rpm</B
+> -Uvh egcs-c++-version.i386.rpm
+               </PRE
+></TD
+></TR
+></TABLE
+>
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;                 egcs-c++                    ##################################################
+               </TT
+></PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               Before you decompress the tarballs, it is a good idea to make a list of files on the system before you install it, and one afterwards, and then compare them using diff to find out what file it placed where. Simply run <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; PostgreSQL1</B
+></TT
+> 
+               before and <B
+CLASS="command"
+>find</B
+> <TT
+CLASS="userinput"
+><B
+>/* &#62; PostgreSQL2</B
+></TT
+> after you install the tarball, and use <B
+CLASS="command"
+>diff</B
+> <TT
+CLASS="userinput"
+><B
+>PostgreSQL1 PostgreSQL2 &#62; PostgreSQL-Installed</B
+></TT
+> to get a list of what changed.
+             </P
+><P
+>&#13;               To Compile you need to decompress the tarball -<TT
+CLASS="literal"
+>tar.gz</TT
+>:
+               <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;                 [root@deep] /# <B
+CLASS="command"
+>cp</B
+> postgresql-version.tar.gz /var/tmp
+                 [root@deep] /# <B
+CLASS="command"
+>cd</B
+> /var/tmp
+                 [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+> xzpf postgresql-version.tar.gz
+               </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="datab-pSQL.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap27sec221.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Linux PostgreSQL Database Server</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="datab-pSQL.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Compile and Optimize</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

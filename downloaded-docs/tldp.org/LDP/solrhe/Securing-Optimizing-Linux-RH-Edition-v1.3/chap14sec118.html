@@ -1,0 +1,415 @@
+<HTML
+><HEAD
+><TITLE
+>Test fire your PortSentry</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Security/Monitoring"
+HREF="soft-secmonitor.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure and Optimise Portsentry"
+HREF="chap14sec117.html"><LINK
+REL="NEXT"
+TITLE="Software -Networking"
+HREF="soft-net.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap14sec117.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 14. Software -Security/Monitoring</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="soft-net.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN7774"
+>14.7. Test fire your PortSentry</A
+></H1
+><P
+>&#13;         The PortSentry program can be configured in six different modes of operation, but be aware that only one protocol mode type can be started at a time. To be more accurate, you can start one <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> mode and one <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> mode, so 
+         two <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> modes and one <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> modes, for example, doesn't work. The available modes are:
+         <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><B
+CLASS="command"
+>portsentry</B
+> -tcp</DT
+><DD
+><P
+>&#13;         basic port-bound <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> mode
+         </P
+></DD
+><DT
+><B
+CLASS="command"
+>portsentry</B
+> -udp</DT
+><DD
+><P
+>&#13;         basic port-bound <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> mode
+         </P
+></DD
+><DT
+><B
+CLASS="command"
+>portsentry</B
+> -stcp</DT
+><DD
+><P
+>&#13;         Stealth <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> scan detection
+         </P
+></DD
+><DT
+><B
+CLASS="command"
+>portsentry</B
+> -atcp</DT
+><DD
+><P
+>&#13;         Advanced <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> stealth scan detection
+         </P
+></DD
+><DT
+><B
+CLASS="command"
+>portsentry</B
+> -sudp</DT
+><DD
+><P
+>&#13;         Stealth <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> scan detection
+         </P
+></DD
+><DT
+><B
+CLASS="command"
+>portsentry</B
+> -audp</DT
+><DD
+><P
+>&#13;         Advanced Stealth <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> scan detection
+         </P
+></DD
+></DL
+></DIV
+>
+         </P
+><P
+>&#13;         In my case I prefer to start <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> in Advanced <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> stealth scan detection protocol mode and <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> in Stealth <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> scan detection protocol 
+         mode. For information about the other protocol modes, please refer to the <TT
+CLASS="filename"
+>README.install</TT
+> and <TT
+CLASS="filename"
+>README.stealth</TT
+> file under the PortSentry source directory.
+         For <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> mode I choose:
+         <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>&#13;          -atcp
+         </B
+></DT
+><DD
+><P
+>&#13;         Advanced <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> stealth scan detection mode
+         </P
+></DD
+></DL
+></DIV
+>
+         With the Advanced <SPAN
+CLASS="acronym"
+>TCP</SPAN
+> stealth scan detection mode  -atcp protocol mode type, PortSentry will first check to see what ports you have running on your server, then remove 
+         these ports from monitoring and will begin watching the remaining ports. This is very powerful and reacts exceedingly quickly for port scanners. It also uses very little <SPAN
+CLASS="acronym"
+>CPU</SPAN
+> time.
+         </P
+><P
+>&#13;         For <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> mode I choose:
+         <DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>&#13;          -sudp
+         </B
+></DT
+><DD
+><P
+>&#13;         Stealth <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> scan detection mode
+         </P
+></DD
+></DL
+></DIV
+>
+         With the Stealth <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> scan detection mode  -sudp protocol mode type, the <SPAN
+CLASS="acronym"
+>UDP</SPAN
+> ports will be listed and then monitored.
+         </P
+><P
+>&#13;         To start PortSentry in the two modes selected above, use the commands:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;         [root@deep] /#  /usr/psionic/portsentry/portsentry -atcp
+         [root@deep] /#  /usr/psionic/portsentry/portsentry -sudp
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+         You can add the above lines to your <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> script file and PortSentry software will be automatically started if you reboot your system.
+         </P
+></BLOCKQUOTE
+></DIV
+><P
+>&#13;         These are the files Installed by Portsentry on your system:
+         <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;         /usr/psionic
+         </TT
+></TD
+></TR
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;         /usr/psionic/portsentry
+         </TT
+></TD
+></TR
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;         /usr/psionic/portsentry/portsentry.conf
+         </TT
+></TD
+></TR
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;         /usr/psionic/portsentry/portsentry.ignore
+         </TT
+></TD
+></TR
+><TR
+><TD
+><TT
+CLASS="filename"
+>&#13;         /usr/psionic/portsentry/portsentry
+         </TT
+></TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+         </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap14sec117.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="soft-net.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure and Optimise Portsentry</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="soft-secmonitor.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Software -Networking</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

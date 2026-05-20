@@ -1,0 +1,1016 @@
+<HTML
+><HEAD
+><TITLE
+>Mail Transfer Agents</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.63
+"><LINK
+REL="HOME"
+TITLE="LDAP Implementation HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="DNS"
+HREF="dns.html"><LINK
+REL="NEXT"
+TITLE="Address books"
+HREF="address.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>LDAP Implementation HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="dns.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="address.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="SENDMAIL"
+>6. Mail Transfer Agents</A
+></H1
+><P
+>i will describe three different MTA's in this section, Sendmail, Postfix and Qmail. These are three MTA's that can be configured to use Ldap for the retrieval of information. From personal experience, I must say that Postfix is <EM
+>much</EM
+>
+easier to set up than sendmail, but this may change in the future, as the ldap support in sendmail develops to a more mature state.
+I have not used qmail myself.</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN460"
+>6.1. Sendmail</A
+></H2
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN462"
+>6.1.1. Ldap support in sendmail</A
+></H3
+><P
+>Sendmail has support for ldap since somewhere around version 8.8.x using the map type <EM
+>ldapx</EM
+>.From version 8.10 and up an ldap database type <EM
+>ldap</EM
+> is supported. Please note that the ldap map support is not enabled per default in the RedHat package. Debian versions 2.2 and later do have ldap support in their sendmail, I am told. If you have to compile it yourself, please read the file <TT
+CLASS="FILENAME"
+>sendmail/README</TT
+> from the sendmail sources. It contains valuable information about how to compile in the ldap support.</P
+><P
+>Both the old and the new ldap map type have the ability to look up entries in an ldap database. There is one thing that must be noted however. When a search is being done, only one result should be returned. If more results are found, only the first is used. Additionally, is multiple return values for that result are found, only the first is returned. Let's take a look at the following example ldif file:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>dn: cn=mailuser1,ou=mail,dc=company,dc=com
+objectclass: top
+objectclass: foo
+cn: mailuser1
+mail: mailuser1@company.com
+mail: info@company.com</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>If a search is performed with a simple search filter like <EM
+>cn=mailuser1</EM
+>, and the attribute that is asked for is <EM
+>mail</EM
+>, only <EM
+>mailuser1@company.com</EM
+>, is returned. To get both results, they should we stored in a single-valued attribute with comma-separated values, like this:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>mail: mailuser1@company.com, info@company.com</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>An email message containing information related to this subject can be found at the <A
+HREF="alias_issues"
+TARGET="_top"
+>LIH home</A
+>.</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN479"
+>6.1.2. System layout.</A
+></H3
+><P
+>When ldap maps are available, almost anything can be looked up in an ldap database. What we would like to do is to simplify the configuration of the following setup.</P
+><P
+>Let's say we have a medium-sized or large network where we recieve for  many domains. We have two mailhosts and two or three fallback hosts. This setup will normally have four places where three types of information are stored. <P
+></P
+><UL
+><LI
+><P
+>The mailhosts both need a file <TT
+CLASS="FILENAME"
+></TT
+>, or traditionally <TT
+CLASS="FILENAME"
+>sendmail.cw</TT
+>, to store the domains for which they should recieve mail. The fallback hosts keep the same information in the <TT
+CLASS="FILENAME"
+>access</TT
+> file, but they use it to list the domains for which they should relay any incoming mail.</P
+></LI
+><LI
+><P
+>The mailhosts both have a <TT
+CLASS="FILENAME"
+>virtusers</TT
+> file, which maps multiple adresses (or entire domains) to a single virtual or local user.</P
+></LI
+><LI
+><P
+>The mailhosts both have an <TT
+CLASS="FILENAME"
+>aliases</TT
+> file, which maps virtual users to one or more mail addresses or local users.</P
+></LI
+></UL
+>If this information is stored in a single database, each host will read its configuration from that database, which improves both the manageability and the scaleability of the network. One could even think of a single host which carries all data, mapped to with nfs. In such a case it makes no difference anymore to which host we are connecting. To a user, they appear to be all the same.</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN495"
+>6.1.3. Sendmail configuration file</A
+></H3
+><P
+>To understand how this information is read from an ldap database instead of the regular files a little background knowledge of the <TT
+CLASS="FILENAME"
+>sendmail.cf</TT
+> file is neccesary. The information we're dealing with here is stored in two different ways. The <TT
+CLASS="FILENAME"
+>local-host-names</TT
+> file is read into a class (class w, to be exactly, hence the old extension cw), while the virtusers file is used through a simple map. The aliases file is also a map, but it is defined in a different manner and used internally, instead of being referred to in rules.</P
+><P
+>When information is retrieved from a ldap database, it always ends up being in a map. This is somewhat problematic with the information stored in the <TT
+CLASS="FILENAME"
+>local-host-names</TT
+> file, because this used to be a class. I have been unable to fill the class with the information from the map or something alike. That would be the easy way, but I think it's not possible. (If I'm incorrect about this, please let me know). Therefore, I had to define a new map, and insert rules in the sendmail configuration to make sure that (almost) every time when a value is looked up in the class, the new map is searched for the value too.</P
+><P
+>For the maps, the change of configuration is easy. A map is normally defined with a name and database type, and some database-specific options, (like the location of the file, for the normally used newdb database types). So for maps, it suffices to change the definition of the map and voila, we're done. Ldap maps have a few more options, some of which can be predefined. They are explained in the following list (largely taken from Booker Bense's document):<P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><P
+><B
+>Ldap-specific map options in sendmail.cf</B
+></P
+><DL
+><DT
+>-h</DT
+><DD
+><P
+>Defines a space-separated list with hostnames of ldap servers. All machines will be queried in this order, until a result is found. This can be configured globally.</P
+></DD
+><DT
+>-b</DT
+><DD
+><P
+>Defines the ldap search base, e.g. the ldap directory you are going to search in. This can be configured globally.</P
+></DD
+><DT
+>-k</DT
+><DD
+><P
+>Defines the ldap search filter. It is a "sprintf" style string that defines how the map takes it's input value and constructs an ldap search. It has the form of an ordinary ldap search filter, with %s replaced by the value that is searched for. To learn more about ldap search filters please see <A
+HREF="http://www.cis.ohio-state.edu/htbin/rfc/rfc2254.html"
+TARGET="_top"
+>RFC 2254</A
+>. The search filter and the search base used above should define a search that returns at most one entry. The ldap map will only use the first entry it recieves. </P
+></DD
+><DT
+>-v</DT
+><DD
+><P
+>Defines the ldap attribute of which the value will be returned by the map lookup. Explained in detail later.</P
+></DD
+></DL
+></DIV
+></P
+><P
+>PLease note that all ldap options must be double-quoted and must immediately follow the sendmail option. Here is an example:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>Kldapexamplemap ldap -h"localhost ldap.myorg.com" -b"ou=mail,dc=myorg,dc=com" -k"(mailstuff)(uid=%s))" -v"mailaddress"</PRE
+></TD
+></TR
+></TABLE
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN525"
+>6.1.4. Schema</A
+></H3
+><P
+>For this particular setup I have defined a subtree <EM
+>mail</EM
+> in the ldap directory, under which all mail-related information will be stored. I t would have been possible to store some of the user-related mail-information in the <EM
+>ou=Users</EM
+> subtree, but I have specificalle chosen not to do this. When using a separate subtree, all information for sendmail is stored in a single place, and, when having many users, searches may be faster, because not the entire <EM
+>ou=Users</EM
+> subtree needs to be searched, but only the <EM
+>ou=mail</EM
+> subtree.</P
+><P
+>In this subtree two kinds of records will appear.<P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>Entries that hold mappings from the <TT
+CLASS="FILENAME"
+>virtuser</TT
+> file and <TT
+CLASS="FILENAME"
+>aliases</TT
+> file, for a single virtual user. I have chosen to store both mappings in a single entry, because this clarifies the effect and configuration used. For this I have defined an objectclass <EM
+>inetmailrecipient</EM
+>, and three attributes, <EM
+>mailid</EM
+>, <EM
+>mailacceptinggeneralid</EM
+> and <EM
+>maildrop</EM
+>.</P
+><P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>inetmailrecipient</DT
+><DD
+><P
+>This is a classification that tells us the entry is some form of mapping from one or more real mail addresses and/or mail domains to one or more real users.</P
+></DD
+><DT
+>mailid</DT
+><DD
+><P
+>This describes the mail addresses that this virtual user recieves mail for. Can be in the form of normail addresses, like <EM
+>foo@myorg.com</EM
+>, or complete domains like <EM
+>@my2nd.org</EM
+>. Multiple of these attributes may be present, but they should all contain only one value. For each of these id's mail is sent to <EM
+>mailacceptinggeneralid</EM
+>.</P
+><P
+>Here you'll put what you used to put at the left side in the <TT
+CLASS="FILENAME"
+>virtusers</TT
+> file.</P
+></DD
+><DT
+>mailacceptinggeneralid</DT
+><DD
+><P
+>Defines a virtual user. This is in fact the link between the <TT
+CLASS="FILENAME"
+>virtusers</TT
+> and <TT
+CLASS="FILENAME"
+>aliases</TT
+> file. In each entry, one attribute of this type must be present, but no more than one may be present, and the attribute may contain only one value. This can either be a local username, or a virtual user. In the second case, a maildrop attribute must be present, in the first case, it does not.</P
+><P
+>Here you'll put what you used to put in the <TT
+CLASS="FILENAME"
+>virtusers</TT
+> file, and at the left side in the <TT
+CLASS="FILENAME"
+>aliases</TT
+> file.</P
+></DD
+><DT
+>maildrop</DT
+><DD
+><P
+>Defines the addresses and/or users that mail received for  should be delivered to. Only one attribute of this type may be present, but it may contain a comma-separated list of addresses and/or users. If the value of <EM
+>mailacceptinggeneralid</EM
+> is a virtual user, this attribute must be present. If the value is a real user, this entry may be omitted.</P
+><P
+>Here you'll put what you used to put at the right side in the <TT
+CLASS="FILENAME"
+>aliases</TT
+> file.</P
+></DD
+></DL
+></DIV
+></P
+><P
+>In general, one could say that the <EM
+>mailid</EM
+> and <EM
+>mailacceptinggeneralid</EM
+> together provide the functionality of the <TT
+CLASS="FILENAME"
+>virtusers</TT
+> file, and <EM
+>mailacceptinggeneralid</EM
+> and <EM
+>maildrop</EM
+> together provide the functionality of the <TT
+CLASS="FILENAME"
+>aliases</TT
+> file.</P
+></LI
+><LI
+><P
+>One or more entries that hold the domain names which would normally apear in the <TT
+CLASS="FILENAME"
+>sendmail.cw</TT
+> and <TT
+CLASS="FILENAME"
+>access</TT
+> files. For this I have defined an objectclass <EM
+>inetmaildomain</EM
+>, and three attributes, <EM
+>maildomain</EM
+>, <EM
+>sendmailislokalkey</EM
+> and <EM
+>sendmailaccesskey</EM
+>.</P
+><P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>inetmaildomain</DT
+><DD
+><P
+>This is a classification that tells us the entry lists mail domains which belong to our system, and either should be delivered locally, or be relayed to another host.</P
+></DD
+><DT
+>maildomain</DT
+><DD
+><P
+>Defines the mail domain. Multiple of these attributes may be presentin a single entry. The value should be the domain without the "@".</P
+><P
+>For each of the dmain entries in the <EM
+>local-host-names</EM
+> file, one of these attributes should be present.</P
+></DD
+><DT
+>sendmailislocalkey</DT
+><DD
+><P
+>This defines a simple key that is used in the sendmail rules to determine if a domain is local. It can be anything really, but is must be the exact string you will use in your sendmail rules. For now I have used <EM
+><TT
+CLASS="SGMLTAG"
+>&#60;LDAPLOCAL&#62;</TT
+></EM
+>. One attribute of this type must be present, and no more than one may be present in each entry.</P
+></DD
+><DT
+>sendmailaccesskey</DT
+><DD
+><P
+>This defines the key that is used in the sendmail rules to determine what action needs t be taken for the specified domain. It can be one of <EM
+>RELAY</EM
+>, <EM
+>OK</EM
+>, <EM
+>REJECT</EM
+>, <EM
+>DISCARD</EM
+> or an error indicator. (For detailed information see the <TT
+CLASS="FILENAME"
+>cf/README</TT
+> file from the sendmail sources.)</P
+></DD
+></DL
+></DIV
+></P
+><DIV
+CLASS="NOTE"
+><BLOCKQUOTE
+CLASS="NOTE"
+><P
+><B
+>Note: </B
+>PLease note that in this particular setup I will only be using entire domains in the <EM
+>access</EM
+> file. That means that in this case I can use the <EM
+>maildomain</EM
+> attribute for both the information used in the <EM
+>access</EM
+> file and the information used in the <EM
+>local-host-names</EM
+>. If you want a finer control over your access list, you should define a separate entry to hold that information, instead of using the <EM
+>maildomain</EM
+> attribute.</P
+></BLOCKQUOTE
+></DIV
+></LI
+></OL
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN622"
+>6.1.5. More information.</A
+></H3
+><P
+>Here are a few sources of information that might be useful:
+<P
+></P
+><UL
+><LI
+><P
+>Booker Bense has written a <A
+HREF="http://www.stanford.edu/~bbense/ldap/Inst.html"
+TARGET="_top"
+>document</A
+> about the usage of ldap with sendmail 8.9.3. He says it's the wrong place to start when learning about using sendmail and ldap, but it has been of great help to me.</P
+></LI
+><LI
+><P
+><A
+HREF="http://www.iconimaging.net/~jradford/sendmail/sendmail-ldap.html"
+TARGET="_top"
+>A short howto</A
+> about how to setup sendmail with ldap, written by Jason Christopher Radford</P
+></LI
+><LI
+><P
+><A
+HREF="http://ldapman.org/articles/index.html"
+TARGET="_top"
+>New articles</A
+> about ldap and sendmail are being published on <A
+HREF="http://www.sendmail.net"
+TARGET="_top"
+>sendmail.net</A
+>, written by Michael Donnelly, originating from <A
+HREF="http:///www.ldapmap.org"
+TARGET="_top"
+>ldapmap.org</A
+>, which has also a lot of general interesting ldap-related information.</P
+></LI
+></UL
+></P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN637"
+>6.2. Postfix</A
+></H2
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN639"
+>6.2.1. Support</A
+></H3
+><P
+>Postfix has native ldap support. A lot of options in postfix can be configured using <EM
+>maps</EM
+> which can be of various types. One of those types is ldap.
+For each ldap map a couple of options can be configured. (See <A
+HREF="sendmail.html#POSTCONF"
+>Section 6.2.2</A
+>.)</P
+><P
+>The process of having postfix look up certain data in an ldap database is pretty straightforward. The most common use (so i think) is to have postfix look up virtual users in the ldap database. Together with the above explaind nss_ldap feature, this allows you to have all your email users in an ldap database. But other things can be configured too, like the domains postfix is allowed to relay mail for, or relay mail from, or for which is should act as a backup mail server.</P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="POSTCONF"
+>6.2.2. Configuration</A
+></H3
+><P
+>The description of the configuration options is completely taken from LDAP_README in the postfix docs from version 20001217.</P
+><P
+><P
+></P
+><DIV
+CLASS="VARIABLELIST"
+><DL
+><DT
+>server_host</DT
+><DD
+><P
+>The name of the host running the LDAP server, e.g.</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_server_host = ldap.your.com</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>It should be possible with all the libraries mentioned above to 
+specify multiple servers separated by spaces, with the libraries
+trying them in order should the first one fail. It should also
+be possible to give each server in the list a different port, by
+naming them like "ldap.your.com:1444".</P
+></DD
+><DT
+>server_port (389)</DT
+><DD
+><P
+>The port the LDAP server listens on, e.g.</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_server_port = 778</PRE
+></TD
+></TR
+></TABLE
+></P
+></DD
+><DT
+>search_base (No default; you must configure this.)</DT
+><DD
+><P
+>The base at which to conduct the search, e.g.</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_search_base = dc=your, dc=com</PRE
+></TD
+></TR
+></TABLE
+></P
+></DD
+><DT
+>timeout (10 seconds)</DT
+><DD
+><P
+>The number of seconds a search can take before timing out, e.g.</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_timeout = 5</PRE
+></TD
+></TR
+></TABLE
+></P
+></DD
+><DT
+>query_filter (mailacceptinggeneralid=%s)</DT
+><DD
+><P
+>The RFC2254 filter used to search the directory, where %s is a 
+substitute for the address Postfix is trying to resolve, e.g.</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_query_filter = (%s)(paid_up=true))</PRE
+></TD
+></TR
+></TABLE
+></P
+></DD
+><DT
+>domain (No default; you must configure this.)</DT
+><DD
+><P
+>This is a list of domain names, paths to files, or dictionaries.
+If specified, only lookups ending in a domain on this list will
+be searched. This can significantly reduce the query load on the 
+LDAP server.</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_domain = postfix.org, hash:/etc/postfix/searchdomains</PRE
+></TD
+></TR
+></TABLE
+></P
+></DD
+><DT
+>result_attribute (maildrop)</DT
+><DD
+><P
+>The attribute(s) Postfix will read from any directory entries
+returned by the lookup, to be resolved to an email address.</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_result_attribute = mailbox,maildrop</PRE
+></TD
+></TR
+></TABLE
+></P
+></DD
+><DT
+>special_result_attribute (No default)</DT
+><DD
+><P
+>The attribute(s) of directory entries that can contain DNs or URLs.
+If found, a recursive subsequent search is done using their values.</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_special_result_attribute = member</PRE
+></TD
+></TR
+></TABLE
+></P
+></DD
+><DT
+>scope (sub)</DT
+><DD
+><P
+>The LDAP search scope: sub, base, or one. These translate into
+LDAP_SCOPE_SUBTREE, LDAP_SCOPE_BASE, and LDAP_SCOPE_ONELEVEL.</P
+></DD
+><DT
+>bind (yes)</DT
+><DD
+><P
+>Whether or not to bind to the LDAP server. Newer LDAP
+implementations don't require clients to bind, which saves
+time. Example:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_bind = no</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>If you do need to bind, you might consider configuring Postfix
+to connect to the local machine on a port that's an SSL tunnel
+to your LDAP server. If your LDAP server doesn't natively
+support SSL, put a tunnel (wrapper, proxy, whatever you want to
+call it) on that system too. This should prevent the password
+from traversing the network in the clear.</P
+></DD
+><DT
+>bind_dn ("")</DT
+><DD
+><P
+>If you do have to bind, do it with this distinguished name.
+Example:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_bind_dn = uid=postfix, dc=your, dc=com</PRE
+></TD
+></TR
+></TABLE
+></P
+></DD
+><DT
+>bind_pw ("")</DT
+><DD
+><P
+>The password for the distinguished name above. If you have to
+use this, you probably want to make main.cf readable only by
+the Postfix user. Example:</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="90%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>ldapsource_bind_pw = postfixpw</PRE
+></TD
+></TR
+></TABLE
+></P
+></DD
+><DT
+>cache (no)</DT
+><DD
+><P
+>Whether to use a client-side cache for the LDAP connection. See
+ldap_enable_cache(3). It's off by default.</P
+></DD
+><DT
+>cache_expiry (30 seconds)</DT
+><DD
+><P
+>If the client-side cache is enabled, cached results will expire
+after this many seconds.</P
+></DD
+><DT
+>cache_size (32768 bytes)</DT
+><DD
+><P
+>If the client-side cache is enabled, this is its size in bytes.</P
+></DD
+><DT
+>dereference (0)</DT
+><DD
+><P
+>When to dereference LDAP aliases. (Note that this has nothing
+do with Postfix aliases.) The permitted values are those 
+legal for the OpenLDAP/UM LDAP implementations:
+<P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>0</TD
+><TD
+>never</TD
+></TR
+><TR
+><TD
+>1</TD
+><TD
+>when searching</TD
+></TR
+><TR
+><TD
+>2</TD
+><TD
+>when locating the base object for the search</TD
+></TR
+><TR
+><TD
+>3</TD
+><TD
+>always</TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+></P
+></DD
+></DL
+></DIV
+></P
+></DIV
+><DIV
+CLASS="SECT3"
+><H3
+CLASS="SECT3"
+><A
+NAME="AEN747"
+>6.2.3. Example setup</A
+></H3
+><P
+>If you want a virtual domain (say foo.virtualdomain.com) and you want to store email addresses in Ldap for this domain, youwould need the following piece in your <TT
+CLASS="FILENAME"
+>main.cf</TT
+>.</P
+><P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="PROGRAMLISTING"
+>virtual_maps = ldap:ldapvirtual
+ldapvirtual_search_base = ou=mail,o=YourOrg,c=nl
+ldapvirtual_query_filter = (mailacceptinggeneralid=%s)
+ldapvirtual_domain = foo.virtualdomain.com
+ldapvirtual_result_attribute = maildrop
+ldapvirtual_bind = no
+ldapvirtual_scope = one</PRE
+></TD
+></TR
+></TABLE
+></P
+><P
+>With this setting, if postfix receives mail for a user with a domain part "foo.virtualdomain.com", to do a search in the database for entries that have an attribute <EM
+>mailacceptinggeneralid</EM
+> that matches "user@foo.virtualdomain.com". If such an entry is found, the values of all available <EM
+>maildrop</EM
+> attributes are returned, and to these values the mail is delivered. If "user@foo.virtualdomain.com" is not found, another query is performed, that tries to match the catchall user, "@foo.virtualdomain.com". If this is again not found, the message will be bounced.</P
+></DIV
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN756"
+>6.3. Qmail</A
+></H2
+><P
+>Qmail itself does not have any ldap support. However, there is a patch by Andre Oppermann that provides ldap support.
+This package, including the documentation for it, can be found at <A
+HREF="http://www.nrg4u.com"
+TARGET="_top"
+>his site</A
+>. </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="dns.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="address.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>DNS</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Address books</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

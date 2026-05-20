@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Beyond IrDA</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Advanced Topics"
+HREF="infrared-howto-c-advanced-topics.html"><LINK
+REL="PREVIOUS"
+TITLE="Power Saving"
+HREF="infrared-howto-s-power-saving.html"><LINK
+REL="NEXT"
+TITLE="IrDA Network Neighborhood"
+HREF="infrared-howto-s-network-neighborhood.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-power-saving.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 5. Advanced Topics</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-network-neighborhood.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-beyond-irda"
+></A
+>5.6. Beyond IrDA</H1
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1459"
+></A
+>5.6.1. Extending Transmission Distance</H2
+><P
+>&#13;   According to the IrDA specification the range is up to 1 meter. From
+   the "IrDA Data Link Design Guide" p. 20 by
+   <A
+HREF="http://www.hp.com/go/ir"
+TARGET="_top"
+>Hewlett-Packard</A
+>
+   : " In some cases it may be desired to
+   increase link distance beyond the 1 meter guaranteed by IrDA. The two
+   ways to do this are to increase transmitted light intensity, or to
+   increase receiver sensitivity. In order to extend the link distance,
+   both sensitivity and intensity must be increased for both ends of the
+   IR link. If it is desired to communicate with a standard IrDA device
+   that may have minimum transmitter intensity, the receiver intensity
+   must be increased. The standard IrDA device may also have minimum
+   receiver sensitivity, so transmitter intensity must also be
+   increased."
+</P
+><P
+>&#13;   Andreas Butz wrote: "This might be a silly question, but has anyone an
+   idea whether the whole IrDA stack really relies on a two-way
+   connection, or whether there are some parts of it that could be abused
+   for a one-way connection, ideally for unreliable data? We're trying to
+   modify some IR dongles to broadcast information to palm pilots over
+   several meters distance (cover a whole room), and since we don't want
+   to modify the pilots themselves, and increasing the sensitivity on the
+   receiver side seems unlikely to work, we're stuck with a one way
+   link.". Please see the mailing list archive for details of the
+   discussion.
+</P
+><P
+>&#13;   Sent by Marc Bury " .. just heard about some
+   Philips new scheme for remote controls: they call it IRDA - Control.
+   This is supposed to be bi-directional, 75 kbps data rate, multiple
+   simultaneous devices (up to 8) and with a minimum 6 meter range!" More
+   information at 
+   <A
+HREF="http://www.irda.org/"
+TARGET="_top"
+>IrDA.org</A
+> .
+</P
+><P
+>&#13;   The German magazine ELEKTOR issued a guide to build a Long Distance
+   IrDA Dongle (20m, RS232, IrDA 1.0),
+   <A
+HREF="http://www.elektor.de"
+TARGET="_top"
+>ELEKTOR</A
+>
+   5/97 p.
+</P
+><P
+>&#13;   <SPAN
+CLASS="QUOTE"
+>"The main problem is that you generally have to
+   make the receiver more sensitive. Basic physics has the inverse square
+   law: the intensity drops with the SQUARE of the distance, so going
+   from 1 to 5 meters requires 25x the power (and battery drain on a
+   portable device), or 25x the sensitivity (and dynamic range - it still
+   has to be able to work at 3 inches). And if you want to do it on the
+   other end, it doesn't simply have to be 25x more sensitive, it must
+   pick up the tiny IrDA pulse needle in a haystack of florescent lights,
+   screen savers, moving shadows ..."</SPAN
+>
+</P
+><P
+>&#13;   Also laser diodes (pulsable) were recommended by K-H. Eischer: But they
+   are more expensive. And the laser diodes are also dangerous if they
+   have more than 1 mW. A better solution would be to use lenses to focus
+   the beam. There is a minimum of absorbtion in the air (I don't know
+   the right frequency) and you should use IR diodes with this frequency.
+</P
+><P
+>&#13;   James wrote: " Who ever it was wanting to do long distance with IrDA,
+   we've tried this before. The best approaches are:
+</P
+><P
+>&#13;
+<P
+></P
+><UL
+><LI
+><P
+>&#13;   wavelan - buy the cards but not the antennas you can make your own
+   with equaly good gain as the $9000 type they sell here.
+</P
+></LI
+><LI
+><P
+>&#13;   microwave - you can pick up X-band doppler radar modules, tune
+   them slightly apart and use the your local TX as the LO for the
+   incomming RX, the whole thing behaves like ethernet and you can
+   hook it onto an AUI port, this may now be illegal.
+</P
+></LI
+><LI
+><P
+>&#13;   ir - Many people sell kits which transmit video over Ir, they come
+   complete with the large fresnel lense you need, they manage about
+   4MHz b/w over 100m.
+</P
+></LI
+><LI
+><P
+>&#13;   laser diodes - when we looked at these they were a pain, I think
+   elantec make decent drivers but modulating them was a big pain,
+   Steve Carcia had a series on articles on modulating He-Ne lasers
+   but be careful they have lots of volts in them that want to get
+   out and kill you.
+</P
+></LI
+></UL
+>
+
+</P
+><P
+>&#13;   Whatever you choose IrDA might very well be a good choice for a
+   protocol, given it's one of the few that sensibly copes with simplex."
+</P
+><P
+>&#13;   Here are some links to 
+   <A
+HREF="http://repair4laptop.org/notebook_irda_selfmade.html"
+TARGET="_top"
+>do-it-yourself InfraRed (IrDA) devices</A
+>
+   to use with your laptop, notebook, PDA or mobile phone.
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1485"
+></A
+>5.6.2. Upcoming Standards (Bluetooth and IrDA)</H2
+><P
+>&#13;   "More and more people now think that IrDA and Bluetooth will live
+   happily side by side, and the idea of Bluetooth as the IrDA killer
+   just don't work anymore. IrDA is still unbeatable in price/performance
+   and with the new additions to the standards family like AIR and VFIR,
+   it's really good to see that IrDA is moving in the right direction."
+   
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-power-saving.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-network-neighborhood.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Power Saving</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-advanced-topics.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>IrDA Network Neighborhood</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

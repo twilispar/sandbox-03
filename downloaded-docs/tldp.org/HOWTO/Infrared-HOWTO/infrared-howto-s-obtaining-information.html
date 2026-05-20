@@ -1,0 +1,543 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML
+><HEAD
+><TITLE
+>Obtaining Information about the Infrared Port in Laptops</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.7"><LINK
+REL="HOME"
+TITLE="Linux Infrared HOWTO"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Hardware Supported by Linux/IrDA"
+HREF="infrared-howto-c-hardware-supported.html"><LINK
+REL="PREVIOUS"
+TITLE="Hardware Supported by Linux/IrDA"
+HREF="infrared-howto-c-hardware-supported.html"><LINK
+REL="NEXT"
+TITLE="Hardware Surveys"
+HREF="infrared-howto-s-hardware-surveys.html"></HEAD
+><BODY
+CLASS="sect1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Linux Infrared HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-c-hardware-supported.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 4. Hardware Supported by Linux/IrDA</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="infrared-howto-s-hardware-surveys.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="sect1"
+><H1
+CLASS="sect1"
+><A
+NAME="infrared-howto-s-obtaining-information"
+></A
+>4.1. Obtaining Information about the Infrared Port in Laptops</H1
+><P
+>&#13;   To get the IrDA port of your laptop working with Linux/IrDA you may
+   use StandardInfraRed (SIR) or FastInfraRed (FIR).
+</P
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1042"
+></A
+>4.1.1. SIR</H2
+><P
+>&#13;   Up to 115.200bps, the infrared port emulates a serial port like the
+   16550A UART. This will be detected by the kernel serial driver at boot
+   time, or when you load the serial module. If infrared support is
+   enabled in the BIOS, for most laptops you will get a kernel message
+   like:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;Serial driver version 4.25 with no serial options enabled
+ttyS00 at 0x03f8 (irq = 4) is a 16550A     #first serial port /dev/ttyS0
+ttyS01 at 0x3000 (irq = 10) is a 16550A    #e.g. infrared port
+ttyS02 at 0x0300 (irq = 3) is a 16550A     #e.g. PCMCIA modem port
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></DIV
+><DIV
+CLASS="sect2"
+><H2
+CLASS="sect2"
+><A
+NAME="AEN1046"
+></A
+>4.1.2. FIR</H2
+><P
+>&#13;   If you want to use up to 4Mbps, your machine has to be equipped with a
+   certain FIR chip. You need a certain Linux/IrDA driver to support this
+   chip. Therefore you need exact information about the FIR chip. You may
+   get this information in one of the following ways:
+</P
+><P
+>&#13;
+<P
+></P
+><OL
+TYPE="1"
+><LI
+><P
+>&#13;   Read the <EM
+>specification</EM
+> of the machine, 
+   though it is very rare that you will find enough and reliable information there. 
+</P
+></LI
+><LI
+><P
+>&#13;   Try to find out whether the FIR chip is a <EM
+>PCI</EM
+> device.
+   Do a <B
+CLASS="command"
+>cat /proc/pci</B
+> . The appropriate files for 2.2.x
+   kernels are in <TT
+CLASS="filename"
+>/proc/bus/pci</TT
+> . Though often the PCI
+   information is incomplete. You may find the latest information about PCI
+   devices and vendor numbers in the kernel documentation usually in
+   <TT
+CLASS="filename"
+>/usr/src/linux/Documentation</TT
+> or at the page of
+   <A
+HREF="http://members.datafast.net.au/~dft0802/"
+TARGET="_top"
+>Craig Hart</A
+>.
+   From kernel 2.1.82 on, you may use <B
+CLASS="command"
+>lspci</B
+> from the
+   <B
+CLASS="command"
+>pci-utils</B
+> package, too.
+   
+</P
+></LI
+><LI
+><P
+>&#13;   Use the <EM
+>DOS tool</EM
+> <B
+CLASS="command"
+>CTPCI330.EXE</B
+> 
+   provided in ZIP format by the 
+   <A
+HREF="http://www.heise.de/ct/ftp/ctsi.shtml"
+TARGET="_top"
+>German computer magazine CT</A
+>.
+   
+   The information provided by this program is sometimes better than that 
+   provided by the Linux tools.
+</P
+></LI
+><LI
+><P
+>&#13;Try to get information about <EM
+>Plug-and-Play (PnP)</EM
+> devices. Though I didn't use them for this purpose yet, the <B
+CLASS="command"
+>isapnp</B
+> tools, could be useful.
+</P
+></LI
+><LI
+><P
+>&#13;If you have installed the <EM
+>Linux/<SPAN
+CLASS="trademark"
+>IrDA</SPAN
+>&reg; software</EM
+> load the FIR modules and watch the output of <B
+CLASS="command"
+>dmesg</B
+>, whether FIR is detected or not.
+</P
+></LI
+><LI
+><P
+>&#13;Another way how to figure it out explained by Thomas Davis (modified by WH): "Dig through the FTP site of the vendor, find the <EM
+>Windows9x FIR drivers</EM
+>, and they have (for a SMC chip): 
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;-rw-rw-r--   1 ratbert  ratbert       743 Apr  3  1997 smcirlap.inf 
+-rw-rw-r--   1 ratbert  ratbert     17021 Mar 24  1997 smcirlap.vxd 
+-rw-rw-r--   1 ratbert  ratbert      1903 Jul 18  1997 smcser.inf 
+-rw-rw-r--   1 ratbert  ratbert     31350 Jun  7  1997 smcser.vxd 
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+If in doubt, always look for the .inf/.vxd drivers for Windows95. Windows95 doesn't ship with _ANY_ FIR drivers. (they are all third party, mostly from Counterpoint, who was assimilated by ESI)." 
+</P
+></LI
+><LI
+><P
+>&#13;   Also Thomas Davis found a package of small <EM
+>DOS utilities made
+   by SMSC</EM
+>. Look at 
+
+
+   <A
+HREF="ftp://ftp.smsc.com/pub/appsoftware/"
+TARGET="_top"
+>IR_UTILS.ZIP</A
+>
+   The package contains <B
+CLASS="command"
+>FINDCHIP.EXE</B
+>. And includes a 
+   <B
+CLASS="command"
+>FIRSETUP.EXE</B
+> utility that is supposed to be 
+   able to set all values except the chip address. Furthermore it contains 
+   <B
+CLASS="command"
+>BIOSDUMP.EXE</B
+>, which produces this output:
+</P
+><P
+>&#13;Example 1 (from a COMPAQ Armada 1592DT)
+</P
+><P
+>&#13;<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;In current devNode:
+           Size      = 78
+           Handle    = 14
+           ID        = 0x1105D041 = 'PNP0511' -- Generic IrDA SIR
+Types:  Base = 0x07, Sub = 0x00,  Interface = 0x02
+Comm. Device, RS-232, 16550-compatible
+Attribute = 0x80
+                CAN be disabled
+                CAN be configured
+BOTH Static &#38; Dynamic configuration
+Allocated Resource Descriptor Block TAG's:
+TAG=0x47, Length=7 I/O Tag, 16-bit Decode
+Min=0x03E8, Max=0x03E8
+Align=0x00, Range=0x08
+TAG=0x22, Length=2 IRQ Tag, Mask=0x0010
+TAG=0x79, Length=1 END Tag, Data=0x2F
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+</P
+><P
+>&#13;Result 1:
+</P
+><P
+>&#13;<B
+CLASS="command"
+>Irq Tag, Mask (bit mapped - ) = 0x0010 = 0000 0000 0000 0001 0000</B
+> so, it's IRQ 4. (start at 0, count up ..), so this is a SIR only device, at IRQ=4, IO=x03e8.
+</P
+><P
+>&#13;Example 2 (from an unknown machine)
+</P
+><P
+>&#13;
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;In current devNode:
+          Size      = 529
+          Handle    = 14
+          ID        = 0x10F0A34D = 'SMCF010' -- SMC IrCC
+Types:  Base = 0x07, Sub = 0x00,  Interface = 0x02
+Comm. Device, RS-232, 16550-compatible
+Attribute = 0x80
+               CAN be disabled
+               CAN be configured
+BOTH Static &#38; Dynamic configuration 
+
+Allocated Resource Descriptor Block TAG's:
+TAG=0x47, Length=7 I/O Tag, 16-bit Decode
+Min=0x02F8, Max=0x02F8
+Align=0x00, Range=0x08
+TAG=0x22, Length=2 IRQ Tag, Mask=0x0008
+TAG=0x47, Length=7 I/O Tag, 16-bit Decode
+Min=0x02E8, Max=0x02E8
+Align=0x00, Range=0x08
+TAG=0x2A, Length=2 DMA Tag, Mask=0x02, Info=0x08
+TAG=0x79, Length=1 END Tag, Data=0x00
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+><P
+>&#13;Result 2:
+</P
+><P
+>&#13;a) it's a SMC IrCC chip
+</P
+><P
+>&#13;b) one portion is at 0x02f8, has an io-extent of 8 bytes; irq = 3
+</P
+><P
+>&#13;c) another portion is at 0x02e8, io-extent of 8 bytes; dma = 1 (0x02 =0000 0010)
+</P
+><DIV
+CLASS="warning"
+><P
+></P
+><TABLE
+CLASS="warning"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/warning.gif"
+HSPACE="5"
+ALT="Warning"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+><P
+>&#13;   The package is not intended for the end user, and some of the utilities could be harmful.
+   The only documentation in the package is in Microsoft Word format.
+   
+</P
+></TD
+></TR
+></TABLE
+></DIV
+></LI
+><LI
+><P
+>&#13;   Use the <EM
+>Device Manager</EM
+> of the MicroSoft Windows9x/NT operating system.
+</P
+></LI
+><LI
+><P
+>&#13;   You may also use the <EM
+>hardware surveys</EM
+> mentioned below.
+</P
+></LI
+><LI
+><P
+>&#13;   And as a last resort, you may even open the laptop and look at
+   the inscriptions at the chips themselfs. Here is a probably
+   incomplete list of manufacturers: Chrystal, Hewlett Packard (HP,
+   chipsets are marked HSDL), Hitachi, IBM, National Semi Conductor
+   (NSC), NEC, Philips, Sharp, Standard Micro Systems Corporation
+   (SMC/SMSC), Texas Instruments (TI), VLSI, Winbond. As an example
+   of application circuits the HSDL-7001 (from a HP brochure,
+   modified by WH):
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="programlisting"
+>&#13;    LEDs    Encode/Decode    SIR/FIR
+
+   HSDL-1001    HSDL-7001      UART 16550/
+                  MicroController
+   ______      ______________      ____________
+  |      |    |              |    |            |
+(||   TXD|&#60;---|IR_TXD     TXD|&#60;---|SOUT        |
+  |      |    |              |    |            |
+  |      |    |           RCV|---&#62;|SIN        |
+  |      |    |              |    |            |
+(||   RCV|---&#62;|IR_RCV  16XCLK|&#60;---|BAUDOUT     |
+  |      |    |          NRST|-+  |            |
+   ------      --------------  |   ------------
+                               V
+</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+
+</P
+></LI
+></OL
+>
+
+</P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-hardware-supported.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="infrared-howto-s-hardware-surveys.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Hardware Supported by Linux/IrDA</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="infrared-howto-c-hardware-supported.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Hardware Surveys</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

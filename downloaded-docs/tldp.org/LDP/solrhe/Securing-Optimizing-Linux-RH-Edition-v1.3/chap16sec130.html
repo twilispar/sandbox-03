@@ -1,0 +1,704 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the /etc/ssh2/sshd2_config file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securties(commercial)"
+HREF="softsec-com.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/ssh2/ssh2_config file"
+HREF="chap16sec129.html"><LINK
+REL="NEXT"
+TITLE="Configure sshd2 to use tcp-wrappers/inetd super server"
+HREF="chap16sec131.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap16sec129.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 16. Software -Securties(commercial)</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap16sec131.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN8822"
+>16.4. Configure the <TT
+CLASS="filename"
+>/etc/ssh2/sshd2_config</TT
+> file</A
+></H1
+><P
+>&#13;         The configuration file for sshd2 <TT
+CLASS="filename"
+>/etc/ssh2/sshd2_config</TT
+> allows you to set options that modify the operation of the daemon. The files contain keyword-value pairs, one per line, with keywords 
+         being case insensitive. Here are the more important keywords; a complete listing is available in the man page for <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>sshd2</SPAN
+>(8)</SPAN
+>.
+         </P
+><P
+>&#13;         Edit the <TT
+CLASS="filename"
+>sshd2_config</TT
+> file (vi <TT
+CLASS="filename"
+>/etc/ssh2/sshs2_config</TT
+> and add or change, if necessary:
+         <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;         # sshd2_config
+         # SSH 2.0 Server Configuration File
+
+         *:Port	                                22
+         ListenAddress	                        192.168.1.1
+         Ciphers	                        blowfish
+         IdentityFile	                        identification
+         AuthorizationFile	                authorization
+         HostKeyFile                     	hostkey
+         PublicHostKeyFile	                hostkey.pub
+         RandomSeedFile	                        random_seed
+         ForwardAgent	                        no
+         ForwardX11	                        no
+         PasswordGuesses	                3
+         MaxConnections	                        5 
+         PermitRootLogin	                no
+         AllowedAuthentications	                publickey,password
+         RequiredAuthentications	        publickey,password
+         VerboseMode	                        no
+         PrintMotd	                        yes
+         CheckMail	                        yes
+         UserConfigDirectory	                "%D/.ssh2"
+         SyslogFacility                  	DAEMON
+         Ssh1Compatibility               	no
+         NoDelay                         	yes
+         KeepAlive                       	yes
+         UserKnownHosts	                        yes
+         AllowHosts	                        192.168.1.4
+         DenyHosts	                        *
+         QuietMode                       	no
+
+         # subsystem definitions
+
+         subsystem-sftp                  	sftp-server
+         </PRE
+></TD
+></TR
+></TABLE
+>
+         This tells sshd2_config file to set itself up for this particular configuration setup with:
+         </P
+><DIV
+CLASS="glosslist"
+><DL
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>Port 22</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>Port</TT
+> specifies which port number the ssh2 daemon listens to for ssh incoming connection. The default port is 22.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>ListenAddress 192.168.1.1</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>ListenAddress</TT
+> specifies the <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address of the interface network on which the ssh2 daemon server socket is bound. The default is <TT
+CLASS="literal"
+>0.0.0.0</TT
+>; to improve security you may 
+         specify only the required ones to limit possible addresses.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>Ciphers blowfish</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>Ciphers</TT
+> specifies what cipher should be used for encrypting sessions. The blowfish uses 64-bit blocks and keys of up to 448 bits.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>IdentityFile identification</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>IdentityFile</TT
+> specifies an alternate name for the user's identification file.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>AuthorizationFile authorization</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>AuthorizationFile</TT
+> specifies an alternate name for the user's authorization file.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>HostKeyFile hostkey</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>HostKeyFile</TT
+> specifies an alternate file containing the private host key. The default is <TT
+CLASS="filename"
+>/etc/ssh2/hostkey</TT
+>.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>PublicHostKeyFile hostkey.pub</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>PublicHostKeyFile</TT
+> specifies an alternate file containing the public host key. The default is <TT
+CLASS="filename"
+>/etc/ssh2/hostkey.pub</TT
+>.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>RandomSeedFile random_seed</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>RandomSeedFile</TT
+> specifies an alternate name for the user's random seed file.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>ForwardAgent no</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>ForwardAgent</TT
+> specifies which connection authentication agent <EM
+>if any</EM
+> should be forwarded to the remote machine.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>ForwardX11 no</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>ForwardX11</TT
+> is for people that use the <TT
+CLASS="literal"
+>Xwindow</TT
+> <SPAN
+CLASS="acronym"
+>GUI</SPAN
+> and want to automatically redirect <TT
+CLASS="literal"
+>X11</TT
+> sessions to the remote machine. Since we set up a server and don't have 
+         a <SPAN
+CLASS="acronym"
+>GUI</SPAN
+> installed on it, we can safely turn this option off.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>PasswordGuesses 3</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>PasswordGuesses</TT
+> specifies how many tries the user has when using password authentication.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>MaxConnections 5</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>MaxConnections</TT
+> specifies what the maximum number of connections that ssh2 daemon will handle simultaneously is.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>PermitRootLogin no</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>PermitRootLogin</TT
+> specifies whether root can log in using ssh. Never say, <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+> to this option.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>AllowedAuthentications publickey,password</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>AllowedAuthentications</TT
+> specifies which authentication methods are allowed to be used. With this option the administrator can force users to complete several authentications before 
+         they are considered authenticated.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>RequiredAuthentications publickey,password</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>RequiredAuthentications</TT
+> related to <TT
+CLASS="envar"
+>AllowedAuthentications</TT
+>, specifies which authentication methods the users must complete before continuing. This parameter must be the same as 
+         for the <TT
+CLASS="envar"
+>AllowedAuthentications</TT
+> option or the server will denies connection every time.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>VerboseMode no</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>VerboseMode</TT
+> instructs the ssh2 daemon to print debugging messages about its progress. This option is helpful in debugging connection, authentication, and configuration problems.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>PrintMotd yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>PrintMotd</TT
+> specifies whether the ssh2 daemon should print the content of the <TT
+CLASS="filename"
+>/etc/motd</TT
+> file when a user logs in interactively. The <TT
+CLASS="filename"
+>/etc/motd</TT
+> file is also 
+         know as the <EM
+>message of the day</EM
+>.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>CheckMail yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>CheckMail</TT
+> specifies whether the ssh2 daemon should print information about new mail you may have.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>UserConfigDirectory "%D/.ssh2"</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>UserConfigDirectory</TT
+> specifies the default location for user-specific configuration data.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>SyslogFacility DAEMON</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>SyslogFacility</TT
+> specifies the facility code used when logging messages from the ssh2 daemon. The facility specifies the subsystem that produced the message, in our case <TT
+CLASS="envar"
+>DAEMON</TT
+>.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>Ssh1Compatibility no</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>Ssh1Compatibility</TT
+> specifies whether or not to use SSH1 compatibility code with SSH2 for ssh1 users.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>NoDelay yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>NoDelay</TT
+> specifies if the socket option TCP_NODELAY should be enabled. It is recommended that you set this option to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+> to improve network performance.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>KeepAlive yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>KeepAlive</TT
+> specifies whether the system should send keep alive messages to the remote server. If set to <TT
+CLASS="userinput"
+><B
+>yes</B
+></TT
+> then the death of the connection or crash of 
+         remote machines will be properly noticed.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>UserKnownHosts yes</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>UserKnownHosts</TT
+> specifies whether the default user's home directory <TT
+CLASS="prompt"
+>$</TT
+><TT
+CLASS="filename"
+>HOME/.ssh2/knownhosts/</TT
+> can be used to get hosts public keys when using <I
+CLASS="wordasword"
+>hostbased-authentication</I
+>.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>AllowHosts 192.168.1.4</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>AllowHosts</TT
+> specifies and control which hosts can access ssh2 services. Multiple hosts can be specified separated by spaces.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>DenyHosts *</TT
+></B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>DenyHosts</TT
+> specifies and controls which hosts cannot access ssh2 services. Multiple hosts can be specified separated by spaces. The default pattern <TT
+CLASS="literal"
+>*</TT
+> mean all hosts.
+         </P
+></DD
+><DT
+><B
+>&#13;         <TT
+CLASS="envar"
+>QuietMode no</TT
+>
+         </B
+></DT
+><DD
+><P
+>&#13;         The option <TT
+CLASS="envar"
+>QuietMode</TT
+> specifies whether the system runs in quiet mode. This option must be set to <TT
+CLASS="userinput"
+><B
+>no</B
+></TT
+>, because in quiet mode nothing is logged in the system log except for fatal 
+         errors. Since we want to have information about user sessions it is preferable to disable this option.
+         </P
+></DD
+></DL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap16sec129.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap16sec131.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/ssh2/ssh2_config</TT
+> file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="softsec-com.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure sshd2 to use tcp-wrappers/inetd super server</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

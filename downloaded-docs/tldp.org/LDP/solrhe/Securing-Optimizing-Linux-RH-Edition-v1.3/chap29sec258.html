@@ -1,0 +1,213 @@
+<HTML
+><HEAD
+><TITLE
+>Configure the new /etc/logrotate.d/apache file</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Network Server, web/Apache"
+HREF="netweb-Apache.html"><LINK
+REL="PREVIOUS"
+TITLE="Test the new chrooted jail"
+HREF="chap29sec257.html"><LINK
+REL="NEXT"
+TITLE="Optimizing Apache"
+HREF="chap29sec259.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap29sec257.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 29. Software -Network Server, web/Apache</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap29sec259.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN19965"
+>29.21. Configure the new <TT
+CLASS="filename"
+>/etc/logrotate.d/apache</TT
+> file</A
+></H1
+><P
+>&#13;      Now Apache logs files residing in the <TT
+CLASS="filename"
+>/chroot/var/log/httpd</TT
+> directory instead of <TT
+CLASS="filename"
+>/var/log/httpd</TT
+> and for this reason we need to modify the <TT
+CLASS="filename"
+>/etc/logrotate.d/httpd</TT
+> 
+      file to point to the new chrooted directory. Also, we've compiled Apache with mod_ssl, so we'll add one more line to permit the logrotate program to rotate the <TT
+CLASS="filename"
+>ssl_request_log</TT
+> and <TT
+CLASS="filename"
+>ssl_engine_log</TT
+> files. 
+      Configure your <TT
+CLASS="filename"
+>/etc/logrotate.d/apache</TT
+> file to rotate your log files each week automatically.
+    </P
+><P
+>&#13;      Create the <TT
+CLASS="filename"
+>apache</TT
+> file, <B
+CLASS="command"
+>touch</B
+> <TT
+CLASS="filename"
+>/etc/logrotate.d/apache</TT
+> and add:
+      <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="programlisting"
+>&#13;        /chroot/httpd/var/log/httpd/access_log {
+        missingok
+        postrotate
+        /usr/bin/killall -HUP /chroot/httpd/usr/sbin/httpd
+        endscript
+        }
+
+        /chroot/httpd/var/log/httpd/error_log {
+        missingok
+        postrotate
+        /usr/bin/killall -HUP /chroot/httpd/usr/sbin/httpd
+        endscript
+        }
+
+        /chroot/httpd/var/log/httpd/ssl_request_log {
+        missingok
+        postrotate
+        /usr/bin/killall -HUP /chroot/httpd/usr/sbin/httpd
+        endscript
+        }
+
+        /chroot/httpd/var/log/httpd/ssl_engine_log {
+        missingok
+        postrotate
+        /usr/bin/killall -HUP /chroot/httpd/usr/sbin/httpd
+        endscript
+        }
+      </PRE
+></TD
+></TR
+></TABLE
+>
+    </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap29sec257.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap29sec259.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Test the new chrooted jail</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="netweb-Apache.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Optimizing Apache</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

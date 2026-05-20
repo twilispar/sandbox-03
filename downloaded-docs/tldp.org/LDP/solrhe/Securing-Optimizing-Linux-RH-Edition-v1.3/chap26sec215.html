@@ -1,0 +1,401 @@
+<HTML
+><HEAD
+><TITLE
+>Securing OpenLDAP</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux OpenLDAP Server"
+HREF="net-oLDAP.html"><LINK
+REL="PREVIOUS"
+TITLE="Configure the /etc/rc.d/init.d/ldap script file"
+HREF="chap26sec214.html"><LINK
+REL="NEXT"
+TITLE="OpenLDAP Creation and Maintenance Tools"
+HREF="chap26sec216.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap26sec214.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 26. Linux OpenLDAP Server</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap26sec216.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN16326"
+>26.6. Securing OpenLDAP</A
+></H1
+><P
+>&#13;             Don't forget to immunize important configuration files. The immutable bit can be used to prevent one from accidentally deleting or overwriting a file that must be protected. It also prevents someone from creating a symbolic link 
+             to this file. Once your <TT
+CLASS="filename"
+>slapd.conf</TT
+> file has been configured, it's a good idea to immunize it with command like:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;               [root@deep] /# <B
+CLASS="command"
+>chattr</B
+> +i /etc/openldap/slapd.conf
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               Further documentation, for more details there are several man pages you can read:
+               <P
+></P
+><DIV
+CLASS="variablelist"
+><DL
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldapd</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;                     <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> X.500 Protocol Daemon
+                   </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldapdelete</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;                   ldap delete entry tool
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldapfilter.conf</SPAN
+>(5)</SPAN
+></DT
+><DD
+><P
+>&#13;                   configuration file for <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> get filter routines
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldapfriendly</SPAN
+>(5)</SPAN
+></DT
+><DD
+><P
+>&#13;                   data file for <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> friendly routines
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldapmodify, ldapadd</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;                   ldap modify entry and ldap add entry tools
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldapmodrdn</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;                   ldap modify entry RDN tool
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldappasswd</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;                   change the password of an <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> entry
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldapsearch</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;                   ldap search tool
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldapsearchprefs.conf</SPAN
+>(5)</SPAN
+></DT
+><DD
+><P
+>&#13;                   configuration file for <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> search preference routines
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldaptemplates.conf</SPAN
+>(5)</SPAN
+></DT
+><DD
+><P
+>&#13;                   configuration file for <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> display template routines
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ldif</SPAN
+>(5)</SPAN
+></DT
+><DD
+><P
+>&#13;                   <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> Data Interchange Format
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>slapd</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;                   Stand-alone <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> Daemon
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>slapd.conf</SPAN
+>(5)</SPAN
+></DT
+><DD
+><P
+>&#13;                   configuration file for slapd, the stand-alone <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> daemon
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>slurpd</SPAN
+>(8)</SPAN
+></DT
+><DD
+><P
+>&#13;                   Standalone <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> Update Replication Daemon
+                 </P
+></DD
+><DT
+><SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>ud</SPAN
+>(1)</SPAN
+></DT
+><DD
+><P
+>&#13;                   interactive <SPAN
+CLASS="acronym"
+>LDAP</SPAN
+> Directory Server query program
+                 </P
+></DD
+></DL
+></DIV
+>
+             </P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap26sec214.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap26sec216.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/etc/rc.d/init.d/ldap</TT
+> script file</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="net-oLDAP.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>OpenLDAP Creation and Maintenance Tools</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

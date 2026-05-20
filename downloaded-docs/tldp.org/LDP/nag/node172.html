@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>File Transfers</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node173.html">Forwarding</A>
+<B>Up:</B> <A HREF="node170.html">The Do's and Dont's </A>
+<B> Previous:</B> <A HREF="node171.html">Command Execution</A>
+<BR> <P>
+<H2><A NAME="SECTION0014420000">File Transfers</A></H2>
+Taylor UUCP also allows you to fine-tune file transfers in great
+detail.  At one extreme, you can disable transfers to and from a
+particular system.  Just set request to no, and
+the remote system will not be able either to retrieve files from your
+system or send it any files.  Similarly, you can prohibit your users
+from transferring files to or from a system by setting
+transfer to no.  By default, users on both the
+local and the remote system are allowed to up- and download files.
+<P>
+In addition, you can configure the directories to and from which files may
+be copied. Usually, you will want to restrict access from remote systems
+to a single directory hierarchy, but still allow your users to send
+files from their home directory. Commonly, remote users will be allowed
+to receive files only from the public UUCP directory, /var/spool/uucppublic.
+This is the traditional place to make files publicly available; very
+much like FTP servers on the Internet.  It is commonly referred to using
+the tilde character.
+<P>
+Therefore, Taylor UUCP provides four different commands to configure the
+directories for sending and receiving files. They are
+local-send, which specifies the list of directories a user may
+ask UUCP to send files from; local-receive, which gives the
+the list of directories a user may ask to receive files to; and
+remote-send and remote-receive, which do the
+analogous for requests from a foreign system.
+Consider the following example:
+<P>
+<P><P>
+<P>
+The local-send command allows users on your host to send any
+files below /home and from the public UUCP directory to
+pablo. The local-receive command allows them to
+receive files either to the world-writable receive directory in
+the uucppublic, or any world-writable directory below /home.  The
+remote-send directive allows pablo to request files
+from /var/spool/uucppublic, except for files below the incoming and
+receive directories. This is signaled to uucico by
+preceding the directory names with exclamation marks. Finally, the
+last line allows pablo to upload any files to incoming.
+<P>
+One of the biggest problems with file transfers using UUCP is that
+will only receive files to directories that are world-writable.
+This may tempt some users to set up traps for other users, etc.
+However, there's no way escaping this problem except disabling UUCP
+file transfers altogether.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node173.html">Forwarding</A>
+<B>Up:</B> <A HREF="node170.html">The Do's and Dont's </A>
+<B> Previous:</B> <A HREF="node171.html">Command Execution</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,385 @@
+<HTML
+><HEAD
+><TITLE
+>Linux Tripwire 2.2.1</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Software -Securities/System Integrity"
+HREF="sysintegrity.html"><LINK
+REL="PREVIOUS"
+TITLE="Software -Securities/System Integrity"
+HREF="sysintegrity.html"><LINK
+REL="NEXT"
+TITLE="Configure the /var/tmp/install.cfg file"
+HREF="chap17sec137.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="sysintegrity.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 17. Software -Securities/System Integrity</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap17sec137.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="prt6ch3sc1trwr"
+>17.1. Linux Tripwire 2.2.1</A
+></H1
+><TABLE
+CLASS="sidebar"
+BORDER="1"
+CELLPADDING="5"
+><TR
+><TD
+><DIV
+CLASS="sidebar"
+><A
+NAME="AEN9302"
+></A
+><P
+><B
+>According to the official [<SPAN
+CLASS="citation"
+>Tripwire site</SPAN
+>]:</B
+></P
+><P
+>&#13;           Tripwire works at the most fundamental layer, protecting the servers and workstations that make up the corporate network. Tripwire works by first scanning a computer and creating a database of system files, a compact 
+           digital <I
+CLASS="wordasword"
+>snapshot</I
+> of the system in a known secure state. The user can configure Tripwire very precisely, specifying individual files and directories on each machine to monitor, or creating a 
+           standard template that can be used on all machines in an enterprisewide environement.
+           </P
+><P
+>&#13;           Once this baseline database is created, a system administrator can use Tripwire to check the integrity of a system at any time. By scanning the current system and comparing that information with the data stored 
+           in the database, Tripwire detects and reports any additions, deletions, or changes to the system outside of the specified boundaries. If these changes are valid, the administrator can update the baseline database 
+           with the new information.  If malicious changes are found, the system administrator will instantly know exactly which part, which component <SPAN
+CLASS="abbrev"
+>etc.</SPAN
+> of the network have been affected.
+           </P
+></DIV
+></TD
+></TR
+></TABLE
+><P
+>&#13;           This version of Tripwire has significant product enhancements over previous versions of Tripwire. Some of the enhancements include:
+           <P
+></P
+><UL
+><LI
+><P
+>&#13;           Multiple levels of reporting allow you to choose different levels of report detail.
+           </P
+></LI
+><LI
+><P
+>&#13;           Syslog option sends information about database initialization, database update, policy update and integrity check to the syslog.
+                      </P
+></LI
+><LI
+><P
+>&#13;           Database performance has been optimized to increase the efficiency of integrity checks.
+                      </P
+></LI
+><LI
+><P
+>&#13;           Individual email recipients can be sent certain sections of a report.
+                      </P
+></LI
+><LI
+><P
+>&#13;           SMTP email reporting support.
+                      </P
+></LI
+><LI
+><P
+>&#13;           Email test mode enables you to verify that the email settings are correct.
+                      </P
+></LI
+><LI
+><P
+>&#13;           Ability to create multiple sections within a policy file to be executed separately.
+                      </P
+></LI
+></UL
+>
+           </P
+><P
+>&#13;
+           These installation instructions assume:
+           <P
+></P
+><UL
+><LI
+><P
+>&#13;           Commands are Unix-compatible.
+           </P
+></LI
+><LI
+><P
+>&#13;           The source path is <TT
+CLASS="filename"
+>/var/tmp</TT
+> -<EM
+>other paths are possible</EM
+>.
+                      </P
+></LI
+><LI
+><P
+>&#13;           Installations were tested on Red Hat Linux 6.1 and 6.2.
+                      </P
+></LI
+><LI
+><P
+>&#13;           All steps in the installation will happen in super-user account root.
+                      </P
+></LI
+><LI
+><P
+>&#13;           Tripwire version number is <TT
+CLASS="literal"
+>2.2.1</TT
+>
+                      </P
+></LI
+></UL
+>
+           </P
+><P
+>&#13;           These are the Package(s) you need to install:
+           <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;           Tripwire Homepage: <A
+HREF="appendixa.html#prtinxfp15"
+>http://www.tripwiresecurity.com/</A
+>
+           </TD
+></TR
+><TR
+><TD
+>&#13;           You must be sure to download: Tripwire_221_for_Linux_x86_tar.gz
+           </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+           </P
+><P
+>&#13;           To Compile Tripwire-2.2.1, you do need to Decompress the tarball <TT
+CLASS="literal"
+>tar.gz</TT
+>.:
+           <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;           [root@deep] /#<B
+CLASS="command"
+>cp</B
+> Tripwire_version_for_Linux_x86_tar.gz /var/tmp
+           [root@deep] /#<B
+CLASS="command"
+>cd</B
+> /var/tmp
+           [root@deep ]/tmp# <B
+CLASS="command"
+>tar</B
+>  xzpf Tripwire_version_for_Linux_x86_tar.gz
+           </PRE
+></TD
+></TR
+></TABLE
+>
+           </P
+><DIV
+CLASS="note"
+><BLOCKQUOTE
+CLASS="note"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Note.gif"
+ALT="Note"
+></IMG
+></SPAN
+>: </B
+>
+           After the decompression of Tripwire you will see the following files in your <TT
+CLASS="filename"
+>/var/tmp</TT
+> directory related to Tripwire software: 
+           <P
+></P
+><TABLE
+BORDER="0"
+><TBODY
+><TR
+><TD
+>&#13;           License.txt
+           </TD
+></TR
+><TR
+><TD
+>&#13;           README
+                      </TD
+></TR
+><TR
+><TD
+>&#13;           Release_Notes
+                      </TD
+></TR
+><TR
+><TD
+>&#13;           install.cfg
+                      </TD
+></TR
+><TR
+><TD
+>&#13;           install.sh
+                      </TD
+></TR
+><TR
+><TD
+>&#13;           package directory 
+                      </TD
+></TR
+><TR
+><TD
+>&#13;           Tripwire tar.gz file Tripwire_version_for_Linux_x86_tar.gz.
+                      </TD
+></TR
+></TBODY
+></TABLE
+><P
+></P
+>
+           </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="sysintegrity.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap17sec137.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Software -Securities/System Integrity</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="sysintegrity.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Configure the <TT
+CLASS="filename"
+>/var/tmp/install.cfg</TT
+> file</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

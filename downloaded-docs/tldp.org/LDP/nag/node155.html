@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>What UUCP Needs to Know</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node156.html">Site Naming</A>
+<B>Up:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<B> Previous:</B> <A HREF="node154.html">A Gentle Introduction to </A>
+<BR> <P>
+<H2><A NAME="SECTION0014320000">What UUCP Needs to Know</A></H2>
+<P>
+<A NAME="uucpstartingparameters"></A>
+<P>
+Before you start writing the UUCP configuration files, you have to
+gather some information it needs to know.
+<P>
+First, you will have to figure out what serial device your modem is
+attached to.  Usually, the (DOS) ports COM1 through COM4 map to the
+device special files /dev/cua0 through /dev/cua3.  Most
+distributions, such as Slackware, create a link /dev/modem as a
+link to the appropriate cua* device file, and configure
+kermit, seyon, etc, to use this generic file.  In this
+case, you should either use /dev/modem in your UUCP
+configuration, too.
+<P>
+The reason for this is that all dial-out programs use so-called
+<em>lock files</em> to signal when a serial port is in use. The names of
+these lock files are a concatenation of the string LCK.. and
+the device file name, for instance LCK..cua1. If programs use
+different names for the same device, they will fail to recognize each
+other's lock files.  As a consequence, they will disrupt each other's
+session when started at the same time.  This is not an unlikely event
+when you schedule your UUCP calls using a crontab entry.
+<P>
+For details of setting up your serial ports, please refer to
+chapter-<A HREF="node53.html#serial"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.
+<P>
+Next, you must find out at what speed your modem and  will
+communicate.  You will have to set this to the maximum effective
+transfer rate you expect to get. The effective transfer rate may be
+much higher than the raw physical transfer rate your modem is capable
+of.  For instance, many modems send and receive data at 2400bps (bits
+per second).  Using compression protocols such as V.42bis, the actual
+transfer rate may climb up to 9600bps.
+<P>
+Of course, if UUCP is to do anything, you will need the phone number of
+a system to call.  Also, you will need a valid login id and possibly a
+password for the remote machine.<A HREF="footnode.html#6604"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="5951"></A>
+You will also have to know <em>exactly</em> how to log into the system.
+E.g., do you have to press the BREAK key before the login prompt
+appears? Does it display login: or user:? This is
+necessary for composing the <em>chat script</em>, which is a recipe telling
+uucico how to log in. If you don't know, or if the usual chat
+script fails, try to call the system with a terminal program like
+kermit or minicom, and write down exactly what you have
+to do.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node156.html">Site Naming</A>
+<B>Up:</B> <A HREF="node153.html">UUCP Configuration Files</A>
+<B> Previous:</B> <A HREF="node154.html">A Gentle Introduction to </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

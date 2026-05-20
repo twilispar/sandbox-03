@@ -1,0 +1,436 @@
+<HTML
+><HEAD
+><TITLE
+>Tuning IDE Hard Disk Performance</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.60"><LINK
+REL="HOME"
+TITLE="Securing and Optimizing Linux"
+HREF="index.html"><LINK
+REL="UP"
+TITLE="Linux General Optimization"
+HREF="gen-optim.html"><LINK
+REL="PREVIOUS"
+TITLE="The atime and noatime attribute"
+HREF="chap6sec73.html"><LINK
+REL="NEXT"
+TITLE="Better manage your TCP/IP resources"
+HREF="chap6sec75.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>Securing and Optimizing Linux: RedHat Edition -A Hands on Guide</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="chap6sec73.html"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+>Chapter 6. Linux General Optimization</TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="chap6sec75.html"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN4832"
+>6.12. Tuning <SPAN
+CLASS="acronym"
+>IDE</SPAN
+> Hard Disk Performance</A
+></H1
+><P
+>&#13;             Putting your swap partitions near the beginning of your drive, see <A
+HREF="chap3sec14.html#pr1ch25lk1"
+>This chart to get a better idea,</A
+> may give you some acceptable improvement. The beginning of the drive is physically located on the outer portion of the 
+             cylinder, and the read/write head can cover much more ground per revolution. We typically see partitions placed at the end of the drive work 3MB/s slower using the <TT
+CLASS="userinput"
+><B
+>hdparm -t</B
+></TT
+> command.
+
+             </P
+><P
+>&#13;             Performance increases have been reported on massive disk I/O operations by setting the <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>IDE</SPAN
+></SPAN
+> drivers to use DMA, 32-bit transfers and multiple sector modes. The kernel seems to use more conservative settings 
+             unless told otherwise. The magic command to change the setting of your drive is <B
+CLASS="command"
+>hdparm</B
+>.
+
+             To enable 32-bit I/O over the <SPAN
+CLASS="acronym"
+>PCI</SPAN
+> buses, use the command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+> /sbin/hdparm</B
+> -c1 /dev/hda <EM
+>or hdb, hdc etc</EM
+>.
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             This will usually, depending on your <SPAN
+CLASS="acronym"
+>IDE</SPAN
+> Disk Drive model, cut the timing buffered disk reads time by 2. The <SPAN
+CLASS="citerefentry"
+><SPAN
+CLASS="refentrytitle"
+>hdparm</SPAN
+>(8)</SPAN
+> manpage says that you may need to use -c 3 for some chipsets. All (E)<SPAN
+CLASS="acronym"
+>IDE</SPAN
+>
+             drives still have only a 16-bit connection over the ribbon cable from the interface card.
+
+             To enable <SPAN
+CLASS="acronym"
+>DMA</SPAN
+>, use the command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+> /sbin/hdparm</B
+> -d1 /dev/hda <EM
+>or hdb, hdc etc</EM
+>.
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             This may depend on support for your motherboard chipset being compiled into your kernel. Also, this command will enable <SPAN
+CLASS="acronym"
+>DMA</SPAN
+> support for your hard drive, it will cut the timing buffered disk reads time and 
+             will improve the performance by 2.
+
+             To enable multiword <SPAN
+CLASS="acronym"
+>DMA</SPAN
+> mode 2 transfers, use the command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>/sbin/hdparm</B
+> -d1 -X34 /dev/hda <EM
+>or hdb, hdc etc</EM
+>.
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             This sets the <SPAN
+CLASS="acronym"
+><SPAN
+CLASS="acronym"
+>IDE</SPAN
+></SPAN
+> transfer mode for newer <SPAN
+CLASS="acronym"
+>(E)<SPAN
+CLASS="acronym"
+>IDE</SPAN
+>/ATA2</SPAN
+> drives. check your hardware manual to see if you have it.
+
+             To enable Ultra<SPAN
+CLASS="acronym"
+>DMA</SPAN
+> mode2 transfers, use the command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+> /sbin/hdparm</B
+> -d1 -X66 /dev/hda <EM
+>or hdb, hdc etc</EM
+>.
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;             You'll need to prepare the chipset for Ultra<SPAN
+CLASS="acronym"
+>DMA</SPAN
+> beforehand. Also, see your manual page about hdparm for more information. Use this with extreme caution!
+
+             To set multiple sector mode I/O, use the command:
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>/sbin/hdparm</B
+> -m XX /dev/hda <EM
+>or hdb, hdc etc</EM
+>.
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             Where XX is the maximum setting supported by your drive. The  -i flag can be used to find the maximum setting supported by an installed drive: look for MaxMultSect in the output.
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>/sbin/hdparm</B
+> -i /dev/hda <EM
+>or hdb, hdc etc</EM
+>.
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><P
+>&#13;               <DIV
+CLASS="informalexample"
+><A
+NAME="AEN4877"
+></A
+><P
+></P
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="literallayout"
+><TT
+CLASS="computeroutput"
+>&#13;             /dev/hda:
+
+             Model=Maxtor 7540 AV, FwRev=GA7X4647, SerialNo=L1007YZS
+             Config={ HardSect NotMFM HdSw&#62;15uSec Fixed DTR&#62;5Mbs FmtGapReq }
+             RawCHS=1046/16/63, TrkSize=0, SectSize=0, ECCbytes=11
+             BuffType=3(DualPortCache), BuffSize=32kB, MaxMultSect=8, MultSect=8
+             DblWordIO=yes, maxPIO=2(fast), DMA=yes, maxDMA=1(medium)
+             CurCHS=523/32/63, CurSects=379584528, LBA=yes, LBA=yes, LBAsects=1054368
+             tDMA={min:150,rec:150}, DMA modes: sword0 sword1 *sword2 *mword0
+             IORDY=on/off, tPIO={min:240,w/IORDY:180}, PIO modes: mode3
+             
+             </TT
+>
+             </PRE
+></TD
+></TR
+></TABLE
+><P
+></P
+></DIV
+>
+             </P
+><P
+>&#13;             Multiple sector mode aka <SPAN
+CLASS="acronym"
+>IDE</SPAN
+> Block Mode, is a feature of most modern <SPAN
+CLASS="acronym"
+>IDE</SPAN
+> hard drives, permitting the transfer of multiple sectors per I/O 
+             interrupt, rather than the usual one sector per interrupt. When this feature is enabled, it typically reduces operating system overhead for disk I/O  by 30-50%. On many systems 
+             it also provides increased data throughput of anywhere from 5% to 50%.
+
+             You can test the results of your changes by running hdparm in performance test mode: 
+             <TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="screen"
+>&#13;             [root@deep] /#<B
+CLASS="command"
+>/sbin/hdparm</B
+> -t /dev/hda <EM
+>or hdb, hdc etc</EM
+>.
+             </PRE
+></TD
+></TR
+></TABLE
+>
+             </P
+><DIV
+CLASS="tip"
+><BLOCKQUOTE
+CLASS="tip"
+><P
+><B
+><SPAN
+CLASS="inlinemediaobject"
+><IMG
+SRC="./images/Tip.gif"
+ALT="Tip"
+></IMG
+></SPAN
+>: </B
+>
+             Once you have a set of hdparm options, you can put the commands in your <TT
+CLASS="filename"
+>/etc/rc.d/rc.local</TT
+> file to run it every time you reboot the machine. 
+             </P
+></BLOCKQUOTE
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="chap6sec73.html"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="chap6sec75.html"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>The atime and noatime attribute</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="gen-optim.html"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Better manage your <SPAN
+CLASS="acronym"
+>TCP/IP</SPAN
+> resources</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

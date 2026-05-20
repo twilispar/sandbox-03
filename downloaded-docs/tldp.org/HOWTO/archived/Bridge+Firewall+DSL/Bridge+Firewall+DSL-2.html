@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>Bridge + Firewall + DSL Mini-HOWTO: Bridging, Firewalls, and DSL connections</TITLE>
+ <LINK HREF="Bridge+Firewall+DSL-3.html" REL=next>
+ <LINK HREF="Bridge+Firewall+DSL-1.html" REL=previous>
+ <LINK HREF="Bridge+Firewall+DSL.html#toc2" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="Bridge+Firewall+DSL-3.html">Next</A>
+<A HREF="Bridge+Firewall+DSL-1.html">Previous</A>
+<A HREF="Bridge+Firewall+DSL.html#toc2">Contents</A>
+<HR>
+<H2><A NAME="s2">2. Bridging, Firewalls, and DSL connections</A> </H2>
+
+<P>Until recently, our local network was hooked into the global net
+via PPP over a modem. I had installed a firewall using IPChains
+(
+<A HREF="http://www.linuxdoc.org/HOWTO/IPCHAINS-HOWTO.html">http://www.linuxdoc.org/HOWTO/IPCHAINS-HOWTO.html</A>)
+with this setup and it worked nicely. We recently upgraded to a DSL connection.
+I thought it would be trivial to simply switch my firewall to insulate me
+from the larger net coming in via the DSL connection. I was wrong.
+It took three days of work to finally get it up and running. I found a lot
+of suspect information on the net that caused a good deal of confusion.
+This mini-HOWTO was written because I suspected that our setup will be a quite
+common configuration in the future when DSL becomes more widespread and I wanted to
+help people avoid massive frustration.
+<P> I guess this is applicable to a cable modem setup, but YMMV as I know nothing
+about cable modem hookups.
+<H2><A NAME="ss2.1">2.1 The Problem</A>
+ </H2>
+
+<P>The problem I am trying to solve is to configure the system such
+that the firewall code in the kernel (that is manipulated with
+ipchains) can be used to filter the packets that travel back and
+forth between the outside world and the local network. I also needed
+some of the local machines to be "seen" on the global net (though always
+filtered through the firewall). This ruled out IP masquerading (see
+<A HREF="http://www.linuxdoc.org/HOWTO/IP-Masquerade-HOWTO.html">IP Masquerade HOWTO</A>) which would otherwise probably be
+a simpler solution. This is not as simple as it seems.
+<P>
+<H2><A NAME="ss2.2">2.2 The Solution</A>
+ </H2>
+
+<P>To accomplish our goal of insulating a local net from the global
+net (over DSL) by using our Linux box, we will use two ethernet (NIC) cards.
+One card is hooked up to the local net and one to the global net. The only
+machine that can directly talk to the outside world is the Linux box. All
+other machines in our local net must go through the Linux box (firewall).
+<P>Configuring the software really consists of two problems:
+<P>
+<UL>
+<LI>Route packets between the local and global net (bridging)</LI>
+<LI>Filter the packets to stop some from traversing the firewall</LI>
+</UL>
+<P>The 
+<A HREF="http://www.linuxdoc.org/HOWTO/mini/Bridge.html">Bridging mini-Howto</A>
+gives detailed instructions that solves the first problem by routing packets
+between the two sides of the network (local and global). This works by putting
+both NIC's into "promiscuous" mode such that they sniff all the packets on
+each NIC and transfer packets over when they belong on the other side.
+This is done transparently; the other computers on the net do not even see
+the bridge, because it does not even have an IP address. But this does not
+totally solve the problem. I wanted the firewall to have an IP address
+(for administration via the network, if nothing else) and more importantly,
+the bridge code in the kernel intercepts and bridges packets BEFORE they get 
+to the firewall code, so the firewall will have no effect.
+<P>It turns out you can assign your NIC's IP addresses and still use them as a
+bridge. Although the 
+<A HREF="http://www.linuxdoc.org/HOWTO/mini/Bridge.html">Bridging mini-Howto</A>
+does not do this (well actually, it uses loopback addresses), it works fine.
+That solves one problem. For the firewall problem, we turn to a fine kernel patch
+at 
+<A HREF="http://ac2i.tzo.com/bridge_filter/">http://ac2i.tzo.com/bridge_filter/</A>
+that causes the firewall rules to be invoked for packets that are being
+bridged with a special new rule "bridgein".
+<H2><A NAME="ss2.3">2.3 Setup Overview</A>
+ </H2>
+
+<P>This mini-HOWTO is meant to handle the situation where you have a Linux
+box configured as a gateway/firewall. The system has 2 NIC cards installed.
+One of the NIC cards is connected to the outside world (in our case a DSL
+modem) and nothing else. The other NIC is connected to our local network.
+<P>Note that I have only had one experience with this and it was on my
+i386 (ABIT BP6 MOBO, w/2 celery) box with RedHat 6.0 with the 2.2.13
+kernel, and a DSL modem going to a router, and two Netgear FA310TX
+NIC cards. Your mileage may vary.
+<P>Also note that the steps here will leave your network open to potential
+attack during setup (before the firewall is turned on). If you are very
+paranoid you will want to take extra steps to avoid this.
+<H2><A NAME="ss2.4">2.4 References</A>
+ </H2>
+
+<P>I found a good deal of information on the net that I used to finally
+get things working. Some of the information was useful, but inaccurate.
+<P>The 
+<A HREF="http://www.linuxdoc.org/HOWTO/mini/Bridge.html">Bridging mini-Howto</A>
+was instrumental in getting things up. Unfortunately using it alone does not
+implement a firewall.
+<P>The 
+<A HREF="http://www.linuxdoc.org/HOWTO/mini/Bridge+Firewall.html">Linux Bridge+Firewall mini-HOWTO</A>
+at first looked like just what I needed. However, it turns out that I think
+it is inaccurate. I got things sort-of working with it, but in the end I
+realized that it was not necessary to split your sub-net in two like it
+directs and did not use that method. If you look at this document, take
+it with a grain of salt.
+<P>The 
+<A HREF="http://ac2i.tzo.com/bridge_filter/">Bridge Filter Patch</A> is
+the key to getting the whole thing to work. Oddly enough, the information on
+the web page directs you to the Bridge+Firewall mini-HOWTO. You do not need
+to use the information in Bridge+Firewall mini-HOWTO to get things to work. 
+You will need this patch.
+<P>The 
+<A HREF="http://www.linuxdoc.org/HOWTO/IPCHAINS-HOWTO.html">IPCHAINS HOWTO</A>
+is invaluable in setting up the firewall itself. I do not attempt to cover the details
+of firewall setup in this document; only issues which are different because
+of the bridging setup are mentioned here.
+<HR>
+<A HREF="Bridge+Firewall+DSL-3.html">Next</A>
+<A HREF="Bridge+Firewall+DSL-1.html">Previous</A>
+<A HREF="Bridge+Firewall+DSL.html#toc2">Contents</A>
+</BODY>
+</HTML>

@@ -1,0 +1,390 @@
+<HTML
+><HEAD
+><TITLE
+>Client (Linux)</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.76b+
+"><LINK
+REL="HOME"
+TITLE="The Linux Print2Win mini-HOWTO"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Server (Windows)"
+HREF="x29.html"><LINK
+REL="NEXT"
+TITLE="/etc/printcap Tips"
+HREF="x75.html"></HEAD
+><BODY
+CLASS="section"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>The Linux Print2Win mini-HOWTO</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x29.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x75.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="section"
+><H1
+CLASS="section"
+><A
+NAME="AEN32">3. Client (Linux)</H1
+>
+    
+    <P
+>&#13;      The client configuration is similar to Linux to Linux printing.
+    </P
+>
+
+    <DIV
+CLASS="section"
+><H2
+CLASS="section"
+><A
+NAME="AEN35">3.1. Standard lpr</H2
+>
+      
+      <P
+>&#13;        The simplest way to do it is to add an entry to
+        <TT
+CLASS="filename"
+>/etc/printcap</TT
+>.  As a quick example, the entry
+        for a generic matrix printer would be:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+># EPSON LX300 
+epson:\
+:sd=/var/spool/lpd/epson:\
+:mx#0:\
+:sh:\
+:if=/var/spool/lpd/epson/filter:\
+:lp=/dev/null:</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+      </P
+>
+
+      <DIV
+CLASS="note"
+><P
+></P
+><TABLE
+CLASS="note"
+WIDTH="100%"
+BORDER="0"
+><TR
+><TD
+WIDTH="25"
+ALIGN="CENTER"
+VALIGN="TOP"
+><IMG
+SRC="../images/note.gif"
+HSPACE="5"
+ALT="Note"></TD
+><TD
+ALIGN="LEFT"
+VALIGN="TOP"
+>&#13;        <P
+>&#13;          Make sure you are using the correct filter, or the right generic
+          one.
+        </P
+>
+      </TD
+></TR
+></TABLE
+></DIV
+>
+
+
+      <P
+>&#13;        Be sure you have created the directory
+        <TT
+CLASS="filename"
+>/var/spool/lpd/epson</TT
+>, and the users you wish
+        to use the printer have the right access to this.
+      </P
+>
+
+      <P
+>&#13;        For example, assume the Windows print server is named <SPAN
+CLASS="systemitem"
+>meriadoc</SPAN
+>, with an <SPAN
+CLASS="acronym"
+>IP</SPAN
+> address of
+        <TT
+CLASS="literal"
+>192.168.1.49</TT
+>, and the printer is shared from
+        Windows as <SPAN
+CLASS="systemitem"
+>epsonLX</SPAN
+>.
+      </P
+>
+      <P
+>&#13;        So, you have to configure
+        <TT
+CLASS="filename"
+>/var/spool/lpd/epson/.config</TT
+> like this:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+>share='\\meriadoc\epsonLX'
+hostip=192.168.1.49</PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+      </P
+>
+      <P
+>&#13;        Where:
+        <P
+></P
+><UL
+><LI
+>&#13;            <P
+><TT
+CLASS="varname"
+>share</TT
+>='\\<TT
+CLASS="replaceable"
+><I
+>windows-print-server-name</I
+></TT
+>\<TT
+CLASS="replaceable"
+><I
+>print-share-name</I
+></TT
+>'</P
+>
+          </LI
+><LI
+>&#13;            <P
+><TT
+CLASS="varname"
+>hostip</TT
+>=<TT
+CLASS="replaceable"
+><I
+>windows-print-server-IP</I
+></TT
+></P
+>
+          </LI
+></UL
+>
+
+      </P
+>
+      <P
+>&#13;        Once your <TT
+CLASS="filename"
+>/etc/printcap</TT
+> is configured, you
+        have to enable the print share:
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+><TT
+CLASS="prompt"
+>[localhost]$</TT
+> <TT
+CLASS="userinput"
+><B
+>lpc up epson</B
+></TT
+>
+<TT
+CLASS="prompt"
+>[localhost]$</TT
+> <TT
+CLASS="userinput"
+><B
+>lpc enable epson</B
+></TT
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+      </P
+>
+      <P
+>&#13;        If everything is ok, you can send jobs to the queue:
+
+<TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><FONT
+COLOR="#000000"
+><PRE
+CLASS="screen"
+><TT
+CLASS="prompt"
+>[localhost]$</TT
+> <TT
+CLASS="userinput"
+><B
+>lpr -Pepson <TT
+CLASS="replaceable"
+><I
+>file</I
+></TT
+></B
+></TT
+></PRE
+></FONT
+></TD
+></TR
+></TABLE
+>
+      </P
+>
+
+    </DIV
+>
+
+  </DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x29.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x75.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Server (Windows)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><TT
+CLASS="filename"
+>/etc/printcap</TT
+> Tips</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

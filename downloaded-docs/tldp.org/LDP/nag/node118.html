@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>General Security Considerations</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node119.html">Authentication with PPP</A>
+<B>Up:</B> <A HREF="node107.html">The Point-to-Point Protocol</A>
+<B> Previous:</B> <A HREF="node117.html">Link Control Options</A>
+<BR> <P>
+<H1><A NAME="SECTION0010900000">General Security Considerations</A></H1>
+<P>
+<A NAME="4380"></A>
+<A NAME="4552"></A>
+<A NAME="4382"></A>
+<A NAME="4383"></A>
+<P>
+A misconfigured PPP daemon can be a devastating security breach.  It can
+be as bad as letting anyone plug in their machine into your Ethernet
+(and that is very bad). In this section, we will discuss a few measures
+that should make your PPP configuration safe.
+<P>
+One problem with pppd is that to configure the network device
+and the routing table, it requires root privilege.  You will
+usually solve this by running it setuid root. However,
+pppd allows users to set various security-relevant options.  To
+protect against any attacks a user may launch by manipulating these
+options, it is suggested you set a couple of default values in the
+global /etc/ppp/options file, like those shown in the sample
+file in section-<A HREF="#pppppprc"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>.  Some of them, such as the
+authentication options, cannot be overridden by the user, and so
+provide a reasonable protection against manipulations.
+<P>
+Of course, you have to protect yourself from the systems you speak PPP
+with, too.  To fend off hosts posing as someone else, you should
+always some sort of authentication from your peer.  Additionally, you
+should not allow foreign hosts to use any IP-address they choose, but
+restrict them to at least a few.  The following section will deal with
+these topics.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

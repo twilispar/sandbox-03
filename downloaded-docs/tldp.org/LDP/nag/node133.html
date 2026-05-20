@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Client Side of NIS</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node134.html">Running a NIS Server</A>
+<B>Up:</B> <A HREF="node130.html">The Network Information System</A>
+<B> Previous:</B> <A HREF="node132.html">NIS versus NIS+</A>
+<BR> <P>
+<H1><A NAME="SECTION0012300000">The Client Side of NIS</A></H1>
+<P>
+<A NAME="nisclients"></A>
+<A NAME="5052"></A>
+<A NAME="5053"></A>
+<P>
+If you are familiar with writing or porting network applications, you
+will notice that most NIS maps listed above correspond to library
+functions in the C-library. For instance, to obtain passwd
+information, you generally use the getpwnam(3) and
+getpwuid(3) functions which return the account information
+associated with the given user name or numerical user id, respectively.
+Under normal circumstances, these functions will perform the requested
+lookup on the standard file, such as /etc/passwd.
+<P>
+A NIS-aware implementation of these functions, however, will modify this
+behavior, and place an RPC call to have the NIS server look up the user
+name or id. This happens completely transparent to the application.  The
+function may either ``append'' the NIS map to or ``replace'' the
+original file with it. Of course, this does not refer to a real
+modification of the file, it only means that it <em>appears</em> to the
+application as if the file had been replaced or appended to.
+<P>
+For traditional NIS implementations, there used to be certain
+conventions as to which maps replaced, and which were appended to the
+original information.  Some, like the passwd maps, required kludgy
+modifications of the passwd file which, when done wrong, would
+open up security holes. To avoid these pitfalls, NYS uses a general
+configuration scheme that determines whether a particular set of client
+functions uses the original files, NIS, or NIS+, and in which
+order. It will be described in a later section of this chapter.
+<P>
+<A NAME="5062"></A>
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

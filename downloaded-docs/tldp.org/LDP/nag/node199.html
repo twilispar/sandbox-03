@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<!-- updated   Sun Jul 14 20:15:00 MET DST 1996 by:
+    Tony den Haan (tony@iaehv.nl)  ftp://ftp.IAEhv.nl/pub/users/tony-->
+ 
+<HEAD>
+<TITLE>UUCP Setup</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node200.html">Setup for a LAN</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node198.html">Getting smail Up and </A>
+<BR> <P>
+<H1><A NAME="SECTION0016100000">UUCP Setup</A></H1>
+<A NAME="smailsimple"></A>
+To use smail in a UUCP-only environment, the basic installation
+is rather simple. First, you must make sure you have the two symbolic
+links to rmail and sendmail mentioned above. If you expect
+to receive SMTP batches from other sites, you also have to make
+rsmtp a link to smail.
+<P>
+In Vince Skahan's smail distribution, you will find a sample
+configuration file. It is named config.sample and resides in
+/usr/lib/smail. You have to copy it to config and edit it to reflect
+values specific to your site.
+<P>
+Assume your site is named swim.twobirds.com, and is registered
+in the UUCP maps as swim. Your smarthost is ulysses.
+Then your config file should look like this:
+<PRE>
+           #
+           # Our domain names
+           visible domain=two.birds:uucp
+           #
+           # Our name on outgoing mails
+           visible name=swim.twobirds.com
+           #
+           # Use this as uucp-name as well
+           uucp name=swim.twobirds.com
+           #
+           # Our smarthost
+           smart host=ulysses
+</PRE>
+The first statement tells smail about the domains your site
+belongs to.  Insert their names here, separated by colons. If your site
+name is registered in the UUCP maps, you should also add uucp.
+When being handed a mail message, smail determines your host's
+name using the hostname(2) system call, and checks the
+recipient's address against this hostname, tacking on all names from
+this list in turn. If the address matches any of these names, or
+the unqualified hostname, the recipient is considered local, and
+smail attempts to deliver the message to a user or alias on the
+local host. Otherwise, the recipient is considered remote, and delivery
+to the destination host is attempted.
+<P>
+visible_name should contain a single, fully qualified domain name
+of your site that you want to use on outgoing mails. This name is used
+when generating the sender's address on all outgoing mail.  You must
+make sure to use a name that smail recognizes as referring to the
+local host (i.e. the hostname with one of the domains listed in the
+visible_domain attribute). Otherwise, replies to your mails
+will bounce off your site.
+<P>
+The last statement sets the path used for smart-host routing (described
+in section-<A HREF="node190.html#mailrouting"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>). With this sample setup, smail
+will forward any mail for remote addresses to the smart host. The path
+specified in the smart_path attribute will be used as a route
+to the smart host.  Since messages will be delivered via UUCP, the
+attribute must specify a system known to your UUCP software. Please
+refer to chapter-<A HREF="node146.html#uucp"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> on making a site known to UUCP.
+<P>
+There's one option used in the above file that we haven't explained yet;
+this is uucp_name. The reason to use the option is this: By
+default, smail uses the value returned by hostname(2)
+for UUCP-specific things such as the return path given in the
+From_ header line. If your hostname is <em>not</em> registered
+with the UUCP mapping project, you should tell smail to use your
+fully qualified domain name instead.<A HREF="footnode.html#7786"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> This can be done by adding the uucp_name option to the
+config file.
+<P>
+There is another file in /usr/lib/smail, called paths.sample. It
+is an example of what a paths file might look like. However, you
+will not need one unless you have mail links to more than one site.
+If you do, however, you will have to write one yourself, or generate one
+from the Usenet maps. The paths file will be described later in
+this chapter.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node200.html">Setup for a LAN</A>
+<B>Up:</B> <A HREF="node198.html">Getting smail Up and </A>
+<B> Previous:</B> <A HREF="node198.html">Getting smail Up and </A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

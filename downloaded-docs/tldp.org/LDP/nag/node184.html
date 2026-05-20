@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Troubleshooting</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node185.html">Log Files</A>
+<B>Up:</B> <A HREF="node146.html">Managing Taylor UUCP</A>
+<B> Previous:</B> <A HREF="node183.html">Selecting Specific Protocols</A>
+<BR> <P>
+<H1><A NAME="SECTION0014700000">Troubleshooting</A></H1>
+<P>
+<A NAME="uucpmiscfaq"></A>
+<A NAME="6507"></A>
+<P>
+This section describes what may go wrong with your UUCP connection, and
+makes suggestions where to look for the error.  However, the questions
+were compiled off the top of my head. There's much more that can go
+wrong.
+<P>
+<A NAME="6508"></A>
+In any case, enable debugging with -xall, and take a look at
+the output in Debug in the spool directory.  It should help you
+to quickly recognize where the problem lies.  Also, I have always found
+it helpful to turn on my modem's speaker when it didn't connect. With
+Hayes-compatible modems, this is accomplished by adding ``ATL1M1 OK''
+to the modem chat in the dial file.
+<P>
+The first check always should be whether all file permissions are set
+correctly.  uucico should be setuid uucp, and all files in
+/usr/lib/uucp, /var/spool/uucp and /var/spool/uucppublic should be owned by
+uucp. There are also some hidden files<A HREF="footnode.html#6629"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> in the spool directory which must be owned by uucp as well.
+<P>
+<B>uucico keeps saying ``Wrong time to call''</B>:
+This probably means that in the system entry in sys, you didn't
+specify a time command that details when the remote system may
+be called, or you gave one which actually forbids calling at the current
+time. If no call schedule is given, uucico assumes that the
+system may never be called.
+<P>
+<B>uucico complains that the site is already locked</B>:
+This means that uucico detected a lock file for the remote
+system in /var/spool/uucp.  The lock file may be from an earlier call to
+the system that crashed, or was killed. However, it's also likely that
+there's another uucico process sitting around that is trying to
+dial the remote system and got stuck in a chat script, etc. If this
+uucico process doesn't succeed in connecting to the remote
+system, kill it with a hangup signal, and remove any lock files it left
+lying around.
+<P>
+<B>I can connect to the remote site, but the chat script fails</B>:
+Look at the text you receive from the remote site. If it's garbled, this
+might be a speed-related problem.  Otherwise, confirm if it really
+agrees with what your chat script expects.  Remember, the chat script
+starts with an expect string. If you receive the login prompt, then send
+your name, but never get the password prompt, insert some delays before
+sending it, or even in-between the letters. You might be too fast for
+your modem.
+<P>
+<B>My modem does not dial</B>:
+If your modem doesn't indicate that the DTR line has been raised when
+uucico calls out, you possibly haven't given the right device to
+uucico. If your modem recognizes DTR, check with a terminal
+program that you can write to it. If this works, turn on echoing with
+E at the start of the modem chat. If it doesn't echo your
+commands during the modem chat, check if your line speed is too high or
+low for your modem. If you see the echo, check if you have disabled
+modem responses, or set them to number codes.  Verify that the chat
+script itself is correct. Remember that you have to write two
+backslashes to send one to the modem.
+<P>
+<B>My modem tries to dial, but doesn't get out</B>:
+Insert a delay into the phone number. This is especially useful when
+dialing out from a company's internal telephone net.  For people in
+Europe, who usually dial pulse-tone, try touch-tone.  In some countries,
+postal services have been upgrading their nets recently. Touch-tone
+sometimes helps.
+<P>
+<B>I log file says I have extremely high packet loss rates</B>:
+This looks like a speed problem. Maybe the link between computer and
+modem is too slow (remember to adapt it to the highest effective rate
+possible)? Or is it your hardware that is too slow to service interrupts
+in time? With a NSC-16550A chipset on your serial port, 38kbps are said
+to work reasonably well; however, without FIFOs (like 16450 chips), 9600
+bps is the limit. Also, you should make sure hardware handshake is
+enabled on the serial line.
+<P>
+Another likely cause is that hardware handshake isn't enabled on the
+port.  Taylor UUCP 1.04 has no provisions for turning on RTS/CTS
+handshake.  You have to enable this explicitly from rc.serial
+using the following command:
+<P>
+<P><P>
+<P>
+<B>I can log in, but handshake fails</B>:
+Well, there can be a number of problems. The output in the log file
+should tell you a lot. Look at what protocols the remote site offers (It
+sends a string Pprotlist during the handshake).  Maybe they
+don't have any in common (did you select any protocols in sys or
+port?).
+<P>
+If the remote system sends RLCK, there is a stale lockfile for
+you on the remote system. If it's not because you're already connected
+to the remote system on a different line, ask to have it removed.
+<P>
+If it sends RBADSEQ, the other site has conversation count checks
+enabled for you, but numbers didn't match. If it sends RLOGIN,
+you were not permitted to login under this id.
+<P>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node185.html">Log Files</A>
+<B>Up:</B> <A HREF="node146.html">Managing Taylor UUCP</A>
+<B> Previous:</B> <A HREF="node183.html">Selecting Specific Protocols</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

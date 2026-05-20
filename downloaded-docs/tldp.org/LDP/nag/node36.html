@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Enter DNS</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node37.html">Name Lookups with DNS</A>
+<B>Up:</B> <A HREF="node34.html">The Domain Name System</A>
+<B> Previous:</B> <A HREF="node35.html">Hostname Resolution</A>
+<BR> <P>
+<H2><A NAME="SECTION004620000">Enter DNS</A></H2>
+DNS organizes host names in a hierarchy of domains.  A domain is a
+collection of sites that are related in some sense--- be it because
+they form a proper network (e.g. all machines on a campus, or all hosts
+on BITNET), because they all belong to a certain organization (like the
+U.S. government), or because they're simply geographically close. For
+instance, universities are grouped in the edu domain, with each
+University or College using a separate <em>subdomain</em> below which
+their hosts are subsumed. Groucho Marx University might be given the
+groucho.edu domain, with the LAN of the Mathematics Department
+being assigned maths.groucho.edu.  Hosts on the departmental
+network would have this domain name tacked onto their host name; so
+erdos would be known as erdos.maths.groucho.edu.  This is
+called the <em>fully qualified domain name</em>, or FQDN, which uniquely
+identifies this host world-wide.
+<P>
+<P><A NAME="1745"></A><BR>
+<STRONG>Figure:</STRONG> 
+  <A NAME="introfigdns"></A>
+  A part of the domain name space
+	
+ <BR>Another lost figure?
+<P>
+<P>
+Figure-<A HREF="node36.html#introfigdns"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A> shows a section of the name space.  The entry
+at the root of this tree, which is denoted by a single dot, is quite
+appropriately called the <em>root domain</em>, and encompasses all other
+domains. To indicate that a host name is a fully qualified domain name,
+rather than a name relative to some (implicit) local domain, it is
+sometimes written with a trailing dot. This signifies that the name's
+last component is the root domain.
+<P>
+<A NAME="1530"></A>
+Depending on its location in the name hierarchy, a domain may be
+called top-level, second-level, or third-level. More levels of
+subdivision occur, but are rare. These are a couple of top-level
+domains you may see frequently:
+<pre>
+
+
+            edu (Mostly US) educational institutions like universities, etc.
+
+
+            com Commercial organizations, companies.
+
+
+            org Non-commercial organizations. Often private UUCP networks  are
+                in this domain.
+
+
+            net Gateways and other administrative host on a network.
+
+
+            mil US military institutions.
+
+
+            gov US government institutions.
+
+
+           uucp Officially, all site names formerly used as UUCP names without
+                domain, have been moved to this domain.
+
+
+</pre>
+
+Technically, the first four of these belong to the US part of the
+Internet, but you may also see non-US sites in these domains. This is
+especially true of the net domain.  However, mil
+and gov are used exclusively in the US.
+<P>
+Outside the US, each country generally uses a top-level domain of its
+own named after the two-letter country code defined in ISO-3166.
+Finland, for instance, uses the fi domain, fr is used by
+France, de by Germany, or au by Australia etc.  Below
+this top-level domain, each country's NIC is free to organize host
+names in whatever way they want. Australia, for example, has
+second-level domain similar to the international top-level domains,
+named com.au, edu.au, and so on.  Others, like Germany,
+don't use this extra level, but rather have slightly longish names that
+refer directly to the organizations running a particular domain. For
+example, it's not uncommon to see host names like
+ftp.informatik.uni-erlangen.de. Chalk that up to German
+efficiency.
+<P>
+Of course, these national domains do not imply that a host below that
+domain is actually located in that country; it only signals that the
+host has been registered with that country's NIC. A Swedish manufacturer
+might have a branch in Australia, and still have all its hosts
+registered with the se top-level domain.
+<P>
+Now, organizing the name space in a hierarchy of domain names nicely
+solves the problem of name uniqueness; with DNS, a host name has to be
+unique only within its domain to give it a name different from all
+other hosts world-wide. Furthermore, fully qualified names are quite
+easy to remember.  Taken by themselves, these are already very good
+reasons to split up a large domain into several subdomains.
+<P>
+<A NAME="1551"></A>
+<A NAME="1552"></A>
+<A NAME="1553"></A>
+But DNS does even more for you than than this: it allows you to delegate
+authority over a subdomain to its administrators.  For example, the
+maintainers at the Groucho Computing Center might create a subdomain for
+each department; we already encountered the maths and
+physics subdomains above.  When they find the network at the
+Physics Department too large and chaotic to manage from outside (after
+all, physicists are known to be an unruly bunch of people), they may
+simply pass control over the physics.groucho.edu domain to the
+administrators of this network.  These are then free to use whatever
+host names they like, and assign them IP addresses from their network in
+whatever fashion the like, without outside interference.
+<P>
+<A NAME="1557"></A>
+<A NAME="1746"></A>
+To this end, the name space is split up into <em>zones</em>, each rooted
+at a domain. Note the subtle difference between a zone and a domain:
+the <em>domain</em> groucho.edu encompasses all hosts at the
+Groucho Marx University, while the <em>zone</em> groucho.edu
+includes only the hosts that are managed by the Computing Center
+directly, for example those at the Mathematics Department.  The hosts
+at the Physics Department belong to a different zone, namely
+physics.groucho.edu.  In figure-<A HREF="node36.html#introfigdns"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>, the start
+of a zone is marked by a small circle to the right of the domain name.
+<A NAME="1566"></A>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node37.html">Name Lookups with DNS</A>
+<B>Up:</B> <A HREF="node34.html">The Domain Name System</A>
+<B> Previous:</B> <A HREF="node35.html">Hostname Resolution</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

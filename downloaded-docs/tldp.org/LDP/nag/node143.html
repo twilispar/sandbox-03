@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The NFS Daemons</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node144.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A HREF="node140.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A HREF="node142.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node144.html">The exports File</A>
+<B>Up:</B> <A HREF="node140.html">The Network File System</A>
+<B> Previous:</B> <A HREF="node142.html">Mounting an NFS Volume</A>
+<BR> <P>
+<H1><A NAME="SECTION0013300000">The NFS Daemons</A></H1>
+<A NAME="nfsdaemons"></A>
+If you want to provide NFS service to other hosts, you have to run the
+nfsd and mountd daemons on your machine.  As RPC-based
+programs, they are not managed by inetd, but are started up at
+boot time, and register themselves with the portmapper. Therefore, you
+have to make sure to start them only after rpc.portmap is
+running.  Usually, you include the following two lines in your
+rc.inet2 script:
+<PRE>
+     if [ -x /usr/sbin/rpc.mountd ]; then
+             /usr/sbin/rpc.mountd; echo -n " mountd"
+     fi
+     if [ -x /usr/sbin/rpc.nfsd ]; then
+             /usr/sbin/rpc.nfsd; echo -n " nfsd"
+     fi
+</PRE>
+
+The ownership information of files a NFS daemon provides to its
+clients usually contains only numerical user and group id's.  If both
+client and server associate the same user and group names with these
+numerical id's, they are said to share the same uid/gid space. For
+example, this is the case when you use NIS to distribute the
+passwd information to all hosts on your LAN.
+<P>
+On some occasions, however, they do not match. Rather updating the
+uid's and gid's of the client to match those of the server, you can
+use the ugidd mapping daemon to work around this. Using the
+map_daemon option explained below, you can tell nfsd
+to map the server's uid/gid space to the client's uid/gid space with
+the aid of the ugidd on the client.
+<P>
+ugidd is an RPC-based server, and is started from
+rc.inet2 just like nfsd and mountd.
+<PRE>
+     if [ -x /usr/sbin/rpc.ugidd ]; then
+             /usr/sbin/rpc.ugidd; echo -n " ugidd"
+     fi
+</PRE>
+<HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

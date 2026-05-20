@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Setting up the proc Filesystem</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node60.html">Installing the Binaries</A>
+<B>Up:</B> <A HREF="node58.html">Configuring TCP/IP Networking</A>
+<B> Previous:</B> <A HREF="node58.html">Configuring TCP/IP Networking</A>
+<BR> <P>
+<H1><A NAME="SECTION007100000">Setting up the proc Filesystem</A></H1>
+<A NAME="ifaceprocfs"></A>
+Some of the configuration tools of the Net-2 release rely on
+the proc filesystem for communicating with the kernel. This
+is an interface that permits access to kernel run-time information
+through a filesystem-like mechanism. When mounted, you can list its
+files like any other filesystem, or display their contents.  Typical
+items include the loadavg file that contains the system load
+average, or meminfo, which shows current core memory and swap
+usage.
+<P>
+To this, the networking code adds the net directory.
+It contains a number of files that show things like the
+kernel ARP tables, the state of TCP connections, and the routing tables.
+Most network administration tools get their information from these files.
+<P>
+<A NAME="2525"></A>
+The proc filesystem (or procfs as it is also known)
+is usually mounted on /proc at system boot time. The best 
+method is to add the following line to /etc/fstab:
+<pre>
+           # procfs mont point:
+           none            /proc           proc    defaults
+</pre>
+and execute ``mount /proc'' from your /etc/rc script.
+<P>
+The procfs is nowadays configured into most kernels by default.
+If the procfs is not in your kernel, you will get a message like
+``mount: fs type procfs not supported by kernel''. You will then
+have to recompile the kernel and answer ``yes'' when asked for
+procfs support.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>

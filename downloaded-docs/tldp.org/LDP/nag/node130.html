@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1-c (Feb 29, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Network Information System</TITLE>
+</HEAD>
+<BODY LANG="EN">
+ <A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node131.html">Getting Acquainted with NIS</A>
+<B>Up:</B> <A HREF="nag.html">The Network Administrators' Guide</A>
+<B> Previous:</B> <A HREF="node129.html">Configuring the r Commands</A>
+<BR> <P>
+<H1><A NAME="SECTION0012000000">The Network Information System</A></H1>
+<P>
+<A NAME="nis"></A>
+<A NAME="4903"></A>
+<A NAME="5312"></A>
+<A NAME="5313"></A>
+<A NAME="5314"></A>
+<A NAME="4907"></A>
+<A NAME="4908"></A>
+<A NAME="4909"></A>
+<P>
+When you are running a local area network, your overall goal is usually
+to provide an environment to your users that makes the network
+transparent.  An important stepping stone to this end is to keep vital
+data such as user account information synchronized between all hosts.
+We have seen before that for host name resolution, a powerful and
+sophisticated service exists, being DNS. For others tasks, there is no
+such specialized service. Moreover, if you manage only a small LAN with
+no Internet connectivity, setting up DNS may not seem worth the trouble
+for many administrators.
+<P>
+This is why Sun developed NIS, the <em>Network Information System</em>.
+NIS provides generic database access facilities that can be used to
+distribute information such as that contained in the passwd and
+groups files to all hosts on your network.  This makes the
+network appear just as a single system, with the same accounts on all
+hosts. In a similar fashion, you can use NIS to distribute the hostname
+information form /etc/hosts to all machines on the network.
+<P>
+NIS is based on RPC, and comprises a server, a client-side library, and
+several administrative tools.  Originally, NIS was called <em>Yellow
+Pages</em>, or YP, which is still widely used to informally refer this
+service. On the other hand, Yellow Pages is a trademark of British
+Telecom, which required Sun to drop that name. As things go, some
+names stick with people, and so YP lives on as a prefix to the names
+of most NIS-related commands such as ypserv, ypbind,
+etc.
+<P>
+<A NAME="4917"></A>
+<A NAME="4918"></A>
+<A NAME="5315"></A>
+<A NAME="5316"></A>
+Today, NIS is available for virtually all , and there are even
+free implementations of it. One is from the BSD Net-2 release, and has
+been derived from a public domain reference implementation donated by
+Sun.  The library client code from this release has been in the GNU
+libc for a long time, while the administrative programs have only
+recently been ported to  by Swen Th&#252;mmler.<A HREF="footnode.html#5317"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> An NIS server is missing from the reference implementation.  Tobias
+Reber has written another NIS package including all tools and a server;
+it is called yps.<A HREF="footnode.html#5318"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<P>
+<A NAME="4932"></A>
+<A NAME="4933"></A>
+<A NAME="5319"></A>
+Currently, a complete rewrite of the NIS code called NYS is being done
+by Peter Eriksson,<A HREF="footnode.html#5320"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> which supports both plain NIS and Sun's much revised NIS+. NYS
+not only provides a set of NIS tools and a server, but also adds a whole
+new set of library functions which will most probably make it into the
+standard libc eventually. This includes a new configuration scheme
+for hostname resolution that replaces the current scheme using
+host.conf. The features of these functions will be discussed
+below.
+<P>
+This chapter will focus on NYS rather than the other two packages, to which
+I will refer as the ``traditional'' NIS code. If you do want to run any of
+these packages, the instructions in this chapter may or may not be enough.
+To obtain additional information, please get a standard book on NIS, such
+as Hal Stern's <em>NFS and NIS</em> (see-[<A HREF="#sternnfs"></A>]).
+<P>
+For the time being, NYS is still under development, and therefore standard
+ utilities such as the network programs or the login program
+are not yet aware of the NYS configuration scheme.  Until NYS is merged
+into the mainstream libc you therefore have to recompile all these
+binaries if you want to make them use NYS.  In any of these applications'
+Makefiles, specify -lnsl as the last option before
+libc to the linker. This links in the relevant functions from
+libnsl, the NYS library, instead of the standard C-library.
+<P>
+<BR> <HR>
+<UL> 
+<LI> <A HREF="node131.html#SECTION0012100000">Getting Acquainted with NIS</A>
+<LI> <A HREF="node132.html#SECTION0012200000">NIS versus NIS+</A>
+<LI> <A HREF="node133.html#SECTION0012300000">The Client Side of NIS</A>
+<LI> <A HREF="node134.html#SECTION0012400000">Running a NIS Server</A>
+<LI> <A HREF="node135.html#SECTION0012500000">Setting up a NIS Client with NYS</A>
+<LI> <A HREF="node136.html#SECTION0012600000">Choosing the Right Maps</A>
+<LI> <A HREF="node137.html#SECTION0012700000">Using the passwd and group Maps</A>
+<LI> <A HREF="node138.html#SECTION0012800000">Using NIS with Shadow Support</A>
+<LI> <A HREF="node139.html#SECTION0012900000">Using the Traditional NIS Code</A>
+</UL>
+<HR><A HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A>  <BR>
+<B> Next:</B> <A HREF="node131.html">Getting Acquainted with NIS</A>
+<B>Up:</B> <A HREF="nag.html">The Network Administrators' Guide</A>
+<B> Previous:</B> <A HREF="node129.html">Configuring the r Commands</A>
+<P><ADDRESS>
+<I>Andrew Anderson <BR>
+Thu Mar  7 23:22:06 EST 1996</I>
+</ADDRESS>
+</BODY>
+</HTML>
