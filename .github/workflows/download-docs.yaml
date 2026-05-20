@@ -1,0 +1,49 @@
+name: Download Docs
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Docs URL"
+        required: true
+        type: string
+
+jobs:
+  download-docs:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install wget
+        run: sudo apt-get update && sudo apt-get install -y wget
+
+      - name: Download docs
+        run: |
+          mkdir -p downloaded-docs
+
+          # wget \
+          #   --mirror \
+          #   --convert-links \
+          #   --adjust-extension \
+          #   --page-requisites \
+          #   --no-parent \
+          #   "${{ github.event.inputs.url }}" \
+          #   -P downloaded-docs
+
+          wget -m "${{ github.event.inputs.url }}" -P downloaded-docs
+        continue-on-error: true
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add downloaded-docs
+          git commit -m "Download docs from ${{ github.event.inputs.url }}" || echo "No changes"
+
+          git push

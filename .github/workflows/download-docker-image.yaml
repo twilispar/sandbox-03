@@ -1,0 +1,63 @@
+name: Download Docker Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: "Docker image name (example: nginx:latest)"
+        required: true
+        type: string
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      
+      - name: Install docker engine
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install ca-certificates curl -y
+          sudo install -m 0755 -d /etc/apt/keyrings
+          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+          sudo chmod a+r /etc/apt/keyrings/docker.asc
+          # Add the repository to Apt sources:
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+            $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update -y
+          sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+      - name: Pull Docker image
+        run: |
+          docker pull "${{ github.event.inputs.image }}"
+
+      - name: Save image as tar
+        run: |
+          IMAGE_NAME=$(echo "${{ github.event.inputs.image }}" | sed 's#[/:]#_#g')
+          docker save "${{ github.event.inputs.image }}" -o "${IMAGE_NAME}.tar"
+          echo "IMAGE_TAR=${IMAGE_NAME}.tar" >> $GITHUB_ENV
+
+      - name: Split tar into 50MB chunks
+        run: |
+          # Split into 50MB parts (prefix: ${IMAGE_NAME}.part-)
+          split -b 50M "${IMAGE_NAME}.tar" "${IMAGE_NAME}.part-"
+          # Optional: remove the original large tar to avoid committing it
+          rm "${IMAGE_NAME}.tar"
+      
+      - name: Commit and push chunks
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          # Add all split files (they end with .part-aa, .part-ab, ...)
+          git add "${IMAGE_NAME}.part-*"
+
+          # Only commit if there are changes
+          git commit -m "Add Docker image chunks for ${{ github.event.inputs.image }}" || echo "No changes to commit"
+
+          git push
