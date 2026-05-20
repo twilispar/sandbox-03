@@ -17,7 +17,7 @@ jobs:
 
       - name: Install aria2
         run: sudo apt-get install -y aria2
-      
+
       - name: Extract URLs and download files
         run: |
           MSG=$(git log -1 --pretty=%B)
@@ -99,6 +99,7 @@ jobs:
 
             echo "🚀 Pushing batch $BATCH_NUM: files $((i+1))–$(( i + ${#BATCH[@]} )) of $TOTAL"
 
+            echo "${BATCH[@]}"
             git add "${BATCH[@]}"
             git commit -m "Add downloaded files — batch $BATCH_NUM [skip ci]"
 
