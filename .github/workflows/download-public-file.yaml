@@ -3,6 +3,13 @@ on:
   push:
     branches:
       - "**"
+
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Public File URL"
+        required: true
+        type: string
 jobs:
   save-file:
     if: contains(github.event.head_commit.message, 'download:') || contains(github.event.head_commit.message, 'download-zip:')
@@ -20,7 +27,11 @@ jobs:
 
       - name: Extract URLs and download files
         run: |
-          MSG=$(git log -1 --pretty=%B)
+          # MSG=$(git log -1 --pretty=%B)
+          
+          # !== MY OWN LOGIC ==! #
+          MSG="${{ github.event.inputs.url }}"
+          
           echo "Commit message: $MSG"
 
           if echo "$MSG" | grep -qP 'download-zip:'; then
