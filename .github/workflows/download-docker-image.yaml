@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      
+
       - name: Install docker engine
         run: |
           sudo apt-get update -y
@@ -38,7 +38,11 @@ jobs:
 
       - name: Save image as tar
         run: |
-          IMAGE_NAME=$(echo "${{ github.event.inputs.image }}" | sed 's#[/:]#_#g')
+          # IMAGE_NAME=$(echo "${{ github.event.inputs.image }}" | sed 's#[/:]#_#g')
+          IMAGE_NAME="${{ github.event.inputs.image }}"
+          IMAGE_NAME="${input//\//-}"
+          IMAGE_NAME="${IMAGE_NAME//:/-}"
+
           docker save "${{ github.event.inputs.image }}" -o "${IMAGE_NAME}.tar"
           echo "IMAGE_TAR=${IMAGE_NAME}.tar" >> $GITHUB_ENV
 
@@ -48,7 +52,7 @@ jobs:
           split -b 50M "${IMAGE_NAME}.tar" "${IMAGE_NAME}.part-"
           # Optional: remove the original large tar to avoid committing it
           rm "${IMAGE_NAME}.tar"
-      
+
       - name: Commit and push chunks
         run: |
           git config user.name "github-actions"
