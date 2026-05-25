@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Psycopg - PostgreSQL adapter for Python</title>
+    <meta
+      name="description"
+      content="Psycopg is the most popular PostgreSQL adapter for the Python programming language."
+    />
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/syntax.css?h=3b162580">
+  </head>
+  <body>
+    <!-- ── Navigation ─────────────────────────────────────────────── -->
+    <header class="site-header">
+      <nav class="nav">
+        <a href="/" class="nav__logo" aria-label="psycopg home">
+          <img src="/img/logo.png" alt="" width="48" height="48" />
+          <span>psycopg</span>
+        </a>
+        <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav__links" role="list">
+          <li><a href="/">home</a></li>
+          <li><a href="/#sponsors">sponsors</a></li>
+          <li><a href="/#features">features</a></li>
+          <li><a href="/#development">development</a></li>
+          <li><a href="/articles">articles</a></li>
+          <li><a href="/#maintainers">maintainers</a></li>
+          <li><a href="/#contact">contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="with_sidebar">
+      <main class="page">
+<article class="post-article">
+  <a href="/articles/" class="post-back">
+    <span class="pag-arrow">&#8592;</span>
+    <span class="post-back__label">articles</span>
+  </a>
+
+  <header class="post-article__header">
+    
+    <div class="post-article__tags"><a class="post-tag" href="/articles/tag/windows/">windows</a><a class="post-tag" href="/articles/tag/build/">build</a><a class="post-tag" href="/articles/tag/recipe/">recipe</a></div>
+    
+    <h1 class="post-article__title">Building Psycopg on Windows using MinGW</h1>
+    <div class="post-article__byline">
+      <span class="post-article__author">Daniele Varrazzo</span>
+      <time class="post-article__date" datetime="2011-06-05">05 Jun 2011</time>
+    </div>
+  </header>
+
+  <div class="post-article__body">
+    <p>My goal was to install Psycopg on Windows using MinGW and the PostgreSQL binary package.</p>
+<p>I have used the <a class="reference external" href="http://www.develer.com/oss/GccWinBinaries">MinGW GCC binaries</a> packaged by Giovanni Bajo. The package takes care of a lot of details, for instance registering MinGW as default compiler for Python, plus some magic I don't even want to know, and makes the entire process simple enough.</p>
+<!-- CUT-HERE -->
+<p>The first step is to ensure that <tt class="docutils literal">setup.py</tt> can find <tt class="docutils literal">pg_config</tt>. There is a bug causing it not to be found if <em>it is</em> in the path: it will be fixed in Psycopg 2.4.2. On a few older versions you will have to specify the <tt class="docutils literal">pg_config</tt> path in the <tt class="docutils literal">setup.cfg</tt> or by the <tt class="docutils literal"><span class="pre">--pg-config</span></tt> option, e.g.</p>
+<pre class="literal-block">
+python setup.py build_ext --pg-config=C:\path\to\pg_config.exe build
+</pre>
+<p>The library built depends on <tt class="docutils literal">libpq.dll</tt>, so at runtime this library should be available, e.g. on the path or it may be copied in the <tt class="docutils literal">psycopg2</tt> directory. The libpq in turn depends on a few other dlls, all found in the PostgreSQL <tt class="docutils literal">bin</tt> directory: <tt class="docutils literal">libeay32.dll</tt>, <tt class="docutils literal">ssleay32.dll</tt> and <tt class="docutils literal"><span class="pre">libintl-8.dll</span></tt>: they should be made available to the client as well. Unfortunately if any of these libraries is missing you will only get an &quot;ImportError: dll load failed&quot;. The problem is very easy to debug using a <a class="reference external" href="http://www.dependencywalker.com/">dependency walker</a>.</p>
+<p>Another problem you may find is building for Python 2.6 and newer: some MinGW versions ship with a broken msvcr90 lib, and the result is again a rather unhelpful ImportError. the dependency walker is useful in this case too, showing the missing <tt class="docutils literal">localtime</tt> function in the library. The bug was reported in the <a class="reference external" href="https://bugs.python.org/issue3308">issue 3308</a>: my solution was to <a class="reference external" href="http://tdm-gcc.tdragon.net/">download a newer MinGW</a> and use the <tt class="docutils literal">libmsvcr90.a</tt> from there.</p>
+<p>So, overall, it can be done, but the result still depends on many dlls. I'm torn if the solution could be to have all the dependencies copied in the package directory. Of course you can still use <a class="reference external" href="http://www.stickpeople.com/projects/python/win-psycopg/">Jason's binary package</a>: he builds both the libpq and the openssl as static libs and creates a self-contained psycopg, which is probably the handiest result, but can't be obtained only using the PostgreSQL binaries.</p>
+
+  </div>
+
+  <div class="post-article__comments">
+    <script src="https://utteranc.es/client.js"
+      repo="psycopg/psycopg-website"
+      issue-term="pathname"
+      label="comments"
+      theme="github-dark"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </div>
+</article>
+
+      </main>
+      <div id="sidebar">
+      </div>
+      
+    </div>
+
+    <!-- ── Footer ─────────────────────────────────────────────────── -->
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p class="site-footer__copy">
+          &copy; The Psycopg Team<br/>
+          Psycopg is free software released under the
+          <a href="https://www.gnu.org/licenses/lgpl-3.0.en.html" rel="noopener">GNU LGPL license</a>.
+        </p>
+        <a href="/" class="site-footer__logo" aria-label="psycopg home">
+          <img src="/img/logo.png" alt="" width="40" height="40" />
+          <span>psycopg</span>
+        </a>
+      </div>
+    </footer>
+
+    <script src="/js/main.js" type="module"></script>
+  </body>
+</html>
+

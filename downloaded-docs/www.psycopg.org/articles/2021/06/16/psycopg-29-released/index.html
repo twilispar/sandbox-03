@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Psycopg - PostgreSQL adapter for Python</title>
+    <meta
+      name="description"
+      content="Psycopg is the most popular PostgreSQL adapter for the Python programming language."
+    />
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/syntax.css?h=3b162580">
+  </head>
+  <body>
+    <!-- ── Navigation ─────────────────────────────────────────────── -->
+    <header class="site-header">
+      <nav class="nav">
+        <a href="/" class="nav__logo" aria-label="psycopg home">
+          <img src="/img/logo.png" alt="" width="48" height="48" />
+          <span>psycopg</span>
+        </a>
+        <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav__links" role="list">
+          <li><a href="/">home</a></li>
+          <li><a href="/#sponsors">sponsors</a></li>
+          <li><a href="/#features">features</a></li>
+          <li><a href="/#development">development</a></li>
+          <li><a href="/articles">articles</a></li>
+          <li><a href="/#maintainers">maintainers</a></li>
+          <li><a href="/#contact">contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="with_sidebar">
+      <main class="page">
+<article class="post-article">
+  <a href="/articles/" class="post-back">
+    <span class="pag-arrow">&#8592;</span>
+    <span class="post-back__label">articles</span>
+  </a>
+
+  <header class="post-article__header">
+    
+    <div class="post-article__tags"><a class="post-tag" href="/articles/tag/news/">news</a><a class="post-tag" href="/articles/tag/release/">release</a></div>
+    
+    <h1 class="post-article__title">Psycopg 2.9 released</h1>
+    <div class="post-article__byline">
+      <span class="post-article__author">Daniele Varrazzo</span>
+      <time class="post-article__date" datetime="2021-06-16">16 Jun 2021</time>
+    </div>
+  </header>
+
+  <div class="post-article__body">
+    <p>Psycopg 2.9 has been released!</p>
+<p>This is a relatively small release compared to previous major releases.
+However the creation of the packages took a lot of effort. The previously used
+CI system now has reduced support for free software projects - it was decided
+that package building should be moved to GitHub Actions.</p>
+<p>Packaging has also become more complex because of the evolution of the Python
+packaging standards and the need to support multiple architectures (Intel,
+ARM, PPC...).</p>
+<p>Maintaining a project such as Psycopg requires a lot of effort. For this
+reason, we are extremely grateful to all our <a class="reference external" href="https://www.psycopg.org/sponsors/">sponsors</a> who are enabling the
+maintenance and development of Psycopg. Thank you very much! <span class="raw-html"><i
+class="fa fa-heart"></i></span></p>
+<!-- CUT-HERE -->
+<p>What’s new in psycopg 2.9</p>
+<ul class="simple">
+<li><tt class="docutils literal">with connection</tt> starts a transaction on autocommit transactions too (<a class="reference external" href="https://github.com/psycopg/psycopg2/issues/941">ticket #941</a>).</li>
+<li>Timezones with fractional minutes are supported on Python 3.7 and following (<a class="reference external" href="https://github.com/psycopg/psycopg2/issues/1272">ticket #1272</a>).</li>
+<li>Escape table and column names in <tt class="docutils literal">copy_from()</tt> and <tt class="docutils literal">copy_to()</tt>.</li>
+<li>Connection exceptions with sqlstate 08XXX reclassified as <tt class="docutils literal">OperationalError</tt> (a subclass of the previously used <tt class="docutils literal">DatabaseError</tt>) (<a class="reference external" href="https://github.com/psycopg/psycopg2/issues/1148">ticket #1148</a>).</li>
+<li>Include library dirs required from libpq to work around MacOS build problems (<a class="reference external" href="https://github.com/psycopg/psycopg2/issues/1200">ticket #1200</a>).</li>
+</ul>
+<p>Other changes:</p>
+<ul class="simple">
+<li>Dropped support for Python 2.7, 3.4, 3.5 (<a class="reference external" href="https://github.com/psycopg/psycopg2/issues/1198">ticket #1198</a>, <a class="reference external" href="https://github.com/psycopg/psycopg2/issues/1000">ticket #1000</a>, <a class="reference external" href="https://github.com/psycopg/psycopg2/issues/1197">ticket #1197</a>).</li>
+<li>Dropped support for <tt class="docutils literal">mx.DateTime</tt>.</li>
+<li>Use <tt class="docutils literal">datetime.timezone</tt> objects by default in <tt class="docutils literal">datetime</tt> objects instead of <tt class="docutils literal">FixedOffsetTimezone</tt>.</li>
+<li>The <tt class="docutils literal">psycopg2.tz</tt> module is deprecated and scheduled to be dropped in the next major release.</li>
+<li>Provide <a class="reference external" href="https://peps.python.org/pep-0599">PEP 599</a> wheels packages (<tt class="docutils literal">manylinux2014</tt> tag) for <tt class="docutils literal">i686</tt> and <tt class="docutils literal">x86_64</tt> platforms.</li>
+<li>Provide <a class="reference external" href="https://peps.python.org/pep-0600">PEP 600</a> wheels packages (<tt class="docutils literal">manylinux_2_24</tt> tag) for <tt class="docutils literal">aarch64</tt> and <tt class="docutils literal">ppc64le</tt> platforms.</li>
+<li>Wheel package compiled against OpenSSL 1.1.1k and PostgreSQL 13.3.</li>
+<li>Build system for Linux/MacOS binary packages moved to GitHub Actions.</li>
+</ul>
+
+  </div>
+
+  <div class="post-article__comments">
+    <script src="https://utteranc.es/client.js"
+      repo="psycopg/psycopg-website"
+      issue-term="pathname"
+      label="comments"
+      theme="github-dark"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </div>
+</article>
+
+      </main>
+      <div id="sidebar">
+      </div>
+      
+    </div>
+
+    <!-- ── Footer ─────────────────────────────────────────────────── -->
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p class="site-footer__copy">
+          &copy; The Psycopg Team<br/>
+          Psycopg is free software released under the
+          <a href="https://www.gnu.org/licenses/lgpl-3.0.en.html" rel="noopener">GNU LGPL license</a>.
+        </p>
+        <a href="/" class="site-footer__logo" aria-label="psycopg home">
+          <img src="/img/logo.png" alt="" width="40" height="40" />
+          <span>psycopg</span>
+        </a>
+      </div>
+    </footer>
+
+    <script src="/js/main.js" type="module"></script>
+  </body>
+</html>
+

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>psycopg2.errorcodes – Error codes defined by PostgreSQL &#8212; Psycopg 2.9.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/better.css?v=58ad701a" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=null"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'null');
+    </script>
+    <script src="_static/documentation_options.js?v=5abf1fe6"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="psycopg2.pool – Connections pooling" href="pool.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+      <link rel="stylesheet" href="_static/psycopg.css" type="text/css" />
+  </head><body>
+    <header id="pageheader"><h1><a href="index.html ">
+        Psycopg 2.9.12 documentation
+    </a></h1></header>
+  <div class="related top">
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="pool.html" title="Previous document"><code class="xref py py-obj docutils literal notranslate"><span class="pre">psycopg2.pool</span></code> – Connections pooling</a>
+        </li>
+        <li>
+          <a href="faq.html" title="Next document">Frequently Asked Questions</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="index.html">Home</a></li> 
+    </ul>
+  </nav>
+  </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="psycopg2-errorcodes-error-codes-defined-by-postgresql">
+<h1><a class="reference internal" href="#module-psycopg2.errorcodes" title="psycopg2.errorcodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">psycopg2.errorcodes</span></code></a> – Error codes defined by PostgreSQL<a class="headerlink" href="#psycopg2-errorcodes-error-codes-defined-by-postgresql" title="Link to this heading">¶</a></h1>
+<span class="target" id="module-psycopg2.errorcodes"><span id="index-0"></span></span><div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.0.6.</span></p>
+</div>
+<p>This module contains symbolic names for all PostgreSQL error codes and error
+classes codes.  Subclasses of <a class="reference internal" href="module.html#psycopg2.Error" title="psycopg2.Error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Error</span></code></a> make the PostgreSQL error
+code available in the <a class="reference internal" href="module.html#psycopg2.Error.pgcode" title="psycopg2.Error.pgcode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pgcode</span></code></a> attribute.</p>
+<p>From PostgreSQL documentation:</p>
+<blockquote>
+<div><p>All messages emitted by the PostgreSQL server are assigned five-character
+error codes that follow the SQL standard’s conventions for <code class="sql docutils literal notranslate"><span class="pre">SQLSTATE</span></code>
+codes.  Applications that need to know which error condition has occurred
+should usually test the error code, rather than looking at the textual
+error message.  The error codes are less likely to change across
+PostgreSQL releases, and also are not subject to change due to
+localization of error messages. Note that some, but not all, of the error
+codes produced by PostgreSQL are defined by the SQL standard; some
+additional error codes for conditions not defined by the standard have
+been invented or borrowed from other databases.</p>
+<p>According to the standard, the first two characters of an error code
+denote a class of errors, while the last three characters indicate a
+specific condition within that class. Thus, an application that does not
+recognize the specific error code can still be able to infer what to do
+from the error class.</p>
+</div></blockquote>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://www.postgresql.org/docs/current/static/errcodes-appendix.html#ERRCODES-TABLE">PostgreSQL Error Codes table</a></p>
+</div>
+<p>An example of the available constants defined in the module:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">errorcodes</span><span class="o">.</span><span class="n">CLASS_SYNTAX_ERROR_OR_ACCESS_RULE_VIOLATION</span>
+<span class="go">&#39;42&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">errorcodes</span><span class="o">.</span><span class="n">UNDEFINED_TABLE</span>
+<span class="go">&#39;42P01&#39;</span>
+</pre></div>
+</div>
+<p>Constants representing all the error values defined by PostgreSQL versions
+between 8.1 and 15 are included in the module.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="psycopg2.errorcodes.lookup">
+<span class="sig-prename descclassname"><span class="pre">psycopg2.errorcodes.</span></span><span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#psycopg2.errorcodes.lookup" title="Link to this definition">¶</a></dt>
+<dd><p>Lookup an error code or class code and return its symbolic name.</p>
+<p>Raise <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KeyError</span></code></a> if the code is not found.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT ouch FROM aargh;&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">errorcodes</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">pgcode</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+<span class="go">&#39;CLASS_SYNTAX_ERROR_OR_ACCESS_RULE_VIOLATION&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">errorcodes</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">pgcode</span><span class="p">)</span>
+<span class="go">&#39;UNDEFINED_TABLE&#39;</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 2.0.14.</span></p>
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h3>Quick search</h3>
+<form class="search" action="search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="related bottom">
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="pool.html" title="Previous document"><code class="xref py py-obj docutils literal notranslate"><span class="pre">psycopg2.pool</span></code> – Connections pooling</a>
+        </li>
+        <li>
+          <a href="faq.html" title="Next document">Frequently Asked Questions</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="index.html">Home</a></li> 
+    </ul>
+  </nav>
+  </div>
+  <footer id="pagefooter">&copy; 2001-2021, Federico Di Gregorio, Daniele Varrazzo, The Psycopg Team.
+
+  </footer>
+
+  
+  </body>
+</html>

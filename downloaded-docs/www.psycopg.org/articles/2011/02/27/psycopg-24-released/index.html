@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Psycopg - PostgreSQL adapter for Python</title>
+    <meta
+      name="description"
+      content="Psycopg is the most popular PostgreSQL adapter for the Python programming language."
+    />
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/syntax.css?h=3b162580">
+  </head>
+  <body>
+    <!-- ── Navigation ─────────────────────────────────────────────── -->
+    <header class="site-header">
+      <nav class="nav">
+        <a href="/" class="nav__logo" aria-label="psycopg home">
+          <img src="/img/logo.png" alt="" width="48" height="48" />
+          <span>psycopg</span>
+        </a>
+        <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav__links" role="list">
+          <li><a href="/">home</a></li>
+          <li><a href="/#sponsors">sponsors</a></li>
+          <li><a href="/#features">features</a></li>
+          <li><a href="/#development">development</a></li>
+          <li><a href="/articles">articles</a></li>
+          <li><a href="/#maintainers">maintainers</a></li>
+          <li><a href="/#contact">contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="with_sidebar">
+      <main class="page">
+<article class="post-article">
+  <a href="/articles/" class="post-back">
+    <span class="pag-arrow">&#8592;</span>
+    <span class="post-back__label">articles</span>
+  </a>
+
+  <header class="post-article__header">
+    
+    <div class="post-article__tags"><a class="post-tag" href="/articles/tag/news/">news</a><a class="post-tag" href="/articles/tag/release/">release</a></div>
+    
+    <h1 class="post-article__title">Psycopg 2.4 released</h1>
+    <div class="post-article__byline">
+      <span class="post-article__author">Federico Di Gregorio</span>
+      <time class="post-article__date" datetime="2011-02-27">27 Feb 2011</time>
+    </div>
+  </header>
+
+  <div class="post-article__body">
+    <p>Hi *,</p>
+<p>this is probably one of the best psycopg releases ever. Daniele, Jason
+and all the others that sent patches did an impressive work to have
+psycopg build and work flawlessly on all the supported platforms (well..
+we can probably do a little bit better on MacOS but everything else is
+almost perfect). So here it is (followed by NEWS excerpt, as always):</p>
+<ul class="simple">
+<li><a class="reference external" href="https://pypi.org/packages/source/p/psycopg2/psycopg2-2.4.tar.gz">Source code</a></li>
+<li><a class="reference external" href="https://pypi.org/packages/source/p/psycopg2/psycopg2-2.4.tar.gz.asc">Signature</a></li>
+</ul>
+<div class="line-block">
+<div class="line">Have fun,</div>
+<div class="line">federico</div>
+</div>
+<!-- CUT-HERE -->
+<div class="section" id="what-s-new-in-psycopg-2-4">
+<h2>What's new in psycopg 2.4</h2>
+<p>Added support for Python 3.1 and 3.2. The conversion has also
+brought several improvements:</p>
+<ul class="simple">
+<li>Added 'b' and 't' mode to large objects: write can deal with both
+bytes strings and unicode; read can return either bytes strings
+or decoded unicode.</li>
+<li>COPY sends Unicode data to files implementing 'io.TextIOBase'.</li>
+<li>Improved PostgreSQL-Python encodings mapping.</li>
+<li>Added a few missing encodings: EUC_CN, EUC_JIS_2004, ISO885910,
+ISO885916, LATIN10, SHIFT_JIS_2004.</li>
+<li>Dropped repeated dictionary lookups with unicode query/parameters.</li>
+</ul>
+<p>Improvements to the named cusors:</p>
+<ul class="simple">
+<li>More efficient iteration on named cursors, fetching 'itersize'
+records at time from the backend.</li>
+<li>The named cursors name can be an invalid identifier.</li>
+</ul>
+<p>Improvements in data handling:</p>
+<ul class="simple">
+<li>Added 'register_composite()' function to cast PostgreSQL
+composite types into Python tuples/namedtuples.</li>
+<li>Adapt types 'bytearray' (from Python 2.6), 'memoryview' (from
+Python 2.7) and other objects implementing the &quot;Revised Buffer
+Protocol&quot; to 'bytea' data type.</li>
+<li>The 'hstore' adapter can work even when the data type is not
+installed in the 'public' namespace.</li>
+<li>Raise a clean exception instead of returning bad data when
+receiving bytea in 'hex' format and the client libpq can't parse
+them.</li>
+<li>Empty lists correctly roundtrip Python -&gt; PostgreSQL -&gt; Python.</li>
+</ul>
+<p>Other changes:</p>
+<ul class="simple">
+<li>'cursor.description' is provided as named tuples if available.</li>
+<li>The build script refuses to guess values if 'pg_config' is not
+found.</li>
+<li>Connections and cursors are weakly referenceable.</li>
+</ul>
+<p>Bug fixes:</p>
+<ul class="simple">
+<li>Fixed adaptation of None in composite types (ticket #26). Bug
+report by Karsten Hilbert.</li>
+<li>Fixed several reference leaks in less common code paths.</li>
+<li>Fixed segfault when a large object is closed and its connection no
+more available.</li>
+<li>Added missing icon to ZPsycopgDA package, not available in Zope
+2.12.9 (ticket #30). Bug report and patch by Pumukel.</li>
+<li>Fixed conversion of negative infinity (ticket #40). Bug report and
+patch by Marti Raudsepp.</li>
+</ul>
+</div>
+
+  </div>
+
+  <div class="post-article__comments">
+    <script src="https://utteranc.es/client.js"
+      repo="psycopg/psycopg-website"
+      issue-term="pathname"
+      label="comments"
+      theme="github-dark"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </div>
+</article>
+
+      </main>
+      <div id="sidebar">
+      </div>
+      
+    </div>
+
+    <!-- ── Footer ─────────────────────────────────────────────────── -->
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p class="site-footer__copy">
+          &copy; The Psycopg Team<br/>
+          Psycopg is free software released under the
+          <a href="https://www.gnu.org/licenses/lgpl-3.0.en.html" rel="noopener">GNU LGPL license</a>.
+        </p>
+        <a href="/" class="site-footer__logo" aria-label="psycopg home">
+          <img src="/img/logo.png" alt="" width="40" height="40" />
+          <span>psycopg</span>
+        </a>
+      </div>
+    </footer>
+
+    <script src="/js/main.js" type="module"></script>
+  </body>
+</html>
+

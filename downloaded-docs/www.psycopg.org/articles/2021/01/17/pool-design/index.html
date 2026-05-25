@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Psycopg - PostgreSQL adapter for Python</title>
+    <meta
+      name="description"
+      content="Psycopg is the most popular PostgreSQL adapter for the Python programming language."
+    />
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/syntax.css?h=3b162580">
+  </head>
+  <body>
+    <!-- ── Navigation ─────────────────────────────────────────────── -->
+    <header class="site-header">
+      <nav class="nav">
+        <a href="/" class="nav__logo" aria-label="psycopg home">
+          <img src="/img/logo.png" alt="" width="48" height="48" />
+          <span>psycopg</span>
+        </a>
+        <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav__links" role="list">
+          <li><a href="/">home</a></li>
+          <li><a href="/#sponsors">sponsors</a></li>
+          <li><a href="/#features">features</a></li>
+          <li><a href="/#development">development</a></li>
+          <li><a href="/articles">articles</a></li>
+          <li><a href="/#maintainers">maintainers</a></li>
+          <li><a href="/#contact">contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="with_sidebar">
+      <main class="page">
+<article class="post-article">
+  <a href="/articles/" class="post-back">
+    <span class="pag-arrow">&#8592;</span>
+    <span class="post-back__label">articles</span>
+  </a>
+
+  <header class="post-article__header">
+    
+    <div class="post-article__tags"><a class="post-tag" href="/articles/tag/psycopg3/">psycopg3</a><a class="post-tag" href="/articles/tag/development/">development</a></div>
+    
+    <h1 class="post-article__title">Designing a connection pool for psycopg3</h1>
+    <div class="post-article__byline">
+      <span class="post-article__author">Daniele Varrazzo</span>
+      <time class="post-article__date" datetime="2021-01-17">17 Jan 2021</time>
+    </div>
+  </header>
+
+  <div class="post-article__body">
+    <p>The <a class="reference external" href="https://www.psycopg.org/docs/pool.html">psycopg2 pool</a> is a pretty simple object, little more than... a pool of
+open connections, and I think it falls short in several ways:</p>
+<ul class="simple">
+<li>the top usability problem is the fact that it cannot be used as context
+manager;</li>
+<li>if a connection is broken it is not noticed it until it is used by a client;</li>
+<li>if <tt class="docutils literal">minconn</tt> connections are already taken, a new one is created and
+disposed of as soon as finished using, regardless of whether other clients
+may need it;</li>
+<li>if more than <tt class="docutils literal">maxconn</tt> connections are requested the client will receive
+an error.</li>
+</ul>
+<p>For <tt class="docutils literal">psycopg3</tt> I would like something better. I have read around, looking
+into other pool implementations to figure out what a well designed connection
+pool ought to do (a very well thought one seems the Java <a class="reference external" href="https://github.com/brettwooldridge/HikariCP">HikariCP</a>) and
+these are a few ideas I'd like to work on: they are here for a feedback,
+before I jump into enthusiastically implementing the wrong thing...</p>
+<!-- CUT-HERE -->
+<div class="section" id="client-interface">
+<h2>Client interface</h2>
+<div class="section" id="context-manager">
+<h3>Context manager</h3>
+<p>In modern Python it is expected that resources are handled by a context
+manager, so the canonical way to use a pooled connection should be:</p>
+<pre class="code python literal-block">
+<span class="k">with</span> <span class="n">pool</span><span class="o">.</span><span class="n">connection</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span><span class="w">
+</span>    <span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span><span class="w">
+</span>    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">)</span><span class="w">
+</span>    <span class="n">consume_data</span><span class="p">(</span><span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">())</span>
+</pre>
+<p>Note that, because there is a <a class="reference external" href="https://www.psycopg.org/psycopg3/docs/connection.html#psycopg3.Connection.execute">Connection.execute()</a> method, the minimal use
+would be:</p>
+<pre class="code python literal-block">
+<span class="k">with</span> <span class="n">pool</span><span class="o">.</span><span class="n">connection</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span><span class="w">
+</span>    <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">DML_QUERY</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="blocking-behaviour">
+<h3>Blocking behaviour</h3>
+<p>Another important usability point is the behaviour in the face of an exhausted
+pool: the sane behaviour here is to block: not forever, but until either a
+connection is available or until a timeout expires, and only then throw an
+exception, so that in the face of a spike there is a buffer before requests
+start to get killed. I would expect no crash here:</p>
+<pre class="code python literal-block">
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">worker</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">work_for_sec</span><span class="p">):</span><span class="w">
+</span>    <span class="k">await</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;select pg_sleep(</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">work_for_sec</span><span class="p">,))</span><span class="w">
+
+</span><span class="n">pool</span> <span class="o">=</span> <span class="n">psycopg3</span><span class="o">.</span><span class="n">AsyncPool</span><span class="p">(</span><span class="n">maxconn</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">connection_timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span><span class="w">
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span><span class="w">
+</span>    <span class="k">async</span> <span class="k">with</span> <span class="n">pool</span><span class="o">.</span><span class="n">connection</span><span class="p">():</span><span class="w">
+</span>        <span class="n">create_task</span><span class="p">(</span><span class="n">worker</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">work_for_sec</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+</pre>
+<p>Which also illustrates that, as many other objects in <tt class="docutils literal">psycopg3</tt>, there
+would be an <a class="reference external" href="https://docs.python.org/3/library/asyncio.html">asyncio</a> version of the object and a sync one (which would work
+with normal threads and with Eventlet/gevent green threads).</p>
+</div>
+<div class="section" id="connection-configuration">
+<h3>Connection configuration</h3>
+<p>There should be a way to configure a Python connection, for instance to
+register adapters, before it is available to the application. Is subclassing
+the best way to do it? Someone might find more useful to choose dynamically
+what configuration to use.</p>
+<pre class="code python literal-block">
+<span class="c1"># Subclassing:</span><span class="w">
+
+</span><span class="k">class</span><span class="w"> </span><span class="nc">MyPool</span><span class="p">(</span><span class="n">psycopg3</span><span class="o">.</span><span class="n">pool</span><span class="p">):</span><span class="w">
+</span>    <span class="k">def</span><span class="w"> </span><span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">):</span><span class="w">
+</span>        <span class="n">MyAdapter</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span><span class="w">
+</span>        <span class="k">return</span> <span class="n">conn</span><span class="w">
+
+</span><span class="n">pool</span> <span class="o">=</span> <span class="n">MyPool</span><span class="p">()</span><span class="w">
+
+</span><span class="c1"># Configuring:</span><span class="w">
+
+</span><span class="k">def</span><span class="w"> </span><span class="nf">my_configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">):</span><span class="w">
+</span>    <span class="n">MyAdapter</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span><span class="w">
+</span>    <span class="k">return</span> <span class="n">conn</span><span class="w">
+
+</span><span class="n">pool</span> <span class="o">=</span> <span class="n">psycopg3</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">configure_func</span><span class="o">=</span><span class="n">my_configure</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="exclusive-connections">
+<h3>Exclusive connections?</h3>
+<p>Should there be a way to create an exclusive connection? Sometimes I need
+one, in an otherwise pooled application, e.g. to receive notifications:</p>
+<pre class="code python literal-block">
+<span class="k">def</span><span class="w"> </span><span class="nf">listen_notifications</span><span class="p">():</span><span class="w">
+</span>    <span class="k">with</span> <span class="n">pool</span><span class="o">.</span><span class="n">exclusive</span><span class="p">()</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span><span class="w">
+</span>        <span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span><span class="w">
+</span>        <span class="k">for</span> <span class="n">notify</span> <span class="ow">in</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span><span class="o">.</span><span class="n">notifies</span><span class="p">():</span><span class="w">
+</span>            <span class="n">handle_notification</span><span class="p">(</span><span class="n">notify</span><span class="p">)</span>
+</pre>
+<p>But I don't think there is such need if the connection parameters are made
+available on the pool:</p>
+<pre class="code python literal-block">
+<span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">maxconn</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">pool_maxconn</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">db_dsn</span><span class="p">,))</span><span class="w">
+
+</span><span class="k">def</span><span class="w"> </span><span class="nf">listen_notifications</span><span class="p">():</span><span class="w">
+</span>    <span class="k">with</span> <span class="n">psycopg3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">*</span><span class="n">pool</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">pool</span><span class="o">.</span><span class="n">kwargs</span><span class="p">):</span><span class="w">
+</span>        <span class="n">conn</span><span class="o">.</span><span class="n">autocommit</span> <span class="o">=</span> <span class="kc">True</span><span class="w">
+</span>        <span class="k">for</span> <span class="n">notify</span> <span class="ow">in</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span><span class="o">.</span><span class="n">notifies</span><span class="p">():</span><span class="w">
+</span>            <span class="n">handle_notification</span><span class="p">(</span><span class="n">notify</span><span class="p">)</span>
+</pre>
+<p>which leaves to the user the choice between what connection class to use,
+how to configure it, etc. So that's probably not so useful.</p>
+</div>
+</div>
+<div class="section" id="internal-behaviour">
+<h2>Internal behaviour</h2>
+<div class="section" id="pool-worker">
+<h3>Pool worker</h3>
+<p>If we desire the pool to be a fast provider of connection, not slowing down
+the application operations, certain things should happen behind the scene:</p>
+<ul class="simple">
+<li>do we have a spike, so we need more connections?</li>
+<li>do we have a moment of calm, so we can do with less connections?</li>
+<li>are the connections in the pool still sane?</li>
+</ul>
+<p>A trivial behaviour would be something like &quot;if there are no connections
+available create a new one&quot;:</p>
+<pre class="code python literal-block">
+<span class="k">class</span><span class="w"> </span><span class="nc">Pool</span><span class="p">:</span><span class="w">
+</span>    <span class="k">def</span><span class="w"> </span><span class="nf">getconn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>        <span class="n">conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_a_connection_from_the_pool</span><span class="p">()</span><span class="w">
+</span>        <span class="k">if</span> <span class="n">conn</span><span class="p">:</span><span class="w">
+</span>            <span class="k">return</span> <span class="n">conn</span><span class="w">
+</span>        <span class="k">else</span><span class="p">:</span><span class="w">
+</span>            <span class="n">conn</span> <span class="o">=</span> <span class="n">psycopg3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span><span class="w">
+</span>            <span class="bp">self</span><span class="o">.</span><span class="n">_put_it_in_the_pool_when_done</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span><span class="w">
+</span>            <span class="k">return</span> <span class="n">conn</span>
+</pre>
+<p>This <a class="reference external" href="https://github.com/brettwooldridge/HikariCP/blob/dev/documents/Welcome-To-The-Jungle.md">interesting article</a> shows that this might not be the best way to do
+it, especially if the connection time is particularly long compared to the
+processing time. Growing the pool could be demanded to a background worker,
+following a strategy like:</p>
+<pre class="code python literal-block">
+<span class="k">class</span><span class="w"> </span><span class="nc">Pool</span><span class="p">:</span><span class="w">
+</span>    <span class="k">def</span><span class="w"> </span><span class="nf">getconn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pool</span><span class="p">():</span><span class="w">
+</span>            <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">create_a_new_connection_and_put_it_in_the_pool</span><span class="p">()</span><span class="w">
+</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_a_connection_from_the_pool</span><span class="p">()</span>
+</pre>
+<p>If there is a workers infrastructure in place there can me more jobs for them:
+periodically checking for the state of the unused connections in the pool, for
+instance, or closing them if they have been alive more than a configured
+amount of time (30 minutes?) and replacing them with a fresh one, (or not
+replacing them in case we have more than <tt class="docutils literal">minconn</tt> connections and a
+previous spike has now passed).</p>
+</div>
+<div class="section" id="what-to-do-in-case-of-connection-failure">
+<h3>What to do in case of connection failure?</h3>
+<p>The pool acts as a shield helping the application to reconnect in case the
+connection with the database is lost. However, when does this behaviour stop
+being sane? If the database is unreachable - maybe misconfigured, maybe moved
+- there is a risk that the application doesn't die, because the pool keeps
+insisting to reconnect, but it doesn't work either, because there is no
+working database connection.</p>
+<p>In my experience with live systems this can be a difficult condition to
+diagnose: several times I have wished that an application, screaming loud on a
+dashboard, instead of trying to stay up complaining quietly in some logging
+stream. On the other hand maybe the state the application holds is precious
+enough that it can be worth to wait a few minutes before crashing and burning.</p>
+<p>A first step towards a sane behaviour could be to die early, on startup, if
+the connection is not working when the first pool population is done: the
+program would fail hard and fast if the database - assumed to be a
+prerequisite - is nowhere to be found.</p>
+<p>What if the database is missing in action during the program lifetime?
+Following connection attempts may be repeated, with an exponential backoff,
+until dying after a few minutes of fruitless attempts (with a <tt class="docutils literal">sys.exit(1)</tt>
+or some other termination function which might be subclassed).</p>
+</div>
+<div class="section" id="connections-usage-pattern">
+<h3>Connections usage pattern</h3>
+<p>In which order should the connections in the pool be used? As a stack (put
+back a connection on top of the stack, it will be the next one to use)? As a
+queue (put back the connection at the bottom of the queue, try to use them
+uniformly)? Randomly (whatever comes out from whatever hash map used to keep
+the connection)?</p>
+<p>Is there a reason to prefer one way or the other? ISTM that a stack behaviour
+allows a better reuse of prepared statements and an easy implementation of
+the <tt class="docutils literal">max_idle_sec</tt> parameter (get connections from the top of the stack,
+evict idle ones from the bottom). I am sure I haven't thought about this well
+enough though.</p>
+</div>
+</div>
+<div class="section" id="proposed-api">
+<h2>Proposed API</h2>
+<p>Given the behaviour described, the methods available on the pool object might
+look like the ones described here.</p>
+<p>The interface would be implemented in two version: a <tt class="docutils literal">Pool</tt> class
+using normal blocking functions and threads for concurrency (which greenlet
+libraries such as Eventlet or gevent would be able to monkeypatch) and an
+<tt class="docutils literal">AsyncPool</tt> implementation using the usual <tt class="docutils literal">await</tt> and <tt class="docutils literal">async with</tt> on
+blocking methods and using <tt class="docutils literal">asyncio.Task</tt> for concurrency.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal">connection(timeout_sec=None)</tt> method:</dt>
+<dd><p class="first">Open a context block and return a connection from the pool. The connection
+is returned to the pool at the end of the block.</p>
+<p class="last">On block exit, if a transaction is open, <strong>commit or roll back</strong> an open
+transaction, according to whether an exception has been raised in the
+block, consistently with what the <a class="reference external" href="https://www.psycopg.org/psycopg3/docs/transactions.html#transaction-blocks">connection block</a> does.</p>
+</dd>
+<dt><tt class="docutils literal">getconn(timeout_sec)</tt>, <tt class="docutils literal">putconn(conn)</tt> methods:</dt>
+<dd><p class="first">Obtain a connection from the pool and return it. To use if, for some
+reason, the context manager cannot be used.</p>
+<p class="last">On <tt class="docutils literal">putconn()</tt> check the state of the connection: if it is broken
+dispose of it and create a new one; if in state of transaction of error
+<strong>roll back the transaction</strong>, consistently with what
+<a class="reference external" href="https://www.psycopg.org/psycopg3/docs/connection.html#psycopg3.Connection.close">Connection.close()</a> does.</p>
+</dd>
+<dt><tt class="docutils literal">close()</tt></dt>
+<dd>Close all the connections in the pool. Further attempts to create a new
+connection will fail immediately with a helpful message (like, &quot;dude,
+what do you want to do, seriously?&quot;)</dd>
+<dt><tt class="docutils literal">configure(conn)</tt>:</dt>
+<dd>Configure a connection before making it available to the pool. The default
+implementation is no-op: subclasses may override it to configure the
+connections; alternatively a <tt class="docutils literal">configure_func</tt> might be passed to the
+<tt class="docutils literal">Pool</tt> constructor.</dd>
+<dt><tt class="docutils literal">get_info()</tt>:</dt>
+<dd>Return stats about the behaviour of the pool so far (connections open,
+reused, returned...) for monitoring.</dd>
+<dt><tt class="docutils literal">terminate()</tt></dt>
+<dd>Terminate the program, invoked by a pool worker after connection attempts
+have been repeatedly fruitless. It is exposed to allow overriding the
+default behaviour (<tt class="docutils literal">sys.exit(1)</tt>) in a subclass.</dd>
+<dt><tt class="docutils literal">get_maintenance_task()</tt>:</dt>
+<dd><p class="first">Get the next maintenance task to perform on the pool. Having them
+available externally would make possible to have full control of when such
+tasks are executed (useful for testing or to provide some sort of
+sync behaviour, using no background worker).</p>
+<p class="last">Experimental idea: will drop it if it would make the pool implementation
+more difficult than it should be.</p>
+</dd>
+</dl>
+<div class="section" id="key-configuration-parameters">
+<h3>Key configuration parameters</h3>
+<p>These parameter would be passed to the class constructor.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal">minconn</tt>:</dt>
+<dd>Minimum number of connections to keep open in the pool. If some are closed
+the pool should try to create new ones as quickly as possible to replace
+them. Proposed default: 4 (very defensive: to enable the pooling behaviour
+but to avoid to saturate a server unless configured up).</dd>
+<dt><tt class="docutils literal">maxconn</tt>:</dt>
+<dd>Maximum number of connections to open at any given time. If <tt class="docutils literal">maxconn</tt> ==
+<tt class="docutils literal">minconn</tt> no extra connection is created in case more client requests
+arrive: they will just wait until a connection is made available again. If
+<tt class="docutils literal">maxconn</tt> &gt; <tt class="docutils literal">minconn</tt> the pool can create new connections if the demand
+increases; later the extra connections created may be closed if deemed no
+more required (default: <tt class="docutils literal">minconn</tt>).</dd>
+<dt><tt class="docutils literal">args</tt>, <tt class="docutils literal">kwargs</tt>:</dt>
+<dd>Arguments to pass to the <tt class="docutils literal">connection_factory</tt> to create a new connection
+(default: empty, connect as per <a class="reference external" href="https://www.postgresql.org/docs/current/libpq-envars.html">PG* env vars</a>, like
+<tt class="docutils literal">psycopg3.connect()</tt>).</dd>
+<dt><tt class="docutils literal">connection_factory</tt>:</dt>
+<dd>The connection class to create (default: <a class="reference external" href="https://www.psycopg.org/psycopg3/docs/connection.html#psycopg3.Connection">Connection</a> for <tt class="docutils literal">Pool</tt>,
+<a class="reference external" href="https://www.psycopg.org/psycopg3/docs/connection.html#psycopg3.AsyncConnection">AsyncConnection</a> for <tt class="docutils literal">AsyncPool</tt>).</dd>
+<dt><tt class="docutils literal">configure_function</tt>:</dt>
+<dd>A function to configure the connection after its creation and before making
+it available to the pool. Alternative to subclassing the <tt class="docutils literal">Pool</tt> class to
+configure <tt class="docutils literal">Pool.configure()</tt>. It can be a callable taking a connection as
+parameter, or the dotted name of such callable, so that e.g. the function
+name might be passed to the application as an env var.</dd>
+<dt><tt class="docutils literal">timeout_sec</tt>:</dt>
+<dd>Default timeout before raising an exception if a connection
+cannot be served. It may be overridden by
+<tt class="docutils literal"><span class="pre">Pool.connection(timeout_sec=...)</span></tt> (default: 30 sec).</dd>
+<dt><tt class="docutils literal">max_lifetime_sec</tt>:</dt>
+<dd>Maximum time a connection should be kept in the pool
+and used. After such time, when the connection is not in use, it can be
+closed and replaced by a new one (default: 30 minutes - 10% random factor to
+avoid mass evictions).</dd>
+<dt><tt class="docutils literal">max_idle_sec</tt>:</dt>
+<dd>Time a connection can sit idle in the pool before being removed. Only
+connections above <tt class="docutils literal">minconn</tt> are removed, if <tt class="docutils literal">maxconn</tt> allows to create
+them (default: 10 min + 10% random).</dd>
+<dt><tt class="docutils literal">terminate_after_sec</tt>:</dt>
+<dd>Number of seconds to wait for a reconnection attempt before giving up and
+terminate the program, calling <tt class="docutils literal">Pool.terminate()</tt> (default: 5 min,
+starting from 1sec ± 10%, doubled up until the precise threshold, then
+kaputt).</dd>
+<dt><tt class="docutils literal">num_workers</tt>:</dt>
+<dd>Number of background workers to perform maintenance tasks. If set to 0 the
+dynamic characteristics of the pool might be downgraded (e.g. creating a new
+connection will happen in the requesting thread, blocking it for the time it
+takes). Background jobs might be executed by the application calling
+<tt class="docutils literal">get_maintenance_task()</tt> (default: 3).</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="thoughts">
+<h2>Thoughts?</h2>
+<p>Please let me know what you think your Best Ever Connection Pool for psycopg3
+should do. Thank you very much!</p>
+</div>
+
+  </div>
+
+  <div class="post-article__comments">
+    <script src="https://utteranc.es/client.js"
+      repo="psycopg/psycopg-website"
+      issue-term="pathname"
+      label="comments"
+      theme="github-dark"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </div>
+</article>
+
+      </main>
+      <div id="sidebar">
+      </div>
+      
+    </div>
+
+    <!-- ── Footer ─────────────────────────────────────────────────── -->
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p class="site-footer__copy">
+          &copy; The Psycopg Team<br/>
+          Psycopg is free software released under the
+          <a href="https://www.gnu.org/licenses/lgpl-3.0.en.html" rel="noopener">GNU LGPL license</a>.
+        </p>
+        <a href="/" class="site-footer__logo" aria-label="psycopg home">
+          <img src="/img/logo.png" alt="" width="40" height="40" />
+          <span>psycopg</span>
+        </a>
+      </div>
+    </footer>
+
+    <script src="/js/main.js" type="module"></script>
+  </body>
+</html>
+

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Psycopg - PostgreSQL adapter for Python</title>
+    <meta
+      name="description"
+      content="Psycopg is the most popular PostgreSQL adapter for the Python programming language."
+    />
+    <link rel="icon" type="image/png" href="/img/logo.png" />
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/syntax.css?h=3b162580">
+  </head>
+  <body>
+    <!-- ── Navigation ─────────────────────────────────────────────── -->
+    <header class="site-header">
+      <nav class="nav">
+        <a href="/" class="nav__logo" aria-label="psycopg home">
+          <img src="/img/logo.png" alt="" width="48" height="48" />
+          <span>psycopg</span>
+        </a>
+        <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav__links" role="list">
+          <li><a href="/">home</a></li>
+          <li><a href="/#sponsors">sponsors</a></li>
+          <li><a href="/#features">features</a></li>
+          <li><a href="/#development">development</a></li>
+          <li><a href="/articles">articles</a></li>
+          <li><a href="/#maintainers">maintainers</a></li>
+          <li><a href="/#contact">contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="with_sidebar">
+      <main class="page">
+<article class="post-article">
+  <a href="/articles/" class="post-back">
+    <span class="pag-arrow">&#8592;</span>
+    <span class="post-back__label">articles</span>
+  </a>
+
+  <header class="post-article__header">
+    
+    <div class="post-article__tags"><a class="post-tag" href="/articles/tag/recipe/">recipe</a></div>
+    
+    <h1 class="post-article__title">Prepared statements in Psycopg</h1>
+    <div class="post-article__byline">
+      <span class="post-article__author">Daniele Varrazzo</span>
+      <time class="post-article__date" datetime="2012-10-01">01 Oct 2012</time>
+    </div>
+  </header>
+
+  <div class="post-article__body">
+    <p>Although the libpq library supports <a class="reference external" href="https://www.postgresql.org/docs/current/static/libpq-exec.html#LIBPQ-PQPREPARE">prepared statements</a>, psycopg2 doesn't offer yet a direct way to access the relevant functions. This will probably change in the future, but in the meantime it is possible to use prepared statements in PostgreSQL using the <a class="reference external" href="https://www.postgresql.org/docs/current/static/sql-prepare.html">PREPARE</a> SQL command.</p>
+<!-- CUT-HERE -->
+<p>Whenever you have a loop where the same parametrized query or command is executed:</p>
+<pre class="code python literal-block">
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span><span class="w">
+</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span><span class="w">
+</span>    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="w">
+</span>        <span class="s2">&quot;select * from tables where i = </span><span class="si">%s</span><span class="s2"> and j = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span><span class="w">
+</span>        <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span><span class="w">
+</span>    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">cur</span><span class="p">:</span><span class="w">
+</span>        <span class="n">do_something_with</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+</pre>
+<p>you can actually ask PostgreSQL to prepare the plan in advance and use it, saving time in the inner loop:</p>
+<pre class="code python literal-block">
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span><span class="w">
+</span><span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="w">
+</span>    <span class="s2">&quot;prepare myplan as &quot;</span><span class="w">
+</span>    <span class="s2">&quot;select * from tables where i = $1 and j = $2&quot;</span><span class="p">)</span><span class="w">
+</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span><span class="w">
+</span>    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;execute myplan (</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span><span class="w">
+</span>    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">cur</span><span class="p">:</span><span class="w">
+</span>        <span class="n">do_something_with</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+</pre>
+<p>The time saved could be relevant for complex queries which are fast to execute; for queries that instead take several seconds to complete, the planning time is probably negligible so there wouldn't be much to save. Note that the query passed to <tt class="docutils literal">PREPARE</tt> uses Postgres-style placeholders (<tt class="docutils literal">$1</tt>, <tt class="docutils literal">$2</tt>...) instead of the familiar Python-style <tt class="docutils literal">%s</tt> or <tt class="docutils literal">%(name)s</tt>.</p>
+<p>So is psycopg useless in this case? Is the burden of executing <tt class="docutils literal">PREPARE</tt> on the poor user? Well, it's actually easy to write a <a class="reference external" href="https://gist.github.com/3797445">cursor subclass implementing prepared statements</a>. The proposed <tt class="docutils literal">PreparingCursor</tt> doesn't <tt class="docutils literal">PREPARE</tt> each statement passed to <tt class="docutils literal">execute()</tt>: this would be harmful as it involves an extra roundtrip to the server and the plan for a prepared statements is sometimes less efficient than one calculated with the knowledge of the real parameters used. So the proposed class exposes an explicit <tt class="docutils literal">prepare()</tt> method: it takes a query (written with Python-style placeholders, so exactly the one you would have used with <tt class="docutils literal">execute()</tt>), replaces it with Postgres-style placeholders and <tt class="docutils literal">PREPARE</tt>s it. In further calls to <tt class="docutils literal">execute()</tt> the query can be omitted: in this case (or if the query is the one prepared) the prepared statement is executed instead.</p>
+<p>Using the <tt class="docutils literal">PreparingCursor</tt> the above example could be written as:</p>
+<pre class="code python literal-block">
+<span class="n">cur</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">(</span><span class="n">cursor_factory</span><span class="o">=</span><span class="n">PreparingCursor</span><span class="p">)</span><span class="w">
+</span><span class="n">cur</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="w">
+</span>    <span class="s2">&quot;select * from tables where i = </span><span class="si">%s</span><span class="s2"> and j = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span><span class="w">
+</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span><span class="w">
+</span>    <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span><span class="w">
+</span>    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">cur</span><span class="p">:</span><span class="w">
+</span>        <span class="n">do_something_with</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+</pre>
+<p>The preparing cursor also overrides <tt class="docutils literal">executemany()</tt>: in this case the query is always prepared as it is assumed that it will be executed more than once. Other extensions are a <tt class="docutils literal">prepared</tt> attribute, returning the prepared statement if any, and a <tt class="docutils literal">deallocate()</tt> method to release the prepared statement (which would be deleted anyway at the end of the session).</p>
+<p>The preparing cursor may find its way into a future psycopg2 release, but its design is not finalized yet and several details, both in the interface and the implementation, could be done in different ways. So please use it and give us feedback: we'll use it to design the optimal implementation for Psycopg!</p>
+
+  </div>
+
+  <div class="post-article__comments">
+    <script src="https://utteranc.es/client.js"
+      repo="psycopg/psycopg-website"
+      issue-term="pathname"
+      label="comments"
+      theme="github-dark"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </div>
+</article>
+
+      </main>
+      <div id="sidebar">
+      </div>
+      
+    </div>
+
+    <!-- ── Footer ─────────────────────────────────────────────────── -->
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p class="site-footer__copy">
+          &copy; The Psycopg Team<br/>
+          Psycopg is free software released under the
+          <a href="https://www.gnu.org/licenses/lgpl-3.0.en.html" rel="noopener">GNU LGPL license</a>.
+        </p>
+        <a href="/" class="site-footer__logo" aria-label="psycopg home">
+          <img src="/img/logo.png" alt="" width="40" height="40" />
+          <span>psycopg</span>
+        </a>
+      </div>
+    </footer>
+
+    <script src="/js/main.js" type="module"></script>
+  </body>
+</html>
+
