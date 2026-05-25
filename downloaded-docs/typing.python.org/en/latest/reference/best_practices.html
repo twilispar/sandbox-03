@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Typing Best Practices &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Testing and Ensuring Type Annotation Quality" href="quality.html" />
+    <link rel="prev" title="Protocols and structural subtyping" href="protocols.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/reference/best_practices.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Typing Best Practices</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#typing-features">Typing Features</a><ul>
+<li><a class="reference internal" href="#type-aliases">Type Aliases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ergonomic-practices">Ergonomic Practices</a><ul>
+<li><a class="reference internal" href="#using-any-and-object">Using <code class="docutils literal notranslate"><span class="pre">Any</span></code> and <code class="docutils literal notranslate"><span class="pre">object</span></code></a></li>
+<li><a class="reference internal" href="#arguments-and-return-types">Arguments and Return Types</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stylistic-practices">Stylistic Practices</a><ul>
+<li><a class="reference internal" href="#shorthand-syntax">Shorthand Syntax</a></li>
+<li><a class="reference internal" href="#types">Types</a></li>
+<li><a class="reference internal" href="#built-in-generics">Built-in Generics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="protocols.html"
+                          title="previous chapter">Protocols and structural subtyping</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quality.html"
+                          title="next chapter">Testing and Ensuring Type Annotation Quality</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/best_practices.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="quality.html" title="Testing and Ensuring Type Annotation Quality"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="protocols.html" title="Protocols and structural subtyping"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Typing Best Practices</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="typing-best-practices">
+<span id="best-practices"></span><h1>Typing Best Practices<a class="headerlink" href="#typing-best-practices" title="Link to this heading">¶</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<p>Over time, some best practices have proven themselves as useful when working
+with type hints in Python. Not all practices are applicable in all situations
+and some practices come down to personal style and preference, but they
+are a good default set of recommendations to fall back to, unless there is
+a specific reason to deviate.</p>
+<p>These best practices are constantly evolving, especially as the typing
+capabilities and ecosystem grow. So expect new best practices to be added
+and existing best practices to be modified or even removed as better practices
+evolve. That is why we would love to hear from your experiences with typing.
+Please see <a class="reference internal" href="../index.html#contact"><span class="std std-ref">Discussions and Support</span></a> on how to join the discussion.</p>
+</section>
+<section id="typing-features">
+<h2>Typing Features<a class="headerlink" href="#typing-features" title="Link to this heading">¶</a></h2>
+<section id="type-aliases">
+<h3>Type Aliases<a class="headerlink" href="#type-aliases" title="Link to this heading">¶</a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">TypeAlias</span></code> for type aliases (but not for regular aliases).</p>
+<p>Yes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_IntList</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span>
+<span class="n">Path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span>
+<span class="n">ERROR</span> <span class="o">=</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span>
+</pre></div>
+</div>
+<p>No:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_IntList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="n">g</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span>
+<span class="n">Path</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span>
+<span class="n">ERROR</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="ergonomic-practices">
+<h2>Ergonomic Practices<a class="headerlink" href="#ergonomic-practices" title="Link to this heading">¶</a></h2>
+<section id="using-any-and-object">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">Any</span></code> and <code class="docutils literal notranslate"><span class="pre">object</span></code><a class="headerlink" href="#using-any-and-object" title="Link to this heading">¶</a></h3>
+<p>Generally, use <code class="docutils literal notranslate"><span class="pre">Any</span></code> when a type cannot be expressed appropriately
+with the current type system or using the correct type is unergonomic.</p>
+<p>If a function accepts every possible object as an argument, for example
+because it’s only passed to <code class="docutils literal notranslate"><span class="pre">str()</span></code>, use <code class="docutils literal notranslate"><span class="pre">object</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Any</span></code> as
+type annotation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">print_formatted</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">o</span><span class="si">:</span><span class="s2">02</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Similarly, if the return value of a callback is ignored,
+annotate it with <code class="docutils literal notranslate"><span class="pre">object</span></code>, not <code class="docutils literal notranslate"><span class="pre">Any</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">call_cb</span><span class="p">(</span><span class="n">cb</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">cb</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="arguments-and-return-types">
+<span id="argument-return-practices"></span><h3>Arguments and Return Types<a class="headerlink" href="#arguments-and-return-types" title="Link to this heading">¶</a></h3>
+<p>For arguments, prefer protocols and abstract types (<code class="docutils literal notranslate"><span class="pre">Mapping</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Sequence</span></code>, <code class="docutils literal notranslate"><span class="pre">Iterable</span></code>, etc.). If an argument accepts literally any value,
+use <code class="docutils literal notranslate"><span class="pre">object</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Any</span></code>.</p>
+<p>For return values, prefer concrete types (<code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">dict</span></code>, etc.) for
+concrete implementations. The return values of protocols
+and abstract base classes must be judged on a case-by-case basis.</p>
+<p>Yes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">map_it</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_map</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_string</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># accepts any object</span>
+</pre></div>
+</div>
+<p>No:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">map_it</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_map</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_string</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Maybe:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyProto</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Avoid union return types, since they require <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> checks.
+Use <code class="docutils literal notranslate"><span class="pre">Any</span></code> or <code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">|</span> <span class="pre">Any</span></code> if necessary.</p>
+</section>
+</section>
+<section id="stylistic-practices">
+<h2>Stylistic Practices<a class="headerlink" href="#stylistic-practices" title="Link to this heading">¶</a></h2>
+<section id="shorthand-syntax">
+<h3>Shorthand Syntax<a class="headerlink" href="#shorthand-syntax" title="Link to this heading">¶</a></h3>
+<p>Where possible, use shorthand syntax for unions instead of
+<code class="docutils literal notranslate"><span class="pre">Union</span></code> or <code class="docutils literal notranslate"><span class="pre">Optional</span></code>. <code class="docutils literal notranslate"><span class="pre">None</span></code> should be the last
+element of an union.</p>
+<p>Yes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>No:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">baz</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="types">
+<h3>Types<a class="headerlink" href="#types" title="Link to this heading">¶</a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">float</span></code> instead of <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">float</span></code>.
+Use <code class="docutils literal notranslate"><span class="pre">None</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Literal[None]</span></code>.</p>
+</section>
+<section id="built-in-generics">
+<h3>Built-in Generics<a class="headerlink" href="#built-in-generics" title="Link to this heading">¶</a></h3>
+<p>Use built-in generics instead of the aliases from <code class="docutils literal notranslate"><span class="pre">typing</span></code>,
+where possible.</p>
+<p>Yes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">MyClass</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>No:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Type</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">MyClass</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Typing Best Practices</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#typing-features">Typing Features</a><ul>
+<li><a class="reference internal" href="#type-aliases">Type Aliases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ergonomic-practices">Ergonomic Practices</a><ul>
+<li><a class="reference internal" href="#using-any-and-object">Using <code class="docutils literal notranslate"><span class="pre">Any</span></code> and <code class="docutils literal notranslate"><span class="pre">object</span></code></a></li>
+<li><a class="reference internal" href="#arguments-and-return-types">Arguments and Return Types</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stylistic-practices">Stylistic Practices</a><ul>
+<li><a class="reference internal" href="#shorthand-syntax">Shorthand Syntax</a></li>
+<li><a class="reference internal" href="#types">Types</a></li>
+<li><a class="reference internal" href="#built-in-generics">Built-in Generics</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="protocols.html"
+                          title="previous chapter">Protocols and structural subtyping</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quality.html"
+                          title="next chapter">Testing and Ensuring Type Annotation Quality</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/best_practices.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="quality.html" title="Testing and Ensuring Type Annotation Quality"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="protocols.html" title="Protocols and structural subtyping"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Typing Best Practices</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

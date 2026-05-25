@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Class type assignability &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Type aliases" href="aliases.html" />
+    <link rel="prev" title="Type qualifiers" href="qualifiers.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/class-compat.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Class type assignability</a><ul>
+<li><a class="reference internal" href="#classvar"><code class="docutils literal notranslate"><span class="pre">ClassVar</span></code></a></li>
+<li><a class="reference internal" href="#override"><code class="docutils literal notranslate"><span class="pre">&#64;override</span></code></a><ul>
+<li><a class="reference internal" href="#strict-enforcement-per-project">Strict Enforcement Per-Project</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="qualifiers.html"
+                          title="previous chapter">Type qualifiers</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="aliases.html"
+                          title="next chapter">Type aliases</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/class-compat.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="aliases.html" title="Type aliases"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="qualifiers.html" title="Type qualifiers"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Class type assignability</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="class-type-assignability">
+<span id="class-compat"></span><h1>Class type assignability<a class="headerlink" href="#class-type-assignability" title="Link to this heading">¶</a></h1>
+<section id="classvar">
+<span id="id1"></span><h2><code class="docutils literal notranslate"><span class="pre">ClassVar</span></code><a class="headerlink" href="#classvar" title="Link to this heading">¶</a></h2>
+<p>(Originally specified in <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0526/"><strong>PEP 526</strong></a>.)</p>
+<p>The <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ClassVar" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">typing.ClassVar</span></code></a> <a class="reference internal" href="glossary.html#term-type-qualifier"><span class="xref std std-term">type qualifier</span></a> is used to annotate
+class variables that should not be set on class instances. This restriction
+is enforced by static checkers, but not at runtime.</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ClassVar" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">ClassVar</span></code></a> may be used in one of several forms:</p>
+<ul>
+<li><p>With an explicit type, using the syntax <code class="docutils literal notranslate"><span class="pre">ClassVar[&lt;type&gt;]</span></code>. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">C</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</li>
+<li><p>With no type annotation. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">C</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">ClassVar</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">z</span><span class="p">:</span> <span class="n">ClassVar</span>
+</pre></div>
+</div>
+<p>If an assigned value is available (e.g. with <code class="docutils literal notranslate"><span class="pre">y</span></code>), the type should be
+inferred as some type to which this value is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> (for example,
+<code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">Literal[2]</span></code>, or <code class="docutils literal notranslate"><span class="pre">Any</span></code>).</p>
+<p>If the bare <code class="docutils literal notranslate"><span class="pre">ClassVar</span></code> qualifier is used without any assigned value, the type
+should be inferred as <a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a>. Type checkers may error if no assigned
+value is present.</p>
+</li>
+</ul>
+<p>Type annotations can be used to annotate class and instance variables
+in class bodies and methods. In particular, the value-less notation <code class="docutils literal notranslate"><span class="pre">a:</span> <span class="pre">int</span></code>
+allows one to annotate instance variables that should be initialized
+in <code class="docutils literal notranslate"><span class="pre">__init__</span></code> or <code class="docutils literal notranslate"><span class="pre">__new__</span></code>. The syntax is as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">BasicStarship</span><span class="p">:</span>
+    <span class="n">captain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Picard&#39;</span>               <span class="c1"># instance variable with default</span>
+    <span class="n">damage</span><span class="p">:</span> <span class="nb">int</span>                           <span class="c1"># instance variable without default</span>
+    <span class="n">stats</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># class variable</span>
+</pre></div>
+</div>
+<p>Here <code class="docutils literal notranslate"><span class="pre">ClassVar</span></code> is a <a class="reference internal" href="glossary.html#term-special-form"><span class="xref std std-term">special form</span></a> defined by the <a class="reference external" href="https://docs.python.org/3/library/typing.html#module-typing" title="(in Python v3.14)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">typing</span></code></a> module that
+indicates to the static type checker that this variable should not be
+set on instances.</p>
+<p>Note that a <code class="docutils literal notranslate"><span class="pre">ClassVar</span></code> parameter cannot include any type variables, regardless
+of the level of nesting: <code class="docutils literal notranslate"><span class="pre">ClassVar[T]</span></code> and <code class="docutils literal notranslate"><span class="pre">ClassVar[list[set[T]]]</span></code> are
+both invalid if <code class="docutils literal notranslate"><span class="pre">T</span></code> is a type variable.</p>
+<p>This could be illustrated with a more detailed example. In this class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Starship</span><span class="p">:</span>
+    <span class="n">captain</span> <span class="o">=</span> <span class="s1">&#39;Picard&#39;</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">damage</span><span class="p">,</span> <span class="n">captain</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">damage</span>
+        <span class="k">if</span> <span class="n">captain</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">captain</span> <span class="o">=</span> <span class="n">captain</span>  <span class="c1"># Else keep the default</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">hit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Starship</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Starship</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hits&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">stats</span></code> is intended to be a class variable (keeping track of many different
+per-game statistics), while <code class="docutils literal notranslate"><span class="pre">captain</span></code> is an instance variable with a default
+value set in the class. This difference might not be seen by a type
+checker: both get initialized in the class, but <code class="docutils literal notranslate"><span class="pre">captain</span></code> serves only
+as a convenient default value for the instance variable, while <code class="docutils literal notranslate"><span class="pre">stats</span></code>
+is truly a class variable – it is intended to be shared by all instances.</p>
+<p>Since both variables happen to be initialized at the class level, it is
+useful to distinguish them by marking class variables as annotated with
+types wrapped in <code class="docutils literal notranslate"><span class="pre">ClassVar[...]</span></code>. In this way a type checker may flag
+accidental assignments to attributes with the same name on instances.</p>
+<p>For example, annotating the discussed class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Starship</span><span class="p">:</span>
+    <span class="n">captain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Picard&#39;</span>
+    <span class="n">damage</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">stats</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">damage</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">captain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">damage</span>
+        <span class="k">if</span> <span class="n">captain</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">captain</span> <span class="o">=</span> <span class="n">captain</span>  <span class="c1"># Else keep the default</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">hit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Starship</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Starship</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hits&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">enterprise_d</span> <span class="o">=</span> <span class="n">Starship</span><span class="p">(</span><span class="mi">3000</span><span class="p">)</span>
+<span class="n">enterprise_d</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># Flagged as error by a type checker</span>
+<span class="n">Starship</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># This is OK</span>
+</pre></div>
+</div>
+<p>As a matter of convenience (and convention), instance variables can be
+annotated in <code class="docutils literal notranslate"><span class="pre">__init__</span></code> or other methods, rather than in the class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Box</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">:</span> <span class="n">T</span> <span class="o">=</span> <span class="n">content</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">ClassVar</span></code> cannot be used as a qualifier for a <a class="reference internal" href="typeddict.html#typeddict"><span class="std std-ref">TypedDict</span></a>
+item or a <a class="reference internal" href="namedtuples.html#namedtuple"><span class="std std-ref">NamedTuple</span></a> field. Such usage also generates
+an error at runtime.</p>
+</section>
+<section id="override">
+<span id="id2"></span><h2><code class="docutils literal notranslate"><span class="pre">&#64;override</span></code><a class="headerlink" href="#override" title="Link to this heading">¶</a></h2>
+<p>(Originally specified by <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0698/"><strong>PEP 698</strong></a>.)</p>
+<p>When type checkers encounter a method decorated with <code class="docutils literal notranslate"><span class="pre">&#64;typing.override</span></code> they
+should treat it as a type error unless that method is overriding a method or
+attribute in some ancestor class, and the type of the overriding method is
+<a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to the type of the overridden method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">override</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Parent</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Child</span><span class="p">(</span><span class="n">Parent</span><span class="p">):</span>
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">2</span>
+
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">baz</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>  <span class="c1"># Type check error: no matching signature in ancestor</span>
+        <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;override</span></code> decorator should be permitted anywhere a type checker
+considers a method to be a valid override, which typically includes not only
+normal methods but also <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;staticmethod</span></code>, and <code class="docutils literal notranslate"><span class="pre">&#64;classmethod</span></code>.</p>
+<section id="strict-enforcement-per-project">
+<h3>Strict Enforcement Per-Project<a class="headerlink" href="#strict-enforcement-per-project" title="Link to this heading">¶</a></h3>
+<p>We believe that <code class="docutils literal notranslate"><span class="pre">&#64;override</span></code> is most useful if checkers also allow developers
+to opt into a strict mode where methods that override a parent class are
+required to use the decorator. Strict enforcement should be opt-in for backward
+compatibility.</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Class type assignability</a><ul>
+<li><a class="reference internal" href="#classvar"><code class="docutils literal notranslate"><span class="pre">ClassVar</span></code></a></li>
+<li><a class="reference internal" href="#override"><code class="docutils literal notranslate"><span class="pre">&#64;override</span></code></a><ul>
+<li><a class="reference internal" href="#strict-enforcement-per-project">Strict Enforcement Per-Project</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="qualifiers.html"
+                          title="previous chapter">Type qualifiers</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="aliases.html"
+                          title="next chapter">Type aliases</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/class-compat.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="aliases.html" title="Type aliases"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="qualifiers.html" title="Type qualifiers"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Class type assignability</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

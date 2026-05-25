@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Literals &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Protocols" href="protocol.html" />
+    <link rel="prev" title="Type aliases" href="aliases.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/literal.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Literals</a><ul>
+<li><a class="reference internal" href="#literal"><code class="docutils literal notranslate"><span class="pre">Literal</span></code></a><ul>
+<li><a class="reference internal" href="#core-semantics">Core Semantics</a><ul>
+<li><a class="reference internal" href="#core-behavior">Core behavior</a></li>
+<li><a class="reference internal" href="#equivalence-of-two-literals">Equivalence of two Literals</a></li>
+<li><a class="reference internal" href="#shortening-unions-of-literals">Shortening unions of literals</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#legal-and-illegal-parameterizations">Legal and illegal parameterizations</a><ul>
+<li><a class="reference internal" href="#legal-parameters-for-literal-at-type-check-time">Legal parameters for <code class="docutils literal notranslate"><span class="pre">Literal</span></code> at type check time</a></li>
+<li><a class="reference internal" href="#illegal-parameters-for-literal-at-type-check-time">Illegal parameters for <code class="docutils literal notranslate"><span class="pre">Literal</span></code> at type check time</a></li>
+<li><a class="reference internal" href="#parameters-at-runtime">Parameters at runtime</a></li>
+<li><a class="reference internal" href="#literals-enums-and-forward-references">Literals, enums, and forward references</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#type-inference">Type inference</a><ul>
+<li><a class="reference internal" href="#backwards-compatibility">Backwards compatibility</a></li>
+<li><a class="reference internal" href="#using-non-literals-in-literal-contexts">Using non-Literals in Literal contexts</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interactions-with-other-types-and-features">Interactions with other types and features</a><ul>
+<li><a class="reference internal" href="#intelligent-indexing-of-structured-data">Intelligent indexing of structured data</a></li>
+<li><a class="reference internal" href="#interactions-with-overloads">Interactions with overloads</a></li>
+<li><a class="reference internal" href="#interactions-with-generics">Interactions with generics</a></li>
+<li><a class="reference internal" href="#interactions-with-enums-and-exhaustiveness-checks">Interactions with enums and exhaustiveness checks</a></li>
+<li><a class="reference internal" href="#interactions-with-narrowing">Interactions with narrowing</a></li>
+<li><a class="reference internal" href="#interactions-with-final">Interactions with Final</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#literalstring"><code class="docutils literal notranslate"><span class="pre">LiteralString</span></code></a><ul>
+<li><a class="reference internal" href="#valid-locations-for-literalstring">Valid locations for <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code></a></li>
+<li><a class="reference internal" href="#id3">Type inference</a><ul>
+<li><a class="reference internal" href="#inferring-literalstring">Inferring <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code></a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#interaction-with-type-variables-and-generics">Interaction with Type Variables and Generics</a></li>
+<li><a class="reference internal" href="#literalstring-overloads">Interactions with Overloads</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="aliases.html"
+                          title="previous chapter">Type aliases</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="protocol.html"
+                          title="next chapter">Protocols</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/literal.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="protocol.html" title="Protocols"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="aliases.html" title="Type aliases"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Literals</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="literals">
+<span id="literal-types"></span><h1>Literals<a class="headerlink" href="#literals" title="Link to this heading">¶</a></h1>
+<section id="literal">
+<span id="id1"></span><h2><code class="docutils literal notranslate"><span class="pre">Literal</span></code><a class="headerlink" href="#literal" title="Link to this heading">¶</a></h2>
+<p>(Originally specified in <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0586/"><strong>PEP 586</strong></a>.)</p>
+<section id="core-semantics">
+<h3>Core Semantics<a class="headerlink" href="#core-semantics" title="Link to this heading">¶</a></h3>
+<p>This section outlines the baseline behavior of literal types.</p>
+<section id="core-behavior">
+<h4>Core behavior<a class="headerlink" href="#core-behavior" title="Link to this heading">¶</a></h4>
+<p>Literal types indicate that a variable has a specific and
+concrete value. For example, if we define some variable <code class="docutils literal notranslate"><span class="pre">foo</span></code> to have
+type <code class="docutils literal notranslate"><span class="pre">Literal[3]</span></code>, we are declaring that <code class="docutils literal notranslate"><span class="pre">foo</span></code> must be exactly equal
+to <code class="docutils literal notranslate"><span class="pre">3</span></code> and no other value.</p>
+<p>Given some value <code class="docutils literal notranslate"><span class="pre">v</span></code> that is a member of type <code class="docutils literal notranslate"><span class="pre">T</span></code>, the type <code class="docutils literal notranslate"><span class="pre">Literal[v]</span></code>
+is a subtype of <code class="docutils literal notranslate"><span class="pre">T</span></code>. For example, <code class="docutils literal notranslate"><span class="pre">Literal[3]</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
+<p>All methods from the parent type will be directly inherited by the
+literal type. So, if we have some variable <code class="docutils literal notranslate"><span class="pre">foo</span></code> of type <code class="docutils literal notranslate"><span class="pre">Literal[3]</span></code>
+it’s safe to do things like <code class="docutils literal notranslate"><span class="pre">foo</span> <span class="pre">+</span> <span class="pre">5</span></code> since <code class="docutils literal notranslate"><span class="pre">foo</span></code> inherits <code class="docutils literal notranslate"><span class="pre">int</span></code>’s
+<code class="docutils literal notranslate"><span class="pre">__add__</span></code> method. The resulting type of <code class="docutils literal notranslate"><span class="pre">foo</span> <span class="pre">+</span> <span class="pre">5</span></code> is <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
+<p>This “inheriting” behavior is identical to how we
+<a class="reference internal" href="aliases.html#newtype"><span class="std std-ref">handle NewTypes</span></a>.</p>
+</section>
+<section id="equivalence-of-two-literals">
+<h4>Equivalence of two Literals<a class="headerlink" href="#equivalence-of-two-literals" title="Link to this heading">¶</a></h4>
+<p>Two types <code class="docutils literal notranslate"><span class="pre">Literal[v1]</span></code> and <code class="docutils literal notranslate"><span class="pre">Literal[v2]</span></code> are equivalent when
+both of the following conditions are true:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">type(v1)</span> <span class="pre">==</span> <span class="pre">type(v2)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v1</span> <span class="pre">==</span> <span class="pre">v2</span></code></p></li>
+</ol>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">Literal[20]</span></code> and <code class="docutils literal notranslate"><span class="pre">Literal[0x14]</span></code> are equivalent.
+However, <code class="docutils literal notranslate"><span class="pre">Literal[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">Literal[False]</span></code> are <em>not</em> equivalent
+despite that <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">==</span> <span class="pre">False</span></code> evaluates to ‘true’ at runtime: <code class="docutils literal notranslate"><span class="pre">0</span></code>
+has type <code class="docutils literal notranslate"><span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">False</span></code> has type <code class="docutils literal notranslate"><span class="pre">bool</span></code>.</p>
+</section>
+<section id="shortening-unions-of-literals">
+<h4>Shortening unions of literals<a class="headerlink" href="#shortening-unions-of-literals" title="Link to this heading">¶</a></h4>
+<p>Literals are parameterized with one or more values. When a Literal is
+parameterized with more than one value, it’s treated as exactly equivalent
+to the union of those types. That is, <code class="docutils literal notranslate"><span class="pre">Literal[v1,</span> <span class="pre">v2,</span> <span class="pre">v3]</span></code> is equivalent
+to <code class="docutils literal notranslate"><span class="pre">Literal[v1]</span> <span class="pre">|</span> <span class="pre">Literal[v2]</span> <span class="pre">|</span> <span class="pre">Literal[v3]</span></code>.</p>
+<p>This shortcut helps make writing signatures for functions that accept
+many different literals more ergonomic — for example, functions like
+<code class="docutils literal notranslate"><span class="pre">open(...)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: this is a simplification of the true type signature.</span>
+<span class="n">_PathType</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="nb">int</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">_PathType</span><span class="p">,</span>
+         <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">,</span> <span class="s2">&quot;a+&quot;</span><span class="p">,</span> <span class="s2">&quot;x+&quot;</span><span class="p">],</span>
+         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">_PathType</span><span class="p">,</span>
+         <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rb&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="s2">&quot;ab&quot;</span><span class="p">,</span> <span class="s2">&quot;xb&quot;</span><span class="p">,</span> <span class="s2">&quot;r+b&quot;</span><span class="p">,</span> <span class="s2">&quot;w+b&quot;</span><span class="p">,</span> <span class="s2">&quot;a+b&quot;</span><span class="p">,</span> <span class="s2">&quot;x+b&quot;</span><span class="p">],</span>
+         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IO</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="c1"># Fallback overload for when the user isn&#39;t using literal types</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">_PathType</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IO</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>The provided values do not all have to be members of the same type.
+For example, <code class="docutils literal notranslate"><span class="pre">Literal[42,</span> <span class="pre">&quot;foo&quot;,</span> <span class="pre">True]</span></code> is a legal type.</p>
+<p>However, Literal <strong>must</strong> be parameterized with at least one type.
+Types like <code class="docutils literal notranslate"><span class="pre">Literal[]</span></code> or <code class="docutils literal notranslate"><span class="pre">Literal</span></code> are illegal.</p>
+</section>
+</section>
+<section id="legal-and-illegal-parameterizations">
+<h3>Legal and illegal parameterizations<a class="headerlink" href="#legal-and-illegal-parameterizations" title="Link to this heading">¶</a></h3>
+<p>This section describes what exactly constitutes a legal <code class="docutils literal notranslate"><span class="pre">Literal[...]</span></code> type:
+what values may and may not be used as parameters.</p>
+<p>In short, a <code class="docutils literal notranslate"><span class="pre">Literal[...]</span></code> type may be parameterized by one or more literal
+expressions, and nothing else.</p>
+<section id="legal-parameters-for-literal-at-type-check-time">
+<span id="literal-legal-parameters"></span><h4>Legal parameters for <code class="docutils literal notranslate"><span class="pre">Literal</span></code> at type check time<a class="headerlink" href="#legal-parameters-for-literal-at-type-check-time" title="Link to this heading">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">Literal</span></code> may be parameterized with literal <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">bool</span></code> objects, instances of <code class="docutils literal notranslate"><span class="pre">enum.Enum</span></code> subclasses, and <code class="docutils literal notranslate"><span class="pre">None</span></code>. So for example, all of
+the following would be legal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Literal</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span>
+<span class="n">Literal</span><span class="p">[</span><span class="mh">0x1A</span><span class="p">]</span>  <span class="c1"># Equivalent to Literal[26]</span>
+<span class="n">Literal</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;hello world&quot;</span><span class="p">]</span>
+<span class="n">Literal</span><span class="p">[</span><span class="sa">u</span><span class="s2">&quot;hello world&quot;</span><span class="p">]</span>  <span class="c1"># Equivalent to Literal[&quot;hello world&quot;]</span>
+<span class="n">Literal</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;hello world&quot;</span><span class="p">]</span>
+<span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Color</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">Literal</span><span class="p">[</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="p">]</span>
+<span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> Since the type <code class="docutils literal notranslate"><span class="pre">None</span></code> is inhabited by just a single
+value, the types <code class="docutils literal notranslate"><span class="pre">None</span></code> and <code class="docutils literal notranslate"><span class="pre">Literal[None]</span></code> are exactly equivalent.
+Type checkers may simplify <code class="docutils literal notranslate"><span class="pre">Literal[None]</span></code> into just <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Literal</span></code> may also be parameterized by other literal types, or type aliases
+to other literal types. For example, the following is legal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ReadOnlyMode</span>         <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">]</span>
+<span class="n">WriteAndTruncateMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">,</span> <span class="s2">&quot;wt&quot;</span><span class="p">,</span> <span class="s2">&quot;w+t&quot;</span><span class="p">]</span>
+<span class="n">WriteNoTruncateMode</span>  <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;r+&quot;</span><span class="p">,</span> <span class="s2">&quot;r+t&quot;</span><span class="p">]</span>
+<span class="n">AppendMode</span>           <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;a+&quot;</span><span class="p">,</span> <span class="s2">&quot;at&quot;</span><span class="p">,</span> <span class="s2">&quot;a+t&quot;</span><span class="p">]</span>
+
+<span class="n">AllModes</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="n">ReadOnlyMode</span><span class="p">,</span> <span class="n">WriteAndTruncateMode</span><span class="p">,</span>
+                   <span class="n">WriteNoTruncateMode</span><span class="p">,</span> <span class="n">AppendMode</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>This feature is again intended to help make using and reusing literal types
+more ergonomic.</p>
+<p><strong>Note:</strong> As a consequence of the above rules, type checkers are also expected
+to support types that look like the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Literal</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;foo&quot;</span><span class="p">],</span> <span class="mi">5</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>This should be exactly equivalent to the following type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Literal</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>…and also to the following type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Literal</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</section>
+<section id="illegal-parameters-for-literal-at-type-check-time">
+<h4>Illegal parameters for <code class="docutils literal notranslate"><span class="pre">Literal</span></code> at type check time<a class="headerlink" href="#illegal-parameters-for-literal-at-type-check-time" title="Link to this heading">¶</a></h4>
+<p>The following parameters are intentionally disallowed by design:</p>
+<ul class="simple">
+<li><p>Arbitrary expressions like <code class="docutils literal notranslate"><span class="pre">Literal[3</span> <span class="pre">+</span> <span class="pre">4]</span></code> or
+<code class="docutils literal notranslate"><span class="pre">Literal[&quot;foo&quot;.replace(&quot;o&quot;,</span> <span class="pre">&quot;b&quot;)]</span></code>.</p>
+<ul>
+<li><p>Rationale: Literal types are meant to be a
+minimal extension to the typing ecosystem and requiring type
+checkers to interpret potentially expressions inside types adds too
+much complexity.</p></li>
+<li><p>As a consequence, complex numbers like <code class="docutils literal notranslate"><span class="pre">Literal[4</span> <span class="pre">+</span> <span class="pre">3j]</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Literal[-4</span> <span class="pre">+</span> <span class="pre">2j]</span></code> are also prohibited. For consistency, literals like
+<code class="docutils literal notranslate"><span class="pre">Literal[4j]</span></code> that contain just a single complex number are also
+prohibited.</p></li>
+<li><p>The only exceptions to this rule are the unary <code class="docutils literal notranslate"><span class="pre">-</span></code> (minus) and unary <code class="docutils literal notranslate"><span class="pre">+</span></code> (plus) for ints: types
+like <code class="docutils literal notranslate"><span class="pre">Literal[-5]</span></code> and <code class="docutils literal notranslate"><span class="pre">Literal[+1]</span></code> are <em>accepted</em>.</p></li>
+</ul>
+</li>
+<li><p>Tuples containing valid literal types like <code class="docutils literal notranslate"><span class="pre">Literal[(1,</span> <span class="pre">&quot;foo&quot;,</span> <span class="pre">&quot;bar&quot;)]</span></code>.
+The user could always express this type as
+<code class="docutils literal notranslate"><span class="pre">tuple[Literal[1],</span> <span class="pre">Literal[&quot;foo&quot;],</span> <span class="pre">Literal[&quot;bar&quot;]]</span></code> instead. Also,
+tuples are likely to be confused with the <code class="docutils literal notranslate"><span class="pre">Literal[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>
+shortcut.</p></li>
+<li><p>Mutable literal data structures like dict literals, list literals, or
+set literals: literals are always implicitly final and immutable. So,
+<code class="docutils literal notranslate"><span class="pre">Literal[{&quot;a&quot;:</span> <span class="pre">&quot;b&quot;,</span> <span class="pre">&quot;c&quot;:</span> <span class="pre">&quot;d&quot;}]</span></code> is illegal.</p></li>
+<li><p>Any other types: for example, <code class="docutils literal notranslate"><span class="pre">Literal[Path]</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">Literal[some_object_instance]</span></code> are illegal. This includes typevars: if
+<code class="docutils literal notranslate"><span class="pre">T</span></code> is a typevar,  <code class="docutils literal notranslate"><span class="pre">Literal[T]</span></code> is not allowed. Typevars can vary over
+only types, never over values.</p></li>
+</ul>
+<p>The following are provisionally disallowed for simplicity. We can consider
+allowing them in the future.</p>
+<ul class="simple">
+<li><p>Floats: e.g. <code class="docutils literal notranslate"><span class="pre">Literal[3.14]</span></code>. Representing Literals of infinity or NaN
+in a clean way is tricky; real-world APIs are unlikely to vary their
+behavior based on a float parameter.</p></li>
+<li><p>Any: e.g. <code class="docutils literal notranslate"><span class="pre">Literal[Any]</span></code>. <code class="docutils literal notranslate"><span class="pre">Any</span></code> is a type, and <code class="docutils literal notranslate"><span class="pre">Literal[...]</span></code> is
+meant to contain values only. It is also unclear what <code class="docutils literal notranslate"><span class="pre">Literal[Any]</span></code>
+would actually semantically mean.</p></li>
+</ul>
+</section>
+<section id="parameters-at-runtime">
+<h4>Parameters at runtime<a class="headerlink" href="#parameters-at-runtime" title="Link to this heading">¶</a></h4>
+<p>Although the set of parameters <code class="docutils literal notranslate"><span class="pre">Literal[...]</span></code> may contain at type check time
+is very small, the actual implementation of <code class="docutils literal notranslate"><span class="pre">typing.Literal</span></code> will not perform
+any checks at runtime. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">3</span>
+
+<span class="n">x</span><span class="p">:</span> <span class="n">Literal</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">y</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">my_function</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_function</span>
+</pre></div>
+</div>
+<p>The type checker should reject this program: all three uses of
+<code class="docutils literal notranslate"><span class="pre">Literal</span></code> are <em>invalid</em> according to this spec. However, Python itself
+should execute this program with no errors.</p>
+<p>This is partly to help us preserve flexibility in case we want to expand the
+scope of what <code class="docutils literal notranslate"><span class="pre">Literal</span></code> can be used for in the future, and partly because
+it is not possible to detect all illegal parameters at runtime to begin with.
+For example, it is impossible to distinguish between <code class="docutils literal notranslate"><span class="pre">Literal[1</span> <span class="pre">+</span> <span class="pre">2]</span></code> and
+<code class="docutils literal notranslate"><span class="pre">Literal[3]</span></code> at runtime.</p>
+</section>
+<section id="literals-enums-and-forward-references">
+<h4>Literals, enums, and forward references<a class="headerlink" href="#literals-enums-and-forward-references" title="Link to this heading">¶</a></h4>
+<p>One potential ambiguity is between literal strings and forward
+references to literal enum members. For example, suppose we have the
+type <code class="docutils literal notranslate"><span class="pre">Literal[&quot;Color.RED&quot;]</span></code>. Does this literal type
+contain a string literal or a forward reference to some <code class="docutils literal notranslate"><span class="pre">Color.RED</span></code>
+enum member?</p>
+<p>In cases like these, we always assume the user meant to construct a
+literal string. If the user wants a forward reference, they must wrap
+the entire literal type in a string – e.g. <code class="docutils literal notranslate"><span class="pre">&quot;Literal[Color.RED]&quot;</span></code>.</p>
+</section>
+</section>
+<section id="type-inference">
+<h3>Type inference<a class="headerlink" href="#type-inference" title="Link to this heading">¶</a></h3>
+<p>This section describes a few rules regarding type inference and
+literals, along with some examples.</p>
+<section id="backwards-compatibility">
+<h4>Backwards compatibility<a class="headerlink" href="#backwards-compatibility" title="Link to this heading">¶</a></h4>
+<p>When type checkers add support for Literal, it’s important they do so
+in a way that maximizes backwards-compatibility. Type checkers should
+ensure that code that used to type check continues to do so after support
+for Literal is added on a best-effort basis.</p>
+<p>This is particularly important when performing type inference. For
+example, given the statement <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">&quot;blue&quot;</span></code>, should the inferred
+type of <code class="docutils literal notranslate"><span class="pre">x</span></code> be <code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Literal[&quot;blue&quot;]</span></code>?</p>
+<p>One naive strategy would be to always assume expressions are intended
+to be Literal types. So, <code class="docutils literal notranslate"><span class="pre">x</span></code> would always have an inferred type of
+<code class="docutils literal notranslate"><span class="pre">Literal[&quot;blue&quot;]</span></code> in the example above. This naive strategy is almost
+certainly too disruptive – it would cause programs like the following
+to start failing when they previously did not:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># If a type checker infers &#39;var&#39; has type Literal[3]</span>
+<span class="c1"># and my_list has type List[Literal[3]]...</span>
+<span class="n">var</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="p">]</span>
+
+<span class="c1"># ...this call would be a type-error.</span>
+<span class="n">my_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Another example of when this strategy would fail is when setting fields
+in objects:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyObject</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># If a type checker infers MyObject.field has type Literal[3]...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">MyObject</span><span class="p">()</span>
+
+<span class="c1"># ...this assignment would no longer type check</span>
+<span class="n">m</span><span class="o">.</span><span class="n">field</span> <span class="o">=</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>An alternative strategy that <em>does</em> maintain compatibility in every case would
+be to always assume expressions are <em>not</em> Literal types unless they are
+explicitly annotated otherwise. A type checker using this strategy would
+always infer that <code class="docutils literal notranslate"><span class="pre">x</span></code> is of type <code class="docutils literal notranslate"><span class="pre">str</span></code> in the first example above.</p>
+<p>This is not the only viable strategy: type checkers should feel free to experiment
+with more sophisticated inference techniques. No particular strategy is
+mandated, but type checkers should keep in mind the importance of backwards
+compatibility.</p>
+</section>
+<section id="using-non-literals-in-literal-contexts">
+<h4>Using non-Literals in Literal contexts<a class="headerlink" href="#using-non-literals-in-literal-contexts" title="Link to this heading">¶</a></h4>
+<p>Literal types follow the existing rules regarding subtyping with no additional
+special-casing. For example, programs like the following are type safe:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">expects_str</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<span class="n">var</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span>
+
+<span class="c1"># Legal: Literal[&quot;foo&quot;] is a subtype of str</span>
+<span class="n">expects_str</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This also means non-Literal types in general are not <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to
+Literal types. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">expects_literal</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">runner</span><span class="p">(</span><span class="n">my_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># ILLEGAL: str is not assignable to Literal[&quot;foo&quot;]</span>
+    <span class="n">expects_literal</span><span class="p">(</span><span class="n">my_str</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> If the user wants their API to support accepting both literals
+<em>and</em> the original type – perhaps for legacy purposes – they should
+implement a fallback overload. See <a class="reference internal" href="#literalstring-overloads"><span class="std std-ref">Interactions with Overloads</span></a>.</p>
+</section>
+</section>
+<section id="interactions-with-other-types-and-features">
+<h3>Interactions with other types and features<a class="headerlink" href="#interactions-with-other-types-and-features" title="Link to this heading">¶</a></h3>
+<p>This section discusses how Literal types interact with other existing types.</p>
+<section id="intelligent-indexing-of-structured-data">
+<h4>Intelligent indexing of structured data<a class="headerlink" href="#intelligent-indexing-of-structured-data" title="Link to this heading">¶</a></h4>
+<p>Literals can be used to “intelligently index” into structured types like
+tuples, NamedTuple, and classes. (Note: this is not an exhaustive list).</p>
+<p>For example, type checkers should infer the correct value type when
+indexing into a tuple using an int key that corresponds to a valid index:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">b</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">some_tuple</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">some_tuple</span><span class="p">[</span><span class="n">a</span><span class="p">])</span>   <span class="c1"># Revealed type is &#39;int&#39;</span>
+<span class="n">some_tuple</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>                <span class="c1"># Error: 5 is not a valid index into the tuple</span>
+</pre></div>
+</div>
+<p>We expect similar behavior when using functions like getattr:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Test</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">myfield</span> <span class="o">=</span> <span class="n">param</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">mymethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">a</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;myfield&quot;</span><span class="p">]</span>  <span class="o">=</span> <span class="s2">&quot;myfield&quot;</span>
+<span class="n">b</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mymethod&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mymethod&quot;</span>
+<span class="n">c</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;blah&quot;</span><span class="p">]</span>     <span class="o">=</span> <span class="s2">&quot;blah&quot;</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">Test</span><span class="p">()</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">a</span><span class="p">))</span>  <span class="c1"># Revealed type is &#39;int&#39;</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>  <span class="c1"># Revealed type is &#39;Callable[[int], str]&#39;</span>
+<span class="nb">getattr</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>               <span class="c1"># Error: No attribute named &#39;blah&#39; in Test</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> See <a class="reference internal" href="#interactions-with-final">Interactions with Final</a> for how we can
+express the variable declarations above in a more compact manner.</p>
+</section>
+<section id="interactions-with-overloads">
+<h4>Interactions with overloads<a class="headerlink" href="#interactions-with-overloads" title="Link to this heading">¶</a></h4>
+<p>Literal types and overloads do not need to interact in  a special
+way: the existing rules work fine.</p>
+<p>However, one important use case type checkers must take care to
+support is the ability to use a <em>fallback</em> when the user is not using literal
+types. For example, consider <code class="docutils literal notranslate"><span class="pre">open</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_PathType</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span> <span class="o">|</span> <span class="nb">int</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">_PathType</span><span class="p">,</span>
+         <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">,</span> <span class="s2">&quot;a+&quot;</span><span class="p">,</span> <span class="s2">&quot;x+&quot;</span><span class="p">],</span>
+         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">_PathType</span><span class="p">,</span>
+         <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rb&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="s2">&quot;ab&quot;</span><span class="p">,</span> <span class="s2">&quot;xb&quot;</span><span class="p">,</span> <span class="s2">&quot;r+b&quot;</span><span class="p">,</span> <span class="s2">&quot;w+b&quot;</span><span class="p">,</span> <span class="s2">&quot;a+b&quot;</span><span class="p">,</span> <span class="s2">&quot;x+b&quot;</span><span class="p">],</span>
+         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IO</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="c1"># Fallback overload for when the user isn&#39;t using literal types</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">_PathType</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IO</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>If we were to change the signature of <code class="docutils literal notranslate"><span class="pre">open</span></code> to use just the first two overloads,
+we would break any code that does not pass in a literal string expression.
+For example, code like this would be broken:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">pick_file_mode</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="c1"># f should continue to be of type IO[Any] here</span>
+</pre></div>
+</div>
+<p>A little more broadly: we mandate that whenever we add literal types to
+some existing API in typeshed, we also always include a fallback overload to
+maintain backwards-compatibility.</p>
+</section>
+<section id="interactions-with-generics">
+<h4>Interactions with generics<a class="headerlink" href="#interactions-with-generics" title="Link to this heading">¶</a></h4>
+<p>Literal types are types, and can be used anywhere a type is expected.</p>
+<p>For example, it is legal to parameterize generic functions or
+classes using Literal types:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># A simplified definition for Matrix[row, column]</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Matrix</span><span class="p">[</span><span class="n">A</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Matrix</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Matrix</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">]:</span> <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__matmul__</span><span class="p">[</span><span class="n">C</span><span class="p">:</span> <span class="nb">int</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Matrix</span><span class="p">[</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Matrix</span><span class="p">[</span><span class="n">A</span><span class="p">,</span> <span class="n">C</span><span class="p">]:</span> <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Matrix</span><span class="p">[</span><span class="n">B</span><span class="p">,</span> <span class="n">A</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="n">foo</span><span class="p">:</span> <span class="n">Matrix</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">bar</span><span class="p">:</span> <span class="n">Matrix</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">7</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+<span class="n">baz</span> <span class="o">=</span> <span class="n">foo</span> <span class="o">@</span> <span class="n">bar</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">baz</span><span class="p">)</span>  <span class="c1"># Revealed type is &#39;Matrix[Literal[2], Literal[7]]&#39;</span>
+</pre></div>
+</div>
+<p>Similarly, it is legal to use type variables with value restrictions
+or bounds involving Literal types:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">takes_letter</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="p">(</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">],</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">])](</span><span class="n">value</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">value</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">takes_foo</span><span class="p">[</span><span class="n">S</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">]](</span><span class="n">value</span><span class="p">:</span> <span class="n">S</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">S</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>…although it is unclear when it would ever be useful to construct a
+TypeVar with a Literal upper bound. For example, the <code class="docutils literal notranslate"><span class="pre">S</span></code> TypeVar in
+the above example is essentially pointless: we can get equivalent behavior
+by using <code class="docutils literal notranslate"><span class="pre">S</span> <span class="pre">=</span> <span class="pre">Literal[&quot;foo&quot;]</span></code> instead.</p>
+<p><strong>Note:</strong> Literal types and generics deliberately interact in only very
+basic and limited ways. In particular, libraries that want to type check
+code containing a heavy amount of numeric or numpy-style manipulation will
+almost certainly likely find Literal types as described here to be
+insufficient for their needs.</p>
+</section>
+<section id="interactions-with-enums-and-exhaustiveness-checks">
+<h4>Interactions with enums and exhaustiveness checks<a class="headerlink" href="#interactions-with-enums-and-exhaustiveness-checks" title="Link to this heading">¶</a></h4>
+<p>Type checkers should be capable of performing exhaustiveness checks when
+working with Literal types that have a closed number of variants, such as
+enums. For example, the type checker should be capable of inferring that
+the final <code class="docutils literal notranslate"><span class="pre">else</span></code> statement must be of type <code class="docutils literal notranslate"><span class="pre">str</span></code>, since all three
+values of the <code class="docutils literal notranslate"><span class="pre">Status</span></code> enum have already been exhausted:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Status</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">SUCCESS</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">INVALID_DATA</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">FATAL_ERROR</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_status</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Status</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Success!&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">Status</span><span class="o">.</span><span class="n">INVALID_DATA</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The given data is invalid because...&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">s</span> <span class="ow">is</span> <span class="n">Status</span><span class="o">.</span><span class="n">FATAL_ERROR</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unexpected fatal error...&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># &#39;s&#39; must be of type &#39;str&#39; since all other options are exhausted</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Got custom status: &quot;</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, the <code class="docutils literal notranslate"><span class="pre">Status</span></code> enum could be treated as being approximately equivalent
+to <code class="docutils literal notranslate"><span class="pre">Literal[Status.SUCCESS,</span> <span class="pre">Status.INVALID_DATA,</span> <span class="pre">Status.FATAL_ERROR]</span></code>
+and the type of <code class="docutils literal notranslate"><span class="pre">s</span></code> narrowed accordingly.</p>
+</section>
+<section id="interactions-with-narrowing">
+<h4>Interactions with narrowing<a class="headerlink" href="#interactions-with-narrowing" title="Link to this heading">¶</a></h4>
+<p>Type checkers may optionally perform additional analysis for both enum and
+non-enum Literal types beyond what is described in the section above.</p>
+<p>For example, it may be useful to perform narrowing based on things like
+containment or equality checks:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">parse_status</span><span class="p">(</span><span class="n">status</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;MALFORMED&quot;</span><span class="p">,</span> <span class="s2">&quot;ABORTED&quot;</span><span class="p">):</span>
+        <span class="c1"># Type checker could narrow &#39;status&#39; to type</span>
+        <span class="c1"># Literal[&quot;MALFORMED&quot;, &quot;ABORTED&quot;] here.</span>
+        <span class="k">return</span> <span class="n">expects_bad_status</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+
+    <span class="c1"># Similarly, type checker could narrow &#39;status&#39; to Literal[&quot;PENDING&quot;]</span>
+    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;PENDING&quot;</span><span class="p">:</span>
+        <span class="n">expects_pending_status</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It may also be useful to perform narrowing taking into account expressions
+involving Literal bools. For example, we can combine <code class="docutils literal notranslate"><span class="pre">Literal[True]</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Literal[False]</span></code>, and overloads to construct “custom type guards”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_int_like</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_int_like</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_int_like</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="n">vector</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">is_int_like</span><span class="p">(</span><span class="n">vector</span><span class="p">):</span>
+    <span class="n">vector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">vector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;bad&quot;</span><span class="p">)</span>   <span class="c1"># This branch is inferred to be unreachable</span>
+
+<span class="n">scalar</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span>
+<span class="k">if</span> <span class="n">is_int_like</span><span class="p">(</span><span class="n">scalar</span><span class="p">):</span>
+    <span class="n">scalar</span> <span class="o">+=</span> <span class="mi">3</span>      <span class="c1"># Type checks: type of &#39;scalar&#39; is narrowed to &#39;int&#39;</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">scalar</span> <span class="o">+=</span> <span class="s2">&quot;foo&quot;</span>  <span class="c1"># Type checks: type of &#39;scalar&#39; is narrowed to &#39;str&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="interactions-with-final">
+<span id="literal-final-interactions"></span><h4>Interactions with Final<a class="headerlink" href="#interactions-with-final" title="Link to this heading">¶</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">Final</span></code> qualifier can be used to declare that some variable or
+attribute cannot be reassigned:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">foo</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">foo</span> <span class="o">=</span> <span class="mi">4</span>           <span class="c1"># Error: &#39;foo&#39; is declared to be Final</span>
+</pre></div>
+</div>
+<p>Note that in the example above, we know that <code class="docutils literal notranslate"><span class="pre">foo</span></code> will always be equal to
+exactly <code class="docutils literal notranslate"><span class="pre">3</span></code>. A type checker can use this information to deduce that <code class="docutils literal notranslate"><span class="pre">foo</span></code>
+is valid to use in any context that expects a <code class="docutils literal notranslate"><span class="pre">Literal[3]</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">expects_three</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">expects_three</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>  <span class="c1"># Type checks, since &#39;foo&#39; is Final and equal to 3</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">Final</span></code> qualifier serves as a shorthand for declaring that a variable
+is <em>effectively Literal</em>.</p>
+<p>Type checkers are expected to
+support this shortcut. Specifically, given a variable or attribute assignment
+of the form <code class="docutils literal notranslate"><span class="pre">var:</span> <span class="pre">Final</span> <span class="pre">=</span> <span class="pre">value</span></code> where <code class="docutils literal notranslate"><span class="pre">value</span></code> is a valid parameter for
+<code class="docutils literal notranslate"><span class="pre">Literal[...]</span></code>, type checkers should understand that <code class="docutils literal notranslate"><span class="pre">var</span></code> may be used in
+any context that expects a <code class="docutils literal notranslate"><span class="pre">Literal[value]</span></code>.</p>
+<p>Type checkers are not obligated to understand any other uses of Final. For
+example, whether or not the following program type checks is left unspecified:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: The assignment does not exactly match the form &#39;var: Final = value&#39;.</span>
+<span class="n">bar1</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">expects_three</span><span class="p">(</span><span class="n">bar1</span><span class="p">)</span>  <span class="c1"># May or may not be accepted by type checkers</span>
+
+<span class="c1"># Note: &quot;Literal[1 + 2]&quot; is not a legal type.</span>
+<span class="n">bar2</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="n">expects_three</span><span class="p">(</span><span class="n">bar2</span><span class="p">)</span>  <span class="c1"># May or may not be accepted by type checkers</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="literalstring">
+<span id="id2"></span><h2><code class="docutils literal notranslate"><span class="pre">LiteralString</span></code><a class="headerlink" href="#literalstring" title="Link to this heading">¶</a></h2>
+<p>(Originally specified in <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0675/"><strong>PEP 675</strong></a>.)</p>
+<section id="valid-locations-for-literalstring">
+<h3>Valid locations for <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code><a class="headerlink" href="#valid-locations-for-literalstring" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> can be used where any other type can be used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">variable_annotation</span><span class="p">:</span> <span class="n">LiteralString</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="n">literal_string</span><span class="p">:</span> <span class="n">LiteralString</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LiteralString</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Foo</span><span class="p">:</span>
+    <span class="n">my_attribute</span><span class="p">:</span> <span class="n">LiteralString</span>
+
+<span class="n">type_argument</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LiteralString</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">enforce_literal</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">LiteralString</span><span class="p">](</span><span class="n">value</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>It cannot be nested within unions of <code class="docutils literal notranslate"><span class="pre">Literal</span></code> types:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bad_union</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="n">LiteralString</span><span class="p">]</span>  <span class="c1"># Not OK</span>
+<span class="n">bad_nesting</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">LiteralString</span><span class="p">]</span>  <span class="c1"># Not OK</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>Type inference<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<section id="inferring-literalstring">
+<h4>Inferring <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code><a class="headerlink" href="#inferring-literalstring" title="Link to this heading">¶</a></h4>
+<p>Any literal string type is assignable to <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code>. For
+example, <code class="docutils literal notranslate"><span class="pre">x:</span> <span class="pre">LiteralString</span> <span class="pre">=</span> <span class="pre">&quot;foo&quot;</span></code> is valid because <code class="docutils literal notranslate"><span class="pre">&quot;foo&quot;</span></code> is
+inferred to be of type <code class="docutils literal notranslate"><span class="pre">Literal[&quot;foo&quot;]</span></code>.</p>
+<p>We also infer <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> in the
+following cases:</p>
+<ul class="simple">
+<li><p>Addition: <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code> is of type <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> if the types of both <code class="docutils literal notranslate"><span class="pre">x</span></code>
+and <code class="docutils literal notranslate"><span class="pre">y</span></code> are assignable to <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code>.</p></li>
+<li><p>Joining: <code class="docutils literal notranslate"><span class="pre">sep.join(xs)</span></code> is of type <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> if <code class="docutils literal notranslate"><span class="pre">sep</span></code>’s
+type is assignable to <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> and <code class="docutils literal notranslate"><span class="pre">xs</span></code>’s type is
+assignable to <code class="docutils literal notranslate"><span class="pre">Iterable[LiteralString]</span></code>.</p></li>
+<li><p>In-place addition: If <code class="docutils literal notranslate"><span class="pre">s</span></code> has type <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> and <code class="docutils literal notranslate"><span class="pre">x</span></code> has a type
+assignable to <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code>, then <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">+=</span> <span class="pre">x</span></code> preserves <code class="docutils literal notranslate"><span class="pre">s</span></code>’s type as
+<code class="docutils literal notranslate"><span class="pre">LiteralString</span></code>.</p></li>
+<li><p>String formatting: An f-string has type <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> if and only if its
+constituent expressions are literal strings. <code class="docutils literal notranslate"><span class="pre">s.format(...)</span></code> is assignable
+to <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> if and only if <code class="docutils literal notranslate"><span class="pre">s</span></code> and the arguments have types
+assignable to <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code>.</p></li>
+</ul>
+<p>In all other cases, if one or more of the composed values has a
+non-literal type <code class="docutils literal notranslate"><span class="pre">str</span></code>, the composition of types will have type
+<code class="docutils literal notranslate"><span class="pre">str</span></code>. For example, if <code class="docutils literal notranslate"><span class="pre">s</span></code> has type <code class="docutils literal notranslate"><span class="pre">str</span></code>, then <code class="docutils literal notranslate"><span class="pre">&quot;hello&quot;</span> <span class="pre">+</span> <span class="pre">s</span></code>
+has type <code class="docutils literal notranslate"><span class="pre">str</span></code>. This matches the pre-existing behavior of type
+checkers.</p>
+<p><code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> is assignable to the type <code class="docutils literal notranslate"><span class="pre">str</span></code>. It inherits all
+methods from <code class="docutils literal notranslate"><span class="pre">str</span></code>. So, if we have a variable <code class="docutils literal notranslate"><span class="pre">s</span></code> of type
+<code class="docutils literal notranslate"><span class="pre">LiteralString</span></code>, it is safe to write <code class="docutils literal notranslate"><span class="pre">s.startswith(&quot;hello&quot;)</span></code>.</p>
+<p>Some type checkers refine the type of a string when doing an equality
+check:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span>
+        <span class="n">reveal_type</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># =&gt; Literal[&quot;bar&quot;]</span>
+</pre></div>
+</div>
+<p>Such a refined type in the if-block is also assignable to
+<code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> because its type is <code class="docutils literal notranslate"><span class="pre">Literal[&quot;bar&quot;]</span></code>.</p>
+</section>
+<section id="examples">
+<h4>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h4>
+<p>See the examples below to help clarify the above rules:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">literal_string</span><span class="p">:</span> <span class="n">LiteralString</span>
+<span class="n">s</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">literal_string</span>  <span class="c1"># OK</span>
+
+<span class="n">literal_string</span><span class="p">:</span> <span class="n">LiteralString</span> <span class="o">=</span> <span class="n">s</span>  <span class="c1"># Error: Expected LiteralString, got str.</span>
+<span class="n">literal_string</span><span class="p">:</span> <span class="n">LiteralString</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>Addition of literal strings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">expect_literal_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">LiteralString</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span> <span class="o">+</span> <span class="s2">&quot;bar&quot;</span><span class="p">)</span>  <span class="c1"># OK</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="n">literal_string</span> <span class="o">+</span> <span class="s2">&quot;bar&quot;</span><span class="p">)</span>  <span class="c1"># OK</span>
+
+<span class="n">literal_string2</span><span class="p">:</span> <span class="n">LiteralString</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="n">literal_string</span> <span class="o">+</span> <span class="n">literal_string2</span><span class="p">)</span>  <span class="c1"># OK</span>
+
+<span class="n">plain_string</span><span class="p">:</span> <span class="nb">str</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="n">literal_string</span> <span class="o">+</span> <span class="n">plain_string</span><span class="p">)</span>  <span class="c1"># Not OK.</span>
+</pre></div>
+</div>
+<p>Join using literal strings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expect_literal_string</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">]))</span>  <span class="c1"># OK</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="n">literal_string</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">]))</span>  <span class="c1"># OK</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="n">literal_string</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">literal_string</span><span class="p">,</span> <span class="n">literal_string2</span><span class="p">]))</span>  <span class="c1"># OK</span>
+
+<span class="n">xs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LiteralString</span><span class="p">]</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="n">literal_string</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">xs</span><span class="p">))</span> <span class="c1"># OK</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="n">plain_string</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">literal_string</span><span class="p">,</span> <span class="n">literal_string2</span><span class="p">]))</span>
+<span class="c1"># Not OK because the separator has type &#39;str&#39;.</span>
+</pre></div>
+</div>
+<p>In-place addition using literal strings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">literal_string</span> <span class="o">+=</span> <span class="s2">&quot;foo&quot;</span>  <span class="c1"># OK</span>
+<span class="n">literal_string</span> <span class="o">+=</span> <span class="n">literal_string2</span>  <span class="c1"># OK</span>
+<span class="n">literal_string</span> <span class="o">+=</span> <span class="n">plain_string</span> <span class="c1"># Not OK</span>
+</pre></div>
+</div>
+<p>Format strings using literal strings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">literal_name</span><span class="p">:</span> <span class="n">LiteralString</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;hello </span><span class="si">{</span><span class="n">literal_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># OK because it is composed from literal strings.</span>
+
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="s2">&quot;hello </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">literal_name</span><span class="p">))</span>  <span class="c1"># OK</span>
+
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>  <span class="c1"># OK</span>
+
+<span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;hello </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># NOT OK. The format-string is constructed from &#39;username&#39;,</span>
+<span class="c1"># which has type &#39;str&#39;.</span>
+
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="s2">&quot;hello </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>  <span class="c1"># Not OK</span>
+</pre></div>
+</div>
+<p>Other literal types, such as literal integers, are not assignable to <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">some_int</span><span class="p">:</span> <span class="nb">int</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="n">some_int</span><span class="p">)</span>  <span class="c1"># Error: Expected LiteralString, got int.</span>
+
+<span class="n">literal_one</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">expect_literal_string</span><span class="p">(</span><span class="n">literal_one</span><span class="p">)</span>  <span class="c1"># Error: Expected LiteralString, got Literal[1].</span>
+</pre></div>
+</div>
+<p>We can call functions on literal strings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">add_limit</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="n">LiteralString</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LiteralString</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">query</span> <span class="o">+</span> <span class="s2">&quot; LIMIT = 1&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">my_query</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="n">LiteralString</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">sql_connection</span><span class="p">()</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">add_limit</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>Conditional statements and expressions work as expected:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">return_literal_string</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LiteralString</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;foo&quot;</span> <span class="k">if</span> <span class="n">condition1</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;bar&quot;</span>  <span class="c1"># OK</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">return_literal_str2</span><span class="p">(</span><span class="n">literal_string</span><span class="p">:</span> <span class="n">LiteralString</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LiteralString</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;foo&quot;</span> <span class="k">if</span> <span class="n">condition1</span><span class="p">()</span> <span class="k">else</span> <span class="n">literal_string</span>  <span class="c1"># OK</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">return_literal_str3</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LiteralString</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">condition1</span><span class="p">():</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">LiteralString</span> <span class="o">=</span> <span class="s2">&quot;bar&quot;</span>
+
+    <span class="k">return</span> <span class="n">result</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+</section>
+<section id="interaction-with-type-variables-and-generics">
+<h4>Interaction with Type Variables and Generics<a class="headerlink" href="#interaction-with-type-variables-and-generics" title="Link to this heading">¶</a></h4>
+<p>Type variables can use <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> as an upper bound:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">LiteralString</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">literal_identity</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">LiteralString</span><span class="p">](</span><span class="n">s</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+<span class="n">hello</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;hello&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">literal_identity</span><span class="p">(</span><span class="n">hello</span><span class="p">)</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>  <span class="c1"># =&gt; Literal[&quot;hello&quot;]</span>
+
+<span class="n">s</span><span class="p">:</span> <span class="n">LiteralString</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">literal_identity</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">y2</span><span class="p">)</span>  <span class="c1"># =&gt; LiteralString</span>
+
+<span class="n">s_error</span><span class="p">:</span> <span class="nb">str</span>
+<span class="n">literal_identity</span><span class="p">(</span><span class="n">s_error</span><span class="p">)</span>
+<span class="c1"># Error: Expected T (bound to LiteralString), got str.</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> can be used as a type argument for generic classes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Container</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+<span class="n">literal_string</span><span class="p">:</span> <span class="n">LiteralString</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span>
+<span class="n">x</span><span class="p">:</span> <span class="n">Container</span><span class="p">[</span><span class="n">LiteralString</span><span class="p">]</span> <span class="o">=</span> <span class="n">Container</span><span class="p">(</span><span class="n">literal_string</span><span class="p">)</span>  <span class="c1"># OK</span>
+
+<span class="n">s</span><span class="p">:</span> <span class="nb">str</span>
+<span class="n">x_error</span><span class="p">:</span> <span class="n">Container</span><span class="p">[</span><span class="n">LiteralString</span><span class="p">]</span> <span class="o">=</span> <span class="n">Container</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># Not OK</span>
+</pre></div>
+</div>
+<p>Standard containers like <code class="docutils literal notranslate"><span class="pre">List</span></code> work as expected:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LiteralString</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="s2">&quot;baz&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="literalstring-overloads">
+<span id="id4"></span><h4>Interactions with Overloads<a class="headerlink" href="#literalstring-overloads" title="Link to this heading">¶</a></h4>
+<p>Literal strings and overloads do not need to interact in a special
+way: the existing rules work fine. <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code> can be used as a
+fallback overload where a specific <code class="docutils literal notranslate"><span class="pre">Literal[&quot;foo&quot;]</span></code> type does not
+match:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">LiteralString</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">x1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>  <span class="c1"># First overload.</span>
+<span class="n">x2</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="s2">&quot;bar&quot;</span><span class="p">)</span>  <span class="c1"># Second overload.</span>
+<span class="n">s</span><span class="p">:</span> <span class="nb">str</span>
+<span class="n">x3</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">foo</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># Third overload.</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Literals</a><ul>
+<li><a class="reference internal" href="#literal"><code class="docutils literal notranslate"><span class="pre">Literal</span></code></a><ul>
+<li><a class="reference internal" href="#core-semantics">Core Semantics</a><ul>
+<li><a class="reference internal" href="#core-behavior">Core behavior</a></li>
+<li><a class="reference internal" href="#equivalence-of-two-literals">Equivalence of two Literals</a></li>
+<li><a class="reference internal" href="#shortening-unions-of-literals">Shortening unions of literals</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#legal-and-illegal-parameterizations">Legal and illegal parameterizations</a><ul>
+<li><a class="reference internal" href="#legal-parameters-for-literal-at-type-check-time">Legal parameters for <code class="docutils literal notranslate"><span class="pre">Literal</span></code> at type check time</a></li>
+<li><a class="reference internal" href="#illegal-parameters-for-literal-at-type-check-time">Illegal parameters for <code class="docutils literal notranslate"><span class="pre">Literal</span></code> at type check time</a></li>
+<li><a class="reference internal" href="#parameters-at-runtime">Parameters at runtime</a></li>
+<li><a class="reference internal" href="#literals-enums-and-forward-references">Literals, enums, and forward references</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#type-inference">Type inference</a><ul>
+<li><a class="reference internal" href="#backwards-compatibility">Backwards compatibility</a></li>
+<li><a class="reference internal" href="#using-non-literals-in-literal-contexts">Using non-Literals in Literal contexts</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interactions-with-other-types-and-features">Interactions with other types and features</a><ul>
+<li><a class="reference internal" href="#intelligent-indexing-of-structured-data">Intelligent indexing of structured data</a></li>
+<li><a class="reference internal" href="#interactions-with-overloads">Interactions with overloads</a></li>
+<li><a class="reference internal" href="#interactions-with-generics">Interactions with generics</a></li>
+<li><a class="reference internal" href="#interactions-with-enums-and-exhaustiveness-checks">Interactions with enums and exhaustiveness checks</a></li>
+<li><a class="reference internal" href="#interactions-with-narrowing">Interactions with narrowing</a></li>
+<li><a class="reference internal" href="#interactions-with-final">Interactions with Final</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#literalstring"><code class="docutils literal notranslate"><span class="pre">LiteralString</span></code></a><ul>
+<li><a class="reference internal" href="#valid-locations-for-literalstring">Valid locations for <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code></a></li>
+<li><a class="reference internal" href="#id3">Type inference</a><ul>
+<li><a class="reference internal" href="#inferring-literalstring">Inferring <code class="docutils literal notranslate"><span class="pre">LiteralString</span></code></a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#interaction-with-type-variables-and-generics">Interaction with Type Variables and Generics</a></li>
+<li><a class="reference internal" href="#literalstring-overloads">Interactions with Overloads</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="aliases.html"
+                          title="previous chapter">Type aliases</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="protocol.html"
+                          title="next chapter">Protocols</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/literal.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="protocol.html" title="Protocols"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="aliases.html" title="Type aliases"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Literals</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

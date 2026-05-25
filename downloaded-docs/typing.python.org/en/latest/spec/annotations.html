@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Type annotations &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Type forms" href="type-forms.html" />
+    <link rel="prev" title="Type system concepts" href="concepts.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/annotations.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type annotations</a><ul>
+<li><a class="reference internal" href="#the-meaning-of-annotations">The meaning of annotations</a></li>
+<li><a class="reference internal" href="#type-and-annotation-expressions">Type and annotation expressions</a></li>
+<li><a class="reference internal" href="#string-annotations">String annotations</a></li>
+<li><a class="reference internal" href="#annotating-generator-functions-and-coroutines">Annotating generator functions and coroutines</a></li>
+<li><a class="reference internal" href="#annotating-instance-and-class-methods">Annotating instance and class methods</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="concepts.html"
+                          title="previous chapter">Type system concepts</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="type-forms.html"
+                          title="next chapter">Type forms</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/annotations.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="type-forms.html" title="Type forms"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="concepts.html" title="Type system concepts"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Type annotations</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="type-annotations">
+<span id="id1"></span><h1>Type annotations<a class="headerlink" href="#type-annotations" title="Link to this heading">¶</a></h1>
+<section id="the-meaning-of-annotations">
+<h2>The meaning of annotations<a class="headerlink" href="#the-meaning-of-annotations" title="Link to this heading">¶</a></h2>
+<p>The type system leverages <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-3107/"><strong>PEP 3107</strong></a>-style annotations with a number of
+extensions described in sections below.  In its basic form, type
+hinting is used by filling function annotation slots with classes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">greeting</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s1">&#39;Hello &#39;</span> <span class="o">+</span> <span class="n">name</span>
+</pre></div>
+</div>
+<p>This states that the expected type of the <code class="docutils literal notranslate"><span class="pre">name</span></code> argument is
+<code class="docutils literal notranslate"><span class="pre">str</span></code>.  Analogically, the expected return type is <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
+<p>Expressions whose type is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to a specific argument type are
+also accepted for that argument. Similarly, an expression whose type is
+assignable to the annotated return type can be returned from the function.</p>
+<p id="missing-annotations">Any function without annotations can be treated as having <a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a>
+annotations on all arguments and the return type. Type checkers may also
+optionally infer more precise types for missing annotations.</p>
+<p>Type checkers may choose to entirely ignore (not type check) the bodies of
+functions with no annotations, but this behavior is not required.</p>
+<p>It is recommended but not required that checked functions have
+annotations for all arguments and the return type.  For a checked
+function, the default annotation for arguments and for the return type
+is <code class="docutils literal notranslate"><span class="pre">Any</span></code>. An exception to the above is the first argument of
+instance and class methods (conventionally named <code class="docutils literal notranslate"><span class="pre">self</span></code> or <code class="docutils literal notranslate"><span class="pre">cls</span></code>),
+which type checkers should assume to have an appropriate type, as per
+<a class="reference internal" href="#annotating-methods"><span class="std std-ref">Annotating instance and class methods</span></a>.</p>
+<p>(Note that the return type of <code class="docutils literal notranslate"><span class="pre">__init__</span></code> ought to be annotated with
+<code class="docutils literal notranslate"><span class="pre">-&gt;</span> <span class="pre">None</span></code>.  The reason for this is subtle.  If <code class="docutils literal notranslate"><span class="pre">__init__</span></code> assumed
+a return annotation of <code class="docutils literal notranslate"><span class="pre">-&gt;</span> <span class="pre">None</span></code>, would that mean that an
+argument-less, un-annotated <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method should still be
+type-checked?  Rather than leaving this ambiguous or introducing an
+exception to the exception, we simply say that <code class="docutils literal notranslate"><span class="pre">__init__</span></code> ought to
+have a return annotation; the default behavior is thus the same as for
+other methods.)</p>
+<p>A type checker is expected to check the body of a checked function for
+consistency with the given annotations.  The annotations may also be
+used to check correctness of calls appearing in other checked functions.</p>
+<p>Type checkers are expected to attempt to infer as much information as
+necessary.  The minimum requirement is to handle the builtin
+decorators <code class="docutils literal notranslate"><span class="pre">&#64;property</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;staticmethod</span></code> and <code class="docutils literal notranslate"><span class="pre">&#64;classmethod</span></code>.</p>
+</section>
+<section id="type-and-annotation-expressions">
+<span id="valid-types"></span><h2>Type and annotation expressions<a class="headerlink" href="#type-and-annotation-expressions" title="Link to this heading">¶</a></h2>
+<p>The terms <em>type expression</em> and <em>annotation expression</em> denote specific
+subsets of Python expressions that are used in the type system.  All
+type expressions are also annotation expressions, but not all annotation
+expressions are type expressions.</p>
+<p id="type-expression">A <em>type expression</em> is any expression that validly expresses a type. Type
+expressions are always acceptable in annotations and also in various other
+places. Specifically, type expressions are used in the following locations:</p>
+<ul class="simple">
+<li><p>In a type annotation (always as part of an annotation expression)</p></li>
+<li><p>The first argument to <a class="reference internal" href="directives.html#cast"><span class="std std-ref">cast()</span></a></p></li>
+<li><p>The second argument to <a class="reference internal" href="directives.html#assert-type"><span class="std std-ref">assert_type()</span></a></p></li>
+<li><p>The bounds and constraints of a <code class="docutils literal notranslate"><span class="pre">TypeVar</span></code> (whether created through the
+old syntax or the native syntax in Python 3.12)</p></li>
+<li><p>The default of a <code class="docutils literal notranslate"><span class="pre">TypeVar</span></code>, <code class="docutils literal notranslate"><span class="pre">ParamSpec</span></code>, or <code class="docutils literal notranslate"><span class="pre">TypeVarTuple</span></code> (whether
+created through the old syntax or the native syntax in Python 3.12)</p></li>
+<li><p>The definition of a type alias (whether created through the <code class="docutils literal notranslate"><span class="pre">type</span></code> statement,
+the old assignment syntax, or the <code class="docutils literal notranslate"><span class="pre">TypeAliasType</span></code> constructor)</p></li>
+<li><p>The type arguments of a generic class (which may appear in a base class
+or in a constructor call)</p></li>
+<li><p>The definitions of fields in the functional forms for creating
+<a class="reference internal" href="typeddict.html#typeddict"><span class="std std-ref">TypedDict</span></a> and <a class="reference internal" href="namedtuples.html#namedtuple"><span class="std std-ref">NamedTuple</span></a> types</p></li>
+<li><p>The value passed to the <code class="docutils literal notranslate"><span class="pre">extra_items</span></code> argument in the <a class="reference internal" href="typeddict.html#typeddict"><span class="std std-ref">TypedDict</span></a>
+constructor</p></li>
+<li><p>The base type in the definition of a <a class="reference internal" href="aliases.html#newtype"><span class="std std-ref">NewType</span></a></p></li>
+</ul>
+<p id="annotation-expression">An <em>annotation expression</em> is an expression that is acceptable to use in
+an annotation context (a function parameter annotation, function return
+annotation, or variable annotation). Generally, an annotation expression
+is a type expression, optionally surrounded by one or more <a class="reference internal" href="glossary.html#term-type-qualifier"><span class="xref std std-term">type qualifiers</span></a>
+or by <cite>Annotated</cite>. Each type qualifier is valid only in some contexts. Note
+that while annotation expressions are the only expressions valid as type
+annotations in the type system, the Python language itself makes no such
+restriction: any expression is allowed.</p>
+<p>Annotations must be valid expressions that evaluate without raising
+exceptions at the time the function is defined (but see <a class="reference internal" href="#forward-references"><span class="std std-ref">String annotations</span></a>).</p>
+<p id="expression-grammar">The following grammar describes the allowed elements of type and annotation expressions:</p>
+<pre>
+<strong id="grammar-token-expression-grammar-annotation_expression">annotation_expression</strong> ::=  &lt;Required&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-annotation_expression"><code class="xref docutils literal notranslate"><span class="pre">annotation_expression</span></code></a> ']'
+                           | &lt;NotRequired&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-annotation_expression"><code class="xref docutils literal notranslate"><span class="pre">annotation_expression</span></code></a> ']'
+                           | &lt;ReadOnly&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-annotation_expression"><code class="xref docutils literal notranslate"><span class="pre">annotation_expression</span></code></a>']'
+                           | &lt;ClassVar&gt; ('[' <a class="reference internal" href="#grammar-token-expression-grammar-annotation_expression"><code class="xref docutils literal notranslate"><span class="pre">annotation_expression</span></code></a>']')?
+                           | &lt;Final&gt; ('[' <a class="reference internal" href="#grammar-token-expression-grammar-annotation_expression"><code class="xref docutils literal notranslate"><span class="pre">annotation_expression</span></code></a>']')?
+                           | &lt;InitVar&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-annotation_expression"><code class="xref docutils literal notranslate"><span class="pre">annotation_expression</span></code></a> ']'
+                           | &lt;Annotated&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-annotation_expression"><code class="xref docutils literal notranslate"><span class="pre">annotation_expression</span></code></a> ','
+                                         expression (',' expression)* ']'
+                           | &lt;TypeAlias&gt;
+                                 (valid only in variable annotations)
+                           | <a class="reference internal" href="#grammar-token-expression-grammar-unpacked"><code class="xref docutils literal notranslate"><span class="pre">unpacked</span></code></a>
+                                 (valid only for *args annotations)
+                           | &lt;Unpack&gt; '[' name ']'
+                                 (where name refers to an in-scope TypedDict;
+                                  valid only in **kwargs annotations)
+                           | <a class="reference internal" href="#grammar-token-expression-grammar-string_annotation"><code class="xref docutils literal notranslate"><span class="pre">string_annotation</span></code></a>
+                                 (must evaluate to a valid <a class="reference internal" href="#grammar-token-expression-grammar-annotation_expression"><code class="xref docutils literal notranslate"><span class="pre">annotation_expression</span></code></a>)
+                           | name '.' 'args'
+                                (where name must be an in-scope ParamSpec;
+                                 valid only in *args annotations)
+                           | name '.' 'kwargs'
+                                 (where name must be an in-scope ParamSpec;
+                                  valid only in **kwargs annotations)
+                           | <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a>
+<strong id="grammar-token-expression-grammar-type_expression">type_expression      </strong> ::=  &lt;Any&gt;
+                           | &lt;Self&gt;
+                                 (valid only in some contexts)
+                           | &lt;LiteralString&gt;
+                           | &lt;NoReturn&gt;
+                           | &lt;Never&gt;
+                           | &lt;None&gt;
+                           | name
+                                 (where name must refer to a valid in-scope class,
+                                  type alias, or TypeVar)
+                           | name '[' (<a class="reference internal" href="#grammar-token-expression-grammar-maybe_unpacked"><code class="xref docutils literal notranslate"><span class="pre">maybe_unpacked</span></code></a> | <a class="reference internal" href="#grammar-token-expression-grammar-type_expression_list"><code class="xref docutils literal notranslate"><span class="pre">type_expression_list</span></code></a>)
+                                  (',' (<a class="reference internal" href="#grammar-token-expression-grammar-maybe_unpacked"><code class="xref docutils literal notranslate"><span class="pre">maybe_unpacked</span></code></a> | <a class="reference internal" href="#grammar-token-expression-grammar-type_expression_list"><code class="xref docutils literal notranslate"><span class="pre">type_expression_list</span></code></a>))* ']'
+                                 (the <a class="reference internal" href="#grammar-token-expression-grammar-type_expression_list"><code class="xref docutils literal notranslate"><span class="pre">type_expression_list</span></code></a> form is valid only when
+                                  specializing a ParamSpec)
+                           | name '[' '(' ')' ']'
+                                 (denoting specialization with an empty TypeVarTuple)
+                           | &lt;Literal&gt; '[' expression (',' expression) ']'
+                                 (see documentation for Literal for restrictions)
+                           | <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> '|' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a>
+                           | &lt;Optional&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ']'
+                           | &lt;Union&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> (',' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a>)* ']'
+                           | &lt;type&gt; '[' &lt;Any&gt; ']'
+                           | &lt;type&gt; '[' name ']'
+                                 (where name must refer to a valid in-scope class
+                                  or TypeVar)
+                           | &lt;Callable&gt; '[' '...' ',' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ']'
+                           | &lt;Callable&gt; '[' name ',' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ']'
+                                 (where name must be a valid in-scope ParamSpec)
+                           | &lt;Callable&gt; '[' &lt;Concatenate&gt; '[' (<a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ',')+
+                                        (name | '...') ']' ',' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ']'
+                                 (where name must be a valid in-scope ParamSpec)
+                           | &lt;Callable&gt; '[' '[' <a class="reference internal" href="#grammar-token-expression-grammar-maybe_unpacked"><code class="xref docutils literal notranslate"><span class="pre">maybe_unpacked</span></code></a> (',' <a class="reference internal" href="#grammar-token-expression-grammar-maybe_unpacked"><code class="xref docutils literal notranslate"><span class="pre">maybe_unpacked</span></code></a>)*
+                                        ']' ',' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ']'
+                           | <a class="reference internal" href="#grammar-token-expression-grammar-tuple_type_expression"><code class="xref docutils literal notranslate"><span class="pre">tuple_type_expression</span></code></a>
+                           | &lt;Annotated&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ','
+                                         expression (',' expression)* ']'
+                           | &lt;TypeGuard&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ']'
+                                 (valid only in some contexts)
+                           | &lt;TypeIs&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ']'
+                                 (valid only in some contexts)
+                           | &lt;TypeForm&gt; ('[' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ']')?
+                           | <a class="reference internal" href="#grammar-token-expression-grammar-string_annotation"><code class="xref docutils literal notranslate"><span class="pre">string_annotation</span></code></a>
+                                 (must evaluate to a valid <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a>)
+<strong id="grammar-token-expression-grammar-maybe_unpacked">maybe_unpacked       </strong> ::=  <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> | <a class="reference internal" href="#grammar-token-expression-grammar-unpacked"><code class="xref docutils literal notranslate"><span class="pre">unpacked</span></code></a>
+<strong id="grammar-token-expression-grammar-unpacked">unpacked             </strong> ::=  '*' <a class="reference internal" href="#grammar-token-expression-grammar-unpackable"><code class="xref docutils literal notranslate"><span class="pre">unpackable</span></code></a>
+                           | &lt;Unpack&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-unpackable"><code class="xref docutils literal notranslate"><span class="pre">unpackable</span></code></a> ']'
+<strong id="grammar-token-expression-grammar-unpackable">unpackable           </strong> ::=  <a class="reference internal" href="#grammar-token-expression-grammar-tuple_type_expression"><code class="xref docutils literal notranslate"><span class="pre">tuple_type_expression</span></code></a>`
+                           | name
+                                 (where name must refer to an in-scope TypeVarTuple)
+<strong id="grammar-token-expression-grammar-tuple_type_expression">tuple_type_expression</strong> ::=  &lt;tuple&gt; '[' '(' ')' ']'
+                                (representing an empty tuple)
+                           | &lt;tuple&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> ',' '...' ']'
+                                 (representing an arbitrary-length tuple)
+                           | &lt;tuple&gt; '[' <a class="reference internal" href="#grammar-token-expression-grammar-maybe_unpacked"><code class="xref docutils literal notranslate"><span class="pre">maybe_unpacked</span></code></a> (',' <a class="reference internal" href="#grammar-token-expression-grammar-maybe_unpacked"><code class="xref docutils literal notranslate"><span class="pre">maybe_unpacked</span></code></a>)* ']'
+<strong id="grammar-token-expression-grammar-string_annotation">string_annotation    </strong> ::=  string
+                               (must be a string literal that is parsable
+                                as Python code; see &quot;String annotations&quot;)
+<strong id="grammar-token-expression-grammar-type_expression_list">type_expression_list </strong> ::=  '[' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a> (',' <a class="reference internal" href="#grammar-token-expression-grammar-type_expression"><code class="xref docutils literal notranslate"><span class="pre">type_expression</span></code></a>)* ']'
+                           | '[' ']'
+</pre>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>The grammar assumes the code has already been parsed as Python code, and
+loosely follows the structure of the AST. Syntactic details like comments
+and whitespace are ignored.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;Name&gt;</span></code> refers to a <a class="reference internal" href="glossary.html#term-special-form"><span class="xref std std-term">special form</span></a>. Most special forms must be imported
+from <a class="reference external" href="https://docs.python.org/3/library/typing.html#module-typing" title="(in Python v3.14)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">typing</span></code></a> or <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code>, except for <code class="docutils literal notranslate"><span class="pre">None</span></code>,  <code class="docutils literal notranslate"><span class="pre">InitVar</span></code>,
+<code class="docutils literal notranslate"><span class="pre">type</span></code>, and <code class="docutils literal notranslate"><span class="pre">tuple</span></code>. The latter two have aliases in <a class="reference external" href="https://docs.python.org/3/library/typing.html#module-typing" title="(in Python v3.14)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">typing</span></code></a>: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Type</span></code></a>
+and <code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Tuple</span></code>.  <code class="docutils literal notranslate"><span class="pre">InitVar</span></code> must be imported from <a class="reference external" href="https://docs.python.org/3/library/dataclasses.html#module-dataclasses" title="(in Python v3.14)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">dataclasses</span></code></a>.
+<code class="docutils literal notranslate"><span class="pre">Callable</span></code> may be imported from either <a class="reference external" href="https://docs.python.org/3/library/typing.html#module-typing" title="(in Python v3.14)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">typing</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#module-collections.abc" title="(in Python v3.14)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">collections.abc</span></code></a>.
+Special forms may be aliased
+(e.g., <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">typing</span> <span class="pre">import</span> <span class="pre">Literal</span> <span class="pre">as</span> <span class="pre">L</span></code>), and they may be referred to by a
+qualified name (e.g., <code class="docutils literal notranslate"><span class="pre">typing.Literal</span></code>). There are other special forms that are not
+acceptable in any annotation or type expression, including <code class="docutils literal notranslate"><span class="pre">Generic</span></code>, <code class="docutils literal notranslate"><span class="pre">Protocol</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code>.</p></li>
+<li><p>Any leaf denoted as <code class="docutils literal notranslate"><span class="pre">name</span></code> may also be a qualified name (i.e., <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">'.'</span> <span class="pre">name</span></code>
+or <code class="docutils literal notranslate"><span class="pre">package</span> <span class="pre">'.'</span> <span class="pre">module</span> <span class="pre">'.'</span> <span class="pre">name</span></code>, with any level of nesting).</p></li>
+<li><p>Comments in parentheses denote additional restrictions not expressed in the
+grammar, or brief descriptions of the meaning of a construct.</p></li>
+</ul>
+</section>
+<section id="string-annotations">
+<span id="forward-references"></span><h2>String annotations<a class="headerlink" href="#string-annotations" title="Link to this heading">¶</a></h2>
+<p>When a type hint cannot be evaluated at runtime, that
+definition may be expressed as a string literal, to be resolved later.</p>
+<p>A situation where this occurs commonly is the definition of a
+container class, where the class being defined occurs in the signature
+of some of the methods.  For example, the following code (the start of
+a simple binary tree implementation) does not work:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Tree</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">Tree</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+</pre></div>
+</div>
+<p>To address this, we write:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Tree</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="s1">&#39;Tree&#39;</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="s1">&#39;Tree&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+</pre></div>
+</div>
+<p>The string literal should contain a valid Python expression (i.e.,
+<code class="docutils literal notranslate"><span class="pre">compile(lit,</span> <span class="pre">'',</span> <span class="pre">'eval')</span></code> should be a valid code object) and it
+should evaluate without errors once the module has been fully loaded.
+The local and global namespace in which it is evaluated should be the
+same namespaces in which default arguments to the same function would
+be evaluated.</p>
+<p>Moreover, the expression should be parseable as a valid type hint, i.e.,
+it is constrained by the rules from <a class="reference internal" href="#expression-grammar"><span class="std std-ref">the expression grammar</span></a>.</p>
+<p>If a triple quote is used, the string should be parsed as though it is
+implicitly surrounded by parentheses. This allows newline characters to be
+used within the string literal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">value</span><span class="p">:</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    int |</span>
+<span class="s2">    str |</span>
+<span class="s2">    list[Any]</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>It is allowable to use string literals as <em>part</em> of a type hint, for
+example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Tree</span><span class="p">:</span>
+    <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">leaves</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;Tree&#39;</span><span class="p">]:</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>A common use for forward references is when e.g. Django models are
+needed in the signatures.  Typically, each model is in a separate
+file, and has methods taking arguments whose type involves other models.
+Because of the way circular imports work in Python, it is often not
+possible to import all the needed models directly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># File models/a.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">models.b</span><span class="w"> </span><span class="kn">import</span> <span class="n">B</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">B</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="c1"># File models/b.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">models.a</span><span class="w"> </span><span class="kn">import</span> <span class="n">A</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">B</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">A</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="c1"># File main.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">models.a</span><span class="w"> </span><span class="kn">import</span> <span class="n">A</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">models.b</span><span class="w"> </span><span class="kn">import</span> <span class="n">B</span>
+</pre></div>
+</div>
+<p>Assuming main is imported first, this will fail with an ImportError at
+the line <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">models.a</span> <span class="pre">import</span> <span class="pre">A</span></code> in models/b.py, which is being
+imported from models/a.py before a has defined class A.  The solution
+is to switch to module-only imports and reference the models by their
+_module_._class_ name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># File models/a.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">models</span><span class="w"> </span><span class="kn">import</span> <span class="n">b</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="s1">&#39;b.B&#39;</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="c1"># File models/b.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">models</span><span class="w"> </span><span class="kn">import</span> <span class="n">a</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">B</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="s1">&#39;a.A&#39;</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="c1"># File main.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">models.a</span><span class="w"> </span><span class="kn">import</span> <span class="n">A</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">models.b</span><span class="w"> </span><span class="kn">import</span> <span class="n">B</span>
+</pre></div>
+</div>
+</section>
+<section id="annotating-generator-functions-and-coroutines">
+<h2>Annotating generator functions and coroutines<a class="headerlink" href="#annotating-generator-functions-and-coroutines" title="Link to this heading">¶</a></h2>
+<p>The return type of generator functions can be annotated by
+the generic type <code class="docutils literal notranslate"><span class="pre">Generator[yield_type,</span> <span class="pre">send_type,</span>
+<span class="pre">return_type]</span></code> provided by <code class="docutils literal notranslate"><span class="pre">typing.py</span></code> module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">echo_round</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="k">yield</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">res</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="k">yield</span> <span class="nb">round</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">&#39;OK&#39;</span>
+</pre></div>
+</div>
+<p>Coroutines introduced in <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0492/"><strong>PEP 492</strong></a> are annotated with the same syntax as
+ordinary functions. However, the return type annotation corresponds to the
+type of <code class="docutils literal notranslate"><span class="pre">await</span></code> expression, not to the coroutine type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">spam</span><span class="p">(</span><span class="n">ignored</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s1">&#39;spam&#39;</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">bar</span> <span class="o">=</span> <span class="k">await</span> <span class="n">spam</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># type is str</span>
+</pre></div>
+</div>
+<p>The generic ABC <code class="docutils literal notranslate"><span class="pre">collections.abc.Coroutine</span></code> can be used
+to specify awaitables that also support
+<code class="docutils literal notranslate"><span class="pre">send()</span></code> and <code class="docutils literal notranslate"><span class="pre">throw()</span></code> methods. The variance and order of type variables
+correspond to those of <code class="docutils literal notranslate"><span class="pre">Generator</span></code>, namely <code class="docutils literal notranslate"><span class="pre">Coroutine[T_co,</span> <span class="pre">T_contra,</span> <span class="pre">V_co]</span></code>,
+for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Coroutine</span>
+<span class="n">c</span><span class="p">:</span> <span class="n">Coroutine</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="o">...</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;hi&#39;</span><span class="p">)</span>  <span class="c1"># type is list[str]</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="k">await</span> <span class="n">c</span>  <span class="c1"># type is int</span>
+</pre></div>
+</div>
+<p>The generic ABCs <code class="docutils literal notranslate"><span class="pre">Awaitable</span></code>,
+<code class="docutils literal notranslate"><span class="pre">AsyncIterable</span></code>, and <code class="docutils literal notranslate"><span class="pre">AsyncIterator</span></code> can be used for situations where more precise
+types cannot be specified:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">op</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Awaitable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">cond</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">spam</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="annotating-instance-and-class-methods">
+<span id="annotating-methods"></span><h2>Annotating instance and class methods<a class="headerlink" href="#annotating-instance-and-class-methods" title="Link to this heading">¶</a></h2>
+<p>In most cases the first argument of instance and class methods
+(conventionally named <code class="docutils literal notranslate"><span class="pre">self</span></code> or <code class="docutils literal notranslate"><span class="pre">cls</span></code>) does not need to be annotated.</p>
+<p>If the argument is not annotated, then for instance methods it may be
+inferred to have either the type of the containing class, or the type <a class="reference internal" href="generics.html#self"><span class="std std-ref">Self</span></a>. For class methods it may be inferred to have either the type object
+type corresponding to the containing class object, or <code class="docutils literal notranslate"><span class="pre">type[Self]</span></code>.</p>
+<p>In addition, the first argument in an instance method can be annotated
+with a type variable. In this case the return type may use the same
+type variable, thus making that method a generic function. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Copyable</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Copyable</span><span class="p">](</span><span class="bp">self</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+        <span class="c1"># return a copy of self</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">C</span><span class="p">(</span><span class="n">Copyable</span><span class="p">):</span> <span class="o">...</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">C</span><span class="p">()</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># type here should be C</span>
+</pre></div>
+</div>
+<p>The same applies to class methods using <code class="docutils literal notranslate"><span class="pre">type[]</span></code> in an annotation
+of the first argument:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">C</span><span class="p">:</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">factory</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">C</span><span class="p">](</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+        <span class="c1"># make a new instance of cls</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">D</span><span class="p">(</span><span class="n">C</span><span class="p">):</span> <span class="o">...</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">factory</span><span class="p">()</span>  <span class="c1"># type here should be D</span>
+</pre></div>
+</div>
+<p>Note that some type checkers may apply restrictions on this use, such as
+requiring an appropriate upper bound for the type variable used
+(see examples).</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type annotations</a><ul>
+<li><a class="reference internal" href="#the-meaning-of-annotations">The meaning of annotations</a></li>
+<li><a class="reference internal" href="#type-and-annotation-expressions">Type and annotation expressions</a></li>
+<li><a class="reference internal" href="#string-annotations">String annotations</a></li>
+<li><a class="reference internal" href="#annotating-generator-functions-and-coroutines">Annotating generator functions and coroutines</a></li>
+<li><a class="reference internal" href="#annotating-instance-and-class-methods">Annotating instance and class methods</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="concepts.html"
+                          title="previous chapter">Type system concepts</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="type-forms.html"
+                          title="next chapter">Type forms</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/annotations.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="type-forms.html" title="Type forms"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="concepts.html" title="Type system concepts"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Type annotations</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Historical and deprecated features &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Glossary" href="glossary.html" />
+    <link rel="prev" title="Distributing type information" href="distributing.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/historical.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Historical and deprecated features</a><ul>
+<li><a class="reference internal" href="#type-comments">Type comments</a></li>
+<li><a class="reference internal" href="#type-comments-on-function-definitions">Type comments on function definitions</a></li>
+<li><a class="reference internal" href="#positional-only-parameters">Positional-only parameters</a></li>
+<li><a class="reference internal" href="#generics-in-standard-collections">Generics in standard collections</a></li>
+<li><a class="reference internal" href="#union-and-optional"><code class="docutils literal notranslate"><span class="pre">Union</span></code> and <code class="docutils literal notranslate"><span class="pre">Optional</span></code></a></li>
+<li><a class="reference internal" href="#unpack"><code class="docutils literal notranslate"><span class="pre">Unpack</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="distributing.html"
+                          title="previous chapter">Distributing type information</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="glossary.html"
+                          title="next chapter">Glossary</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/historical.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="glossary.html" title="Glossary"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="distributing.html" title="Distributing type information"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Historical and deprecated features</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="historical-and-deprecated-features">
+<span id="historical"></span><h1>Historical and deprecated features<a class="headerlink" href="#historical-and-deprecated-features" title="Link to this heading">¶</a></h1>
+<p>Over the course of the development of the Python type system, several
+changes were made to the Python grammar and standard library to make it
+easier to use the type system. This specification aims to use the more
+modern syntax in all examples, but type checkers should generally support
+the older alternatives and treat them as equivalent.</p>
+<p>This section lists all of these cases.</p>
+<section id="type-comments">
+<span id="id1"></span><h2>Type comments<a class="headerlink" href="#type-comments" title="Link to this heading">¶</a></h2>
+<p>No first-class syntax support for explicitly marking variables as being
+of a specific type existed when the type system was first designed.
+To help with type inference in
+complex cases, a comment of the following format may be used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>                <span class="c1"># type: list[Employee]</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>  <span class="c1"># type: list[int], list[int], list[str]</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>  <span class="c1"># type: (list[int], list[int], list[str])</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>   <span class="c1"># type: float, float, list[float]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>            <span class="c1"># type: list[int]</span>
+</pre></div>
+</div>
+<p>Type comments should be put on the last line of the statement that
+contains the variable definition.</p>
+<p>These should be treated as equivalent to annotating the variables
+using <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0526/"><strong>PEP 526</strong></a> variable annotations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Employee</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="n">y</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="n">z</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="n">a</span><span class="p">:</span> <span class="nb">float</span>
+<span class="n">b</span><span class="p">:</span> <span class="nb">float</span>
+<span class="n">c</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Type comments can also be placed on
+<code class="docutils literal notranslate"><span class="pre">with</span></code> statements and <code class="docutils literal notranslate"><span class="pre">for</span></code> statements, right after the colon.</p>
+<p>Examples of type comments on <code class="docutils literal notranslate"><span class="pre">with</span></code> and <code class="docutils literal notranslate"><span class="pre">for</span></code> statements:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">frobnicate</span><span class="p">()</span> <span class="k">as</span> <span class="n">foo</span><span class="p">:</span>  <span class="c1"># type: int</span>
+    <span class="c1"># Here foo is an int</span>
+    <span class="o">...</span>
+
+<span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>  <span class="c1"># type: float, float</span>
+    <span class="c1"># Here x and y are floats</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>In stubs it may be useful to declare the existence of a variable
+without giving it an initial value.  This can be done using <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0526/"><strong>PEP 526</strong></a>
+variable annotation syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">IO</span>
+
+<span class="n">stream</span><span class="p">:</span> <span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The above syntax is acceptable in stubs for all versions of Python.
+However, in non-stub code for versions of Python 3.5 and earlier
+there is a special case:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">IO</span>
+
+<span class="n">stream</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: IO[str]</span>
+</pre></div>
+</div>
+<p>Type checkers should not complain about this (despite the value
+<code class="docutils literal notranslate"><span class="pre">None</span></code> not matching the given type), nor should they change the
+inferred type to <code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">|</span> <span class="pre">None</span></code>.  The
+assumption here is that other code will ensure that the variable is
+given a value of the proper type, and all uses can assume that the
+variable has the given type.</p>
+</section>
+<section id="type-comments-on-function-definitions">
+<span id="type-comments-function"></span><h2>Type comments on function definitions<a class="headerlink" href="#type-comments-on-function-definitions" title="Link to this heading">¶</a></h2>
+<p>Some tools may want to support type annotations in code that must be
+compatible with Python 2.7.  For this purpose function annotations can be placed in
+a <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span></code> comment.  Such a comment must be placed immediately
+following the function header (before the docstring).  An example: the
+following Python 3 code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">embezzle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">funds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">,</span> <span class="o">*</span><span class="n">fake_receipts</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Embezzle funds from account using fake receipts.&quot;&quot;&quot;</span>
+    <span class="o">&lt;</span><span class="n">code</span> <span class="n">goes</span> <span class="n">here</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>is equivalent to the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">embezzle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">,</span> <span class="n">funds</span><span class="o">=</span><span class="mi">1000000</span><span class="p">,</span> <span class="o">*</span><span class="n">fake_receipts</span><span class="p">):</span>
+    <span class="c1"># type: (str, int, *str) -&gt; None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Embezzle funds from account using fake receipts.&quot;&quot;&quot;</span>
+    <span class="o">&lt;</span><span class="n">code</span> <span class="n">goes</span> <span class="n">here</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Note that for methods, no type is needed for <code class="docutils literal notranslate"><span class="pre">self</span></code>.</p>
+<p>For an argument-less method it would look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">load_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># type: () -&gt; bool</span>
+    <span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Sometimes you want to specify the return type for a function or method
+without (yet) specifying the argument types.  To support this
+explicitly, the argument list may be replaced with an ellipsis.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">send_email</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="n">bcc</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">body</span><span class="p">):</span>
+    <span class="c1"># type: (...) -&gt; bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send an email message.  Return True if successful.&quot;&quot;&quot;</span>
+    <span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Sometimes you have a long list of parameters and specifying their
+types in a single <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span></code> comment would be awkward.  To this end
+you may list the arguments one per line and add a <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span></code> comment
+per line after an argument’s associated comma, if any.
+To specify the return type use the ellipsis syntax. Specifying the return
+type is not mandatory and not every argument needs to be given a type.
+A line with a <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span></code> comment should contain exactly one argument.
+The type comment for the last argument (if any) should precede the close
+parenthesis. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">send_email</span><span class="p">(</span><span class="n">address</span><span class="p">,</span>     <span class="c1"># type: Union[str, List[str]]</span>
+               <span class="n">sender</span><span class="p">,</span>      <span class="c1"># type: str</span>
+               <span class="n">cc</span><span class="p">,</span>          <span class="c1"># type: Optional[List[str]]</span>
+               <span class="n">bcc</span><span class="p">,</span>         <span class="c1"># type: Optional[List[str]]</span>
+               <span class="n">subject</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+               <span class="n">body</span><span class="o">=</span><span class="kc">None</span>    <span class="c1"># type: List[str]</span>
+               <span class="p">):</span>
+    <span class="c1"># type: (...) -&gt; bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send an email message.  Return True if successful.&quot;&quot;&quot;</span>
+    <span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul>
+<li><p>Tools that support this syntax should support it regardless of the
+Python version being checked.  This is necessary in order to support
+code that straddles Python 2 and Python 3.</p></li>
+<li><p>It is not allowed for an argument or return value to have both
+a type annotation and a type comment.</p></li>
+<li><p>When using the short form (e.g. <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">(str,</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></code>)
+every argument must be accounted for, except the first argument of
+instance and class methods (those are usually omitted, but it’s
+allowed to include them).</p></li>
+<li><p>The return type is mandatory for the short form.  If in Python 3 you
+would omit some argument or the return type, the Python 2 notation
+should use <code class="docutils literal notranslate"><span class="pre">Any</span></code>.</p></li>
+<li><p>When using the short form, for <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwds</span></code>, put 1 or 2
+stars in front of the corresponding type annotation.  (As with
+Python 3 annotations, the annotation here denotes the type of the
+individual argument values, not of the tuple/dict that you receive
+as the special argument value <code class="docutils literal notranslate"><span class="pre">args</span></code> or <code class="docutils literal notranslate"><span class="pre">kwds</span></code>.)</p></li>
+<li><p>Like other type comments, any names used in the annotations must be
+imported or defined by the module containing the annotation.</p></li>
+<li><p>When using the short form, the entire annotation must be one line.</p></li>
+<li><p>The short form may also occur on the same line as the close
+parenthesis, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>  <span class="c1"># type: (int, int) -&gt; int</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+</div>
+</li>
+<li><p>Misplaced type comments will be flagged as errors by a type checker.
+If necessary, such comments could be commented twice. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Docstring&#39;&#39;&#39;</span>
+    <span class="c1"># type: () -&gt; None  # Error!</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Docstring&#39;&#39;&#39;</span>
+    <span class="c1"># # type: () -&gt; None  # This is OK</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>When checking Python 2.7 code, type checkers should treat the <code class="docutils literal notranslate"><span class="pre">int</span></code> and
+<code class="docutils literal notranslate"><span class="pre">long</span></code> types as equivalent. For parameters typed as <code class="docutils literal notranslate"><span class="pre">Text</span></code>, arguments of
+type <code class="docutils literal notranslate"><span class="pre">str</span></code> as well as <code class="docutils literal notranslate"><span class="pre">unicode</span></code> should be acceptable.</p>
+</section>
+<section id="positional-only-parameters">
+<span id="pos-only-double-underscore"></span><h2>Positional-only parameters<a class="headerlink" href="#positional-only-parameters" title="Link to this heading">¶</a></h2>
+<p>Some functions are designed to take their arguments only positionally,
+and expect their callers never to use the argument’s name to provide
+that argument by keyword. Before Python 3.8 (<span class="target" id="index-2"></span><a class="pep reference external" href="https://peps.python.org/pep-0570/"><strong>PEP 570</strong></a>), Python did
+not provide a way to declare positional-only parameters.</p>
+<p>To support positional-only parameters in code that must remain compatible
+with older versions of Python, type checkers should support the following
+special case: all parameters with names that begin but don’t end with <code class="docutils literal notranslate"><span class="pre">__</span></code>
+are assumed to be positional-only:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">__x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">__y__</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">f</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">__y__</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># This call is fine.</span>
+
+<span class="n">f</span><span class="p">(</span><span class="n">__x</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># This call is an error.</span>
+</pre></div>
+</div>
+<p>Consistent with <span class="target" id="index-3"></span><a class="pep reference external" href="https://peps.python.org/pep-0570/"><strong>PEP 570</strong></a> syntax, positional-only parameters cannot appear
+after parameters that accept keyword arguments. Type checkers should enforce
+this requirement:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">__y</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># Type error</span>
+</pre></div>
+</div>
+</section>
+<section id="generics-in-standard-collections">
+<h2>Generics in standard collections<a class="headerlink" href="#generics-in-standard-collections" title="Link to this heading">¶</a></h2>
+<p>Before Python 3.9 (<span class="target" id="index-4"></span><a class="pep reference external" href="https://peps.python.org/pep-0585/"><strong>PEP 585</strong></a>), standard library generic types like
+<code class="docutils literal notranslate"><span class="pre">list</span></code> could not be parameterized at runtime (i.e., <code class="docutils literal notranslate"><span class="pre">list[int]</span></code>
+would throw an error). Therefore, the <code class="docutils literal notranslate"><span class="pre">typing</span></code> module provided
+generic aliases for major builtin and standard library types (e.g.,
+<code class="docutils literal notranslate"><span class="pre">typing.List[int]</span></code>).</p>
+<p>In each of these cases, type checkers should treat the library type
+as equivalent to the alias in the <code class="docutils literal notranslate"><span class="pre">typing</span></code> module. This includes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">list</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.List</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dict</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Dict</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">set</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Set</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">frozenset</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.FrozenSet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tuple</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Tuple</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Type</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.deque</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Deque</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.defaultdict</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.DefaultDict</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.OrderedDict</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.OrderedDict</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.Counter</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Counter</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.ChainMap</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.ChainMap</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Awaitable</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Awaitable</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Coroutine</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Coroutine</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.AsyncIterable</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.AsyncIterable</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.AsyncIterator</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.AsyncIterator</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.AsyncGenerator</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.AsyncGenerator</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Iterable</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Iterable</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Iterator</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Iterator</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Generator</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Generator</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Reversible</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Reversible</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Container</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Container</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Collection</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Collection</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Callable</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Callable</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Set</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.AbstractSet</span></code> (note the change in name)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.MutableSet</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.MutableSet</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Mapping</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Mapping</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.MutableMapping</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.MutableMapping</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.Sequence</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Sequence</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.MutableSequence</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.MutableSequence</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.ByteString</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.ByteString</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.MappingView</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.MappingView</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.KeysView</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.KeysView</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.ItemsView</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.ItemsView</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collections.abc.ValuesView</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.ValuesView</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contextlib.AbstractContextManager</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.ContextManager</span></code> (note the change in name)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contextlib.AbstractAsyncContextManager</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.AsyncContextManager</span></code> (note the change in name)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">re.Pattern</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Pattern</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">re.Match</span></code> and <code class="docutils literal notranslate"><span class="pre">typing.Match</span></code></p></li>
+</ul>
+<p>The generic aliases in the <code class="docutils literal notranslate"><span class="pre">typing</span></code> module are considered deprecated
+and type checkers may warn if they are used.</p>
+</section>
+<section id="union-and-optional">
+<span id="typing-optional"></span><span id="typing-union"></span><h2><code class="docutils literal notranslate"><span class="pre">Union</span></code> and <code class="docutils literal notranslate"><span class="pre">Optional</span></code><a class="headerlink" href="#union-and-optional" title="Link to this heading">¶</a></h2>
+<p>Before Python 3.10 (<span class="target" id="index-5"></span><a class="pep reference external" href="https://peps.python.org/pep-0604/"><strong>PEP 604</strong></a>), Python did not support the <code class="docutils literal notranslate"><span class="pre">|</span></code> operator
+for creating unions of types. Therefore, the <code class="docutils literal notranslate"><span class="pre">typing.Union</span></code> <a class="reference internal" href="glossary.html#term-special-form"><span class="xref std std-term">special form</span></a> can also
+be used to create union types. Type checkers should treat the two forms as equivalent.</p>
+<p>In addition, the <code class="docutils literal notranslate"><span class="pre">Optional</span></code> <a class="reference internal" href="glossary.html#term-special-form"><span class="xref std std-term">special form</span></a> is equivalent to a union with <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p>Examples:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">str</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">Union[int,</span> <span class="pre">str]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">range</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">Union[int,</span> <span class="pre">str,</span> <span class="pre">range]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">Optional[int]</span></code> and <code class="docutils literal notranslate"><span class="pre">Union[int,</span> <span class="pre">None]</span></code></p></li>
+</ul>
+</section>
+<section id="unpack">
+<span id="unpack-pep646"></span><h2><code class="docutils literal notranslate"><span class="pre">Unpack</span></code><a class="headerlink" href="#unpack" title="Link to this heading">¶</a></h2>
+<p><span class="target" id="index-6"></span><a class="pep reference external" href="https://peps.python.org/pep-0646/"><strong>PEP 646</strong></a>, which introduced <code class="docutils literal notranslate"><span class="pre">TypeVarTuple</span></code> into Python 3.11, also made two grammar
+changes to support use of variadic generics, allowing use of the <code class="docutils literal notranslate"><span class="pre">*</span></code> operator in
+index operations and in <code class="docutils literal notranslate"><span class="pre">*args</span></code> annotations. The <code class="docutils literal notranslate"><span class="pre">Unpack[]</span></code> operator was added to
+support equivalent semantics on older Python versions. It should be treated as equivalent
+to the <code class="docutils literal notranslate"><span class="pre">*</span></code> syntax. In particular, the following are equivalent:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">A[*Ts]</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">A[Unpack[Ts]]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">f(*args:</span> <span class="pre">*Ts):</span> <span class="pre">...</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">f(*args:</span> <span class="pre">Unpack[Ts]):</span> <span class="pre">...</span></code></p></li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Historical and deprecated features</a><ul>
+<li><a class="reference internal" href="#type-comments">Type comments</a></li>
+<li><a class="reference internal" href="#type-comments-on-function-definitions">Type comments on function definitions</a></li>
+<li><a class="reference internal" href="#positional-only-parameters">Positional-only parameters</a></li>
+<li><a class="reference internal" href="#generics-in-standard-collections">Generics in standard collections</a></li>
+<li><a class="reference internal" href="#union-and-optional"><code class="docutils literal notranslate"><span class="pre">Union</span></code> and <code class="docutils literal notranslate"><span class="pre">Optional</span></code></a></li>
+<li><a class="reference internal" href="#unpack"><code class="docutils literal notranslate"><span class="pre">Unpack</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="distributing.html"
+                          title="previous chapter">Distributing type information</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="glossary.html"
+                          title="next chapter">Glossary</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/historical.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="glossary.html" title="Glossary"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="distributing.html" title="Distributing type information"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Historical and deprecated features</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

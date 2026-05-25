@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Typed dictionaries &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tuples" href="tuples.html" />
+    <link rel="prev" title="Dataclasses" href="dataclasses.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/typeddict.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Typed dictionaries</a><ul>
+<li><a class="reference internal" href="#syntax">Syntax</a><ul>
+<li><a class="reference internal" href="#class-based-syntax">Class-based Syntax</a></li>
+<li><a class="reference internal" href="#functional-syntax">Functional syntax</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-typeddict-types">Using TypedDict Types</a><ul>
+<li><a class="reference internal" href="#the-typeddict-constructor">The TypedDict constructor</a></li>
+<li><a class="reference internal" href="#initialization-from-dictionary-literals">Initialization from dictionary literals</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#inheritance">Inheritance</a><ul>
+<li><a class="reference internal" href="#overriding-items">Overriding items</a></li>
+<li><a class="reference internal" href="#openness">Openness</a></li>
+<li><a class="reference internal" href="#multiple-inheritance">Multiple inheritance</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#subtyping-and-assignability">Subtyping and assignability</a><ul>
+<li><a class="reference internal" href="#subtyping-between-typeddict-types">Subtyping between TypedDict types</a></li>
+<li><a class="reference internal" href="#subtyping-with-mapping">Subtyping with <code class="docutils literal notranslate"><span class="pre">Mapping</span></code></a></li>
+<li><a class="reference internal" href="#subtyping-with-dict">Subtyping with <code class="docutils literal notranslate"><span class="pre">dict</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#supported-and-unsupported-operations">Supported and Unsupported Operations</a><ul>
+<li><a class="reference internal" href="#allowed-keys">Allowed keys</a></li>
+<li><a class="reference internal" href="#specific-operations">Specific operations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#backwards-compatibility">Backwards Compatibility</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="dataclasses.html"
+                          title="previous chapter">Dataclasses</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="tuples.html"
+                          title="next chapter">Tuples</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/typeddict.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tuples.html" title="Tuples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="dataclasses.html" title="Dataclasses"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Typed dictionaries</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="typed-dictionaries">
+<span id="typeddict"></span><span id="id1"></span><h1>Typed dictionaries<a class="headerlink" href="#typed-dictionaries" title="Link to this heading">¶</a></h1>
+<p>(Originally specified in <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0589/"><strong>PEP 589</strong></a>, with later additions: <code class="docutils literal notranslate"><span class="pre">Required</span></code>
+and <code class="docutils literal notranslate"><span class="pre">NotRequired</span></code> in <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0655/"><strong>PEP 655</strong></a>, use with <code class="docutils literal notranslate"><span class="pre">Unpack</span></code> in <span class="target" id="index-2"></span><a class="pep reference external" href="https://peps.python.org/pep-0692/"><strong>PEP 692</strong></a>,
+<code class="docutils literal notranslate"><span class="pre">ReadOnly</span></code> in <span class="target" id="index-3"></span><a class="pep reference external" href="https://peps.python.org/pep-0705/"><strong>PEP 705</strong></a>, and <code class="docutils literal notranslate"><span class="pre">closed=True</span></code> and <code class="docutils literal notranslate"><span class="pre">extra_items=</span></code> in <span class="target" id="index-4"></span><a class="pep reference external" href="https://peps.python.org/pep-0728/"><strong>PEP 728</strong></a>.)</p>
+<p>A TypedDict type represents <code class="docutils literal notranslate"><span class="pre">dict</span></code> objects that contain only keys of
+type <code class="docutils literal notranslate"><span class="pre">str</span></code>. There are restrictions on which string keys are valid, and
+which values can be associated with each key. Values that <a class="reference internal" href="glossary.html#term-inhabit"><span class="xref std std-term">inhabit</span></a> a
+TypedDict type must be instances of <code class="docutils literal notranslate"><span class="pre">dict</span></code> itself, not a subclass.</p>
+<p>TypedDict types can define any number of <a class="reference internal" href="glossary.html#term-item"><span class="xref std std-term">items</span></a>, which are string
+keys associated with values of a specified type. For example,
+a TypedDict may contain the item <code class="docutils literal notranslate"><span class="pre">a:</span> <span class="pre">str</span></code>, indicating that the key <code class="docutils literal notranslate"><span class="pre">a</span></code>
+must map to a value of type <code class="docutils literal notranslate"><span class="pre">str</span></code>. Items may be either <a class="reference internal" href="glossary.html#term-required"><span class="xref std std-term">required</span></a>,
+meaning they must be present in every instance of the TypedDict type, or
+<a class="reference internal" href="glossary.html#term-non-required"><span class="xref std std-term">non-required</span></a>, meaning they may be omitted, but if they are present,
+they must be of the type specified in the TypedDict definition. By default,
+all items in a TypedDict are mutable, but items
+may also be marked as <a class="reference internal" href="glossary.html#term-read-only"><span class="xref std std-term">read-only</span></a>, indicating that they may not be
+modified.</p>
+<p>In addition to explicitly specified items, TypedDicts may allow additional
+items. By default, TypedDicts are <a class="reference internal" href="glossary.html#term-open"><span class="xref std std-term">open</span></a>, meaning they may contain an
+unknown set of additional items. They may also be marked as <a class="reference internal" href="glossary.html#term-closed"><span class="xref std std-term">closed</span></a>,
+in which case they may not contain any keys beyond those explicitly specified.
+As a third option, they may be defined with <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a> of a specific type.
+In this case, there may be any number of additional items present at runtime, but
+their values must be of the specified type. Extra items may or may not be
+<a class="reference internal" href="glossary.html#term-read-only"><span class="xref std std-term">read-only</span></a>. Thus, a TypedDict may be open, closed, or have extra items;
+we refer to this property as the <em>openness</em> of the TypedDict. For many purposes,
+an open TypedDict is equivalent to a TypedDict with read-only extra items of
+type <code class="docutils literal notranslate"><span class="pre">object</span></code>, but certain behaviors differ; for example, the
+<a class="reference internal" href="#typeddict-constructor"><span class="std std-ref">TypedDict constructor</span></a> of open TypedDicts does not
+allow unrecognized keys.</p>
+<p>A TypedDict is a <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a> type: independent TypedDict types may be
+<a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to each other based on their structure, even if they do not
+share a common base class. For example, two TypedDict types that contain the same
+items are <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a>. Nevertheless, TypedDict types may inherit from other
+TypedDict types to share common items. TypedDict types may also be generic.</p>
+<section id="syntax">
+<h2>Syntax<a class="headerlink" href="#syntax" title="Link to this heading">¶</a></h2>
+<p>This section outlines the syntax for creating TypedDict types. There are two
+syntaxes: the class-based syntax and the functional syntax.</p>
+<section id="class-based-syntax">
+<span id="typeddict-class-based-syntax"></span><h3>Class-based Syntax<a class="headerlink" href="#class-based-syntax" title="Link to this heading">¶</a></h3>
+<p>A TypedDict type can be defined using the class definition syntax with
+<code class="docutils literal notranslate"><span class="pre">typing.TypedDict</span></code> as a direct or indirect base class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Movie</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">year</span><span class="p">:</span> <span class="nb">int</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Movie</span></code> is a TypedDict type with two items: <code class="docutils literal notranslate"><span class="pre">'name'</span></code> (with type
+<code class="docutils literal notranslate"><span class="pre">str</span></code>) and <code class="docutils literal notranslate"><span class="pre">'year'</span></code> (with type <code class="docutils literal notranslate"><span class="pre">int</span></code>).</p>
+<p>A TypedDict can also be created through inheritance from one or more
+other TypedDict types:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">BookBasedMovie</span><span class="p">(</span><span class="n">Movie</span><span class="p">):</span>
+    <span class="n">based_on</span><span class="p">:</span> <span class="nb">str</span>
+</pre></div>
+</div>
+<p>This creates a TypedDict type <code class="docutils literal notranslate"><span class="pre">BookBasedMovie</span></code> with three items:
+<code class="docutils literal notranslate"><span class="pre">'name'</span></code> (type <code class="docutils literal notranslate"><span class="pre">str</span></code>), <code class="docutils literal notranslate"><span class="pre">'year'</span></code> (type <code class="docutils literal notranslate"><span class="pre">int</span></code>), and <code class="docutils literal notranslate"><span class="pre">'based_on'</span></code> (type <code class="docutils literal notranslate"><span class="pre">str</span></code>).
+See <a class="reference internal" href="#typeddict-inheritance"><span class="std std-ref">Inheritance</span></a> for more details.</p>
+<p>A generic TypedDict can be created by inheriting from <code class="docutils literal notranslate"><span class="pre">Generic</span></code> with a list
+of type parameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Response</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="n">T</span>
+</pre></div>
+</div>
+<p>Or, in Python 3.12 and newer, by using the native syntax for generic classes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Response</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="n">T</span>
+</pre></div>
+</div>
+<p>It is invalid to specify a base class other than <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code>, <code class="docutils literal notranslate"><span class="pre">Generic</span></code>,
+or another TypedDict type in a class-based TypedDict definition.
+It is also invalid to specify a custom metaclass.</p>
+<p>A TypedDict definition may also contain the following keyword arguments
+in the class definition:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">total</span></code>: a boolean literal (<code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>) indicating whether
+all items are <a class="reference internal" href="glossary.html#term-required"><span class="xref std std-term">required</span></a> (<code class="docutils literal notranslate"><span class="pre">True</span></code>, the default) or <a class="reference internal" href="glossary.html#term-non-required"><span class="xref std std-term">non-required</span></a>
+(<code class="docutils literal notranslate"><span class="pre">False</span></code>). This affects only items defined in this class, not in any
+base classes, and it does not affect any items that use an explicit
+<code class="docutils literal notranslate"><span class="pre">Required[]</span></code> or <code class="docutils literal notranslate"><span class="pre">NotRequired[]</span></code> qualifier. The value must be exactly
+<code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>; other expressions are not allowed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">closed</span></code>: a boolean literal (<code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>) indicating whether
+the TypedDict is <a class="reference internal" href="glossary.html#term-closed"><span class="xref std std-term">closed</span></a> (<code class="docutils literal notranslate"><span class="pre">True</span></code>) or <a class="reference internal" href="glossary.html#term-open"><span class="xref std std-term">open</span></a> (<code class="docutils literal notranslate"><span class="pre">False</span></code>).
+The latter is the default, except when inheriting from another TypedDict that
+is not open (see <a class="reference internal" href="#typeddict-inheritance"><span class="std std-ref">Inheritance</span></a>), or when the <code class="docutils literal notranslate"><span class="pre">extra_items</span></code>
+argument is also used.
+As with <code class="docutils literal notranslate"><span class="pre">total</span></code>, the value must be exactly <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>. It is an error
+to use this argument together with <code class="docutils literal notranslate"><span class="pre">extra_items=</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extra_items</span></code>: indicates that the TypedDict has <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a>. The argument
+must be a <a class="reference internal" href="glossary.html#term-annotation-expression"><span class="xref std std-term">annotation expression</span></a> specifying the type of the extra items.
+The <a class="reference internal" href="glossary.html#term-type-qualifier"><span class="xref std std-term">type qualifier</span></a> <code class="docutils literal notranslate"><span class="pre">ReadOnly[]</span></code> may be used to indicate that the extra items are
+<a class="reference internal" href="glossary.html#term-read-only"><span class="xref std std-term">read-only</span></a>. Other type qualifiers are not allowed. If the extra items type
+is <code class="docutils literal notranslate"><span class="pre">Never</span></code>, no extra items are allowed, so this is equivalent to <code class="docutils literal notranslate"><span class="pre">closed=True</span></code>.</p></li>
+</ul>
+<p>The body of the class definition defines the <a class="reference internal" href="glossary.html#term-item"><span class="xref std std-term">items</span></a> of the
+TypedDict type. It may also contain a docstring or <code class="docutils literal notranslate"><span class="pre">pass</span></code> statements
+(primarily to allow the creation of an empty TypedDict). <cite>if</cite> conditions that
+the type checker is able to
+<a class="reference internal" href="directives.html#version-and-platform-checks"><span class="std std-ref">statically evaluate</span></a> are also permitted (e.g.
+<cite>if sys.version_info &gt; (3, 14)</cite>), in order to specify items that exist only under
+the given conditions. No other statements are allowed, and type checkers should
+report an error if any are present. Type comments are not supported for
+creating TypedDict items.</p>
+<p id="notrequired"><span id="required"></span><span id="required-notrequired"></span>An item definition takes the form of an attribute annotation, <code class="docutils literal notranslate"><span class="pre">key:</span> <span class="pre">T</span></code>. <code class="docutils literal notranslate"><span class="pre">key</span></code> is
+an identifier and corresponds to the string key of the item, and <code class="docutils literal notranslate"><span class="pre">T</span></code> is an
+<a class="reference internal" href="glossary.html#term-annotation-expression"><span class="xref std std-term">annotation expression</span></a> specifying the type of the item value. This annotation
+expression contains a <a class="reference internal" href="glossary.html#term-type-expression"><span class="xref std std-term">type expression</span></a>, optionally qualified with one of the
+<a class="reference internal" href="glossary.html#term-type-qualifier"><span class="xref std std-term">type qualifiers</span></a> <code class="docutils literal notranslate"><span class="pre">Required</span></code>, <code class="docutils literal notranslate"><span class="pre">NotRequired</span></code>, or <code class="docutils literal notranslate"><span class="pre">ReadOnly</span></code>.
+These type qualifiers may be nested arbitrarily or wrapped in <code class="docutils literal notranslate"><span class="pre">Annotated[]</span></code>. It is
+an error to use both <code class="docutils literal notranslate"><span class="pre">Required</span></code> and <code class="docutils literal notranslate"><span class="pre">NotRequired</span></code> in the same item definition.
+An item is <a class="reference internal" href="glossary.html#term-read-only"><span class="xref std std-term">read-only</span></a> if and only if the <code class="docutils literal notranslate"><span class="pre">ReadOnly</span></code> qualifier is used.</p>
+<p>To determine whether an item is <a class="reference internal" href="glossary.html#term-required"><span class="xref std std-term">required</span></a> or <a class="reference internal" href="glossary.html#term-non-required"><span class="xref std std-term">non-required</span></a>, the following
+procedure is used:</p>
+<ul class="simple">
+<li><p>If the <code class="docutils literal notranslate"><span class="pre">Required</span></code> qualifier is present, the item is required.</p></li>
+<li><p>If the <code class="docutils literal notranslate"><span class="pre">NotRequired</span></code> qualifier is present, the item is non-required.</p></li>
+<li><p>If the <code class="docutils literal notranslate"><span class="pre">total</span></code> argument of the TypedDict definition is <code class="docutils literal notranslate"><span class="pre">False</span></code>, the item is non-required.</p></li>
+<li><p>Else, the item is required.</p></li>
+</ul>
+<p>It is valid to use <code class="docutils literal notranslate"><span class="pre">Required[]</span></code> and <code class="docutils literal notranslate"><span class="pre">NotRequired[]</span></code> even for
+items where it is redundant, to enable additional explicitness if desired.
+Note that the value of <code class="docutils literal notranslate"><span class="pre">total</span></code> only affects items defined in the current class body,
+not in any base classes. Thus, inheritance can be used to create a TypedDict that mixes
+required and non-required items without using <code class="docutils literal notranslate"><span class="pre">Required[]</span></code> or <code class="docutils literal notranslate"><span class="pre">NotRequired[]</span></code>.</p>
+<p>The following example demonstrates some of these rules:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">NotRequired</span><span class="p">,</span> <span class="n">Required</span><span class="p">,</span> <span class="n">ReadOnly</span><span class="p">,</span> <span class="n">Annotated</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Movie</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># required, not read-only</span>
+    <span class="n">year</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># required, not read-only</span>
+    <span class="n">director</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># non-required, not read-only</span>
+    <span class="n">rating</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">ReadOnly</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>  <span class="c1"># non-required, read-only</span>
+    <span class="n">invalid</span><span class="p">:</span> <span class="n">Required</span><span class="p">[</span><span class="n">NotRequired</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>  <span class="c1"># type checker error: both Required and NotRequired used</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PartialMovie</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># non-required, not read-only</span>
+    <span class="n">year</span><span class="p">:</span> <span class="n">Required</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>  <span class="c1"># required, not read-only</span>
+    <span class="n">score</span><span class="p">:</span> <span class="n">ReadOnly</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># non-required, read-only</span>
+</pre></div>
+</div>
+</section>
+<section id="functional-syntax">
+<span id="typeddict-functional-syntax"></span><h3>Functional syntax<a class="headerlink" href="#functional-syntax" title="Link to this heading">¶</a></h3>
+<p>In addition to the class-based syntax, TypedDict types can be created
+using an alternative functional syntax. This syntax allows defining
+items with keys that are not valid Python identifiers, and it is compatible
+with older Python versions such as 3.5 and 2.7 that don’t support the
+variable definition syntax introduced in <span class="target" id="index-5"></span><a class="pep reference external" href="https://peps.python.org/pep-0526/"><strong>PEP 526</strong></a>. On the other hand, this syntax
+does not support inheritance.</p>
+<p>The functional syntax resembles the traditional syntax for defining named tuples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+
+<span class="n">Movie</span> <span class="o">=</span> <span class="n">TypedDict</span><span class="p">(</span><span class="s1">&#39;Movie&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>The syntax comprises a call to <code class="docutils literal notranslate"><span class="pre">TypedDict()</span></code>, the result of which must be immediately
+assigned to a variable with the same name as the first argument to <code class="docutils literal notranslate"><span class="pre">TypedDict()</span></code>.</p>
+<p>The call to <code class="docutils literal notranslate"><span class="pre">TypedDict()</span></code> must have two positional arguments. The first is a string
+literal specifying the name of the TypedDict type. The second is a dictionary specifying
+the <a class="reference internal" href="glossary.html#term-item"><span class="xref std std-term">items</span></a> of the TypedDict. It must be a dictionary display expression,
+not a variable or other expression that evaluates to a dictionary at runtime.
+The keys of the dictionary must be string literals and the values must be
+<a class="reference internal" href="glossary.html#term-annotation-expression"><span class="xref std std-term">annotation expressions</span></a> following the same rules as
+the class-based syntax (i.e., the qualifiers <code class="docutils literal notranslate"><span class="pre">Required</span></code>, <code class="docutils literal notranslate"><span class="pre">NotRequired</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">ReadOnly</span></code> are allowed). In addition to the two positional arguments, <code class="docutils literal notranslate"><span class="pre">total</span></code>,
+<code class="docutils literal notranslate"><span class="pre">closed</span></code>, and <code class="docutils literal notranslate"><span class="pre">extra_items</span></code> keyword arguments are also supported, with the same
+semantics as in the class-based syntax.</p>
+</section>
+</section>
+<section id="using-typeddict-types">
+<h2>Using TypedDict Types<a class="headerlink" href="#using-typeddict-types" title="Link to this heading">¶</a></h2>
+<p>Here is an example of how the type <code class="docutils literal notranslate"><span class="pre">Movie</span></code> can be used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movie</span><span class="p">:</span> <span class="n">Movie</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Blade Runner&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="mi">1982</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>An explicit <code class="docutils literal notranslate"><span class="pre">Movie</span></code> type annotation is generally needed, as
+otherwise an ordinary dictionary type could be assumed by a type
+checker, for backwards compatibility.  When a type checker can infer
+that a constructed dictionary object should be a TypedDict, an
+explicit annotation can be omitted.  A typical example is a dictionary
+object as a function argument.  In this example, a type checker is
+expected to infer that the dictionary argument should be understood as
+a TypedDict:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">record_movie</span><span class="p">(</span><span class="n">movie</span><span class="p">:</span> <span class="n">Movie</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">record_movie</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Blade Runner&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="mi">1982</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Another example where a type checker should treat a dictionary display
+as a TypedDict is in an assignment to a variable with a previously
+declared TypedDict type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movie</span><span class="p">:</span> <span class="n">Movie</span>
+<span class="o">...</span>
+<span class="n">movie</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Blade Runner&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="mi">1982</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Operations on <code class="docutils literal notranslate"><span class="pre">movie</span></code> can be checked by a static type checker:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movie</span><span class="p">[</span><span class="s1">&#39;director&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Ridley Scott&#39;</span>  <span class="c1"># Error: invalid key &#39;director&#39;</span>
+<span class="n">movie</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1982&#39;</span>  <span class="c1"># Error: invalid value type (&quot;int&quot; expected)</span>
+</pre></div>
+</div>
+<p>The code below should be rejected, since <code class="docutils literal notranslate"><span class="pre">'title'</span></code> is not a valid
+key, and the <code class="docutils literal notranslate"><span class="pre">'name'</span></code> key is missing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movie2</span><span class="p">:</span> <span class="n">Movie</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Blade Runner&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="mi">1982</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The created TypedDict type object is not a real class object.  Here
+are the only uses of the type a type checker is expected to allow:</p>
+<ul class="simple">
+<li><p>It can be used in <a class="reference internal" href="glossary.html#term-type-expression"><span class="xref std std-term">type expressions</span></a> to
+represent the TypedDict type.</p></li>
+<li><p>It can be used as a callable object with keyword arguments
+corresponding to the TypedDict items; see <a class="reference internal" href="#typeddict-constructor"><span class="std std-ref">The TypedDict constructor</span></a>.</p></li>
+<li><p>It can be used as a base class, but only when defining a derived
+TypedDict (see <a class="reference internal" href="#typeddict-class-based-syntax"><span class="std std-ref">above</span></a>).</p></li>
+</ul>
+<p>In particular, TypedDict type objects cannot be used in
+<code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> tests such as <code class="docutils literal notranslate"><span class="pre">isinstance(d,</span> <span class="pre">Movie)</span></code>. This is
+consistent with how <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> is not supported for
+other type forms such as <code class="docutils literal notranslate"><span class="pre">list[str]</span></code>.</p>
+<section id="the-typeddict-constructor">
+<span id="typeddict-constructor"></span><h3>The TypedDict constructor<a class="headerlink" href="#the-typeddict-constructor" title="Link to this heading">¶</a></h3>
+<p>TypedDict types are callable at runtime and can be used as a constructor
+to create values that conform to the TypedDict type. The constructor
+takes only keyword arguments, corresponding to the items of the TypedDict.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">Movie</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Blade Runner&#39;</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">1982</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When called, the TypedDict type object returns an ordinary
+dictionary object at runtime:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>  <span class="c1"># &lt;class &#39;dict&#39;&gt;</span>
+</pre></div>
+</div>
+<p>Every <a class="reference internal" href="glossary.html#term-required"><span class="xref std std-term">required</span></a> item must be provided as a keyword argument. <a class="reference internal" href="glossary.html#term-non-required"><span class="xref std std-term">Non-required</span></a>
+items may be omitted. Whether an item is read-only has no effect on the
+constructor.</p>
+<p>Closed and open TypedDicts allow no additional items beyond those explicitly
+defined, but TypedDicts with extra items allow arbitrary keyword arguments,
+which must be of the specified type. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">ReadOnly</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MovieWithExtras</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="n">ReadOnly</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">year</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="n">m1</span> <span class="o">=</span> <span class="n">MovieWithExtras</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Blade Runner&#39;</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">1982</span><span class="p">)</span>  <span class="c1"># OK</span>
+<span class="n">m2</span> <span class="o">=</span> <span class="n">MovieWithExtras</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;The Godfather&#39;</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">1972</span><span class="p">,</span> <span class="n">director</span><span class="o">=</span><span class="s1">&#39;Francis Ford Coppola&#39;</span><span class="p">,</span> <span class="n">rating</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>  <span class="c1"># OK</span>
+<span class="n">m3</span> <span class="o">=</span> <span class="n">MovieWithExtras</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Inception&#39;</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">2010</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mf">160.0</span><span class="p">)</span>  <span class="c1"># Type check error: budget must be int or str</span>
+</pre></div>
+</div>
+</section>
+<section id="initialization-from-dictionary-literals">
+<h3>Initialization from dictionary literals<a class="headerlink" href="#initialization-from-dictionary-literals" title="Link to this heading">¶</a></h3>
+<p>Type checkers should also allow initializing a value of TypedDict type from
+a dictionary literal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">m</span><span class="p">:</span> <span class="n">Movie</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Blade Runner&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="mi">1982</span><span class="p">}</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>Or from a call to <code class="docutils literal notranslate"><span class="pre">dict()</span></code> with keyword arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">m</span><span class="p">:</span> <span class="n">Movie</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Blade Runner&#39;</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">1982</span><span class="p">)</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>In these cases, extra keys should not be allowed unless the TypedDict
+is defined to allow <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a>. In this example, the <code class="docutils literal notranslate"><span class="pre">director</span></code> key is not defined in
+<code class="docutils literal notranslate"><span class="pre">Movie</span></code> and is expected to generate an error from a type checker:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">m</span><span class="p">:</span> <span class="n">Movie</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Alien&#39;</span><span class="p">,</span>
+    <span class="n">year</span><span class="o">=</span><span class="mi">1979</span><span class="p">,</span>
+    <span class="n">director</span><span class="o">=</span><span class="s1">&#39;Ridley Scott&#39;</span><span class="p">)</span>  <span class="c1"># error: Unexpected key &#39;director&#39;</span>
+</pre></div>
+</div>
+<p>If a TypedDict has extra items, extra keys are allowed, provided their value
+matches the extra items type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ExtraMovie</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="nb">bool</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">a</span><span class="p">:</span> <span class="n">ExtraMovie</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Blade Runner&quot;</span><span class="p">,</span> <span class="s2">&quot;novel_adaptation&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>  <span class="c1"># OK</span>
+<span class="n">b</span><span class="p">:</span> <span class="n">ExtraMovie</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Blade Runner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">1982</span><span class="p">,</span>  <span class="c1"># Not OK. &#39;int&#39; is not assignable to &#39;bool&#39;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">extra_items=bool</span></code> specifies that items other than <code class="docutils literal notranslate"><span class="pre">'name'</span></code>
+have a value type of <code class="docutils literal notranslate"><span class="pre">bool</span></code> and are non-required.</p>
+</section>
+</section>
+<section id="inheritance">
+<span id="typeddict-inheritance"></span><h2>Inheritance<a class="headerlink" href="#inheritance" title="Link to this heading">¶</a></h2>
+<p>As discussed under <a class="reference internal" href="#typeddict-class-based-syntax"><span class="std std-ref">Class-based Syntax</span></a>, TypedDict types
+can inherit from one or more other TypedDict types.  In this case the
+<code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> base class should not be included.  Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">BookBasedMovie</span><span class="p">(</span><span class="n">Movie</span><span class="p">):</span>
+    <span class="n">based_on</span><span class="p">:</span> <span class="nb">str</span>
+</pre></div>
+</div>
+<p>Now <code class="docutils literal notranslate"><span class="pre">BookBasedMovie</span></code> has keys <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">year</span></code>, and <code class="docutils literal notranslate"><span class="pre">based_on</span></code>. It is
+equivalent to this definition, since TypedDict types are <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a> types:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">BookBasedMovie</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">year</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">based_on</span><span class="p">:</span> <span class="nb">str</span>
+</pre></div>
+</div>
+<section id="overriding-items">
+<h3>Overriding items<a class="headerlink" href="#overriding-items" title="Link to this heading">¶</a></h3>
+<p>Under limited circumstances, subclasses may redeclare items defined in a superclass with
+a different type or different qualifiers. Redeclaring an item with the same type and qualifiers
+is always allowed, although it is redundant.</p>
+<p>If an item is mutable in a superclass, it must remain mutable in the subclass. Similarly,
+mutable items that are <a class="reference internal" href="glossary.html#term-required"><span class="xref std std-term">required</span></a> in a superclass must remain required in the subclass,
+and mutable <a class="reference internal" href="glossary.html#term-non-required"><span class="xref std std-term">non-required</span></a> items in the superclass must remain non-required in the subclass.
+However, if the superclass item is <a class="reference internal" href="glossary.html#term-read-only"><span class="xref std std-term">read-only</span></a>, a superclass item that is non-required
+may be overridden with a required item in the subclass. A read-only item in a superclass
+may be redeclared as mutable (that is, without the <code class="docutils literal notranslate"><span class="pre">ReadOnly</span></code> qualifier) in a subclass.
+These rules are necessary for type safety.</p>
+<p>If an item is read-only in the superclass, the subclass may redeclare it with a different type
+that is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to the superclass type. Otherwise, changing the type of an item is not allowed.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">X</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">ReadOnly</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">z</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Y</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Type check error: cannot overwrite TypedDict field &quot;x&quot;</span>
+    <span class="n">y</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># OK: bool is assignable to int, and a mutable item can override a read-only one</span>
+    <span class="n">z</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># Type check error: key is mutable, so subclass type must be consistent with superclass</span>
+</pre></div>
+</div>
+</section>
+<section id="openness">
+<h3>Openness<a class="headerlink" href="#openness" title="Link to this heading">¶</a></h3>
+<p>The openness of a TypedDict (whether it is <a class="reference internal" href="glossary.html#term-open"><span class="xref std std-term">open</span></a>, <a class="reference internal" href="glossary.html#term-closed"><span class="xref std std-term">closed</span></a>, or has <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a>)
+is inherited from its superclass by default:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ClosedBase</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ClosedChild</span><span class="p">(</span><span class="n">ClosedBase</span><span class="p">):</span>  <span class="c1"># also closed</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExtraItemsBase</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExtraItemsChild</span><span class="p">(</span><span class="n">ExtraItemsBase</span><span class="p">):</span>  <span class="c1"># also has extra_items=int | None</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>However, subclasses may also explicitly use the <code class="docutils literal notranslate"><span class="pre">closed</span></code> and <code class="docutils literal notranslate"><span class="pre">extra_items</span></code> arguments
+to change the openness of the TypedDict, but in some cases this yields a type checker error:</p>
+<ul class="simple">
+<li><p>If the base class is open, all possible states are allowed in the subclass: it may remain open,
+it may be closed (with <code class="docutils literal notranslate"><span class="pre">closed=True</span></code>), or it may have extra items (with <code class="docutils literal notranslate"><span class="pre">extra_items=...</span></code>).</p></li>
+<li><p>If the base class is closed, any child classes must also be closed.</p></li>
+<li><p>If the base class has extra items, but they are not read-only, the child class must also allow
+the same extra items.</p></li>
+<li><p>If the base class has read-only extra items, the child class may be closed,
+or it may redeclare its extra items with a type that is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to the base class type.
+Child classes may also have mutable extra items if the base class has read-only extra items.</p></li>
+</ul>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ExtraItemsRO</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="n">ReadOnly</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ClosedChild</span><span class="p">(</span><span class="n">ExtraItemsRO</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>  <span class="c1"># OK</span>
+    <span class="k">pass</span>
+
+<span class="c1"># OK, str is assignable to int | str, and mutable extra items can override read-only ones</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NarrowerChild</span><span class="p">(</span><span class="n">ExtraItemsRO</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="nb">str</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>When a TypedDict has extra items, this effectively defines the value type of any unnamed
+items accepted to the TypedDict and marks them as non-required. Thus, there are some
+restrictions on the items that can be added in subclasses. For each item
+added in a subclass of a class with extra items of type <code class="docutils literal notranslate"><span class="pre">T</span></code>, the following rules must be followed:</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">extra_items</span></code> is read-only</p>
+<ul>
+<li><p>The item can be either required or non-required</p></li>
+<li><p>The item’s value type must be <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to <code class="docutils literal notranslate"><span class="pre">T</span></code></p></li>
+</ul>
+</li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">extra_items</span></code> is not read-only</p>
+<ul>
+<li><p>The item must be non-required</p></li>
+<li><p>The item’s value type must be <a class="reference internal" href="glossary.html#term-consistent"><span class="xref std std-term">consistent</span></a> with <code class="docutils literal notranslate"><span class="pre">T</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MovieBase</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MovieRequiredYear</span><span class="p">(</span><span class="n">MovieBase</span><span class="p">):</span>  <span class="c1"># Not OK. Required key &#39;year&#39; is not known to &#39;MovieBase&#39;</span>
+    <span class="n">year</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MovieNotRequiredYear</span><span class="p">(</span><span class="n">MovieBase</span><span class="p">):</span>  <span class="c1"># Not OK. &#39;int | None&#39; is not consistent with &#39;int&#39;</span>
+    <span class="n">year</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MovieWithYear</span><span class="p">(</span><span class="n">MovieBase</span><span class="p">):</span>  <span class="c1"># OK</span>
+    <span class="n">year</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BookBase</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="n">ReadOnly</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Book</span><span class="p">(</span><span class="n">BookBase</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="nb">str</span><span class="p">):</span>  <span class="c1"># OK</span>
+    <span class="n">year</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># OK, since extra_items is read-only</span>
+</pre></div>
+</div>
+</section>
+<section id="multiple-inheritance">
+<h3>Multiple inheritance<a class="headerlink" href="#multiple-inheritance" title="Link to this heading">¶</a></h3>
+<p>TypedDict types may use multiple inheritance to inherit items from multiple
+base classes. Here is an example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">X</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Y</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">y</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">XYZ</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+    <span class="n">z</span><span class="p">:</span> <span class="nb">bool</span>
+</pre></div>
+</div>
+<p>The TypedDict <code class="docutils literal notranslate"><span class="pre">XYZ</span></code> has three items: <code class="docutils literal notranslate"><span class="pre">x</span></code> (type <code class="docutils literal notranslate"><span class="pre">int</span></code>), <code class="docutils literal notranslate"><span class="pre">y</span></code>
+(type <code class="docutils literal notranslate"><span class="pre">str</span></code>), and <code class="docutils literal notranslate"><span class="pre">z</span></code> (type <code class="docutils literal notranslate"><span class="pre">bool</span></code>).</p>
+<p>Multiple inheritance does not allow conflicting types for the same item:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">X</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+   <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Y</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+   <span class="n">x</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">XYZ</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>  <span class="c1"># Type check error: cannot overwrite TypedDict field &quot;x&quot; while merging</span>
+   <span class="n">xyz</span><span class="p">:</span> <span class="nb">bool</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="subtyping-and-assignability">
+<span id="typeddict-assignability"></span><h2>Subtyping and assignability<a class="headerlink" href="#subtyping-and-assignability" title="Link to this heading">¶</a></h2>
+<p>Because TypedDict types are <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a> types, a TypedDict <code class="docutils literal notranslate"><span class="pre">T1</span></code> is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to another
+TypedDict type <code class="docutils literal notranslate"><span class="pre">T2</span></code> if the two are structurally compatible, meaning that all operations that
+are allowed on <code class="docutils literal notranslate"><span class="pre">T2</span></code> are also allowed on <code class="docutils literal notranslate"><span class="pre">T1</span></code>. For similar reasons, TypedDict types are
+generally not assignable to any specialization of <code class="docutils literal notranslate"><span class="pre">dict</span></code> or <code class="docutils literal notranslate"><span class="pre">Mapping</span></code>, other than <code class="docutils literal notranslate"><span class="pre">Mapping[str,</span> <span class="pre">object]</span></code>,
+though certain <a class="reference internal" href="glossary.html#term-closed"><span class="xref std std-term">closed</span></a> TypedDicts and TypedDicts with <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a> may be assignable
+to these types.</p>
+<p>The rest of this section discusses the <a class="reference internal" href="glossary.html#term-subtype"><span class="xref std std-term">subtyping</span></a> rules for TypedDict in more detail.
+As with any type, the rules for <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignability</span></a> can be derived from the subtyping
+rules using the <a class="reference internal" href="glossary.html#term-materialize"><span class="xref std std-term">materialization</span></a> procedure. Generally, this means that where
+“<a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a>” is mentioned below, the <a class="reference internal" href="glossary.html#term-consistent"><span class="xref std std-term">consistency</span></a> relation can be used instead
+when implementing assignability, and where “<a class="reference internal" href="glossary.html#term-subtype"><span class="xref std std-term">subtyping</span></a>” between elements of a
+TypedDict is mentioned, assignability can be used instead when implementing assignability between TypedDicts.</p>
+<section id="subtyping-between-typeddict-types">
+<h3>Subtyping between TypedDict types<a class="headerlink" href="#subtyping-between-typeddict-types" title="Link to this heading">¶</a></h3>
+<p>A TypedDict type <code class="docutils literal notranslate"><span class="pre">B</span></code> is a <a class="reference internal" href="glossary.html#term-subtype"><span class="xref std std-term">subtype</span></a> of a TypedDict type <code class="docutils literal notranslate"><span class="pre">A</span></code> if
+and only if all of the conditions below are satisfied. For the purposes of these conditions,
+an <a class="reference internal" href="glossary.html#term-open"><span class="xref std std-term">open</span></a> TypedDict is treated as if it had read-only <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a> of type <code class="docutils literal notranslate"><span class="pre">object</span></code>.</p>
+<p>The conditions are as follows:</p>
+<ul class="simple">
+<li><p>For each item in <code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<ul>
+<li><p>If it is required in <code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<ul>
+<li><p>It must also be required in <code class="docutils literal notranslate"><span class="pre">B</span></code>.</p></li>
+<li><p>If it is read-only in <code class="docutils literal notranslate"><span class="pre">A</span></code>, the item type in <code class="docutils literal notranslate"><span class="pre">B</span></code> must be a subtype of the item type in <code class="docutils literal notranslate"><span class="pre">A</span></code>.
+(For <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignability</span></a> between two TypedDicts, the first item must instead
+be assignable to the second.)</p></li>
+<li><p>If it is mutable in <code class="docutils literal notranslate"><span class="pre">A</span></code>, it must also be mutable in <code class="docutils literal notranslate"><span class="pre">B</span></code>, and the item type in <code class="docutils literal notranslate"><span class="pre">B</span></code> must be
+<a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> to the item type in <code class="docutils literal notranslate"><span class="pre">A</span></code>. (It follows that for assignability, the two item types
+must be <a class="reference internal" href="glossary.html#term-consistent"><span class="xref std std-term">consistent</span></a>.)</p></li>
+</ul>
+</li>
+<li><p>If it is non-required in <code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<ul>
+<li><p>If it is read-only in <code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<ul>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">B</span></code> has an item with the same key, its item type must be a subtype of the item type in <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+<li><p>Else:</p>
+<ul>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">B</span></code> is closed, the check succeeds.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">B</span></code> has extra items, the extra items type must be a subtype of the item type in <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>If it is mutable in <code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<ul>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">B</span></code> has an item with the same key, it must also be mutable and non-required, and its item type must be
+<a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> to the item type in <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+<li><p>Else:</p>
+<ul>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">B</span></code> is closed, the check fails.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">B</span></code> has extra items, the extra items type must not be read-only and must
+be <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> to the item type in <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">A</span></code> is closed, <code class="docutils literal notranslate"><span class="pre">B</span></code> must also be closed, and it must not contain any items that are not present in <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">A</span></code> has read-only extra items, <code class="docutils literal notranslate"><span class="pre">B</span></code> must either be closed or also have extra items, and the extra items type in <code class="docutils literal notranslate"><span class="pre">B</span></code>
+must be a subtype of the extra items type in <code class="docutils literal notranslate"><span class="pre">A</span></code>. Additionally, for any items in <code class="docutils literal notranslate"><span class="pre">B</span></code> that are not present in <code class="docutils literal notranslate"><span class="pre">A</span></code>,
+the item type must be a subtype of the extra items type in <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">A</span></code> has mutable extra items, <code class="docutils literal notranslate"><span class="pre">B</span></code> must also have mutable extra items, and the extra items type in <code class="docutils literal notranslate"><span class="pre">B</span></code>
+must be <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> to the extra items type in <code class="docutils literal notranslate"><span class="pre">A</span></code>. Additionally, for any items in <code class="docutils literal notranslate"><span class="pre">B</span></code> that are not present in <code class="docutils literal notranslate"><span class="pre">A</span></code>,
+the item type must be <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> to the extra items type in <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+</ul>
+<p>The intuition behind these rules is that any operation that is valid on <code class="docutils literal notranslate"><span class="pre">A</span></code> must also be valid and safe on <code class="docutils literal notranslate"><span class="pre">B</span></code>.
+For example, any key access on <code class="docutils literal notranslate"><span class="pre">A</span></code> that is guaranteed to succeed (because the item is required) must also succeed on <code class="docutils literal notranslate"><span class="pre">B</span></code>,
+and any mutating operation (such as setting or deleting a key) that is allowed on <code class="docutils literal notranslate"><span class="pre">A</span></code> must also be allowed on <code class="docutils literal notranslate"><span class="pre">B</span></code>.</p>
+<p>An example where mutability is relevant:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">B</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">A</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">a</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">b</span><span class="p">:</span> <span class="n">B</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>  <span class="c1"># Type check error: &#39;B&#39; not assignable to &#39;A&#39;</span>
+<span class="n">b</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Runtime error: None + 1</span>
+</pre></div>
+</div>
+</section>
+<section id="subtyping-with-mapping">
+<span id="typeddict-mapping"></span><h3>Subtyping with <code class="docutils literal notranslate"><span class="pre">Mapping</span></code><a class="headerlink" href="#subtyping-with-mapping" title="Link to this heading">¶</a></h3>
+<p>A TypedDict type is a <a class="reference internal" href="glossary.html#term-subtype"><span class="xref std std-term">subtype</span></a> of a type of the form <code class="docutils literal notranslate"><span class="pre">Mapping[str,</span> <span class="pre">VT]</span></code>
+when all value types of the items in the TypedDict
+are subtypes of <code class="docutils literal notranslate"><span class="pre">VT</span></code>. For the purpose of this rule, an <a class="reference internal" href="glossary.html#term-open"><span class="xref std std-term">open</span></a> TypedDict is considered
+to have read-only <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a> of type <code class="docutils literal notranslate"><span class="pre">object</span></code>.</p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MovieExtraStr</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="nb">str</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">extra_str</span><span class="p">:</span> <span class="n">MovieExtraStr</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Blade Runner&quot;</span><span class="p">,</span> <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+<span class="n">str_mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">extra_str</span>  <span class="c1"># OK</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MovieExtraInt</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="n">extra_int</span><span class="p">:</span> <span class="n">MovieExtraInt</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Blade Runner&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">1982</span><span class="p">}</span>
+<span class="n">int_mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">extra_int</span>  <span class="c1"># Not OK. &#39;int | str&#39; is not assignable with &#39;int&#39;</span>
+<span class="n">int_str_mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">extra_int</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>As a consequence, every TypedDict type is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to <code class="docutils literal notranslate"><span class="pre">Mapping[str,</span> <span class="pre">object]</span></code>.</p>
+</section>
+<section id="subtyping-with-dict">
+<span id="typeddict-dict"></span><h3>Subtyping with <code class="docutils literal notranslate"><span class="pre">dict</span></code><a class="headerlink" href="#subtyping-with-dict" title="Link to this heading">¶</a></h3>
+<p>Generally, TypedDict types are not subtypes of any specialization of <code class="docutils literal notranslate"><span class="pre">dict[...]</span></code> type, since
+dictionary types allow destructive operations, including <code class="docutils literal notranslate"><span class="pre">clear()</span></code>. They
+also allow arbitrary keys to be set, which would compromise type safety.</p>
+<p>However, a TypedDict with <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a> may be a subtype of <code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">VT]</span></code>,
+provided certain conditions are met, because it introduces sufficient restrictions
+for this subtyping relation to be safe.
+A TypedDict type is a subtype of <code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">VT]</span></code> if the following conditions are met:</p>
+<ul class="simple">
+<li><p>The TypedDict type has mutable <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a> of a type that is <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> to <code class="docutils literal notranslate"><span class="pre">VT</span></code>.</p></li>
+<li><p>All items on the TypedDict satisfy the following conditions:</p>
+<ul>
+<li><p>The value type of the item is <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> to <code class="docutils literal notranslate"><span class="pre">VT</span></code>.</p></li>
+<li><p>The item is not read-only.</p></li>
+<li><p>The item is not required.</p></li>
+</ul>
+</li>
+</ul>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">IntDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntDictWithNum</span><span class="p">(</span><span class="n">IntDict</span><span class="p">):</span>
+    <span class="n">num</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">IntDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">v</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>  <span class="c1"># OK</span>
+    <span class="n">v</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>  <span class="c1"># OK</span>
+
+<span class="n">not_required_num_dict</span><span class="p">:</span> <span class="n">IntDictWithNum</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;num&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="n">regular_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">not_required_num_dict</span>  <span class="c1"># OK</span>
+<span class="n">f</span><span class="p">(</span><span class="n">not_required_num_dict</span><span class="p">)</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>In this case, some methods that are otherwise unavailable on a TypedDict are allowed,
+with signatures matching <code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">VT]</span></code>
+(e.g.: <code class="docutils literal notranslate"><span class="pre">__setitem__(self,</span> <span class="pre">key:</span> <span class="pre">str,</span> <span class="pre">value:</span> <span class="pre">VT)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">not_required_num_dict</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>  <span class="c1"># OK</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">not_required_num_dict</span><span class="o">.</span><span class="n">popitem</span><span class="p">())</span>  <span class="c1"># OK. Revealed type is &#39;tuple[str, int]&#39;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">not_required_num_dict</span><span class="p">:</span> <span class="n">IntDictWithNum</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">not_required_num_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span>  <span class="c1"># OK</span>
+    <span class="k">del</span> <span class="n">not_required_num_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>On the other hand, <code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">VT]</span></code> is not assignable to any TypedDict type,
+because such a type includes instances of subclasses of <code class="docutils literal notranslate"><span class="pre">dict</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CustomDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">might_not_be_a_builtin_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
+    <span class="n">int_dict</span><span class="p">:</span> <span class="n">IntDict</span> <span class="o">=</span> <span class="n">might_not_be_a_builtin_dict</span> <span class="c1"># Not OK</span>
+
+<span class="n">not_a_builtin_dict</span> <span class="o">=</span> <span class="n">CustomDict</span><span class="p">({</span><span class="s2">&quot;num&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">f</span><span class="p">(</span><span class="n">not_a_builtin_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="supported-and-unsupported-operations">
+<span id="typeddict-operations"></span><h2>Supported and Unsupported Operations<a class="headerlink" href="#supported-and-unsupported-operations" title="Link to this heading">¶</a></h2>
+<p>Type checkers should support restricted forms of most <code class="docutils literal notranslate"><span class="pre">dict</span></code>
+operations on TypedDict objects.  The guiding principle is that
+operations not involving <code class="docutils literal notranslate"><span class="pre">Any</span></code> types should be rejected by type
+checkers if they may violate runtime type safety.  Here are some of
+the most important type safety violations to prevent:</p>
+<ol class="arabic simple">
+<li><p>A required key is missing.</p></li>
+<li><p>A value has an invalid type.</p></li>
+<li><p>A key that is not defined in the TypedDict type is added.</p></li>
+<li><p>Read-only items are modified or deleted.</p></li>
+</ol>
+<p id="readonly">Items that are <a class="reference internal" href="glossary.html#term-read-only"><span class="xref std std-term">read-only</span></a> may not be mutated (added, modified, or removed):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReadOnly</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Band</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">members</span><span class="p">:</span> <span class="n">ReadOnly</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+
+<span class="n">blur</span><span class="p">:</span> <span class="n">Band</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;blur&quot;</span><span class="p">,</span> <span class="s2">&quot;members&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="n">blur</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Blur&quot;</span>  <span class="c1"># OK: &quot;name&quot; is not read-only</span>
+<span class="n">blur</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Damon Albarn&quot;</span><span class="p">]</span>  <span class="c1"># Type check error: &quot;members&quot; is read-only</span>
+<span class="n">blur</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Damon Albarn&quot;</span><span class="p">)</span>  <span class="c1"># OK: list is mutable</span>
+</pre></div>
+</div>
+<p>The exact type checking rules are up to each type checker to decide.
+In some cases potentially unsafe operations may be accepted if the
+alternative is to generate false positive errors for idiomatic code.
+Sometimes, operations on <a class="reference internal" href="glossary.html#term-closed"><span class="xref std std-term">closed</span></a> TypedDicts or TypedDicts with
+<a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a> are safe even if they would be unsafe on
+<a class="reference internal" href="glossary.html#term-open"><span class="xref std std-term">open</span></a> TypedDicts, so type checker behavior may depend on the
+openness of the TypedDict.</p>
+<section id="allowed-keys">
+<h3>Allowed keys<a class="headerlink" href="#allowed-keys" title="Link to this heading">¶</a></h3>
+<p>Many operations on TypedDict objects involve specifying a dictionary key.
+Examples include accessing an item with <code class="docutils literal notranslate"><span class="pre">d['key']</span></code> or setting an item with
+<code class="docutils literal notranslate"><span class="pre">d['key']</span> <span class="pre">=</span> <span class="pre">value</span></code>.</p>
+<p>A key that is not a literal should generally be rejected, since its
+value is unknown during type checking, and thus can cause some of the
+above violations. This involves both destructive operations such as setting
+an item and read-only operations such as subscription expressions.</p>
+<p>The use of a key that is not known to exist should be reported as an error,
+even if this wouldn’t necessarily generate a runtime type error.  These are
+often mistakes, and these may insert values with an invalid type if
+<a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a> <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignability</span></a> hides the types of
+certain items. For example, <code class="docutils literal notranslate"><span class="pre">d['x']</span> <span class="pre">=</span> <span class="pre">1</span></code> should generate a type check error
+if <code class="docutils literal notranslate"><span class="pre">'x'</span></code> is not a valid key for <code class="docutils literal notranslate"><span class="pre">d</span></code> (which is assumed to be a TypedDict
+type), unless <code class="docutils literal notranslate"><span class="pre">d</span></code> has mutable <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a> of a compatible type.</p>
+<p>Type checkers should allow <a class="reference internal" href="qualifiers.html#uppercase-final"><span class="std std-ref">final names</span></a> with
+string values to be used instead of string literals in operations on
+TypedDict objects.  For example, this is valid:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">YEAR</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="s1">&#39;year&#39;</span>
+
+<span class="n">m</span><span class="p">:</span> <span class="n">Movie</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Alien&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="mi">1979</span><span class="p">}</span>
+<span class="n">years_since_epoch</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="n">YEAR</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1970</span>
+</pre></div>
+</div>
+<p>Similarly, an expression with a suitable <a class="reference internal" href="literal.html#literal"><span class="std std-ref">literal type</span></a>
+can be used instead of a literal value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="n">movie</span><span class="p">:</span> <span class="n">Movie</span><span class="p">,</span>
+              <span class="n">key</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">movie</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="specific-operations">
+<h3>Specific operations<a class="headerlink" href="#specific-operations" title="Link to this heading">¶</a></h3>
+<p>This section discusses some specific operations in more detail.</p>
+<ul>
+<li><p>As an exception to the general rule around non-literal keys, <code class="docutils literal notranslate"><span class="pre">d.get(e)</span></code> and <code class="docutils literal notranslate"><span class="pre">e</span> <span class="pre">in</span> <span class="pre">d</span></code>
+should be allowed for TypedDict objects, for an arbitrary expression
+<code class="docutils literal notranslate"><span class="pre">e</span></code> with type <code class="docutils literal notranslate"><span class="pre">str</span></code>.  The motivation is that these are safe and
+can be useful for introspecting TypedDict objects.  The static type
+of <code class="docutils literal notranslate"><span class="pre">d.get(e)</span></code> should be the union of all possible item types in <code class="docutils literal notranslate"><span class="pre">d</span></code>
+if the string value of <code class="docutils literal notranslate"><span class="pre">e</span></code> cannot be determined statically.
+(This simplifies to <code class="docutils literal notranslate"><span class="pre">object</span></code> if <code class="docutils literal notranslate"><span class="pre">d</span></code> is <a class="reference internal" href="glossary.html#term-open"><span class="xref std std-term">open</span></a>.)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clear()</span></code> is not safe on <a class="reference internal" href="glossary.html#term-open"><span class="xref std std-term">open</span></a> TypedDicts since it could remove required items, some of which
+may not be directly visible because of <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a>
+<a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignability</span></a>. However, this method is safe on
+<a class="reference internal" href="glossary.html#term-closed"><span class="xref std std-term">closed</span></a> TypedDicts and TypedDicts with <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a> if
+there are no required or read-only items and there cannot be any subclasses with required
+or read-only items.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">popitem()</span></code> is similarly unsafe on many TypedDicts, even
+if all known items are <a class="reference internal" href="glossary.html#term-non-required"><span class="xref std std-term">non-required</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">del</span> <span class="pre">obj['key']</span></code> should be rejected unless <code class="docutils literal notranslate"><span class="pre">'key'</span></code> is a
+non-required, mutable key.</p></li>
+<li><p>Type checkers may allow reading an item using <code class="docutils literal notranslate"><span class="pre">d['x']</span></code> even if
+the key <code class="docutils literal notranslate"><span class="pre">'x'</span></code> is not required, instead of requiring the use of
+<code class="docutils literal notranslate"><span class="pre">d.get('x')</span></code> or an explicit <code class="docutils literal notranslate"><span class="pre">'x'</span> <span class="pre">in</span> <span class="pre">d</span></code> check.  The rationale is
+that tracking the existence of keys is difficult to implement in full
+generality, and that disallowing this could require many changes to
+existing code.
+Similarly, type checkers may allow indexed accesses
+with arbitrary str keys when a TypedDict is <a class="reference internal" href="glossary.html#term-closed"><span class="xref std std-term">closed</span></a> or has <a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a>.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="n">movie</span><span class="p">:</span> <span class="n">MovieExtraInt</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">movie</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>  <span class="c1"># Revealed type is &#39;str | int&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p>The return types of the <code class="docutils literal notranslate"><span class="pre">items()</span></code> and <code class="docutils literal notranslate"><span class="pre">values()</span></code> methods can be determined
+from the union of all item types in the TypedDict (which would include <code class="docutils literal notranslate"><span class="pre">object</span></code>
+for <a class="reference internal" href="glossary.html#term-open"><span class="xref std std-term">open</span></a> TypedDicts). Therefore, type checkers should infer more precise
+types for TypedDicts that are not open:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MovieExtraInt</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">movie</span><span class="p">:</span> <span class="n">MovieExtraInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">movie</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>  <span class="c1"># Revealed type is &#39;dict_items[str, str | int]&#39;</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">movie</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>  <span class="c1"># Revealed type is &#39;dict_values[str, str | int]&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">update()</span></code> method should not allow mutating a read-only item.
+Therefore, type checkers should error if a
+TypedDict with a read-only item is updated with another TypedDict that declares
+that item:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">ReadOnly</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">y</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="n">a1</span><span class="p">:</span> <span class="n">A</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="n">a2</span><span class="p">:</span> <span class="n">A</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">a2</span><span class="p">)</span>  <span class="c1"># Type check error: &quot;x&quot; is read-only in A</span>
+</pre></div>
+</div>
+<p>Unless the declared value is of bottom type (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Never" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Never</span></code></a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">B</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Never</span><span class="p">]</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">ReadOnly</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">update_a</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">B</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>  <span class="c1"># Accepted by type checker: &quot;x&quot; cannot be set on b</span>
+</pre></div>
+</div>
+<p>Note: Nothing will ever match the <code class="docutils literal notranslate"><span class="pre">Never</span></code> type, so an item annotated with it must be absent.</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="backwards-compatibility">
+<h2>Backwards Compatibility<a class="headerlink" href="#backwards-compatibility" title="Link to this heading">¶</a></h2>
+<p>To retain backwards compatibility, type checkers should not infer a
+TypedDict type unless it is sufficiently clear that this is desired by
+the programmer.  When unsure, an ordinary dictionary type should be
+inferred.  Otherwise existing code that type checks without errors may
+start generating errors once TypedDict support is added to the type
+checker, since TypedDict types are more restrictive than dictionary
+types.  In particular, they aren’t subtypes of dictionary types.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Typed dictionaries</a><ul>
+<li><a class="reference internal" href="#syntax">Syntax</a><ul>
+<li><a class="reference internal" href="#class-based-syntax">Class-based Syntax</a></li>
+<li><a class="reference internal" href="#functional-syntax">Functional syntax</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-typeddict-types">Using TypedDict Types</a><ul>
+<li><a class="reference internal" href="#the-typeddict-constructor">The TypedDict constructor</a></li>
+<li><a class="reference internal" href="#initialization-from-dictionary-literals">Initialization from dictionary literals</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#inheritance">Inheritance</a><ul>
+<li><a class="reference internal" href="#overriding-items">Overriding items</a></li>
+<li><a class="reference internal" href="#openness">Openness</a></li>
+<li><a class="reference internal" href="#multiple-inheritance">Multiple inheritance</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#subtyping-and-assignability">Subtyping and assignability</a><ul>
+<li><a class="reference internal" href="#subtyping-between-typeddict-types">Subtyping between TypedDict types</a></li>
+<li><a class="reference internal" href="#subtyping-with-mapping">Subtyping with <code class="docutils literal notranslate"><span class="pre">Mapping</span></code></a></li>
+<li><a class="reference internal" href="#subtyping-with-dict">Subtyping with <code class="docutils literal notranslate"><span class="pre">dict</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#supported-and-unsupported-operations">Supported and Unsupported Operations</a><ul>
+<li><a class="reference internal" href="#allowed-keys">Allowed keys</a></li>
+<li><a class="reference internal" href="#specific-operations">Specific operations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#backwards-compatibility">Backwards Compatibility</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="dataclasses.html"
+                          title="previous chapter">Dataclasses</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="tuples.html"
+                          title="next chapter">Tuples</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/typeddict.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tuples.html" title="Tuples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="dataclasses.html" title="Dataclasses"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Typed dictionaries</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

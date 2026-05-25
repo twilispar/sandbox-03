@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Static Typing with Python &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Using External Libraries" href="tutorials/external_libraries.html" /><link rel="stylesheet" href="_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="_static/py.svg" />
+            <script type="text/javascript" src="_static/copybutton.js"></script>
+            <script type="text/javascript" src="_static/menu.js"></script>
+            <script type="text/javascript" src="_static/search-focus.js"></script>
+            <script type="text/javascript" src="_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/index.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="#">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Static Typing with Python</a><ul>
+<li><a class="reference internal" href="#tutorials">Tutorials</a></li>
+<li><a class="reference internal" href="#guides">Guides</a></li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
+<li><a class="reference internal" href="#specification">Specification</a><ul>
+<li><a class="reference internal" href="#typing-peps">Typing PEPs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#discussions-and-support">Discussions and Support</a></li>
+<li><a class="reference internal" href="#typing-related-tools">Typing-related Tools</a><ul>
+<li><a class="reference internal" href="#type-checkers">Type Checkers</a></li>
+<li><a class="reference internal" href="#development-environments">Development Environments</a></li>
+<li><a class="reference internal" href="#linters-and-formatters">Linters and Formatters</a></li>
+<li><a class="reference internal" href="#type-hint-and-stub-integration">Type-Hint and Stub Integration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="tutorials/external_libraries.html"
+                          title="next chapter">Using External Libraries</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorials/external_libraries.html" title="Using External Libraries"
+             accesskey="N">next</a> |</li>
+          <li><img src="_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="#">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Static Typing with Python</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="static-typing-with-python">
+<h1>Static Typing with Python<a class="headerlink" href="#static-typing-with-python" title="Link to this heading">¶</a></h1>
+<section id="tutorials">
+<h2>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/external_libraries.html">Using External Libraries</a></li>
+</ul>
+</div>
+</section>
+<section id="guides">
+<h2>Guides<a class="headerlink" href="#guides" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/libraries.html">Typing Python Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/writing_stubs.html">Writing and Maintaining Stub Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/modernizing.html">Modernizing Superseded Typing Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/unreachable.html">Unreachable Code and Exhaustiveness Checking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/type_narrowing.html">Type Narrowing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/typing_anti_pitch.html">Reasons to avoid static type checking</a></li>
+</ul>
+</div>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reference/generics.html">Generics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/protocols.html">Protocols and structural subtyping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/best_practices.html">Typing Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference/quality.html">Testing and Ensuring Type Annotation Quality</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.python.org/3/library/typing.html">typing Module Documentation</a></li>
+</ul>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The documentation at <a class="reference external" href="https://mypy.readthedocs.io/">https://mypy.readthedocs.io/</a> is relatively accessible
+and complete.</p>
+</div>
+</section>
+<section id="specification">
+<h2>Specification<a class="headerlink" href="#specification" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="spec/index.html">Specification for the Python type system</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="spec/type-system.html">The Python Type System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/meta.html">Meta-topics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/concepts.html">Type system concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/annotations.html">Type annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/type-forms.html">Type forms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/special-types.html">Special types in annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/generics.html">Generics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/qualifiers.html">Type qualifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/class-compat.html">Class type assignability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/aliases.html">Type aliases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/literal.html">Literals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/protocol.html">Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/callables.html">Callables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/constructors.html">Constructors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/overload.html"><code class="docutils literal notranslate"><span class="pre">Overloads</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/exceptions.html">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/dataclasses.html">Dataclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/typeddict.html">Typed dictionaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/tuples.html">Tuples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/namedtuples.html">Named Tuples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/enums.html">Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/narrowing.html">Type narrowing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/directives.html">Type checker directives</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/distributing.html">Distributing type information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/historical.html">Historical and deprecated features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spec/glossary.html">Glossary</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="typing-peps">
+<h3>Typing PEPs<a class="headerlink" href="#typing-peps" title="Link to this heading">¶</a></h3>
+<p>Significant changes to the Python Type System Specification are proposed and
+discussed in Python Enhancement Proposals (PEPs). See
+<a class="reference external" href="https://peps.python.org/topic/typing">https://peps.python.org/topic/typing</a> for a list of all current and historical
+typing-related PEPs.</p>
+</section>
+</section>
+<section id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+<section id="discussions-and-support">
+<span id="contact"></span><h2>Discussions and Support<a class="headerlink" href="#discussions-and-support" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/python/typing/discussions">User help forum</a></p></li>
+<li><p><a class="reference external" href="http://gitter.im/python/typing">User chat on Gitter</a></p></li>
+<li><p><a class="reference external" href="https://discuss.python.org/c/typing/32">Developer forum</a></p></li>
+<li><p><a class="reference external" href="https://mail.python.org/archives/list/typing-sig&#64;python.org/">Developer mailing list (archived)</a></p></li>
+</ul>
+</section>
+<section id="typing-related-tools">
+<h2>Typing-related Tools<a class="headerlink" href="#typing-related-tools" title="Link to this heading">¶</a></h2>
+<section id="type-checkers">
+<h3>Type Checkers<a class="headerlink" href="#type-checkers" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://mypy-lang.org/">mypy</a></p></li>
+<li><p><a class="reference external" href="https://pyrefly.org/">pyrefly</a></p></li>
+<li><p><a class="reference external" href="https://github.com/microsoft/pyright">pyright</a></p></li>
+<li><p><a class="reference external" href="https://docs.astral.sh/ty/">ty</a></p></li>
+<li><p><a class="reference external" href="https://docs.zubanls.com/en/latest/">Zuban</a></p></li>
+</ul>
+<p>The extent to which these adhere to the specification is monitored by a
+<a class="reference external" href="https://github.com/python/typing/tree/main/conformance">conformance test suite</a>
+(<a class="reference external" href="https://htmlpreview.github.io/?https://github.com/python/typing/blob/main/conformance/results/results.html">results</a>).</p>
+</section>
+<section id="development-environments">
+<h3>Development Environments<a class="headerlink" href="#development-environments" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>, an IDE that supports
+type stubs both for type checking and code completion.</p></li>
+<li><p><a class="reference external" href="https://code.visualstudio.com/">Visual Studio Code</a>, a code editor that
+supports type checking using mypy, pyright, or the
+<a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance">Pylance</a>
+extension.</p></li>
+</ul>
+</section>
+<section id="linters-and-formatters">
+<h3>Linters and Formatters<a class="headerlink" href="#linters-and-formatters" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://black.readthedocs.io/">black</a>, a code formatter with support for
+type stub files.</p></li>
+<li><p><a class="reference external" href="https://github.com/ambv/flake8-pyi">flake8-pyi</a>, a plugin for the
+<a class="reference external" href="https://flake8.pycqa.org/">flake8</a> linter that adds support for type
+stubs.</p></li>
+<li><p><a class="reference external" href="https://astral.sh/ruff">ruff</a>, a linter built for speed, with support for
+most of the <code class="docutils literal notranslate"><span class="pre">flake8-pyi</span></code> rules.</p></li>
+</ul>
+</section>
+<section id="type-hint-and-stub-integration">
+<h3>Type-Hint and Stub Integration<a class="headerlink" href="#type-hint-and-stub-integration" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/JelleZijlstra/autotyping">autotyping</a>, a tool which
+infers simple types from their context and inserts them as inline type-hints.</p></li>
+<li><p><a class="reference external" href="https://google.github.io/pytype/developers/tools.html#merge_pyi">merge-pyi</a>,
+a thin wrapper around <code class="docutils literal notranslate"><span class="pre">ApplyTypeAnnotationsVisitor</span></code> from
+<a class="reference external" href="https://libcst.readthedocs.io/en/latest/">libCST</a> that integrates .pyi
+signatures as inline type-hints in Python source code.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="#">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Static Typing with Python</a><ul>
+<li><a class="reference internal" href="#tutorials">Tutorials</a></li>
+<li><a class="reference internal" href="#guides">Guides</a></li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
+<li><a class="reference internal" href="#specification">Specification</a><ul>
+<li><a class="reference internal" href="#typing-peps">Typing PEPs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#discussions-and-support">Discussions and Support</a></li>
+<li><a class="reference internal" href="#typing-related-tools">Typing-related Tools</a><ul>
+<li><a class="reference internal" href="#type-checkers">Type Checkers</a></li>
+<li><a class="reference internal" href="#development-environments">Development Environments</a></li>
+<li><a class="reference internal" href="#linters-and-formatters">Linters and Formatters</a></li>
+<li><a class="reference internal" href="#type-hint-and-stub-integration">Type-Hint and Stub Integration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="tutorials/external_libraries.html"
+                          title="next chapter">Using External Libraries</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorials/external_libraries.html" title="Using External Libraries"
+             >next</a> |</li>
+          <li><img src="_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="#">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Static Typing with Python</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

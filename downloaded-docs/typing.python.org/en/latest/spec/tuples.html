@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tuples &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Named Tuples" href="namedtuples.html" />
+    <link rel="prev" title="Typed dictionaries" href="typeddict.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/tuples.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Tuples</a><ul>
+<li><a class="reference internal" href="#tuple-type-form">Tuple Type Form</a></li>
+<li><a class="reference internal" href="#unpacked-tuple-form">Unpacked Tuple Form</a></li>
+<li><a class="reference internal" href="#type-compatibility-rules">Type Compatibility Rules</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="typeddict.html"
+                          title="previous chapter">Typed dictionaries</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="namedtuples.html"
+                          title="next chapter">Named Tuples</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/tuples.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="namedtuples.html" title="Named Tuples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="typeddict.html" title="Typed dictionaries"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tuples</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="tuples">
+<span id="id1"></span><h1>Tuples<a class="headerlink" href="#tuples" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">tuple</span></code> class has some special behaviors and properties that make it
+different from other classes from a typing perspective. The most obvious
+difference is that <code class="docutils literal notranslate"><span class="pre">tuple</span></code> is variadic – it supports an arbitrary number
+of type arguments. At runtime, the sequence of objects contained within the
+tuple is fixed at the time of construction. Elements cannot be added, removed,
+reordered, or replaced after construction. These properties affect subtyping
+rules and other behaviors as described below.</p>
+<section id="tuple-type-form">
+<h2>Tuple Type Form<a class="headerlink" href="#tuple-type-form" title="Link to this heading">¶</a></h2>
+<p>The type of a tuple can be expressed by listing the element types. For
+example, <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">int,</span> <span class="pre">str]</span></code> is a tuple containing an <code class="docutils literal notranslate"><span class="pre">int</span></code>, another
+<code class="docutils literal notranslate"><span class="pre">int</span></code>, and a <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
+<p>The empty tuple can be annotated as <code class="docutils literal notranslate"><span class="pre">tuple[()]</span></code>.</p>
+<p>Arbitrary-length homogeneous tuples can be expressed using one type and an
+ellipsis, for example <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">...]</span></code>. This type is equivalent to a union
+of tuples containing zero or more <code class="docutils literal notranslate"><span class="pre">int</span></code> elements (<code class="docutils literal notranslate"><span class="pre">tuple[()]</span> <span class="pre">|</span>
+<span class="pre">tuple[int]</span> <span class="pre">|</span> <span class="pre">tuple[int,</span> <span class="pre">int]</span> <span class="pre">|</span> <span class="pre">tuple[int,</span> <span class="pre">int,</span> <span class="pre">int]</span> <span class="pre">|</span> <span class="pre">...</span></code>).
+Arbitrary-length homogeneous tuples are sometimes referred to as “unbounded
+tuples”. Both of these terms appear within the typing spec, and they refer to
+the same concept.</p>
+<p>The type <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">...]</span></code> is special in that it is <a class="reference internal" href="glossary.html#term-consistent"><span class="xref std std-term">consistent</span></a> with
+all tuple types, and <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to a tuple of any length. This is
+useful for gradual typing. The type <code class="docutils literal notranslate"><span class="pre">tuple</span></code> (with no type arguments provided)
+is equivalent to <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">...]</span></code>.</p>
+<p>Arbitrary-length tuples have exactly two type arguments – the type and
+an ellipsis. Any other tuple form that uses an ellipsis is invalid:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>  <span class="c1"># OK</span>
+<span class="n">t2</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>  <span class="c1"># Invalid</span>
+<span class="n">t3</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">...</span><span class="p">]</span>  <span class="c1"># Invalid</span>
+<span class="n">t4</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>  <span class="c1"># Invalid</span>
+<span class="n">t5</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>  <span class="c1"># Invalid</span>
+<span class="n">t6</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span>  <span class="c1"># Invalid</span>
+<span class="n">t7</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span>  <span class="c1"># Invalid</span>
+</pre></div>
+</div>
+</section>
+<section id="unpacked-tuple-form">
+<h2>Unpacked Tuple Form<a class="headerlink" href="#unpacked-tuple-form" title="Link to this heading">¶</a></h2>
+<p>An unpacked form of <code class="docutils literal notranslate"><span class="pre">tuple</span></code> (using an unpack operator <code class="docutils literal notranslate"><span class="pre">*</span></code>) can be used
+within a tuple type argument list. For example, <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">*tuple[str]]</span></code>
+is equivalent to <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">str]</span></code>. Unpacking an unbounded tuple preserves
+the unbounded tuple as it is. That is, <code class="docutils literal notranslate"><span class="pre">*tuple[int,</span> <span class="pre">...]</span></code> remains
+<code class="docutils literal notranslate"><span class="pre">*tuple[int,</span> <span class="pre">...]</span></code>; there’s no simpler form. This enables us to specify
+types such as <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">*tuple[str,</span> <span class="pre">...],</span> <span class="pre">str]</span></code> – a tuple type where the
+first element is guaranteed to be of type <code class="docutils literal notranslate"><span class="pre">int</span></code>, the last element is
+guaranteed to be of type <code class="docutils literal notranslate"><span class="pre">str</span></code>, and the elements in the middle are zero or
+more elements of type <code class="docutils literal notranslate"><span class="pre">str</span></code>. The type <code class="docutils literal notranslate"><span class="pre">tuple[*tuple[int,</span> <span class="pre">...]]</span></code> is
+equivalent to <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">...]</span></code>.</p>
+<p>If an unpacked <code class="docutils literal notranslate"><span class="pre">*tuple[Any,</span> <span class="pre">...]</span></code> is embedded within another tuple, that
+portion of the tuple is <a class="reference internal" href="glossary.html#term-consistent"><span class="xref std std-term">consistent</span></a> with any tuple of any length.</p>
+<p>Only one unbounded tuple can be used within another tuple:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>  <span class="c1"># OK</span>
+<span class="n">t2</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]]</span>  <span class="c1"># OK</span>
+<span class="n">t3</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span>  <span class="c1"># Type error</span>
+<span class="n">t4</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span> <span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span>  <span class="c1"># Type error</span>
+</pre></div>
+</div>
+<p>An unpacked TypeVarTuple counts as an unbounded tuple in the context of this rule:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">[</span><span class="o">*</span><span class="n">Ts</span><span class="p">](</span><span class="n">t</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">*</span><span class="n">Ts</span><span class="p">]):</span>
+    <span class="n">t5</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">*</span><span class="n">Ts</span><span class="p">]</span>  <span class="c1"># OK</span>
+    <span class="n">t6</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="o">*</span><span class="n">Ts</span><span class="p">]</span>  <span class="c1"># Type error</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">*</span></code> syntax requires Python 3.11 or newer. For older versions of Python,
+the <code class="docutils literal notranslate"><span class="pre">typing.Unpack</span></code> <a class="reference internal" href="glossary.html#term-special-form"><span class="xref std std-term">special form</span></a> can be used:
+<code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">Unpack[tuple[str,</span> <span class="pre">...]],</span> <span class="pre">int]</span></code>.</p>
+<p>Unpacked tuples can also be used for <code class="docutils literal notranslate"><span class="pre">*args</span></code> parameters in a function
+signature: <code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">f(*args:</span> <span class="pre">*tuple[int,</span> <span class="pre">str]):</span> <span class="pre">...</span></code>. Unpacked tuples
+can also be used for specializing generic classes or type variables that are
+parameterized using a <code class="docutils literal notranslate"><span class="pre">TypeVarTuple</span></code>. For more details, see
+<a class="reference internal" href="generics.html#args-as-typevartuple"><span class="std std-ref">*args as a Type Variable Tuple</span></a>.</p>
+</section>
+<section id="type-compatibility-rules">
+<h2>Type Compatibility Rules<a class="headerlink" href="#type-compatibility-rules" title="Link to this heading">¶</a></h2>
+<p>Because tuple contents are immutable, the element types of a tuple are covariant.
+For example, <code class="docutils literal notranslate"><span class="pre">tuple[bool,</span> <span class="pre">int]</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">object]</span></code>.</p>
+<p>As discussed above, a homogeneous tuple of arbitrary length is equivalent
+to a union of tuples of different lengths. That means <code class="docutils literal notranslate"><span class="pre">tuple[()]</span></code>,
+<code class="docutils literal notranslate"><span class="pre">tuple[int]</span></code> and <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">*tuple[int,</span> <span class="pre">...]]</span></code> are all subtypes of
+<code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">...]</span></code>. The converse is not true; <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">...]</span></code> is not a
+subtype of <code class="docutils literal notranslate"><span class="pre">tuple[int]</span></code>.</p>
+<p>The type <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">...]</span></code> is <a class="reference internal" href="glossary.html#term-consistent"><span class="xref std std-term">consistent</span></a> with any tuple:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">t1</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">t2</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">t3</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]):</span>
+    <span class="n">v1</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">t1</span>  <span class="c1"># OK</span>
+    <span class="n">v2</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">t1</span>  <span class="c1"># OK</span>
+
+    <span class="n">v3</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">t2</span>  <span class="c1"># Type error</span>
+    <span class="n">v4</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">t2</span>  <span class="c1"># OK</span>
+
+    <span class="n">v5</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">t3</span>  <span class="c1"># OK</span>
+    <span class="n">v6</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="n">t3</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>The length of a tuple at runtime is immutable, so it is safe for type checkers
+to use length checks to narrow the type of a tuple:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">int</span><span class="p">]):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Type can be narrowed to tuple[int].</span>
+        <span class="n">reveal_type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>  <span class="c1"># tuple[int]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Type can be narrowed to tuple[str, str] | tuple[int, int].</span>
+        <span class="n">reveal_type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>  <span class="c1"># tuple[str, str] | tuple[int, int]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="c1"># Type can be narrowed to tuple[int, str, int].</span>
+        <span class="n">reveal_type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>  <span class="c1"># tuple[int, str, int]</span>
+</pre></div>
+</div>
+<p>This property may also be used to safely narrow tuple types within a <code class="docutils literal notranslate"><span class="pre">match</span></code>
+statement that uses sequence patterns.</p>
+<p>If a tuple element is a union type, the tuple can be safely expanded into a
+union of tuples. For example, <code class="docutils literal notranslate"><span class="pre">tuple[int</span> <span class="pre">|</span> <span class="pre">str]</span></code> is equivalent to
+<code class="docutils literal notranslate"><span class="pre">tuple[int]</span> <span class="pre">|</span> <span class="pre">tuple[str]</span></code>. If multiple elements are union types, full expansion
+must consider all combinations. For example, <code class="docutils literal notranslate"><span class="pre">tuple[int</span> <span class="pre">|</span> <span class="pre">str,</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">str]</span></code> is
+equivalent to <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">int]</span> <span class="pre">|</span> <span class="pre">tuple[int,</span> <span class="pre">str]</span> <span class="pre">|</span> <span class="pre">tuple[str,</span> <span class="pre">int]</span> <span class="pre">|</span> <span class="pre">tuple[str,</span> <span class="pre">str]</span></code>.
+Unbounded tuples cannot be expanded in this manner.</p>
+<p>Type checkers may safely use this equivalency rule when narrowing tuple types:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">subj</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]):</span>
+    <span class="k">match</span> <span class="n">subj</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">():</span>
+            <span class="n">reveal_type</span><span class="p">(</span><span class="n">subj</span><span class="p">)</span>  <span class="c1"># tuple[int | str, str]</span>
+        <span class="k">case</span> <span class="n">y</span><span class="p">:</span>
+            <span class="n">reveal_type</span><span class="p">(</span><span class="n">subj</span><span class="p">)</span>  <span class="c1"># tuple[int | str, int]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">tuple</span></code> class derives from <code class="docutils literal notranslate"><span class="pre">Sequence[T_co]</span></code> where <code class="docutils literal notranslate"><span class="pre">T_co</span></code> is a covariant
+(non-variadic) type variable. The specialized type of <code class="docutils literal notranslate"><span class="pre">T_co</span></code> should be computed
+by a type checker as a supertype of all element types.
+For example, <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">*tuple[str,</span> <span class="pre">...]]</span></code> is a subtype of
+<code class="docutils literal notranslate"><span class="pre">Sequence[int</span> <span class="pre">|</span> <span class="pre">str]</span></code> or <code class="docutils literal notranslate"><span class="pre">Sequence[object]</span></code>.</p>
+<p>A zero-length tuple (<code class="docutils literal notranslate"><span class="pre">tuple[()]</span></code>) is a subtype of <code class="docutils literal notranslate"><span class="pre">Sequence[Never]</span></code>.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Tuples</a><ul>
+<li><a class="reference internal" href="#tuple-type-form">Tuple Type Form</a></li>
+<li><a class="reference internal" href="#unpacked-tuple-form">Unpacked Tuple Form</a></li>
+<li><a class="reference internal" href="#type-compatibility-rules">Type Compatibility Rules</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="typeddict.html"
+                          title="previous chapter">Typed dictionaries</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="namedtuples.html"
+                          title="next chapter">Named Tuples</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/tuples.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="namedtuples.html" title="Named Tuples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="typeddict.html" title="Typed dictionaries"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tuples</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

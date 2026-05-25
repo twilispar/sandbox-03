@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Enumerations &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Type narrowing" href="narrowing.html" />
+    <link rel="prev" title="Named Tuples" href="namedtuples.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/enums.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Enumerations</a><ul>
+<li><a class="reference internal" href="#enum-definition">Enum Definition</a></li>
+<li><a class="reference internal" href="#enum-behaviors">Enum Behaviors</a></li>
+<li><a class="reference internal" href="#defining-members">Defining Members</a></li>
+<li><a class="reference internal" href="#member-names">Member Names</a></li>
+<li><a class="reference internal" href="#member-values">Member Values</a></li>
+<li><a class="reference internal" href="#enum-literal-expansion">Enum Literal Expansion</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="namedtuples.html"
+                          title="previous chapter">Named Tuples</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="narrowing.html"
+                          title="next chapter">Type narrowing</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/enums.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="narrowing.html" title="Type narrowing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="namedtuples.html" title="Named Tuples"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Enumerations</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="enumerations">
+<h1>Enumerations<a class="headerlink" href="#enumerations" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">enum.Enum</span></code> class behaves differently from other Python classes in several
+ways that require special-case handling in type checkers. This section discusses
+the Enum behaviors that should be supported by type checkers and others which
+may be supported optionally. It is recommended that library and type stub
+authors avoid using optional behaviors because these may not be supported
+by some type checkers.</p>
+<section id="enum-definition">
+<h2>Enum Definition<a class="headerlink" href="#enum-definition" title="Link to this heading">¶</a></h2>
+<p>Enum classes can be defined using a “class syntax” or a “function syntax”.
+The function syntax offers several ways to specify enum members: names passed
+as individual arguments, a list or tuple of names, a string of
+comma-delimited or space-delimited names, a list or tuple of tuples that contain
+name/value pairs, and a dictionary of name/value items.</p>
+<p>Type checkers should support the class syntax, but the function syntax (in
+its various forms) is optional:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Color1</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span> <span class="c1"># Supported</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">Color2</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Color2&#39;</span><span class="p">,</span> <span class="s1">&#39;RED&#39;</span><span class="p">,</span> <span class="s1">&#39;GREEN&#39;</span><span class="p">,</span> <span class="s1">&#39;BLUE&#39;</span><span class="p">)</span>  <span class="c1"># Optional</span>
+<span class="n">Color3</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Color3&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;RED&#39;</span><span class="p">,</span> <span class="s1">&#39;GREEN&#39;</span><span class="p">,</span> <span class="s1">&#39;BLUE&#39;</span><span class="p">])</span>  <span class="c1"># Optional</span>
+<span class="n">Color4</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Color4&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;RED&#39;</span><span class="p">,</span> <span class="s1">&#39;GREEN&#39;</span><span class="p">,</span> <span class="s1">&#39;BLUE&#39;</span><span class="p">))</span>  <span class="c1"># Optional</span>
+<span class="n">Color5</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Color5&#39;</span><span class="p">,</span> <span class="s1">&#39;RED, GREEN, BLUE&#39;</span><span class="p">)</span>  <span class="c1"># Optional</span>
+<span class="n">Color6</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Color6&#39;</span><span class="p">,</span> <span class="s1">&#39;RED GREEN BLUE&#39;</span><span class="p">)</span>  <span class="c1"># Optional</span>
+<span class="n">Color7</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Color7&#39;</span><span class="p">,</span> <span class="p">[(</span><span class="s1">&#39;RED&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;GREEN&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;BLUE&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)])</span>  <span class="c1"># Optional</span>
+<span class="n">Color8</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Color8&#39;</span><span class="p">,</span> <span class="p">((</span><span class="s1">&#39;RED&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;GREEN&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;BLUE&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)))</span>  <span class="c1"># Optional</span>
+<span class="n">Color9</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s1">&#39;Color9&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;RED&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;GREEN&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;BLUE&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>  <span class="c1"># Optional</span>
+</pre></div>
+</div>
+<p>Enum classes can also be defined using a subclass of <code class="docutils literal notranslate"><span class="pre">enum.Enum</span></code> or any class
+that uses <code class="docutils literal notranslate"><span class="pre">enum.EnumType</span></code> (or a subclass thereof) as a metaclass. Note that
+<code class="docutils literal notranslate"><span class="pre">enum.EnumType</span></code> was named <code class="docutils literal notranslate"><span class="pre">enum.EnumMeta</span></code> prior to Python 3.11. Type
+checkers should treat such classes as enums:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CustomEnum1</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Color7</span><span class="p">(</span><span class="n">CustomEnum1</span><span class="p">):</span>  <span class="c1"># Supported</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomEnumType</span><span class="p">(</span><span class="n">EnumType</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomEnum2</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">CustomEnumType</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Color8</span><span class="p">(</span><span class="n">CustomEnum2</span><span class="p">):</span>  <span class="c1"># Supported</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>Enum members may be conditional, via checks of the same
+<a class="reference internal" href="directives.html#version-and-platform-checks"><span class="std std-ref">statically-known conditions</span></a>
+that a type-checker understands elsewhere, such as Python version:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Color</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span>
+        <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</section>
+<section id="enum-behaviors">
+<h2>Enum Behaviors<a class="headerlink" href="#enum-behaviors" title="Link to this heading">¶</a></h2>
+<p>Enum classes are iterable and indexable, and they can be called with a value
+to look up the enum member with that value. Type checkers should support these
+behaviors:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Color</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">Color</span><span class="p">:</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>  <span class="c1"># Revealed type is &#39;Color&#39;</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Color</span><span class="p">[</span><span class="s2">&quot;RED&quot;</span><span class="p">])</span>  <span class="c1"># Revealed type is &#39;Literal[Color.RED]&#39; (or &#39;Color&#39;)</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Color</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>  <span class="c1"># Revealed type is &#39;Literal[Color.BLUE]&#39; (or &#39;Color&#39;)</span>
+</pre></div>
+</div>
+<p>Unlike most Python classes, calling an enum class does not invoke its constructor.
+Instead, the call performs a value-based lookup of an enum member.</p>
+<p>An Enum class with one or more defined members cannot be subclassed. They are
+implicitly “final”. Type checkers should enforce this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">EnumWithNoMembers</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Shape</span><span class="p">(</span><span class="n">EnumWithNoMembers</span><span class="p">):</span>  <span class="c1"># OK (because no members are defined)</span>
+    <span class="n">SQUARE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">CIRCLE</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ExtendedShape</span><span class="p">(</span><span class="n">Shape</span><span class="p">):</span>  <span class="c1"># Type checker error: Shape is implicitly final</span>
+    <span class="n">TRIANGLE</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</section>
+<section id="defining-members">
+<h2>Defining Members<a class="headerlink" href="#defining-members" title="Link to this heading">¶</a></h2>
+<p>When using the “class syntax”, enum classes can define both members and
+other (non-member) attributes. The <code class="docutils literal notranslate"><span class="pre">EnumType</span></code> metaclass applies a set
+of rules to distinguish between members and non-members. Type checkers
+should honor the most common of these rules. The lesser-used rules are
+optional. Some of these rules may be impossible to evaluate and enforce
+statically in cases where dynamic values are used.</p>
+<ul>
+<li><p>If an attribute is defined in the class body with a type annotation but
+with no assigned value, a type checker should assume this is a non-member
+attribute:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Pet</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">genus</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Non-member attribute</span>
+    <span class="n">species</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Non-member attribute</span>
+
+    <span class="n">CAT</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Member attribute</span>
+    <span class="n">DOG</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Member attribute</span>
+</pre></div>
+</div>
+<p>Within a type stub, members can be defined using the actual runtime values,
+or a placeholder of <code class="docutils literal notranslate"><span class="pre">...</span></code> can be used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Pet</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">genus</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Non-member attribute</span>
+    <span class="n">species</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># Non-member attribute</span>
+
+    <span class="n">CAT</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Member attribute with known value and type</span>
+    <span class="n">DOG</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># Member attribute with unknown value and known type</span>
+    <span class="n">BIRD</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># Member attribute with unknown value and type</span>
+</pre></div>
+</div>
+</li>
+<li><p>Members defined within an enum class should not include explicit type
+annotations. Type checkers should infer a literal type for all members.
+A type checker should report an error if a type annotation is used
+for an enum member because this type will be incorrect and misleading
+to readers of the code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Pet</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">CAT</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># OK</span>
+    <span class="n">DOG</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Type checker error</span>
+</pre></div>
+</div>
+</li>
+<li><p>Methods, callables, descriptors (including properties), and nested classes
+that are defined in the class are not treated as enum members by the
+<code class="docutils literal notranslate"><span class="pre">EnumType</span></code> metaclass and should likewise not be treated as enum members by
+a type checker:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">identity</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Pet</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">CAT</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Member attribute</span>
+    <span class="n">DOG</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Member attribute</span>
+
+    <span class="n">converter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># Non-member attribute</span>
+    <span class="n">transform</span> <span class="o">=</span> <span class="n">identity</span>  <span class="c1"># Non-member attribute</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">species</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># Non-member property</span>
+        <span class="k">return</span> <span class="s2">&quot;mammal&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Non-member method</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;meow&quot;</span> <span class="k">if</span> <span class="bp">self</span> <span class="ow">is</span> <span class="n">Pet</span><span class="o">.</span><span class="n">CAT</span> <span class="k">else</span> <span class="s2">&quot;woof&quot;</span><span class="p">)</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Nested</span><span class="p">:</span> <span class="o">...</span> <span class="c1"># Non-member nested class</span>
+</pre></div>
+</div>
+</li>
+<li><p>An attribute that is assigned the value of another member of the same enum
+is not a member itself. Instead, it is an alias for the first member:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TrafficLight</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="n">AMBER</span> <span class="o">=</span> <span class="n">YELLOW</span>  <span class="c1"># Alias for YELLOW</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">TrafficLight</span><span class="o">.</span><span class="n">AMBER</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[TrafficLight.YELLOW]</span>
+</pre></div>
+</div>
+</li>
+<li><p>If using Python 3.11 or newer, the <code class="docutils literal notranslate"><span class="pre">enum.member</span></code> and <code class="docutils literal notranslate"><span class="pre">enum.nonmember</span></code>
+classes can be used to unambiguously distinguish members from non-members.
+Type checkers should support these classes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Example</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">member</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Member attribute</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">nonmember</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Non-member attribute</span>
+
+    <span class="nd">@member</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Member method</span>
+        <span class="k">pass</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Example</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[Example.a]</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Example</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>  <span class="c1"># Revealed type is int or Literal[2]</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Example</span><span class="o">.</span><span class="n">c</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[Example.c]</span>
+</pre></div>
+</div>
+</li>
+<li><p>An attribute with a private name (beginning with, but not ending in, a double
+underscore) is treated as a non-member:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Example</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Member attribute</span>
+    <span class="n">__B</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Non-member attribute</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Example</span><span class="o">.</span><span class="n">A</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[Example.A]</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Example</span><span class="o">.</span><span class="n">__B</span><span class="p">)</span>  <span class="c1"># Type Error: Private name is mangled</span>
+</pre></div>
+</div>
+</li>
+<li><p>An enum class can define a class symbol named <code class="docutils literal notranslate"><span class="pre">_ignore_</span></code>. This can be a list
+of names or a string containing a space-delimited list of names that are
+deleted from the enum class at runtime. Type checkers may support this
+mechanism:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Pet</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">_ignore_</span> <span class="o">=</span> <span class="s2">&quot;DOG FISH&quot;</span>
+    <span class="n">CAT</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Member attribute</span>
+    <span class="n">DOG</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># temporary variable, will be removed from the final enum class</span>
+    <span class="n">FISH</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># temporary variable, will be removed from the final enum class</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="member-names">
+<h2>Member Names<a class="headerlink" href="#member-names" title="Link to this heading">¶</a></h2>
+<p>All enum member objects have an attribute <code class="docutils literal notranslate"><span class="pre">_name_</span></code> that contains the member’s
+name. They also have a property <code class="docutils literal notranslate"><span class="pre">name</span></code> that returns the same name. Type
+checkers may infer a literal type for the name of a member:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Color</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="o">.</span><span class="n">_name_</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[&quot;RED&quot;] (or str)</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[&quot;RED&quot;] (or str)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func1</span><span class="p">(</span><span class="n">red_or_blue</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="p">,</span> <span class="n">Color</span><span class="o">.</span><span class="n">BLUE</span><span class="p">]):</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">red_or_blue</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[&quot;RED&quot;, &quot;BLUE&quot;] (or str)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func2</span><span class="p">(</span><span class="n">any_color</span><span class="p">:</span> <span class="n">Color</span><span class="p">):</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">any_color</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[&quot;RED&quot;, &quot;BLUE&quot;, &quot;GREEN&quot;] (or str)</span>
+</pre></div>
+</div>
+</section>
+<section id="member-values">
+<h2>Member Values<a class="headerlink" href="#member-values" title="Link to this heading">¶</a></h2>
+<p>All enum member objects have an attribute <code class="docutils literal notranslate"><span class="pre">_value_</span></code> that contains the member’s
+value. They also have a property <code class="docutils literal notranslate"><span class="pre">value</span></code> that returns the same value. Type
+checkers may infer the type of a member’s value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Color</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="o">.</span><span class="n">_value_</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[1] (or int or object or Any)</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[1] (or int or object or Any)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func1</span><span class="p">(</span><span class="n">red_or_blue</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="p">,</span> <span class="n">Color</span><span class="o">.</span><span class="n">BLUE</span><span class="p">]):</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">red_or_blue</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[1, 2] (or int or object or Any)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func2</span><span class="p">(</span><span class="n">any_color</span><span class="p">:</span> <span class="n">Color</span><span class="p">):</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">any_color</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[1, 2, 3] (or int or object or Any)</span>
+</pre></div>
+</div>
+<p>The value of <code class="docutils literal notranslate"><span class="pre">_value_</span></code> can be assigned in a constructor method. This technique
+is sometimes used to initialize both the member value and non-member attributes.
+If the value assigned in the class body is a tuple, the unpacked tuple value is
+passed to the constructor. Type checkers may validate consistency between assigned
+tuple values and the constructor signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Planet</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value_</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="n">mass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+
+    <span class="n">MERCURY</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.301e+23</span><span class="p">,</span> <span class="mf">2.4397e6</span><span class="p">)</span>
+    <span class="n">VENUS</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">4.867e+24</span><span class="p">,</span> <span class="mf">6.0518e6</span><span class="p">)</span>
+    <span class="n">EARTH</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">5.972e+24</span><span class="p">,</span> <span class="mf">6.37814e6</span><span class="p">)</span>
+    <span class="n">MARS</span> <span class="o">=</span> <span class="p">(</span><span class="mf">6.417e+23</span><span class="p">,</span> <span class="mf">3.3962e6</span><span class="p">)</span>  <span class="c1"># Type checker error (optional)</span>
+    <span class="n">JUPITER</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Type checker error (optional)</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Planet</span><span class="o">.</span><span class="n">MERCURY</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[1] (or int or object or Any)</span>
+</pre></div>
+</div>
+<p>The class <code class="docutils literal notranslate"><span class="pre">enum.auto</span></code> and method <code class="docutils literal notranslate"><span class="pre">_generate_next_value_</span></code> can be used within
+an enum class to automatically generate values for enum members. Type checkers
+may support these to infer literal types for member values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Color</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">Color</span><span class="o">.</span><span class="n">RED</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[1] (or int or object or Any)</span>
+</pre></div>
+</div>
+<p>If an enum class provides an explicit type annotation for <code class="docutils literal notranslate"><span class="pre">_value_</span></code>, type
+checkers should enforce this declared type when values are assigned to
+<code class="docutils literal notranslate"><span class="pre">_value_</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Color</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">_value_</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># OK</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span>  <span class="c1"># Type error</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Planet</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">_value_</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mass</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value_</span> <span class="o">=</span> <span class="n">value</span> <span class="c1"># Type error</span>
+
+    <span class="n">MERCURY</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.301e+23</span><span class="p">,</span> <span class="mf">2.4397e6</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the literal values for enum members are not supplied, as they sometimes
+are not within a type stub file, a type checker can use the type of the
+<code class="docutils literal notranslate"><span class="pre">_value_</span></code> attribute:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ColumnType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">_value_</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">DORIC</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="n">IONIC</span> <span class="o">=</span> <span class="o">...</span>
+    <span class="n">CORINTHIAN</span> <span class="o">=</span> <span class="o">...</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">ColumnType</span><span class="o">.</span><span class="n">DORIC</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>  <span class="c1"># Revealed type is int (or object or Any)</span>
+</pre></div>
+</div>
+</section>
+<section id="enum-literal-expansion">
+<h2>Enum Literal Expansion<a class="headerlink" href="#enum-literal-expansion" title="Link to this heading">¶</a></h2>
+<p>From the perspective of the type system, most enum classes are equivalent
+to the union of the literal members within that enum. (This rule
+does not apply to classes that derive from <code class="docutils literal notranslate"><span class="pre">enum.Flag</span></code> because these enums
+allow flags to be combined in arbitrary ways.) Because of the equivalency
+between an enum class and the union of literal members within that enum, the
+two types may be used interchangeably. Type checkers may therefore expand
+an enum type (that does not derive from <code class="docutils literal notranslate"><span class="pre">enum.Flag</span></code>) into a union of
+literal values during type narrowing and exhaustion detection:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Color</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_color1</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">Color</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="n">Color</span><span class="o">.</span><span class="n">RED</span> <span class="ow">or</span> <span class="n">c</span> <span class="ow">is</span> <span class="n">Color</span><span class="o">.</span><span class="n">BLUE</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;red or blue&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reveal_type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>  <span class="c1"># Revealed type is Literal[Color.GREEN]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_color2</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">Color</span><span class="p">):</span>
+    <span class="k">match</span> <span class="n">c</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">Color</span><span class="o">.</span><span class="n">RED</span> <span class="o">|</span> <span class="n">Color</span><span class="o">.</span><span class="n">BLUE</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;red or blue&quot;</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">Color</span><span class="o">.</span><span class="n">GREEN</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+            <span class="n">reveal_type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>  <span class="c1"># Revealed type is Never</span>
+</pre></div>
+</div>
+<p>Likewise, a type checker should treat a complete union of all literal members
+as <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> to the enum type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Answer</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Yes</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">No</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Answer</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Answer</span><span class="o">.</span><span class="n">Yes</span> <span class="ow">and</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Answer</span><span class="o">.</span><span class="n">No</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid value&quot;</span><span class="p">)</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>  <span class="c1"># Revealed type is Answer (or Literal[Answer.Yes, Answer.No])</span>
+    <span class="k">return</span> <span class="n">val</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Enumerations</a><ul>
+<li><a class="reference internal" href="#enum-definition">Enum Definition</a></li>
+<li><a class="reference internal" href="#enum-behaviors">Enum Behaviors</a></li>
+<li><a class="reference internal" href="#defining-members">Defining Members</a></li>
+<li><a class="reference internal" href="#member-names">Member Names</a></li>
+<li><a class="reference internal" href="#member-values">Member Values</a></li>
+<li><a class="reference internal" href="#enum-literal-expansion">Enum Literal Expansion</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="namedtuples.html"
+                          title="previous chapter">Named Tuples</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="narrowing.html"
+                          title="next chapter">Type narrowing</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/enums.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="narrowing.html" title="Type narrowing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="namedtuples.html" title="Named Tuples"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Enumerations</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

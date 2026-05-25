@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Constructors &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Overloads" href="overload.html" />
+    <link rel="prev" title="Callables" href="callables.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/constructors.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Constructors</a><ul>
+<li><a class="reference internal" href="#constructor-calls">Constructor Calls</a></li>
+<li><a class="reference internal" href="#metaclass-call-method">Metaclass <code class="docutils literal notranslate"><span class="pre">__call__</span></code> Method</a></li>
+<li><a class="reference internal" href="#new-method"><code class="docutils literal notranslate"><span class="pre">__new__</span></code> Method</a></li>
+<li><a class="reference internal" href="#init-method"><code class="docutils literal notranslate"><span class="pre">__init__</span></code> Method</a></li>
+<li><a class="reference internal" href="#classes-without-new-and-init-methods">Classes Without <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code> Methods</a></li>
+<li><a class="reference internal" href="#constructor-calls-for-type-t">Constructor Calls for type[T]</a></li>
+<li><a class="reference internal" href="#specialization-during-construction">Specialization During Construction</a></li>
+<li><a class="reference internal" href="#consistency-of-new-and-init">Consistency of <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code></a></li>
+<li><a class="reference internal" href="#converting-a-constructor-to-callable">Converting a Constructor to Callable</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="callables.html"
+                          title="previous chapter">Callables</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="overload.html"
+                          title="next chapter"><code class="docutils literal notranslate"><span class="pre">Overloads</span></code></a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/constructors.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="overload.html" title="Overloads"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="callables.html" title="Callables"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Constructors</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="constructors">
+<h1>Constructors<a class="headerlink" href="#constructors" title="Link to this heading">¶</a></h1>
+<p>Calls to constructors require special handling within type checkers.</p>
+<section id="constructor-calls">
+<h2>Constructor Calls<a class="headerlink" href="#constructor-calls" title="Link to this heading">¶</a></h2>
+<p>At runtime, a call to a class’ constructor typically results in the invocation of
+three methods in the following order:</p>
+<ol class="arabic simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method of the metaclass (which is typically supplied by the
+<code class="docutils literal notranslate"><span class="pre">type</span></code> class but can be overridden by a custom metaclass and which is
+responsible for calling the next two methods)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">__new__</span></code> static method of the class</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">__init__</span></code> instance method of the class</p></li>
+</ol>
+<p>Type checkers should mirror this runtime behavior when analyzing a constructor
+call.</p>
+</section>
+<section id="metaclass-call-method">
+<h2>Metaclass <code class="docutils literal notranslate"><span class="pre">__call__</span></code> Method<a class="headerlink" href="#metaclass-call-method" title="Link to this heading">¶</a></h2>
+<p>When evaluating a constructor call, a type checker should first check if the
+class has a custom metaclass (a subclass of <code class="docutils literal notranslate"><span class="pre">type</span></code>) that defines a <code class="docutils literal notranslate"><span class="pre">__call__</span></code>
+method. If so, it should evaluate the call of this method using the supplied
+arguments. If the metaclass is <code class="docutils literal notranslate"><span class="pre">type</span></code>, this step can be skipped.</p>
+<p>If the evaluated return type of the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method indicates something
+other than an instance of the class being constructed, a type checker should
+assume that the metaclass <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method is overriding <code class="docutils literal notranslate"><span class="pre">type.__call__</span></code>
+in some special manner, and it should not attempt to evaluate the <code class="docutils literal notranslate"><span class="pre">__new__</span></code>
+or <code class="docutils literal notranslate"><span class="pre">__init__</span></code> methods on the class. For example, some metaclass <code class="docutils literal notranslate"><span class="pre">__call__</span></code>
+methods are annotated to return <code class="docutils literal notranslate"><span class="pre">NoReturn</span></code> to indicate that constructor
+calls are not supported for that class.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Cannot instantiate class&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">Meta</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">(),</span> <span class="n">Never</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>If no return type annotation is provided for <code class="docutils literal notranslate"><span class="pre">__call__</span></code>, a type checker may
+assume that it does not override <code class="docutils literal notranslate"><span class="pre">type.__call__</span></code> in a special manner and
+proceed as though the return type is an instance of the type specified by
+the <code class="docutils literal notranslate"><span class="pre">cls</span></code> parameter.</p>
+</section>
+<section id="new-method">
+<h2><code class="docutils literal notranslate"><span class="pre">__new__</span></code> Method<a class="headerlink" href="#new-method" title="Link to this heading">¶</a></h2>
+<p>After the metaclass <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method has been evaluated, a type checker
+should evaluate the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method of the class (if applicable) using
+the supplied arguments. This step should be skipped if the class does not
+define a <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method and does not inherit a <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method from
+a base class other than <code class="docutils literal notranslate"><span class="pre">object</span></code>.</p>
+<p>If the class is generic and explicitly specialized, the type checker should
+partially specialize the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method using the supplied type arguments.
+If the class is not explicitly specialized, class-scoped type variables should
+be solved using the supplied arguments passed to the constructor call.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+<span class="c1"># Constructor calls for specialized classes</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">](</span><span class="mi">1</span><span class="p">),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">[</span><span class="nb">float</span><span class="p">](</span><span class="mi">1</span><span class="p">),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span>
+<span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">](</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># Type error</span>
+
+<span class="c1"># Constructor calls for non-specialized classes</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>If any class-scoped type variables are not solved when evaluating the <code class="docutils literal notranslate"><span class="pre">__new__</span></code>
+method call using the supplied arguments, these type variables should be left
+unsolved, allowing the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method (if applicable) to be used to solve
+them.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>For most classes, the return type for the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method is typically
+<code class="docutils literal notranslate"><span class="pre">Self</span></code>, but other types are also allowed. For example, the <code class="docutils literal notranslate"><span class="pre">__new__</span></code>
+method may return an instance of a subclass or an instance of some completely
+unrelated class.</p>
+<p>If the evaluated return type of <code class="docutils literal notranslate"><span class="pre">__new__</span></code> is not the class being constructed
+(or a subclass thereof), a type checker should assume that the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>
+method will not be called. This is consistent with the runtime behavior of the
+<code class="docutils literal notranslate"><span class="pre">type.__call__</span></code> method. If the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method return type is a union with
+one or more members that are not the class being constructed (or a subclass
+thereof), a type checker should likewise assume that the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method
+will not be called.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="c1"># In this case, the __init__ method should not be considered</span>
+    <span class="c1"># by the type checker when evaluating a constructor call.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">(),</span> <span class="nb">int</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>For purposes of this test, an explicit return type of <code class="docutils literal notranslate"><span class="pre">Any</span></code> (or a
+union containing <code class="docutils literal notranslate"><span class="pre">Any</span></code>) should be treated as a type that is not an instance
+of the class being constructed.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="c1"># The __init__ method will not be called in this case, so</span>
+    <span class="c1"># it should not be evaluated.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">(),</span> <span class="n">Any</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>If the return type of <code class="docutils literal notranslate"><span class="pre">__new__</span></code> is not annotated, a type checker may assume
+that the return type is <code class="docutils literal notranslate"><span class="pre">Self</span></code> and proceed with the assumption that the
+<code class="docutils literal notranslate"><span class="pre">__init__</span></code> method will be called.</p>
+<p>If the class is generic, it is possible for a <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method to override
+the specialized class type and return a class instance that is specialized
+with different type arguments.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MyClass[list[T]]&quot;</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">](),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>If the <code class="docutils literal notranslate"><span class="pre">cls</span></code> parameter within the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method is not annotated, type
+checkers should infer a type of <code class="docutils literal notranslate"><span class="pre">type[Self]</span></code>. Regardless of whether the
+type of the <code class="docutils literal notranslate"><span class="pre">cls</span></code> parameter is explicit or inferred, the type checker should
+bind the class being constructed to the <code class="docutils literal notranslate"><span class="pre">cls</span></code> parameter and report any type
+errors that arise during binding.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="s2">&quot;type[MyClass[int]]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MyClass[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">MyClass</span><span class="p">()</span>  <span class="c1"># OK</span>
+<span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">]()</span>  <span class="c1"># OK</span>
+<span class="n">MyClass</span><span class="p">[</span><span class="nb">str</span><span class="p">]()</span>  <span class="c1"># Type Error</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="init-method">
+<h2><code class="docutils literal notranslate"><span class="pre">__init__</span></code> Method<a class="headerlink" href="#init-method" title="Link to this heading">¶</a></h2>
+<p>After evaluating the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method, a type checker should evaluate the
+<code class="docutils literal notranslate"><span class="pre">__init__</span></code> method (if applicable) using the supplied arguments. If the class
+is generic and explicitly specialized (or specialized via the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method
+return type), the type checker should partially specialize the <code class="docutils literal notranslate"><span class="pre">__init__</span></code>
+method using the supplied type arguments. If the class is not explicitly
+specialized, class-scoped type variables should be solved using the supplied
+arguments passed to the constructor call.</p>
+<p>This step should be skipped if the class does not define an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method
+and does not inherit an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method from a base class other than
+<code class="docutils literal notranslate"><span class="pre">object</span></code>.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="c1"># Constructor calls for specialized classes</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">](</span><span class="mi">1</span><span class="p">),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">[</span><span class="nb">float</span><span class="p">](</span><span class="mi">1</span><span class="p">),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span>
+<span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">](</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># Type error</span>
+
+<span class="c1"># Constructor calls for non-specialized classes</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass</span><span class="p">(</span><span class="mf">1.0</span><span class="p">),</span> <span class="n">MyClass</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>If the <code class="docutils literal notranslate"><span class="pre">self</span></code> parameter within the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method is not annotated, type
+checkers should infer a type of <code class="docutils literal notranslate"><span class="pre">Self</span></code>. Regardless of whether the <code class="docutils literal notranslate"><span class="pre">self</span></code>
+parameter type is explicit or inferred, a type checker should bind the class
+being constructed to this parameter and report any type errors that arise
+during binding.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;MyClass[int]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">MyClass</span><span class="p">()</span>  <span class="c1"># OK</span>
+<span class="n">MyClass</span><span class="p">[</span><span class="nb">int</span><span class="p">]()</span>  <span class="c1"># OK</span>
+<span class="n">MyClass</span><span class="p">[</span><span class="nb">str</span><span class="p">]()</span>  <span class="c1"># Type Error</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The return type for <code class="docutils literal notranslate"><span class="pre">__init__</span></code> is always <code class="docutils literal notranslate"><span class="pre">None</span></code>, which means the
+method cannot influence the return type of the constructor call by specifying
+a return type. There are cases where it is desirable for the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method
+to influence the return type, especially when the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method is
+overloaded. To enable this, type checkers should allow the <code class="docutils literal notranslate"><span class="pre">self</span></code> parameter
+to be annotated with a type that influences the resulting type of the
+constructor call.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass1</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;MyClass1[list[int]]&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;MyClass1[set[str]]&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass1</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">MyClass1</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass1</span><span class="p">[</span><span class="nb">int</span><span class="p">](</span><span class="mi">3</span><span class="p">),</span> <span class="n">MyClass1</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass1</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">MyClass1</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass1</span><span class="p">(</span><span class="mf">3.0</span><span class="p">),</span> <span class="n">MyClass1</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Function-scoped type variables can also be used in the <code class="docutils literal notranslate"><span class="pre">self</span></code>
+annotation of an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method to influence the return type of the
+constructor call.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass2</span><span class="p">[</span><span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">[</span><span class="n">V1</span><span class="p">,</span> <span class="n">V2</span><span class="p">](</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;MyClass2[V1, V2]&quot;</span><span class="p">,</span> <span class="n">value1</span><span class="p">:</span> <span class="n">V1</span><span class="p">,</span> <span class="n">value2</span><span class="p">:</span> <span class="n">V2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">MyClass2</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass2</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">](</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">MyClass2</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyClass3</span><span class="p">[</span><span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">[</span><span class="n">V1</span><span class="p">,</span> <span class="n">V2</span><span class="p">](</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;MyClass3[V2, V1]&quot;</span><span class="p">,</span> <span class="n">value1</span><span class="p">:</span> <span class="n">V1</span><span class="p">,</span> <span class="n">value2</span><span class="p">:</span> <span class="n">V2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">MyClass3</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass3</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">](</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">MyClass3</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Class-scoped type variables should not be used in the <code class="docutils literal notranslate"><span class="pre">self</span></code> annotation
+because such use can lead to ambiguous or nonsensical type evaluation results.
+Type checkers should report an error if a class-scoped type variable is used
+within a type annotation for the <code class="docutils literal notranslate"><span class="pre">self</span></code> parameter in an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass4</span><span class="p">[</span><span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">]:</span>
+    <span class="c1"># The ``self`` annotation should result in a type error</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;MyClass4[T2, T1]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="classes-without-new-and-init-methods">
+<h2>Classes Without <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code> Methods<a class="headerlink" href="#classes-without-new-and-init-methods" title="Link to this heading">¶</a></h2>
+<p>If a class does not define a <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method or <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method and
+does not inherit either of these methods from a base class other than
+<code class="docutils literal notranslate"><span class="pre">object</span></code>, a type checker should evaluate the argument list using the
+<code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code> methods from the <code class="docutils literal notranslate"><span class="pre">object</span></code> class.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass5</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="n">MyClass5</span><span class="p">()</span>  <span class="c1"># OK</span>
+<span class="n">MyClass5</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Type error</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="constructor-calls-for-type-t">
+<h2>Constructor Calls for type[T]<a class="headerlink" href="#constructor-calls-for-type-t" title="Link to this heading">¶</a></h2>
+<p>When a value of type <code class="docutils literal notranslate"><span class="pre">type[T]</span></code> (where <code class="docutils literal notranslate"><span class="pre">T</span></code> is a concrete class or a type
+variable) is called, a type checker should evaluate the constructor call as if
+it is being made on the class <code class="docutils literal notranslate"><span class="pre">T</span></code> (or the class that represents the upper bound
+of type variable <code class="docutils literal notranslate"><span class="pre">T</span></code>). This means the type checker should use the <code class="docutils literal notranslate"><span class="pre">__call__</span></code>
+method of <code class="docutils literal notranslate"><span class="pre">T</span></code>’s metaclass and the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code> methods of <code class="docutils literal notranslate"><span class="pre">T</span></code>
+to evaluate the constructor call.</p>
+<p>It should be noted that such code could be unsafe because the type <code class="docutils literal notranslate"><span class="pre">type[T]</span></code>
+may represent subclasses of <code class="docutils literal notranslate"><span class="pre">T</span></code>, and those subclasses could redefine the
+<code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code> methods in a way that is incompatible with the
+base class. Likewise, the metaclass of <code class="docutils literal notranslate"><span class="pre">T</span></code> could redefine the <code class="docutils literal notranslate"><span class="pre">__call__</span></code>
+method in a way that is incompatible with the base metaclass.</p>
+</section>
+<section id="specialization-during-construction">
+<h2>Specialization During Construction<a class="headerlink" href="#specialization-during-construction" title="Link to this heading">¶</a></h2>
+<p>As discussed above, if a class is generic and not explicitly specialized, its
+type variables should be solved using the arguments passed to the <code class="docutils literal notranslate"><span class="pre">__new__</span></code>
+and <code class="docutils literal notranslate"><span class="pre">__init__</span></code> methods. If one or more type variables are not solved during
+these method evaluations, they should take on their default values.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">assert_type</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyClass1</span><span class="p">[</span><span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">T1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass1</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">MyClass1</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyClass2</span><span class="p">[</span><span class="n">T1</span><span class="p">,</span> <span class="n">T3</span> <span class="o">=</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">T1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">assert_type</span><span class="p">(</span><span class="n">MyClass2</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">MyClass2</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="consistency-of-new-and-init">
+<h2>Consistency of <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code><a class="headerlink" href="#consistency-of-new-and-init" title="Link to this heading">¶</a></h2>
+<p>Type checkers may optionally validate that the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code>
+methods for a class have <a class="reference internal" href="glossary.html#term-consistent"><span class="xref std std-term">consistent</span></a> signatures.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+    <span class="c1"># Type error: __new__ and __init__ have inconsistent signatures</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="converting-a-constructor-to-callable">
+<h2>Converting a Constructor to Callable<a class="headerlink" href="#converting-a-constructor-to-callable" title="Link to this heading">¶</a></h2>
+<p>Class objects are callable, which means the type of a class object can be
+<a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to a callable type.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">accepts_callable</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">,</span> <span class="n">R</span><span class="p">](</span><span class="n">cb</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">R</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">R</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">cb</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">accepts_callable</span><span class="p">(</span><span class="n">MyClass</span><span class="p">))</span>  <span class="c1"># ``def (x: int) -&gt; MyClass``</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>When converting a class to a callable type, a type checker should use the
+following rules, which reflect the same rules specified above for evaluating
+constructor calls:</p>
+<ol class="arabic simple">
+<li><p>If the class has a custom metaclass that defines a <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method
+that is annotated with a return type other than a subclass of the
+class being constructed (or a union that contains such a type), a type
+checker should assume that the metaclass <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method is overriding
+<code class="docutils literal notranslate"><span class="pre">type.__call__</span></code> in some special manner. In this case, the callable should
+be synthesized from the parameters and return type of the metaclass
+<code class="docutils literal notranslate"><span class="pre">__call__</span></code> method after it is bound to the class, and the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> or
+<code class="docutils literal notranslate"><span class="pre">__init__</span></code> methods (if present) should be ignored. This is an uncommon
+case. In the more typical case where there is no custom metaclass that
+overrides <code class="docutils literal notranslate"><span class="pre">type.__call__</span></code> in a special manner, the metaclass <code class="docutils literal notranslate"><span class="pre">__call__</span></code>
+signature should be ignored for purposes of converting to a callable type.
+If a custom metaclass <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method is present but does not have an
+annotated return type, type checkers may assume that the method acts like
+<code class="docutils literal notranslate"><span class="pre">type.__call__</span></code> and proceed to the next step.</p></li>
+<li><p>If the class defines a <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method or inherits a <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method
+from a base class other than <code class="docutils literal notranslate"><span class="pre">object</span></code>, a type checker should synthesize a
+callable from the parameters and return type of that method after it is bound
+to the class.</p></li>
+<li><p>If the return type of the method in step 2 evaluates to a type that is not a
+subclass of the class being constructed (or a union that includes such a
+class), the final callable type is based on the result of step 2, and the
+conversion process is complete. The <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method is ignored in this
+case. This is consistent with the runtime behavior of the <code class="docutils literal notranslate"><span class="pre">type.__call__</span></code>
+method.</p></li>
+<li><p>If the class defines an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method or inherits an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method
+from a base class other than <code class="docutils literal notranslate"><span class="pre">object</span></code>, a callable type should be synthesized
+from the parameters of the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method after it is bound to the class
+instance resulting from step 2. The return type of this synthesized callable
+should be the concrete value of <code class="docutils literal notranslate"><span class="pre">Self</span></code>.</p></li>
+<li><p>If step 2 and 4 both produce no result because the class does not define or
+inherit a <code class="docutils literal notranslate"><span class="pre">__new__</span></code> or <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method from a class other than <code class="docutils literal notranslate"><span class="pre">object</span></code>,
+the type checker should synthesize callable types from the <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and
+<code class="docutils literal notranslate"><span class="pre">__init__</span></code> methods for the <code class="docutils literal notranslate"><span class="pre">object</span></code> class.</p></li>
+<li><p>Steps 2, 4 and 5 will produce either one or two callable types. The final
+result of the conversion process is the union of these types. This will
+reflect the callable signatures of the applicable <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and
+<code class="docutils literal notranslate"><span class="pre">__init__</span></code> methods.</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; No __new__ or __init__ &quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">B</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; __new__ and __init__ &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">C</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; __new__ but no __init__ &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Class not constructable&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">D</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">CustomMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Custom metaclass that overrides type.__call__ &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This __new__ is ignored for purposes of conversion &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">E</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; __new__ that causes __init__ to be ignored &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">A</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">A</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This __init__ is ignored for purposes of conversion &quot;&quot;&quot;</span>
+        <span class="o">...</span>
+
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">accepts_callable</span><span class="p">(</span><span class="n">A</span><span class="p">))</span>  <span class="c1"># ``def () -&gt; A``</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">accepts_callable</span><span class="p">(</span><span class="n">B</span><span class="p">))</span>  <span class="c1"># ``def (*args, **kwargs) -&gt; B | def (x: int) -&gt; B``</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">accepts_callable</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>  <span class="c1"># ``def (x: int) -&gt; int``</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">accepts_callable</span><span class="p">(</span><span class="n">D</span><span class="p">))</span>  <span class="c1"># ``def () -&gt; NoReturn``</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">accepts_callable</span><span class="p">(</span><span class="n">E</span><span class="p">))</span>  <span class="c1"># ``def () -&gt; A``</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>If the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> or <code class="docutils literal notranslate"><span class="pre">__new__</span></code> method is overloaded, the callable
+type should be synthesized from the overloads. The resulting callable type
+itself will be overloaded.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">accepts_callable</span><span class="p">(</span><span class="n">MyClass</span><span class="p">))</span>  <span class="c1"># overload of ``def (x: int) -&gt; MyClass`` and ``def (x: str) -&gt; MyClass``</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>If the class is generic, the synthesized callable should include any class-scoped
+type parameters that appear within the signature, but these type parameters should
+be converted to function-scoped type parameters for the callable.
+Any function-scoped type parameters in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> or <code class="docutils literal notranslate"><span class="pre">__new__</span></code>
+method should also be included as function-scoped type parameters in the synthesized
+callable.</p>
+<blockquote>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">[</span><span class="n">V</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">V</span><span class="p">],</span> <span class="n">z</span><span class="p">:</span> <span class="n">V</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">accepts_callable</span><span class="p">(</span><span class="n">MyClass</span><span class="p">))</span>  <span class="c1"># ``def [T, V] (x: T, y: list[V], z: V) -&gt; MyClass[T]``</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Constructors</a><ul>
+<li><a class="reference internal" href="#constructor-calls">Constructor Calls</a></li>
+<li><a class="reference internal" href="#metaclass-call-method">Metaclass <code class="docutils literal notranslate"><span class="pre">__call__</span></code> Method</a></li>
+<li><a class="reference internal" href="#new-method"><code class="docutils literal notranslate"><span class="pre">__new__</span></code> Method</a></li>
+<li><a class="reference internal" href="#init-method"><code class="docutils literal notranslate"><span class="pre">__init__</span></code> Method</a></li>
+<li><a class="reference internal" href="#classes-without-new-and-init-methods">Classes Without <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code> Methods</a></li>
+<li><a class="reference internal" href="#constructor-calls-for-type-t">Constructor Calls for type[T]</a></li>
+<li><a class="reference internal" href="#specialization-during-construction">Specialization During Construction</a></li>
+<li><a class="reference internal" href="#consistency-of-new-and-init">Consistency of <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code></a></li>
+<li><a class="reference internal" href="#converting-a-constructor-to-callable">Converting a Constructor to Callable</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="callables.html"
+                          title="previous chapter">Callables</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="overload.html"
+                          title="next chapter"><code class="docutils literal notranslate"><span class="pre">Overloads</span></code></a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/constructors.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="overload.html" title="Overloads"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="callables.html" title="Callables"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Constructors</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

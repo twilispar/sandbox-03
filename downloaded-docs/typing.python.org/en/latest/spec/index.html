@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Specification for the Python type system &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="The Python Type System" href="type-system.html" />
+    <link rel="prev" title="Testing and Ensuring Type Annotation Quality" href="../reference/quality.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/index.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../reference/quality.html"
+                          title="previous chapter">Testing and Ensuring Type Annotation Quality</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="type-system.html"
+                          title="next chapter">The Python Type System</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="type-system.html" title="The Python Type System"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../reference/quality.html" title="Testing and Ensuring Type Annotation Quality"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Specification for the Python type system</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="specification-for-the-python-type-system">
+<h1>Specification for the Python type system<a class="headerlink" href="#specification-for-the-python-type-system" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="type-system.html">The Python Type System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="type-system.html#purpose">Purpose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-system.html#non-goals">Non-goals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-system.html#interpretation">Interpretation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="meta.html">Meta-topics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="meta.html#about-this-specification">About this specification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meta.html#changing-the-specification">Changing the specification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Type system concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#static-dynamic-and-gradual-typing">Static, dynamic, and gradual typing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#fully-static-and-gradual-types">Fully static and gradual types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#subtype-supertype-and-type-equivalence">Subtype, supertype, and type equivalence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#nominal-and-structural-types">Nominal and structural types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#materialization">Materialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#consistency">Consistency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#the-assignable-to-or-consistent-subtyping-relation">The assignable-to (or consistent subtyping) relation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#summary-of-type-relations">Summary of type relations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#attributes-and-methods">Attributes and methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#union-types">Union types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="annotations.html">Type annotations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="annotations.html#the-meaning-of-annotations">The meaning of annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="annotations.html#type-and-annotation-expressions">Type and annotation expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="annotations.html#string-annotations">String annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="annotations.html#annotating-generator-functions-and-coroutines">Annotating generator functions and coroutines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="annotations.html#annotating-instance-and-class-methods">Annotating instance and class methods</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="type-forms.html">Type forms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="type-forms.html#typeform">TypeForm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-forms.html#implicit-typeform-evaluation">Implicit <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-forms.html#valid-type-expressions">Valid type expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-forms.html#explicit-typeform-evaluation">Explicit <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="type-forms.html#assignability">Assignability</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="special-types.html">Special types in annotations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="special-types.html#any"><code class="docutils literal notranslate"><span class="pre">Any</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="special-types.html#none"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="special-types.html#noreturn"><code class="docutils literal notranslate"><span class="pre">NoReturn</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="special-types.html#never"><code class="docutils literal notranslate"><span class="pre">Never</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="special-types.html#special-cases-for-float-and-complex">Special cases for <code class="docutils literal notranslate"><span class="pre">float</span></code> and <code class="docutils literal notranslate"><span class="pre">complex</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="special-types.html#type"><code class="docutils literal notranslate"><span class="pre">type[]</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="generics.html">Generics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#user-defined-generic-types">User-defined generic types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#scoping-rules-for-type-variables">Scoping rules for type variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#instantiating-generic-classes-and-type-erasure">Instantiating generic classes and type erasure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#arbitrary-generic-types-as-base-classes">Arbitrary generic types as base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#abstract-generic-types">Abstract generic types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#type-variables-with-an-upper-bound">Type variables with an upper bound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#variance">Variance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#paramspec">ParamSpec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#typevartuple">TypeVarTuple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#defaults-for-type-parameters">Defaults for Type Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#self"><code class="docutils literal notranslate"><span class="pre">Self</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="generics.html#variance-inference">Variance Inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="qualifiers.html">Type qualifiers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="qualifiers.html#final"><code class="docutils literal notranslate"><span class="pre">&#64;final</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="qualifiers.html#uppercase-final"><code class="docutils literal notranslate"><span class="pre">Final</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="qualifiers.html#annotated"><code class="docutils literal notranslate"><span class="pre">Annotated</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="class-compat.html">Class type assignability</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="class-compat.html#classvar"><code class="docutils literal notranslate"><span class="pre">ClassVar</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="class-compat.html#override"><code class="docutils literal notranslate"><span class="pre">&#64;override</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aliases.html">Type aliases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="aliases.html#typealias"><code class="docutils literal notranslate"><span class="pre">TypeAlias</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="aliases.html#type-statement"><code class="docutils literal notranslate"><span class="pre">type</span></code> statement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aliases.html#newtype"><code class="docutils literal notranslate"><span class="pre">NewType</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="literal.html">Literals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="literal.html#literal"><code class="docutils literal notranslate"><span class="pre">Literal</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="literal.html#literalstring"><code class="docutils literal notranslate"><span class="pre">LiteralString</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="protocol.html">Protocols</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#terminology">Terminology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#defining-a-protocol">Defining a protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#protocol-members">Protocol members</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#explicitly-declaring-implementation">Explicitly declaring implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#merging-and-extending-protocols">Merging and extending protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#generic-protocols">Generic protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#recursive-protocols">Recursive protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#self-types-in-protocols">Self-types in protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#assignability-relationships-with-other-types">Assignability relationships with other types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#unions-and-intersections-of-protocols">Unions and intersections of protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#type-and-class-objects-vs-protocols"><code class="docutils literal notranslate"><span class="pre">type[]</span></code> and class objects vs protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#newtype-and-type-aliases"><code class="docutils literal notranslate"><span class="pre">NewType()</span></code> and type aliases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#modules-as-implementations-of-protocols">Modules as implementations of protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocol.html#runtime-checkable-decorator-and-narrowing-types-by-isinstance"><code class="docutils literal notranslate"><span class="pre">&#64;runtime_checkable</span></code> decorator and narrowing types by <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="callables.html">Callables</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="callables.html#terminology">Terminology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callables.html#positional-only-parameters">Positional-only parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callables.html#default-argument-values">Default argument values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callables.html#annotating-args-and-kwargs">Annotating <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="callables.html#unpack-for-keyword-arguments"><code class="docutils literal notranslate"><span class="pre">Unpack</span></code> for keyword arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callables.html#callable">Callable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callables.html#callback-protocols">Callback protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="callables.html#assignability-rules-for-callables">Assignability rules for callables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="constructors.html">Constructors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="constructors.html#constructor-calls">Constructor Calls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constructors.html#metaclass-call-method">Metaclass <code class="docutils literal notranslate"><span class="pre">__call__</span></code> Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constructors.html#new-method"><code class="docutils literal notranslate"><span class="pre">__new__</span></code> Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constructors.html#init-method"><code class="docutils literal notranslate"><span class="pre">__init__</span></code> Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constructors.html#classes-without-new-and-init-methods">Classes Without <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code> Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constructors.html#constructor-calls-for-type-t">Constructor Calls for type[T]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constructors.html#specialization-during-construction">Specialization During Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constructors.html#consistency-of-new-and-init">Consistency of <code class="docutils literal notranslate"><span class="pre">__new__</span></code> and <code class="docutils literal notranslate"><span class="pre">__init__</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="constructors.html#converting-a-constructor-to-callable">Converting a Constructor to Callable</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overload.html"><code class="docutils literal notranslate"><span class="pre">Overloads</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overload.html#overload-definitions">Overload definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overload.html#invalid-overload-definitions">Invalid overload definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overload.html#implementation-consistency">Implementation consistency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overload.html#overload-call-evaluation">Overload call evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overload.html#argument-type-expansion">Argument type expansion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#context-managers">Context Managers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dataclasses.html">Dataclasses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dataclasses.html#the-dataclass-transform-decorator">The <code class="docutils literal notranslate"><span class="pre">dataclass_transform</span></code> decorator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="typeddict.html">Typed dictionaries</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typeddict.html#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typeddict.html#using-typeddict-types">Using TypedDict Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typeddict.html#inheritance">Inheritance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typeddict.html#subtyping-and-assignability">Subtyping and assignability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typeddict.html#supported-and-unsupported-operations">Supported and Unsupported Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="typeddict.html#backwards-compatibility">Backwards Compatibility</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tuples.html">Tuples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tuples.html#tuple-type-form">Tuple Type Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuples.html#unpacked-tuple-form">Unpacked Tuple Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tuples.html#type-compatibility-rules">Type Compatibility Rules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="namedtuples.html">Named Tuples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="namedtuples.html#defining-named-tuples">Defining Named Tuples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namedtuples.html#named-tuple-usage">Named Tuple Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namedtuples.html#assignability">Assignability</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="enums.html">Enumerations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="enums.html#enum-definition">Enum Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html#enum-behaviors">Enum Behaviors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html#defining-members">Defining Members</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html#member-names">Member Names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html#member-values">Member Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="enums.html#enum-literal-expansion">Enum Literal Expansion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="narrowing.html">Type narrowing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="narrowing.html#typeguard">TypeGuard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="narrowing.html#typeis">TypeIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="directives.html">Type checker directives</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#assert-type"><code class="docutils literal notranslate"><span class="pre">assert_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#reveal-type"><code class="docutils literal notranslate"><span class="pre">reveal_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#type-ignore-comments"><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code> comments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#cast"><code class="docutils literal notranslate"><span class="pre">cast()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#type-checking"><code class="docutils literal notranslate"><span class="pre">TYPE_CHECKING</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#no-type-check"><code class="docutils literal notranslate"><span class="pre">&#64;no_type_check</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#version-and-platform-checking">Version and platform checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#deprecated"><code class="docutils literal notranslate"><span class="pre">&#64;deprecated</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="directives.html#disjoint-base"><code class="docutils literal notranslate"><span class="pre">&#64;disjoint_base</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="distributing.html">Distributing type information</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="distributing.html#stub-files">Stub files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributing.html#type-information-in-libraries">Type information in libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributing.html#library-interface-public-and-private-symbols">Library interface (public and private symbols)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distributing.html#import-conventions">Import Conventions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="historical.html">Historical and deprecated features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="historical.html#type-comments">Type comments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="historical.html#type-comments-on-function-definitions">Type comments on function definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="historical.html#positional-only-parameters">Positional-only parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="historical.html#generics-in-standard-collections">Generics in standard collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="historical.html#union-and-optional"><code class="docutils literal notranslate"><span class="pre">Union</span></code> and <code class="docutils literal notranslate"><span class="pre">Optional</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="historical.html#unpack"><code class="docutils literal notranslate"><span class="pre">Unpack</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../reference/quality.html"
+                          title="previous chapter">Testing and Ensuring Type Annotation Quality</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="type-system.html"
+                          title="next chapter">The Python Type System</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="type-system.html" title="The Python Type System"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../reference/quality.html" title="Testing and Ensuring Type Annotation Quality"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Specification for the Python type system</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

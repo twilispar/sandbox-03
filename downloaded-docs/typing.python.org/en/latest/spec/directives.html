@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Type checker directives &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Distributing type information" href="distributing.html" />
+    <link rel="prev" title="Type narrowing" href="narrowing.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/directives.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type checker directives</a><ul>
+<li><a class="reference internal" href="#assert-type"><code class="docutils literal notranslate"><span class="pre">assert_type()</span></code></a></li>
+<li><a class="reference internal" href="#reveal-type"><code class="docutils literal notranslate"><span class="pre">reveal_type()</span></code></a></li>
+<li><a class="reference internal" href="#type-ignore-comments"><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code> comments</a></li>
+<li><a class="reference internal" href="#cast"><code class="docutils literal notranslate"><span class="pre">cast()</span></code></a></li>
+<li><a class="reference internal" href="#type-checking"><code class="docutils literal notranslate"><span class="pre">TYPE_CHECKING</span></code></a></li>
+<li><a class="reference internal" href="#no-type-check"><code class="docutils literal notranslate"><span class="pre">&#64;no_type_check</span></code></a></li>
+<li><a class="reference internal" href="#version-and-platform-checking">Version and platform checking</a></li>
+<li><a class="reference internal" href="#deprecated"><code class="docutils literal notranslate"><span class="pre">&#64;deprecated</span></code></a><ul>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#type-checker-behavior">Type checker behavior</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#disjoint-base"><code class="docutils literal notranslate"><span class="pre">&#64;disjoint_base</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="narrowing.html"
+                          title="previous chapter">Type narrowing</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="distributing.html"
+                          title="next chapter">Distributing type information</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/directives.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="distributing.html" title="Distributing type information"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="narrowing.html" title="Type narrowing"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Type checker directives</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="type-checker-directives">
+<span id="directives"></span><h1>Type checker directives<a class="headerlink" href="#type-checker-directives" title="Link to this heading">¶</a></h1>
+<section id="assert-type">
+<span id="id1"></span><h2><code class="docutils literal notranslate"><span class="pre">assert_type()</span></code><a class="headerlink" href="#assert-type" title="Link to this heading">¶</a></h2>
+<p>The function <code class="docutils literal notranslate"><span class="pre">typing.assert_type(val,</span> <span class="pre">typ)</span></code> allows users to
+ask a static type checker to confirm that the inferred type of <em>val</em>
+is <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> to <em>typ</em>.</p>
+<p>When a type checker encounters a call to <code class="docutils literal notranslate"><span class="pre">assert_type()</span></code>, it
+should emit an error if the value is not of the specified type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">greet</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">assert_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="c1"># OK, inferred type of `name` is `str`</span>
+    <span class="n">assert_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>  <span class="c1"># type checker error</span>
+</pre></div>
+</div>
+<p>If the two types are <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> but syntactically different,
+the type checker may reject the <code class="docutils literal notranslate"><span class="pre">assert_type()</span></code> call:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_type</span><span class="p">,</span> <span class="n">Literal</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">greet</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">assert_type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;spam&quot;</span><span class="p">])</span>  <span class="c1"># type checker may error</span>
+</pre></div>
+</div>
+<p>Type checkers should aim to minimize cases where they reject
+<code class="docutils literal notranslate"><span class="pre">assert_type()</span></code> calls that use equivalent types.</p>
+<p>The second argument must be a valid <a class="reference internal" href="glossary.html#term-type-expression"><span class="xref std std-term">type expression</span></a>.</p>
+</section>
+<section id="reveal-type">
+<span id="id2"></span><h2><code class="docutils literal notranslate"><span class="pre">reveal_type()</span></code><a class="headerlink" href="#reveal-type" title="Link to this heading">¶</a></h2>
+<p>The function <code class="docutils literal notranslate"><span class="pre">reveal_type(obj)</span></code> makes type checkers
+reveal the inferred static type of an expression.</p>
+<p>When a static type checker encounters a call to this function,
+it should emit a diagnostic with the type of the argument. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">reveal_type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># Revealed type is &quot;builtins.int&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="type-ignore-comments">
+<span id="type-ignore"></span><h2><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code> comments<a class="headerlink" href="#type-ignore-comments" title="Link to this heading">¶</a></h2>
+<p>The special comment <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code> is used to silence type checker
+errors.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code> comment should be put on the line that the
+error refers to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">http.client</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;not_found&#39;</span><span class="p">:</span> <span class="n">http</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">NOT_FOUND</span>  <span class="c1"># type: ignore</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code> comment on a line by itself at the top of a file,
+before any docstrings, imports, or other executable code, silences all
+errors in the file. Blank lines and other comments, such as shebang
+lines and coding cookies, may precede the <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code> comment.</p>
+<p>In some cases, linting tools or other comments may be needed on the same
+line as a type comment. In these cases, the type comment should be before
+other comments and linting markers:</p>
+<blockquote>
+<div><p># type: ignore # &lt;comment or other marker&gt;</p>
+</div></blockquote>
+<p>The form <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore[...]</span></code> may be used to suppress only type errors with a
+given error code, though support for this is optional and may vary by type checker:</p>
+<ul class="simple">
+<li><p>Given <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore[my_code1]</span></code>, a type checker may ignore the error code
+<code class="docutils literal notranslate"><span class="pre">my_code1</span></code> and choose to treat this form as equivalent to <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code>.</p></li>
+<li><p>Alternatively, given <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore[my_code1]</span></code> a type checker may suppress the
+error only if the error cause matches the error code <code class="docutils literal notranslate"><span class="pre">my_code1</span></code>.</p></li>
+<li><p>A bare <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code> must always suppress all type errors.</p></li>
+</ul>
+</section>
+<section id="cast">
+<span id="id3"></span><h2><code class="docutils literal notranslate"><span class="pre">cast()</span></code><a class="headerlink" href="#cast" title="Link to this heading">¶</a></h2>
+<p>Occasionally the type checker may need a different kind of hint: the
+programmer may know that an expression is of a more constrained type
+than a type checker may be able to infer.  For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">find_first_str</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">))</span>
+    <span class="c1"># We only get here if there&#39;s at least one string in a</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Some type checkers may not be able to infer that the type of
+<code class="docutils literal notranslate"><span class="pre">a[index]</span></code> is <code class="docutils literal notranslate"><span class="pre">str</span></code> and only infer <code class="docutils literal notranslate"><span class="pre">object</span></code> or <code class="docutils literal notranslate"><span class="pre">Any</span></code>, but we
+know that (if the code gets to that point) it must be a string.  The
+<code class="docutils literal notranslate"><span class="pre">cast(t,</span> <span class="pre">x)</span></code> call tells the type checker that we are confident that
+the type of <code class="docutils literal notranslate"><span class="pre">x</span></code> is <code class="docutils literal notranslate"><span class="pre">t</span></code>. <code class="docutils literal notranslate"><span class="pre">t</span></code> must be a valid <a class="reference internal" href="glossary.html#term-type-expression"><span class="xref std std-term">type expression</span></a>.
+At runtime a cast always returns the
+expression unchanged – it does not check the type, and it does not
+convert or coerce the value.</p>
+</section>
+<section id="type-checking">
+<span id="if-type-checking"></span><h2><code class="docutils literal notranslate"><span class="pre">TYPE_CHECKING</span></code><a class="headerlink" href="#type-checking" title="Link to this heading">¶</a></h2>
+<p>Sometimes there’s code that must be seen by a type checker (or other
+static analysis tools) but should not be executed.  For such
+situations the <code class="docutils literal notranslate"><span class="pre">typing</span></code> module defines a constant,
+<code class="docutils literal notranslate"><span class="pre">TYPE_CHECKING</span></code>, that is considered <code class="docutils literal notranslate"><span class="pre">True</span></code> during type checking
+(or other static analysis) but <code class="docutils literal notranslate"><span class="pre">False</span></code> at runtime.  Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">expensive_mod</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">a_func</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="s1">&#39;expensive_mod.SomeClass&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">a_var</span><span class="p">:</span> <span class="n">expensive_mod</span><span class="o">.</span><span class="n">SomeClass</span> <span class="o">=</span> <span class="n">arg</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>(Note that the type annotation must be enclosed in quotes, making it a
+“forward reference”, to hide the <code class="docutils literal notranslate"><span class="pre">expensive_mod</span></code> reference from the
+interpreter runtime.  In the variable annotation no quotes are needed.)</p>
+<p>This approach may also be useful to handle import cycles.</p>
+</section>
+<section id="no-type-check">
+<span id="id4"></span><h2><code class="docutils literal notranslate"><span class="pre">&#64;no_type_check</span></code><a class="headerlink" href="#no-type-check" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;typing.no_type_check</span></code> decorator may be supported by type checkers
+for functions and classes.</p>
+<p>If a type checker supports the <code class="docutils literal notranslate"><span class="pre">no_type_check</span></code> decorator for functions, it
+should suppress all type errors for the <code class="docutils literal notranslate"><span class="pre">def</span></code> statement and its body including
+any nested functions or classes. It should also ignore all parameter
+and return type annotations and treat the function as if it were unannotated.</p>
+<p>The behavior for the <code class="docutils literal notranslate"><span class="pre">no_type_check</span></code> decorator when applied to a class is
+left undefined by the typing spec at this time.</p>
+</section>
+<section id="version-and-platform-checking">
+<span id="version-and-platform-checks"></span><h2>Version and platform checking<a class="headerlink" href="#version-and-platform-checking" title="Link to this heading">¶</a></h2>
+<p>Type checkers are expected to understand simple version and platform
+checks, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span>
+    <span class="c1"># Python 3.12+</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Python 3.11 and lower</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
+    <span class="c1"># Windows specific definitions</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Posix specific definitions</span>
+</pre></div>
+</div>
+<p>Don’t expect a checker to understand obfuscations like
+<code class="docutils literal notranslate"><span class="pre">&quot;&quot;.join(reversed(sys.platform))</span> <span class="pre">==</span> <span class="pre">&quot;xunil&quot;</span></code>.</p>
+</section>
+<section id="deprecated">
+<span id="id5"></span><h2><code class="docutils literal notranslate"><span class="pre">&#64;deprecated</span></code><a class="headerlink" href="#deprecated" title="Link to this heading">¶</a></h2>
+<p>(Originally specified in <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0702/"><strong>PEP 702</strong></a>.)</p>
+<p>The <a class="reference external" href="https://docs.python.org/3/library/warnings.html#warnings.deprecated" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">warnings.deprecated()</span></code></a>
+decorator can be used on a class, function or method to mark it as deprecated.
+This includes <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypedDict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.TypedDict</span></code></a> and <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NamedTuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.NamedTuple</span></code></a> definitions.
+With overloaded functions, the decorator may be applied to individual overloads,
+indicating that the particular overload is deprecated. The decorator may also be
+applied to the overload implementation function, indicating that the entire function
+is deprecated.</p>
+<p>The decorator takes the following arguments:</p>
+<ul class="simple">
+<li><p>A required positional-only argument representing the deprecation message.</p></li>
+<li><p>Two keyword-only arguments, <code class="docutils literal notranslate"><span class="pre">category</span></code> and <code class="docutils literal notranslate"><span class="pre">stacklevel</span></code>, controlling
+runtime behavior. These are not relevant to type checker behavior so they are
+not further described in this specification.</p></li>
+</ul>
+<p>The positional-only argument is of type <code class="docutils literal notranslate"><span class="pre">str</span></code> and contains a message that should
+be shown by the type checker when it encounters a usage of the decorated object.
+Tools may clean up the deprecation message for display, for example
+by using <a class="reference external" href="https://docs.python.org/3/library/inspect.html#inspect.cleandoc" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">inspect.cleandoc()</span></code></a> or equivalent logic.
+The message must be a string literal.
+The content of deprecation messages is up to the user, but it may include the version
+in which the deprecated object is to be removed, and information about suggested
+replacement APIs.</p>
+<p>Type checkers should produce a diagnostic whenever they encounter a usage of an
+object marked as deprecated. For deprecated overloads, this includes all calls
+that resolve to the deprecated overload.
+For deprecated classes and functions, this includes:</p>
+<ul class="simple">
+<li><p>References through module, class, or instance attributes (<code class="docutils literal notranslate"><span class="pre">module.deprecated_object</span></code>,
+<code class="docutils literal notranslate"><span class="pre">module.SomeClass.deprecated_method</span></code>, <code class="docutils literal notranslate"><span class="pre">module.SomeClass().deprecated_method</span></code>)</p></li>
+<li><p>Any usage of deprecated objects in their defining module
+(<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">deprecated_object()</span></code> in <code class="docutils literal notranslate"><span class="pre">module.py</span></code>)</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">*</span></code> is used, usage of deprecated objects from the
+module (<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">module</span> <span class="pre">import</span> <span class="pre">*;</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">deprecated_object()</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">from</span></code> imports (<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">module</span> <span class="pre">import</span> <span class="pre">deprecated_object</span></code>)</p></li>
+<li><p>Any syntax that indirectly triggers a call to the function. For example,
+if the <code class="docutils literal notranslate"><span class="pre">__add__</span></code> method of a class <code class="docutils literal notranslate"><span class="pre">C</span></code> is deprecated, then
+the code <code class="docutils literal notranslate"><span class="pre">C()</span> <span class="pre">+</span> <span class="pre">C()</span></code> should trigger a diagnostic. Similarly, if the
+setter of a property is marked deprecated, attempts to set the property
+should trigger a diagnostic.</p></li>
+</ul>
+<p>If a method is marked with the <a class="reference internal" href="class-compat.html#override"><span class="std std-ref">&#64;override decorator</span></a>
+and the base class method it overrides is deprecated, the type checker should
+produce a diagnostic.</p>
+<p>There are additional scenarios where deprecations could come into play.
+For example, an object may implement a <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Protocol</span></code></a>, but one
+of the methods required for protocol compliance is deprecated.
+As scenarios such as this one appear complex and relatively unlikely to come up in practice,
+type checkers are not mandated to detect them.</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h3>
+<p>As an example, consider this library stub named <code class="docutils literal notranslate"><span class="pre">library.pyi</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">deprecated</span>
+
+<span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;Use Spam instead&quot;</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Ham</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;It is pining for the fiords&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">norwegian_blue</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="nd">@overload</span>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;Only str will be allowed&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Spam</span><span class="p">:</span>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;There is enough spam in the world&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span> <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;All spam will be equally greasy&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">greasy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span> <span class="o">...</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+    <span class="nd">@shape</span><span class="o">.</span><span class="n">setter</span>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;Shapes are becoming immutable&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Here is how type checkers should handle usage of this library:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">library</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ham</span>  <span class="c1"># error: Use of deprecated class Ham. Use Spam instead.</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">library</span>
+
+<span class="n">library</span><span class="o">.</span><span class="n">norwegian_blue</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># error: Use of deprecated function norwegian_blue. It is pining for the fiords.</span>
+<span class="nb">map</span><span class="p">(</span><span class="n">library</span><span class="o">.</span><span class="n">norwegian_blue</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>  <span class="c1"># error: Use of deprecated function norwegian_blue. It is pining for the fiords.</span>
+
+<span class="n">library</span><span class="o">.</span><span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># error: Use of deprecated overload for foo. Only str will be allowed.</span>
+<span class="n">library</span><span class="o">.</span><span class="n">foo</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>  <span class="c1"># no error</span>
+
+<span class="n">ham</span> <span class="o">=</span> <span class="n">Ham</span><span class="p">()</span>  <span class="c1"># no error (already reported above)</span>
+
+<span class="n">spam</span> <span class="o">=</span> <span class="n">library</span><span class="o">.</span><span class="n">Spam</span><span class="p">()</span>
+<span class="n">spam</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># error: Use of deprecated method Spam.__add__. There is enough spam in the world.</span>
+<span class="n">spam</span><span class="o">.</span><span class="n">greasy</span>  <span class="c1"># error: Use of deprecated property Spam.greasy. All spam will be equally greasy.</span>
+<span class="n">spam</span><span class="o">.</span><span class="n">shape</span>  <span class="c1"># no error</span>
+<span class="n">spam</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="s2">&quot;cube&quot;</span>  <span class="c1"># error: Use of deprecated property setter Spam.shape. Shapes are becoming immutable.</span>
+</pre></div>
+</div>
+<p>The exact wording of the diagnostics is up to the type checker and is not part
+of the specification.</p>
+</section>
+<section id="type-checker-behavior">
+<h3>Type checker behavior<a class="headerlink" href="#type-checker-behavior" title="Link to this heading">¶</a></h3>
+<p>It is unspecified exactly how type checkers should present deprecation
+diagnostics to their users. However, some users (e.g., application developers
+targeting only a specific version of Python) may not care about deprecations,
+while others (e.g., library developers who want their library to remain
+compatible with future versions of Python) would want to catch any use of
+deprecated functionality in their CI pipeline. Therefore, it is recommended
+that type checkers provide configuration options that cover both use cases.
+As with any other type checker error, it is also possible to ignore deprecations
+using <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code> comments.</p>
+</section>
+</section>
+<section id="disjoint-base">
+<span id="id6"></span><h2><code class="docutils literal notranslate"><span class="pre">&#64;disjoint_base</span></code><a class="headerlink" href="#disjoint-base" title="Link to this heading">¶</a></h2>
+<p>(Originally specified in <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0800/"><strong>PEP 800</strong></a>.)</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;typing.disjoint_base</span></code> decorator may be used to mark a nominal class as
+a disjoint base. It may only be used on nominal classes, including <code class="docutils literal notranslate"><span class="pre">NamedTuple</span></code>
+definitions; it is a type checker error to use the decorator on a function,
+<code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> definition, or <code class="docutils literal notranslate"><span class="pre">Protocol</span></code> definition.</p>
+<p>We define two properties on (nominal) classes: a class may or may not <em>be</em> a
+disjoint base, and every class must <em>have</em> a valid disjoint base.</p>
+<p>A nominal class is a disjoint base if it is decorated with <code class="docutils literal notranslate"><span class="pre">&#64;typing.disjoint_base</span></code>,
+or if it contains a non-empty <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> definition.
+This includes classes that have <code class="docutils literal notranslate"><span class="pre">__slots__</span></code> because of the <code class="docutils literal notranslate"><span class="pre">&#64;dataclass(slots=True)</span></code> decorator or
+because of the use of the <code class="docutils literal notranslate"><span class="pre">dataclass_transform</span></code> mechanism to add slots.
+The universal base class, <code class="docutils literal notranslate"><span class="pre">object</span></code>, is also a disjoint base.</p>
+<p>To determine a class’s disjoint base, we look at all of its base classes to
+determine a set of candidate disjoint bases. For each base
+that is itself a disjoint base, the candidate is the base itself; otherwise,
+it is the base’s disjoint base. If the candidate set contains
+a single disjoint base, that is the class’s disjoint base. If there are multiple
+candidates, but one of them is a subclass of all other candidates,
+that class is the disjoint base. If no such candidate exists, the class does not
+have a valid disjoint base, and therefore cannot exist.</p>
+<p>Type checkers must check for a valid disjoint base when checking class definitions,
+and emit a diagnostic if they encounter a class
+definition that lacks a valid disjoint base. Type checkers may also use the disjoint
+base mechanism to determine whether types are disjoint,
+for example when checking whether a type narrowing construct like <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code>
+results in an unreachable branch.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">disjoint_base</span><span class="p">,</span> <span class="n">assert_never</span>
+
+<span class="nd">@disjoint_base</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Disjoint1</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="nd">@disjoint_base</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Disjoint2</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="nd">@disjoint_base</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DisjointChild</span><span class="p">(</span><span class="n">Disjoint1</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">C1</span><span class="p">:</span>  <span class="c1"># disjoint base is `object`</span>
+    <span class="k">pass</span>
+
+<span class="c1"># OK: candidate disjoint bases are `Disjoint1` and `object`, and `Disjoint1` is a subclass of `object`.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">C2</span><span class="p">(</span><span class="n">Disjoint1</span><span class="p">,</span> <span class="n">C1</span><span class="p">):</span>  <span class="c1"># disjoint base is `Disjoint1`</span>
+    <span class="k">pass</span>
+
+<span class="c1"># OK: candidate disjoint bases are `DisjointChild` and `Disjoint1`, and `DisjointChild` is a subclass of `Disjoint1`.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">C3</span><span class="p">(</span><span class="n">DisjointChild</span><span class="p">,</span> <span class="n">Disjoint1</span><span class="p">):</span>  <span class="c1"># disjoint base is `DisjointChild`</span>
+    <span class="k">pass</span>
+
+<span class="c1"># error: candidate disjoint bases are `Disjoint1` and `Disjoint2`, but neither is a subclass of the other</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">C4</span><span class="p">(</span><span class="n">Disjoint1</span><span class="p">,</span> <span class="n">Disjoint2</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">narrower</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Disjoint1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Disjoint2</span><span class="p">):</span>
+        <span class="n">assert_never</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>  <span class="c1"># OK: child class of `Disjoint1` and `Disjoint2` cannot exist</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">C1</span><span class="p">):</span>
+        <span class="n">reveal_type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>  <span class="c1"># Shows a non-empty type, e.g. `Disjoint1 &amp; C1`</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type checker directives</a><ul>
+<li><a class="reference internal" href="#assert-type"><code class="docutils literal notranslate"><span class="pre">assert_type()</span></code></a></li>
+<li><a class="reference internal" href="#reveal-type"><code class="docutils literal notranslate"><span class="pre">reveal_type()</span></code></a></li>
+<li><a class="reference internal" href="#type-ignore-comments"><code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code> comments</a></li>
+<li><a class="reference internal" href="#cast"><code class="docutils literal notranslate"><span class="pre">cast()</span></code></a></li>
+<li><a class="reference internal" href="#type-checking"><code class="docutils literal notranslate"><span class="pre">TYPE_CHECKING</span></code></a></li>
+<li><a class="reference internal" href="#no-type-check"><code class="docutils literal notranslate"><span class="pre">&#64;no_type_check</span></code></a></li>
+<li><a class="reference internal" href="#version-and-platform-checking">Version and platform checking</a></li>
+<li><a class="reference internal" href="#deprecated"><code class="docutils literal notranslate"><span class="pre">&#64;deprecated</span></code></a><ul>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#type-checker-behavior">Type checker behavior</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#disjoint-base"><code class="docutils literal notranslate"><span class="pre">&#64;disjoint_base</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="narrowing.html"
+                          title="previous chapter">Type narrowing</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="distributing.html"
+                          title="next chapter">Distributing type information</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/directives.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="distributing.html" title="Distributing type information"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="narrowing.html" title="Type narrowing"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Type checker directives</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

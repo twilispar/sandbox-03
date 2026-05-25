@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Overloads &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Exceptions" href="exceptions.html" />
+    <link rel="prev" title="Constructors" href="constructors.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/overload.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Overloads</span></code></a><ul>
+<li><a class="reference internal" href="#overload-definitions">Overload definitions</a></li>
+<li><a class="reference internal" href="#invalid-overload-definitions">Invalid overload definitions</a></li>
+<li><a class="reference internal" href="#implementation-consistency">Implementation consistency</a></li>
+<li><a class="reference internal" href="#overload-call-evaluation">Overload call evaluation</a><ul>
+<li><a class="reference internal" href="#step-1">Step 1</a></li>
+<li><a class="reference internal" href="#step-2">Step 2</a></li>
+<li><a class="reference internal" href="#step-3">Step 3</a></li>
+<li><a class="reference internal" href="#step-4">Step 4</a></li>
+<li><a class="reference internal" href="#step-5">Step 5</a></li>
+<li><a class="reference internal" href="#step-6">Step 6</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#argument-type-expansion">Argument type expansion</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="constructors.html"
+                          title="previous chapter">Constructors</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="exceptions.html"
+                          title="next chapter">Exceptions</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/overload.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="exceptions.html" title="Exceptions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="constructors.html" title="Constructors"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">Overloads</span></code></a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="overloads">
+<span id="overload"></span><h1><code class="docutils literal notranslate"><span class="pre">Overloads</span></code><a class="headerlink" href="#overloads" title="Link to this heading">¶</a></h1>
+<p>In Python, it is common for callable objects to be polymorphic, meaning
+they accept different types of arguments. It is also common for such
+callables to return different types depending on the arguments passed to
+them. Overloads provide a way to describe the accepted input signatures
+and corresponding return types.</p>
+<section id="overload-definitions">
+<h2>Overload definitions<a class="headerlink" href="#overload-definitions" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> decorator allows describing functions and methods
+that support multiple different combinations of argument types. This
+pattern is used frequently in builtin modules and types. For example,
+the <code class="docutils literal notranslate"><span class="pre">__getitem__()</span></code> method of the <code class="docutils literal notranslate"><span class="pre">bytes</span></code> type can be described as
+follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">overload</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">bytes</span><span class="p">:</span>
+    <span class="o">...</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">slice</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>This description is more precise than would be possible using unions,
+which cannot express the relationship between the argument and return
+types:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">bytes</span><span class="p">:</span>
+    <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">slice</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Another example where <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> comes in handy is the type of the
+builtin <code class="docutils literal notranslate"><span class="pre">map()</span></code> function, which takes a different number of
+arguments depending on the type of the callable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">overload</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">map</span><span class="p">[</span><span class="n">T1</span><span class="p">,</span> <span class="n">S</span><span class="p">](</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">T1</span><span class="p">],</span> <span class="n">S</span><span class="p">],</span> <span class="n">iter1</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T1</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">S</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">map</span><span class="p">[</span><span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">S</span><span class="p">](</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">],</span> <span class="n">S</span><span class="p">],</span>
+    <span class="n">iter1</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
+    <span class="n">iter2</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">S</span><span class="p">]:</span> <span class="o">...</span>
+<span class="c1"># ... and we could add more items to support more than two iterables</span>
+</pre></div>
+</div>
+<p>Note that we could also easily add items to support <code class="docutils literal notranslate"><span class="pre">map(None,</span> <span class="pre">...)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">map</span><span class="p">[</span><span class="n">T1</span><span class="p">](</span><span class="n">func</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">iter1</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T1</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T1</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">map</span><span class="p">[</span><span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">](</span>
+    <span class="n">func</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">iter1</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
+    <span class="n">iter2</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">]]:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Uses of the <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> decorator as shown above are suitable for
+stub files. In regular modules, a series of <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>-decorated
+definitions must be followed by exactly one
+non-<code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>-decorated definition (for the same function/method).
+The <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>-decorated definitions are for the benefit of the
+type checker only, since they will be overwritten by the
+non-<code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>-decorated definition, while the latter is used at
+runtime but should be ignored by a type checker. At runtime, calling
+an <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>-decorated function directly will raise
+<code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code>. Here’s an example of a non-stub overload
+that can’t easily be expressed using a union or a type variable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">utf8</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">utf8</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">utf8</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">unicode</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">utf8</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="o">&lt;</span><span class="n">actual</span> <span class="n">implementation</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>A constrained <code class="docutils literal notranslate"><span class="pre">TypeVar</span></code> type can sometimes be used instead of
+using the <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> decorator. For example, the definitions
+of <code class="docutils literal notranslate"><span class="pre">concat1</span></code> and <code class="docutils literal notranslate"><span class="pre">concat2</span></code> in this stub file are equivalent:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">concat1</span><span class="p">[</span><span class="n">S</span><span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)](</span><span class="n">x</span><span class="p">:</span> <span class="n">S</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">S</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">S</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">concat2</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">concat2</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Some functions, such as <code class="docutils literal notranslate"><span class="pre">map</span></code> or <code class="docutils literal notranslate"><span class="pre">bytes.__getitem__</span></code> above, can’t
+be represented precisely using type variables. We
+recommend that <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> is only used in cases where a type
+variable is not sufficient.</p>
+<p>Another important difference between type variables and an <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>
+is that the former can also be used to define constraints for generic
+class type parameters. For example, the type parameter of the generic
+class <code class="docutils literal notranslate"><span class="pre">typing.IO</span></code> is constrained (only <code class="docutils literal notranslate"><span class="pre">IO[str]</span></code>, <code class="docutils literal notranslate"><span class="pre">IO[bytes]</span></code>
+and <code class="docutils literal notranslate"><span class="pre">IO[Any]</span></code> are valid):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">IO</span><span class="p">[</span><span class="n">S</span><span class="p">:</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)]:</span> <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="invalid-overload-definitions">
+<h2>Invalid overload definitions<a class="headerlink" href="#invalid-overload-definitions" title="Link to this heading">¶</a></h2>
+<p>Type checkers should enforce the following rules for overload definitions.</p>
+<p>At least two <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>-decorated definitions must be present. If only
+one is present, an error should be reported.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>-decorated definitions must be followed by an overload
+implementation, which does not include an <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> decorator. Type
+checkers should report an error or warning if an implementation is missing.
+Overload definitions within stub files, protocols, and on abstract methods
+within abstract base classes are exempt from this check.</p>
+<p>If one overload signature is decorated with <code class="docutils literal notranslate"><span class="pre">&#64;staticmethod</span></code> or
+<code class="docutils literal notranslate"><span class="pre">&#64;classmethod</span></code>, all overload signatures must be similarly decorated. The
+implementation, if present, must also have a consistent decorator. Type
+checkers should report an error if these conditions are not met.</p>
+<p>If a <code class="docutils literal notranslate"><span class="pre">&#64;final</span></code> or <code class="docutils literal notranslate"><span class="pre">&#64;override</span></code> decorator is supplied for a function with
+overloads, the decorator should be applied only to the overload implementation
+if it is present. If an overload implementation isn’t present (for example, in
+a stub file), the <code class="docutils literal notranslate"><span class="pre">&#64;final</span></code> or <code class="docutils literal notranslate"><span class="pre">&#64;override</span></code> decorator should be applied only
+to the first overload. Type checkers should enforce these rules and generate
+an error when they are violated. If a <code class="docutils literal notranslate"><span class="pre">&#64;final</span></code> or <code class="docutils literal notranslate"><span class="pre">&#64;override</span></code> decorator
+follows these rules, a type checker should treat the decorator as if it is
+present on all overloads.</p>
+<p>Overloads are allowed to use a mixture of <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">def</span></code> and <code class="docutils literal notranslate"><span class="pre">def</span></code> statements
+within the same overload definition. Type checkers should convert
+<code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">def</span></code> statements to a non-async signature (wrapping the return
+type in a <code class="docutils literal notranslate"><span class="pre">Coroutine</span></code>) before testing for implementation consistency.</p>
+</section>
+<section id="implementation-consistency">
+<h2>Implementation consistency<a class="headerlink" href="#implementation-consistency" title="Link to this heading">¶</a></h2>
+<p>If an overload implementation is defined, type checkers should validate
+that it is consistent with all of its associated overload signatures.
+The implementation should accept all potential sets of arguments
+that are accepted by the overloads and should produce all potential return
+types produced by the overloads. In typing terms, this means the input
+signature of the implementation should be <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to the input
+signatures of all overloads, and the return type of all overloads should be
+assignable to the return type of the implementation.</p>
+<p>If the implementation is inconsistent with its overloads, a type checker
+should report an error:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="c1"># This implementation is inconsistent with the second overload</span>
+<span class="c1"># because it does not accept a keyword argument ``x`` and the</span>
+<span class="c1"># the overload&#39;s return type ``int`` is not assignable to the</span>
+<span class="c1"># implementation&#39;s return type ``str``.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+  <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When a type checker checks the implementation for consistency with overloads,
+it should first apply any transforms that change the effective type of the
+implementation including the presence of a <code class="docutils literal notranslate"><span class="pre">yield</span></code> statement in the
+implementation body, the use of <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">def</span></code>, and the presence of additional
+decorators.</p>
+</section>
+<section id="overload-call-evaluation">
+<h2>Overload call evaluation<a class="headerlink" href="#overload-call-evaluation" title="Link to this heading">¶</a></h2>
+<p>When a type checker evaluates the call of an overloaded function, it
+attempts to “match” the supplied arguments with one or more overloads.
+This section describes the algorithm that type checkers should use
+for overload matching.</p>
+<p>Only the overloads (the <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code>-decorated signatures) should be
+considered for matching purposes. The implementation, if provided,
+should be ignored for purposes of overload matching.</p>
+<section id="step-1">
+<h3>Step 1<a class="headerlink" href="#step-1" title="Link to this heading">¶</a></h3>
+<p>Examine the argument list to determine the number of
+positional and keyword arguments. Use this information to eliminate any
+overload candidates that are not plausible based on their
+input signatures.</p>
+<ul class="simple">
+<li><p>If no candidate overloads remain, generate an error and stop.</p></li>
+<li><p>If only one candidate overload remains, it is the winning match. Evaluate
+it as if it were a non-overloaded function call and stop.</p></li>
+<li><p>If two or more candidate overloads remain, proceed to step 2.</p></li>
+</ul>
+</section>
+<section id="step-2">
+<h3>Step 2<a class="headerlink" href="#step-2" title="Link to this heading">¶</a></h3>
+<p>Evaluate each remaining overload as a regular (non-overloaded)
+call to determine whether it is compatible with the supplied
+argument list. Unlike step 1, this step considers the types of the parameters
+and arguments. During this step, do not generate any user-visible errors.
+Simply record which of the overloads result in evaluation errors.</p>
+<ul class="simple">
+<li><p>If all overloads result in errors, proceed to step 3.</p></li>
+<li><p>If only one overload evaluates without error, it is the winning match.
+Evaluate it as if it were a non-overloaded function call and stop.</p></li>
+<li><p>If two or more candidate overloads remain, proceed to step 4.</p></li>
+</ul>
+</section>
+<section id="step-3">
+<h3>Step 3<a class="headerlink" href="#step-3" title="Link to this heading">¶</a></h3>
+<p>If step 2 produces errors for all overloads, perform
+“argument type expansion”. Union types can be expanded
+into their constituent subtypes. For example, the type <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">str</span></code> can
+be expanded into <code class="docutils literal notranslate"><span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p>
+<p>Type expansion should be performed one argument at a time from left to
+right. Each expansion results in sets of effective argument types.
+For example, if there are two arguments whose types evaluate to
+<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">str</span></code> and <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">bytes</span></code>, expanding the first argument type
+results in two sets of argument types: <code class="docutils literal notranslate"><span class="pre">(int,</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">bytes)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">bytes)</span></code>. If type expansion for the second argument is required,
+four sets of argument types are produced: <code class="docutils literal notranslate"><span class="pre">(int,</span> <span class="pre">int)</span></code>, <code class="docutils literal notranslate"><span class="pre">(int,</span> <span class="pre">bytes)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">int)</span></code>, and <code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">bytes)</span></code>.</p>
+<p>After each argument’s expansion, return to step 2 and evaluate all
+expanded argument lists.</p>
+<ul class="simple">
+<li><p>If all argument lists evaluate successfully, combine their
+respective return types by union to determine the final return type
+for the call, and stop.</p></li>
+<li><p>If argument expansion has been applied to all arguments and one or
+more of the expanded argument lists cannot be evaluated successfully,
+generate an error and stop.</p></li>
+</ul>
+<p>For additional details about argument type expansion, see
+<a class="reference internal" href="#argument-type-expansion">argument-type-expansion</a> below.</p>
+</section>
+<section id="step-4">
+<h3>Step 4<a class="headerlink" href="#step-4" title="Link to this heading">¶</a></h3>
+<p>If the argument list is compatible with two or more overloads,
+determine whether one or more of the overloads has a variadic parameter
+(either <code class="docutils literal notranslate"><span class="pre">*args</span></code> or <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>) that maps to a corresponding argument
+that supplies an indeterminate number of positional or keyword arguments.
+If so, eliminate overloads that do not have a variadic parameter.</p>
+<ul class="simple">
+<li><p>If this results in only one remaining candidate overload, it is
+the winning match. Evaluate it as if it were a non-overloaded function
+call and stop.</p></li>
+<li><p>If two or more candidate overloads remain, proceed to step 5.</p></li>
+</ul>
+</section>
+<section id="step-5">
+<h3>Step 5<a class="headerlink" href="#step-5" title="Link to this heading">¶</a></h3>
+<p>For all arguments, determine whether all possible
+<a class="reference internal" href="glossary.html#term-materialize"><span class="xref std std-term">materializations</span></a> of the argument’s type are assignable to
+the corresponding parameter type for each of the remaining overloads. If so,
+eliminate all of the subsequent remaining overloads.</p>
+<p>Consider the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
+    <span class="c1"># All materializations of list[Any] will match either the first or</span>
+    <span class="c1"># second overload, so the third overload can be eliminated.</span>
+    <span class="n">example</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This rule eliminates overloads that will never be chosen even if the
+caller eliminates types that include <code class="docutils literal notranslate"><span class="pre">Any</span></code>.</p>
+<p>If the call involves more than one argument, all possible materializations of
+every argument type must be assignable to its corresponding parameter type.
+If this condition exists, all subsequent remaining overloads should be eliminated.</p>
+<p>Once this filtering process is applied for all arguments, examine the return
+types of the remaining overloads. If these return types include type variables,
+they should be replaced with their solved types. If the resulting return types
+for all remaining overloads are <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a>, proceed to step 6.</p>
+<p>If the return types are not equivalent, overload matching is ambiguous. In
+this case, assume a return type of <code class="docutils literal notranslate"><span class="pre">Any</span></code> and stop.</p>
+</section>
+<section id="step-6">
+<h3>Step 6<a class="headerlink" href="#step-6" title="Link to this heading">¶</a></h3>
+<p>Choose the first remaining candidate overload as the winning
+match. Evaluate it as if it were a non-overloaded function call and stop.</p>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h3>
+<p>Example 1:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example1</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example1</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">example1</span><span class="p">()</span>  <span class="c1"># Error in step 1: no plausible overloads</span>
+<span class="n">example1</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># Step 1 eliminates second overload</span>
+<span class="n">example1</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># Step 1 eliminates first overload</span>
+
+<span class="n">example1</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># Error in step 2: no compatible overloads</span>
+<span class="n">example1</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Error in step 2: no compatible overloads</span>
+</pre></div>
+</div>
+<p>Example 2:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example2</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example2</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]):</span>
+    <span class="c1"># In this example, argument type expansion is</span>
+    <span class="c1"># performed on the first two arguments. Expansion</span>
+    <span class="c1"># of the third is unnecessary.</span>
+    <span class="n">r1</span> <span class="o">=</span> <span class="n">example2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span>  <span class="c1"># Should reveal str | int</span>
+
+    <span class="c1"># Here, the types of all three arguments are expanded</span>
+    <span class="c1"># without success.</span>
+    <span class="n">example2</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># Error in step 3</span>
+</pre></div>
+</div>
+<p>Example 3:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example3</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example3</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example3</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+    <span class="c1"># Step 1 eliminates second overload. Step 4 and</span>
+    <span class="c1"># step 5 do not apply. Step 6 picks the first</span>
+    <span class="c1"># overload.</span>
+    <span class="n">r1</span> <span class="o">=</span> <span class="n">example3</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span>  <span class="c1"># Should reveal tuple[int]</span>
+
+    <span class="c1"># Step 1 eliminates first overload. Step 4 and</span>
+    <span class="c1"># step 5 do not apply. Step 6 picks the second</span>
+    <span class="c1"># overload.</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">example3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">r2</span><span class="p">)</span>  <span class="c1"># Should reveal tuple[int, int]</span>
+
+    <span class="c1"># Step 1 doesn&#39;t eliminate any overloads. Step 4</span>
+    <span class="c1"># picks the third overload.</span>
+    <span class="n">r3</span> <span class="o">=</span> <span class="n">example3</span><span class="p">(</span><span class="o">*</span><span class="n">val</span><span class="p">)</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">r3</span><span class="p">)</span>  <span class="c1"># Should reveal tuple[int, ...]</span>
+</pre></div>
+</div>
+<p>Example 4:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example4</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example4</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">example4</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="n">v1</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">v2</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="c1"># Step 2 eliminates the third overload. Step 5</span>
+    <span class="c1"># determines that first and second overloads</span>
+    <span class="c1"># both apply and are ambiguous due to Any, but</span>
+    <span class="c1"># return types are consistent.</span>
+    <span class="n">r1</span> <span class="o">=</span> <span class="n">example4</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span>  <span class="c1"># Reveals int</span>
+
+    <span class="c1"># Step 2 eliminates the second overload. Step 5</span>
+    <span class="c1"># determines that first and third overloads</span>
+    <span class="c1"># both apply and are ambiguous due to Any, and</span>
+    <span class="c1"># the return types are inconsistent.</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">example4</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">r2</span><span class="p">)</span>  <span class="c1"># Should reveal Any</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="argument-type-expansion">
+<span id="id1"></span><h2>Argument type expansion<a class="headerlink" href="#argument-type-expansion" title="Link to this heading">¶</a></h2>
+<p>When performing argument type expansion, a type that is equivalent to
+a union of a finite set of subtypes should be expanded into its constituent
+subtypes. This includes the following cases.</p>
+<ol class="arabic simple">
+<li><p>Explicit unions: Each subtype of the union should be considered as a
+separate argument type. For example, the type <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">str</span></code> should be expanded
+into <code class="docutils literal notranslate"><span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">str</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bool</span></code> should be expanded into <code class="docutils literal notranslate"><span class="pre">Literal[True]</span></code> and <code class="docutils literal notranslate"><span class="pre">Literal[False]</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Enum</span></code> types (other than those that derive from <code class="docutils literal notranslate"><span class="pre">enum.Flag</span></code>) should
+be expanded into their literal members.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type[A</span> <span class="pre">|</span> <span class="pre">B]</span></code> should be expanded into <code class="docutils literal notranslate"><span class="pre">type[A]</span></code> and <code class="docutils literal notranslate"><span class="pre">type[B]</span></code>.</p></li>
+<li><p>Tuples of known length that contain expandable types should be expanded
+into all possible combinations of their element types. For example, the type
+<code class="docutils literal notranslate"><span class="pre">tuple[int</span> <span class="pre">|</span> <span class="pre">str,</span> <span class="pre">bool]</span></code> should be expanded into <code class="docutils literal notranslate"><span class="pre">(int,</span> <span class="pre">Literal[True])</span></code>,
+<code class="docutils literal notranslate"><span class="pre">(int,</span> <span class="pre">Literal[False])</span></code>, <code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">Literal[True])</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">(str,</span> <span class="pre">Literal[False])</span></code>.</p></li>
+</ol>
+<p>The above list may not be exhaustive, and additional cases may be added in
+the future as the type system evolves.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Overloads</span></code></a><ul>
+<li><a class="reference internal" href="#overload-definitions">Overload definitions</a></li>
+<li><a class="reference internal" href="#invalid-overload-definitions">Invalid overload definitions</a></li>
+<li><a class="reference internal" href="#implementation-consistency">Implementation consistency</a></li>
+<li><a class="reference internal" href="#overload-call-evaluation">Overload call evaluation</a><ul>
+<li><a class="reference internal" href="#step-1">Step 1</a></li>
+<li><a class="reference internal" href="#step-2">Step 2</a></li>
+<li><a class="reference internal" href="#step-3">Step 3</a></li>
+<li><a class="reference internal" href="#step-4">Step 4</a></li>
+<li><a class="reference internal" href="#step-5">Step 5</a></li>
+<li><a class="reference internal" href="#step-6">Step 6</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#argument-type-expansion">Argument type expansion</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="constructors.html"
+                          title="previous chapter">Constructors</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="exceptions.html"
+                          title="next chapter">Exceptions</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/overload.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="exceptions.html" title="Exceptions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="constructors.html" title="Constructors"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">Overloads</span></code></a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

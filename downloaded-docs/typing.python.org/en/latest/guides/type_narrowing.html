@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Type Narrowing &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reasons to avoid static type checking" href="typing_anti_pitch.html" />
+    <link rel="prev" title="Unreachable Code and Exhaustiveness Checking" href="unreachable.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/guides/type_narrowing.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type Narrowing</a><ul>
+<li><a class="reference internal" href="#how-to-use-typeis-and-typeguard">How to use <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code></a></li>
+<li><a class="reference internal" href="#writing-a-correct-typeis-function">Writing a correct <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> function</a></li>
+<li><a class="reference internal" href="#typeis-and-typeguard"><code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code></a></li>
+<li><a class="reference internal" href="#safety-and-soundness">Safety and soundness</a><ul>
+<li><a class="reference internal" href="#isinstance-and-issubclass"><code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> and <code class="docutils literal notranslate"><span class="pre">issubclass()</span></code></a></li>
+<li><a class="reference internal" href="#incorrect-typeis-and-typeguard-functions">Incorrect <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> functions</a></li>
+<li><a class="reference internal" href="#unsound-typeguard-narrowing">Unsound <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> narrowing</a></li>
+<li><a class="reference internal" href="#invalidated-assumptions">Invalidated assumptions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="unreachable.html"
+                          title="previous chapter">Unreachable Code and Exhaustiveness Checking</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="typing_anti_pitch.html"
+                          title="next chapter">Reasons to avoid static type checking</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/type_narrowing.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="typing_anti_pitch.html" title="Reasons to avoid static type checking"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="unreachable.html" title="Unreachable Code and Exhaustiveness Checking"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Type Narrowing</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="type-narrowing">
+<h1>Type Narrowing<a class="headerlink" href="#type-narrowing" title="Link to this heading">¶</a></h1>
+<p>Python programs often contain symbols that take on multiple types within a
+single given scope and that are distinguished by a conditional check at
+runtime. For example, here the variable <em>name</em> can be either a <code class="docutils literal notranslate"><span class="pre">str</span></code> or
+<code class="docutils literal notranslate"><span class="pre">None</span></code>, and the <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">name</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></code> narrows it down to just <code class="docutils literal notranslate"><span class="pre">str</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">maybe_greet</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This technique is called <em>type narrowing</em>.
+To avoid false positives on such code, type checkers understand
+various kinds of conditional checks that are used to narrow types in Python code.
+The exact set of type narrowing constructs that a type checker understands
+is not specified and varies across type checkers. Commonly understood
+patterns include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">x</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">x</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">isinstance(x,</span> <span class="pre">SomeType)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">callable(x)</span></code></p></li>
+</ul>
+<p>In addition to narrowing local variables, type checkers usually also support
+narrowing instance attributes and sequence members, such as
+<code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">x.some_attribute</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></code> or <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">x[0]</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></code>, though the exact
+conditions for this behavior differ between type checkers.</p>
+<p>Consult your type checker’s documentation for more information on the type
+narrowing constructs it supports.</p>
+<p>The type system also includes two ways to create <em>user-defined</em> type narrowing
+functions: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeIs" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">typing.TypeIs</span></code></a> and <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeGuard" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">typing.TypeGuard</span></code></a>. These
+are useful if you want to reuse a more complicated check in multiple places, or
+you use a check that the type checker doesn’t understand. In these cases, you
+can define a <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> or <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> function to perform the check and allow type checkers
+to use it to narrow the type of a variable. Between the two, <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> usually
+has the more intuitive behavior, so we’ll talk about it more; see
+<a class="reference internal" href="#guide-type-narrowing-typeis-typeguard"><span class="std std-ref">below</span></a> for a comparison.</p>
+<section id="how-to-use-typeis-and-typeguard">
+<h2>How to use <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code><a class="headerlink" href="#how-to-use-typeis-and-typeguard" title="Link to this heading">¶</a></h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> function takes a single argument and is annotated as returning
+<code class="docutils literal notranslate"><span class="pre">TypeIs[T]</span></code>, where <code class="docutils literal notranslate"><span class="pre">T</span></code> is the type that you want to narrow to. The function
+must return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the argument is of type <code class="docutils literal notranslate"><span class="pre">T</span></code>, and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.
+The function can then be used in <code class="docutils literal notranslate"><span class="pre">if</span></code> checks, just like you would use <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code>.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">TypeIs</span>
+
+<span class="nb">type</span> <span class="n">Direction</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_direction</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeIs</span><span class="p">[</span><span class="n">Direction</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">maybe_direction</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">is_direction</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2"> is a cardinal direction&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2"> is not a cardinal direction&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> function looks similar and is used in the same way, but the
+type narrowing behavior is different, as discussed in <a class="reference internal" href="#guide-type-narrowing-typeis-typeguard"><span class="std std-ref">the section below</span></a>.</p>
+<p>Depending on the version of Python you are running, you will be able to
+import <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> either from the standard library <a class="reference external" href="https://docs.python.org/3/library/typing.html#module-typing" title="(in Python v3.14)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">typing</span></code></a>
+module or from the third-party <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code> module:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> is in <code class="docutils literal notranslate"><span class="pre">typing</span></code> starting from Python 3.13 and in <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code>
+starting from version 4.10.0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> is in <code class="docutils literal notranslate"><span class="pre">typing</span></code> starting from Python 3.10 and in <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code>
+starting from version 3.10.0.0.</p></li>
+</ul>
+</section>
+<section id="writing-a-correct-typeis-function">
+<h2>Writing a correct <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> function<a class="headerlink" href="#writing-a-correct-typeis-function" title="Link to this heading">¶</a></h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> function allows you to override your type checker’s type narrowing
+behavior. This is a powerful tool, but it can be dangerous because an incorrectly
+written <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> function can lead to unsound type checking, and type checkers
+cannot detect such errors.</p>
+<p>For a function returning <code class="docutils literal notranslate"><span class="pre">TypeIs[T]</span></code> to be correct, it must return <code class="docutils literal notranslate"><span class="pre">True</span></code> if and only if
+the argument is of type <code class="docutils literal notranslate"><span class="pre">T</span></code>, and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise. If this condition is
+not met, the type checker may infer incorrect types.</p>
+<p>Below are some examples of correct and incorrect <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> functions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeIs</span>
+
+<span class="c1"># Correct</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_int</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeIs</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+
+<span class="c1"># Incorrect: does not return True for all ints</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_positive_int</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeIs</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+<span class="c1"># Incorrect: returns True for some non-ints</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_real_number</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeIs</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This function demonstrates some errors that can occur when using a poorly written
+<code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> function. These errors are not detected by type checkers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">caller</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">is_positive_int</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>  <span class="c1"># narrowed to int</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># narrowed to str (incorrectly)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># runtime error if x is a negative int</span>
+
+    <span class="k">if</span> <span class="n">is_real_number</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>  <span class="c1"># narrowed to int</span>
+        <span class="c1"># Because of the incorrect TypeIs, this branch is taken at runtime if</span>
+        <span class="c1"># y is a float.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">bit_count</span><span class="p">())</span>  <span class="c1"># runtime error: this method exists only on int, not float</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># narrowed to float (though never executed at runtime)</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Here is an example of a correct <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> function for a more complicated type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">TypeIs</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Point</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">y</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_point</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeIs</span><span class="p">[</span><span class="n">Point</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="typeis-and-typeguard">
+<span id="guide-type-narrowing-typeis-typeguard"></span><h2><code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code><a class="headerlink" href="#typeis-and-typeguard" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeIs" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">typing.TypeIs</span></code></a> and <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeGuard" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">typing.TypeGuard</span></code></a> are both tools for narrowing the type of a variable
+based on a user-defined function. Both can be used to annotate functions that take an
+argument and return a boolean depending on whether the input argument is compatible with
+the narrowed type. These functions can then be used in <code class="docutils literal notranslate"><span class="pre">if</span></code> checks to narrow the type
+of a variable.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> usually has the more intuitive behavior, but it
+introduces more restrictions. <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> is the right tool to use if:</p>
+<ul class="simple">
+<li><p>You want to narrow to a type that is not <a class="reference internal" href="../spec/glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to the input type, for example
+from <code class="docutils literal notranslate"><span class="pre">list[object]</span></code> to <code class="docutils literal notranslate"><span class="pre">list[int]</span></code>.  <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> only allows narrowing between
+compatible types.</p></li>
+<li><p>Your function does not return <code class="docutils literal notranslate"><span class="pre">True</span></code> for all input values that are members of
+the narrowed type. For example, you could have a <code class="docutils literal notranslate"><span class="pre">TypeGuard[int]</span></code> that returns <code class="docutils literal notranslate"><span class="pre">True</span></code>
+only for positive integers.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> differ in the following ways:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> requires the narrowed type to be <a class="reference internal" href="../spec/glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to the input type, while
+<code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> does not.</p></li>
+<li><p>When a <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> function returns <code class="docutils literal notranslate"><span class="pre">True</span></code>, type checkers narrow the type of the
+variable to exactly the <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> type. When a <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> function returns <code class="docutils literal notranslate"><span class="pre">True</span></code>,
+type checkers can infer a more precise type combining the previously known type of the
+variable with the <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> type. (This is known as an “intersection type”.)</p></li>
+<li><p>When a <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> function returns <code class="docutils literal notranslate"><span class="pre">False</span></code>, type checkers cannot narrow the type of
+the variable at all. When a <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> function returns <code class="docutils literal notranslate"><span class="pre">False</span></code>, type checkers can narrow
+the type of the variable to exclude the <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> type.</p></li>
+</ul>
+<p>This behavior can be seen in the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeGuard</span><span class="p">,</span> <span class="n">TypeIs</span><span class="p">,</span> <span class="n">reveal_type</span><span class="p">,</span> <span class="n">final</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Base</span><span class="p">:</span> <span class="o">...</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Child</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span> <span class="o">...</span>
+<span class="nd">@final</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Unrelated</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_base_typeguard</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeGuard</span><span class="p">[</span><span class="n">Base</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Base</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_base_typeis</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeIs</span><span class="p">[</span><span class="n">Base</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Base</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">use_typeguard</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Child</span> <span class="o">|</span> <span class="n">Unrelated</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">is_base_typeguard</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">reveal_type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># Base</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reveal_type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># Child | Unrelated</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">use_typeis</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Child</span> <span class="o">|</span> <span class="n">Unrelated</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">is_base_typeis</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">reveal_type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># Child</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">reveal_type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># Unrelated</span>
+</pre></div>
+</div>
+</section>
+<section id="safety-and-soundness">
+<h2>Safety and soundness<a class="headerlink" href="#safety-and-soundness" title="Link to this heading">¶</a></h2>
+<p>While type narrowing is important for typing real-world Python code, many
+forms of type narrowing are unsafe in the presence of mutability. Type checkers
+attempt to limit type narrowing in a way that minimizes unsafety while remaining
+useful, but not all safety violations can be detected.</p>
+<section id="isinstance-and-issubclass">
+<h3><code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> and <code class="docutils literal notranslate"><span class="pre">issubclass()</span></code><a class="headerlink" href="#isinstance-and-issubclass" title="Link to this heading">¶</a></h3>
+<p>While the exact behavior is not standardized, type checkers usually support
+narrowing terms based on calls to <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> and <code class="docutils literal notranslate"><span class="pre">issubclass()</span></code>. However,
+these functions have complex runtime behavior that type checkers cannot fully
+capture: they call the <code class="xref py py-meth docutils literal notranslate"><span class="pre">__instancecheck__()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">__subclasscheck__()</span></code>
+special methods, which may include arbitrarily complex logic.</p>
+<p>This affects some parts of the standard library that rely on these methods.
+<a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a> allows registration of subclasses using the <code class="docutils literal notranslate"><span class="pre">.register()</span></code> method,
+but type checkers usually will not recognize this method. <a class="reference internal" href="../spec/protocol.html#runtime-checkable"><span class="std std-ref">Runtime-checkable
+protocols</span></a> support runtime <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> checks, but their
+behavior does not exactly match the type system (for example, the types of method
+parameters are not checked).</p>
+</section>
+<section id="incorrect-typeis-and-typeguard-functions">
+<h3>Incorrect <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> functions<a class="headerlink" href="#incorrect-typeis-and-typeguard-functions" title="Link to this heading">¶</a></h3>
+<p>Both <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> rely on the user writing a function that
+returns whether an object is of a particular type. However, the type checker
+does not validate whether the function actually behaves as expected. If it
+does not, the type checker’s narrowing behavior will not match what happens
+at runtime.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeIs</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_str</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeIs</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">takes_str_or_int</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">is_str</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="s2">&quot; is a string&quot;</span><span class="p">)</span>  <span class="c1"># runtime error</span>
+</pre></div>
+</div>
+<p>To avoid this problem, every <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> function should be
+carefully reviewed and tested.</p>
+</section>
+<section id="unsound-typeguard-narrowing">
+<h3>Unsound <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> narrowing<a class="headerlink" href="#unsound-typeguard-narrowing" title="Link to this heading">¶</a></h3>
+<p>Unlike <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code>, <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> can narrow to a type that is not a subtype of the
+original type. This allows for unsafe behavior with invariant data structures:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TypeGuard</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_int_list</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TypeGuard</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">maybe_mutate_list</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">is_int_list</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># OK, x is narrowed to list[int]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">takes_bool_list</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">maybe_mutate_list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">reveal_type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># list[bool]</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># fails at runtime</span>
+
+<span class="n">takes_bool_list</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>To avoid this problem, use <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> instead of <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> where possible.
+If you must use <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code>, avoid narrowing across incompatible types.
+Prefer using covariant, immutable types in parameter annotations (e.g.,
+<code class="docutils literal notranslate"><span class="pre">Sequence</span></code> or <code class="docutils literal notranslate"><span class="pre">Iterable</span></code> instead of <code class="docutils literal notranslate"><span class="pre">list</span></code>). If you do this, it is more likely
+that you’ll be able to use <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> to implement your type narrowing functions.</p>
+</section>
+<section id="invalidated-assumptions">
+<h3>Invalidated assumptions<a class="headerlink" href="#invalidated-assumptions" title="Link to this heading">¶</a></h3>
+<p>One category of safety issues relates to the fact that type narrowing relies
+on a condition that was established at one point in the code and is then relied
+on later: we first check <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">x</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></code>, then rely on <code class="docutils literal notranslate"><span class="pre">x</span></code> not being <code class="docutils literal notranslate"><span class="pre">None</span></code>.
+However, in the meantime other code may have run (for example, in another thread,
+another coroutine, or simply some code that was invoked by a function call) and
+invalidated the earlier condition.</p>
+<p>Such problems are most likely when narrowing is performed on elements of mutable
+objects, but it is possible to construct unsafe examples even using only narrowing
+of local variables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">maybe_greet</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_it_to_none</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">name</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">set_it_to_none</span><span class="p">()</span>
+        <span class="c1"># fails at runtime, no error in current type checkers</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+
+<span class="n">maybe_greet</span><span class="p">(</span><span class="s2">&quot;Guido&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A more realistic example might involve multiple coroutines mutating a list:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">TypeIs</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_int_sequence</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TypeIs</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">takes_seq</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]):</span>
+    <span class="k">if</span> <span class="n">is_int_sequence</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The total is&quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>  <span class="c1"># fails at runtime</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">takes_list</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">takes_seq</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">t</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">lst</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">takes_list</span><span class="p">(</span><span class="n">lst</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>These issues unfortunately cannot be fully detected by the current
+Python type system. (An example of a different programming language that
+does solve this problem is Rust, which uses a system called
+<a class="reference external" href="https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html">ownership</a>.)
+To avoid such issues, avoid using type narrowing on objects that are mutated
+from other parts of the code.</p>
+</section>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Type checker documentation on type narrowing</p>
+<ul>
+<li><p><a class="reference external" href="https://mypy.readthedocs.io/en/stable/type_narrowing.html">Mypy</a></p></li>
+<li><p><a class="reference external" href="https://microsoft.github.io/pyright/#/type-concepts-advanced?id=type-narrowing">Pyright</a></p></li>
+</ul>
+</li>
+<li><p>PEPs related to type narrowing. These contain additional discussion
+and motivation for current type checker behaviors.</p>
+<ul>
+<li><p><span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0647/"><strong>PEP 647</strong></a> (introduced <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code>)</p></li>
+<li><p>(<em>withdrawn</em>) <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0724/"><strong>PEP 724</strong></a> (proposed change to <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> behavior)</p></li>
+<li><p><span class="target" id="index-2"></span><a class="pep reference external" href="https://peps.python.org/pep-0742/"><strong>PEP 742</strong></a> (introduced <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code>)</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type Narrowing</a><ul>
+<li><a class="reference internal" href="#how-to-use-typeis-and-typeguard">How to use <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code></a></li>
+<li><a class="reference internal" href="#writing-a-correct-typeis-function">Writing a correct <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> function</a></li>
+<li><a class="reference internal" href="#typeis-and-typeguard"><code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code></a></li>
+<li><a class="reference internal" href="#safety-and-soundness">Safety and soundness</a><ul>
+<li><a class="reference internal" href="#isinstance-and-issubclass"><code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> and <code class="docutils literal notranslate"><span class="pre">issubclass()</span></code></a></li>
+<li><a class="reference internal" href="#incorrect-typeis-and-typeguard-functions">Incorrect <code class="docutils literal notranslate"><span class="pre">TypeIs</span></code> and <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> functions</a></li>
+<li><a class="reference internal" href="#unsound-typeguard-narrowing">Unsound <code class="docutils literal notranslate"><span class="pre">TypeGuard</span></code> narrowing</a></li>
+<li><a class="reference internal" href="#invalidated-assumptions">Invalidated assumptions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="unreachable.html"
+                          title="previous chapter">Unreachable Code and Exhaustiveness Checking</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="typing_anti_pitch.html"
+                          title="next chapter">Reasons to avoid static type checking</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/type_narrowing.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="typing_anti_pitch.html" title="Reasons to avoid static type checking"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="unreachable.html" title="Unreachable Code and Exhaustiveness Checking"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Type Narrowing</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Unreachable Code and Exhaustiveness Checking &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Type Narrowing" href="type_narrowing.html" />
+    <link rel="prev" title="Modernizing Superseded Typing Features" href="modernizing.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/guides/unreachable.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Unreachable Code and Exhaustiveness Checking</a><ul>
+<li><a class="reference internal" href="#never-and-noreturn"><code class="docutils literal notranslate"><span class="pre">Never</span></code> and <code class="docutils literal notranslate"><span class="pre">NoReturn</span></code></a></li>
+<li><a class="reference internal" href="#assert-never-and-exhaustiveness-checking"><code class="docutils literal notranslate"><span class="pre">assert_never()</span></code> and Exhaustiveness Checking</a></li>
+<li><a class="reference internal" href="#marking-code-as-unreachable">Marking Code as Unreachable</a></li>
+<li><a class="reference internal" href="#detecting-unexpectedly-unreachable-code">Detecting Unexpectedly Unreachable Code</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="modernizing.html"
+                          title="previous chapter">Modernizing Superseded Typing Features</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="type_narrowing.html"
+                          title="next chapter">Type Narrowing</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/unreachable.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="type_narrowing.html" title="Type Narrowing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="modernizing.html" title="Modernizing Superseded Typing Features"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Unreachable Code and Exhaustiveness Checking</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="unreachable-code-and-exhaustiveness-checking">
+<span id="unreachable"></span><h1>Unreachable Code and Exhaustiveness Checking<a class="headerlink" href="#unreachable-code-and-exhaustiveness-checking" title="Link to this heading">¶</a></h1>
+<p>Sometimes it is necessary to write code that should never execute, and
+sometimes we write code that we expect to execute, but that is actually
+unreachable. The type checker can help in both cases.</p>
+<p>In this guide, we’ll cover:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Never</span></code>, the primitive type used for unreachable code</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">assert_never()</span></code>, a helper for exhaustiveness checking</p></li>
+<li><p>Directly marking code as unreachable</p></li>
+<li><p>Detecting unexpectedly unreachable code</p></li>
+</ul>
+<section id="never-and-noreturn">
+<h2><code class="docutils literal notranslate"><span class="pre">Never</span></code> and <code class="docutils literal notranslate"><span class="pre">NoReturn</span></code><a class="headerlink" href="#never-and-noreturn" title="Link to this heading">¶</a></h2>
+<p>Type theory has a concept of a
+<a class="reference external" href="https://en.wikipedia.org/wiki/Bottom_type">bottom type</a>,
+a type that has no values. Concretely, this can be used to represent
+the return type of a function that never returns, or the argument type
+of a function that may never be called. You can also think of the
+bottom type as a union with no members.</p>
+<p>The Python type system has long provided a type called <code class="docutils literal notranslate"><span class="pre">NoReturn</span></code>.
+While it was originally meant only for functions that never return,
+this concept is naturally extended to the bottom type in general, and all
+type checkers treat <code class="docutils literal notranslate"><span class="pre">NoReturn</span></code> as a general bottom type.</p>
+<p>To make the meaning of this type more explicit, Python 3.11 and
+typing-extensions 4.1 add a new primitive, <code class="docutils literal notranslate"><span class="pre">Never</span></code>. To type checkers,
+it has the same meaning as <code class="docutils literal notranslate"><span class="pre">NoReturn</span></code>.</p>
+<p>In this guide, we’ll use <code class="docutils literal notranslate"><span class="pre">Never</span></code> for the bottom type, but if you cannot
+use it yet, you can always use <code class="docutils literal notranslate"><span class="pre">typing.NoReturn</span></code> instead.</p>
+</section>
+<section id="assert-never-and-exhaustiveness-checking">
+<h2><code class="docutils literal notranslate"><span class="pre">assert_never()</span></code> and Exhaustiveness Checking<a class="headerlink" href="#assert-never-and-exhaustiveness-checking" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Never</span></code> type can be leveraged to perform static exhaustiveness checking,
+where we use the type checker to make sure that we covered all possible
+cases. For example, this can come up when code performs a separate action
+for each member of an enum, or for each type in a union.</p>
+<p>To have the type checker do exhaustiveness checking for us, we call a
+function with a parameter typed as <code class="docutils literal notranslate"><span class="pre">Never</span></code>. The type checker will allow
+this call only if it can prove that the code is not reachable.</p>
+<p>As an example, consider this simple calculator:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Never</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">assert_never</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">Never</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Never</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;Expected code to be unreachable&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Op</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">ADD</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">SUBTRACT</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">match</span> <span class="n">op</span><span class="p">:</span>
+        <span class="k">case</span> <span class="n">Op</span><span class="o">.</span><span class="n">ADD</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">left</span> <span class="o">+</span> <span class="n">right</span>
+        <span class="k">case</span> <span class="n">Op</span><span class="o">.</span><span class="n">SUBTRACT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">left</span> <span class="o">-</span> <span class="n">right</span>
+        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+            <span class="n">assert_never</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To use this feature on Python versions earlier than 3.11, you will need to
+import <code class="docutils literal notranslate"><span class="pre">Never</span></code> from <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code> (version 4.1 or newer).</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">match</span></code> statement covers all members of the <code class="docutils literal notranslate"><span class="pre">Op</span></code> enum,
+so the <code class="docutils literal notranslate"><span class="pre">assert_never()</span></code> call is unreachable and the type checker
+will accept this code. However, if you add another member to the
+enum (say, <code class="docutils literal notranslate"><span class="pre">MULTIPLY</span></code>) but don’t update the <code class="docutils literal notranslate"><span class="pre">match</span></code> statement,
+the type checker will give an error saying that you are not handling
+the <code class="docutils literal notranslate"><span class="pre">MULTIPLY</span></code> case.</p>
+<p>Because the <code class="docutils literal notranslate"><span class="pre">assert_never()</span></code> helper function is frequently useful,
+it is provided by the standard library as <code class="docutils literal notranslate"><span class="pre">typing.assert_never</span></code>
+starting in Python 3.11,
+and is also present in <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code> starting at version 4.1.
+However, it is also possible to define a similar function in your own
+code, for example if you want to customize the runtime error message.</p>
+<p>This use of match statements for comprehensive matching is common
+enough that some typecheckers have direct support for checking all match
+statements for exhaustiveness, regardless of whether or not they have an
+<code class="docutils literal notranslate"><span class="pre">assert_never</span></code>-style function in their default arm. For instance, in pyright
+this can be enabled by enabling the diagnostic code <code class="docutils literal notranslate"><span class="pre">reportMatchNotExhaustive</span></code>
+(on by default in strict mode), and in mypy it can be enabled by enabling
+the error code <code class="docutils literal notranslate"><span class="pre">exhaustive-match</span></code>.</p>
+<p>You can also use <code class="docutils literal notranslate"><span class="pre">assert_never()</span></code> with a sequence of <code class="docutils literal notranslate"><span class="pre">if</span></code> statements:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="n">Op</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">Op</span><span class="o">.</span><span class="n">ADD</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">left</span> <span class="o">+</span> <span class="n">right</span>
+    <span class="k">elif</span> <span class="n">op</span> <span class="ow">is</span> <span class="n">Op</span><span class="o">.</span><span class="n">SUBTRACT</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">left</span> <span class="o">-</span> <span class="n">right</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">assert_never</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="marking-code-as-unreachable">
+<h2>Marking Code as Unreachable<a class="headerlink" href="#marking-code-as-unreachable" title="Link to this heading">¶</a></h2>
+<p>Sometimes a piece of code is unreachable, but the type system is not
+powerful enough to recognize that. For example, consider a function that
+finds the lowest unused street number in a street:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_used</span><span class="p">(</span><span class="n">street</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">lowest_unused</span><span class="p">(</span><span class="n">street</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_used</span><span class="p">(</span><span class="n">street</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">i</span>
+    <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;unreachable&quot;</span>
+</pre></div>
+</div>
+<p>Because <code class="docutils literal notranslate"><span class="pre">itertools.count()</span></code> is an infinite iterator, this function
+will never reach the <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">False</span></code> statement. However, there is
+no way for the type checker to know that, so without the <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">False</span></code>,
+the type checker will complain that the function is missing a return
+statement.</p>
+<p>Note how this is different from <code class="docutils literal notranslate"><span class="pre">assert_never()</span></code>:</p>
+<ul class="simple">
+<li><p>If we used <code class="docutils literal notranslate"><span class="pre">assert_never()</span></code> in the <code class="docutils literal notranslate"><span class="pre">lowest_unused()</span></code> function,
+the type checker would produce an error, because the type checker
+cannot prove that the line is unreachable.</p></li>
+<li><p>If we used <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">False</span></code> instead of <code class="docutils literal notranslate"><span class="pre">assert_never()</span></code> in the
+<code class="docutils literal notranslate"><span class="pre">calculate()</span></code> example above, we would not get the benefits of
+exhaustiveness checking. If the code is actually reachable,
+the type checker will not warn us and we could hit the assertion
+at runtime.</p></li>
+</ul>
+<p>While <code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">False</span></code> is the most idiomatic way to express this pattern,
+any statement that ends execution will do. For example, you could raise
+an exception or call a function that returns <code class="docutils literal notranslate"><span class="pre">Never</span></code>.</p>
+</section>
+<section id="detecting-unexpectedly-unreachable-code">
+<h2>Detecting Unexpectedly Unreachable Code<a class="headerlink" href="#detecting-unexpectedly-unreachable-code" title="Link to this heading">¶</a></h2>
+<p>Another possible problem is code that is supposed to execute, but that
+can actually be statically determined to be unreachable.
+Some type checkers have an option that enables warnings for code
+detected as unreachable (e.g., <code class="docutils literal notranslate"><span class="pre">--warn-unreachable</span></code> in mypy).</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Unreachable Code and Exhaustiveness Checking</a><ul>
+<li><a class="reference internal" href="#never-and-noreturn"><code class="docutils literal notranslate"><span class="pre">Never</span></code> and <code class="docutils literal notranslate"><span class="pre">NoReturn</span></code></a></li>
+<li><a class="reference internal" href="#assert-never-and-exhaustiveness-checking"><code class="docutils literal notranslate"><span class="pre">assert_never()</span></code> and Exhaustiveness Checking</a></li>
+<li><a class="reference internal" href="#marking-code-as-unreachable">Marking Code as Unreachable</a></li>
+<li><a class="reference internal" href="#detecting-unexpectedly-unreachable-code">Detecting Unexpectedly Unreachable Code</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="modernizing.html"
+                          title="previous chapter">Modernizing Superseded Typing Features</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="type_narrowing.html"
+                          title="next chapter">Type Narrowing</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/unreachable.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="type_narrowing.html" title="Type Narrowing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="modernizing.html" title="Modernizing Superseded Typing Features"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Unreachable Code and Exhaustiveness Checking</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

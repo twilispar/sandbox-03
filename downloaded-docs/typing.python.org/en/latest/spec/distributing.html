@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Distributing type information &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Historical and deprecated features" href="historical.html" />
+    <link rel="prev" title="Type checker directives" href="directives.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/distributing.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Distributing type information</a><ul>
+<li><a class="reference internal" href="#stub-files">Stub files</a><ul>
+<li><a class="reference internal" href="#syntax">Syntax</a></li>
+<li><a class="reference internal" href="#supported-constructs">Supported Constructs</a><ul>
+<li><a class="reference internal" href="#value-expressions">Value Expressions</a></li>
+<li><a class="reference internal" href="#module-level-attributes">Module Level Attributes</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#functions-and-methods">Functions and Methods</a></li>
+<li><a class="reference internal" href="#decorators">Decorators</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-typeshed-project">The Typeshed Project</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#type-information-in-libraries">Type information in libraries</a><ul>
+<li><a class="reference internal" href="#packaging-type-information">Packaging Type Information</a><ul>
+<li><a class="reference internal" href="#stub-only-packages">Stub-only Packages</a></li>
+<li><a class="reference internal" href="#partial-stub-packages">Partial Stub Packages</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#import-resolution-ordering">Import resolution ordering</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#library-interface-public-and-private-symbols">Library interface (public and private symbols)</a></li>
+<li><a class="reference internal" href="#import-conventions">Import Conventions</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="directives.html"
+                          title="previous chapter">Type checker directives</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="historical.html"
+                          title="next chapter">Historical and deprecated features</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/distributing.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="historical.html" title="Historical and deprecated features"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="directives.html" title="Type checker directives"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Distributing type information</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="distributing-type-information">
+<span id="distributing-type"></span><h1>Distributing type information<a class="headerlink" href="#distributing-type-information" title="Link to this heading">¶</a></h1>
+<section id="stub-files">
+<span id="id1"></span><h2>Stub files<a class="headerlink" href="#stub-files" title="Link to this heading">¶</a></h2>
+<p>(Originally specified in <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0484/"><strong>PEP 484</strong></a>.)</p>
+<p><em>Stub files</em>, also called <em>type stubs</em>, provide type information for untyped
+Python packages and modules. Stub files serve multiple purposes:</p>
+<ul class="simple">
+<li><p>They are the only way to add type information to extension modules.</p></li>
+<li><p>They can provide type information for packages that do not wish to
+add them inline.</p></li>
+<li><p>They can be distributed separately from the package or module that they
+provide types for. The latter is referred to as the <em>implementation</em>.
+This allows stubs to be developed at a different pace or by different
+authors, which is especially useful when adding type annotations to
+existing packages.</p></li>
+<li><p>They can act as documentation, succinctly explaining the external
+API of a package, without including implementation details or private
+members.</p></li>
+</ul>
+<p>Stub files use a subset of the constructs used in Python source files, as
+described in <a class="reference internal" href="#stub-file-supported-constructs"><span class="std std-ref">Supported Constructs</span></a> below. Type checkers should
+parse a stub that uses only such constructs without error and not interpret any
+construct in a manner contradictory to this specification. However, type
+checkers are not required to implement checks for all of these constructs and
+can elect to ignore unsupported ones. Additionally, type checkers can support
+constructs not described here.</p>
+<p>If a stub file is found for a module, the type checker should not read the
+corresponding “real” module. See <a class="reference internal" href="#mro"><span class="std std-ref">Import resolution ordering</span></a> for more information.</p>
+<section id="syntax">
+<span id="stub-file-syntax"></span><h3>Syntax<a class="headerlink" href="#syntax" title="Link to this heading">¶</a></h3>
+<p>Stub files are syntactically valid Python files with a <code class="docutils literal notranslate"><span class="pre">.pyi</span></code> suffix. They
+should be parseable (e.g., with <a class="reference external" href="https://docs.python.org/3/library/ast.html#ast.parse" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">ast.parse()</span></code></a>) in all Python versions
+that are supported by the implementation and that are still supported
+by the CPython project. For example, defining a type alias using the
+<code class="docutils literal notranslate"><span class="pre">type</span></code> keyword is only accepted by the Python parser in Python 3.12 and later,
+so stubs supporting Python 3.11 or earlier versions should not use this syntax.
+This allows type checkers implemented in Python to parse stub files using
+functionality from the standard library.
+Type checkers may choose to support syntactic features from newer Python versions
+in stub files, but stubs that rely on such features may not be portable to all
+type checkers. Type checkers may also choose to support Python versions that
+are no longer supported by CPython; if so, they cannot rely on standard library
+functionality to parse stub files.</p>
+<p>Type checkers should evaluate all <a class="reference internal" href="glossary.html#term-annotation-expression"><span class="xref std std-term">annotation expressions</span></a> as if they are quoted.
+Consequently, forward references do not need to be quoted, and type system
+features that do not depend on Python syntax changes are supported in stubs regardless
+of the Python version supported. For example, the use of the <code class="docutils literal notranslate"><span class="pre">|</span></code> operator
+to create unions (<code class="docutils literal notranslate"><span class="pre">X</span> <span class="pre">|</span> <span class="pre">Y</span></code>) was introduced in Python 3.10, but may be used
+even in stubs that support Python 3.9 and older versions.</p>
+</section>
+<section id="supported-constructs">
+<span id="stub-file-supported-constructs"></span><h3>Supported Constructs<a class="headerlink" href="#supported-constructs" title="Link to this heading">¶</a></h3>
+<p>Type checkers should fully support these constructs:</p>
+<ul class="simple">
+<li><p>All features from the <code class="docutils literal notranslate"><span class="pre">typing</span></code> module of the latest released Python version
+that use <a class="reference internal" href="#stub-file-syntax"><span class="std std-ref">supported syntax</span></a></p></li>
+<li><p>Comments, including type declaration (<code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">X</span></code>) and error suppression
+(<code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span> <span class="pre">ignore</span></code>) comments</p></li>
+<li><p>Import statements, including the standard <a class="reference internal" href="#import-conventions"><span class="std std-ref">Import Conventions</span></a> and cyclic
+imports</p></li>
+<li><p>Aliases, including type aliases, at both the module and class level</p></li>
+<li><p><a class="reference internal" href="directives.html#version-and-platform-checks"><span class="std std-ref">Simple version and platform checks</span></a></p></li>
+</ul>
+<p>The constructs in the following subsections may be supported in a more limited
+fashion, as described below.</p>
+<section id="value-expressions">
+<h4>Value Expressions<a class="headerlink" href="#value-expressions" title="Link to this heading">¶</a></h4>
+<p>In locations where value expressions can appear, such as the right-hand side of
+assignment statements and function parameter defaults, type checkers should
+support the following expressions:</p>
+<ul class="simple">
+<li><p>The ellipsis literal, <code class="docutils literal notranslate"><span class="pre">...</span></code>, which can stand in for any value</p></li>
+<li><p>Any value that is a
+<a class="reference internal" href="literal.html#literal-legal-parameters"><span class="std std-ref">legal parameter for typing.Literal</span></a></p></li>
+<li><p>Floating point literals, such as <code class="docutils literal notranslate"><span class="pre">3.14</span></code></p></li>
+<li><p>Complex literals, such as <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">+</span> <span class="pre">2j</span></code></p></li>
+</ul>
+</section>
+<section id="module-level-attributes">
+<h4>Module Level Attributes<a class="headerlink" href="#module-level-attributes" title="Link to this heading">¶</a></h4>
+<p>Type checkers should support module-level variable annotations, with and without
+assignments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
+<span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type: int</span>
+<span class="n">x</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># type: int</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="literal.html#literal-final-interactions"><span class="std std-ref">Literal shortcut using Final</span></a> should be
+supported:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># type is Literal[0]</span>
+</pre></div>
+</div>
+<p>When the type of a variable is omitted or disagrees from the assigned value,
+type checker behavior is undefined:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># behavior undefined</span>
+<span class="n">x</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="o">...</span>  <span class="c1"># behavior undefined</span>
+<span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># behavior undefined</span>
+</pre></div>
+</div>
+</section>
+<section id="classes">
+<h4>Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h4>
+<p>Class definition syntax follows general Python syntax, but type checkers
+are expected to understand only the following constructs in class bodies:</p>
+<ul class="simple">
+<li><p>The ellipsis literal <code class="docutils literal notranslate"><span class="pre">...</span></code> is used for empty class bodies. Using <code class="docutils literal notranslate"><span class="pre">pass</span></code> in
+class bodies is undefined.</p></li>
+<li><p>Instance attributes follow the same rules as module level attributes
+(see above).</p></li>
+<li><p>Method definitions (see below) and properties.</p></li>
+<li><p>Aliases.</p></li>
+<li><p>Inner class definitions.</p></li>
+</ul>
+<p>Yes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Simple</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Complex</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="n">read_write</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_only</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">do_stuff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+    <span class="n">doStuff</span> <span class="o">=</span> <span class="n">do_stuff</span>
+    <span class="n">IntList</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Inner</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="functions-and-methods">
+<h4>Functions and Methods<a class="headerlink" href="#functions-and-methods" title="Link to this heading">¶</a></h4>
+<p>Function and method definition follows general Python syntax. Using a function
+or method body other than the ellipsis literal is undefined:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">():</span> <span class="o">...</span>  <span class="c1"># compatible</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">():</span> <span class="k">pass</span>  <span class="c1"># behavior undefined</span>
+</pre></div>
+</div>
+</section>
+<section id="decorators">
+<span id="stub-decorators"></span><h4>Decorators<a class="headerlink" href="#decorators" title="Link to this heading">¶</a></h4>
+<p>Type checkers are expected to understand the effects of all decorators defined
+in the <code class="docutils literal notranslate"><span class="pre">typing</span></code> module, plus these additional ones:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">classmethod</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">staticmethod</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">property</span></code> (including <code class="docutils literal notranslate"><span class="pre">.setter</span></code> and <code class="docutils literal notranslate"><span class="pre">.deleter</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">abc.abstractmethod</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dataclasses.dataclass</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">warnings.deprecated</span></code></p></li>
+<li><p>functions decorated with <code class="docutils literal notranslate"><span class="pre">&#64;typing.dataclass_transform</span></code></p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<section id="the-typeshed-project">
+<h3>The Typeshed Project<a class="headerlink" href="#the-typeshed-project" title="Link to this heading">¶</a></h3>
+<p>The <a class="reference external" href="https://github.com/python/typeshed">typeshed project</a> contains type
+stubs for the standard library (vendored or handled specially by type checkers)
+and type stubs for third-party libraries that don’t ship their own type information
+(typically distributed via PyPI). Policies regarding the
+stubs collected there are decided separately and described in the project’s
+documentation.</p>
+</section>
+</section>
+<section id="type-information-in-libraries">
+<span id="packaging-typed-libraries"></span><h2>Type information in libraries<a class="headerlink" href="#type-information-in-libraries" title="Link to this heading">¶</a></h2>
+<p>(Originally specified in <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0561/"><strong>PEP 561</strong></a>.)</p>
+<p>There are several motivations and methods of supporting typing in a package.
+This specification recognizes three types of packages that users of typing wish to
+create:</p>
+<ol class="arabic simple">
+<li><p>The package maintainer would like to add type information inline.</p></li>
+<li><p>The package maintainer would like to add type information via stubs.</p></li>
+<li><p>A third party or package maintainer would like to share stub files for
+a package, but the maintainer does not want to include them in the source
+of the package.</p></li>
+</ol>
+<p>This specification aims to support all three scenarios and make them simple to add to
+packaging and deployment.</p>
+<p>The two major parts of this specification are the packaging specifications
+and the resolution order for resolving module type information.</p>
+<section id="packaging-type-information">
+<h3>Packaging Type Information<a class="headerlink" href="#packaging-type-information" title="Link to this heading">¶</a></h3>
+<p>In order to make packaging and distributing type information as simple and
+easy as possible, packaging and distribution is done through existing
+frameworks.</p>
+<p>Package maintainers who wish to support type checking of their code MUST add
+a marker file named <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> to their package supporting typing. This marker applies
+recursively: if a top-level package includes it, all its sub-packages MUST support
+type checking as well.</p>
+<p>To have this file including with the package, maintainers can use existing packaging
+options such as <code class="docutils literal notranslate"><span class="pre">package_data</span></code> in <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>. For more details, see
+<a class="reference internal" href="../guides/libraries.html#providing-type-annotations"><span class="std std-ref">the guide to providing type annotations</span></a>.</p>
+<p>For namespace packages (see <span class="target" id="index-2"></span><a class="pep reference external" href="https://peps.python.org/pep-0420/"><strong>PEP 420</strong></a>), the <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> file should be in the
+submodules of the namespace, to avoid conflicts and for clarity.</p>
+<p>This specification does not support distributing typing information as part of
+module-only distributions or single-file modules within namespace packages.</p>
+<p>The single-file module should be refactored into a package
+and indicate that the package supports typing as described
+above.</p>
+<section id="stub-only-packages">
+<h4>Stub-only Packages<a class="headerlink" href="#stub-only-packages" title="Link to this heading">¶</a></h4>
+<p>For package maintainers wishing to ship stub files containing all of their
+type information, it is preferred that the <code class="docutils literal notranslate"><span class="pre">*.pyi</span></code> stubs are alongside the
+corresponding <code class="docutils literal notranslate"><span class="pre">*.py</span></code> files. However, the stubs can also be put in a separate
+package and distributed separately. Third parties can also find this method
+useful if they wish to distribute stub files. The name of the stub package
+MUST follow the scheme <code class="docutils literal notranslate"><span class="pre">foopkg-stubs</span></code> for type stubs for the package named
+<code class="docutils literal notranslate"><span class="pre">foopkg</span></code>.</p>
+<p>Note the name of the distribution (i.e. the project name on PyPI) containing
+the package MAY be different than the mandated <code class="docutils literal notranslate"><span class="pre">*-stubs</span></code> package name.
+The name of the distribution SHOULD NOT be <code class="docutils literal notranslate"><span class="pre">types-*</span></code>, since this is
+conventionally used for stub-only packages provided by typeshed.</p>
+<p>For stub-only packages adding a <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> marker is not
+needed since the name <code class="docutils literal notranslate"><span class="pre">*-stubs</span></code> is enough to indicate it is a source of typing
+information.</p>
+<p>Third parties seeking to distribute stub files are encouraged to contact the
+maintainer of the package about distribution alongside the package. If the
+maintainer does not wish to maintain or package stub files or type information
+<a class="reference internal" href="glossary.html#term-inline"><span class="xref std std-term">inline</span></a>, then a third party stub-only package can be created.</p>
+<p>In addition, stub-only distributions MAY indicate which version(s)
+of the runtime package are targeted by indicating the runtime distribution’s
+version(s) through normal dependency data. For example, the
+stub package <code class="docutils literal notranslate"><span class="pre">flyingcircus-stubs</span></code> can indicate the versions of the
+runtime <code class="docutils literal notranslate"><span class="pre">flyingcircus</span></code> distribution it supports through <code class="docutils literal notranslate"><span class="pre">dependencies</span></code>
+field in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>.</p>
+<p>For namespace packages (see <span class="target" id="index-3"></span><a class="pep reference external" href="https://peps.python.org/pep-0420/"><strong>PEP 420</strong></a>), stub-only packages should
+use the <code class="docutils literal notranslate"><span class="pre">-stubs</span></code> suffix on only the root namespace package.
+All stub-only namespace packages should omit <code class="docutils literal notranslate"><span class="pre">__init__.pyi</span></code> files. <code class="docutils literal notranslate"><span class="pre">py.typed</span></code>
+marker files are not necessary for stub-only packages, but similarly
+to packages with inline types, if used, they should be in submodules of the namespace to
+avoid conflicts and for clarity.</p>
+<p>For example, if the <code class="docutils literal notranslate"><span class="pre">pentagon</span></code> and <code class="docutils literal notranslate"><span class="pre">hexagon</span></code> are separate distributions
+installing within the namespace package <code class="docutils literal notranslate"><span class="pre">shapes.polygons</span></code>
+The corresponding types-only distributions should produce packages
+laid out as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>shapes-stubs
+└── polygons
+    └── pentagon
+        └── __init__.pyi
+
+shapes-stubs
+└── polygons
+    └── hexagon
+        └── __init__.pyi
+</pre></div>
+</div>
+</section>
+<section id="partial-stub-packages">
+<h4>Partial Stub Packages<a class="headerlink" href="#partial-stub-packages" title="Link to this heading">¶</a></h4>
+<p>Many stub packages will only have part of the type interface for libraries
+completed, especially initially. For the benefit of type checking and code
+editors, packages can be “partial”. This means modules not found in the stub
+package SHOULD be searched for in parts five and six of the module resolution
+order below, namely <a class="reference internal" href="glossary.html#term-inline"><span class="xref std std-term">inline</span></a> packages and any third-party stubs the type
+checker chooses to vendor.</p>
+<p>Type checkers should merge the stub package and runtime package
+directories. This can be thought of as the functional equivalent of copying the
+stub package into the same directory as the corresponding runtime package
+and type checking the combined directory structure. Thus type
+checkers MUST maintain the normal resolution order of checking <code class="docutils literal notranslate"><span class="pre">*.pyi</span></code> before
+<code class="docutils literal notranslate"><span class="pre">*.py</span></code> files.</p>
+<p>If a stub package distribution is partial it MUST include <code class="docutils literal notranslate"><span class="pre">partial\n</span></code> in a
+<code class="docutils literal notranslate"><span class="pre">py.typed</span></code> file.  For stub-packages distributing within a namespace
+package (see <span class="target" id="index-4"></span><a class="pep reference external" href="https://peps.python.org/pep-0420/"><strong>PEP 420</strong></a>), the <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> file should be in the
+submodules of the namespace.</p>
+<p>Type checkers should treat namespace packages within stub-packages as
+incomplete since multiple distributions may populate them.
+Regular packages within namespace packages in stub-package distributions
+are considered complete unless a <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> with <code class="docutils literal notranslate"><span class="pre">partial\n</span></code> is included.</p>
+</section>
+</section>
+<section id="import-resolution-ordering">
+<span id="mro"></span><h3>Import resolution ordering<a class="headerlink" href="#import-resolution-ordering" title="Link to this heading">¶</a></h3>
+<p>The following is the order in which type checkers supporting this specification SHOULD
+resolve modules containing type information:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="glossary.html#term-stub"><span class="xref std std-term">Stubs</span></a> or Python source manually put in the beginning of the path. Type
+checkers SHOULD provide this to allow the user complete control of which
+stubs to use, and to patch broken stubs or <a class="reference internal" href="glossary.html#term-inline"><span class="xref std std-term">inline</span></a> types from packages.
+In mypy the <code class="docutils literal notranslate"><span class="pre">$MYPYPATH</span></code> environment variable can be used for this.</p></li>
+<li><p>User code - the files the type checker is running on.</p></li>
+<li><p>Typeshed stubs for the standard library. These will usually be vendored by
+type checkers, but type checkers SHOULD provide an option for users to
+provide a path to a directory containing a custom or modified version of
+typeshed; if this option is provided, type checkers SHOULD use this as the
+canonical source for standard-library types in this step.</p></li>
+<li><p><a class="reference internal" href="glossary.html#term-stub"><span class="xref std std-term">Stub</span></a> packages - these packages SHOULD supersede any installed inline
+package. They can be found in directories named <code class="docutils literal notranslate"><span class="pre">foopkg-stubs</span></code> for
+package <code class="docutils literal notranslate"><span class="pre">foopkg</span></code>.</p></li>
+<li><p>Packages with a <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> marker file - if there is nothing overriding
+the installed package, <em>and</em> it opts into type checking, the types
+bundled with the package SHOULD be used (be they in <code class="docutils literal notranslate"><span class="pre">.pyi</span></code> type
+stub files or inline in <code class="docutils literal notranslate"><span class="pre">.py</span></code> files).</p></li>
+<li><p>If the type checker chooses to additionally vendor any third-party stubs
+(from typeshed or elsewhere), these SHOULD come last in the module
+resolution order.</p></li>
+</ol>
+<p>If typecheckers identify a stub-only namespace package without the desired module
+in step 4, they should continue to step 5/6. Typecheckers should identify namespace packages
+by the absence of <code class="docutils literal notranslate"><span class="pre">__init__.pyi</span></code>.  This allows different subpackages to
+independently opt for inline vs stub-only.</p>
+<p>Type checkers that check a different Python version than the version they run
+on MUST find the type information in the <code class="docutils literal notranslate"><span class="pre">site-packages</span></code>/<code class="docutils literal notranslate"><span class="pre">dist-packages</span></code>
+of that Python version. This can be queried e.g.
+<code class="docutils literal notranslate"><span class="pre">pythonX.Y</span> <span class="pre">-c</span> <span class="pre">'import</span> <span class="pre">site;</span> <span class="pre">print(site.getsitepackages())'</span></code>. It is also recommended
+that the type checker allow for the user to point to a particular Python
+binary, in case it is not in the path.</p>
+</section>
+</section>
+<section id="library-interface-public-and-private-symbols">
+<span id="library-interface"></span><h2>Library interface (public and private symbols)<a class="headerlink" href="#library-interface-public-and-private-symbols" title="Link to this heading">¶</a></h2>
+<p>If a <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> module is present, a type checker will treat all modules
+within that package (i.e. all files that end in <code class="docutils literal notranslate"><span class="pre">.py</span></code> or <code class="docutils literal notranslate"><span class="pre">.pyi</span></code>) as
+importable unless the file name begins with an underscore. These modules
+comprise the supported interface for the library.</p>
+<p>Each module exposes a set of symbols. Some of these symbols are
+considered “private” — implementation details that are not part of the
+library’s interface. Type checkers can use the following rules
+to determine which symbols are visible outside of the package.</p>
+<ul class="simple">
+<li><p>Symbols whose names begin with an underscore (but are not dunder
+names) are considered private.</p></li>
+<li><p>Imported symbols are considered private by default. A fixed set of
+<a class="reference internal" href="#import-conventions"><span class="std std-ref">import forms</span></a> re-export imported symbols.</p></li>
+<li><p>A module can expose an <code class="docutils literal notranslate"><span class="pre">__all__</span></code> symbol at the module level that
+provides a list of names that are considered part of the interface.
+This overrides all other rules above, allowing imported symbols or
+symbols whose names begin with an underscore to be included in the
+interface.</p></li>
+<li><p>Local variables within a function (including nested functions) are
+always considered private.</p></li>
+</ul>
+<p>The following idioms are supported for defining the values contained
+within <code class="docutils literal notranslate"><span class="pre">__all__</span></code>. These restrictions allow type checkers to statically
+determine the value of <code class="docutils literal notranslate"><span class="pre">__all__</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">__all__</span> <span class="pre">=</span> <span class="pre">('a',</span> <span class="pre">'b')</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__all__</span> <span class="pre">=</span> <span class="pre">['a',</span> <span class="pre">'b']</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__all__</span> <span class="pre">+=</span> <span class="pre">['a',</span> <span class="pre">'b']</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__all__</span> <span class="pre">+=</span> <span class="pre">submodule.__all__</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__all__.extend(['a',</span> <span class="pre">'b'])</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__all__.extend(submodule.__all__)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__all__.append('a')</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__all__.remove('a')</span></code></p></li>
+</ul>
+</section>
+<section id="import-conventions">
+<span id="id2"></span><h2>Import Conventions<a class="headerlink" href="#import-conventions" title="Link to this heading">¶</a></h2>
+<p>By convention, certain import forms indicate to type checkers that an imported
+symbol is re-exported and should be considered part of the importing module’s
+public interface. All other imported symbols are considered private by default.</p>
+<p>The following import forms re-export symbols:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">X</span> <span class="pre">as</span> <span class="pre">X</span></code> (a redundant module alias): re-exports <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">Y</span> <span class="pre">import</span> <span class="pre">X</span> <span class="pre">as</span> <span class="pre">X</span></code> (a redundant symbol alias): re-exports <code class="docutils literal notranslate"><span class="pre">X</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">Y</span> <span class="pre">import</span> <span class="pre">*</span></code>: if <code class="docutils literal notranslate"><span class="pre">Y</span></code> defines a module-level <code class="docutils literal notranslate"><span class="pre">__all__</span></code> list,
+re-exports all names in <code class="docutils literal notranslate"><span class="pre">__all__</span></code>; otherwise, re-exports  all public symbols
+in <code class="docutils literal notranslate"><span class="pre">Y</span></code>’s global scope.</p></li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Distributing type information</a><ul>
+<li><a class="reference internal" href="#stub-files">Stub files</a><ul>
+<li><a class="reference internal" href="#syntax">Syntax</a></li>
+<li><a class="reference internal" href="#supported-constructs">Supported Constructs</a><ul>
+<li><a class="reference internal" href="#value-expressions">Value Expressions</a></li>
+<li><a class="reference internal" href="#module-level-attributes">Module Level Attributes</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#functions-and-methods">Functions and Methods</a></li>
+<li><a class="reference internal" href="#decorators">Decorators</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-typeshed-project">The Typeshed Project</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#type-information-in-libraries">Type information in libraries</a><ul>
+<li><a class="reference internal" href="#packaging-type-information">Packaging Type Information</a><ul>
+<li><a class="reference internal" href="#stub-only-packages">Stub-only Packages</a></li>
+<li><a class="reference internal" href="#partial-stub-packages">Partial Stub Packages</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#import-resolution-ordering">Import resolution ordering</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#library-interface-public-and-private-symbols">Library interface (public and private symbols)</a></li>
+<li><a class="reference internal" href="#import-conventions">Import Conventions</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="directives.html"
+                          title="previous chapter">Type checker directives</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="historical.html"
+                          title="next chapter">Historical and deprecated features</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/distributing.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="historical.html" title="Historical and deprecated features"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="directives.html" title="Type checker directives"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Distributing type information</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

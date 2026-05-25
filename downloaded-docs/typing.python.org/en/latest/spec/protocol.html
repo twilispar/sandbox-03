@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Protocols &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Callables" href="callables.html" />
+    <link rel="prev" title="Literals" href="literal.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/protocol.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Protocols</a><ul>
+<li><a class="reference internal" href="#terminology">Terminology</a></li>
+<li><a class="reference internal" href="#defining-a-protocol">Defining a protocol</a></li>
+<li><a class="reference internal" href="#protocol-members">Protocol members</a></li>
+<li><a class="reference internal" href="#explicitly-declaring-implementation">Explicitly declaring implementation</a></li>
+<li><a class="reference internal" href="#merging-and-extending-protocols">Merging and extending protocols</a></li>
+<li><a class="reference internal" href="#generic-protocols">Generic protocols</a></li>
+<li><a class="reference internal" href="#recursive-protocols">Recursive protocols</a></li>
+<li><a class="reference internal" href="#self-types-in-protocols">Self-types in protocols</a></li>
+<li><a class="reference internal" href="#assignability-relationships-with-other-types">Assignability relationships with other types</a></li>
+<li><a class="reference internal" href="#unions-and-intersections-of-protocols">Unions and intersections of protocols</a></li>
+<li><a class="reference internal" href="#type-and-class-objects-vs-protocols"><code class="docutils literal notranslate"><span class="pre">type[]</span></code> and class objects vs protocols</a></li>
+<li><a class="reference internal" href="#newtype-and-type-aliases"><code class="docutils literal notranslate"><span class="pre">NewType()</span></code> and type aliases</a></li>
+<li><a class="reference internal" href="#modules-as-implementations-of-protocols">Modules as implementations of protocols</a></li>
+<li><a class="reference internal" href="#runtime-checkable-decorator-and-narrowing-types-by-isinstance"><code class="docutils literal notranslate"><span class="pre">&#64;runtime_checkable</span></code> decorator and narrowing types by <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="literal.html"
+                          title="previous chapter">Literals</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="callables.html"
+                          title="next chapter">Callables</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/protocol.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="callables.html" title="Callables"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="literal.html" title="Literals"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Protocols</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="protocols">
+<span id="id1"></span><h1>Protocols<a class="headerlink" href="#protocols" title="Link to this heading">¶</a></h1>
+<p>(Originally specified in <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0544/"><strong>PEP 544</strong></a>.)</p>
+<section id="terminology">
+<h2>Terminology<a class="headerlink" href="#terminology" title="Link to this heading">¶</a></h2>
+<p>The term <em>protocols</em> is used for some types supporting <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a>
+subtyping. The reason is that the term <em>iterator protocol</em>,
+for example, is widely understood in the community, and coming up with
+a new term for this concept in a statically typed context would just create
+confusion.</p>
+<p>This has the drawback that the term <em>protocol</em> becomes overloaded with
+two subtly different meanings: the first is the traditional, well-known but
+slightly fuzzy concept of protocols such as iterator; the second is the more
+explicitly defined concept of protocols in statically typed code.
+The distinction is not important most of the time, and in other
+cases we can just add a qualifier such as <em>protocol classes</em>
+when referring to the static type concept.</p>
+<p>If a class includes a protocol in its MRO, the class is called an <em>explicit</em>
+subclass of the protocol. If a class defines all attributes and methods of a
+protocol with types that are <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to the types of the protocol’s
+attributes and methods, it is said to implement the protocol and to be
+assignable to the protocol. If a class is assignable to a protocol but the
+protocol is not included in the MRO, the class is <em>implicitly</em> assignable to
+the protocol. (Note that one can explicitly subclass a protocol and still not
+implement it if a protocol attribute is set to <code class="docutils literal notranslate"><span class="pre">None</span></code> in the subclass. See
+Python <a class="reference external" href="https://docs.python.org/3/reference/datamodel.html#specialnames" title="(in Python v3.14)"><span class="xref std std-ref">data model</span></a> for details.)</p>
+<p>The attributes (variables and methods) of a protocol that are mandatory for
+another class for it to be assignable to the protocol are called “protocol
+members”.</p>
+</section>
+<section id="defining-a-protocol">
+<span id="protocol-definition"></span><h2>Defining a protocol<a class="headerlink" href="#defining-a-protocol" title="Link to this heading">¶</a></h2>
+<p>Protocols are defined by including a <a class="reference internal" href="glossary.html#term-special-form"><span class="xref std std-term">special form</span></a> <code class="docutils literal notranslate"><span class="pre">typing.Protocol</span></code>
+(an instance of <code class="docutils literal notranslate"><span class="pre">abc.ABCMeta</span></code>) in the base classes list, typically
+at the end of the list. Here is a simple example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SupportsClose</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>Now if one defines a class <code class="docutils literal notranslate"><span class="pre">Resource</span></code> with a <code class="docutils literal notranslate"><span class="pre">close()</span></code> method whose type
+signature is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to <code class="docutils literal notranslate"><span class="pre">SupportsClose.close</span></code>, it would implicitly
+be assignable to <code class="docutils literal notranslate"><span class="pre">SupportsClose</span></code>, since <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a> assignability is
+used for protocol types:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Resource</span><span class="p">:</span>
+    <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Apart from a few restrictions explicitly mentioned below, protocol types can
+be used in every context where normal types can:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">close_all</span><span class="p">(</span><span class="n">things</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SupportsClose</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">things</span><span class="p">:</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;foo.txt&#39;</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">Resource</span><span class="p">()</span>
+<span class="n">close_all</span><span class="p">([</span><span class="n">f</span><span class="p">,</span> <span class="n">r</span><span class="p">])</span>  <span class="c1"># OK!</span>
+<span class="n">close_all</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>     <span class="c1"># Error: &#39;int&#39; has no &#39;close&#39; method</span>
+</pre></div>
+</div>
+<p>Note that both the user-defined class <code class="docutils literal notranslate"><span class="pre">Resource</span></code> and the built-in <code class="docutils literal notranslate"><span class="pre">IO</span></code> type
+(the return type of <code class="docutils literal notranslate"><span class="pre">open()</span></code>) are assignable to <code class="docutils literal notranslate"><span class="pre">SupportsClose</span></code>, because
+each provides a <code class="docutils literal notranslate"><span class="pre">close()</span></code> method with an assignable type signature.</p>
+</section>
+<section id="protocol-members">
+<h2>Protocol members<a class="headerlink" href="#protocol-members" title="Link to this heading">¶</a></h2>
+<p>All methods defined in the protocol class body are protocol members, both
+normal and decorated with <code class="docutils literal notranslate"><span class="pre">&#64;abstractmethod</span></code>. If any parameters of a
+protocol method are not annotated, then their types are assumed to be <code class="docutils literal notranslate"><span class="pre">Any</span></code>
+(see <a class="reference internal" href="annotations.html#missing-annotations"><span class="std std-ref">“The meaning of annotations”</span></a>). Bodies of protocol methods are type checked.
+An abstract method that should not be called via <code class="docutils literal notranslate"><span class="pre">super()</span></code> ought to raise
+<code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code>. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Example</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">first</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>     <span class="c1"># This is a protocol member</span>
+        <span class="k">return</span> <span class="mi">42</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">second</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>    <span class="c1"># Method without a default implementation</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</pre></div>
+</div>
+<p>Static methods, class methods, and properties are equally allowed
+in protocols.</p>
+<p>To define a protocol variable, one can use variable
+annotations in the class body. Additional attributes <em>only</em> defined in
+the body of a method by assignment via <code class="docutils literal notranslate"><span class="pre">self</span></code> are not allowed. The rationale
+for this is that the protocol class implementation is often not shared by
+subtypes, so the interface should not depend on the default implementation.
+Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Template</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>        <span class="c1"># This is a protocol member</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>   <span class="c1"># This one too (with default)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Error in type checker</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Concrete</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+
+<span class="n">var</span><span class="p">:</span> <span class="n">Template</span> <span class="o">=</span> <span class="n">Concrete</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="mi">42</span><span class="p">)</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>To distinguish between protocol class variables and protocol instance
+variables, the special <a class="reference internal" href="class-compat.html#classvar"><span class="std std-ref">ClassVar</span></a> annotation should be used.
+By default, protocol variables as defined above are considered
+readable and writable. To define a read-only protocol variable, one can use
+an (abstract) property.</p>
+</section>
+<section id="explicitly-declaring-implementation">
+<h2>Explicitly declaring implementation<a class="headerlink" href="#explicitly-declaring-implementation" title="Link to this heading">¶</a></h2>
+<p>To explicitly declare that a certain class implements a given protocol,
+it can be used as a regular base class. In this case a class could use
+default implementations of protocol members. Static analysis tools are
+expected to automatically detect that a class implements a given protocol.
+So while it’s possible to subclass a protocol explicitly, it’s <em>not necessary</em>
+to do so for the sake of type-checking.</p>
+<p>The default implementations cannot be used if the assignable-to relationship is
+implicit and only <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a> – the semantics of inheritance is not
+changed. Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PColor</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">complex_method</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># some complex code here</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NiceColor</span><span class="p">(</span><span class="n">PColor</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;deep blue&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BadColor</span><span class="p">(</span><span class="n">PColor</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>  <span class="c1"># Error, no default implementation</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ImplicitColor</span><span class="p">:</span>   <span class="c1"># Note no &#39;PColor&#39; base here</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;probably gray&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">complex_method</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="c1"># class needs to implement this</span>
+
+<span class="n">nice</span><span class="p">:</span> <span class="n">NiceColor</span>
+<span class="n">another</span><span class="p">:</span> <span class="n">ImplicitColor</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">represent</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">PColor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">draw</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">complex_method</span><span class="p">())</span>
+
+<span class="n">represent</span><span class="p">(</span><span class="n">nice</span><span class="p">)</span> <span class="c1"># OK</span>
+<span class="n">represent</span><span class="p">(</span><span class="n">another</span><span class="p">)</span> <span class="c1"># Also OK</span>
+</pre></div>
+</div>
+<p>Note that there is little difference between explicitly subclassing and
+implicitly implementing the protocol; the main benefit of explicit subclassing
+is to get some protocol methods “for free”. In addition, type checkers can
+statically verify that the class actually implements the protocol correctly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">RGB</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="n">rgb</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">intensity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Point</span><span class="p">(</span><span class="n">RGB</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">red</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">green</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">blue</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rgb</span> <span class="o">=</span> <span class="n">red</span><span class="p">,</span> <span class="n">green</span><span class="p">,</span> <span class="n">blue</span>  <span class="c1"># Error, &#39;blue&#39; must be &#39;int&#39;</span>
+
+    <span class="c1"># Type checker might warn that &#39;intensity&#39; is not defined</span>
+</pre></div>
+</div>
+<p>A class can explicitly inherit from multiple protocols and also from normal
+classes. In this case methods are resolved using normal MRO and a type checker
+verifies that all member assignability is correct. The semantics of
+<code class="docutils literal notranslate"><span class="pre">&#64;abstractmethod</span></code> is not changed; all of them must be implemented by an
+explicit subclass before it can be instantiated.</p>
+</section>
+<section id="merging-and-extending-protocols">
+<h2>Merging and extending protocols<a class="headerlink" href="#merging-and-extending-protocols" title="Link to this heading">¶</a></h2>
+<p>The general philosophy is that protocols are mostly like regular ABCs, but a
+static type checker will handle them specially. Subclassing a protocol class
+would not turn the subclass into a protocol unless it also has
+<code class="docutils literal notranslate"><span class="pre">typing.Protocol</span></code> as an explicit base class. Without this base, the class is
+“downgraded” to a regular ABC that cannot be used with <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a>
+subtyping. The rationale for this rule is that we don’t want to accidentally
+have some class act as a protocol just because one of its base classes happens
+to be one. We still slightly prefer <a class="reference internal" href="glossary.html#term-nominal"><span class="xref std std-term">nominal</span></a> subtyping over structural
+subtyping in the static typing world.</p>
+<p>A subprotocol can be defined by having <em>both</em> one or more protocols as
+immediate base classes and also having <code class="docutils literal notranslate"><span class="pre">typing.Protocol</span></code> as an immediate
+base class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sized</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SizedAndClosable</span><span class="p">(</span><span class="n">Sized</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>Now the protocol <code class="docutils literal notranslate"><span class="pre">SizedAndClosable</span></code> is a protocol with two methods,
+<code class="docutils literal notranslate"><span class="pre">__len__</span></code> and <code class="docutils literal notranslate"><span class="pre">close</span></code>. If one omits <code class="docutils literal notranslate"><span class="pre">Protocol</span></code> in the base class list,
+this would be a regular (non-protocol) class that must implement <code class="docutils literal notranslate"><span class="pre">Sized</span></code>.
+Alternatively, one can implement <code class="docutils literal notranslate"><span class="pre">SizedAndClosable</span></code> protocol by merging
+the <code class="docutils literal notranslate"><span class="pre">SupportsClose</span></code> protocol from the example in the <a class="reference internal" href="#protocol-definition">protocol-definition</a> section
+with <code class="docutils literal notranslate"><span class="pre">typing.Sized</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sized</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SupportsClose</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SizedAndClosable</span><span class="p">(</span><span class="n">Sized</span><span class="p">,</span> <span class="n">SupportsClose</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The two definitions of <code class="docutils literal notranslate"><span class="pre">SizedAndClosable</span></code> are equivalent. Subclass
+relationships between protocols are not meaningful when considering
+assignability, since <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a> <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignability</span></a> is
+the criterion, not the MRO.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">Protocol</span></code> is included in the base class list, all the other base classes
+must be protocols. A protocol can’t extend a regular class.
+Note that rules around explicit subclassing are different
+from regular ABCs, where abstractness is simply defined by having at least one
+abstract method being unimplemented. Protocol classes must be marked
+<em>explicitly</em>.</p>
+</section>
+<section id="generic-protocols">
+<span id="id2"></span><h2>Generic protocols<a class="headerlink" href="#generic-protocols" title="Link to this heading">¶</a></h2>
+<p>Generic protocols are important. For example, <code class="docutils literal notranslate"><span class="pre">SupportsAbs</span></code>, <code class="docutils literal notranslate"><span class="pre">Iterable</span></code>
+and <code class="docutils literal notranslate"><span class="pre">Iterator</span></code> are generic protocols. They are defined similar to normal
+non-protocol generic types:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>The older (pre-3.12) syntax <code class="docutils literal notranslate"><span class="pre">Protocol[T,</span> <span class="pre">S,</span> <span class="pre">...]</span></code> remains available as a
+shorthand for <code class="docutils literal notranslate"><span class="pre">Protocol,</span> <span class="pre">Generic[T,</span> <span class="pre">S,</span> <span class="pre">...]</span></code>. It is an error to combine the
+shorthand with <code class="docutils literal notranslate"><span class="pre">Generic[T,</span> <span class="pre">S,</span> <span class="pre">...]</span></code> or to mix it with the new
+<code class="docutils literal notranslate"><span class="pre">class</span> <span class="pre">Iterable[T]</span></code> form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>   <span class="c1"># INVALID</span>
+    <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">Protocol</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>   <span class="c1"># INVALID</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>When using the generics syntax introduced in Python 3.12, the variance of
+type variables is inferred. When using the pre-3.12 generics syntax, variance
+must be specified (unless <code class="docutils literal notranslate"><span class="pre">infer_variance=True</span></code> is used). Type checkers will
+warn if the declared variance does not match the protocol definition. Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+<span class="n">T_co</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T_co&#39;</span><span class="p">,</span> <span class="n">covariant</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">T_contra</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T_contra&#39;</span><span class="p">,</span> <span class="n">contravariant</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Box</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">T_co</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T_co</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="n">box</span><span class="p">:</span> <span class="n">Box</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<span class="n">second_box</span><span class="p">:</span> <span class="n">Box</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="n">box</span> <span class="o">=</span> <span class="n">second_box</span>  <span class="c1"># This is OK due to the covariance of &#39;Box&#39;.</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Sender</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">T_contra</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">T_contra</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="n">sender</span><span class="p">:</span> <span class="n">Sender</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<span class="n">new_sender</span><span class="p">:</span> <span class="n">Sender</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="n">new_sender</span> <span class="o">=</span> <span class="n">sender</span>  <span class="c1"># OK, &#39;Sender&#39; is contravariant.</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Proto</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+    <span class="n">attr</span><span class="p">:</span> <span class="n">T</span>  <span class="c1"># this class is invariant, since it has a mutable attribute</span>
+
+<span class="n">var</span><span class="p">:</span> <span class="n">Proto</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<span class="n">another_var</span><span class="p">:</span> <span class="n">Proto</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">another_var</span>  <span class="c1"># Error! &#39;Proto[float]&#39; is not assignable to &#39;Proto[int]&#39;.</span>
+</pre></div>
+</div>
+<p>Note that unlike nominal classes, de facto covariant protocols cannot be
+declared as invariant, since this can break transitivity of subtyping.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AnotherBox</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>  <span class="c1"># Error, this protocol is covariant in T,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>     <span class="c1"># not invariant.</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="recursive-protocols">
+<h2>Recursive protocols<a class="headerlink" href="#recursive-protocols" title="Link to this heading">¶</a></h2>
+<p>Recursive protocols are also supported. Forward references to the protocol
+class names can be <a class="reference internal" href="annotations.html#forward-references"><span class="std std-ref">given as strings</span></a>. Recursive
+protocols are useful for representing self-referential data structures
+like trees in an abstract fashion:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Traversable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">leaves</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="s1">&#39;Traversable&#39;</span><span class="p">]:</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>Note that for recursive protocols, a class is considered assignable to
+the protocol in situations where the decision depends on itself.
+Continuing the previous example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SimpleTree</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">leaves</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;SimpleTree&#39;</span><span class="p">]:</span>
+        <span class="o">...</span>
+
+<span class="n">root</span><span class="p">:</span> <span class="n">Traversable</span> <span class="o">=</span> <span class="n">SimpleTree</span><span class="p">()</span>  <span class="c1"># OK</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Tree</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">leaves</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s1">&#39;Tree[T]&#39;</span><span class="p">]:</span>
+        <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">walk</span><span class="p">(</span><span class="n">graph</span><span class="p">:</span> <span class="n">Traversable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="n">tree</span><span class="p">:</span> <span class="n">Tree</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">()</span>
+<span class="n">walk</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>  <span class="c1"># OK, &#39;Tree[float]&#39; is assignable to &#39;Traversable&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="self-types-in-protocols">
+<h2>Self-types in protocols<a class="headerlink" href="#self-types-in-protocols" title="Link to this heading">¶</a></h2>
+<p>The self-types in protocols follow the
+<a class="reference internal" href="annotations.html#annotating-methods"><span class="std std-ref">rules for other methods</span></a>. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Copyable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">[</span><span class="n">C</span><span class="p">:</span> <span class="n">Copyable</span><span class="p">](</span><span class="bp">self</span><span class="p">:</span> <span class="n">C</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">C</span><span class="p">:</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">One</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;One&#39;</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Other</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Other</span><span class="p">](</span><span class="bp">self</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="n">c</span><span class="p">:</span> <span class="n">Copyable</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">One</span><span class="p">()</span>  <span class="c1"># OK</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Other</span><span class="p">()</span>  <span class="c1"># Also OK</span>
+</pre></div>
+</div>
+</section>
+<section id="assignability-relationships-with-other-types">
+<h2>Assignability relationships with other types<a class="headerlink" href="#assignability-relationships-with-other-types" title="Link to this heading">¶</a></h2>
+<p>Protocols cannot be instantiated, so there are no values whose
+runtime type is a protocol. For variables and parameters with protocol types,
+assignability relationships are subject to the following rules:</p>
+<ul class="simple">
+<li><p>A protocol is never assignable to a concrete type.</p></li>
+<li><p>A concrete type <code class="docutils literal notranslate"><span class="pre">X</span></code> is assignable to a protocol <code class="docutils literal notranslate"><span class="pre">P</span></code> if and only if <code class="docutils literal notranslate"><span class="pre">X</span></code>
+implements all protocol members of <code class="docutils literal notranslate"><span class="pre">P</span></code> with assignable types. In other
+words, <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignability</span></a> with respect to a protocol is
+always <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a>.</p></li>
+<li><p>A protocol <code class="docutils literal notranslate"><span class="pre">P1</span></code> is assignable to another protocol <code class="docutils literal notranslate"><span class="pre">P2</span></code> if <code class="docutils literal notranslate"><span class="pre">P1</span></code> defines
+all protocol members of <code class="docutils literal notranslate"><span class="pre">P2</span></code> with assignable types.</p></li>
+</ul>
+<p>Generic protocol types follow the same rules of variance as non-protocol
+types. Protocol types can be used in all contexts where any other types
+can be used, such as in unions, <code class="docutils literal notranslate"><span class="pre">ClassVar</span></code>, type variables bounds, etc.
+Generic protocols follow the rules for generic abstract classes, except for
+using structural assignability instead of assignability defined by
+inheritance relationships.</p>
+<p>Static type checkers will recognize protocol implementations, even if the
+corresponding protocols are <em>not imported</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># file lib.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sized</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ListLike</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">Sized</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">populate</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="n">ListLike</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="c1"># file main.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib</span><span class="w"> </span><span class="kn">import</span> <span class="n">populate</span>  <span class="c1"># Note that ListLike is NOT imported</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MockStack</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">42</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">populate</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>    <span class="c1"># Passes type check</span>
+<span class="n">populate</span><span class="p">(</span><span class="n">MockStack</span><span class="p">())</span>  <span class="c1"># Also OK</span>
+</pre></div>
+</div>
+</section>
+<section id="unions-and-intersections-of-protocols">
+<h2>Unions and intersections of protocols<a class="headerlink" href="#unions-and-intersections-of-protocols" title="Link to this heading">¶</a></h2>
+<p>Unions of protocol classes behaves the same way as for non-protocol
+classes. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Exitable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="o">...</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Quittable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">quit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">Exitable</span> <span class="o">|</span> <span class="n">Quittable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DefaultJob</span><span class="p">:</span>
+    <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">quit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+<span class="n">finish</span><span class="p">(</span><span class="n">DefaultJob</span><span class="p">())</span> <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>One can use multiple inheritance to define an intersection of protocols.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Hashable</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">HashableFloats</span><span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">Hashable</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cached_func</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">HashableFloats</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="n">cached_func</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c1"># OK, tuple is both hashable and iterable</span>
+</pre></div>
+</div>
+</section>
+<section id="type-and-class-objects-vs-protocols">
+<h2><code class="docutils literal notranslate"><span class="pre">type[]</span></code> and class objects vs protocols<a class="headerlink" href="#type-and-class-objects-vs-protocols" title="Link to this heading">¶</a></h2>
+<p>Variables and parameters annotated with <code class="docutils literal notranslate"><span class="pre">type[Proto]</span></code> accept only concrete
+(non-protocol) <a class="reference internal" href="glossary.html#term-consistent-subtype"><span class="xref std std-term">consistent subtypes</span></a> of <code class="docutils literal notranslate"><span class="pre">Proto</span></code>.
+The main reason for this is to allow instantiation of parameters with such
+types. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Proto</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">meth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="o">...</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Concrete</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">meth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">42</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Proto</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span><span class="o">.</span><span class="n">meth</span><span class="p">()</span> <span class="c1"># OK</span>
+<span class="n">fun</span><span class="p">(</span><span class="n">Proto</span><span class="p">)</span>              <span class="c1"># Error</span>
+<span class="n">fun</span><span class="p">(</span><span class="n">Concrete</span><span class="p">)</span>           <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>The same rule applies to variables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">var</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Proto</span><span class="p">]</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">Proto</span>    <span class="c1"># Error</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">Concrete</span> <span class="c1"># OK</span>
+<span class="n">var</span><span class="p">()</span><span class="o">.</span><span class="n">meth</span><span class="p">()</span>   <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>Assigning an ABC or a protocol class to a variable is allowed if it is
+not explicitly typed, and such assignment creates a type alias.
+For normal (non-abstract) classes, the behavior of <code class="docutils literal notranslate"><span class="pre">type[]</span></code> is
+not changed.</p>
+<p>A class object is considered an implementation of a protocol if accessing
+all members on it results in types assignable to the types of the protocol members.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Protocol</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ProtoA</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">meth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProtoB</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">meth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">C</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">meth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">a</span><span class="p">:</span> <span class="n">ProtoA</span> <span class="o">=</span> <span class="n">C</span>  <span class="c1"># Type check error, signatures don&#39;t match!</span>
+<span class="n">b</span><span class="p">:</span> <span class="n">ProtoB</span> <span class="o">=</span> <span class="n">C</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+</section>
+<section id="newtype-and-type-aliases">
+<span id="protocol-newtype-aliases"></span><h2><code class="docutils literal notranslate"><span class="pre">NewType()</span></code> and type aliases<a class="headerlink" href="#newtype-and-type-aliases" title="Link to this heading">¶</a></h2>
+<p>Protocols are essentially anonymous. To emphasize this point, static type
+checkers might refuse protocol classes inside <code class="docutils literal notranslate"><span class="pre">NewType()</span></code> to avoid an
+illusion that a distinct type is provided:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Protocol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Id</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">secrets</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span>
+
+<span class="n">UserId</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s1">&#39;UserId&#39;</span><span class="p">,</span> <span class="n">Id</span><span class="p">)</span>  <span class="c1"># Error, can&#39;t provide distinct type</span>
+</pre></div>
+</div>
+<p>In contrast, type aliases are fully supported, including generic type
+aliases:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reversible</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Sized</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SizedIterable</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Sized</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="nb">type</span> <span class="n">CompatReversible</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="n">Reversible</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">|</span> <span class="n">SizedIterable</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="modules-as-implementations-of-protocols">
+<h2>Modules as implementations of protocols<a class="headerlink" href="#modules-as-implementations-of-protocols" title="Link to this heading">¶</a></h2>
+<p>A module object is accepted where a protocol is expected if the public
+interface of the given module is assignable to the expected protocol.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># file default_config.py</span>
+<span class="n">timeout</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">one_flag</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">other_flag</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># file main.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">default_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Options</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">one_flag</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">other_flag</span><span class="p">:</span> <span class="nb">bool</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="n">options</span><span class="p">:</span> <span class="n">Options</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="n">setup</span><span class="p">(</span><span class="n">default_config</span><span class="p">)</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>To determine assignability of module level functions, the <code class="docutils literal notranslate"><span class="pre">self</span></code> argument
+of the corresponding protocol methods is dropped. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># callbacks.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">on_error</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">on_success</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="c1"># main.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">callbacks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Reporter</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_success</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="n">rp</span><span class="p">:</span> <span class="n">Reporter</span> <span class="o">=</span> <span class="n">callbacks</span>  <span class="c1"># Passes type check</span>
+</pre></div>
+</div>
+</section>
+<section id="runtime-checkable-decorator-and-narrowing-types-by-isinstance">
+<span id="runtime-checkable"></span><h2><code class="docutils literal notranslate"><span class="pre">&#64;runtime_checkable</span></code> decorator and narrowing types by <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code><a class="headerlink" href="#runtime-checkable-decorator-and-narrowing-types-by-isinstance" title="Link to this heading">¶</a></h2>
+<p>The default semantics is that <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> and <code class="docutils literal notranslate"><span class="pre">issubclass()</span></code> fail
+for protocol types. This is in the spirit of duck typing – protocols
+basically would be used to model duck typing statically, not explicitly
+at runtime.</p>
+<p>However, it should be possible for protocol types to implement custom
+instance and class checks when this makes sense, similar to how <code class="docutils literal notranslate"><span class="pre">Iterable</span></code>
+and other ABCs in <code class="docutils literal notranslate"><span class="pre">collections.abc</span></code> and <code class="docutils literal notranslate"><span class="pre">typing</span></code> already do it,
+but this is limited to non-generic and unsubscripted generic protocols
+(<code class="docutils literal notranslate"><span class="pre">Iterable</span></code> is statically equivalent to <code class="docutils literal notranslate"><span class="pre">Iterable[Any]</span></code>).
+The <code class="docutils literal notranslate"><span class="pre">typing</span></code> module will define a special <code class="docutils literal notranslate"><span class="pre">&#64;runtime_checkable</span></code> class decorator
+that provides the same semantics for class and instance checks as for
+<code class="docutils literal notranslate"><span class="pre">collections.abc</span></code> classes, essentially making them “runtime protocols”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">runtime_checkable</span><span class="p">,</span> <span class="n">Protocol</span>
+
+<span class="nd">@runtime_checkable</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SupportsClose</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+
+<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;some/file&#39;</span><span class="p">),</span> <span class="n">SupportsClose</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that instance checks are not 100% reliable statically, which is why
+this behavior is opt-in.
+The most type checkers can do is to treat <code class="docutils literal notranslate"><span class="pre">isinstance(obj,</span> <span class="pre">Iterator)</span></code>
+roughly as a simpler way to write
+<code class="docutils literal notranslate"><span class="pre">hasattr(x,</span> <span class="pre">'__iter__')</span> <span class="pre">and</span> <span class="pre">hasattr(x,</span> <span class="pre">'__next__')</span></code>. To minimize
+the risks for this feature, the following rules are applied.</p>
+<p><strong>Definitions</strong>:</p>
+<ul class="simple">
+<li><p><em>Data and non-data protocols</em>: A protocol is called a non-data protocol
+if it only contains methods as members (for example <code class="docutils literal notranslate"><span class="pre">Sized</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Iterator</span></code>, etc). A protocol that contains at least one non-method member
+(like <code class="docutils literal notranslate"><span class="pre">x:</span> <span class="pre">int</span></code>) is called a data protocol.</p></li>
+<li><p><em>Unsafe overlap</em>: A type <code class="docutils literal notranslate"><span class="pre">X</span></code> is called unsafely overlapping with a protocol
+<code class="docutils literal notranslate"><span class="pre">P</span></code>, if <code class="docutils literal notranslate"><span class="pre">X</span></code> is not assignable to <code class="docutils literal notranslate"><span class="pre">P</span></code>, but it is assignable to the
+type-erased version of <code class="docutils literal notranslate"><span class="pre">P</span></code> where all members have type <code class="docutils literal notranslate"><span class="pre">Any</span></code>. In
+addition, if at least one element of a union unsafely overlaps with a
+protocol <code class="docutils literal notranslate"><span class="pre">P</span></code>, then the whole union is unsafely overlapping with <code class="docutils literal notranslate"><span class="pre">P</span></code>.</p></li>
+</ul>
+<p><strong>Specification</strong>:</p>
+<ul class="simple">
+<li><p>A protocol can be used as a second argument in <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">issubclass()</span></code> only if it is explicitly opt-in by <code class="docutils literal notranslate"><span class="pre">&#64;runtime_checkable</span></code>
+decorator. This requirement exists because protocol checks are not type safe
+in case of dynamically set attributes, and because type checkers can only prove
+that an <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> check is safe only for a given class, not for all its
+subclasses.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> can be used with both data and non-data protocols, while
+<code class="docutils literal notranslate"><span class="pre">issubclass()</span></code> can be used only with non-data protocols. This restriction
+exists because some data attributes can be set on an instance in constructor
+and this information is not always available on the class object.</p></li>
+<li><p>Type checkers should reject an <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> or <code class="docutils literal notranslate"><span class="pre">issubclass()</span></code> call, if
+there is an unsafe overlap between the type of the first argument and
+the protocol.</p></li>
+<li><p>Type checkers should be able to select a correct element from a union after
+a safe <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code> or <code class="docutils literal notranslate"><span class="pre">issubclass()</span></code> call. For narrowing from non-union
+types, type checkers can use their best judgement (this is intentionally
+unspecified, since a precise specification would require intersection types).</p></li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Protocols</a><ul>
+<li><a class="reference internal" href="#terminology">Terminology</a></li>
+<li><a class="reference internal" href="#defining-a-protocol">Defining a protocol</a></li>
+<li><a class="reference internal" href="#protocol-members">Protocol members</a></li>
+<li><a class="reference internal" href="#explicitly-declaring-implementation">Explicitly declaring implementation</a></li>
+<li><a class="reference internal" href="#merging-and-extending-protocols">Merging and extending protocols</a></li>
+<li><a class="reference internal" href="#generic-protocols">Generic protocols</a></li>
+<li><a class="reference internal" href="#recursive-protocols">Recursive protocols</a></li>
+<li><a class="reference internal" href="#self-types-in-protocols">Self-types in protocols</a></li>
+<li><a class="reference internal" href="#assignability-relationships-with-other-types">Assignability relationships with other types</a></li>
+<li><a class="reference internal" href="#unions-and-intersections-of-protocols">Unions and intersections of protocols</a></li>
+<li><a class="reference internal" href="#type-and-class-objects-vs-protocols"><code class="docutils literal notranslate"><span class="pre">type[]</span></code> and class objects vs protocols</a></li>
+<li><a class="reference internal" href="#newtype-and-type-aliases"><code class="docutils literal notranslate"><span class="pre">NewType()</span></code> and type aliases</a></li>
+<li><a class="reference internal" href="#modules-as-implementations-of-protocols">Modules as implementations of protocols</a></li>
+<li><a class="reference internal" href="#runtime-checkable-decorator-and-narrowing-types-by-isinstance"><code class="docutils literal notranslate"><span class="pre">&#64;runtime_checkable</span></code> decorator and narrowing types by <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="literal.html"
+                          title="previous chapter">Literals</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="callables.html"
+                          title="next chapter">Callables</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/protocol.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="callables.html" title="Callables"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="literal.html" title="Literals"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Protocols</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

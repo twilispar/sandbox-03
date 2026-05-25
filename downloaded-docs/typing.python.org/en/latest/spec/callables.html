@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Callables &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Constructors" href="constructors.html" />
+    <link rel="prev" title="Protocols" href="protocol.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/callables.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Callables</a><ul>
+<li><a class="reference internal" href="#terminology">Terminology</a></li>
+<li><a class="reference internal" href="#positional-only-parameters">Positional-only parameters</a></li>
+<li><a class="reference internal" href="#default-argument-values">Default argument values</a></li>
+<li><a class="reference internal" href="#annotating-args-and-kwargs">Annotating <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code></a></li>
+<li><a class="reference internal" href="#unpack-for-keyword-arguments"><code class="docutils literal notranslate"><span class="pre">Unpack</span></code> for keyword arguments</a><ul>
+<li><a class="reference internal" href="#function-calls-with-standard-dictionaries">Function calls with standard dictionaries</a></li>
+<li><a class="reference internal" href="#keyword-collisions">Keyword collisions</a></li>
+<li><a class="reference internal" href="#required-and-non-required-items">Required and non-required items</a></li>
+<li><a class="reference internal" href="#read-only-items">Read-only items</a></li>
+<li><a class="reference internal" href="#extra-items">Extra items</a></li>
+<li><a class="reference internal" href="#assignment">Assignment</a><ul>
+<li><a class="reference internal" href="#source-and-destination-contain-kwargs">Source and destination contain <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code></a></li>
+<li><a class="reference internal" href="#source-contains-kwargs-and-destination-doesn-t">Source contains <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> and destination doesn’t</a></li>
+<li><a class="reference internal" href="#source-contains-untyped-kwargs">Source contains untyped <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code></a></li>
+<li><a class="reference internal" href="#source-contains-traditionally-typed-kwargs-t">Source contains traditionally typed <code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">T</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#passing-kwargs-inside-a-function-to-another-function">Passing kwargs inside a function to another function</a></li>
+<li><a class="reference internal" href="#using-unpack-with-types-other-than-typeddict">Using <code class="docutils literal notranslate"><span class="pre">Unpack</span></code> with types other than <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#callable">Callable</a><ul>
+<li><a class="reference internal" href="#meaning-of-in-callable">Meaning of <code class="docutils literal notranslate"><span class="pre">...</span></code> in <code class="docutils literal notranslate"><span class="pre">Callable</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#callback-protocols">Callback protocols</a></li>
+<li><a class="reference internal" href="#assignability-rules-for-callables">Assignability rules for callables</a><ul>
+<li><a class="reference internal" href="#parameter-types">Parameter types</a></li>
+<li><a class="reference internal" href="#parameter-kinds">Parameter kinds</a></li>
+<li><a class="reference internal" href="#args-parameters"><code class="docutils literal notranslate"><span class="pre">*args</span></code> parameters</a></li>
+<li><a class="reference internal" href="#kwargs-parameters"><code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> parameters</a></li>
+<li><a class="reference internal" href="#signatures-with-paramspecs">Signatures with ParamSpecs</a></li>
+<li><a class="reference internal" href="#id4">Default argument values</a></li>
+<li><a class="reference internal" href="#overloads">Overloads</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="protocol.html"
+                          title="previous chapter">Protocols</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="constructors.html"
+                          title="next chapter">Constructors</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/callables.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="constructors.html" title="Constructors"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="protocol.html" title="Protocols"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Callables</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="callables">
+<span id="id1"></span><h1>Callables<a class="headerlink" href="#callables" title="Link to this heading">¶</a></h1>
+<section id="terminology">
+<h2>Terminology<a class="headerlink" href="#terminology" title="Link to this heading">¶</a></h2>
+<p>In this section, and throughout this specification, the term  “parameter”
+refers to a named symbol associated with a function that receives the value of
+an argument (or multiple arguments) passed to the function. The term
+“argument” refers to a value passed to a function when it is called.</p>
+<p>Python supports five kinds of parameters: positional-only, keyword-only,
+standard (positional or keyword), variadic positional (<code class="docutils literal notranslate"><span class="pre">*args</span></code>), and
+variadic keyword (<code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>). Positional-only parameters can accept only
+positional arguments, and keyword-only parameters can accept only keyword
+arguments. Standard parameters can accept either positional or keyword
+arguments. Parameters of the form <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> are variadic
+and accept zero or more positional or keyword arguments, respectively.</p>
+<p>In the example below, <code class="docutils literal notranslate"><span class="pre">a</span></code> is a positional-only parameter, <code class="docutils literal notranslate"><span class="pre">b</span></code> is
+a standard (positional or keyword) parameter, <code class="docutils literal notranslate"><span class="pre">c</span></code> is a keyword-only parameter,
+<code class="docutils literal notranslate"><span class="pre">args</span></code> is a variadic parameter that accepts additional positional arguments,
+and <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> is a variadic parameter that accepts additional keyword
+arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>A function’s “signature” refers to its list of parameters (including
+the name, kind, optional declared type, and whether it has a default
+argument value) plus its return type. The signature of the function above is
+<code class="docutils literal notranslate"><span class="pre">(a:</span> <span class="pre">str,</span> <span class="pre">/,</span> <span class="pre">b,</span> <span class="pre">*args,</span> <span class="pre">c=...,</span> <span class="pre">**kwargs)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></code>. Note that the default
+argument value for parameter <code class="docutils literal notranslate"><span class="pre">c</span></code> is denoted as <code class="docutils literal notranslate"><span class="pre">...</span></code> here because the
+presence of a default value is considered part of the signature, but the
+specific value is not.</p>
+<p>The term “input signature” is used to refer to only the parameters of a function.
+In the example above, the input signature is <code class="docutils literal notranslate"><span class="pre">(a:</span> <span class="pre">str,</span> <span class="pre">/,</span> <span class="pre">b,</span> <span class="pre">*args,</span> <span class="pre">c=...,</span> <span class="pre">**kwargs)</span></code>.</p>
+</section>
+<section id="positional-only-parameters">
+<h2>Positional-only parameters<a class="headerlink" href="#positional-only-parameters" title="Link to this heading">¶</a></h2>
+<p>Within a function signature, positional-only parameters are separated from
+non-positional-only parameters by a single forward slash (‘/’). This
+forward slash does not represent a parameter, but rather a delimiter. In this
+example, <code class="docutils literal notranslate"><span class="pre">a</span></code> is a positional-only parameter and <code class="docutils literal notranslate"><span class="pre">b</span></code> is a standard
+(positional or keyword) parameter:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="n">func</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># OK</span>
+<span class="n">func</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># OK</span>
+<span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+<p>Support for the <code class="docutils literal notranslate"><span class="pre">/</span></code> delimiter was introduced in Python 3.8 (<span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0570/"><strong>PEP 570</strong></a>).
+For compatibility with earlier versions of Python, the type system also
+supports specifying positional-only parameters using a <a class="reference internal" href="historical.html#pos-only-double-underscore"><span class="std std-ref">double leading
+underscore</span></a>.</p>
+</section>
+<section id="default-argument-values">
+<h2>Default argument values<a class="headerlink" href="#default-argument-values" title="Link to this heading">¶</a></h2>
+<p>In certain cases, it may be desirable to omit the default argument value for
+a parameter. Examples include function definitions in stub files or methods
+within a protocol or abstract base class. In such cases, the default value
+may be given as an ellipsis. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">AnyStr</span> <span class="o">=</span> <span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyStr</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>If a non-ellipsis default value is present and its type can be statically
+evaluated, a type checker should verify that this type is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to
+the declared parameter’s type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span> <span class="o">...</span>  <span class="c1"># OK</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span> <span class="o">...</span>  <span class="c1"># OK</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span> <span class="o">...</span>  <span class="c1"># Error</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span> <span class="o">...</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+</section>
+<section id="annotating-args-and-kwargs">
+<span id="annotating-args-kwargs"></span><h2>Annotating <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code><a class="headerlink" href="#annotating-args-and-kwargs" title="Link to this heading">¶</a></h2>
+<p>At runtime, the type of a variadic positional parameter (<code class="docutils literal notranslate"><span class="pre">*args</span></code>) is a
+<code class="docutils literal notranslate"><span class="pre">tuple</span></code>, and the type of a variadic keyword parameter (<code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>) is a
+<code class="docutils literal notranslate"><span class="pre">dict</span></code>. However, when annotating these parameters, the type annotation
+refers to the type of items within the <code class="docutils literal notranslate"><span class="pre">tuple</span></code> or <code class="docutils literal notranslate"><span class="pre">dict</span></code> (unless
+<code class="docutils literal notranslate"><span class="pre">Unpack</span></code> is used).</p>
+<p>Therefore, the definition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>means that the function accepts an arbitrary number of positional arguments
+of type <code class="docutils literal notranslate"><span class="pre">str</span></code> and an arbitrary number of keyword arguments of type <code class="docutils literal notranslate"><span class="pre">int</span></code>.
+For example, all of the following represent function calls with valid
+arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">func</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">func</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the body of function <code class="docutils literal notranslate"><span class="pre">func</span></code>, the type of parameter <code class="docutils literal notranslate"><span class="pre">args</span></code> is
+<code class="docutils literal notranslate"><span class="pre">tuple[str,</span> <span class="pre">...]</span></code>, and the type of parameter <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> is <code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">int]</span></code>.</p>
+</section>
+<section id="unpack-for-keyword-arguments">
+<span id="unpack-kwargs"></span><h2><code class="docutils literal notranslate"><span class="pre">Unpack</span></code> for keyword arguments<a class="headerlink" href="#unpack-for-keyword-arguments" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">typing.Unpack</span></code> has two use cases in the type system:</p>
+<ul class="simple">
+<li><p>As introduced by <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0646/"><strong>PEP 646</strong></a>, a backward-compatible form for certain operations
+involving variadic generics. See the section on <code class="docutils literal notranslate"><span class="pre">TypeVarTuple</span></code> for details.</p></li>
+<li><p>As introduced by <span class="target" id="index-2"></span><a class="pep reference external" href="https://peps.python.org/pep-0692/"><strong>PEP 692</strong></a>, a way to annotate the <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> of a function.</p></li>
+</ul>
+<p>This second usage is described in this section. The following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Unpack</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Movie</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">year</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Movie</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>means that the <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> comprise two keyword arguments specified by
+<code class="docutils literal notranslate"><span class="pre">Movie</span></code> (i.e. a <code class="docutils literal notranslate"><span class="pre">name</span></code> keyword of type <code class="docutils literal notranslate"><span class="pre">str</span></code> and a <code class="docutils literal notranslate"><span class="pre">year</span></code> keyword of
+type <code class="docutils literal notranslate"><span class="pre">int</span></code>). This indicates that the function should be called as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Movie</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Life of Brian&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">1979</span><span class="p">}</span>
+
+<span class="n">foo</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>                               <span class="c1"># OK!</span>
+<span class="n">foo</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;The Meaning of Life&quot;</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">1983</span><span class="p">)</span>  <span class="c1"># OK!</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">Unpack</span></code> is used, type checkers treat <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> inside the
+function body as a <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Movie</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">assert_type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">Movie</span><span class="p">)</span>  <span class="c1"># OK!</span>
+</pre></div>
+</div>
+<section id="function-calls-with-standard-dictionaries">
+<h3>Function calls with standard dictionaries<a class="headerlink" href="#function-calls-with-standard-dictionaries" title="Link to this heading">¶</a></h3>
+<p>Passing a dictionary of type <code class="docutils literal notranslate"><span class="pre">dict[str,</span> <span class="pre">object]</span></code> as a <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> argument
+to a function that has <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> annotated with <code class="docutils literal notranslate"><span class="pre">Unpack</span></code> must generate a
+type checker error. On the other hand, the behavior for functions using
+standard, untyped dictionaries can depend on the type checker. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Movie</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">movie</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Life of Brian&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">1979</span><span class="p">}</span>
+<span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">movie</span><span class="p">)</span>  <span class="c1"># WRONG! Movie is of type dict[str, object]</span>
+
+<span class="n">typed_movie</span><span class="p">:</span> <span class="n">Movie</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;The Meaning of Life&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">1983</span><span class="p">}</span>
+<span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">typed_movie</span><span class="p">)</span>  <span class="c1"># OK!</span>
+
+<span class="n">another_movie</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Life of Brian&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">1979</span><span class="p">}</span>
+<span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">another_movie</span><span class="p">)</span>  <span class="c1"># Depends on the type checker.</span>
+</pre></div>
+</div>
+</section>
+<section id="keyword-collisions">
+<h3>Keyword collisions<a class="headerlink" href="#keyword-collisions" title="Link to this heading">¶</a></h3>
+<p>A <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> that is used to type <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> could potentially contain
+keys that are already defined in the function’s signature. If the duplicate
+name is a standard parameter, an error should be reported by type checkers.
+If the duplicate name is a positional-only parameter, no errors should be
+generated. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Movie</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>     <span class="c1"># WRONG! &quot;name&quot; will</span>
+                                                        <span class="c1"># always bind to the</span>
+                                                        <span class="c1"># first parameter.</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Movie</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># OK! &quot;name&quot; is a</span>
+                                                        <span class="c1"># positional-only parameter,</span>
+                                                        <span class="c1"># so **kwargs can contain</span>
+                                                        <span class="c1"># a &quot;name&quot; keyword.</span>
+</pre></div>
+</div>
+</section>
+<section id="required-and-non-required-items">
+<h3>Required and non-required items<a class="headerlink" href="#required-and-non-required-items" title="Link to this heading">¶</a></h3>
+<p>Items in a TypedDict may be either <a class="reference internal" href="glossary.html#term-required"><span class="xref std std-term">required</span></a> or <a class="reference internal" href="glossary.html#term-non-required"><span class="xref std std-term">non-required</span></a>.
+When using a <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> to type <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> all of the required and
+non-required keys should correspond to required and non-required function
+keyword parameters. Therefore, if a required key is not provided by the
+caller, then an error must be reported by type checkers.</p>
+</section>
+<section id="read-only-items">
+<h3>Read-only items<a class="headerlink" href="#read-only-items" title="Link to this heading">¶</a></h3>
+<p>TypedDict items may also be <a class="reference internal" href="glossary.html#term-read-only"><span class="xref std std-term">read-only</span></a>. Marking one or more of the items of a TypedDict
+used to type <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> as read-only will have no effect on the type signature of the method.
+However, it <em>will</em> prevent the item from being modified in the body of the function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Args</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">key1</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">key2</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ReadOnlyArgs</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">key1</span><span class="p">:</span> <span class="n">ReadOnly</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">key2</span><span class="p">:</span> <span class="n">ReadOnly</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Function</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Args</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">impl</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ReadOnlyArgs</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;key1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Type check error: key1 is readonly</span>
+
+<span class="n">fn</span><span class="p">:</span> <span class="n">Function</span> <span class="o">=</span> <span class="n">impl</span>  <span class="c1"># Accepted by type checker: function signatures are identical</span>
+</pre></div>
+</div>
+</section>
+<section id="extra-items">
+<h3>Extra items<a class="headerlink" href="#extra-items" title="Link to this heading">¶</a></h3>
+<p>If the TypedDict used for annotating <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> is defined to allow
+<a class="reference internal" href="glossary.html#term-extra-items"><span class="xref std std-term">extra items</span></a>, arbitrary additional keyword arguments of the right
+type may be passed to the function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MovieNoExtra</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MovieExtra</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">extra_items</span><span class="o">=</span><span class="nb">int</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">MovieNoExtra</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">MovieExtra</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="c1"># Should be equivalent to:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">f</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;No Country for Old Men&quot;</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">2007</span><span class="p">)</span> <span class="c1"># Not OK. Unrecognized item</span>
+<span class="n">g</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;No Country for Old Men&quot;</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="mi">2007</span><span class="p">)</span> <span class="c1"># OK</span>
+</pre></div>
+</div>
+</section>
+<section id="assignment">
+<h3>Assignment<a class="headerlink" href="#assignment" title="Link to this heading">¶</a></h3>
+<p>Assignments of a function typed with <code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">Unpack[Movie]</span></code> and another
+callable type should pass type checking only for the scenarios described below.</p>
+<section id="source-and-destination-contain-kwargs">
+<h4>Source and destination contain <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code><a class="headerlink" href="#source-and-destination-contain-kwargs" title="Link to this heading">¶</a></h4>
+<p>Both destination and source functions have a <code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">Unpack[TypedDict]</span></code>
+parameter and the destination function’s <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to
+the source function’s <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> and the rest of the parameters are
+assignable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Animal</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Dog</span><span class="p">(</span><span class="n">Animal</span><span class="p">):</span>
+    <span class="n">breed</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">accept_animal</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Animal</span><span class="p">]):</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">accept_dog</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Dog</span><span class="p">]):</span> <span class="o">...</span>
+
+<span class="n">accept_dog</span> <span class="o">=</span> <span class="n">accept_animal</span>  <span class="c1"># OK! Expression of type Dog can be</span>
+                            <span class="c1"># assigned to a variable of type Animal.</span>
+
+<span class="n">accept_animal</span> <span class="o">=</span> <span class="n">accept_dog</span>  <span class="c1"># WRONG! Expression of type Animal</span>
+                            <span class="c1"># cannot be assigned to a variable of type Dog.</span>
+</pre></div>
+</div>
+</section>
+<section id="source-contains-kwargs-and-destination-doesn-t">
+<span id="pep-692-assignment-dest-no-kwargs"></span><h4>Source contains <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> and destination doesn’t<a class="headerlink" href="#source-contains-kwargs-and-destination-doesn-t" title="Link to this heading">¶</a></h4>
+<p>The destination callable doesn’t contain <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>, the source callable
+contains <code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">Unpack[TypedDict]</span></code> and the destination function’s keyword
+arguments are <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to the corresponding keys in source function’s
+<code class="docutils literal notranslate"><span class="pre">TypedDict</span></code>. Moreover, not required keys should correspond to optional
+function arguments, whereas required keys should correspond to required
+function arguments. Again, the rest of the parameters have to be assignable.
+Continuing the previous example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Example</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">animal</span><span class="p">:</span> <span class="n">Animal</span>
+    <span class="n">string</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">number</span><span class="p">:</span> <span class="n">NotRequired</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">src</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Example</span><span class="p">]):</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dest</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">animal</span><span class="p">:</span> <span class="n">Dog</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">...</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="n">dest</span> <span class="o">=</span> <span class="n">src</span>  <span class="c1"># OK!</span>
+</pre></div>
+</div>
+<p>It is worth pointing out that the destination function’s parameters that are to
+be assignable to the keys and values from the <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> must be keyword
+only:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">dest</span><span class="p">(</span><span class="n">dog</span><span class="p">:</span> <span class="n">Dog</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">number</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">...</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="n">dog</span><span class="p">:</span> <span class="n">Dog</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Daisy&quot;</span><span class="p">,</span> <span class="s2">&quot;breed&quot;</span><span class="p">:</span> <span class="s2">&quot;labrador&quot;</span><span class="p">}</span>
+
+<span class="n">dest</span><span class="p">(</span><span class="n">dog</span><span class="p">,</span> <span class="s2">&quot;some string&quot;</span><span class="p">)</span>  <span class="c1"># OK!</span>
+
+<span class="n">dest</span> <span class="o">=</span> <span class="n">src</span>                <span class="c1"># Type checker error!</span>
+<span class="n">dest</span><span class="p">(</span><span class="n">dog</span><span class="p">,</span> <span class="s2">&quot;some string&quot;</span><span class="p">)</span>  <span class="c1"># The same call fails at</span>
+                          <span class="c1"># runtime now because &#39;src&#39; expects</span>
+                          <span class="c1"># keyword arguments.</span>
+</pre></div>
+</div>
+<p>The reverse situation where the destination callable contains
+<code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">Unpack[TypedDict]</span></code> and the source callable doesn’t contain
+<code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> should be disallowed. This is because, we cannot be sure that
+additional keyword arguments are not being passed in when an instance of a
+subclass had been assigned to a variable with a base class type and then
+unpacked in the destination callable invocation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">dest</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Animal</span><span class="p">]):</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">src</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="n">dog</span><span class="p">:</span> <span class="n">Dog</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Daisy&quot;</span><span class="p">,</span> <span class="s2">&quot;breed&quot;</span><span class="p">:</span> <span class="s2">&quot;Labrador&quot;</span><span class="p">}</span>
+<span class="n">animal</span><span class="p">:</span> <span class="n">Animal</span> <span class="o">=</span> <span class="n">dog</span>
+
+<span class="n">dest</span> <span class="o">=</span> <span class="n">src</span>      <span class="c1"># WRONG!</span>
+<span class="n">dest</span><span class="p">(</span><span class="o">**</span><span class="n">animal</span><span class="p">)</span>  <span class="c1"># Fails at runtime.</span>
+</pre></div>
+</div>
+<p>A similar situation can happen even without inheritance as <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignability</span></a> between <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code>s is <a class="reference internal" href="glossary.html#term-structural"><span class="xref std std-term">structural</span></a>.</p>
+</section>
+<section id="source-contains-untyped-kwargs">
+<h4>Source contains untyped <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code><a class="headerlink" href="#source-contains-untyped-kwargs" title="Link to this heading">¶</a></h4>
+<p>The destination callable contains <code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">Unpack[TypedDict]</span></code> and the
+source callable contains untyped <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">src</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dest</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Movie</span><span class="p">]):</span> <span class="o">...</span>
+
+<span class="n">dest</span> <span class="o">=</span> <span class="n">src</span>  <span class="c1"># OK!</span>
+</pre></div>
+</div>
+</section>
+<section id="source-contains-traditionally-typed-kwargs-t">
+<h4>Source contains traditionally typed <code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">T</span></code><a class="headerlink" href="#source-contains-traditionally-typed-kwargs-t" title="Link to this heading">¶</a></h4>
+<p>The destination callable contains <code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">Unpack[TypedDict]</span></code>, the source
+callable contains traditionally typed <code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">T</span></code> and each of the
+destination function <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code>’s fields is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to a variable
+of type <code class="docutils literal notranslate"><span class="pre">T</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Vehicle</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Car</span><span class="p">(</span><span class="n">Vehicle</span><span class="p">):</span>
+    <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Motorcycle</span><span class="p">(</span><span class="n">Vehicle</span><span class="p">):</span>
+    <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Vehicles</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">car</span><span class="p">:</span> <span class="n">Car</span>
+    <span class="n">moto</span><span class="p">:</span> <span class="n">Motorcycle</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dest</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Vehicles</span><span class="p">]):</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">src</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Vehicle</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="n">dest</span> <span class="o">=</span> <span class="n">src</span>  <span class="c1"># OK!</span>
+</pre></div>
+</div>
+<p>On the other hand, if the destination callable contains either untyped or
+traditionally typed <code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">T</span></code> and the source callable is typed using
+<code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">Unpack[TypedDict]</span></code> then an error should be generated, because
+traditionally typed <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> aren’t checked for keyword names.</p>
+<p>To summarize, function parameters should behave contravariantly and function
+return types should behave covariantly.</p>
+</section>
+</section>
+<section id="passing-kwargs-inside-a-function-to-another-function">
+<h3>Passing kwargs inside a function to another function<a class="headerlink" href="#passing-kwargs-inside-a-function-to-another-function" title="Link to this heading">¶</a></h3>
+<p><a class="reference internal" href="#pep-692-assignment-dest-no-kwargs"><span class="std std-ref">A previous point</span></a>
+mentions the problem of possibly passing additional keyword arguments by
+assigning a subclass instance to a variable that has a base class type. Let’s
+consider the following example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Animal</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Dog</span><span class="p">(</span><span class="n">Animal</span><span class="p">):</span>
+    <span class="n">breed</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">takes_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span> <span class="o">...</span>
+
+<span class="n">dog</span><span class="p">:</span> <span class="n">Dog</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Daisy&quot;</span><span class="p">,</span> <span class="s2">&quot;breed&quot;</span><span class="p">:</span> <span class="s2">&quot;Labrador&quot;</span><span class="p">}</span>
+<span class="n">animal</span><span class="p">:</span> <span class="n">Animal</span> <span class="o">=</span> <span class="n">dog</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Animal</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Animal</span><span class="p">]):</span>
+    <span class="n">takes_name</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">baz</span><span class="p">(</span><span class="n">animal</span><span class="p">:</span> <span class="n">Animal</span><span class="p">):</span>
+    <span class="n">takes_name</span><span class="p">(</span><span class="o">**</span><span class="n">animal</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">spam</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Animal</span><span class="p">]):</span>
+    <span class="n">baz</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="n">foo</span><span class="p">(</span><span class="o">**</span><span class="n">animal</span><span class="p">)</span>   <span class="c1"># OK! foo only expects and uses keywords of &#39;Animal&#39;.</span>
+
+<span class="n">bar</span><span class="p">(</span><span class="o">**</span><span class="n">animal</span><span class="p">)</span>   <span class="c1"># WRONG! This will fail at runtime because &#39;breed&#39; keyword</span>
+                <span class="c1"># will be passed to &#39;takes_name&#39; as well.</span>
+
+<span class="n">spam</span><span class="p">(</span><span class="o">**</span><span class="n">animal</span><span class="p">)</span>  <span class="c1"># WRONG! Again, &#39;breed&#39; keyword will be eventually passed</span>
+                <span class="c1"># to &#39;takes_name&#39;.</span>
+</pre></div>
+</div>
+<p>In the example above, the call to <code class="docutils literal notranslate"><span class="pre">foo</span></code> will not cause any issues at
+runtime. Even though <code class="docutils literal notranslate"><span class="pre">foo</span></code> expects <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> of type <code class="docutils literal notranslate"><span class="pre">Animal</span></code> it doesn’t
+matter if it receives additional arguments because it only reads and uses what
+it needs completely ignoring any additional values.</p>
+<p>The calls to <code class="docutils literal notranslate"><span class="pre">bar</span></code> and <code class="docutils literal notranslate"><span class="pre">spam</span></code> will fail because an unexpected keyword
+argument will be passed to the <code class="docutils literal notranslate"><span class="pre">takes_name</span></code> function.</p>
+<p>Therefore, <code class="docutils literal notranslate"><span class="pre">kwargs</span></code> hinted with an unpacked <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> can only be passed
+to another function if the function to which unpacked kwargs are being passed
+to has <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> in its signature as well, because then additional keywords
+would not cause errors at runtime during function invocation. Otherwise, the
+type checker should generate an error.</p>
+<p>In cases similar to the <code class="docutils literal notranslate"><span class="pre">bar</span></code> function above the problem could be worked
+around by explicitly dereferencing desired fields and using them as arguments
+to perform the function call:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Animal</span><span class="p">]):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+    <span class="n">takes_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="using-unpack-with-types-other-than-typeddict">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">Unpack</span></code> with types other than <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code><a class="headerlink" href="#using-unpack-with-types-other-than-typeddict" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> is the only permitted heterogeneous type for typing <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>.
+Therefore, in the context of typing <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>, using <code class="docutils literal notranslate"><span class="pre">Unpack</span></code> with types
+other than <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> should not be allowed and type checkers should
+generate errors in such cases.</p>
+</section>
+</section>
+<section id="callable">
+<span id="id2"></span><h2>Callable<a class="headerlink" href="#callable" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Callable</span></code> special form can be used to specify the signature of
+a function within a type expression. The syntax is
+<code class="docutils literal notranslate"><span class="pre">Callable[[Param1Type,</span> <span class="pre">Param2Type],</span> <span class="pre">ReturnType]</span></code>. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">cb</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="n">x</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="nb">str</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Parameters specified using <code class="docutils literal notranslate"><span class="pre">Callable</span></code> are assumed to be positional-only.
+The <code class="docutils literal notranslate"><span class="pre">Callable</span></code> form provides no way to specify keyword-only parameters,
+or default argument values. For these use cases, see the section on
+<a class="reference internal" href="#id3">Callback protocols</a>.</p>
+<section id="meaning-of-in-callable">
+<h3>Meaning of <code class="docutils literal notranslate"><span class="pre">...</span></code> in <code class="docutils literal notranslate"><span class="pre">Callable</span></code><a class="headerlink" href="#meaning-of-in-callable" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">Callable</span></code> special form supports the use of <code class="docutils literal notranslate"><span class="pre">...</span></code> in place of the list
+of parameter types. This is a <a class="reference internal" href="glossary.html#term-gradual-form"><span class="xref std std-term">gradual form</span></a> indicating that the type is
+<a class="reference internal" href="glossary.html#term-consistent"><span class="xref std std-term">consistent</span></a> with any input signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cb1</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+<span class="n">cb1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># OK</span>
+<span class="n">cb1</span> <span class="o">=</span> <span class="k">lambda</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># OK</span>
+
+<span class="n">cb2</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">cb1</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">...</span></code> can also be used with <code class="docutils literal notranslate"><span class="pre">Concatenate</span></code>. In this case, the parameters
+prior to the <code class="docutils literal notranslate"><span class="pre">...</span></code> are required to be present in the input signature and
+be assignable, but any additional parameters are permitted:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cb3</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+<span class="n">cb3</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># OK</span>
+<span class="n">cb3</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>  <span class="c1"># OK</span>
+<span class="n">cb3</span> <span class="o">=</span> <span class="k">lambda</span> <span class="p">:</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># Error</span>
+<span class="n">cb3</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">*</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+<p>If the input signature in a function definition includes both a <code class="docutils literal notranslate"><span class="pre">*args</span></code> and
+<code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> parameter and both are typed as <code class="docutils literal notranslate"><span class="pre">Any</span></code> (explicitly or implicitly
+because it has no annotation), a type checker should treat this as the
+equivalent of <code class="docutils literal notranslate"><span class="pre">...</span></code>. Any other parameters in the signature are unaffected
+and are retained as part of the signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Proto1</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Proto2</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Proto3</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Proto4</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">p1</span><span class="p">:</span> <span class="n">Proto1</span><span class="p">,</span> <span class="n">p2</span><span class="p">:</span> <span class="n">Proto2</span><span class="p">,</span> <span class="n">p3</span><span class="p">:</span> <span class="n">Proto3</span><span class="p">):</span>
+    <span class="n">assert_type</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>  <span class="c1"># OK</span>
+    <span class="n">assert_type</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span>  <span class="c1"># OK</span>
+    <span class="n">assert_type</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>  <span class="c1"># Error</span>
+    <span class="n">assert_type</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">Proto4</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>  <span class="c1"># OK</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="c1"># This override is OK because it is assignable to the parent&#39;s method.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">...</span></code> syntax can also be used to provide a <a class="reference internal" href="generics.html#paramspec-valid-use-locations"><span class="std std-ref">specialized value for a
+ParamSpec</span></a> in a generic class or type alias.
+For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="n">Callback</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">]</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">cb</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">f</span><span class="p">:</span> <span class="n">Callback</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">cb</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">...</span></code> is used with signature concatenation, the <code class="docutils literal notranslate"><span class="pre">...</span></code> portion continues
+to be <a class="reference internal" href="glossary.html#term-consistent"><span class="xref std std-term">consistent</span></a> with any input parameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="n">CallbackWithInt</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">]</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+<span class="nb">type</span> <span class="n">CallbackWithStr</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">]</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">cb</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">cb</span> <span class="c1"># OK</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">cb</span> <span class="c1"># Error</span>
+    <span class="n">f3</span><span class="p">:</span> <span class="n">CallbackWithInt</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">cb</span>  <span class="c1"># OK</span>
+    <span class="n">f4</span><span class="p">:</span> <span class="n">CallbackWithStr</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">cb</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+<p>Variadic positional parameter types can be defined with an unpacked tuple
+of the form <code class="docutils literal notranslate"><span class="pre">*tuple[int,</span> <span class="pre">...]</span></code> in the parameter list. The first argument
+specifies the type of the variadic parameters.
+For example, the following defines a callable that accepts any number of integer
+arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="n">VarCallback</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="o">*</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span> <span class="kc">None</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="callback-protocols">
+<span id="id3"></span><h2>Callback protocols<a class="headerlink" href="#callback-protocols" title="Link to this heading">¶</a></h2>
+<p>Protocols can be used to define flexible callback types that are impossible to
+express using the <code class="docutils literal notranslate"><span class="pre">Callable</span></code> special form as specified <a class="reference internal" href="#callable"><span class="std std-ref">above</span></a>.
+This includes keyword parameters, variadic parameters, default argument values,
+and overloads. They can be defined as protocols with a <code class="docutils literal notranslate"><span class="pre">__call__</span></code> member:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Combiner</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">max_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">good_cb</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">max_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+    <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bad_cb</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">max_items</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+    <span class="o">...</span>
+
+<span class="n">comb</span><span class="p">:</span> <span class="n">Combiner</span> <span class="o">=</span> <span class="n">good_cb</span>  <span class="c1"># OK</span>
+<span class="n">comb</span> <span class="o">=</span> <span class="n">bad_cb</span>  <span class="c1"># Error! Argument 2 is not assignable because of</span>
+               <span class="c1"># different parameter name and kind in the callback</span>
+</pre></div>
+</div>
+<p>Callback protocols and <code class="docutils literal notranslate"><span class="pre">Callable[...]</span></code> types can generally be used
+interchangeably.</p>
+</section>
+<section id="assignability-rules-for-callables">
+<h2>Assignability rules for callables<a class="headerlink" href="#assignability-rules-for-callables" title="Link to this heading">¶</a></h2>
+<p>A callable type <code class="docutils literal notranslate"><span class="pre">B</span></code> is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to a callable type <code class="docutils literal notranslate"><span class="pre">A</span></code> if the
+return type of <code class="docutils literal notranslate"><span class="pre">B</span></code> is assignable to the return type of <code class="docutils literal notranslate"><span class="pre">A</span></code> and the input
+signature of <code class="docutils literal notranslate"><span class="pre">B</span></code> accepts all possible combinations of arguments that the
+input signature of <code class="docutils literal notranslate"><span class="pre">A</span></code> accepts. All of the specific assignability rules
+described below derive from this general rule.</p>
+<section id="parameter-types">
+<h3>Parameter types<a class="headerlink" href="#parameter-types" title="Link to this heading">¶</a></h3>
+<p>Callable types are covariant with respect to their return types but
+contravariant with respect to their parameter types. This means a callable
+<code class="docutils literal notranslate"><span class="pre">B</span></code> is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to callable <code class="docutils literal notranslate"><span class="pre">A</span></code> if the types of the parameters of
+<code class="docutils literal notranslate"><span class="pre">A</span></code> are assignable to the parameters of <code class="docutils literal notranslate"><span class="pre">B</span></code>. For example, <code class="docutils literal notranslate"><span class="pre">(x:</span> <span class="pre">float)</span> <span class="pre">-&gt;</span>
+<span class="pre">int</span></code> is assignable to <code class="docutils literal notranslate"><span class="pre">(x:</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">cb</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">int</span><span class="p">]):</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">cb</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+</section>
+<section id="parameter-kinds">
+<h3>Parameter kinds<a class="headerlink" href="#parameter-kinds" title="Link to this heading">¶</a></h3>
+<p>Callable <code class="docutils literal notranslate"><span class="pre">B</span></code> is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to callable <code class="docutils literal notranslate"><span class="pre">A</span></code> only if all keyword-only
+parameters in <code class="docutils literal notranslate"><span class="pre">A</span></code> are present in <code class="docutils literal notranslate"><span class="pre">B</span></code> as either keyword-only parameters or
+standard (positional or keyword) parameters. For example, <code class="docutils literal notranslate"><span class="pre">(a:</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></code>
+is assignable to <code class="docutils literal notranslate"><span class="pre">(*,</span> <span class="pre">a:</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">None</span></code>, but the converse is not true. The
+order of keyword-only parameters is ignored for purposes of assignability:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">KwOnly</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Standard</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">standard</span><span class="p">:</span> <span class="n">Standard</span><span class="p">,</span> <span class="n">kw_only</span><span class="p">:</span> <span class="n">KwOnly</span><span class="p">):</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">KwOnly</span> <span class="o">=</span> <span class="n">standard</span>  <span class="c1"># OK</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">Standard</span> <span class="o">=</span> <span class="n">kw_only</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+<p>Likewise, callable <code class="docutils literal notranslate"><span class="pre">B</span></code> is assignable to callable <code class="docutils literal notranslate"><span class="pre">A</span></code> only if all
+positional-only parameters in <code class="docutils literal notranslate"><span class="pre">A</span></code> are present in <code class="docutils literal notranslate"><span class="pre">B</span></code> as either
+positional-only parameters or standard (positional or keyword) parameters. The
+names of positional-only parameters are ignored for purposes of assignability:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PosOnly</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">not_a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Standard</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">standard</span><span class="p">:</span> <span class="n">Standard</span><span class="p">,</span> <span class="n">pos_only</span><span class="p">:</span> <span class="n">PosOnly</span><span class="p">):</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">PosOnly</span> <span class="o">=</span> <span class="n">standard</span>  <span class="c1"># OK</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">Standard</span> <span class="o">=</span> <span class="n">pos_only</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+</section>
+<section id="args-parameters">
+<h3><code class="docutils literal notranslate"><span class="pre">*args</span></code> parameters<a class="headerlink" href="#args-parameters" title="Link to this heading">¶</a></h3>
+<p>If a callable <code class="docutils literal notranslate"><span class="pre">A</span></code> has a signature with a <code class="docutils literal notranslate"><span class="pre">*args</span></code> parameter, callable <code class="docutils literal notranslate"><span class="pre">B</span></code>
+must also have a <code class="docutils literal notranslate"><span class="pre">*args</span></code> parameter to be <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to <code class="docutils literal notranslate"><span class="pre">A</span></code>, and the
+type of <code class="docutils literal notranslate"><span class="pre">A</span></code>’s <code class="docutils literal notranslate"><span class="pre">*args</span></code> parameter must be assignable to <code class="docutils literal notranslate"><span class="pre">B</span></code>’s <code class="docutils literal notranslate"><span class="pre">*args</span></code>
+parameter:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">NoArgs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntArgs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FloatArgs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">no_args</span><span class="p">:</span> <span class="n">NoArgs</span><span class="p">,</span> <span class="n">int_args</span><span class="p">:</span> <span class="n">IntArgs</span><span class="p">,</span> <span class="n">float_args</span><span class="p">:</span> <span class="n">FloatArgs</span><span class="p">):</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">NoArgs</span> <span class="o">=</span> <span class="n">int_args</span>  <span class="c1"># OK</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">NoArgs</span> <span class="o">=</span> <span class="n">float_args</span>  <span class="c1"># OK</span>
+
+    <span class="n">f3</span><span class="p">:</span> <span class="n">IntArgs</span> <span class="o">=</span> <span class="n">no_args</span>  <span class="c1"># Error: missing *args parameter</span>
+    <span class="n">f4</span><span class="p">:</span> <span class="n">IntArgs</span> <span class="o">=</span> <span class="n">float_args</span>  <span class="c1"># OK</span>
+
+    <span class="n">f5</span><span class="p">:</span> <span class="n">FloatArgs</span> <span class="o">=</span> <span class="n">no_args</span>  <span class="c1"># Error: missing *args parameter</span>
+    <span class="n">f6</span><span class="p">:</span> <span class="n">FloatArgs</span> <span class="o">=</span> <span class="n">int_args</span>  <span class="c1"># Error: float is not assignable to int</span>
+</pre></div>
+</div>
+<p>If a callable <code class="docutils literal notranslate"><span class="pre">A</span></code> has a signature with one or more positional-only
+parameters, a callable <code class="docutils literal notranslate"><span class="pre">B</span></code> is assignable to <code class="docutils literal notranslate"><span class="pre">A</span></code> only if <code class="docutils literal notranslate"><span class="pre">B</span></code> has an
+<code class="docutils literal notranslate"><span class="pre">*args</span></code> parameter whose type is assignable from the types of any
+otherwise-unmatched positional-only parameters in <code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PosOnly</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntArgs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntStrArgs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">StrArgs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Standard</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">int_args</span><span class="p">:</span> <span class="n">IntArgs</span><span class="p">,</span> <span class="n">int_str_args</span><span class="p">:</span> <span class="n">IntStrArgs</span><span class="p">,</span> <span class="n">str_args</span><span class="p">:</span> <span class="n">StrArgs</span><span class="p">):</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">PosOnly</span> <span class="o">=</span> <span class="n">int_args</span>  <span class="c1"># Error: str is not assignable to int</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">PosOnly</span> <span class="o">=</span> <span class="n">int_str_args</span>  <span class="c1"># OK</span>
+    <span class="n">f3</span><span class="p">:</span> <span class="n">PosOnly</span> <span class="o">=</span> <span class="n">str_args</span>  <span class="c1"># OK</span>
+    <span class="n">f4</span><span class="p">:</span> <span class="n">IntStrArgs</span> <span class="o">=</span> <span class="n">str_args</span>  <span class="c1"># Error: int | str is not assignable to str</span>
+    <span class="n">f5</span><span class="p">:</span> <span class="n">IntStrArgs</span> <span class="o">=</span> <span class="n">int_args</span>  <span class="c1"># Error: int | str is not assignable to int</span>
+    <span class="n">f6</span><span class="p">:</span> <span class="n">StrArgs</span> <span class="o">=</span> <span class="n">int_str_args</span>  <span class="c1"># OK</span>
+    <span class="n">f7</span><span class="p">:</span> <span class="n">StrArgs</span> <span class="o">=</span> <span class="n">int_args</span>  <span class="c1"># Error: str is not assignable to int</span>
+    <span class="n">f8</span><span class="p">:</span> <span class="n">IntArgs</span> <span class="o">=</span> <span class="n">int_str_args</span>  <span class="c1"># OK</span>
+    <span class="n">f9</span><span class="p">:</span> <span class="n">IntArgs</span> <span class="o">=</span> <span class="n">str_args</span>  <span class="c1"># Error: int is not assignable to str</span>
+    <span class="n">f10</span><span class="p">:</span> <span class="n">Standard</span> <span class="o">=</span> <span class="n">int_str_args</span>  <span class="c1"># Error: keyword parameters a and b missing</span>
+    <span class="n">f11</span><span class="p">:</span> <span class="n">Standard</span> <span class="o">=</span> <span class="n">str_args</span>  <span class="c1"># Error: keyword parameter b missing</span>
+</pre></div>
+</div>
+</section>
+<section id="kwargs-parameters">
+<h3><code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> parameters<a class="headerlink" href="#kwargs-parameters" title="Link to this heading">¶</a></h3>
+<p>If a callable <code class="docutils literal notranslate"><span class="pre">A</span></code> has a signature with a <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> parameter (without an
+unpacked <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> type annotation), callable <code class="docutils literal notranslate"><span class="pre">B</span></code> must also have a
+<code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> parameter to be <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to <code class="docutils literal notranslate"><span class="pre">A</span></code>, and the type of
+<code class="docutils literal notranslate"><span class="pre">A</span></code>’s <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> parameter must be assignable to <code class="docutils literal notranslate"><span class="pre">B</span></code>’s <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>
+parameter:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">NoKwargs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntKwargs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FloatKwargs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">no_kwargs</span><span class="p">:</span> <span class="n">NoKwargs</span><span class="p">,</span> <span class="n">int_kwargs</span><span class="p">:</span> <span class="n">IntKwargs</span><span class="p">,</span> <span class="n">float_kwargs</span><span class="p">:</span> <span class="n">FloatKwargs</span><span class="p">):</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">NoKwargs</span> <span class="o">=</span> <span class="n">int_kwargs</span>  <span class="c1"># OK</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">NoKwargs</span> <span class="o">=</span> <span class="n">float_kwargs</span>  <span class="c1"># OK</span>
+
+    <span class="n">f3</span><span class="p">:</span> <span class="n">IntKwargs</span> <span class="o">=</span> <span class="n">no_kwargs</span>  <span class="c1"># Error: missing **kwargs parameter</span>
+    <span class="n">f4</span><span class="p">:</span> <span class="n">IntKwargs</span> <span class="o">=</span> <span class="n">float_kwargs</span>  <span class="c1"># OK</span>
+
+    <span class="n">f5</span><span class="p">:</span> <span class="n">FloatKwargs</span> <span class="o">=</span> <span class="n">no_kwargs</span>  <span class="c1"># Error: missing **kwargs parameter</span>
+    <span class="n">f6</span><span class="p">:</span> <span class="n">FloatKwargs</span> <span class="o">=</span> <span class="n">int_kwargs</span>  <span class="c1"># Error: float is not assignable to int</span>
+</pre></div>
+</div>
+<p>If a callable <code class="docutils literal notranslate"><span class="pre">A</span></code> has a signature with one or more keyword-only parameters,
+a callable <code class="docutils literal notranslate"><span class="pre">B</span></code> is assignable to <code class="docutils literal notranslate"><span class="pre">A</span></code> if <code class="docutils literal notranslate"><span class="pre">B</span></code> has a <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> parameter
+whose type is assignable from the types of any otherwise-unmatched keyword-only
+parameters in <code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">KwOnly</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntKwargs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntStrKwargs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">StrKwargs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Standard</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">int_kwargs</span><span class="p">:</span> <span class="n">IntKwargs</span><span class="p">,</span> <span class="n">int_str_kwargs</span><span class="p">:</span> <span class="n">IntStrKwargs</span><span class="p">,</span> <span class="n">str_kwargs</span><span class="p">:</span> <span class="n">StrKwargs</span><span class="p">):</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">KwOnly</span> <span class="o">=</span> <span class="n">int_kwargs</span>  <span class="c1"># Error: str is not assignable to int</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">KwOnly</span> <span class="o">=</span> <span class="n">int_str_kwargs</span>  <span class="c1"># OK</span>
+    <span class="n">f3</span><span class="p">:</span> <span class="n">KwOnly</span> <span class="o">=</span> <span class="n">str_kwargs</span>  <span class="c1"># OK</span>
+    <span class="n">f4</span><span class="p">:</span> <span class="n">IntStrKwargs</span> <span class="o">=</span> <span class="n">str_kwargs</span>  <span class="c1"># Error: int | str is not assignable to str</span>
+    <span class="n">f5</span><span class="p">:</span> <span class="n">IntStrKwargs</span> <span class="o">=</span> <span class="n">int_kwargs</span>  <span class="c1"># Error: int | str is not assignable to int</span>
+    <span class="n">f6</span><span class="p">:</span> <span class="n">StrKwargs</span> <span class="o">=</span> <span class="n">int_str_kwargs</span>  <span class="c1"># OK</span>
+    <span class="n">f7</span><span class="p">:</span> <span class="n">StrKwargs</span> <span class="o">=</span> <span class="n">int_kwargs</span>  <span class="c1"># Error: str is not assignable to int</span>
+    <span class="n">f8</span><span class="p">:</span> <span class="n">IntKwargs</span> <span class="o">=</span> <span class="n">int_str_kwargs</span>  <span class="c1"># OK</span>
+    <span class="n">f9</span><span class="p">:</span> <span class="n">IntKwargs</span> <span class="o">=</span> <span class="n">str_kwargs</span>  <span class="c1"># Error: int is not assignable to str</span>
+    <span class="n">f10</span><span class="p">:</span> <span class="n">Standard</span> <span class="o">=</span> <span class="n">int_str_kwargs</span>  <span class="c1"># Error: Does not accept positional arguments</span>
+    <span class="n">f11</span><span class="p">:</span> <span class="n">Standard</span> <span class="o">=</span> <span class="n">str_kwargs</span>  <span class="c1"># Error: Does not accept positional arguments</span>
+</pre></div>
+</div>
+<p>Assignability rules for callable signatures that contain a <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> with an
+unpacked <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code> are described in the section <a class="reference internal" href="#unpack-kwargs"><span class="std std-ref">above</span></a>.</p>
+</section>
+<section id="signatures-with-paramspecs">
+<h3>Signatures with ParamSpecs<a class="headerlink" href="#signatures-with-paramspecs" title="Link to this heading">¶</a></h3>
+<p>A signature that includes <code class="docutils literal notranslate"><span class="pre">*args:</span> <span class="pre">P.args,</span> <span class="pre">**kwargs:</span> <span class="pre">P.kwargs</span></code> is equivalent
+to a <code class="docutils literal notranslate"><span class="pre">Callable</span></code> parameterized by <code class="docutils literal notranslate"><span class="pre">P</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ProtocolWithP</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="nb">type</span> <span class="n">TypeAliasWithP</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">]</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">[</span><span class="o">**</span><span class="n">P</span><span class="p">](</span><span class="n">proto</span><span class="p">:</span> <span class="n">ProtocolWithP</span><span class="p">[</span><span class="n">P</span><span class="p">],</span> <span class="n">ta</span><span class="p">:</span> <span class="n">TypeAliasWithP</span><span class="p">[</span><span class="n">P</span><span class="p">]):</span>
+    <span class="c1"># These two types are equivalent</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">TypeAliasWithP</span><span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="o">=</span> <span class="n">proto</span>  <span class="c1"># OK</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">ProtocolWithP</span><span class="p">[</span><span class="n">P</span><span class="p">]</span> <span class="o">=</span> <span class="n">ta</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>Default argument values<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p>If a callable <code class="docutils literal notranslate"><span class="pre">C</span></code> has a parameter <code class="docutils literal notranslate"><span class="pre">x</span></code> with a default argument value and
+<code class="docutils literal notranslate"><span class="pre">A</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">C</span></code> except that <code class="docutils literal notranslate"><span class="pre">x</span></code> has no default argument, then
+<code class="docutils literal notranslate"><span class="pre">C</span></code> is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to <code class="docutils literal notranslate"><span class="pre">A</span></code>. <code class="docutils literal notranslate"><span class="pre">C</span></code> is also assignable to <code class="docutils literal notranslate"><span class="pre">A</span></code> if
+<code class="docutils literal notranslate"><span class="pre">A</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">C</span></code> with parameter <code class="docutils literal notranslate"><span class="pre">x</span></code> removed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DefaultArg</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NoDefaultArg</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NoX</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">default_arg</span><span class="p">:</span> <span class="n">DefaultArg</span><span class="p">):</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">NoDefaultArg</span> <span class="o">=</span> <span class="n">default_arg</span>  <span class="c1"># OK</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">NoX</span> <span class="o">=</span> <span class="n">default_arg</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+</section>
+<section id="overloads">
+<h3>Overloads<a class="headerlink" href="#overloads" title="Link to this heading">¶</a></h3>
+<p>If a callable <code class="docutils literal notranslate"><span class="pre">B</span></code> is overloaded with two or more signatures, it is
+<a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to callable <code class="docutils literal notranslate"><span class="pre">A</span></code> if <em>at least one</em> of the overloaded
+signatures in <code class="docutils literal notranslate"><span class="pre">B</span></code> is assignable to <code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Overloaded</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntArg</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">StrArg</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FloatArg</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">overloaded</span><span class="p">:</span> <span class="n">Overloaded</span><span class="p">):</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">IntArg</span> <span class="o">=</span> <span class="n">overloaded</span>  <span class="c1"># OK</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">StrArg</span> <span class="o">=</span> <span class="n">overloaded</span>  <span class="c1"># OK</span>
+    <span class="n">f3</span><span class="p">:</span> <span class="n">FloatArg</span> <span class="o">=</span> <span class="n">overloaded</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+<p>If a callable <code class="docutils literal notranslate"><span class="pre">A</span></code> is overloaded with two or more signatures, callable <code class="docutils literal notranslate"><span class="pre">B</span></code>
+is assignable to <code class="docutils literal notranslate"><span class="pre">A</span></code> if <code class="docutils literal notranslate"><span class="pre">B</span></code> is assignable to <em>all</em> of the signatures in
+<code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Overloaded</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span> <span class="o">...</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">StrArg</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IntStrArg</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">int_str_arg</span><span class="p">:</span> <span class="n">IntStrArg</span><span class="p">,</span> <span class="n">str_arg</span><span class="p">:</span> <span class="n">StrArg</span><span class="p">):</span>
+    <span class="n">f1</span><span class="p">:</span> <span class="n">Overloaded</span> <span class="o">=</span> <span class="n">int_str_arg</span>  <span class="c1"># OK</span>
+    <span class="n">f2</span><span class="p">:</span> <span class="n">Overloaded</span> <span class="o">=</span> <span class="n">str_arg</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Callables</a><ul>
+<li><a class="reference internal" href="#terminology">Terminology</a></li>
+<li><a class="reference internal" href="#positional-only-parameters">Positional-only parameters</a></li>
+<li><a class="reference internal" href="#default-argument-values">Default argument values</a></li>
+<li><a class="reference internal" href="#annotating-args-and-kwargs">Annotating <code class="docutils literal notranslate"><span class="pre">*args</span></code> and <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code></a></li>
+<li><a class="reference internal" href="#unpack-for-keyword-arguments"><code class="docutils literal notranslate"><span class="pre">Unpack</span></code> for keyword arguments</a><ul>
+<li><a class="reference internal" href="#function-calls-with-standard-dictionaries">Function calls with standard dictionaries</a></li>
+<li><a class="reference internal" href="#keyword-collisions">Keyword collisions</a></li>
+<li><a class="reference internal" href="#required-and-non-required-items">Required and non-required items</a></li>
+<li><a class="reference internal" href="#read-only-items">Read-only items</a></li>
+<li><a class="reference internal" href="#extra-items">Extra items</a></li>
+<li><a class="reference internal" href="#assignment">Assignment</a><ul>
+<li><a class="reference internal" href="#source-and-destination-contain-kwargs">Source and destination contain <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code></a></li>
+<li><a class="reference internal" href="#source-contains-kwargs-and-destination-doesn-t">Source contains <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> and destination doesn’t</a></li>
+<li><a class="reference internal" href="#source-contains-untyped-kwargs">Source contains untyped <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code></a></li>
+<li><a class="reference internal" href="#source-contains-traditionally-typed-kwargs-t">Source contains traditionally typed <code class="docutils literal notranslate"><span class="pre">**kwargs:</span> <span class="pre">T</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#passing-kwargs-inside-a-function-to-another-function">Passing kwargs inside a function to another function</a></li>
+<li><a class="reference internal" href="#using-unpack-with-types-other-than-typeddict">Using <code class="docutils literal notranslate"><span class="pre">Unpack</span></code> with types other than <code class="docutils literal notranslate"><span class="pre">TypedDict</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#callable">Callable</a><ul>
+<li><a class="reference internal" href="#meaning-of-in-callable">Meaning of <code class="docutils literal notranslate"><span class="pre">...</span></code> in <code class="docutils literal notranslate"><span class="pre">Callable</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#callback-protocols">Callback protocols</a></li>
+<li><a class="reference internal" href="#assignability-rules-for-callables">Assignability rules for callables</a><ul>
+<li><a class="reference internal" href="#parameter-types">Parameter types</a></li>
+<li><a class="reference internal" href="#parameter-kinds">Parameter kinds</a></li>
+<li><a class="reference internal" href="#args-parameters"><code class="docutils literal notranslate"><span class="pre">*args</span></code> parameters</a></li>
+<li><a class="reference internal" href="#kwargs-parameters"><code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> parameters</a></li>
+<li><a class="reference internal" href="#signatures-with-paramspecs">Signatures with ParamSpecs</a></li>
+<li><a class="reference internal" href="#id4">Default argument values</a></li>
+<li><a class="reference internal" href="#overloads">Overloads</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="protocol.html"
+                          title="previous chapter">Protocols</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="constructors.html"
+                          title="next chapter">Constructors</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/callables.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="constructors.html" title="Constructors"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="protocol.html" title="Protocols"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Callables</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

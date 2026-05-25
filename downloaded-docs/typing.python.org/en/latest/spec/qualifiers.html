@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Type qualifiers &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class type assignability" href="class-compat.html" />
+    <link rel="prev" title="Generics" href="generics.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/qualifiers.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type qualifiers</a><ul>
+<li><a class="reference internal" href="#final"><code class="docutils literal notranslate"><span class="pre">&#64;final</span></code></a></li>
+<li><a class="reference internal" href="#uppercase-final"><code class="docutils literal notranslate"><span class="pre">Final</span></code></a><ul>
+<li><a class="reference internal" href="#syntax">Syntax</a></li>
+<li><a class="reference internal" href="#semantics-and-examples">Semantics and examples</a></li>
+<li><a class="reference internal" href="#importing-final-variables">Importing <code class="docutils literal notranslate"><span class="pre">Final</span></code> Variables</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#annotated"><code class="docutils literal notranslate"><span class="pre">Annotated</span></code></a><ul>
+<li><a class="reference internal" href="#id4">Syntax</a></li>
+<li><a class="reference internal" href="#meaning">Meaning</a></li>
+<li><a class="reference internal" href="#consuming-metadata">Consuming metadata</a></li>
+<li><a class="reference internal" href="#aliases-concerns-over-verbosity">Aliases &amp; Concerns over verbosity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="generics.html"
+                          title="previous chapter">Generics</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="class-compat.html"
+                          title="next chapter">Class type assignability</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/qualifiers.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="class-compat.html" title="Class type assignability"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generics.html" title="Generics"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Type qualifiers</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="type-qualifiers">
+<span id="id1"></span><h1>Type qualifiers<a class="headerlink" href="#type-qualifiers" title="Link to this heading">¶</a></h1>
+<p>This chapter describes the behavior of some <a class="reference internal" href="glossary.html#term-type-qualifier"><span class="xref std std-term">type qualifiers</span></a>.
+Additional type qualifiers are covered in other chapters:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="class-compat.html#classvar"><span class="std std-ref">ClassVar</span></a></p></li>
+<li><p><a class="reference internal" href="typeddict.html#notrequired"><span class="std std-ref">NotRequired</span></a></p></li>
+<li><p><a class="reference internal" href="typeddict.html#readonly"><span class="std std-ref">ReadOnly</span></a></p></li>
+<li><p><a class="reference internal" href="typeddict.html#required"><span class="std std-ref">Required</span></a></p></li>
+</ul>
+<section id="final">
+<span id="at-final"></span><h2><code class="docutils literal notranslate"><span class="pre">&#64;final</span></code><a class="headerlink" href="#final" title="Link to this heading">¶</a></h2>
+<p>(Originally specified in <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0591/"><strong>PEP 591</strong></a>.)</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">typing.final</span></code> decorator is used to restrict the use of
+inheritance and overriding.</p>
+<p>A type checker should prohibit any class decorated with <code class="docutils literal notranslate"><span class="pre">&#64;final</span></code>
+from being subclassed and any method decorated with <code class="docutils literal notranslate"><span class="pre">&#64;final</span></code> from
+being overridden in a subclass. The method decorator version may be
+used with all of instance methods, class methods, static methods, and properties.</p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">final</span>
+
+<span class="nd">@final</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Base</span><span class="p">:</span>
+    <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Derived</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>  <span class="c1"># Error: Cannot inherit from final class &quot;Base&quot;</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>and:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">final</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Base</span><span class="p">:</span>
+    <span class="nd">@final</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Derived</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Error: Cannot override final attribute &quot;foo&quot;</span>
+                            <span class="c1"># (previously declared in base class &quot;Base&quot;)</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>For overloaded methods, <code class="docutils literal notranslate"><span class="pre">&#64;final</span></code> should be placed on the
+implementation (or on the first overload, for stubs):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">overload</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Base</span><span class="p">:</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+    <span class="nd">@overload</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+    <span class="nd">@final</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>It is an error to use <code class="docutils literal notranslate"><span class="pre">&#64;final</span></code> on a non-method function.</p>
+</section>
+<section id="uppercase-final">
+<span id="id2"></span><h2><code class="docutils literal notranslate"><span class="pre">Final</span></code><a class="headerlink" href="#uppercase-final" title="Link to this heading">¶</a></h2>
+<p>(Originally specified in <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0591/"><strong>PEP 591</strong></a>.)</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">typing.Final</span></code> <a class="reference internal" href="glossary.html#term-type-qualifier"><span class="xref std std-term">type qualifier</span></a> is used to indicate that a
+variable or attribute should not be reassigned, redefined, or overridden.</p>
+<section id="syntax">
+<h3>Syntax<a class="headerlink" href="#syntax" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Final</span></code> may be used in one of several forms:</p>
+<ul>
+<li><p>With an explicit type, using the syntax <code class="docutils literal notranslate"><span class="pre">Final[&lt;type&gt;]</span></code>. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ID</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</li>
+<li><p>With no type annotation. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ID</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>The typechecker should apply its usual type inference mechanisms to
+determine the type of <code class="docutils literal notranslate"><span class="pre">ID</span></code> (here, likely, <code class="docutils literal notranslate"><span class="pre">int</span></code>). Note that unlike for
+generic classes this is <em>not</em> the same as <code class="docutils literal notranslate"><span class="pre">Final[Any]</span></code>.</p>
+</li>
+<li><p>In class bodies and stub files you can omit the right hand side and just write
+<code class="docutils literal notranslate"><span class="pre">ID:</span> <span class="pre">Final[float]</span></code>.  If the right hand side is omitted, there must
+be an explicit type argument to <code class="docutils literal notranslate"><span class="pre">Final</span></code>.</p></li>
+<li><p>Finally, as <code class="docutils literal notranslate"><span class="pre">self.id:</span> <span class="pre">Final</span> <span class="pre">=</span> <span class="pre">1</span></code> (also optionally with a type in
+square brackets). This is allowed <em>only</em> in <code class="docutils literal notranslate"><span class="pre">__init__</span></code> methods, so
+that the final instance attribute is assigned only once when an
+instance is created.</p></li>
+</ul>
+</section>
+<section id="semantics-and-examples">
+<h3>Semantics and examples<a class="headerlink" href="#semantics-and-examples" title="Link to this heading">¶</a></h3>
+<p>The two main rules for defining a final name are:</p>
+<ul class="simple">
+<li><p>There can be <em>at most one</em> final declaration per module or class for
+a given attribute. There can’t be separate class-level and instance-level
+constants with the same name.</p></li>
+<li><p>There must be <em>exactly one</em> assignment to a final name.</p></li>
+</ul>
+<p>This means a type checker should prevent further assignments to final
+names in type-checked code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Final</span>
+
+<span class="n">RATE</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="mi">3000</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Base</span><span class="p">:</span>
+    <span class="n">DEFAULT_ID</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">RATE</span> <span class="o">=</span> <span class="mi">300</span>  <span class="c1"># Error: can&#39;t assign to final attribute</span>
+<span class="n">Base</span><span class="o">.</span><span class="n">DEFAULT_ID</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Error: can&#39;t override a final attribute</span>
+</pre></div>
+</div>
+<p>Note that a type checker need not allow <code class="docutils literal notranslate"><span class="pre">Final</span></code> declarations inside loops
+since the runtime will see multiple assignments to the same variable in
+subsequent iterations.</p>
+<p>Additionally, a type checker should prevent final attributes from
+being overridden in a subclass:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Final</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Window</span><span class="p">:</span>
+    <span class="n">BORDER_WIDTH</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="mf">2.5</span>
+    <span class="o">...</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ListView</span><span class="p">(</span><span class="n">Window</span><span class="p">):</span>
+    <span class="n">BORDER_WIDTH</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Error: can&#39;t override a final attribute</span>
+</pre></div>
+</div>
+<p>A final attribute declared in a class body without an initializer must
+be initialized in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method (except in stub files):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ImmutablePoint</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>  <span class="c1"># Error: final attribute without an initializer</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Good</span>
+</pre></div>
+</div>
+<p>The generated <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method of <a class="reference internal" href="dataclasses.html"><span class="doc">Dataclasses</span></a> qualifies for this
+requirement: a bare <code class="docutils literal notranslate"><span class="pre">x:</span> <span class="pre">Final[int]</span></code> is permitted in a dataclass body, because
+the generated <code class="docutils literal notranslate"><span class="pre">__init__</span></code> will initialize <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+<p>Type checkers should infer a final attribute that is initialized in a class
+body as being a class variable, except in the case of <a class="reference internal" href="dataclasses.html"><span class="doc">Dataclasses</span></a>, where
+<code class="docutils literal notranslate"><span class="pre">x:</span> <span class="pre">Final[int]</span> <span class="pre">=</span> <span class="pre">3</span></code> creates a dataclass field and instance-level final
+attribute <code class="docutils literal notranslate"><span class="pre">x</span></code> with default value <code class="docutils literal notranslate"><span class="pre">3</span></code>; <code class="docutils literal notranslate"><span class="pre">x:</span> <span class="pre">ClassVar[Final[int]]</span> <span class="pre">=</span> <span class="pre">3</span></code> is
+necessary to create a final class variable with value <code class="docutils literal notranslate"><span class="pre">3</span></code>. In
+non-dataclasses, combining <code class="docutils literal notranslate"><span class="pre">ClassVar</span></code> and <code class="docutils literal notranslate"><span class="pre">Final</span></code> is redundant, and type
+checkers may choose to warn or error on the redundancy.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Final</span></code> may only be used in assignments or variable annotations. Using it in
+any other position is an error. In particular, <code class="docutils literal notranslate"><span class="pre">Final</span></code> can’t be used in
+annotations for function arguments:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Final</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Error!</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fun</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span>  <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Error!</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Final</span></code> may be wrapped only by other type qualifiers (e.g. <code class="docutils literal notranslate"><span class="pre">ClassVar</span></code> or
+<code class="docutils literal notranslate"><span class="pre">Annotated</span></code>). It cannot be used in a type parameter (e.g.
+<code class="docutils literal notranslate"><span class="pre">list[Final[int]]</span></code> is not permitted.)</p>
+<p>Note that declaring a name as final only guarantees that the name will
+not be re-bound to another value, but does not make the value
+immutable. Immutable ABCs and containers may be used in combination
+with <code class="docutils literal notranslate"><span class="pre">Final</span></code> to prevent mutating such values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+<span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>  <span class="c1"># OK</span>
+
+<span class="n">y</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+<span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>  <span class="c1"># Error: &quot;Sequence[str]&quot; has no attribute &quot;append&quot;</span>
+<span class="n">z</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>  <span class="c1"># Also works</span>
+</pre></div>
+</div>
+<p>Type checkers should treat uses of a final name that was initialized
+with a literal as if it was replaced by the literal. For example, the
+following should be allowed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Final</span>
+
+<span class="n">X</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span>
+<span class="n">Y</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="n">X</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="nb">int</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Final</span></code> cannot be used as a qualifier for a <a class="reference internal" href="typeddict.html#typeddict"><span class="std std-ref">TypedDict</span></a>
+item or a <a class="reference internal" href="namedtuples.html#namedtuple"><span class="std std-ref">NamedTuple</span></a> field. Such usage also generates
+an error at runtime.</p>
+</section>
+<section id="importing-final-variables">
+<h3>Importing <code class="docutils literal notranslate"><span class="pre">Final</span></code> Variables<a class="headerlink" href="#importing-final-variables" title="Link to this heading">¶</a></h3>
+<p>If a module declares a <code class="docutils literal notranslate"><span class="pre">Final</span></code> variable and another module imports that
+variable in an import statement by name or wildcard, the imported symbol
+inherits the <code class="docutils literal notranslate"><span class="pre">Final</span></code> type qualifier. Any attempt to assign a different value
+to this symbol should be flagged as an error by a type checker:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># lib/submodule.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Final</span>
+<span class="n">PI</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="mf">3.14</span>
+
+<span class="c1"># lib/__init__.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.submodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">PI</span>  <span class="c1"># PI is Final</span>
+
+<span class="c1"># test1.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib</span><span class="w"> </span><span class="kn">import</span> <span class="n">PI</span>
+<span class="n">PI</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Error: Can&#39;t assign to Final value</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib</span><span class="w"> </span><span class="kn">import</span> <span class="n">PI</span> <span class="k">as</span> <span class="n">PI2</span>
+<span class="n">PI2</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Error: Can&#39;t assign to Final value</span>
+
+<span class="c1"># test2.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="n">PI</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Error: Can&#39;t assign to Final value</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="annotated">
+<span id="id3"></span><h2><code class="docutils literal notranslate"><span class="pre">Annotated</span></code><a class="headerlink" href="#annotated" title="Link to this heading">¶</a></h2>
+<p>(Originally specified by <span class="target" id="index-2"></span><a class="pep reference external" href="https://peps.python.org/pep-0593/"><strong>PEP 593</strong></a>.)</p>
+<section id="id4">
+<h3>Syntax<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Annotated</span></code> is parameterized with a <em>base expression</em> and at least one
+Python value representing associated <em>metadata</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
+
+<span class="n">Annotated</span><span class="p">[</span><span class="n">BaseExpr</span><span class="p">,</span> <span class="n">Metadata1</span><span class="p">,</span> <span class="n">Metadata2</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Here are the specific details of the syntax:</p>
+<ul>
+<li><p>The base expression (the first argument to <code class="docutils literal notranslate"><span class="pre">Annotated</span></code>) must be valid
+in the context where it is being used:</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> is used in a place where arbitrary
+<a class="reference internal" href="glossary.html#term-annotation-expression"><span class="xref std std-term">annotation expressions</span></a> are allowed,
+the base expression may be an annotation expression.</p></li>
+<li><p>Otherwise, the base expression must be a valid <a class="reference internal" href="glossary.html#term-type-expression"><span class="xref std std-term">type expression</span></a>.</p></li>
+</ul>
+</li>
+<li><p>Multiple metadata elements are supported (<code class="docutils literal notranslate"><span class="pre">Annotated</span></code> supports variadic
+arguments):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">ctype</span><span class="p">(</span><span class="s2">&quot;char&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+</li>
+<li><p>There must be at least one metadata element (<code class="docutils literal notranslate"><span class="pre">Annotated[int]</span></code> is not valid)</p></li>
+<li><p>The order of the metadata is preserved and matters for equality
+checks:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">ctype</span><span class="p">(</span><span class="s2">&quot;char&quot;</span><span class="p">)]</span> <span class="o">!=</span> <span class="n">Annotated</span><span class="p">[</span>
+    <span class="nb">int</span><span class="p">,</span> <span class="n">ctype</span><span class="p">(</span><span class="s2">&quot;char&quot;</span><span class="p">),</span> <span class="n">ValueRange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>Nested <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> types are flattened, with metadata ordered
+starting with the innermost <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> expression:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Annotated</span><span class="p">[</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">)],</span> <span class="n">ctype</span><span class="p">(</span><span class="s2">&quot;char&quot;</span><span class="p">)]</span> <span class="o">==</span> <span class="n">Annotated</span><span class="p">[</span>
+    <span class="nb">int</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">ctype</span><span class="p">(</span><span class="s2">&quot;char&quot;</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p>Duplicated metadata elements are not removed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]</span> <span class="o">!=</span> <span class="n">Annotated</span><span class="p">[</span>
+    <span class="nb">int</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">ValueRange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Annotated</span></code> can be used in definition of nested and generic aliases,
+but only if it wraps a <a class="reference internal" href="glossary.html#term-type-expression"><span class="xref std std-term">type expression</span></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="n">Vec</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">MaxLen</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="nb">type</span> <span class="n">V</span> <span class="o">=</span> <span class="n">Vec</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="c1"># Annotated[list[tuple[int, int]], MaxLen(10)]</span>
+</pre></div>
+</div>
+</li>
+<li><p>As with most <a class="reference internal" href="glossary.html#term-special-form"><span class="xref std std-term">special forms</span></a>, <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> is not assignable to
+<code class="docutils literal notranslate"><span class="pre">type</span></code> or <code class="docutils literal notranslate"><span class="pre">type[T]</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">v1</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>  <span class="c1"># Type error</span>
+
+<span class="n">SmallInt</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span>
+<span class="n">v2</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">SmallInt</span>  <span class="c1"># Type error</span>
+</pre></div>
+</div>
+</li>
+<li><p>An attempt to call <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> (whether parameterized or not) should be
+treated as a type error by type checkers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Annotated</span><span class="p">()</span>  <span class="c1"># Type error</span>
+<span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">](</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Type error</span>
+
+<span class="n">SmallInt</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)]</span>
+<span class="n">SmallInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Type error</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p><span class="target" id="index-3"></span><a class="pep reference external" href="https://peps.python.org/pep-0593/"><strong>PEP 593</strong></a> and an earlier version of this specification used the term
+“annotations” instead of “metadata” for the extra arguments to
+<code class="docutils literal notranslate"><span class="pre">Annotated</span></code>. The term “annotations” is deprecated to avoid confusion
+with the parameter, return, and variable annotations that are part of
+the Python syntax.</p>
+</section>
+<section id="meaning">
+<h3>Meaning<a class="headerlink" href="#meaning" title="Link to this heading">¶</a></h3>
+<p>The metadata provided by <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> can be used for either static
+or runtime analysis. If a library (or tool) encounters an instance of
+<code class="docutils literal notranslate"><span class="pre">Annotated[T,</span> <span class="pre">x]</span></code> and has no special logic for metadata element <code class="docutils literal notranslate"><span class="pre">x</span></code>, it
+should ignore it and treat the expression as equivalent to <code class="docutils literal notranslate"><span class="pre">T</span></code>. Thus, in general,
+any <a class="reference internal" href="glossary.html#term-type-expression"><span class="xref std std-term">type expression</span></a> or <a class="reference internal" href="glossary.html#term-annotation-expression"><span class="xref std std-term">annotation expression</span></a> may be
+wrapped in <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> without changing the meaning of the
+wrapped expression. However, type
+checkers may additionally choose to recognize particular metadata elements and use
+them to implement extensions to the standard type system.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Annotated</span></code> metadata may apply either to the base expression or to the symbol
+being annotated, or even to some other aspect of the program.</p>
+</section>
+<section id="consuming-metadata">
+<h3>Consuming metadata<a class="headerlink" href="#consuming-metadata" title="Link to this heading">¶</a></h3>
+<p>Ultimately, deciding how to interpret the metadata (if
+at all) is the responsibility of the tool or library encountering the
+<code class="docutils literal notranslate"><span class="pre">Annotated</span></code> type. A tool or library encountering an <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> type
+can scan through the metadata to determine if they are of interest
+(e.g., using <code class="docutils literal notranslate"><span class="pre">isinstance()</span></code>).</p>
+<p><strong>Unknown metadata:</strong> When a tool or a library does not support
+metadata or encounters an unknown metadata element, it should ignore it
+and treat the annotation as the base expression.</p>
+<p><strong>Namespacing metadata:</strong> Namespaces are not needed for metadata since
+the class of the metadata object acts as a namespace.</p>
+<p><strong>Multiple metadata elements:</strong> It’s up to the tool consuming the metadata
+to decide whether the client is allowed to have several metadata elements on
+one annotation and how to merge those elements.</p>
+<p>Since the <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> type allows you to put several metadata elements of
+the same (or different) type(s) on any annotation, the tools or libraries
+consuming the metadata are in charge of dealing with potential
+duplicates. For example, if you are doing value range analysis you might
+allow this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">)]</span>
+<span class="n">T2</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">T1</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Flattening nested annotations, this translates to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">T2</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">ValueRange</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">ValueRange</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+</pre></div>
+</div>
+</section>
+<section id="aliases-concerns-over-verbosity">
+<h3>Aliases &amp; Concerns over verbosity<a class="headerlink" href="#aliases-concerns-over-verbosity" title="Link to this heading">¶</a></h3>
+<p>Writing <code class="docutils literal notranslate"><span class="pre">typing.Annotated</span></code> everywhere can be quite verbose;
+fortunately, the ability to alias types means that in practice we
+don’t expect clients to have to write lots of boilerplate code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span> <span class="n">Const</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">my_annotations</span><span class="o">.</span><span class="n">CONST</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">C</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">const_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Const</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type qualifiers</a><ul>
+<li><a class="reference internal" href="#final"><code class="docutils literal notranslate"><span class="pre">&#64;final</span></code></a></li>
+<li><a class="reference internal" href="#uppercase-final"><code class="docutils literal notranslate"><span class="pre">Final</span></code></a><ul>
+<li><a class="reference internal" href="#syntax">Syntax</a></li>
+<li><a class="reference internal" href="#semantics-and-examples">Semantics and examples</a></li>
+<li><a class="reference internal" href="#importing-final-variables">Importing <code class="docutils literal notranslate"><span class="pre">Final</span></code> Variables</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#annotated"><code class="docutils literal notranslate"><span class="pre">Annotated</span></code></a><ul>
+<li><a class="reference internal" href="#id4">Syntax</a></li>
+<li><a class="reference internal" href="#meaning">Meaning</a></li>
+<li><a class="reference internal" href="#consuming-metadata">Consuming metadata</a></li>
+<li><a class="reference internal" href="#aliases-concerns-over-verbosity">Aliases &amp; Concerns over verbosity</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="generics.html"
+                          title="previous chapter">Generics</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="class-compat.html"
+                          title="next chapter">Class type assignability</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/qualifiers.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="class-compat.html" title="Class type assignability"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generics.html" title="Generics"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Type qualifiers</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

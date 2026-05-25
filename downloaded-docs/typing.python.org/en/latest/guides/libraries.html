@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Typing Python Libraries &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Writing and Maintaining Stub Files" href="writing_stubs.html" />
+    <link rel="prev" title="Using External Libraries" href="../tutorials/external_libraries.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/guides/libraries.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Typing Python Libraries</a><ul>
+<li><a class="reference internal" href="#why-provide-type-annotations">Why provide type annotations?</a></li>
+<li><a class="reference internal" href="#how-to-provide-type-annotations">How to provide type annotations?</a><ul>
+<li><a class="reference internal" href="#marking-a-package-as-providing-type-information">Marking a package as providing type information</a><ul>
+<li><a class="reference internal" href="#inline-type-annotations">Inline type annotations</a></li>
+<li><a class="reference internal" href="#type-stub-files-included-in-the-package">Type stub files included in the package</a></li>
+<li><a class="reference internal" href="#companion-type-stub-package">Companion type stub package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#how-much-of-my-library-needs-types">How much of my library needs types?</a><ul>
+<li><a class="reference internal" href="#id1">Type Completeness</a><ul>
+<li><a class="reference internal" href="#examples-of-known-and-unknown-types">Examples of known and unknown types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#best-practices-for-inlined-types">Best Practices for Inlined Types</a><ul>
+<li><a class="reference internal" href="#wide-vs-narrow-types">Wide vs. Narrow Types</a></li>
+<li><a class="reference internal" href="#overloads">Overloads</a></li>
+<li><a class="reference internal" href="#keyword-only-parameters">Keyword-only Parameters</a></li>
+<li><a class="reference internal" href="#annotating-decorators">Annotating Decorators</a></li>
+<li><a class="reference internal" href="#aliasing-decorators">Aliasing Decorators</a></li>
+<li><a class="reference internal" href="#generic-classes-and-functions">Generic Classes and Functions</a></li>
+<li><a class="reference internal" href="#type-aliases">Type Aliases</a></li>
+<li><a class="reference internal" href="#abstract-classes-and-methods">Abstract Classes and Methods</a></li>
+<li><a class="reference internal" href="#final-classes-and-methods">Final Classes and Methods</a></li>
+<li><a class="reference internal" href="#literals">Literals</a></li>
+<li><a class="reference internal" href="#constants">Constants</a></li>
+<li><a class="reference internal" href="#typed-dictionaries-data-classes-and-named-tuples">Typed Dictionaries, Data Classes, and Named Tuples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compatibility-with-older-python-versions">Compatibility with Older Python Versions</a><ul>
+<li><a class="reference internal" href="#quoted-annotations">Quoted Annotations</a></li>
+<li><a class="reference internal" href="#type-comment-annotations">Type Comment Annotations</a></li>
+<li><a class="reference internal" href="#typing-extensions">typing_extensions</a></li>
+<li><a class="reference internal" href="#type-checking">TYPE_CHECKING</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#non-standard-type-behaviors">Non-Standard Type Behaviors</a></li>
+<li><a class="reference internal" href="#docstrings">Docstrings</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../tutorials/external_libraries.html"
+                          title="previous chapter">Using External Libraries</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="writing_stubs.html"
+                          title="next chapter">Writing and Maintaining Stub Files</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/libraries.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="writing_stubs.html" title="Writing and Maintaining Stub Files"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../tutorials/external_libraries.html" title="Using External Libraries"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Typing Python Libraries</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="typing-python-libraries">
+<span id="libraries"></span><h1>Typing Python Libraries<a class="headerlink" href="#typing-python-libraries" title="Link to this heading">¶</a></h1>
+<p>Much of Python’s popularity can be attributed to the rich collection of
+Python libraries available to developers. Authors of these libraries
+play an important role in improving the experience for Python
+developers. This document provides some recommendations and guidance for
+Python library authors.</p>
+<section id="why-provide-type-annotations">
+<h2>Why provide type annotations?<a class="headerlink" href="#why-provide-type-annotations" title="Link to this heading">¶</a></h2>
+<p>Providing type annotations has the following benefits:</p>
+<ol class="arabic simple">
+<li><p>Type annotations help provide users of libraries a better coding
+experience by enabling fast and accurate completion suggestions, class and
+function documentation, signature help, hover text, auto-imports, etc.</p></li>
+<li><p>Users of libraries are able to use static type checkers to detect issues
+with their use of libraries.</p></li>
+<li><p>Type annotations allow library authors to specify an interface contract that
+is enforced by tools. This lets the library implementation evolve with less
+fear that users are depending on implementation details. In the event of
+changes to the library interface, type checkers are able to warn users when
+their code is affected.</p></li>
+<li><p>Library authors are able to use static type checking themselves to help
+produce high-quality, bug-free implementations.</p></li>
+</ol>
+</section>
+<section id="how-to-provide-type-annotations">
+<span id="providing-type-annotations"></span><h2>How to provide type annotations?<a class="headerlink" href="#how-to-provide-type-annotations" title="Link to this heading">¶</a></h2>
+<p><span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0561/"><strong>PEP 561</strong></a> documents several ways type information can be provided for a
+library:</p>
+<ul class="simple">
+<li><p>inline type annotations (preferred)</p></li>
+<li><p>type stub files included in the package</p></li>
+<li><p>a separate companion type stub package</p></li>
+<li><p>type stubs in the typeshed repository</p></li>
+</ul>
+<p>Inline type annotations simply refers to the use of annotations within your
+<code class="docutils literal notranslate"><span class="pre">.py</span></code> files. In contrast, with type stub files, type information lives in
+separate <code class="docutils literal notranslate"><span class="pre">.pyi</span></code> files; see <a class="reference internal" href="../spec/distributing.html#stub-files"><span class="std std-ref">Stub files</span></a> and <a class="reference internal" href="writing_stubs.html#writing-stubs"><span class="std std-ref">Writing and Maintaining Stub Files</span></a> for more
+details.</p>
+<p>We recommend using the inline type annotations approach, since it has the
+following benefits:</p>
+<ul class="simple">
+<li><p>Typically requires the least effort to add and maintain</p></li>
+<li><p>Users don’t have to download additional packages</p></li>
+<li><p>Always remains consistent with the implementation</p></li>
+<li><p>Allows library authors to type check their own code</p></li>
+<li><p>Allows language servers to show users relevant details about the
+implementation, such as docstrings and default parameter values</p></li>
+</ul>
+<p>However, there are cases where inlined type annotations are not possible — most
+notably when a library’s functionality is implemented in a language
+other than Python.</p>
+<p>If you are not interested in providing type annotations for your library, you
+could suggest users to contribute type stubs to the
+<a class="reference external" href="https://github.com/python/typeshed">typeshed</a> project.</p>
+<section id="marking-a-package-as-providing-type-information">
+<h3>Marking a package as providing type information<a class="headerlink" href="#marking-a-package-as-providing-type-information" title="Link to this heading">¶</a></h3>
+<p>As specified in <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0561/"><strong>PEP 561</strong></a>, tools will not treat your package as providing type
+information unless it includes a special <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> marker file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before marking a package as providing type information, it is best to ensure
+that the library’s interface is fully annotated. See <a class="reference internal" href="#type-completeness"><span class="std std-ref">How much of my library needs types?</span></a>
+for more details.</p>
+</div>
+<section id="inline-type-annotations">
+<h4>Inline type annotations<a class="headerlink" href="#inline-type-annotations" title="Link to this heading">¶</a></h4>
+<p>A typical directory structure would look like:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pyproject.toml
+my_great_package/
+   __init__.py
+   stuff.py
+   py.typed
+</pre></div>
+</div>
+<p>Note the py.typed should be located inside the package, along with <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>.</p>
+</section>
+<section id="type-stub-files-included-in-the-package">
+<h4>Type stub files included in the package<a class="headerlink" href="#type-stub-files-included-in-the-package" title="Link to this heading">¶</a></h4>
+<p>It’s possible to include a mix of type stub files (<code class="docutils literal notranslate"><span class="pre">.pyi</span></code>) and inline type
+annotations (<code class="docutils literal notranslate"><span class="pre">.py</span></code>). One use case for including type stub files in your
+package is to provide types for extension modules in your library. A typical
+directory structure would look like:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pyproject.toml
+my_great_package/
+   __init__.py
+   stuff.py
+   stuff.pyi
+   py.typed
+</pre></div>
+</div>
+<p>The presence of <code class="docutils literal notranslate"><span class="pre">.pyi</span></code> files does not affect the Python interpreter at runtime
+in any way. However, static type checkers will only look at the <code class="docutils literal notranslate"><span class="pre">.pyi</span></code> file and
+ignore the corresponding <code class="docutils literal notranslate"><span class="pre">.py</span></code> file.</p>
+</section>
+<section id="companion-type-stub-package">
+<h4>Companion type stub package<a class="headerlink" href="#companion-type-stub-package" title="Link to this heading">¶</a></h4>
+<p>These are often referred to as “stub-only” packages. The name of the stub package
+should be the name of the runtime package suffixed with <code class="docutils literal notranslate"><span class="pre">-stubs</span></code>. The <code class="docutils literal notranslate"><span class="pre">py.typed</span></code>
+marker file is not necessary for stub-only packages. This approach can be useful
+to develop type stubs independently from your library.</p>
+<p>For example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pyproject.toml
+my_great_package-stubs/
+   __init__.pyi
+   stuff.pyi
+</pre></div>
+</div>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-great-package-stubs&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="n">requires-python</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&gt;=3.10&quot;</span>
+
+<span class="k">[build-system]</span>
+<span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;uv_build&gt;=0.9.18,&lt;0.10.0&quot;</span><span class="p">]</span>
+<span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;uv_build&quot;</span>
+</pre></div>
+</div>
+<p>Users are then able to install the stubs-only package separately to provide
+types for the original library.</p>
+</section>
+</section>
+</section>
+<section id="how-much-of-my-library-needs-types">
+<span id="type-completeness"></span><h2>How much of my library needs types?<a class="headerlink" href="#how-much-of-my-library-needs-types" title="Link to this heading">¶</a></h2>
+<p>A “py.typed” library should aim to be type complete so that type
+checking and inspection can work to their full extent. Here we say that a
+library is “type complete” if all of the symbols
+that comprise its <a class="reference internal" href="../spec/distributing.html#library-interface"><span class="std std-ref">interface</span></a> have type annotations
+that refer to types that are fully known. Private symbols are exempt.</p>
+<section id="id1">
+<h3>Type Completeness<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<p>The following are best practice recommendations for how to define “type complete”:</p>
+<p>Classes:</p>
+<ul class="simple">
+<li><p>All class variables, instance variables, and methods that are
+“visible” (not overridden) are annotated and refer to known types</p></li>
+<li><p>If a class is a subclass of a generic class, type arguments are
+provided for each generic type parameter, and these type arguments
+are known types</p></li>
+</ul>
+<p>Functions and Methods:</p>
+<ul class="simple">
+<li><p>All input parameters have type annotations that refer to known types</p></li>
+<li><p>The return parameter is annotated and refers to a known type</p></li>
+<li><p>The result of applying one or more decorators results in a known type</p></li>
+</ul>
+<p>Type Aliases:</p>
+<ul class="simple">
+<li><p>All of the types referenced by the type alias are known</p></li>
+</ul>
+<p>Variables:</p>
+<ul class="simple">
+<li><p>All variables have type annotations that refer to known types</p></li>
+</ul>
+<p>Type annotations can be omitted in a few specific cases where the type
+is obvious from the context:</p>
+<ul class="simple">
+<li><p>Constants that are assigned simple literal values
+(e.g. <code class="docutils literal notranslate"><span class="pre">RED</span> <span class="pre">=</span> <span class="pre">'#F00'</span></code> or <code class="docutils literal notranslate"><span class="pre">MAX_TIMEOUT</span> <span class="pre">=</span> <span class="pre">50</span></code> or
+<code class="docutils literal notranslate"><span class="pre">room_temperature:</span> <span class="pre">Final</span> <span class="pre">=</span> <span class="pre">20</span></code>). A constant is a symbol that is
+assigned only once and is either annotated with <code class="docutils literal notranslate"><span class="pre">Final</span></code> or is named
+in all-caps. A constant that is not assigned a simple literal value
+requires explicit annotations, preferably with a <code class="docutils literal notranslate"><span class="pre">Final</span></code> annotation
+(e.g. <code class="docutils literal notranslate"><span class="pre">WOODWINDS:</span> <span class="pre">Final[list[str]]</span> <span class="pre">=</span> <span class="pre">['Oboe',</span> <span class="pre">'Bassoon']</span></code>).</p></li>
+<li><p>Enum values within an Enum class do not require annotations because
+they take on the type of the Enum class.</p></li>
+<li><p>Type aliases do not require annotations. A type alias is a symbol
+that is defined at a module level with a single assignment where the
+assigned value is an instantiable type, as opposed to a class
+instance
+(e.g. <code class="docutils literal notranslate"><span class="pre">Foo</span> <span class="pre">=</span> <span class="pre">Callable[[Literal[&quot;a&quot;,</span> <span class="pre">&quot;b&quot;]],</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">str]</span></code> or
+<code class="docutils literal notranslate"><span class="pre">Bar</span> <span class="pre">=</span> <span class="pre">MyGenericClass[int]</span> <span class="pre">|</span> <span class="pre">None</span></code>).</p></li>
+<li><p>The “self” parameter in an instance method and the “cls” parameter in
+a class method do not require an explicit annotation.</p></li>
+<li><p>The return type for an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method does not need to be
+specified, since it is always <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p>The following module-level symbols do not require type annotations:
+<code class="docutils literal notranslate"><span class="pre">__all__</span></code>,<code class="docutils literal notranslate"><span class="pre">__author__</span></code>, <code class="docutils literal notranslate"><span class="pre">__copyright__</span></code>, <code class="docutils literal notranslate"><span class="pre">__email__</span></code>,
+<code class="docutils literal notranslate"><span class="pre">__license__</span></code>, <code class="docutils literal notranslate"><span class="pre">__title__</span></code>, <code class="docutils literal notranslate"><span class="pre">__uri__</span></code>, <code class="docutils literal notranslate"><span class="pre">__version__</span></code>.</p></li>
+<li><p>The following class-level symbols do not require type annotations:
+<code class="docutils literal notranslate"><span class="pre">__class__</span></code>, <code class="docutils literal notranslate"><span class="pre">__dict__</span></code>, <code class="docutils literal notranslate"><span class="pre">__doc__</span></code>, <code class="docutils literal notranslate"><span class="pre">__module__</span></code>,
+<code class="docutils literal notranslate"><span class="pre">__slots__</span></code>.</p></li>
+</ul>
+<section id="examples-of-known-and-unknown-types">
+<h4>Examples of known and unknown types<a class="headerlink" href="#examples-of-known-and-unknown-types" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Variable with unknown type</span>
+<span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+
+<span class="c1"># Variable with known type</span>
+<span class="n">a</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+
+<span class="c1"># Type alias with partially unknown type (because type</span>
+<span class="c1"># arguments are missing for list and dict)</span>
+<span class="n">DictOrList</span> <span class="o">=</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">dict</span>
+
+<span class="c1"># Type alias with known type</span>
+<span class="n">DictOrList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+
+<span class="c1"># Generic type alias with known type</span>
+<span class="n">_T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_T&quot;</span><span class="p">)</span>
+<span class="n">DictOrList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">_T</span><span class="p">]</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">_T</span><span class="p">]</span>
+
+<span class="c1"># Function with known type</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Function with partially unknown type (because type annotations</span>
+<span class="c1"># are missing for input parameters and return type)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Function with partially unknown type (because of missing</span>
+<span class="c1"># type args on Dict)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Function with partially unknown type (because return type</span>
+<span class="c1"># annotation is missing)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]):</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Decorator with partially unknown type (because type annotations</span>
+<span class="c1"># are missing for input parameters and return type)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">func</span>
+
+<span class="c1"># Function with partially unknown type (because type is obscured</span>
+<span class="c1"># by untyped decorator)</span>
+<span class="nd">@my_decorator</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+
+<span class="c1"># Class with known type</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">age</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="c1"># Class with partially unknown type</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+    <span class="c1"># Missing type annotation for class variable</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="mf">2.0</span>
+
+    <span class="c1"># Missing input parameter annotations</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+        <span class="c1"># Missing type annotation for instance variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
+
+    <span class="c1"># Missing return type annotation</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+
+<span class="c1"># Class with partially unknown type</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseClass</span><span class="p">:</span>
+    <span class="c1"># Missing type annotation</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="mf">2.0</span>
+
+    <span class="c1"># Missing type annotation</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stuff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+
+<span class="c1"># Class with known type (because it overrides all symbols</span>
+<span class="c1"># exposed by BaseClass that have incomplete types)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DerivedClass</span><span class="p">(</span><span class="n">BaseClass</span><span class="p">):</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stuff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<span class="c1"># Class with partially unknown type because base class</span>
+<span class="c1"># (dict) is generic, and type arguments are not specified.</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DictSubclass</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="best-practices-for-inlined-types">
+<h2>Best Practices for Inlined Types<a class="headerlink" href="#best-practices-for-inlined-types" title="Link to this heading">¶</a></h2>
+<section id="wide-vs-narrow-types">
+<h3>Wide vs. Narrow Types<a class="headerlink" href="#wide-vs-narrow-types" title="Link to this heading">¶</a></h3>
+<p>In type theory, when comparing two types that are related to each other,
+the “wider” type is the one that is more general, and the “narrower”
+type is more specific. For example, <code class="docutils literal notranslate"><span class="pre">Sequence[str]</span></code> is a wider type
+than <code class="docutils literal notranslate"><span class="pre">list[str]</span></code> because all <code class="docutils literal notranslate"><span class="pre">list</span></code> objects are also <code class="docutils literal notranslate"><span class="pre">Sequence</span></code>
+objects, but the converse is not true. A subclass is narrower than a
+class it derives from. A union of types is wider than the individual
+types that comprise the union.</p>
+<p>In general, a function input parameter should be annotated with the
+widest possible type supported by the implementation. For example, if
+the implementation requires the caller to provide an iterable collection
+of strings, the parameter should be annotated as <code class="docutils literal notranslate"><span class="pre">Iterable[str]</span></code>, not
+as <code class="docutils literal notranslate"><span class="pre">list[str]</span></code>. The latter type is narrower than necessary, so if a
+user attempts to pass a tuple of strings (which is supported by the
+implementation), a type checker will complain about a type
+incompatibility.</p>
+<p>As a specific application of the “use the widest type possible” rule,
+libraries should generally use immutable forms of container types
+instead of mutable forms (unless the function needs to modify the
+container). Use <code class="docutils literal notranslate"><span class="pre">Sequence</span></code> rather than <code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">Mapping</span></code> rather
+than <code class="docutils literal notranslate"><span class="pre">dict</span></code>, etc. Immutable containers allow for more flexibility
+because their type parameters are covariant rather than invariant. A
+parameter that is typed as <code class="docutils literal notranslate"><span class="pre">Sequence[str</span> <span class="pre">|</span> <span class="pre">int]</span></code> can accept a
+<code class="docutils literal notranslate"><span class="pre">list[int]</span></code>, <code class="docutils literal notranslate"><span class="pre">Sequence[str]</span></code>, and a <code class="docutils literal notranslate"><span class="pre">Sequence[int]</span></code>. But a
+parameter typed as <code class="docutils literal notranslate"><span class="pre">list[str</span> <span class="pre">|</span> <span class="pre">int]</span></code> is much more restrictive
+and accepts only a <code class="docutils literal notranslate"><span class="pre">list[str</span> <span class="pre">|</span> <span class="pre">int]</span></code>.</p>
+</section>
+<section id="overloads">
+<h3>Overloads<a class="headerlink" href="#overloads" title="Link to this heading">¶</a></h3>
+<p>If a function or method can return multiple different types and those
+types can be determined based on the presence or types of certain
+parameters, use the <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> mechanism described in the
+<code class="xref py py-data docutils literal notranslate"><span class="pre">typing.overload</span></code> documentation. When overloads
+are used within a “.py” file, they must appear prior to the function
+implementation, which should not have an <code class="docutils literal notranslate"><span class="pre">&#64;overload</span></code> decorator.</p>
+</section>
+<section id="keyword-only-parameters">
+<h3>Keyword-only Parameters<a class="headerlink" href="#keyword-only-parameters" title="Link to this heading">¶</a></h3>
+<p>If a function or method is intended to take parameters that are
+specified only by name, use the keyword-only separator (<code class="docutils literal notranslate"><span class="pre">*</span></code>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span><span class="n">age</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dob</span><span class="p">:</span> <span class="n">date</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="annotating-decorators">
+<span id="id2"></span><h3>Annotating Decorators<a class="headerlink" href="#annotating-decorators" title="Link to this heading">¶</a></h3>
+<p>Decorators modify the behavior of a class or a function. Providing
+annotations for decorators is straightforward if the decorator retains
+the original signature of the decorated function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_F</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;_F&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">simple_decorator</span><span class="p">(</span><span class="n">_func</span><span class="p">:</span> <span class="n">_F</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_F</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Simple decorators are invoked without parentheses like this:</span>
+<span class="sd">       @simple_decorator</span>
+<span class="sd">       def my_function(): ...</span>
+<span class="sd">     &quot;&quot;&quot;</span>
+   <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">complex_decorator</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">_F</span><span class="p">],</span> <span class="n">_F</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Complex decorators are invoked with arguments like this:</span>
+<span class="sd">       @complex_decorator(mode=&quot;easy&quot;)</span>
+<span class="sd">       def my_function(): ...</span>
+<span class="sd">     &quot;&quot;&quot;</span>
+   <span class="o">...</span>
+</pre></div>
+</div>
+<p>Decorators that mutate the signature of the decorated function present
+challenges for type annotations. The <code class="docutils literal notranslate"><span class="pre">ParamSpec</span></code> and <code class="docutils literal notranslate"><span class="pre">Concatenate</span></code>
+mechanisms described in <span class="target" id="index-2"></span><a class="pep reference external" href="https://peps.python.org/pep-0612/"><strong>PEP 612</strong></a> provide some help
+here, but these are available only in Python 3.10 and newer. More
+complex signature mutations may require type annotations that erase the
+original signature, thus blinding type checkers and other tools that
+provide signature assistance. As such, library authors are discouraged
+from creating decorators that mutate function signatures in this manner.</p>
+</section>
+<section id="aliasing-decorators">
+<span id="id3"></span><h3>Aliasing Decorators<a class="headerlink" href="#aliasing-decorators" title="Link to this heading">¶</a></h3>
+<p>When writing a library with a couple of decorator factories
+(i.e. functions returning decorators, like <code class="docutils literal notranslate"><span class="pre">complex_decorator</span></code> from the
+<a class="reference internal" href="#annotating-decorators"><span class="std std-ref">Annotating Decorators</span></a> section) it may be tempting to create a shortcut
+for a decorator.</p>
+<p>Different type checkers handle <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeAlias" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">TypeAlias</span></code></a> involving
+<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a> in a
+different manner, so the most portable and easy way to create a shortcut
+is to define a callable <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a> as described in the
+<a class="reference internal" href="../spec/callables.html#callback-protocols"><span class="std std-ref">Callback protocols</span></a> section of the Typing Specification.</p>
+<p>There is already a <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a> called
+<code class="docutils literal notranslate"><span class="pre">IdentityFunction</span></code> defined in
+<a class="reference external" href="https://github.com/python/typeshed/blob/main/stdlib/_typeshed/README.md">_typeshed</a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">_typeshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">IdentityFunction</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">decorator_factory</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;IdentityFunction&quot;</span><span class="p">:</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator factory is invoked with arguments like this:</span>
+<span class="sd">      @decorator_factory(mode=&quot;easy&quot;)</span>
+<span class="sd">      def my_function(): ...</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+     <span class="o">...</span>
+</pre></div>
+</div>
+<p>For non-trivial decorators with custom logic, it is still possible
+to define a custom protocol using <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ParamSpec" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParamSpec</span></code></a>
+and <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Concatenate</span></code></a> mechanisms:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Client</span><span class="p">:</span> <span class="o">...</span>
+
+<span class="n">P</span> <span class="o">=</span> <span class="n">ParamSpec</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PClientInjector</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">Client</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">R</span><span class="p">],</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">R</span><span class="p">]:</span>
+        <span class="o">...</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">inject_client</span><span class="p">(</span><span class="n">service</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PClientInjector</span><span class="p">:</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator factory is invoked with arguments like this:</span>
+<span class="sd">      @inject_client(&quot;testing&quot;)</span>
+<span class="sd">      def my_function(client: Client, value: int): ...</span>
+
+<span class="sd">      my_function then takes only value</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="generic-classes-and-functions">
+<h3>Generic Classes and Functions<a class="headerlink" href="#generic-classes-and-functions" title="Link to this heading">¶</a></h3>
+<p>Classes and functions that can operate in a generic manner on various
+types should declare themselves as generic using standard typing
+mechanisms such as <code class="docutils literal notranslate"><span class="pre">TypeVar</span></code>.
+This includes the use of <code class="docutils literal notranslate"><span class="pre">TypeVar</span></code> symbols. Typically, a <code class="docutils literal notranslate"><span class="pre">TypeVar</span></code>
+should be private to the file that declares it, and should therefore
+begin with an underscore.</p>
+</section>
+<section id="type-aliases">
+<h3>Type Aliases<a class="headerlink" href="#type-aliases" title="Link to this heading">¶</a></h3>
+<p>Type aliases are symbols that refer to other types. Generic type aliases
+(those that refer to unspecialized generic classes) are supported by
+most type checkers.</p>
+<p><span class="target" id="index-3"></span><a class="pep reference external" href="https://peps.python.org/pep-0613/"><strong>PEP 613</strong></a> provides a way
+to explicitly designate a symbol as a type alias using the new TypeAlias
+annotation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simple type alias</span>
+<span class="n">FamilyPet</span> <span class="o">=</span> <span class="n">Cat</span> <span class="o">|</span> <span class="n">Dog</span> <span class="o">|</span> <span class="n">GoldFish</span>
+
+<span class="c1"># Generic type alias</span>
+<span class="n">ListOrTuple</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="n">_T</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">_T</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+<span class="c1"># Recursive type alias</span>
+<span class="n">TreeNode</span> <span class="o">=</span> <span class="n">LeafNode</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;TreeNode&quot;</span><span class="p">]</span>
+
+<span class="c1"># Explicit type alias using TypeAlias</span>
+<span class="n">StrOrInt</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span>
+</pre></div>
+</div>
+</section>
+<section id="abstract-classes-and-methods">
+<h3>Abstract Classes and Methods<a class="headerlink" href="#abstract-classes-and-methods" title="Link to this heading">¶</a></h3>
+<p>Classes that must be subclassed should derive from <code class="docutils literal notranslate"><span class="pre">ABC</span></code>, and methods
+or properties that must be overridden should be decorated with the
+<code class="docutils literal notranslate"><span class="pre">&#64;abstractmethod</span></code> decorator. This allows type checkers to validate
+that the required methods have been overridden and provide developers
+with useful error messages when they are not. It is customary to
+implement an abstract method by raising a <code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code>
+exception.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Hashable</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+   <span class="nd">@property</span>
+   <span class="nd">@abstractmethod</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">hash_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;Subclasses must override&quot;&quot;&quot;</span>
+      <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+   <span class="nd">@abstractmethod</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;Subclasses must override&quot;&quot;&quot;</span>
+      <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="final-classes-and-methods">
+<h3>Final Classes and Methods<a class="headerlink" href="#final-classes-and-methods" title="Link to this heading">¶</a></h3>
+<p>Classes that are not intended to be subclassed should be decorated as
+<code class="docutils literal notranslate"><span class="pre">&#64;final</span></code> as described in <span class="target" id="index-4"></span><a class="pep reference external" href="https://peps.python.org/pep-0591/"><strong>PEP 591</strong></a>. The same decorator
+can also be used to specify methods that cannot be overridden by
+subclasses.</p>
+</section>
+<section id="literals">
+<h3>Literals<a class="headerlink" href="#literals" title="Link to this heading">¶</a></h3>
+<p>Type annotations should make use of the Literal type where appropriate,
+as described in <span class="target" id="index-5"></span><a class="pep reference external" href="https://peps.python.org/pep-0586/"><strong>PEP 586</strong></a>.
+Literals allow for more type specificity than their non-literal
+counterparts.</p>
+</section>
+<section id="constants">
+<h3>Constants<a class="headerlink" href="#constants" title="Link to this heading">¶</a></h3>
+<p>Constant values (those that are read-only) can be specified using the
+Final annotation as described in <span class="target" id="index-6"></span><a class="pep reference external" href="https://peps.python.org/pep-0591/"><strong>PEP 591</strong></a>.</p>
+<p>Type checkers will also typically treat variables that are named using
+all upper-case characters as constants.</p>
+<p>In both cases, it is OK to omit the declared type of a constant if it is
+assigned a literal str, int, float, bool or None value. In such cases,
+the type inference rules are clear and unambiguous, and adding a literal
+type annotation would be redundant.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># All-caps constant with inferred type</span>
+<span class="n">COLOR_FORMAT_RGB</span> <span class="o">=</span> <span class="s2">&quot;rgb&quot;</span>
+
+<span class="c1"># All-caps constant with explicit type</span>
+<span class="n">COLOR_FORMAT_RGB</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rgb&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rgb&quot;</span>
+<span class="n">LATEST_VERSION</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Final variable with inferred type</span>
+<span class="n">ColorFormatRgb</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="s2">&quot;rgb&quot;</span>
+
+<span class="c1"># Final variable with explicit type</span>
+<span class="n">ColorFormatRgb</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;rgb&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;rgb&quot;</span>
+<span class="n">LATEST_VERSION</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="typed-dictionaries-data-classes-and-named-tuples">
+<h3>Typed Dictionaries, Data Classes, and Named Tuples<a class="headerlink" href="#typed-dictionaries-data-classes-and-named-tuples" title="Link to this heading">¶</a></h3>
+<p>If your library runs only on newer versions of Python, you are
+encouraged to use some of the new type-friendly classes.</p>
+<p>NamedTuple (described in <span class="target" id="index-7"></span><a class="pep reference external" href="https://peps.python.org/pep-0484/"><strong>PEP 484</strong></a>) is preferred over
+namedtuple.</p>
+<p>Data classes (described in <span class="target" id="index-8"></span><a class="pep reference external" href="https://peps.python.org/pep-0557/"><strong>PEP 557</strong></a>) are preferred over
+untyped dictionaries.</p>
+<p>TypedDict (described in <span class="target" id="index-9"></span><a class="pep reference external" href="https://peps.python.org/pep-0589/"><strong>PEP 589</strong></a>) is preferred over
+untyped dictionaries.</p>
+</section>
+</section>
+<section id="compatibility-with-older-python-versions">
+<h2>Compatibility with Older Python Versions<a class="headerlink" href="#compatibility-with-older-python-versions" title="Link to this heading">¶</a></h2>
+<p>Each new version of Python from 3.5 onward has introduced new typing
+constructs. This presents a challenge for library authors who want to
+maintain runtime compatibility with older versions of Python. This
+section documents several techniques that can be used to add types while
+maintaining backward compatibility.</p>
+<section id="quoted-annotations">
+<h3>Quoted Annotations<a class="headerlink" href="#quoted-annotations" title="Link to this heading">¶</a></h3>
+<p>Type annotations for variables, parameters, and return types can be
+placed in quotes. The Python interpreter will then ignore them, whereas
+a type checker will interpret them as type annotations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Older versions of Python do not support subscripting</span>
+<span class="c1"># for the OrderedDict type, so the annotation must be</span>
+<span class="c1"># enclosed in quotes.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;OrderedDict[str, str]&quot;</span><span class="p">:</span>
+   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
+</pre></div>
+</div>
+</section>
+<section id="type-comment-annotations">
+<h3>Type Comment Annotations<a class="headerlink" href="#type-comment-annotations" title="Link to this heading">¶</a></h3>
+<p>Python 3.0 introduced syntax for parameter and return type annotations,
+as specified in <span class="target" id="index-10"></span><a class="pep reference external" href="https://peps.python.org/pep-0484/"><strong>PEP 484</strong></a>.
+Python 3.6 introduced support for variable type annotations, as
+specified in <span class="target" id="index-11"></span><a class="pep reference external" href="https://peps.python.org/pep-0526/"><strong>PEP 526</strong></a>.</p>
+<p>If you need to support older versions of Python, type annotations can
+still be provided as “type comments”. These comments take the form
+<code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">type:</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Foo</span><span class="p">:</span>
+   <span class="c1"># Variable type comments go at the end of the line</span>
+   <span class="c1"># where the variable is assigned.</span>
+   <span class="n">timeout</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># type: Optional[int]</span>
+
+   <span class="c1"># Function type comments can be specified on the</span>
+   <span class="c1"># line after the function signature.</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+      <span class="c1"># type: (str, int) -&gt; None</span>
+      <span class="o">...</span>
+
+   <span class="c1"># Function type comments can also specify the type</span>
+   <span class="c1"># of each parameter on its own line.</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">receive_message</span><span class="p">(</span>
+      <span class="bp">self</span><span class="p">,</span>
+      <span class="n">name</span><span class="p">,</span> <span class="c1"># type: str</span>
+      <span class="n">length</span> <span class="c1"># type: int</span>
+   <span class="p">):</span>
+      <span class="c1"># type: () -&gt; Message</span>
+      <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="typing-extensions">
+<h3>typing_extensions<a class="headerlink" href="#typing-extensions" title="Link to this heading">¶</a></h3>
+<p>New type features that require runtime support are typically included in
+the stdlib <code class="docutils literal notranslate"><span class="pre">typing</span></code> module. Where possible, these new features are
+back-ported to a runtime library called <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code> that works
+with older Python runtimes.</p>
+</section>
+<section id="type-checking">
+<h3>TYPE_CHECKING<a class="headerlink" href="#type-checking" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">typing</span></code> module exposes a variable called <code class="docutils literal notranslate"><span class="pre">TYPE_CHECKING</span></code> which
+has a value of False within the Python runtime but a value of True when
+the type checker is performing its analysis. This allows type checking
+statements to be conditionalized.</p>
+<p>Care should be taken when using <code class="docutils literal notranslate"><span class="pre">TYPE_CHECKING</span></code> because behavioral
+changes between type checking and runtime could mask problems that the
+type checker would otherwise catch.</p>
+</section>
+</section>
+<section id="non-standard-type-behaviors">
+<h2>Non-Standard Type Behaviors<a class="headerlink" href="#non-standard-type-behaviors" title="Link to this heading">¶</a></h2>
+<p>Type annotations provide a way to annotate typical type behaviors, but
+some classes implement specialized, non-standard behaviors that cannot
+be described using standard type annotations. For now, such types need
+to be annotated as Any, which is unfortunate because the benefits of
+static typing are lost.</p>
+</section>
+<section id="docstrings">
+<h2>Docstrings<a class="headerlink" href="#docstrings" title="Link to this heading">¶</a></h2>
+<p>Docstrings should be provided for all classes, functions, and methods in
+the interface. They should be formatted according to <span class="target" id="index-12"></span><a class="pep reference external" href="https://peps.python.org/pep-0257/"><strong>PEP 257</strong></a>.</p>
+<p>There is currently no single agreed-upon standard for function and
+method docstrings, but several common variants have emerged. We
+recommend using one of these variants.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Typing Python Libraries</a><ul>
+<li><a class="reference internal" href="#why-provide-type-annotations">Why provide type annotations?</a></li>
+<li><a class="reference internal" href="#how-to-provide-type-annotations">How to provide type annotations?</a><ul>
+<li><a class="reference internal" href="#marking-a-package-as-providing-type-information">Marking a package as providing type information</a><ul>
+<li><a class="reference internal" href="#inline-type-annotations">Inline type annotations</a></li>
+<li><a class="reference internal" href="#type-stub-files-included-in-the-package">Type stub files included in the package</a></li>
+<li><a class="reference internal" href="#companion-type-stub-package">Companion type stub package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#how-much-of-my-library-needs-types">How much of my library needs types?</a><ul>
+<li><a class="reference internal" href="#id1">Type Completeness</a><ul>
+<li><a class="reference internal" href="#examples-of-known-and-unknown-types">Examples of known and unknown types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#best-practices-for-inlined-types">Best Practices for Inlined Types</a><ul>
+<li><a class="reference internal" href="#wide-vs-narrow-types">Wide vs. Narrow Types</a></li>
+<li><a class="reference internal" href="#overloads">Overloads</a></li>
+<li><a class="reference internal" href="#keyword-only-parameters">Keyword-only Parameters</a></li>
+<li><a class="reference internal" href="#annotating-decorators">Annotating Decorators</a></li>
+<li><a class="reference internal" href="#aliasing-decorators">Aliasing Decorators</a></li>
+<li><a class="reference internal" href="#generic-classes-and-functions">Generic Classes and Functions</a></li>
+<li><a class="reference internal" href="#type-aliases">Type Aliases</a></li>
+<li><a class="reference internal" href="#abstract-classes-and-methods">Abstract Classes and Methods</a></li>
+<li><a class="reference internal" href="#final-classes-and-methods">Final Classes and Methods</a></li>
+<li><a class="reference internal" href="#literals">Literals</a></li>
+<li><a class="reference internal" href="#constants">Constants</a></li>
+<li><a class="reference internal" href="#typed-dictionaries-data-classes-and-named-tuples">Typed Dictionaries, Data Classes, and Named Tuples</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compatibility-with-older-python-versions">Compatibility with Older Python Versions</a><ul>
+<li><a class="reference internal" href="#quoted-annotations">Quoted Annotations</a></li>
+<li><a class="reference internal" href="#type-comment-annotations">Type Comment Annotations</a></li>
+<li><a class="reference internal" href="#typing-extensions">typing_extensions</a></li>
+<li><a class="reference internal" href="#type-checking">TYPE_CHECKING</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#non-standard-type-behaviors">Non-Standard Type Behaviors</a></li>
+<li><a class="reference internal" href="#docstrings">Docstrings</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../tutorials/external_libraries.html"
+                          title="previous chapter">Using External Libraries</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="writing_stubs.html"
+                          title="next chapter">Writing and Maintaining Stub Files</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/libraries.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="writing_stubs.html" title="Writing and Maintaining Stub Files"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../tutorials/external_libraries.html" title="Using External Libraries"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Typing Python Libraries</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

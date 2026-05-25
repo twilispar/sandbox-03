@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Type forms &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Special types in annotations" href="special-types.html" />
+    <link rel="prev" title="Type annotations" href="annotations.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/type-forms.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type forms</a><ul>
+<li><a class="reference internal" href="#typeform">TypeForm</a></li>
+<li><a class="reference internal" href="#implicit-typeform-evaluation">Implicit <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> evaluation</a></li>
+<li><a class="reference internal" href="#valid-type-expressions">Valid type expressions</a></li>
+<li><a class="reference internal" href="#explicit-typeform-evaluation">Explicit <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> evaluation</a></li>
+<li><a class="reference internal" href="#assignability">Assignability</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="annotations.html"
+                          title="previous chapter">Type annotations</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="special-types.html"
+                          title="next chapter">Special types in annotations</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/type-forms.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="special-types.html" title="Special types in annotations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="annotations.html" title="Type annotations"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Type forms</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="type-forms">
+<span id="id1"></span><h1>Type forms<a class="headerlink" href="#type-forms" title="Link to this heading">¶</a></h1>
+<section id="typeform">
+<span id="id2"></span><h2>TypeForm<a class="headerlink" href="#typeform" title="Link to this heading">¶</a></h2>
+<p>(Originally specified in <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0747/"><strong>PEP 747</strong></a>.)</p>
+<p>When a type expression is evaluated at runtime, the resulting value is a
+<em>type form</em> object. This value encodes the information supplied in the type
+expression, and it represents the type described by that type expression.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> is a <a class="reference internal" href="glossary.html#term-special-form"><span class="xref std std-term">special form</span></a> that, when used in a type expression,
+describes a set of type form objects. It accepts a single type argument, which
+must be a <a class="reference internal" href="#valid-type-expressions"><span class="std std-ref">valid type expression</span></a>.
+<code class="docutils literal notranslate"><span class="pre">TypeForm[T]</span></code> describes the set of all type form objects that represent
+the type <code class="docutils literal notranslate"><span class="pre">T</span></code> or types that are <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to <code class="docutils literal notranslate"><span class="pre">T</span></code>. For example,
+<code class="docutils literal notranslate"><span class="pre">TypeForm[str</span> <span class="pre">|</span> <span class="pre">None]</span></code> describes the set of all type form objects that
+represent a type assignable to <code class="docutils literal notranslate"><span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeForm</span>
+
+<span class="n">ok1</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># OK</span>
+<span class="n">ok2</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span>  <span class="c1"># OK</span>
+<span class="n">ok3</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># OK</span>
+<span class="n">ok4</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>  <span class="c1"># OK</span>
+<span class="n">ok5</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># OK</span>
+<span class="n">ok6</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;str | None&quot;</span>  <span class="c1"># OK</span>
+<span class="n">ok7</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">Any</span>  <span class="c1"># OK</span>
+
+<span class="n">err1</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span>  <span class="c1"># Error</span>
+<span class="n">err2</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+<p>By this same definition, <code class="docutils literal notranslate"><span class="pre">TypeForm[object]</span></code> describes a type form object
+that represents the type <code class="docutils literal notranslate"><span class="pre">object</span></code> or any type that is assignable to
+<code class="docutils literal notranslate"><span class="pre">object</span></code>. Since all types in the Python type system are assignable to
+<code class="docutils literal notranslate"><span class="pre">object</span></code>, <code class="docutils literal notranslate"><span class="pre">TypeForm[object]</span></code> describes the set of all type form objects
+evaluated from all valid type expressions.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TypeForm[Any]</span></code> describes a <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> type whose type argument is not
+statically known but is a valid type form object. It is assignable both
+to and from any other <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> type (because <code class="docutils literal notranslate"><span class="pre">Any</span></code> is assignable both
+to and from any type).</p>
+<p>The type expression <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code>, with no type argument provided, is
+equivalent to <code class="docutils literal notranslate"><span class="pre">TypeForm[Any]</span></code>.</p>
+</section>
+<section id="implicit-typeform-evaluation">
+<span id="id3"></span><h2>Implicit <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> evaluation<a class="headerlink" href="#implicit-typeform-evaluation" title="Link to this heading">¶</a></h2>
+<p>When a static type checker encounters a valid type expression, the evaluated
+type of this expression should be assignable to <code class="docutils literal notranslate"><span class="pre">TypeForm[T]</span></code> if the type it
+describes is assignable to <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p>
+<p>For example, if a static type checker encounters the expression
+<code class="docutils literal notranslate"><span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span></code>, it may normally evaluate its type as <code class="docutils literal notranslate"><span class="pre">UnionType</span></code> because it
+produces a runtime value that is an instance of <code class="docutils literal notranslate"><span class="pre">types.UnionType</span></code>. However,
+because this expression is a valid type expression, it is also assignable to
+the type <code class="docutils literal notranslate"><span class="pre">TypeForm[str</span> <span class="pre">|</span> <span class="pre">None]</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericAlias</span><span class="p">,</span> <span class="n">UnionType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeForm</span>
+
+<span class="n">v1_actual</span><span class="p">:</span> <span class="n">UnionType</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># OK</span>
+<span class="n">v1_type_form</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># OK</span>
+
+<span class="n">v2_actual</span><span class="p">:</span> <span class="n">GenericAlias</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>  <span class="c1"># OK</span>
+<span class="n">v2_type_form</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> special form is allowed in type expressions, so it can
+also appear in an expression that is assignable to <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code>. Consistent
+with the general rules for <code class="docutils literal notranslate"><span class="pre">Annotated</span></code>, a static type checker may
+choose to ignore any <code class="docutils literal notranslate"><span class="pre">Annotated</span></code> metadata that it does not understand:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeForm</span>
+
+<span class="n">v3</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">]</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+<p>A string literal expression containing a valid type expression should likewise
+be assignable to <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeForm</span>
+
+<span class="n">v4</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;set[str]&quot;</span>  <span class="c1"># OK</span>
+</pre></div>
+</div>
+</section>
+<section id="valid-type-expressions">
+<span id="id4"></span><h2>Valid type expressions<a class="headerlink" href="#valid-type-expressions" title="Link to this heading">¶</a></h2>
+<p>This specification defines syntactic rules for type expressions in the form of a
+<a class="reference internal" href="annotations.html#expression-grammar"><span class="std std-ref">formal grammar</span></a>. Semantic rules are specified as
+comments along with the grammar definition. Contextual requirements are
+detailed throughout the text in sections that discuss concepts that
+appear within type expressions. For example, the special form <code class="docutils literal notranslate"><span class="pre">Self</span></code> can be
+used in a type expression only within a class, and a type variable can be used
+within a type expression only when it is associated with a valid scope.</p>
+<p>A valid type expression is an expression that follows all of the syntactic,
+semantic, and contextual rules for a type expression.</p>
+<p>Expressions that are not valid type expressions should not evaluate to a
+<code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">TypeVarTuple</span><span class="p">,</span> <span class="n">Unpack</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeForm</span>
+
+<span class="n">Ts</span> <span class="o">=</span> <span class="n">TypeVarTuple</span><span class="p">(</span><span class="s2">&quot;Ts&quot;</span><span class="p">)</span>
+<span class="n">var</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">bad1</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>  <span class="c1"># Error: call expression not allowed in type expression</span>
+<span class="n">bad2</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Error: tuple expression not allowed in type expression</span>
+<span class="n">bad3</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Error: non-class object not allowed in type expression</span>
+<span class="n">bad4</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="n">Self</span>  <span class="c1"># Error: Self not allowed outside of a class</span>
+<span class="n">bad5</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>  <span class="c1"># Error: variable not allowed in type expression</span>
+<span class="n">bad6</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;&quot;</span><span class="p">]</span>  <span class="c1"># Error: f-strings not allowed in type expression</span>
+<span class="n">bad7</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>  <span class="c1"># Error: ClassVar not allowed in type expression</span>
+<span class="n">bad8</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="n">Final</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>  <span class="c1"># Error: Final not allowed in type expression</span>
+<span class="n">bad9</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">Ts</span><span class="p">]</span>  <span class="c1"># Error: Unpack not allowed in this context</span>
+<span class="n">bad10</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="n">Optional</span>  <span class="c1"># Error: invalid use of Optional special form</span>
+<span class="n">bad11</span><span class="p">:</span> <span class="n">TypeForm</span> <span class="o">=</span> <span class="s2">&quot;int + str&quot;</span>  <span class="c1"># Error: invalid quoted type expression</span>
+</pre></div>
+</div>
+</section>
+<section id="explicit-typeform-evaluation">
+<span id="id5"></span><h2>Explicit <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> evaluation<a class="headerlink" href="#explicit-typeform-evaluation" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> also acts as a function that can be called with a single
+argument. Type checkers should validate that this argument is a valid type
+expression:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeForm</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">TypeForm</span><span class="p">(</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">])</span>
+
+<span class="n">x2</span> <span class="o">=</span> <span class="n">TypeForm</span><span class="p">(</span><span class="s2">&quot;list[int]&quot;</span><span class="p">)</span>
+<span class="n">assert_type</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span>
+
+<span class="n">x3</span> <span class="o">=</span> <span class="n">TypeForm</span><span class="p">(</span><span class="s2">&quot;type(1)&quot;</span><span class="p">)</span>  <span class="c1"># Error: invalid type expression</span>
+</pre></div>
+</div>
+<p>The static type of a <code class="docutils literal notranslate"><span class="pre">TypeForm(T)</span></code> expression is <code class="docutils literal notranslate"><span class="pre">TypeForm[T]</span></code>.</p>
+<p>At runtime the <code class="docutils literal notranslate"><span class="pre">TypeForm(...)</span></code> callable simply returns the value passed to
+it.</p>
+<p>This explicit syntax serves two purposes. First, it documents the developer’s
+intent to use the value as a type form object. Second, static type checkers
+validate that all rules for type expressions are followed:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x4</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># No error, evaluates to &quot;type[int]&quot;</span>
+
+<span class="n">x5</span> <span class="o">=</span> <span class="n">TypeForm</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># Error: call not allowed in type expression</span>
+</pre></div>
+</div>
+</section>
+<section id="assignability">
+<span id="typeform-assignability"></span><h2>Assignability<a class="headerlink" href="#assignability" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> has a single type parameter, which is covariant. That means
+<code class="docutils literal notranslate"><span class="pre">TypeForm[B]</span></code> is assignable to <code class="docutils literal notranslate"><span class="pre">TypeForm[A]</span></code> if <code class="docutils literal notranslate"><span class="pre">B</span></code> is assignable to
+<code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeForm</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_type_form</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="n">t1</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_type_form</span><span class="p">()</span>  <span class="c1"># OK</span>
+<span class="n">t2</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_type_form</span><span class="p">()</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">type[T]</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">TypeForm[T]</span></code>, which means that <code class="docutils literal notranslate"><span class="pre">type[B]</span></code> is
+assignable to <code class="docutils literal notranslate"><span class="pre">TypeForm[A]</span></code> if <code class="docutils literal notranslate"><span class="pre">B</span></code> is assignable to <code class="docutils literal notranslate"><span class="pre">A</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeForm</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span> <span class="o">...</span>
+
+<span class="n">t3</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_type</span><span class="p">()</span>  <span class="c1"># OK</span>
+<span class="n">t4</span><span class="p">:</span> <span class="n">TypeForm</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_type</span><span class="p">()</span>  <span class="c1"># Error</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">object</span></code> and is assumed to have all of the
+attributes and methods of <code class="docutils literal notranslate"><span class="pre">object</span></code>.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type forms</a><ul>
+<li><a class="reference internal" href="#typeform">TypeForm</a></li>
+<li><a class="reference internal" href="#implicit-typeform-evaluation">Implicit <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> evaluation</a></li>
+<li><a class="reference internal" href="#valid-type-expressions">Valid type expressions</a></li>
+<li><a class="reference internal" href="#explicit-typeform-evaluation">Explicit <code class="docutils literal notranslate"><span class="pre">TypeForm</span></code> evaluation</a></li>
+<li><a class="reference internal" href="#assignability">Assignability</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="annotations.html"
+                          title="previous chapter">Type annotations</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="special-types.html"
+                          title="next chapter">Special types in annotations</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/type-forms.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="special-types.html" title="Special types in annotations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="annotations.html" title="Type annotations"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Type forms</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Type system concepts &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Type annotations" href="annotations.html" />
+    <link rel="prev" title="Meta-topics" href="meta.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/spec/concepts.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type system concepts</a><ul>
+<li><a class="reference internal" href="#static-dynamic-and-gradual-typing">Static, dynamic, and gradual typing</a></li>
+<li><a class="reference internal" href="#fully-static-and-gradual-types">Fully static and gradual types</a><ul>
+<li><a class="reference internal" href="#fully-static-types">Fully static types</a></li>
+<li><a class="reference internal" href="#gradual-types">Gradual types</a></li>
+<li><a class="reference internal" href="#the-gradual-guarantee">The gradual guarantee</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#subtype-supertype-and-type-equivalence">Subtype, supertype, and type equivalence</a></li>
+<li><a class="reference internal" href="#nominal-and-structural-types">Nominal and structural types</a></li>
+<li><a class="reference internal" href="#materialization">Materialization</a></li>
+<li><a class="reference internal" href="#consistency">Consistency</a></li>
+<li><a class="reference internal" href="#the-assignable-to-or-consistent-subtyping-relation">The assignable-to (or consistent subtyping) relation</a></li>
+<li><a class="reference internal" href="#summary-of-type-relations">Summary of type relations</a></li>
+<li><a class="reference internal" href="#attributes-and-methods">Attributes and methods</a></li>
+<li><a class="reference internal" href="#union-types">Union types</a><ul>
+<li><a class="reference internal" href="#union-with-none">Union with None</a></li>
+<li><a class="reference internal" href="#support-for-singleton-types-in-unions">Support for singleton types in unions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="meta.html"
+                          title="previous chapter">Meta-topics</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="annotations.html"
+                          title="next chapter">Type annotations</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/concepts.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="annotations.html" title="Type annotations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="meta.html" title="Meta-topics"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Type system concepts</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="type-system-concepts">
+<span id="id1"></span><h1>Type system concepts<a class="headerlink" href="#type-system-concepts" title="Link to this heading">¶</a></h1>
+<section id="static-dynamic-and-gradual-typing">
+<h2>Static, dynamic, and gradual typing<a class="headerlink" href="#static-dynamic-and-gradual-typing" title="Link to this heading">¶</a></h2>
+<p>A <strong>statically typed</strong> programming language runs a type checker before running
+a program. The program is required to be well typed according to the language’s
+type system. The type system assigns a type to all expressions in the language
+and verifies that their uses obey the typing rules. Normally, a program that is
+not well typed (i.e., one that contains a type error) will not run. Java and
+C++ are examples of statically typed object-oriented languages.</p>
+<p>A <strong>dynamically typed</strong> programming language does not run a type checker before
+running a program. Instead, it checks the types of values before performing
+operations on them at runtime. This is not to say that the language is
+“untyped”. Values at runtime have a type and their uses obey typing rules. Not
+every operation will be checked, but certain primitive operations in the
+language such as attribute access or arithmetic are. Python is a
+dynamically typed language.</p>
+<p><strong>Gradual typing</strong> is a way to combine static and dynamic typing.
+Type-annotated Python allows opting in to static type checking at a fine level
+of granularity, so that some type errors can be caught statically, without
+running the program. Variables, parameters, and returns can optionally be given
+static type annotations. Even within the type of a single data structure,
+static type checking is optional and granular. For example, a dictionary can be
+annotated to enable static checking of the key type but only have dynamic
+runtime checking of the value type.</p>
+<p>A <strong>gradual</strong> type system is one in which a special “unknown” or “dynamic” type
+is used to describe names or expressions whose types are not known statically.
+In Python, this type is spelled <a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a>. Because <span class="xref std std-ref">Any</span> indicates a
+statically unknown type, the static type checker can’t check type correctness
+of operations on expressions typed as <span class="xref std std-ref">Any</span>. These operations are still
+dynamically checked, via the Python runtime’s usual dynamic checking.</p>
+<p>The Python type system also uses <code class="docutils literal notranslate"><span class="pre">...</span></code> within <a class="reference internal" href="callables.html#callable"><span class="std std-ref">Callable</span></a> types and
+within <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">...]</span></code> (see <a class="reference internal" href="tuples.html#tuples"><span class="std std-ref">Tuples</span></a>) to indicate a statically unknown
+component of a type. The detailed rules for these usages are discussed in their
+respective sections of the specification. Collectively, along with <a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a>,
+these are <a class="reference internal" href="glossary.html#term-gradual-form"><span class="xref std std-term">gradual forms</span></a>.</p>
+<p>This specification describes a gradual type system for Python.</p>
+</section>
+<section id="fully-static-and-gradual-types">
+<h2>Fully static and gradual types<a class="headerlink" href="#fully-static-and-gradual-types" title="Link to this heading">¶</a></h2>
+<p>We will refer to types that do not contain a <a class="reference internal" href="glossary.html#term-gradual-form"><span class="xref std std-term">gradual form</span></a> as a sub-part
+as <strong>fully static types</strong>.</p>
+<p>A <strong>gradual type</strong> can be a fully static type, <a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a> itself, or a type
+that contains a gradual form as a sub-part. All Python types are gradual types;
+fully static types are a subset.</p>
+<section id="fully-static-types">
+<h3>Fully static types<a class="headerlink" href="#fully-static-types" title="Link to this heading">¶</a></h3>
+<p>A fully static type denotes a set of potential runtime values. For instance,
+the fully static type <code class="docutils literal notranslate"><span class="pre">object</span></code> is the set of all Python objects. The fully
+static type <code class="docutils literal notranslate"><span class="pre">bool</span></code> is the set of values <code class="docutils literal notranslate"><span class="pre">{</span> <span class="pre">True,</span> <span class="pre">False</span> <span class="pre">}</span></code>. The fully static
+type <code class="docutils literal notranslate"><span class="pre">str</span></code> is the set of all Python strings; more precisely, the set of all
+Python objects whose runtime type (<code class="docutils literal notranslate"><span class="pre">__class__</span></code> attribute) is either <code class="docutils literal notranslate"><span class="pre">str</span></code>
+or a class that inherits directly or indirectly from <code class="docutils literal notranslate"><span class="pre">str</span></code>. A <a class="reference internal" href="protocol.html#protocols"><span class="std std-ref">Protocol</span></a> denotes the set of all objects which share a certain set of
+attributes and/or methods.</p>
+<p>If an object <code class="docutils literal notranslate"><span class="pre">v</span></code> is a member of the set of objects denoted by a fully static
+type <code class="docutils literal notranslate"><span class="pre">T</span></code>, we can say that <code class="docutils literal notranslate"><span class="pre">v</span></code> is a “member of” the type <code class="docutils literal notranslate"><span class="pre">T</span></code>, or <code class="docutils literal notranslate"><span class="pre">v</span></code>
+“<a class="reference internal" href="glossary.html#term-inhabit"><span class="xref std std-term">inhabits</span></a>” <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p>
+</section>
+<section id="gradual-types">
+<h3>Gradual types<a class="headerlink" href="#gradual-types" title="Link to this heading">¶</a></h3>
+<p><a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a> represents an unknown static type. It denotes some unknown set of
+runtime values.</p>
+<p>This may appear similar to the fully static type <code class="docutils literal notranslate"><span class="pre">object</span></code>, which represents
+the set of all Python objects, but it is quite different.</p>
+<p>If an expression has the type <code class="docutils literal notranslate"><span class="pre">object</span></code>, a static type checker should ensure
+that operations on the expression are valid for all Python objects, or else
+emit a static type error. This allows very few operations! For example, if
+<code class="docutils literal notranslate"><span class="pre">x</span></code> is typed as <code class="docutils literal notranslate"><span class="pre">object</span></code>, <code class="docutils literal notranslate"><span class="pre">x.foo</span></code> should be a static type error because
+not all Python objects have an attribute <code class="docutils literal notranslate"><span class="pre">foo</span></code>.</p>
+<p>An expression typed as <a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a>, on the other hand, should be assumed to have
+_some_ specific static type, but _which_ static type is not known. A static
+type checker should not emit static type errors on an expression or statement
+if <span class="xref std std-ref">Any</span> might represent a static type which would avoid the error. (This
+is defined more precisely below, in terms of materialization and
+assignability.)</p>
+<p>Similarly, a type such as <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">Any]</span></code> (see <a class="reference internal" href="tuples.html#tuples"><span class="std std-ref">Tuples</span></a>) or <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span>
+<span class="pre">Any</span></code> (see <a class="reference internal" href="#union-types"><span class="std std-ref">Union types</span></a>) does not represent a single set of Python
+objects; rather, it represents a (bounded) range of possible sets of values.</p>
+<p>In the same way that <a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a> does not represent “the set of all Python
+objects” but rather “an unknown set of objects”, <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">Any]</span></code> does not
+represent “the set of all length-two tuples whose first element is an integer”.
+That is a fully static type, spelled <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">object]</span></code>.  By contrast,
+<code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">Any]</span></code> represents some unknown set of tuple values; it might be
+the set of all tuples of two integers, or the set of all tuples of an integer
+and a string, or some other set of tuple values.</p>
+<p>In practice, this difference is seen (for example) in the fact that we can
+assign an expression of type <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">Any]</span></code> to a target typed as
+<code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">int]</span></code>, whereas assigning <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">object]</span></code> to <code class="docutils literal notranslate"><span class="pre">tuple[int,</span>
+<span class="pre">int]</span></code> is a static type error. (Again, we formalize this distinction in the
+below definitions of materialization and assignability.)</p>
+<p>In the same way that the fully static type <code class="docutils literal notranslate"><span class="pre">object</span></code> is the upper bound for
+the possible sets of values represented by <a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a>, the fully static type
+<code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">object]</span></code> is the upper bound for the possible sets of values
+represented by <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">Any]</span></code>.</p>
+</section>
+<section id="the-gradual-guarantee">
+<h3>The gradual guarantee<a class="headerlink" href="#the-gradual-guarantee" title="Link to this heading">¶</a></h3>
+<p><a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a> allows gradually adding static types to a dynamically typed program.
+In a fully dynamically typed program, a static checker assigns the type
+<span class="xref std std-ref">Any</span> to all expressions, and should emit no errors. Inferring static
+types or adding type annotations to the program (making the program more
+statically typed) may result in static type errors, if the program is not
+correct or if the static types aren’t able to fully represent the runtime
+types. Removing type annotations (making the program more dynamic) should not
+result in additional static type errors. This is often referred to as the
+<strong>gradual guarantee</strong>.</p>
+<p>In Python’s type system, we don’t take the gradual guarantee as a strict
+requirement, but it’s a useful guideline.</p>
+</section>
+</section>
+<section id="subtype-supertype-and-type-equivalence">
+<h2>Subtype, supertype, and type equivalence<a class="headerlink" href="#subtype-supertype-and-type-equivalence" title="Link to this heading">¶</a></h2>
+<p>A fully static type <code class="docutils literal notranslate"><span class="pre">B</span></code> is a <strong>subtype</strong> of another fully static type <code class="docutils literal notranslate"><span class="pre">A</span></code>
+if and only if the set of values represented by <code class="docutils literal notranslate"><span class="pre">B</span></code> is a subset of the set of
+values represented by <code class="docutils literal notranslate"><span class="pre">A</span></code>. Because the subset relation on sets is transitive
+and reflexive, the subtype relation is also transitive (if <code class="docutils literal notranslate"><span class="pre">C</span></code> is a subtype
+of <code class="docutils literal notranslate"><span class="pre">B</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">A</span></code>, then <code class="docutils literal notranslate"><span class="pre">C</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">A</span></code>) and
+reflexive (<code class="docutils literal notranslate"><span class="pre">A</span></code> is always a subtype of <code class="docutils literal notranslate"><span class="pre">A</span></code>).</p>
+<p>The <strong>supertype</strong> relation is the inverse of subtype: <code class="docutils literal notranslate"><span class="pre">A</span></code> is a supertype of
+<code class="docutils literal notranslate"><span class="pre">B</span></code> if and only if <code class="docutils literal notranslate"><span class="pre">B</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">A</span></code>; or equivalently, if and only
+if the set of values represented by <code class="docutils literal notranslate"><span class="pre">A</span></code> is a superset of the values
+represented by <code class="docutils literal notranslate"><span class="pre">B</span></code>. The supertype relation is also transitive and reflexive.</p>
+<p>We also define an <strong>equivalence</strong> relation on fully static types: the types
+<code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> are equivalent (or “the same type”) if and only if <code class="docutils literal notranslate"><span class="pre">A</span></code> is a
+subtype of <code class="docutils literal notranslate"><span class="pre">B</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">A</span></code>. This means that the set of
+values represented by <code class="docutils literal notranslate"><span class="pre">A</span></code> is both a superset and a subset of the values
+represented by <code class="docutils literal notranslate"><span class="pre">B</span></code>, meaning <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> must represent the same set of
+values.</p>
+<p>We may describe a type <code class="docutils literal notranslate"><span class="pre">B</span></code> as “narrower” than a type <code class="docutils literal notranslate"><span class="pre">A</span></code> (or as a “proper
+subtype” of <code class="docutils literal notranslate"><span class="pre">A</span></code>) if <code class="docutils literal notranslate"><span class="pre">B</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> is not equivalent
+to <code class="docutils literal notranslate"><span class="pre">A</span></code>. In the same scenario we can describe the type <code class="docutils literal notranslate"><span class="pre">A</span></code> as “wider” than
+<code class="docutils literal notranslate"><span class="pre">B</span></code>, or a “proper supertype” of <code class="docutils literal notranslate"><span class="pre">B</span></code>.</p>
+</section>
+<section id="nominal-and-structural-types">
+<h2>Nominal and structural types<a class="headerlink" href="#nominal-and-structural-types" title="Link to this heading">¶</a></h2>
+<p>For a type such as <code class="docutils literal notranslate"><span class="pre">str</span></code> (or any other class), which describes the set of
+values whose <code class="docutils literal notranslate"><span class="pre">__class__</span></code> is <code class="docutils literal notranslate"><span class="pre">str</span></code> or a direct or indirect subclass of it,
+subtyping corresponds directly to subclassing. A subclass <code class="docutils literal notranslate"><span class="pre">MyStr</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code>
+is a subtype of <code class="docutils literal notranslate"><span class="pre">str</span></code>, because <code class="docutils literal notranslate"><span class="pre">MyStr</span></code> represents a subset of the values
+represented by <code class="docutils literal notranslate"><span class="pre">str</span></code>. Such types can be called “nominal types” and this is
+“nominal subtyping.”</p>
+<p>Other types (e.g. <a class="reference internal" href="protocol.html#protocols"><span class="std std-ref">Protocols</span></a> and <a class="reference internal" href="typeddict.html#typeddict"><span class="std std-ref">Typed dictionaries</span></a>) instead describe a set
+of values by the types of their attributes and methods, or the types of their
+dictionary keys and values. These are called “structural types”. A structural
+type may be a subtype of another type without any inheritance or subclassing
+relationship, simply because it meets all the requirements of the supertype,
+and perhaps adds more, thus representing a subset of the possible values of the
+supertype. This is “structural subtyping”.</p>
+<p>Although the means of specifying the set of values represented by the types
+differs, the fundamental concepts are the same for both nominal and structural
+types: a type represents a set of possible values and a subtype represents a
+subset of those values.</p>
+</section>
+<section id="materialization">
+<h2>Materialization<a class="headerlink" href="#materialization" title="Link to this heading">¶</a></h2>
+<p>Since <a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a> represents an unknown static type, it does not represent any
+known single set of values (it represents an unknown set of values). Thus it is
+not in the domain of the subtype, supertype, or equivalence relations on static
+types described above.</p>
+<p>To relate gradual types more generally, we define a <strong>materialization</strong>
+relation. Materialization transforms a “more dynamic” type to a “more static”
+type. Given a gradual type <code class="docutils literal notranslate"><span class="pre">A</span></code>, if we replace zero or more occurrences of
+<code class="docutils literal notranslate"><span class="pre">Any</span></code> in <code class="docutils literal notranslate"><span class="pre">A</span></code> with some type (which can be different for each occurrence of
+<code class="docutils literal notranslate"><span class="pre">Any</span></code>), the resulting gradual type <code class="docutils literal notranslate"><span class="pre">B</span></code> is a materialization of <code class="docutils literal notranslate"><span class="pre">A</span></code>. (We
+can also materialize a <a class="reference internal" href="callables.html#callable"><span class="std std-ref">Callable</span></a> type by replacing <code class="docutils literal notranslate"><span class="pre">...</span></code> with any type
+signature, and materialize <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">...]</span></code> by replacing it with a
+determinate-length tuple type.)</p>
+<p>For instance, <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">str]</span></code> (a fully static type) and <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">str]</span></code>
+(a gradual type) are both materializations of <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">Any]</span></code>. <code class="docutils literal notranslate"><span class="pre">tuple[int,</span>
+<span class="pre">str]</span></code> is also a materialization of <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">str]</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">B</span></code> is a materialization of <code class="docutils literal notranslate"><span class="pre">A</span></code>, we can say that <code class="docutils literal notranslate"><span class="pre">B</span></code> is a “more
+static” type than <code class="docutils literal notranslate"><span class="pre">A</span></code>, and <code class="docutils literal notranslate"><span class="pre">A</span></code> is a “more dynamic” type than <code class="docutils literal notranslate"><span class="pre">B</span></code>.</p>
+<p>The materialization relation is both transitive and reflexive, so it defines a
+preorder on gradual types.</p>
+</section>
+<section id="consistency">
+<span id="consistent"></span><h2>Consistency<a class="headerlink" href="#consistency" title="Link to this heading">¶</a></h2>
+<p>We define a <strong>consistency</strong> relation on gradual types, based on
+materialization.</p>
+<p>A fully static type <code class="docutils literal notranslate"><span class="pre">A</span></code> is consistent with another fully static type <code class="docutils literal notranslate"><span class="pre">B</span></code> if
+and only if they are the same type (<code class="docutils literal notranslate"><span class="pre">A</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">B</span></code>).</p>
+<p>A gradual type <code class="docutils literal notranslate"><span class="pre">A</span></code> is consistent with a gradual type <code class="docutils literal notranslate"><span class="pre">B</span></code>, and <code class="docutils literal notranslate"><span class="pre">B</span></code> is
+consistent with <code class="docutils literal notranslate"><span class="pre">A</span></code>, if and only if there exists some fully static type <code class="docutils literal notranslate"><span class="pre">C</span></code>
+which is a materialization of both <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code>.</p>
+<p><a class="reference internal" href="special-types.html#any"><span class="std std-ref">Any</span></a> is consistent with every type, and every type is consistent with
+<span class="xref std std-ref">Any</span>. (This follows from the definitions of materialization and
+consistency but is worth stating explicitly.)</p>
+<p>The consistency relation is not transitive. <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">int]</span></code> is consistent
+with <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">int]</span></code>, and <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">int]</span></code> is consistent with
+<code class="docutils literal notranslate"><span class="pre">tuple[str,</span> <span class="pre">int]</span></code>, but <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">int]</span></code> is not consistent with
+<code class="docutils literal notranslate"><span class="pre">tuple[str,</span> <span class="pre">int]</span></code>.</p>
+<p>The consistency relation is symmetric. If <code class="docutils literal notranslate"><span class="pre">A</span></code> is consistent with <code class="docutils literal notranslate"><span class="pre">B</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span></code>
+is also consistent with <code class="docutils literal notranslate"><span class="pre">A</span></code>. It is also reflexive: <code class="docutils literal notranslate"><span class="pre">A</span></code> is always consistent
+with <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p>
+</section>
+<section id="the-assignable-to-or-consistent-subtyping-relation">
+<span id="assignable"></span><h2>The assignable-to (or consistent subtyping) relation<a class="headerlink" href="#the-assignable-to-or-consistent-subtyping-relation" title="Link to this heading">¶</a></h2>
+<p>Given the materialization relation and the subtyping relation, we can define
+the <strong>consistent subtype</strong> relation over all types. A type <code class="docutils literal notranslate"><span class="pre">B</span></code> is a
+consistent subtype of a type <code class="docutils literal notranslate"><span class="pre">A</span></code> if there exists a materialization <code class="docutils literal notranslate"><span class="pre">A'</span></code> of
+<code class="docutils literal notranslate"><span class="pre">A</span></code> and a materialization <code class="docutils literal notranslate"><span class="pre">B'</span></code> of <code class="docutils literal notranslate"><span class="pre">B</span></code>, where <code class="docutils literal notranslate"><span class="pre">A'</span></code> and <code class="docutils literal notranslate"><span class="pre">B'</span></code> are both
+fully static types, and <code class="docutils literal notranslate"><span class="pre">B'</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">A'</span></code>.</p>
+<p>Consistent subtyping defines “assignability” for Python.  An expression can be
+assigned to a variable (including passed as an argument or returned from a
+function) if its type is a consistent subtype of the variable’s type annotation
+(respectively, parameter’s type annotation or return type annotation).</p>
+<p>We can say that a type <code class="docutils literal notranslate"><span class="pre">B</span></code> is “assignable to” a type <code class="docutils literal notranslate"><span class="pre">A</span></code> if <code class="docutils literal notranslate"><span class="pre">B</span></code> is a
+consistent subtype of <code class="docutils literal notranslate"><span class="pre">A</span></code>. In this case we can also say that <code class="docutils literal notranslate"><span class="pre">A</span></code> is
+“assignable from” <code class="docutils literal notranslate"><span class="pre">B</span></code>.</p>
+<p>In the remainder of this specification, we will usually prefer the term
+<strong>assignable to</strong> over “consistent subtype of”. The two are synonymous, but
+“assignable to” is shorter, and may communicate a clearer intuition to many
+readers.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">Any</span></code> is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to <code class="docutils literal notranslate"><span class="pre">int</span></code>, because <code class="docutils literal notranslate"><span class="pre">int</span></code> is a
+materialization of <code class="docutils literal notranslate"><span class="pre">Any</span></code>, and <code class="docutils literal notranslate"><span class="pre">int</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">int</span></code>. The same
+materialization also shows that <code class="docutils literal notranslate"><span class="pre">int</span></code> is assignable to <code class="docutils literal notranslate"><span class="pre">Any</span></code>.</p>
+<p>The assignable-to relation is not generally symmetric, however. If <code class="docutils literal notranslate"><span class="pre">B</span></code> is a
+subtype of <code class="docutils literal notranslate"><span class="pre">A</span></code>, then <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">B]</span></code> is assignable to <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">A]</span></code>,
+because <code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">B]</span></code> can materialize to <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">B]</span></code>, which is a
+subtype of <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">A]</span></code>. But <code class="docutils literal notranslate"><span class="pre">tuple[int,</span> <span class="pre">A]</span></code> is not assignable to
+<code class="docutils literal notranslate"><span class="pre">tuple[Any,</span> <span class="pre">B]</span></code>.</p>
+<p>For a gradual structural type, consistency and assignability are also
+structural. For example, the structural type “all objects with an attribute
+<code class="docutils literal notranslate"><span class="pre">x</span></code> of type <code class="docutils literal notranslate"><span class="pre">Any</span></code>” is consistent with (and assignable to) the structural
+type “all objects with an attribute <code class="docutils literal notranslate"><span class="pre">x</span></code> of type <code class="docutils literal notranslate"><span class="pre">int</span></code>”.</p>
+</section>
+<section id="summary-of-type-relations">
+<h2>Summary of type relations<a class="headerlink" href="#summary-of-type-relations" title="Link to this heading">¶</a></h2>
+<p>The subtype, supertype, and equivalence relations establish a partial order on
+fully static types. The analogous relations on gradual types (via
+materialization) are “assignable-to” (or “consistent subtype”),
+“assignable-from” (or “consistent supertype”), and “consistent with”. We can
+visualize this analogy in the following table:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Fully static types</p></th>
+<th class="head"><p>Gradual types</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">B</span></code> is a <a class="reference internal" href="glossary.html#term-subtype"><span class="xref std std-term">subtype</span></a> of <code class="docutils literal notranslate"><span class="pre">A</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">B</span></code> is <a class="reference internal" href="glossary.html#term-assignable"><span class="xref std std-term">assignable</span></a> to (or a consistent subtype of) <code class="docutils literal notranslate"><span class="pre">A</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">A</span></code> is a <a class="reference internal" href="glossary.html#term-supertype"><span class="xref std std-term">supertype</span></a> of <code class="docutils literal notranslate"><span class="pre">B</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">A</span></code> is assignable from (or a consistent supertype of) <code class="docutils literal notranslate"><span class="pre">B</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">B</span></code> is <a class="reference internal" href="glossary.html#term-equivalent"><span class="xref std std-term">equivalent</span></a> to <code class="docutils literal notranslate"><span class="pre">A</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">B</span></code> is <a class="reference internal" href="glossary.html#term-consistent"><span class="xref std std-term">consistent</span></a> with <code class="docutils literal notranslate"><span class="pre">A</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>We can also define an <strong>equivalence</strong> relation on gradual types: the gradual
+types <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> are equivalent (that is, the same gradual type, not
+merely consistent with one another) if and only if all materializations of
+<code class="docutils literal notranslate"><span class="pre">A</span></code> are also materializations of <code class="docutils literal notranslate"><span class="pre">B</span></code>, and all materializations of <code class="docutils literal notranslate"><span class="pre">B</span></code>
+are also materializations of <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p>
+</section>
+<section id="attributes-and-methods">
+<h2>Attributes and methods<a class="headerlink" href="#attributes-and-methods" title="Link to this heading">¶</a></h2>
+<p>In Python, we can do more with objects at runtime than just assign them to
+names, pass them to functions, or return them from functions. We can also
+get/set attributes and call methods.</p>
+<p>In the Python data model, the operations that can be performed on a value all
+desugar to method calls. For example, <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code> is (roughly, eliding some
+details) syntactic sugar for either <code class="docutils literal notranslate"><span class="pre">type(a).__add__(a,</span> <span class="pre">b)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">type(b).__radd__(b,</span> <span class="pre">a)</span></code>.</p>
+<p>For a static type checker, accessing <code class="docutils literal notranslate"><span class="pre">a.foo</span></code> is a type error unless all
+possible objects in the set represented by the type of <code class="docutils literal notranslate"><span class="pre">a</span></code> have the <code class="docutils literal notranslate"><span class="pre">foo</span></code>
+attribute. (We consider an implementation of <code class="docutils literal notranslate"><span class="pre">__getattr__</span></code> to be a getter for
+all attribute names, and similarly for <code class="docutils literal notranslate"><span class="pre">__setattr__</span></code> and <code class="docutils literal notranslate"><span class="pre">__delattr__</span></code>.
+There are more <a class="reference external" href="https://docs.python.org/3/reference/datamodel.html#customizing-attribute-access">complexities</a>;
+a full specification of attribute access belongs in its own chapter.)</p>
+<p>If all objects in the set represented by the fully static type <code class="docutils literal notranslate"><span class="pre">A</span></code> have a
+<code class="docutils literal notranslate"><span class="pre">foo</span></code> attribute, we can say that the type <code class="docutils literal notranslate"><span class="pre">A</span></code> has the <code class="docutils literal notranslate"><span class="pre">foo</span></code> attribute.</p>
+<p>If the type <code class="docutils literal notranslate"><span class="pre">A</span></code> of <code class="docutils literal notranslate"><span class="pre">a</span></code> in <code class="docutils literal notranslate"><span class="pre">a.foo</span></code> is a gradual type, it may not represent
+a single set of objects. In this case, <code class="docutils literal notranslate"><span class="pre">a.foo</span></code> is a type error if and only if
+there does not exist any materialization of <code class="docutils literal notranslate"><span class="pre">A</span></code> which has the <code class="docutils literal notranslate"><span class="pre">foo</span></code>
+attribute.</p>
+<p>Equivalently, <code class="docutils literal notranslate"><span class="pre">a.foo</span></code> is a type error unless the type of <code class="docutils literal notranslate"><span class="pre">a</span></code> is assignable
+to a type that has the <code class="docutils literal notranslate"><span class="pre">foo</span></code> attribute.</p>
+</section>
+<section id="union-types">
+<span id="id2"></span><h2>Union types<a class="headerlink" href="#union-types" title="Link to this heading">¶</a></h2>
+<p>Since accepting a small, limited set of expected types for a single
+argument is common, the type system supports union types, created with the
+<code class="docutils literal notranslate"><span class="pre">|</span></code> operator.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">handle_employees</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="n">Employee</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Employee</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">Employee</span><span class="p">):</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="p">]</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>A fully static union type <code class="docutils literal notranslate"><span class="pre">T1</span> <span class="pre">|</span> <span class="pre">T2</span></code>, where <code class="docutils literal notranslate"><span class="pre">T1</span></code> and <code class="docutils literal notranslate"><span class="pre">T2</span></code> are fully static
+types, represents the set of values formed by the union of the sets of values
+represented by <code class="docutils literal notranslate"><span class="pre">T1</span></code> and <code class="docutils literal notranslate"><span class="pre">T2</span></code>, respectively. Thus, by the definition of the
+supertype relation, the union <code class="docutils literal notranslate"><span class="pre">T1</span> <span class="pre">|</span> <span class="pre">T2</span></code> is a supertype of both <code class="docutils literal notranslate"><span class="pre">T1</span></code> and
+<code class="docutils literal notranslate"><span class="pre">T2</span></code>, and <code class="docutils literal notranslate"><span class="pre">T1</span></code> and <code class="docutils literal notranslate"><span class="pre">T2</span></code> are both subtypes of <code class="docutils literal notranslate"><span class="pre">T1</span> <span class="pre">|</span> <span class="pre">T2</span></code>.</p>
+<p>A gradual union type <code class="docutils literal notranslate"><span class="pre">S1</span> <span class="pre">|</span> <span class="pre">S2</span></code>, where <code class="docutils literal notranslate"><span class="pre">S1</span></code> and <code class="docutils literal notranslate"><span class="pre">S2</span></code> are gradual types,
+represents all possible sets of values that could be formed by union of the
+possible sets of values represented by materializations of <code class="docutils literal notranslate"><span class="pre">S1</span></code> and <code class="docutils literal notranslate"><span class="pre">S2</span></code>,
+respectively.</p>
+<p>For any materialization of <code class="docutils literal notranslate"><span class="pre">S1</span></code> to <code class="docutils literal notranslate"><span class="pre">T1</span></code> and <code class="docutils literal notranslate"><span class="pre">S2</span></code> to <code class="docutils literal notranslate"><span class="pre">T2</span></code>, <code class="docutils literal notranslate"><span class="pre">S1</span> <span class="pre">|</span> <span class="pre">S2</span></code>
+can likewise be materialized to <code class="docutils literal notranslate"><span class="pre">T1</span> <span class="pre">|</span> <span class="pre">T2</span></code>. Thus, the gradual types <code class="docutils literal notranslate"><span class="pre">S1</span></code> and
+<code class="docutils literal notranslate"><span class="pre">S2</span></code> are both assignable to the gradual union type <code class="docutils literal notranslate"><span class="pre">S1</span> <span class="pre">|</span> <span class="pre">S2</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">B</span></code> is a subtype of <code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">B</span> <span class="pre">|</span> <span class="pre">A</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p>
+<p>This rule applies only to subtypes, not assignable-to. The union <code class="docutils literal notranslate"><span class="pre">T</span> <span class="pre">|</span> <span class="pre">Any</span></code> is
+not reducible to a simpler form. It represents an unknown static type with
+lower bound <code class="docutils literal notranslate"><span class="pre">T</span></code>. That is, it represents an unknown set of objects which may
+be as large as <code class="docutils literal notranslate"><span class="pre">object</span></code>, or as small as <code class="docutils literal notranslate"><span class="pre">T</span></code>, but no smaller.</p>
+<p>Equivalent gradual types can, however, be simplified from unions; e.g.
+<code class="docutils literal notranslate"><span class="pre">list[Any]</span> <span class="pre">|</span> <span class="pre">list[Any]</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">list[Any]</span></code>. Similarly, the union
+<code class="docutils literal notranslate"><span class="pre">Any</span> <span class="pre">|</span> <span class="pre">Any</span></code> can be simplified to <code class="docutils literal notranslate"><span class="pre">Any</span></code>: the union of two unknown sets of
+objects is an unknown set of objects.</p>
+<section id="union-with-none">
+<h3>Union with None<a class="headerlink" href="#union-with-none" title="Link to this heading">¶</a></h3>
+<p>One common case of union types are <em>optional</em> types, which are unions with
+<code class="docutils literal notranslate"><span class="pre">None</span></code>. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">handle_employee</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="n">Employee</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>Either the type <code class="docutils literal notranslate"><span class="pre">Employee</span></code> or the type of <code class="docutils literal notranslate"><span class="pre">None</span></code> are assignable to the
+union <code class="docutils literal notranslate"><span class="pre">Employee</span> <span class="pre">|</span> <span class="pre">None</span></code>.</p>
+<p>A past version of this specification allowed type checkers to assume an optional
+type when the default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, as in this code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">handle_employee</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="n">Employee</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>This would have been treated as equivalent to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">handle_employee</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="n">Employee</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>This is no longer the recommended behavior. Type checkers should move
+towards requiring the optional type to be made explicit.</p>
+</section>
+<section id="support-for-singleton-types-in-unions">
+<h3>Support for singleton types in unions<a class="headerlink" href="#support-for-singleton-types-in-unions" title="Link to this heading">¶</a></h3>
+<p>A singleton instance is frequently used to mark some special condition,
+in particular in situations where <code class="docutils literal notranslate"><span class="pre">None</span></code> is also a valid value
+for a variable. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_empty</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">_empty</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="n">_empty</span><span class="p">:</span>  <span class="c1"># default argument value</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># argument was provided and it&#39;s None</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>To allow precise typing in such situations, the user should use
+a union type in conjunction with the <code class="docutils literal notranslate"><span class="pre">enum.Enum</span></code> class provided
+by the standard library, so that type errors can be caught statically:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Empty</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">_empty</span> <span class="o">=</span> <span class="n">Empty</span><span class="o">.</span><span class="n">token</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">Empty</span> <span class="o">=</span> <span class="n">_empty</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+
+    <span class="n">boom</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">42</span>  <span class="c1"># This fails type check</span>
+
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="n">_empty</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># At this point typechecker knows that x can only have type int</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>Since the subclasses of <code class="docutils literal notranslate"><span class="pre">Enum</span></code> cannot be further subclassed,
+the type of variable <code class="docutils literal notranslate"><span class="pre">x</span></code> can be statically inferred in all branches
+of the above example. The same approach is applicable if more than one
+singleton object is needed: one can use an enumeration that has more than
+one value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Reason</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">timeout</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Reason</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">response</span> <span class="ow">is</span> <span class="n">Reason</span><span class="o">.</span><span class="n">timeout</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;TIMEOUT&#39;</span>
+    <span class="k">elif</span> <span class="n">response</span> <span class="ow">is</span> <span class="n">Reason</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;ERROR&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># response can be only str, all other possible values exhausted</span>
+        <span class="k">return</span> <span class="s1">&#39;PROCESSED: &#39;</span> <span class="o">+</span> <span class="n">response</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<p>The concepts presented here are derived from the research literature in gradual
+typing. See e.g.:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://doi.org/10.1145/3290329">Giuseppe Castagna, Victor Lanvin, Tommaso Petrucciani, and Jeremy G. Siek. 2019. Gradual Typing: A New Perspective.</a> Proc. ACM Program. Lang. 3, POPL, Article 16 (January 2019), 112 pages</p></li>
+<li><p><a class="reference external" href="https://theses.hal.science/tel-03853222/file/va_Lanvin_Victor.pdf">Victor Lanvin. A semantic foundation for gradual set-theoretic types.</a> Computer science. Université Paris Cité, 2021. English. NNT : 2021UNIP7159. tel-03853222</p></li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Type system concepts</a><ul>
+<li><a class="reference internal" href="#static-dynamic-and-gradual-typing">Static, dynamic, and gradual typing</a></li>
+<li><a class="reference internal" href="#fully-static-and-gradual-types">Fully static and gradual types</a><ul>
+<li><a class="reference internal" href="#fully-static-types">Fully static types</a></li>
+<li><a class="reference internal" href="#gradual-types">Gradual types</a></li>
+<li><a class="reference internal" href="#the-gradual-guarantee">The gradual guarantee</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#subtype-supertype-and-type-equivalence">Subtype, supertype, and type equivalence</a></li>
+<li><a class="reference internal" href="#nominal-and-structural-types">Nominal and structural types</a></li>
+<li><a class="reference internal" href="#materialization">Materialization</a></li>
+<li><a class="reference internal" href="#consistency">Consistency</a></li>
+<li><a class="reference internal" href="#the-assignable-to-or-consistent-subtyping-relation">The assignable-to (or consistent subtyping) relation</a></li>
+<li><a class="reference internal" href="#summary-of-type-relations">Summary of type relations</a></li>
+<li><a class="reference internal" href="#attributes-and-methods">Attributes and methods</a></li>
+<li><a class="reference internal" href="#union-types">Union types</a><ul>
+<li><a class="reference internal" href="#union-with-none">Union with None</a></li>
+<li><a class="reference internal" href="#support-for-singleton-types-in-unions">Support for singleton types in unions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="meta.html"
+                          title="previous chapter">Meta-topics</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="annotations.html"
+                          title="next chapter">Type annotations</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spec/concepts.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="annotations.html" title="Type annotations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="meta.html" title="Meta-topics"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Specification for the Python type system</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Type system concepts</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>

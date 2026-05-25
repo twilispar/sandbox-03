@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Reasons to avoid static type checking &#8212; typing  documentation</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/pydoctheme.css?v=23252803" />
+    <link id="pygments_dark_css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css" href="../_static/pygments_dark.css?v=5349f25f" />
+    
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generics" href="../reference/generics.html" />
+    <link rel="prev" title="Type Narrowing" href="type_narrowing.html" /><link rel="stylesheet" href="../_static/pydoctheme_dark.css" media="(prefers-color-scheme: dark)" id="pydoctheme_dark_css">
+    <link rel="shortcut icon" type="image/png" href="../_static/py.svg" />
+            <script type="text/javascript" src="../_static/copybutton.js"></script>
+            <script type="text/javascript" src="../_static/menu.js"></script>
+            <script type="text/javascript" src="../_static/search-focus.js"></script>
+            <script type="text/javascript" src="../_static/themetoggle.js"></script> 
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="typing" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/guides/typing_anti_pitch.html" /><meta name="readthedocs-http-status" content="200" /></head>
+<body>
+<div class="mobile-nav">
+    <input type="checkbox" id="menuToggler" class="toggler__input" aria-controls="navigation"
+           aria-pressed="false" aria-expanded="false" role="button" aria-label="Menu" />
+    <nav class="nav-content" role="navigation">
+        <label for="menuToggler" class="toggler__label">
+            <span></span>
+        </label>
+        <span class="nav-items-wrapper">
+            <a href="https://www.python.org/" class="nav-logo">
+                <img src="../_static/py.svg" alt="Python logo"/>
+            </a>
+            <span class="version_switcher_placeholder"></span>
+            <form role="search" class="search" action="../search.html" method="get">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+                <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" />
+                <input type="submit" value="Go"/>
+            </form>
+        </span>
+    </nav>
+    <div class="menu-wrapper">
+        <nav class="menu" role="navigation" aria-label="main navigation">
+            <div class="language_switcher_placeholder"></div>
+            
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label>
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Reasons to avoid static type checking</a><ul>
+<li><a class="reference internal" href="#advice-for-maintainers-of-untyped-libraries">Advice for maintainers of untyped libraries</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="type_narrowing.html"
+                          title="previous chapter">Type Narrowing</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../reference/generics.html"
+                          title="next chapter">Generics</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/typing_anti_pitch.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </nav>
+    </div>
+</div>
+  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../reference/generics.html" title="Generics"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="type_narrowing.html" title="Type Narrowing"
+             accesskey="P">previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Reasons to avoid static type checking</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="reasons-to-avoid-static-type-checking">
+<span id="typing-anti-pitch"></span><h1>Reasons to avoid static type checking<a class="headerlink" href="#reasons-to-avoid-static-type-checking" title="Link to this heading">¶</a></h1>
+<p>In the words of <span class="target" id="index-0"></span><a class="pep reference external" href="https://peps.python.org/pep-0484/"><strong>PEP 484</strong></a>:</p>
+<blockquote>
+<div><p>It should also be emphasized that Python will remain a dynamically typed language, and
+the authors have no desire to ever make type hints mandatory, even by convention.</p>
+</div></blockquote>
+<p>The idea that dynamism in Python is a strength of the language is reflected in the fact that
+Python’s type system is gradual. See <span class="target" id="index-1"></span><a class="pep reference external" href="https://peps.python.org/pep-0483/"><strong>PEP 483</strong></a> for details, but the long and short of this is
+that you can add static types to your codebase only to the extent that you want to, and static
+type checkers and other tools should be able to put up with this.</p>
+<p>It’s also worth noting that “static type checking” encompasses a spectrum of possible degrees of
+strictness. On the one hand, you can set yourself up so that your type checker does almost nothing.
+On the other – well, I love type checking, but I would quit Python if I had to enable all
+possible strictness checks that type checkers offer.</p>
+<p>Anyway, with all that said, here’s a list of possible reasons to not use static type checking
+in Python:</p>
+<ul class="simple">
+<li><p>You simply don’t want to. Python is a tool that is meant to serve you. Python is a big tent,
+multi-paradigm language that generally allows you to do things in the way that best suits your
+needs, as best determined by you.</p></li>
+<li><p>Type annotations can both help and hurt readability. While type annotations can serve both
+humans and machines, particularly complex annotations or changes to idioms serve machines more
+than they do humans. Readability counts.</p></li>
+<li><p>The cost-benefit ratio isn’t good enough. Pleasing static type checkers requires a non-zero amount
+of busy work. If this isn’t worth the extra confidence you get, you shouldn’t add static type
+checking.</p></li>
+<li><p>Your codebase fits in your developers’ heads. Opinions vary, but people tend to agree that at
+some number of developers and lines of code, static type checking confers significantly more
+benefit. You don’t feel like you’re there yet.</p></li>
+<li><p>If you maintain high test coverage, that might provide sufficient quality assurance for your
+needs (acknowledging that static type checking and tests enforce different things; static type
+checking usually cannot validate logic, tests can often not prove invariants of your code to
+hold).</p></li>
+<li><p>Your codebase is old, large and has been working fine without static type checking for years.
+While Python’s type system is designed to
+<a class="reference external" href="https://mypy.readthedocs.io/en/stable/existing_code.html">allow gradual adoption of static type checking</a>,
+the total cost of adding type annotations to a large extant codebase can be prohibitive.</p></li>
+<li><p>Your application uses a particularly dynamic framework or your library does enough dynamic things
+that type checking would be unlikely to help your developers and users. Migrating application
+frameworks could be costly. Either a) redesigning your library in ways that static type checkers
+could better understand or b) figuring out clever type annotations to twist the arms of type
+checkers would take a lot of effort.</p></li>
+<li><p>Your codebase has suffered at the hands of <a class="reference external" href="https://www.hyrumslaw.com/">Hyrum’s Law</a>
+and all possible observable behaviour is depended on. In order to avoid false positives for your
+users, all your types end up being either a) complicated <code class="docutils literal notranslate"><span class="pre">Protocol</span></code>s that are hard to maintain,
+or b) <code class="docutils literal notranslate"><span class="pre">Any</span></code> in which case there’s not much point. (On the other hand, static type checking could
+be a good solution for communicating to users what behaviour they should be allowed to rely on)</p></li>
+<li><p>You’re not opposed to type checking in theory, but you dislike Python type checkers in practice.
+Maybe they don’t understand enough of the idioms you use, maybe you’d like them to infer more
+instead of relying on explicit annotations, maybe they’re too slow, maybe they don’t integrate
+well with your editor, maybe they’re too hard to configure. Whatever the reason – it just doesn’t
+work for your project.</p></li>
+<li><p>Type checking in Python isn’t actually strict enough, powerful enough or expressive enough for
+you. Python type checkers end up making various decisions out of pragmatism, or due to limited
+resources, and these decisions might not be the ones for you. This might mean that typed Python
+simply isn’t the right language for you, or you need to find other methods to enforce the
+properties you desire.</p></li>
+</ul>
+<section id="advice-for-maintainers-of-untyped-libraries">
+<h2>Advice for maintainers of untyped libraries<a class="headerlink" href="#advice-for-maintainers-of-untyped-libraries" title="Link to this heading">¶</a></h2>
+<p>You’ve made the decision that adding static types isn’t the right choice for your library. But
+perhaps you’d still like to help your users who do use static type checking – and maybe you have
+some enthusiastic would-be contributors willing to help with this.</p>
+<p>One option is encourage such contributors to publish a <span class="target" id="index-2"></span><a class="pep reference external" href="https://peps.python.org/pep-0561/"><strong>PEP 561</strong></a> stub-only package that is
+maintained separately from your main project. They could also contribute these stubs to the
+<a class="reference external" href="https://github.com/python/typeshed">typeshed</a> project.</p>
+<p>Note that if you’re willing to maintain the stubs, but you don’t wish to have them inline and don’t
+want to statically type check your code, you can accomplish this by distributing type stubs inside
+your package. See <a class="reference internal" href="libraries.html#libraries"><span class="std std-ref">Typing Python Libraries</span></a> for more information. See <a class="reference internal" href="writing_stubs.html#writing-stubs"><span class="std std-ref">Writing and Maintaining Stub Files</span></a> for advice on
+how to help maintain type stubs.</p>
+<p>If more users pester you about adding static types, feel free to link them to this document. And if
+you ever change your mind, make sure to check out some of the other guides in this documentation,
+and ask any questions you have over at <a class="reference external" href="https://github.com/python/typing/discussions">Python’s typing discussions</a>.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Reasons to avoid static type checking</a><ul>
+<li><a class="reference internal" href="#advice-for-maintainers-of-untyped-libraries">Advice for maintainers of untyped libraries</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="type_narrowing.html"
+                          title="previous chapter">Type Narrowing</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../reference/generics.html"
+                          title="next chapter">Generics</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/typing_anti_pitch.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../reference/generics.html" title="Generics"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="type_narrowing.html" title="Type Narrowing"
+             >previous</a> |</li>
+          <li><img src="../_static/py.svg" alt="Python logo" style="vertical-align: middle; margin-top: -1px"/></li>
+          <li><a href="https://www.python.org/">Python</a> &#187;</li>
+          <li class="switchers">
+            <div class="language_switcher_placeholder"></div>
+            <div class="version_switcher_placeholder"></div>
+          </li>
+          <li>
+              
+              <a href="../index.html">typing  documentation</a> &#187;
+              
+          </li>
+        <li class="nav-item nav-item-this"><a href="">Reasons to avoid static type checking</a></li>
+                <li class="right">
+                    
+
+    <div class="inline-search" role="search">
+        <form class="inline-search" action="../search.html" method="get">
+          <input placeholder="Quick search" aria-label="Quick search" type="search" name="q" id="search-box" />
+          <input type="submit" value="Go" />
+        </form>
+    </div>
+                     |
+                </li>
+            <li class="right">
+<label class="theme-selector-label">
+    Theme
+    <select class="theme-selector" oninput="activateTheme(this.value)">
+        <option value="auto" selected>Auto</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+    </select>
+</label> |</li>
+            
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; 
+    Copyright
+     2021, The Python Typing Team.
+    <br />
+    This page is licensed under the Python Software Foundation License Version 2.
+    <br />
+    Examples, recipes, and other code in the documentation are additionally licensed under the Zero Clause BSD License.
+    <br />
+    
+    
+    <br />
+
+    The Python Software Foundation is a non-profit corporation.
+<a href="https://www.python.org/psf/donations/">Please donate.</a>
+<br />
+    <br />
+    
+    <br />
+
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+
+  </body>
+</html>
