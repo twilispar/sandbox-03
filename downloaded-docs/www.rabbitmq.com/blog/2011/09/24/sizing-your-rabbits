@@ -1,0 +1,180 @@
+<!doctype html><html lang=en dir=ltr class="blog-wrapper blog-post-page plugin-blog plugin-id-default" data-has-hydrated=false><head><meta charset=UTF-8><meta name=generator content="Docusaurus v3.10.1"><title data-rh=true>Sizing your Rabbits | RabbitMQ</title><meta data-rh=true name=viewport content="width=device-width, initial-scale=1.0"/><meta data-rh=true name=twitter:card content=summary_large_image /><meta data-rh=true property=og:image content=https://www.rabbitmq.com/img/rabbitmq-social-media-card.svg /><meta data-rh=true name=twitter:image content=https://www.rabbitmq.com/img/rabbitmq-social-media-card.svg /><meta data-rh=true property=og:url content=https://www.rabbitmq.com/blog/2011/09/24/sizing-your-rabbits /><meta data-rh=true property=og:locale content=en /><meta data-rh=true name=docusaurus_locale content=en /><meta data-rh=true name=docusaurus_tag content=default /><meta data-rh=true name=docsearch:language content=en /><meta data-rh=true name=docsearch:docusaurus_tag content=default /><meta data-rh=true property=og:title content="Sizing your Rabbits | RabbitMQ"/><meta data-rh=true name=description content="One of the problems we face at the RabbitMQ HQ is that whilst we may"/><meta data-rh=true property=og:description content="One of the problems we face at the RabbitMQ HQ is that whilst we may"/><meta data-rh=true property=og:type content=article /><meta data-rh=true property=article:published_time content=2011-09-24T00:00:00.000Z /><meta data-rh=true property=article:tag content=Introductory,HowTo /><link data-rh=true rel=icon href=/img/rabbitmq-logo.svg /><link data-rh=true rel=canonical href=https://www.rabbitmq.com/blog/2011/09/24/sizing-your-rabbits /><link data-rh=true rel=alternate href=https://www.rabbitmq.com/blog/2011/09/24/sizing-your-rabbits hreflang=en /><link data-rh=true rel=alternate href=https://www.rabbitmq.com/blog/2011/09/24/sizing-your-rabbits hreflang=x-default /><link data-rh=true rel=preconnect href=https://H10VQIW16Y-dsn.algolia.net crossorigin=anonymous /><script data-rh=true type=application/ld+json>{"@context":"https://schema.org","@id":"https://www.rabbitmq.com/blog/2011/09/24/sizing-your-rabbits","@type":"BlogPosting","author":{"@type":"Person","name":"Matthew Sackman"},"datePublished":"2011-09-24T00:00:00.000Z","description":"One of the problems we face at the RabbitMQ HQ is that whilst we may","headline":"Sizing your Rabbits","isPartOf":{"@id":"https://www.rabbitmq.com/blog","@type":"Blog","name":"Blog"},"keywords":[],"mainEntityOfPage":"https://www.rabbitmq.com/blog/2011/09/24/sizing-your-rabbits","name":"Sizing your Rabbits","url":"https://www.rabbitmq.com/blog/2011/09/24/sizing-your-rabbits"}</script><link rel=alternate type=application/rss+xml href=/blog/rss.xml title="RabbitMQ RSS Feed"><link rel=alternate type=application/atom+xml href=/blog/atom.xml title="RabbitMQ Atom Feed"><link rel=search type=application/opensearchdescription+xml title=RabbitMQ href=/opensearch.xml><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Raleway:400,700"><script src=https://cdn.cookielaw.org/scripttemplates/otSDKStub.js data-domain-script=018ee308-473e-754f-b0c2-cbe82d25512f></script><script>var timer;function OptanonWrapper(){}function setGTM(e,t,n,o,r){e[o]=e[o]||[],e[o].push({"gtm.start":new Date().getTime(),event:"gtm.js"});var a=t.getElementsByTagName(n)[0],i=t.createElement(n);i.async=!0,i.src="https://www.googletagmanager.com/gtm.js?id="+r+("dataLayer"!=o?"&l="+o:""),a.parentNode.insertBefore(i,a)}function waitForOnetrustActiveGroups(){document.cookie.indexOf("OptanonConsent")>-1&&document.cookie.indexOf("groups=")>-1?(clearTimeout(timer),setGTM(window,document,"script","dataLayer","GTM-TT84L8K")):timer=setTimeout(waitForOnetrustActiveGroups,250)}document.cookie.indexOf("OptanonConsent")>-1&&document.cookie.indexOf("groups=")>-1?setGTM(window,document,"script","dataLayer","GTM-TT84L8K"):waitForOnetrustActiveGroups()</script><link rel=stylesheet href=/assets/css/styles.55f09c4d.css /><script src=/assets/js/runtime~main.f0ac4473.js defer></script><script src=/assets/js/main.ca0eb4cf.js defer></script></head><body><svg style="display: none;"><defs>
+<symbol id=theme-svg-external-link viewBox="0 0 24 24"><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme-5b4")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss-5b4")}catch(t){}return!1}())</script><div id=__docusaurus><div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><div class="theme-announcement-bar announcementBar_mb4j" style=background-color:var(--ifm-color-primary-contrast-background);color:var(--ifm-font-color-base) role=banner><div class=announcementBarPlaceholder_vyr4></div><div class="content_knG7 announcementBarContent_xLdY"><div style="font-size: var(--ifm-h4-font-size);">🎉️ <a href=/blog/2026/04/23/rabbitmq-4.3-release><strong>RabbitMQ 4.3</strong> is out!</a> 🥳️</div></div><button type=button aria-label=Close class="clean-btn close closeButton_CVFx announcementBarClose_gvF7"><svg viewBox="0 0 15 15" width=14 height=14><g stroke=currentColor stroke-width=3.1><path d="M.75.75l13.5 13.5M14.25.75L.75 14.25"/></g></svg></button></div><nav aria-label=Main class="theme-layout-navbar navbar navbar--fixed-top"><div class=navbar__inner><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded=false class="navbar__toggle clean-btn" type=button><svg width=30 height=30 viewBox="0 0 30 30" aria-hidden=true><path stroke=currentColor stroke-linecap=round stroke-miterlimit=10 stroke-width=2 d="M4 7h22M4 15h22M4 23h22"/></svg></button><a class=navbar__brand href=/><div class=navbar__logo><img src=/img/rabbitmq-logo-by-tanzu.svg alt=RabbitMQ class="themedComponent_mlkZ themedComponent--light_NVdE"/><img src=/img/rabbitmq-logo-by-tanzu.svg alt=RabbitMQ class="themedComponent_mlkZ themedComponent--dark_xIcU"/></div></a><a class="navbar__item navbar__link" href=/tutorials>Getting Started</a><a class="navbar__item navbar__link" href=/docs>Docs</a><a aria-current=page class="navbar__item navbar__link navbar__link--active" href=/blog>Blog</a><a class="navbar__item navbar__link" href=/contact>Support</a><a class="navbar__item navbar__link" href=/commercial-features>Commercial Features</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="navbar__item dropdown dropdown--hoverable dropdown--right"><a class=navbar__link aria-haspopup=true aria-expanded=false role=button href=/docs>4.3</a><ul class=dropdown__menu><li class=""><strong>Release series</strong><li><a class=dropdown__link href=/docs/next>Next</a><li><a class=dropdown__link href=/docs>4.3</a><li><a class=dropdown__link href=/docs/4.2>4.2</a><li><a class=dropdown__link href=/docs/4.1>4.1</a><li><a class=dropdown__link href=/docs/4.0>4.0</a><li><a class=dropdown__link href=/docs/3.13>3.13</a></ul></div><a href=https://github.com/rabbitmq/rabbitmq-website target=_blank rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type=button disabled title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill=currentColor d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"/></svg><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill=currentColor d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"/></svg><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill=currentColor d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"/></svg></button></div><div class=navbarSearchContainer_Bca1><button type=button class="DocSearch DocSearch-Button" aria-label="Search (Meta+k)" aria-keyshortcuts=Meta+k><span class=DocSearch-Button-Container><svg width=20 height=20 class=DocSearch-Search-Icon viewBox="0 0 24 24" aria-hidden=true><circle cx=11 cy=11 r=8 stroke=currentColor fill=none stroke-width=1.4 /><path d="m21 21-4.3-4.3" stroke=currentColor fill=none stroke-linecap=round stroke-linejoin=round /></svg><span class=DocSearch-Button-Placeholder>Search</span></span><span class=DocSearch-Button-Keys></span></button></div></div></div><div role=presentation class=navbar-sidebar__backdrop></div></nav><div id=__docusaurus_skipToContent_fallback class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="container margin-vert--lg"><div class=row><main class="col col--9 col--offset-1"><article class=""><header><h1 class=title_f1Hy>Sizing your Rabbits</h1><div class="container_mt6G margin-vert--md"><time datetime=2011-09-24T00:00:00.000Z>September 24, 2011</time> · <!-- -->11 min read</div><div class="margin-top--md margin-bottom--sm row"><div class="col col--12 authorCol_Hf19"><div class="avatar margin-bottom--sm"><div class="avatar__intro authorDetails_lV9A"><div class=avatar__name><span class=authorName_yefp translate=no>Matthew Sackman</span></div><div class=authorSocials_rSDt></div></div></div></div></div></header><div id=__blog-post-container class=markdown><p>One of the problems we face at the RabbitMQ HQ is that whilst we may
+know lots about how the broker works, we don't tend to have a large
+pool of experience of designing applications that use RabbitMQ and
+which need to work reliably, unattended, for long periods of time. We
+spend a lot of time answering questions on the mailing list, and we do
+consultancy work here and there, but in some cases it's as a result of
+being contacted by users building applications that we're really made
+to think about long-term behaviour of RabbitMQ. Recently, we've been
+prompted to think long and hard about the basic performance of queues,
+and this has lead to some realisations about provisioning Rabbits.</p>
+<p>RabbitMQ's queues are fastest when they're empty. When a queue is
+empty, and it has consumers ready to receive messages, then as soon as
+a message is received by the queue, it goes straight out to the
+consumer. In the case of a persistent message in a durable queue, yes,
+it will also go to disk, but that's done in an asynchronous manner and
+is buffered heavily. The main point is that very little book-keeping
+needs to be done, very few data structures are modified, and very
+little additional memory needs allocating. Consequently, the CPU load
+of a message going through an empty queue is very small.</p>
+<p>If the queue is not empty then a bit more work has to be done: the
+messages have to actually be queued up. Initially, this too is fast
+and cheap as the underlying functional data structures are very
+fast. Nevertheless, by holding on to messages, the overall memory
+usage of the queue will be higher, and we are doing more work than
+before per message (each message is being both enqueued and dequeued
+now, whereas before each message was just going straight out to a
+consumer), so the CPU cost per message is higher. Consequently, the
+top speed you'll be able to achieve with an empty queue will be higher
+than the top speed of a queue with a fixed N messages in it, even if N
+is very small.</p>
+<p>If the queue receives messages at a faster rate than it can pump out
+to consumers then things get slower. As the queue grows, it will
+require more memory. Additionally, if a queue receives a spike of
+publications, then the queue must spend time dealing with those
+publications, which takes CPU time away from sending existing messages
+out to consumers: a queue of a million messages will be able to be
+drained out to ready consumers at a much higher rate if there are no
+publications arriving at the queue to distract it. Not exactly rocket
+science, but worth remembering that publications arriving at a queue
+can reduce the rate at which the queue drives its consumers.</p>
+<p>Eventually, as a queue grows, it'll become so big that we have to
+start writing messages out to disk and forgetting about them from RAM
+in order to free up RAM. At this point, the CPU cost per message is
+much higher than had the message been dealt with by an empty queue.</p>
+<p>None of this seems particularly profound, but keeping these points in
+mind when building your application turns out to be very important.</p>
+<p>Let's say you design and build your application, using RabbitMQ. There
+will be some set of publishers, and some set of consumers. You test
+this, and let's say that in total, in one part of the system, you find
+that the maximum rate that'll ensure your queues stay empty or very
+near empty is 2000 msgs/second. You then choose a machine on which to
+run RabbitMQ, which might be on some sort of virtual server. When
+testing at 2000 msgs/second you found the CPU load of the box running
+RabbitMQ was not very high: the bottleneck was elsewhere in the
+application -- most likely in the consumers of your queues (you were
+measuring the maximum stable end-to-end performance) -- so RabbitMQ
+itself wasn't being overly stressed and so wasn't eating up much
+CPU. Consequently, you choose a virtual server which isn't enormously
+powerful. You then launch the application and sure enough, everything
+looks OK.</p>
+<p>Over time, your application becomes more popular, and so your rates
+increase.</p>
+<p>Eventually, you get to a point where your consumers are running flat
+out, and your queues are staying nearly empty. But then, at the most
+popular time of the day for your application, your publishers push a
+few more messages into your queues than before. This is just normal
+growth -- you have more users now and so it's not surprising messages
+are being published a bit faster than before. What you hope will
+happen is that RabbitMQ will just happily buffer up the messages and
+will eventually feed them to your consumers who will be able to work
+through the back-log during quieter times of the day.</p>
+<p>The problem is that this might not be able to happen. Because your
+queues are now (albeit briefly) receiving more messages than your
+consumers can cope with, the queues spend more CPU time dealing with
+each message than they used to when the queue was empty (the messages
+now have to be queued up). That takes away CPU time from driving the
+consumers and unfortunately, as you chose a machine for RabbitMQ which
+didn't have a great deal of spare CPU capacity, you start maxing out
+the CPU. Thus your queues can't drive your consumers quite as hard as
+before, which in turn makes the rate of growth of the queues
+increase. This in turn starts to push the queues to sizes where they
+have to start pushing messages to disk in order to free up RAM which
+again takes up more CPU which you don't have, and by this point,
+you're likely in deep trouble.</p>
+<p>What can you do?</p>
+<p>At this immediate point, you need to get your queues drained. Because
+your queues are spending more time dealing with new messages arriving
+than with pushing messages out to consumers, it's unlikely that
+throwing more consumers at the queues is going to significantly
+help. You really need to get the publishers to stop.</p>
+<p>If you have the luxury of just turning off the publishers then do
+that, and turn them back on when the queues become empty again. If you
+can't do that, then you need to divert their load somewhere else, but
+given that your Rabbit is writing out to disk to avoid running out of
+memory, and is maxing out the CPU, adding new queues to your current
+Rabbit is not going to help -- you need a new Rabbit on a different
+machine. If you've set up a cluster, then you could provision new
+queues on a node of your RabbitMQ cluster that is not so heavily
+loaded, then attach lots of new consumers to that, and divert the
+publishers into there. At this point, you'll realise the value of not
+using the default nameless exchange and addressing queues directly,
+and instead will be very glad that you had your publishers publish to
+an exchange you created, thus allowing you to add a new binding to
+your fresh new queue, and deleting the binding to your old queue,
+diverting the load, and not having to interrupt your publishers at
+all. The old queues will then be able to drive their consumers (which
+you've not removed!) as fast as possible, and the queues will
+drain. Now in this situation, you have the prospect of messages being
+processed out of order (new messages arriving in the fresh new queues
+may be processed by your new consumers before the old messages in the
+old queues are processed), but if you have multiple consumers off a
+single queue then you're probably already dealing with that problem
+anyway.</p>
+<p>Prevention, we are often told, is preferable to cure. So how could you
+design your application to be able to help RabbitMQ cope with these
+potentially catastrophic situations?</p>
+<p>Firstly, don't use a very low <code>basic.qos</code> prefetch value in
+your consumers. If you use a value of 1 then it'll mean that a queue
+sends out one message to a consumer, and then can't send anything more
+to that consumer until it receives the acknowledgement back. Only when
+it's done that can it send out the next message. If it takes a while
+for the acknowledgement to make its way back to the queue (for
+example, high latency on the network, or the load that your Rabbit is
+under may mean it takes a while for that acknowledgement to get all
+the way through to the queue) then in the meantime, that consumer is
+sitting there idle. If you use a <code>basic.qos</code> prefetch value
+of 20, for example, then the broker will ensure that 20 messages are
+sent to the consumer, and then even as the acknowledgement for the
+first message is (maybe slowly) making its way back to the queue, the
+consumer still has work to be getting on with (i.e. the next 19
+messages). Essentially, the higher the prefetch value, the greater
+insulation the consumer has from spikes in the round trip time back to
+the queue.</p>
+<p>Secondly, consider not acknowledging every message, but instead
+acknowledging every N messages and setting the <code>multiple</code>
+flag on the acknowledgement. When the queue is overloaded, it's
+because it has too much work to do (profound, I know). As a consumer,
+you can reduce the amount of work it has to do by ensuring you don't
+flood it with acknowledgements.  Thus, for example, you set the
+<code>basic.qos</code> prefetch to 20, but you only send an
+acknowledgement after you've processed every 10 messages and you set
+the <code>multiple</code> flag to true on the acknowledgement. The
+queue will now receive one-tenth of the acknowledgements it would have
+previously received. It will still internally acknowledge all ten
+messages, but it can do it in a more efficient way if it receives one
+acknowledgement that accounts for several messages, rather than lots
+of individual acknowledgements. However, if you're only acknowledging
+every N messages, be sure that your <code>basic.qos</code> prefetch
+value is higher than N. Probably at least 2*N. If your prefetch value
+is the same as N, then your consumer will once again be left idle
+whilst the acknowledgement makes its way back to the queue and the
+queue sends out a fresh batch of messages.</p>
+<p>Thirdly, have a strategy to pivot the load to other queues on others
+machines if the worst comes to the worst. Yes, it is a good idea to
+use RabbitMQ as a buffer which insulates publishers from consumers and
+can absorb spikes. But equally, you need to remember that RabbitMQ's
+queues go fastest when they're empty, and we always say that you
+should design your application so that the queues are normally
+empty. Or to put it another way, the performance of a queue is lowest
+when you likely need more than ever for it to absorb a large
+spike. The upshot of that is that unless you test to makes sure you
+know it will recover, you might be in for a surprise should a
+non-trivial spike occur which substantially increases the length of
+your queues. You may not have factored into your thinking that in such
+a situation, your existing consumers may end up being driven more
+slowly than before, simply because your queues are busy doing other
+things (enqueuing messages), and that this can cause a vicious cycle
+that eventually results in a catastrophic loss of performance of the
+queue.</p>
+<p>The nub of the issue is that a queue is a single-threaded resource. If
+you've designed your routing topology in such a way that it already
+does, or at least can, spread messages across multiple queues rather
+than just hammering all messages into a single queue, then you're far
+more likely to be able to respond to such problems occurring quickly
+and easily, by diverting load and being able to take advantage of
+additional CPU resources which ensure that you can minimise the
+CPU-hit per message.</div><footer class=docusaurus-mt-lg><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class=col><b>Tags:</b><ul class="tags_jXut padding--none margin-left--sm"><li class=tag_QGVx><a rel=tag class="tag_zVej tagRegular_sFm0" href=/blog/tags/introductory>Introductory</a><li class=tag_QGVx><a rel=tag class="tag_zVej tagRegular_sFm0" href=/blog/tags/how-to>HowTo</a></ul></div></div><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href=https://github.com/rabbitmq/rabbitmq-website/tree/main/blog/2011-09-24-sizing-your-rabbits/index.md target=_blank rel="noopener noreferrer" class=theme-edit-this-page><svg fill=currentColor height=20 width=20 viewBox="0 0 40 40" class=iconEdit_Z9Sw aria-hidden=true><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"/></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Blog post page navigation"><a class="pagination-nav__link pagination-nav__link--prev" href=/blog/2011/09/26/pubsubhuddle-realtime-web-talk><div class=pagination-nav__sublabel>Newer post</div><div class=pagination-nav__label>PubSubHuddle 'Realtime Web' talk</div></a><a class="pagination-nav__link pagination-nav__link--next" href=/blog/2011/09/16/pubsub-huddle><div class=pagination-nav__sublabel>Older post</div><div class=pagination-nav__label>PubSub huddle</div></a></nav></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Learn about RabbitMQ</div><ul class="footer__items clean-list"><li class=footer__item><a class=footer__link-item href=/tutorials>Getting Started</a><li class=footer__item><a class=footer__link-item href=/docs>Documentation</a><li class=footer__item><a class=footer__link-item href=/blog>Blog</a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Reach out to the RabbitMQ team</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://github.com/rabbitmq target=_blank rel="noopener noreferrer" class=footer__link-item>GitHub<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://github.com/rabbitmq/rabbitmq-server/discussions target=_blank rel="noopener noreferrer" class=footer__link-item>GitHub Discussions<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class=footer__link-item href="/contact?utm_source=rmq_release-information_tableheader&utm_medium=rmq_website&utm_campaign=tanzu">Long Term Commercial Support</a><li class=footer__item><a class=footer__link-item href=/contact>Contact Us</a><li class=footer__item><a href=https://www.rabbitmq.com/discord target=_blank rel="noopener noreferrer" class=footer__link-item>Discord<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Broadcom</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://tanzu.vmware.com/ target=_blank rel="noopener noreferrer" class=footer__link-item>VMware Tanzu<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://www.vmware.com/help/legal.html target=_blank rel="noopener noreferrer" class=footer__link-item>Terms of Use<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://www.vmware.com/help/privacy.html target=_blank rel="noopener noreferrer" class=footer__link-item>Privacy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class=footer__link-item href=/trademark-guidelines>Trademark Guidelines</a><li class=footer__item><a href=https://www.vmware.com/help/privacy/california-privacy-rights.html target=_blank rel="noopener noreferrer" class=footer__link-item>Your California Privacy Rights<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class="footer__link-item ot-sdk-show-settings">Cookie Settings</a></ul></div></div><div class="footer__bottom text--center"><div class=footer__copyright>Copyright © 2005-2026 Broadcom. All Rights Reserved. The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.</div></div></div></footer></div></body>

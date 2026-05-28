@@ -1,0 +1,294 @@
+<!doctype html><html lang=en dir=ltr class="blog-wrapper blog-post-page plugin-blog plugin-id-default" data-has-hydrated=false><head><meta charset=UTF-8><meta name=generator content="Docusaurus v3.10.1"><title data-rh=true>How quorum queues deliver locally while still offering ordering guarantees | RabbitMQ</title><meta data-rh=true name=viewport content="width=device-width, initial-scale=1.0"/><meta data-rh=true name=twitter:card content=summary_large_image /><meta data-rh=true property=og:image content=https://www.rabbitmq.com/img/rabbitmq-social-media-card.svg /><meta data-rh=true name=twitter:image content=https://www.rabbitmq.com/img/rabbitmq-social-media-card.svg /><meta data-rh=true property=og:url content=https://www.rabbitmq.com/blog/2020/06/23/quorum-queues-local-delivery /><meta data-rh=true property=og:locale content=en /><meta data-rh=true name=docusaurus_locale content=en /><meta data-rh=true name=docusaurus_tag content=default /><meta data-rh=true name=docsearch:language content=en /><meta data-rh=true name=docsearch:docusaurus_tag content=default /><meta data-rh=true property=og:title content="How quorum queues deliver locally while still offering ordering guarantees | RabbitMQ"/><meta data-rh=true name=description content="The team was recently asked about whether and how quorum queues can offer the same message ordering guarantees as classic queues given that they will deliver messages from a local queue replica (leader or follower) when possible. Mirrored queues always deliver from the master (the leader), so delivering from any queue replica sounds like it could impact those guarantees."/><meta data-rh=true property=og:description content="The team was recently asked about whether and how quorum queues can offer the same message ordering guarantees as classic queues given that they will deliver messages from a local queue replica (leader or follower) when possible. Mirrored queues always deliver from the master (the leader), so delivering from any queue replica sounds like it could impact those guarantees."/><meta data-rh=true property=og:type content=article /><meta data-rh=true property=article:published_time content=2020-06-23T00:00:00.000Z /><meta data-rh=true property=article:tag content="Technical Deep Dive"/><link data-rh=true rel=icon href=/img/rabbitmq-logo.svg /><link data-rh=true rel=canonical href=https://www.rabbitmq.com/blog/2020/06/23/quorum-queues-local-delivery /><link data-rh=true rel=alternate href=https://www.rabbitmq.com/blog/2020/06/23/quorum-queues-local-delivery hreflang=en /><link data-rh=true rel=alternate href=https://www.rabbitmq.com/blog/2020/06/23/quorum-queues-local-delivery hreflang=x-default /><link data-rh=true rel=preconnect href=https://H10VQIW16Y-dsn.algolia.net crossorigin=anonymous /><script data-rh=true type=application/ld+json>{"@context":"https://schema.org","@id":"https://www.rabbitmq.com/blog/2020/06/23/quorum-queues-local-delivery","@type":"BlogPosting","author":{"@type":"Person","name":"Jack Vanlightly"},"datePublished":"2020-06-23T00:00:00.000Z","description":"The team was recently asked about whether and how quorum queues can offer the same message ordering guarantees as classic queues given that they will deliver messages from a local queue replica (leader or follower) when possible. Mirrored queues always deliver from the master (the leader), so delivering from any queue replica sounds like it could impact those guarantees.","headline":"How quorum queues deliver locally while still offering ordering guarantees","isPartOf":{"@id":"https://www.rabbitmq.com/blog","@type":"Blog","name":"Blog"},"keywords":[],"mainEntityOfPage":"https://www.rabbitmq.com/blog/2020/06/23/quorum-queues-local-delivery","name":"How quorum queues deliver locally while still offering ordering guarantees","url":"https://www.rabbitmq.com/blog/2020/06/23/quorum-queues-local-delivery"}</script><link rel=alternate type=application/rss+xml href=/blog/rss.xml title="RabbitMQ RSS Feed"><link rel=alternate type=application/atom+xml href=/blog/atom.xml title="RabbitMQ Atom Feed"><link rel=search type=application/opensearchdescription+xml title=RabbitMQ href=/opensearch.xml><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Raleway:400,700"><script src=https://cdn.cookielaw.org/scripttemplates/otSDKStub.js data-domain-script=018ee308-473e-754f-b0c2-cbe82d25512f></script><script>var timer;function OptanonWrapper(){}function setGTM(e,t,n,o,r){e[o]=e[o]||[],e[o].push({"gtm.start":new Date().getTime(),event:"gtm.js"});var a=t.getElementsByTagName(n)[0],i=t.createElement(n);i.async=!0,i.src="https://www.googletagmanager.com/gtm.js?id="+r+("dataLayer"!=o?"&l="+o:""),a.parentNode.insertBefore(i,a)}function waitForOnetrustActiveGroups(){document.cookie.indexOf("OptanonConsent")>-1&&document.cookie.indexOf("groups=")>-1?(clearTimeout(timer),setGTM(window,document,"script","dataLayer","GTM-TT84L8K")):timer=setTimeout(waitForOnetrustActiveGroups,250)}document.cookie.indexOf("OptanonConsent")>-1&&document.cookie.indexOf("groups=")>-1?setGTM(window,document,"script","dataLayer","GTM-TT84L8K"):waitForOnetrustActiveGroups()</script><link rel=stylesheet href=/assets/css/styles.55f09c4d.css /><script src=/assets/js/runtime~main.f0ac4473.js defer></script><script src=/assets/js/main.ca0eb4cf.js defer></script></head><body><svg style="display: none;"><defs>
+<symbol id=theme-svg-external-link viewBox="0 0 24 24"><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme-5b4")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss-5b4")}catch(t){}return!1}())</script><div id=__docusaurus><div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><div class="theme-announcement-bar announcementBar_mb4j" style=background-color:var(--ifm-color-primary-contrast-background);color:var(--ifm-font-color-base) role=banner><div class=announcementBarPlaceholder_vyr4></div><div class="content_knG7 announcementBarContent_xLdY"><div style="font-size: var(--ifm-h4-font-size);">🎉️ <a href=/blog/2026/04/23/rabbitmq-4.3-release><strong>RabbitMQ 4.3</strong> is out!</a> 🥳️</div></div><button type=button aria-label=Close class="clean-btn close closeButton_CVFx announcementBarClose_gvF7"><svg viewBox="0 0 15 15" width=14 height=14><g stroke=currentColor stroke-width=3.1><path d="M.75.75l13.5 13.5M14.25.75L.75 14.25"/></g></svg></button></div><nav aria-label=Main class="theme-layout-navbar navbar navbar--fixed-top"><div class=navbar__inner><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded=false class="navbar__toggle clean-btn" type=button><svg width=30 height=30 viewBox="0 0 30 30" aria-hidden=true><path stroke=currentColor stroke-linecap=round stroke-miterlimit=10 stroke-width=2 d="M4 7h22M4 15h22M4 23h22"/></svg></button><a class=navbar__brand href=/><div class=navbar__logo><img src=/img/rabbitmq-logo-by-tanzu.svg alt=RabbitMQ class="themedComponent_mlkZ themedComponent--light_NVdE"/><img src=/img/rabbitmq-logo-by-tanzu.svg alt=RabbitMQ class="themedComponent_mlkZ themedComponent--dark_xIcU"/></div></a><a class="navbar__item navbar__link" href=/tutorials>Getting Started</a><a class="navbar__item navbar__link" href=/docs>Docs</a><a aria-current=page class="navbar__item navbar__link navbar__link--active" href=/blog>Blog</a><a class="navbar__item navbar__link" href=/contact>Support</a><a class="navbar__item navbar__link" href=/commercial-features>Commercial Features</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="navbar__item dropdown dropdown--hoverable dropdown--right"><a class=navbar__link aria-haspopup=true aria-expanded=false role=button href=/docs>4.3</a><ul class=dropdown__menu><li class=""><strong>Release series</strong><li><a class=dropdown__link href=/docs/next>Next</a><li><a class=dropdown__link href=/docs>4.3</a><li><a class=dropdown__link href=/docs/4.2>4.2</a><li><a class=dropdown__link href=/docs/4.1>4.1</a><li><a class=dropdown__link href=/docs/4.0>4.0</a><li><a class=dropdown__link href=/docs/3.13>3.13</a></ul></div><a href=https://github.com/rabbitmq/rabbitmq-website target=_blank rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type=button disabled title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill=currentColor d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"/></svg><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill=currentColor d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"/></svg><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill=currentColor d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"/></svg></button></div><div class=navbarSearchContainer_Bca1><button type=button class="DocSearch DocSearch-Button" aria-label="Search (Meta+k)" aria-keyshortcuts=Meta+k><span class=DocSearch-Button-Container><svg width=20 height=20 class=DocSearch-Search-Icon viewBox="0 0 24 24" aria-hidden=true><circle cx=11 cy=11 r=8 stroke=currentColor fill=none stroke-width=1.4 /><path d="m21 21-4.3-4.3" stroke=currentColor fill=none stroke-linecap=round stroke-linejoin=round /></svg><span class=DocSearch-Button-Placeholder>Search</span></span><span class=DocSearch-Button-Keys></span></button></div></div></div><div role=presentation class=navbar-sidebar__backdrop></div></nav><div id=__docusaurus_skipToContent_fallback class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="container margin-vert--lg"><div class=row><main class="col col--9 col--offset-1"><article class=""><header><h1 class=title_f1Hy>How quorum queues deliver locally while still offering ordering guarantees</h1><div class="container_mt6G margin-vert--md"><time datetime=2020-06-23T00:00:00.000Z>June 23, 2020</time> · <!-- -->17 min read</div><div class="margin-top--md margin-bottom--sm row"><div class="col col--12 authorCol_Hf19"><div class="avatar margin-bottom--sm"><div class="avatar__intro authorDetails_lV9A"><div class=avatar__name><span class=authorName_yefp translate=no>Jack Vanlightly</span></div><div class=authorSocials_rSDt></div></div></div></div></div></header><div id=__blog-post-container class=markdown><p>The team was recently asked about whether and how quorum queues can offer the same message ordering guarantees as classic queues given that they will deliver messages from a local queue replica (leader or follower) when possible. Mirrored queues always deliver from the master (the leader), so delivering from any queue replica sounds like it could impact those guarantees. </p>
+<p>That is the subject of this post. Be warned, this post is a technical deep dive for the curious and the distributed systems enthusiast. We’ll take a look at how quorum queues can deliver messages from any queue replica, leader or follower, without additional coordination (extra to Raft) but maintaining message ordering guarantees.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=tldr>TLDR<a href=#tldr class=hash-link aria-label="Direct link to TLDR" title="Direct link to TLDR" translate=no>​</a></h2>
+<p>All queues, including quorum queues, provide ordering guarantees per channel for messages that are not <em>redeliveries</em>. The simplest way to look at it is if a queue has only one consumer, then that consumer will get messages delivered in FIFO order. Once you have two consumers on a single queue, then those guarantees change to a monotonic ordering of <em>non-redelivered</em> messages - that is that there may be gaps (because consumers now compete) but a consumer will never be delivered a later message before an earlier message (that is <em>not a redelivery</em>).</p>
+<p>If you need bullet proof FIFO ordering guarantees of ALL messages (including redelivered messages) then you need to use the Single Active Consumer feature with a prefetch of 1. Any redelivered messages get added back to the queue before the next delivery takes place - maintaining FIFO order.</p>
+<p>Quorum queues deliver the same ordering guarantees as classic queues. It just happens to also be able to deliver from any local replica, that is, local to the consumer channel. If you want to understand how quorum queues manage that, then read on! If not then stop here but be happy knowing that the usual ordering guarantees are still maintained.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=the-cost-of-proxying-traffic>The Cost of Proxying Traffic<a href=#the-cost-of-proxying-traffic class=hash-link aria-label="Direct link to The Cost of Proxying Traffic" title="Direct link to The Cost of Proxying Traffic" translate=no>​</a></h2>
+<p>RabbitMQ tries to make things simple by allowing any client to connect to any node in a cluster. If a consumer connects to broker 1 but the queue exists on broker 2, then the traffic will be proxied from broker 2 to broker 1 and back. The consumer has no clue that the queue is hosted on a different node.</p>
+<p>This flexibility and ease of use comes at a cost though. On a three node cluster, the worst case scenario is that the publisher connects to broker 1, its messages are routed to a classic unreplicated queue on broker 2 and the consumer of that queue is connected to broker 3. To process these messages, all three brokers have been roped into it which is of course less efficient.</p>
+<p>If that queue were replicated then the messages would have to be transmitted between the brokers one time for the proxying and then additionally for the replication. On top of that we covered how inefficient the <a class="" href=/blog/2020/04/20/rabbitmq-gets-an-ha-upgrade>mirrored queue algorithm</a> is with multiple sends of each message.</p>
+<p><figure><img decoding=async loading=lazy alt="Fig 1 shows the mirrored queue replication traffic in blue, with additional traffic for proxying publisher and consumer traffic." src=/assets/images/mirrored-network-traffic-895bdb52292953eb16cec42210c703f1.png width=650 height=372 class=img_ev3q /><figcaption>Fig 1 shows the mirrored queue replication traffic in blue, with additional traffic for proxying publisher and consumer traffic.</figcaption></figure><p></p>
+<p>It would be nice if consumers could get delivered the messages from where they are connected to, rather than from the leader that exists on a different broker - this would save on network utilisation and take some pressure off the queue leader.</p>
+<p><figure><img decoding=async loading=lazy alt="Fig 2 shows a quorum queue with replication traffic in blue and only the publisher traffic being proxied as the consumer consumes directly from a follower." src=/assets/images/qq-network-traffic-3109a97bdaa75213b6aac8f24ec8e6e0.png width=648 height=372 class=img_ev3q /><figcaption>Fig 2 shows a quorum queue with replication traffic in blue and only the publisher traffic being proxied as the consumer consumes directly from a follower.</figcaption></figure><p></p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=the-cost-of-coordination>The Cost of Coordination<a href=#the-cost-of-coordination class=hash-link aria-label="Direct link to The Cost of Coordination" title="Direct link to The Cost of Coordination" translate=no>​</a></h2>
+<p>With mirrored queues, all messages are delivered by the queue master (and potentially sent to the consumer via another broker). This is simple and requires no coordination between the master and its mirrors.</p>
+<p>In quorum queues we could have added coordination between the leader and the followers to achieve local delivery. Communication between the leader and followers would coordinate who would deliver which message - because what we can’t have is a message being delivered twice or not at all. Unfortunate things can happen, consumers can fail, brokers can fail, network partitions etc and the coordination would need to handle all of that. </p>
+<p>But coordination is bad for performance. The kind of coordination to make local delivery work could be extremely impactful on performance and also extremely complex. We needed another way and luckily everything we needed was already built into the protocol.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=coordination-no-determinism-yes>Coordination No, Determinism Yes<a href=#coordination-no-determinism-yes class=hash-link aria-label="Direct link to Coordination No, Determinism Yes" title="Direct link to Coordination No, Determinism Yes" translate=no>​</a></h2>
+<p>A common method of avoiding coordination in distributed systems is by using determinism. If every node in a cluster gets the same data, in the same order and makes decisions based only on that data then each node will make the same decision at that point in the log. </p>
+<p>Deterministic decision making requires that each node is fed the same data in the same order. Quorum queues are built on Raft which is a replicated commit log - an ordered sequence of operations. So as long as all the information required to perform local delivery is written to this ordered log of operations, then each replica (leader or follower) will know who should deliver each message without needing to talk to each other about it.</p>
+<p>It turns out that even for leader-only deliveries, we still need the coming and going of consumers to be added to the log. If a broker fails and another follower gets promoted to leader, it will need to know about the surviving consumer channels that exist across the cluster so it can deliver messages to them. This information also enables coordination free local delivery.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=effects-and-the-local-flag>Effects and the Local flag<a href=#effects-and-the-local-flag class=hash-link aria-label="Direct link to Effects and the Local flag" title="Direct link to Effects and the Local flag" translate=no>​</a></h2>
+<p>Quorum queues are built on a Raft implementation called Ra (also developed by the RabbitMQ team). Ra is a programmable state machine that replicates a log of operations. It differentiates between operations that all replicas should perform (commands), for consistency, and external operations that only the leader should perform (effects). These commands, states and effects are programmed by the developer. Quorum queues have their own commands, states and effects.</p>
+<p>A good example of commands and effects are a key-value store. Adding, updating and deleting the data should be performed by all replicas. Each replica needs to have the same data, so when a leader fails, a follower can take over, with the same data. So data modifications are commands. But notifying a client application that a key changed should only happen once. If a client app asked to be notified when a key is updated, it doesn’t want to be notified by the leader and all the secondary replicas! So only the leader should execute the effects.</p>
+<p>Ra has support for “local” effects. In the case of quorum queues, only the <em>send_msg</em> effect is local. The way it works is that all replicas know which consumer channels exist and on which nodes. When a consumer registers, that information is added to the log and likewise, when it fails or cancels that is also added to the log.</p>
+<p>Each replica “applies” each <em>committed</em> (majority replicated) command in the log in order. Applying an <em>enqueue</em> command adds the message to the queue, applying a <em>consumer down</em> command removes that consumer from the Service Queue (more on that next) and returns all messages it has pending back to the queue for redelivery.</p>
+<p>The consumers are added to a Service Queue (SQ) which is deterministically maintained - meaning that all replicas have the same SQ at any given point in the log. Each consumer will assess any given message not yet delivered, with exactly the same SQ as all the other replicas and will dequeue a consumer from the SQ. If that consumer is local (meaning that its channel process is hosted on the same broker as the replica) then the replica will send the message to that local channel. That channel will then send it to the consumer. If the consumer channel is not local, then the replica will not deliver it, but will track its state (who it was delivered to, whether it has been acknowledged etc). One caveat is that if there isn’t a replica that is local to the consumer channel, then the leader sends it to that channel (the proxying approach).</p>
+<p>If you still find this interesting, but find it hard to conceptualise then I don’t blame you. What we need are diagrams and a sequence of events to demonstrate this.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=an-example-with-diagrams>An example with diagrams<a href=#an-example-with-diagrams class=hash-link aria-label="Direct link to An example with diagrams" title="Direct link to An example with diagrams" translate=no>​</a></h2>
+<p>I will group sets of events into each diagram, so as to keep the number of diagrams as low as possible.</p>
+<p>Each diagram consists of three queue replicas, one leader and two followers. We see the state of the log, the service queue, the queue representation and the “apply” actions. Each operation has the format “command term<!-- -->:offset<!-- --> data”. So for example <em><strong>E 1:1 m1</strong></em> is the enqueue command, which is added in the first term, has the first offset and is message m1. Terms and offsets are Raft algorithm terms and not super important in order to understand local delivery (but I recommend reading up on the Raft algorithm if you find this interesting).</p>
+<p><strong>Diagrams guide</strong></p>
+<p><img decoding=async loading=lazy src=/assets/images/diagram-guide-e94f4c294cc5e6d733e659906a89f603.png width=826 height=571 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-1-event-sequence-1>Group 1 (event sequence 1)<a href=#group-1-event-sequence-1 class=hash-link aria-label="Direct link to Group 1 (event sequence 1)" title="Direct link to Group 1 (event sequence 1)" translate=no>​</a></h3>
+<ul>
+<li class="">A publisher channel adds an *<em>enqueue m1</em> *command for message m1.</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group1-1-8ba3af118b15621c48bb82567a088546.png width=1154 height=651 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-2event-sequence-2-3>Group 2 (event sequence 2-3)<a href=#group-2event-sequence-2-3 class=hash-link aria-label="Direct link to Group 2 (event sequence 2-3)" title="Direct link to Group 2 (event sequence 2-3)" translate=no>​</a></h3>
+<ul>
+<li class="">The leader replicates the <strong>enqueue m1</strong> command to Follower A</li>
+<li class="">The leader replicates the <strong>enqueue m1</strong> command to Follower C</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group2-2-b2e8434673442a35e8d51e33b97371e3.png width=1156 height=637 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-3-event-sequence-4-5>Group 3 (event sequence 4-5)<a href=#group-3-event-sequence-4-5 class=hash-link aria-label="Direct link to Group 3 (event sequence 4-5)" title="Direct link to Group 3 (event sequence 4-5)" translate=no>​</a></h3>
+<ul>
+<li class="">The channel for consumer 1, connected to the broker of Follower A, adds a <strong>subscribe c1</strong> command</li>
+<li class="">Command <strong>enqueue m1</strong> is applied by leader B (because it is now committed). <!-- -->
+<ol>
+<li class="">The leader adds it to its queue</li>
+<li class="">The leader notifies the publisher channel it is committed.</li>
+</ol>
+</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group3-1-32cb2f36781bf1b5c6596e43617dc13b.png width=1150 height=640 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-4-event-sequence-6-9>Group 4 (event sequence 6-9)<a href=#group-4-event-sequence-6-9 class=hash-link aria-label="Direct link to Group 4 (event sequence 6-9)" title="Direct link to Group 4 (event sequence 6-9)" translate=no>​</a></h3>
+<ul>
+<li class="">The leader replicates the <strong>subscribe c1</strong> command to Follower A</li>
+<li class="">The leader replicates the <strong>subscribe c1</strong> command to Follower C</li>
+<li class="">Follower C applies the <strong>enqueue m1</strong> command:<!-- -->
+<ol>
+<li class="">Adds the message to its queue</li>
+<li class="">Sees no consumers, so no delivery to be made</li>
+</ol>
+</li>
+<li class="">Follower A applies the <strong>enqueue m1</strong> command:<!-- -->
+<ol>
+<li class="">Adds the message to its queue</li>
+<li class="">Sees no consumers, so no delivery to be made</li>
+</ol>
+</li>
+</ul>
+<p>The consumer does exist of course, but the replicas only learn of consumers when they apply the subscribe command in their logs. They do have those commands in their logs, but they have not yet applied them.</p>
+<p><img decoding=async loading=lazy src=/assets/images/group4-1-3dccbe3c054d2a735dc265d143e70d00.png width=1206 height=642 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-5-event-sequence-10-12>Group 5 (event sequence 10-12)<a href=#group-5-event-sequence-10-12 class=hash-link aria-label="Direct link to Group 5 (event sequence 10-12)" title="Direct link to Group 5 (event sequence 10-12)" translate=no>​</a></h3>
+<ul>
+<li class="">Leader B applies the <strong>subscribe c1</strong> command:<!-- -->
+<ol>
+<li class="">C1 is added to its Service Queue (SQ)</li>
+<li class="">Assesses message m1 which is not delivered yet. It dequeues C1 from the SQ but sees that it is not local so does not send the message to C1, instead it just tracks m1 as being handled by C1. Requeues C1 on the SQ.</li>
+</ol>
+</li>
+<li class="">C2 adds a <strong>subscribe c2</strong> command to the leader.</li>
+<li class="">The publisher channel adds an <strong>enqueue m2</strong> command for message m2.</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group5-1-808e0271d431e9cecf233f97f06ed5fb.png width=1205 height=632 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-6-event-sequence-13-16>Group 6 (event sequence 13-16)<a href=#group-6-event-sequence-13-16 class=hash-link aria-label="Direct link to Group 6 (event sequence 13-16)" title="Direct link to Group 6 (event sequence 13-16)" translate=no>​</a></h3>
+<ul>
+<li class="">The leader replicates the <strong>subscribe c2</strong> command to Follower A</li>
+<li class="">The leader replicates the <strong>subscribe c2</strong> command to Follower C</li>
+<li class="">Follower C applies the <strong>subscribe c1</strong> command:<!-- -->
+<ol>
+<li class="">C1 is added to its Service Queue (SQ)</li>
+<li class="">Assesses message m1 against the first consumer in its SQ, but that channel is not local, requeues C1 on the SQ.</li>
+</ol>
+</li>
+<li class="">Follower A applies the <strong>subscribe c1</strong> command:<!-- -->
+<ol>
+<li class="">C1 is added to its Service Queue (SQ)</li>
+<li class="">Assesses message m1 against the first consumer in its SQ, and sees that the channel is local and so sends the message to that local channel. Requeues C1 on the SQ.</li>
+</ol>
+</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group6-1-a74675689ecaa2619243c53db41c4da1.png width=1205 height=632 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-7-event-sequence-17-20>Group 7 (event sequence 17-20)<a href=#group-7-event-sequence-17-20 class=hash-link aria-label="Direct link to Group 7 (event sequence 17-20)" title="Direct link to Group 7 (event sequence 17-20)" translate=no>​</a></h3>
+<ul>
+<li class="">Leader B applies the <strong>subscribe c2</strong> command:<!-- -->
+<ol>
+<li class="">Enqueues C2 on its SQ.</li>
+</ol>
+</li>
+<li class="">The leader replicates the <strong>enqueue m2</strong> command to Follower A</li>
+<li class="">The channel of consumer 1 adds an <strong>acknowledge m1</strong> command for m1.</li>
+<li class="">Follower A applies the <strong>subscribe c2</strong> command:<!-- -->
+<ol>
+<li class="">Enqueues C2 on its SQ.</li>
+</ol>
+</li>
+</ul>
+<p>Notice that Follower A and Leader B are at the same point in their logs, and have the same Service Queues.</p>
+<p><img decoding=async loading=lazy src=/assets/images/group7-1-e7643d7b18bdd046dad43733d4bd0165.png width=1200 height=641 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-8-event-sequence-21-23>Group 8 (event sequence 21-23)<a href=#group-8-event-sequence-21-23 class=hash-link aria-label="Direct link to Group 8 (event sequence 21-23)" title="Direct link to Group 8 (event sequence 21-23)" translate=no>​</a></h3>
+<ul>
+<li class="">Leader B replicates the <strong>enqueue m2</strong> command to Follower C</li>
+<li class="">Follower C applies the <strong>subscribe c2</strong> command<!-- -->
+<ol>
+<li class="">Enqueues C2 to its SQ</li>
+</ol>
+</li>
+<li class="">Leader B applies the <strong>enqueue m2</strong> command:<!-- -->
+<ol>
+<li class="">Adds message m2 to its queue</li>
+<li class="">Dequeues C1 from its SQ. Sees that this channel is not local. Requeues C1 to the SQ. Tracks state message m1 (that C1 will handle it).</li>
+<li class="">Notifies the publisher channel that this message has been committed.</li>
+</ol>
+</li>
+</ul>
+<p>At this point the SQ of Leader B is different from the followers, but that is only because it is one command ahead in its log.</p>
+<p><img decoding=async loading=lazy src=/assets/images/group8-1-984405314edb9b9c88452b443ba15631.png width=1208 height=670 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-9-event-sequence-24-26>Group 9 (event sequence 24-26)<a href=#group-9-event-sequence-24-26 class=hash-link aria-label="Direct link to Group 9 (event sequence 24-26)" title="Direct link to Group 9 (event sequence 24-26)" translate=no>​</a></h3>
+<ul>
+<li class="">Leader B applies the <strong>acknowledge m1</strong> command:<!-- -->
+<ol>
+<li class="">Removes the message from its queue
+*Follower C applies the <strong>enqueue m2</strong> command:</li>
+<li class="">Adds message m2 to its queue</li>
+<li class="">Dequeues C1 from the SQ, but C1 is not local.</li>
+</ol>
+</li>
+<li class="">Follower A applies the <strong>enqueue m2</strong> command:<!-- -->
+<ol>
+<li class="">Adds message m2 to its queue</li>
+<li class="">Dequeues C1 from the SQ, and sees that C1 is local so sends C1 the message m2. Requeues C1 on the SQ.</li>
+</ol>
+</li>
+</ul>
+<p>See that the service queues match each other - the followers are at the same offset and the leader is ahead by one, but acknowledgements don’t affect the service queues.</p>
+<p><img decoding=async loading=lazy src=/assets/images/group9-1-b6573f51e50fb72dc8fb0dddf6eeb0d7.png width=1219 height=673 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-10-event-sequence-27>Group 10 (event sequence 27)<a href=#group-10-event-sequence-27 class=hash-link aria-label="Direct link to Group 10 (event sequence 27)" title="Direct link to Group 10 (event sequence 27)" translate=no>​</a></h3>
+<ul>
+<li class="">The broker that hosts Leader B fails or is shutdown.</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group10-1-932b644eb7bb096a91087f6f2b0c0e4f.png width=1206 height=667 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-11-event-sequence-28>Group 11 (event sequence 28)<a href=#group-11-event-sequence-28 class=hash-link aria-label="Direct link to Group 11 (event sequence 28)" title="Direct link to Group 11 (event sequence 28)" translate=no>​</a></h3>
+<ul>
+<li class="">A leader election occurs and Follower A wins as it has the highest epoch<!-- -->:offset<!-- --> operation in its log.</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group11-2-6144a98796665d71d3d0e69190200662.png width=1199 height=666 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-12-event-sequence-29-30>Group 12 (event sequence 29-30)<a href=#group-12-event-sequence-29-30 class=hash-link aria-label="Direct link to Group 12 (event sequence 29-30)" title="Direct link to Group 12 (event sequence 29-30)" translate=no>​</a></h3>
+<ul>
+<li class="">A publisher channel adds an <strong>enqueue m3</strong> command.</li>
+<li class="">Leader A replicates the <strong>acknowledge m1</strong> command to Follower C</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group12-1-a2e694d73fb1c38cd46d82c5fde65c08.png width=1206 height=667 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-13-event-sequence-31-33>Group 13 (event sequence 31-33)<a href=#group-13-event-sequence-31-33 class=hash-link aria-label="Direct link to Group 13 (event sequence 31-33)" title="Direct link to Group 13 (event sequence 31-33)" translate=no>​</a></h3>
+<ul>
+<li class="">Leader A replicates the <strong>enqueue m3</strong> command to Follower C</li>
+<li class="">Leader A applies the <strong>acknowledge m1</strong> command<!-- -->
+<ol>
+<li class="">Removes m1 from its queue</li>
+</ol>
+</li>
+<li class="">Follower C applies the <strong>acknowledge m1</strong> command<!-- -->
+<ol>
+<li class="">Removes m1 from its queue</li>
+</ol>
+</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group13-1-a78d5b144265909cc9c3a7c10fb6953d.png width=1207 height=664 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-14-event-sequence-34-35>Group 14 (event sequence 34-35)<a href=#group-14-event-sequence-34-35 class=hash-link aria-label="Direct link to Group 14 (event sequence 34-35)" title="Direct link to Group 14 (event sequence 34-35)" translate=no>​</a></h3>
+<ul>
+<li class="">Leader A applies the <strong>enqueue m3</strong> command:<!-- -->
+<ol>
+<li class="">Adds m3 to its queue</li>
+<li class="">Dequeues C2 from its SQ. C2 is not local, so requeues C2 and tracks message m3 state.</li>
+</ol>
+</li>
+<li class="">Follower C applies the <strong>enqueue m3</strong> command:<!-- -->
+<ol>
+<li class="">Adds m3 to its queue</li>
+<li class="">Dequeues C2 from its SQ. C2 is local and so sends message m3 to that local channel. Requeues C2 on its SQ.</li>
+</ol>
+</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group14-1-74b0971e4a5436e626fb9a1fd40cdd74.png width=1219 height=671 class=img_ev3q /></p>
+<p>So we see that without additional coordination between the replicas, we achieve local delivery, while maintaining FIFO order, even across leadership fail-overs.</p>
+<p>But what about if a consumer fails after having been delivered a message by a follower? Will that be detected and the message redelivered to another consumer channel on a different broker?</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=alternate-scenario---consumer-failure>Alternate scenario - Consumer Failure<a href=#alternate-scenario---consumer-failure class=hash-link aria-label="Direct link to Alternate scenario - Consumer Failure" title="Direct link to Alternate scenario - Consumer Failure" translate=no>​</a></h2>
+<p>We’ll continue where we left off from Group 6 - m1 was already delivered to C1 but not acknowledged.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-7---alternate-event-sequence-17-20>Group 7 - Alternate (event sequence 17-20)<a href=#group-7---alternate-event-sequence-17-20 class=hash-link aria-label="Direct link to Group 7 - Alternate (event sequence 17-20)" title="Direct link to Group 7 - Alternate (event sequence 17-20)" translate=no>​</a></h3>
+<ul>
+<li class="">The channel for C1 goes away (for whatever reason)</li>
+<li class="">Leader B applies the <strong>subscribe c2</strong> command:<!-- -->
+<ol>
+<li class="">Enqueues C2 to SQ</li>
+</ol>
+</li>
+<li class="">Follower A applies the <strong>subscribe c2</strong> command:<!-- -->
+<ol>
+<li class="">Enqueues C2 to SQ</li>
+</ol>
+</li>
+<li class="">Leader B’s monitor sees that C1 is gone. Adds a <strong>down c1</strong> command it’s log.</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group7-alternate-1-2ffa0e20ed90bf9fe0ea577ffacd8fad.png width=1202 height=660 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-8---alternate-event-sequence-21-25>Group 8 - Alternate (event sequence 21-25)<a href=#group-8---alternate-event-sequence-21-25 class=hash-link aria-label="Direct link to Group 8 - Alternate (event sequence 21-25)" title="Direct link to Group 8 - Alternate (event sequence 21-25)" translate=no>​</a></h3>
+<ul>
+<li class="">Leader A replicates the <strong>down c1</strong> command to Follower A</li>
+<li class="">Leader A replicates the <strong>enqueue m2</strong> command to Follower C</li>
+<li class="">Follower C applies the <strong>subscribe c2</strong> command:<!-- -->
+<ol>
+<li class="">Enqueues C2 to its SQ</li>
+</ol>
+</li>
+<li class="">Leader B applies the <strong>enqueue m2</strong> command:<!-- -->
+<ol>
+<li class="">Dequeues C1 from its SQ, but C1 is not local so requeues it. </li>
+</ol>
+</li>
+<li class="">Follower A applies <strong>enqueue m2</strong> command:<!-- -->
+<ol>
+<li class="">Dequeues C1 from its SQ. C1 is local. Tries to send it the message m2 (but can’t because it doesn't exist anymore). Requeues C1 on its SQ.</li>
+</ol>
+</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group8-alternate-a9cf9ca1030225dddcf743487cc709f3.png width=1220 height=667 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-9---alternate-event-sequence-26-28>Group 9 - Alternate (event sequence 26-28)<a href=#group-9---alternate-event-sequence-26-28 class=hash-link aria-label="Direct link to Group 9 - Alternate (event sequence 26-28)" title="Direct link to Group 9 - Alternate (event sequence 26-28)" translate=no>​</a></h3>
+<ul>
+<li class="">Leader B applies the <strong>down c1</strong> command:<!-- -->
+<ol>
+<li class="">Removes C1 from its SQ</li>
+<li class="">Retuns to the queue the messages m1 and m2 that were previously delivered to C1 but not acknowledged</li>
+<li class="">For redelivering message m1, dequeues C2 from the SQ but sees that it is not local. Requeues C2.</li>
+</ol>
+</li>
+<li class="">Follower C applies the <strong>enqueue m2</strong> command:<!-- -->
+<ol>
+<li class="">Dequeues C1 from its SQ, but C1 is not local so requeues it, tracks m2 as being handled by C1.</li>
+</ol>
+</li>
+<li class="">Follower A applies the <strong>down c1</strong> command:<!-- -->
+<ol>
+<li class="">Removes C1 from its SQ</li>
+<li class="">Returns to the queue the messages m1 and m2 that were previously delivered to C1 but not acknowledged</li>
+<li class="">For redelivering message m1, dequeues C2 from the SQ but sees that it is not local. Tracks as being handled by C2.</li>
+</ol>
+</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group9-alternate-1-c014f8e032ffcdcd1af22c17233e2a54.png width=1211 height=666 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-10---alternate-event-sequence-29-31>Group 10 - Alternate (event sequence 29-31)<a href=#group-10---alternate-event-sequence-29-31 class=hash-link aria-label="Direct link to Group 10 - Alternate (event sequence 29-31)" title="Direct link to Group 10 - Alternate (event sequence 29-31)" translate=no>​</a></h3>
+<ul>
+<li class="">Follower A takes the next undelivered message, m2. Dequeues C2 from its SQ, but C2 is not local. Tracks m2 as being handled by C2, requeues C2 on the SQ.</li>
+<li class="">Leader B takes the next undelivered message, m2. Dequeues C2 from its SQ, but C2 is not local. Tracks m2 as being handled by C2, requeues C2 on the SQ.</li>
+<li class="">Follower C applies <strong>down c1</strong> command:<!-- -->
+<ol>
+<li class="">Removes C1 from its SQ</li>
+<li class="">Follower C takes the next undelivered message, m1. Dequeues C2 from its SQ, and sees that C2 is local. Sends m1 to this local channel, requeues C2 on the SQ.</li>
+</ol>
+</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group10-alternate-1-8969c1a8c371756e662797017b3c05dc.png width=1211 height=669 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=group-11---alternate-event-sequence-32>Group 11 - Alternate (event sequence 32)<a href=#group-11---alternate-event-sequence-32 class=hash-link aria-label="Direct link to Group 11 - Alternate (event sequence 32)" title="Direct link to Group 11 - Alternate (event sequence 32)" translate=no>​</a></h3>
+<ul>
+<li class="">Follower C takes the next undelivered message, m2. Dequeues C2 from its SQ, and sees that C2 is local. Sends m2 to this local channel. Requeues C2 on the SQ.</li>
+</ul>
+<p><img decoding=async loading=lazy src=/assets/images/group11-alternate-2-876c31561328e35e1e80bc8775e2225b.png width=1203 height=670 class=img_ev3q /></p>
+<p>The quorum queue handled the consumer 1 failure without any problems, while still delivering from a local replica without additional coordination. The key is deterministic decision making which requires that each node uses only data in the log to inform it's decisions and that there is no divergence of committed entries in their logs (which is all handled by Raft).</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=final-thoughts>Final Thoughts<a href=#final-thoughts class=hash-link aria-label="Direct link to Final Thoughts" title="Direct link to Final Thoughts" translate=no>​</a></h2>
+<p>Quorum queues have the same ordering guarantees as any queue but are also able to deliver messages from a local replica. How they achieve this is interesting but not relevant to developers or administrators. What IS useful is understanding that this is another reason to choose quorum queues over mirrored queues. We <a class="" href=/blog/2020/04/20/rabbitmq-gets-an-ha-upgrade>previously described</a> the very network inefficient algorithm behind mirrored queues, and now you’ve seen that with quorum queues we have heavily optimised network utilisation.</p>
+<p>Consuming from a follower replica doesn’t just result in better network utilisation though, we also get better isolation between publisher and consumer load. Publishers can impact consumers and the other way around because they put contention on the same resource - a queue. By allowing consumers to consume from a different broker, we get better isolation. Just see the <a class="" href=/blog/2020/06/18/cluster-sizing-and-other-considerations>recent sizing case study</a> that showed that quorum queues can sustain a high publish rate even in the face of huge queue backlogs and extra pressure from consumers. Mirrored queues were more susceptible.</p>
+<p>So... consider quorum queues!</div><footer class=docusaurus-mt-lg><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class=col><b>Tags:</b><ul class="tags_jXut padding--none margin-left--sm"><li class=tag_QGVx><a rel=tag class="tag_zVej tagRegular_sFm0" href=/blog/tags/technical-deep-dive>Technical Deep Dive</a></ul></div></div><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href=https://github.com/rabbitmq/rabbitmq-website/tree/main/blog/2020-06-23-quorum-queues-local-delivery/index.md target=_blank rel="noopener noreferrer" class=theme-edit-this-page><svg fill=currentColor height=20 width=20 viewBox="0 0 40 40" class=iconEdit_Z9Sw aria-hidden=true><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"/></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Blog post page navigation"><a class="pagination-nav__link pagination-nav__link--prev" href=/blog/2020/06/30/this-month-in-rabbitmq-may-2020-recap><div class=pagination-nav__sublabel>Newer post</div><div class=pagination-nav__label>This Month in RabbitMQ, May 2020 Recap</div></a><a class="pagination-nav__link pagination-nav__link--next" href=/blog/2020/06/22/cluster-sizing-case-study-quorum-queues-part-2><div class=pagination-nav__sublabel>Older post</div><div class=pagination-nav__label>Cluster Sizing Case Study – Quorum Queues Part 2</div></a></nav></main><div class="col col--2"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href=#tldr class="table-of-contents__link toc-highlight">TLDR</a><li><a href=#the-cost-of-proxying-traffic class="table-of-contents__link toc-highlight">The Cost of Proxying Traffic</a><li><a href=#the-cost-of-coordination class="table-of-contents__link toc-highlight">The Cost of Coordination</a><li><a href=#coordination-no-determinism-yes class="table-of-contents__link toc-highlight">Coordination No, Determinism Yes</a><li><a href=#effects-and-the-local-flag class="table-of-contents__link toc-highlight">Effects and the Local flag</a><li><a href=#an-example-with-diagrams class="table-of-contents__link toc-highlight">An example with diagrams</a><ul><li><a href=#group-1-event-sequence-1 class="table-of-contents__link toc-highlight">Group 1 (event sequence 1)</a><li><a href=#group-2event-sequence-2-3 class="table-of-contents__link toc-highlight">Group 2 (event sequence 2-3)</a><li><a href=#group-3-event-sequence-4-5 class="table-of-contents__link toc-highlight">Group 3 (event sequence 4-5)</a><li><a href=#group-4-event-sequence-6-9 class="table-of-contents__link toc-highlight">Group 4 (event sequence 6-9)</a><li><a href=#group-5-event-sequence-10-12 class="table-of-contents__link toc-highlight">Group 5 (event sequence 10-12)</a><li><a href=#group-6-event-sequence-13-16 class="table-of-contents__link toc-highlight">Group 6 (event sequence 13-16)</a><li><a href=#group-7-event-sequence-17-20 class="table-of-contents__link toc-highlight">Group 7 (event sequence 17-20)</a><li><a href=#group-8-event-sequence-21-23 class="table-of-contents__link toc-highlight">Group 8 (event sequence 21-23)</a><li><a href=#group-9-event-sequence-24-26 class="table-of-contents__link toc-highlight">Group 9 (event sequence 24-26)</a><li><a href=#group-10-event-sequence-27 class="table-of-contents__link toc-highlight">Group 10 (event sequence 27)</a><li><a href=#group-11-event-sequence-28 class="table-of-contents__link toc-highlight">Group 11 (event sequence 28)</a><li><a href=#group-12-event-sequence-29-30 class="table-of-contents__link toc-highlight">Group 12 (event sequence 29-30)</a><li><a href=#group-13-event-sequence-31-33 class="table-of-contents__link toc-highlight">Group 13 (event sequence 31-33)</a><li><a href=#group-14-event-sequence-34-35 class="table-of-contents__link toc-highlight">Group 14 (event sequence 34-35)</a></ul><li><a href=#alternate-scenario---consumer-failure class="table-of-contents__link toc-highlight">Alternate scenario - Consumer Failure</a><ul><li><a href=#group-7---alternate-event-sequence-17-20 class="table-of-contents__link toc-highlight">Group 7 - Alternate (event sequence 17-20)</a><li><a href=#group-8---alternate-event-sequence-21-25 class="table-of-contents__link toc-highlight">Group 8 - Alternate (event sequence 21-25)</a><li><a href=#group-9---alternate-event-sequence-26-28 class="table-of-contents__link toc-highlight">Group 9 - Alternate (event sequence 26-28)</a><li><a href=#group-10---alternate-event-sequence-29-31 class="table-of-contents__link toc-highlight">Group 10 - Alternate (event sequence 29-31)</a><li><a href=#group-11---alternate-event-sequence-32 class="table-of-contents__link toc-highlight">Group 11 - Alternate (event sequence 32)</a></ul><li><a href=#final-thoughts class="table-of-contents__link toc-highlight">Final Thoughts</a></ul></div></div></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Learn about RabbitMQ</div><ul class="footer__items clean-list"><li class=footer__item><a class=footer__link-item href=/tutorials>Getting Started</a><li class=footer__item><a class=footer__link-item href=/docs>Documentation</a><li class=footer__item><a class=footer__link-item href=/blog>Blog</a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Reach out to the RabbitMQ team</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://github.com/rabbitmq target=_blank rel="noopener noreferrer" class=footer__link-item>GitHub<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://github.com/rabbitmq/rabbitmq-server/discussions target=_blank rel="noopener noreferrer" class=footer__link-item>GitHub Discussions<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class=footer__link-item href="/contact?utm_source=rmq_release-information_tableheader&utm_medium=rmq_website&utm_campaign=tanzu">Long Term Commercial Support</a><li class=footer__item><a class=footer__link-item href=/contact>Contact Us</a><li class=footer__item><a href=https://www.rabbitmq.com/discord target=_blank rel="noopener noreferrer" class=footer__link-item>Discord<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Broadcom</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://tanzu.vmware.com/ target=_blank rel="noopener noreferrer" class=footer__link-item>VMware Tanzu<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://www.vmware.com/help/legal.html target=_blank rel="noopener noreferrer" class=footer__link-item>Terms of Use<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://www.vmware.com/help/privacy.html target=_blank rel="noopener noreferrer" class=footer__link-item>Privacy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class=footer__link-item href=/trademark-guidelines>Trademark Guidelines</a><li class=footer__item><a href=https://www.vmware.com/help/privacy/california-privacy-rights.html target=_blank rel="noopener noreferrer" class=footer__link-item>Your California Privacy Rights<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class="footer__link-item ot-sdk-show-settings">Cookie Settings</a></ul></div></div><div class="footer__bottom text--center"><div class=footer__copyright>Copyright © 2005-2026 Broadcom. All Rights Reserved. The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.</div></div></div></footer></div></body>

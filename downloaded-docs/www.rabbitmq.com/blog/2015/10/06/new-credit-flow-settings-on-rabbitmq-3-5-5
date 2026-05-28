@@ -1,0 +1,289 @@
+<!doctype html><html lang=en dir=ltr class="blog-wrapper blog-post-page plugin-blog plugin-id-default" data-has-hydrated=false><head><meta charset=UTF-8><meta name=generator content="Docusaurus v3.10.1"><title data-rh=true>New Credit Flow Settings on RabbitMQ 3.5.5 | RabbitMQ</title><meta data-rh=true name=viewport content="width=device-width, initial-scale=1.0"/><meta data-rh=true name=twitter:card content=summary_large_image /><meta data-rh=true property=og:image content=https://www.rabbitmq.com/img/rabbitmq-social-media-card.svg /><meta data-rh=true name=twitter:image content=https://www.rabbitmq.com/img/rabbitmq-social-media-card.svg /><meta data-rh=true property=og:url content=https://www.rabbitmq.com/blog/2015/10/06/new-credit-flow-settings-on-rabbitmq-3-5-5 /><meta data-rh=true property=og:locale content=en /><meta data-rh=true name=docusaurus_locale content=en /><meta data-rh=true name=docusaurus_tag content=default /><meta data-rh=true name=docsearch:language content=en /><meta data-rh=true name=docsearch:docusaurus_tag content=default /><meta data-rh=true property=og:title content="New Credit Flow Settings on RabbitMQ 3.5.5 | RabbitMQ"/><meta data-rh=true name=description content="This blog post was written for RabbitMQ 3.5, released in 2015. While some parts still"/><meta data-rh=true property=og:description content="This blog post was written for RabbitMQ 3.5, released in 2015. While some parts still"/><meta data-rh=true property=og:type content=article /><meta data-rh=true property=article:published_time content=2015-10-06T00:00:00.000Z /><meta data-rh=true property=article:tag content=Performance /><link data-rh=true rel=icon href=/img/rabbitmq-logo.svg /><link data-rh=true rel=canonical href=https://www.rabbitmq.com/blog/2015/10/06/new-credit-flow-settings-on-rabbitmq-3-5-5 /><link data-rh=true rel=alternate href=https://www.rabbitmq.com/blog/2015/10/06/new-credit-flow-settings-on-rabbitmq-3-5-5 hreflang=en /><link data-rh=true rel=alternate href=https://www.rabbitmq.com/blog/2015/10/06/new-credit-flow-settings-on-rabbitmq-3-5-5 hreflang=x-default /><link data-rh=true rel=preconnect href=https://H10VQIW16Y-dsn.algolia.net crossorigin=anonymous /><script data-rh=true type=application/ld+json>{"@context":"https://schema.org","@id":"https://www.rabbitmq.com/blog/2015/10/06/new-credit-flow-settings-on-rabbitmq-3-5-5","@type":"BlogPosting","author":{"@type":"Person","name":"Álvaro Videla"},"datePublished":"2015-10-06T00:00:00.000Z","description":"This blog post was written for RabbitMQ 3.5, released in 2015. While some parts still","headline":"New Credit Flow Settings on RabbitMQ 3.5.5","isPartOf":{"@id":"https://www.rabbitmq.com/blog","@type":"Blog","name":"Blog"},"keywords":[],"mainEntityOfPage":"https://www.rabbitmq.com/blog/2015/10/06/new-credit-flow-settings-on-rabbitmq-3-5-5","name":"New Credit Flow Settings on RabbitMQ 3.5.5","url":"https://www.rabbitmq.com/blog/2015/10/06/new-credit-flow-settings-on-rabbitmq-3-5-5"}</script><link rel=alternate type=application/rss+xml href=/blog/rss.xml title="RabbitMQ RSS Feed"><link rel=alternate type=application/atom+xml href=/blog/atom.xml title="RabbitMQ Atom Feed"><link rel=search type=application/opensearchdescription+xml title=RabbitMQ href=/opensearch.xml><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Raleway:400,700"><script src=https://cdn.cookielaw.org/scripttemplates/otSDKStub.js data-domain-script=018ee308-473e-754f-b0c2-cbe82d25512f></script><script>var timer;function OptanonWrapper(){}function setGTM(e,t,n,o,r){e[o]=e[o]||[],e[o].push({"gtm.start":new Date().getTime(),event:"gtm.js"});var a=t.getElementsByTagName(n)[0],i=t.createElement(n);i.async=!0,i.src="https://www.googletagmanager.com/gtm.js?id="+r+("dataLayer"!=o?"&l="+o:""),a.parentNode.insertBefore(i,a)}function waitForOnetrustActiveGroups(){document.cookie.indexOf("OptanonConsent")>-1&&document.cookie.indexOf("groups=")>-1?(clearTimeout(timer),setGTM(window,document,"script","dataLayer","GTM-TT84L8K")):timer=setTimeout(waitForOnetrustActiveGroups,250)}document.cookie.indexOf("OptanonConsent")>-1&&document.cookie.indexOf("groups=")>-1?setGTM(window,document,"script","dataLayer","GTM-TT84L8K"):waitForOnetrustActiveGroups()</script><link rel=stylesheet href=/assets/css/styles.55f09c4d.css /><script src=/assets/js/runtime~main.f0ac4473.js defer></script><script src=/assets/js/main.ca0eb4cf.js defer></script></head><body><svg style="display: none;"><defs>
+<symbol id=theme-svg-external-link viewBox="0 0 24 24"><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme-5b4")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss-5b4")}catch(t){}return!1}())</script><div id=__docusaurus><div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><div class="theme-announcement-bar announcementBar_mb4j" style=background-color:var(--ifm-color-primary-contrast-background);color:var(--ifm-font-color-base) role=banner><div class=announcementBarPlaceholder_vyr4></div><div class="content_knG7 announcementBarContent_xLdY"><div style="font-size: var(--ifm-h4-font-size);">🎉️ <a href=/blog/2026/04/23/rabbitmq-4.3-release><strong>RabbitMQ 4.3</strong> is out!</a> 🥳️</div></div><button type=button aria-label=Close class="clean-btn close closeButton_CVFx announcementBarClose_gvF7"><svg viewBox="0 0 15 15" width=14 height=14><g stroke=currentColor stroke-width=3.1><path d="M.75.75l13.5 13.5M14.25.75L.75 14.25"/></g></svg></button></div><nav aria-label=Main class="theme-layout-navbar navbar navbar--fixed-top"><div class=navbar__inner><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded=false class="navbar__toggle clean-btn" type=button><svg width=30 height=30 viewBox="0 0 30 30" aria-hidden=true><path stroke=currentColor stroke-linecap=round stroke-miterlimit=10 stroke-width=2 d="M4 7h22M4 15h22M4 23h22"/></svg></button><a class=navbar__brand href=/><div class=navbar__logo><img src=/img/rabbitmq-logo-by-tanzu.svg alt=RabbitMQ class="themedComponent_mlkZ themedComponent--light_NVdE"/><img src=/img/rabbitmq-logo-by-tanzu.svg alt=RabbitMQ class="themedComponent_mlkZ themedComponent--dark_xIcU"/></div></a><a class="navbar__item navbar__link" href=/tutorials>Getting Started</a><a class="navbar__item navbar__link" href=/docs>Docs</a><a aria-current=page class="navbar__item navbar__link navbar__link--active" href=/blog>Blog</a><a class="navbar__item navbar__link" href=/contact>Support</a><a class="navbar__item navbar__link" href=/commercial-features>Commercial Features</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="navbar__item dropdown dropdown--hoverable dropdown--right"><a class=navbar__link aria-haspopup=true aria-expanded=false role=button href=/docs>4.3</a><ul class=dropdown__menu><li class=""><strong>Release series</strong><li><a class=dropdown__link href=/docs/next>Next</a><li><a class=dropdown__link href=/docs>4.3</a><li><a class=dropdown__link href=/docs/4.2>4.2</a><li><a class=dropdown__link href=/docs/4.1>4.1</a><li><a class=dropdown__link href=/docs/4.0>4.0</a><li><a class=dropdown__link href=/docs/3.13>3.13</a></ul></div><a href=https://github.com/rabbitmq/rabbitmq-website target=_blank rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type=button disabled title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill=currentColor d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"/></svg><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill=currentColor d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"/></svg><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill=currentColor d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"/></svg></button></div><div class=navbarSearchContainer_Bca1><button type=button class="DocSearch DocSearch-Button" aria-label="Search (Meta+k)" aria-keyshortcuts=Meta+k><span class=DocSearch-Button-Container><svg width=20 height=20 class=DocSearch-Search-Icon viewBox="0 0 24 24" aria-hidden=true><circle cx=11 cy=11 r=8 stroke=currentColor fill=none stroke-width=1.4 /><path d="m21 21-4.3-4.3" stroke=currentColor fill=none stroke-linecap=round stroke-linejoin=round /></svg><span class=DocSearch-Button-Placeholder>Search</span></span><span class=DocSearch-Button-Keys></span></button></div></div></div><div role=presentation class=navbar-sidebar__backdrop></div></nav><div id=__docusaurus_skipToContent_fallback class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class="container margin-vert--lg"><div class=row><main class="col col--9 col--offset-1"><article class=""><header><h1 class=title_f1Hy>New Credit Flow Settings on RabbitMQ 3.5.5</h1><div class="container_mt6G margin-vert--md"><time datetime=2015-10-06T00:00:00.000Z>October 6, 2015</time> · <!-- -->15 min read</div><div class="margin-top--md margin-bottom--sm row"><div class="col col--12 authorCol_Hf19"><div class="avatar margin-bottom--sm"><div class="avatar__intro authorDetails_lV9A"><div class=avatar__name><span class=authorName_yefp translate=no>Álvaro Videla</span></div><div class=authorSocials_rSDt></div></div></div></div></div></header><div id=__blog-post-container class=markdown><div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class=admonitionHeading_Gvgb><span class=admonitionIcon_Rf37><svg viewBox="0 0 16 16"><path fill-rule=evenodd d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"/></svg></span>warning</div><div class=admonitionContent_BuS1><p>This blog post was written for RabbitMQ 3.5, released in 2015. While some parts still
+apply, there's a lot of outdated information. For example, RabbitMQ 4.0
+doesn't support queue mirroring anymore and "paging messages to disk" is
+no longer something that RabbitMQ has to do, since messages are almost
+always persisted to disk right away.</div></div>
+<p>In order to prevent fast publishers from overflowing the broker with
+more messages than it can handle at any particular moment, RabbitMQ
+implements an internal mechanism called <em>credit flow</em> that will be
+used by the various systems inside RabbitMQ to throttle down
+publishers, while allowing the message consumers to catch up. In this
+blog post we are going to see how <em>credit flow</em> works, and what we can
+do to tune its configuration for an optimal behaviour.</p>
+<p>The <a href=https://github.com/rabbitmq/rabbitmq-server/releases/tag/rabbitmq_v3_5_5 target=_blank rel="noopener noreferrer" class="">latest</a> version of RabbitMQ includes a couple of new configuration
+values that let users fiddle with the internal credit flow
+settings. Understanding how these work according to your particular
+workload can help you get the most out of RabbitMQ in terms of
+performance, but beware, increasing these values <em>just to see what
+happens</em> can have adverse effects on how RabbitMQ is able to respond
+to message bursts, affecting the internal strategies that RabbitMQ has
+in order to deal with memory pressure. <strong>Handle with care</strong>.</p>
+<p>To understand the new credit flow settings first we need to understand
+how the internals of RabbitMQ work with regards to message publishing
+and paging messages to disk. Let's see first how message publishing
+works in RabbitMQ.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=message-publishing>Message Publishing<a href=#message-publishing class=hash-link aria-label="Direct link to Message Publishing" title="Direct link to Message Publishing" translate=no>​</a></h2>
+<p>To see how <code>credit_flow</code> and its settings affect publishing, let's see
+how internal messages flow in RabbitMQ. Keep in mind that RabbitMQ is
+implemented in Erlang, where processes communicate by sending messages
+to each other.</p>
+<p>Whenever a RabbitMQ instance is running, there are probably hundreds
+of Erlang processes exchanging messages to communicate with each
+other. We have for example a reader process that reads AMQP frames
+from the network. Those frames are transformed into AMQP commands that
+are forwarded to the AMQP channel process. If this channel is handling
+a publish, it needs to ask a particular exchange for the list of
+queues where this message should end up going, which means the channel
+will deliver the message to each of those queues. Finally if the AMQP
+message needs to be persisted, the msg_store process will receive it
+and write it to disk. So whenever we publish an AMQP message to
+RabbitMQ we have the following erlang message flow<sup><a href=#user-content-fn-1-8d30a2 id=user-content-fnref-1-8d30a2 data-footnote-ref=true aria-describedby=footnote-label class=anchorTargetStickyNavbar_Vzrq>1</a></sup>:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#393A34;--prism-background-color:#f6f8fa><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#393A34;background-color:#f6f8fa><code class=codeBlockLines_e6Vv><div class=token-line style=color:#393A34><span class="token plain">reader -> channel -> queue process -> message store.</span><br/></div></code></pre></div></div>
+<p>In order to prevent any of those processes from overflowing the next
+one down the chain, we have a <em>credit flow</em> mechanism in place. Each
+process initially grants certain amount of credits to the process that
+it's sending them messages. Once a process is able to handle N of
+those messages, it will grant more credit to the process that sent
+them. Under default <em>credit flow</em> settings
+(<code>credit_flow_default_credit</code> under <code>rabbitmq.config</code>) these values
+are 200 messages of initial credit, and after 50 messages processed by
+the receiving process, the process that sent the messages will be
+granted 50 more credits.</p>
+<p>Say we are publishing messages to RabbitMQ, this means the <em>reader</em>
+will be sending one erlang message to the channel process per AMQP
+<code>basic.publish</code> received. Each of those messages will consume one of
+these credits from the channel. Once the channel is able to process 50
+of those messages, it will grant more credit to the reader. So far so
+good.</p>
+<p>In turn the channel will send the message to the queue process that
+matched the message routing rules. This will consume one credit from
+the credit granted by the queue process to the channel. After the
+queue process manages to handle 50 deliveries, it will grant 50 more
+credits to the channel.</p>
+<p>Finally if a message is deemed to be persistent (it's persistent and
+published to a durable queue), it will be sent to the message store,
+which in this case will also consume credits from the ones granted by
+the message store to the queue process. In this case the initial
+values are different and handled by the <code>msg_store_credit_disc_bound</code>
+setting: <strong>2000</strong> messages of initial credit and <strong>500</strong> more credits
+after 500 messages are processed by the message store.</p>
+<p>So we know how internal messages flow inside RabbitMQ and when credit
+is granted to a process that's above in the msg stream. The tricky
+part comes when credit is granted between processes. Under normal
+conditions a channel will process 50 messages from the reader, and
+then grant the reader 50 more credits, but keep in mind that a channel
+is not just handling publishes, it's also sending messages to
+consumers, routing messages to queues and so on.</p>
+<p>What happens if the reader is sending messages to the channel at a
+higher speed of what the channel is able to process? If we reach this
+situation, then the channel will block the reader process, which will
+result in producers being throttled down by RabbitMQ. Under default
+settings, the reader will be blocked once it sends 200 messages to the
+channel, but the channel is not able to process at least 50 of them,
+in order to grant credit back to the reader.</p>
+<p>Again, under normal conditions, once the channel manages to go through
+the message backlog, it will grant more credit to the reader, but
+there's a catch. What if the channel process is being blocked by the
+queue process, due to similar reasons? Then the <strong>new credit</strong> that
+was supposed to go to the reader process <strong>will be deferred</strong>. The
+reader process <strong>will remain blocked</strong>.</p>
+<p>Once the queue process manages to go through the deliveries backlog
+from the channel, it will grant more credit to the channel, unblocking
+it, which will result in the channel granting more credit to the
+reader, unblocking it. Once again, that's under normal conditions,
+but, you guessed it, what if the message store is blocking the queue
+process? Then credit to the channel will be deferred, which will
+remain blocked, deferring credit to the reader, <strong>leaving the reader
+blocked</strong>. At some point, the message store will grant messages to the
+queue process, which will grant messages back to the channel, and then
+the channel will finally grant messages to the reader and <strong>unblock
+the reader</strong>:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#393A34;--prism-background-color:#f6f8fa><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#393A34;background-color:#f6f8fa><code class=codeBlockLines_e6Vv><div class=token-line style=color:#393A34><span class="token plain">reader &lt;--[grant]-- channel &lt;--[grant]-- queue process &lt;--[grant]-- message store.</span><br/></div></code></pre></div></div>
+<p>Having one channel and one queue process makes things easier to
+undertand but it might not reflect reality. It's common for RabbitMQ
+users to have more than one channel publishing messages on the same
+connection. Even more common is to have one message being routed to
+more than one queue. What happens with the credit flow scheme we've
+just explained is that <strong>if one of those queues blocks the channel</strong>,
+then <strong>the reader will be blocked as well</strong>.</p>
+<p>The problem is that from a reader standpoint, when we read a frame
+from the network, we don't even know to which channel it belongs
+to. Keep in mind that channels are a logical concept on top of AMQP
+connections. So even if a new AMQP command will end up in a channel
+that is not blocking the reader, the reader has no way of knowing
+it. Note that <strong>we only block publishing</strong> connections, consumers
+connections are unaffected since we want consumers to drain messages
+from queues. This is a good reason why it might be better to have
+connections dedicated to publishing messages, and connections
+dedicated for consumers only.</p>
+<p>On a similar fashion, whenever a channel is processing message
+publishes, it doesn't know where messages will end up going, until it
+performs routing. So a channel might be receiving a message that
+should end up in a queue that is not blocking the channel. Since at
+ingress time we don't know any of this, then the credit flow strategy
+in place is to block the reader until processes down the chain are
+able to handle new messages.</p>
+<p>One of the new settings introduced in RabbitMQ 3.5.5 is the ability to
+modify the values for <code>credit_flow_default_credit</code>. This setting takes
+a tuple of the form <code>{InitialCredit, MoreCreditAfter}</code>. InitialCredit
+is set to <strong>200</strong> by default, and MoreCreditAfter is set to
+<strong>50</strong>. Depending on your particular workflow, you need to decide if
+it's worth bumping those values. Let's see the message flow scheme
+again:</p>
+<div class="language-text codeBlockContainer_Ckt0 theme-code-block" style=--prism-color:#393A34;--prism-background-color:#f6f8fa><div class=codeBlockContent_QJqH><pre tabindex=0 class="prism-code language-text codeBlock_bY9V thin-scrollbar" style=color:#393A34;background-color:#f6f8fa><code class=codeBlockLines_e6Vv><div class=token-line style=color:#393A34><span class="token plain">reader -> channel -> queue process -> message store.</span><br/></div></code></pre></div></div>
+<p>Bumping the values for <code>{InitialCredit, MoreCreditAfter}</code> will mean
+that at any point in that chain we could end up with more messages
+than those that can be handled by the broker at that particular point
+in time. More messages means more RAM usage. The same can be said
+about <code>msg_store_credit_disc_bound</code>, but keep in mind that there's
+only one message store<sup><a href=#user-content-fn-2-8d30a2 id=user-content-fnref-2-8d30a2 data-footnote-ref=true aria-describedby=footnote-label class=anchorTargetStickyNavbar_Vzrq>2</a></sup> per RabbitMQ instance, and there
+can be <strong>many channels</strong> sending messages to the <strong>same queue
+process</strong>. So while a queue process has a value of 2000 as
+<code>InitialCredit</code> from the message store, that queue can be ingesting
+many times that value from different channel/connection sources. So
+200 credits as initial <code>credit_flow_default_credit</code> value could be
+seen as too conservative, but you need to understand if according to
+your workflow that's still good enough or not.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=message-paging>Message Paging<a href=#message-paging class=hash-link aria-label="Direct link to Message Paging" title="Direct link to Message Paging" translate=no>​</a></h2>
+<p>Let's take a look at how RabbitMQ queues store messages. When a
+message enters the queue, the queue needs to determine if the message
+should be persisted or not. If the message has to be persisted, then
+RabbitMQ will do so right away<sup><a href=#user-content-fn-3-8d30a2 id=user-content-fnref-3-8d30a2 data-footnote-ref=true aria-describedby=footnote-label class=anchorTargetStickyNavbar_Vzrq>3</a></sup>. Now even if a message was
+persisted to disk, this doesn't mean the message got removed from RAM,
+since RabbitMQ keeps a cache of messages in RAM for fast access when
+delivering messages to consumers. Whenever we are talking about
+<em>paging messages out to disk</em>, we are talking about what RabbitMQ does
+when it has to send messages from this cache to the file system.</p>
+<p>When RabbitMQ decides it needs to page messages to disk it will call
+the function <code>reduce_memory_use</code> on the internal queue implementation
+in order to send messages to the file system. Messages are going to be
+paged out in batches; how big are those batches depends on the current
+memory pressure status. It basically works like this:</p>
+<p>The function <code>reduce_memory_use</code> will receive a number called <code>target ram count</code> which tells RabbitMQ that it should try to page out
+messages until only that many remain in RAM. Keep in mind that whether
+messages are persistent or not, they are still kept in RAM for fast
+delivery to consumers. Only when memory pressure kicks in, is when
+messages in memory are paged out to disk. Quoting from our code
+comments: The question of whether a message is in RAM and whether it
+is persistent are orthogonal.</p>
+<p>The number of messages that are accounted for during this chunk
+calculation are those messages that are in RAM (in the aforementioned
+cache), plus the number of pending acks that are kept in RAM (i.e.:
+messages that were delivered to consumers and are pending
+acknowledgment). If we have 20000 messages in RAM (cache + pending
+acks) and then <code>target ram count</code> is set to 8000, we will have to page
+out 12000 messages. This means paging will receive a quota of 12000
+messages. Each message paged out to disk will consume one unit from
+that quota, whether it's a pending ack, or an actual message from the
+cache.</p>
+<p>Once we know how many messages need to be paged out, we need to decide
+from where we should page them first: pending acks, or the message
+cache. If pending acks is growing faster than messages the cache, ie:
+more messages are being delivered to consumers than those being
+ingested, this means the algorithm will try to page out pending acks
+first, and then try to push messages from the cache to the file
+system. If the cache is growing faster than pending acks, then
+messages from the cache will be pushed out first.</p>
+<p>The catch here is that paging messages from pending acks (or the cache
+if that comes first) might result in the first part of the process
+consuming all the quota of messages that need to be pushed to disk. So
+if pending acks pushes 12000 acks to disk as in our example, this
+means we won't page out messages from the cache, and vice versa.</p>
+<p>This first part of the paging process sent to disk certain amount of
+messages (between acks + messages paged from the cache). The messages
+that were paged out just had their contents paged out, but their
+position in the queue is still in RAM. Now the queue needs to decide
+if this extra information that's kept in RAM needs to be paged out as
+well, to further reduce memory usage. Here is were finally
+<code>msg_store_io_batch_size</code> enters into play (coupled with
+<code>msg_store_credit_disc_bound</code> as well). Let's try to understand how
+they work.</p>
+<p>The settings for <code>msg_store_credit_disc_bound</code> affect how internal
+credit flow is handled when sending message to disk. The
+<code>rabbitmq_msg_store</code> module implements a database that takes care of
+persisting messages to disk. Some details about the why's of this
+implementation can be found here:
+<a class="" href=/blog/2011/01/20/rabbitmq-backing-stores-databases-and-disks>RabbitMQ, backing stores, databases and disks</a>.</p>
+<p>The message store has a credit system for each of the clients that
+send writes to it. Every RabbitMQ queue would be a read/write client
+for this store. The message store has a credits mechanism to prevent a
+particular writer to overflow its inbox it with messages. Assuming
+current default values, when a writer starts talking to the message
+store, it receives an initial credit of <strong>2000</strong> messages, and it will
+receive more credit once <strong>500</strong> messages are processed. When is this
+credit consumed then? Credit is consumed whenever we write to the
+message store, but that doesn't happen for every message. The plot
+thickens.</p>
+<p>Since version 3.5.0 it's possible to embed small messages into the
+queue index, instead of having to reach the message store for
+that. Messages that are smaller than a configurable setting (currently
+4096 bytes) will go to the queue index when persisted, so those
+messages won't consume this credit. Now, let's see what happens with
+messages that do need to go to the message store.</p>
+<p>Whenever we publish a message that's determined to be persistent
+(persistent messages published to a durable queue), then that message
+will consume one of these credits. If a message has to paged out to
+disk from the cache mentioned above, it will also consume one
+credit. So if during message paging we consume more credits than those
+currently available for our queue, the first half of the paging
+process might stop, since there's no point in sending writes to the
+message store when it won't accept them. This means that from the
+initial quota of 12000 that we would have had to page out, we only
+managed to process 2000 of them (assuming all of them need to go to
+the message store).</p>
+<p>So we managed to page out 2000 messages, but we still keep their
+position in the queue in RAM. Now the paging process will determine if
+it needs to also page out any of these messages positions to disk as
+well. RabbitMQ will calculate how many of them can stay in RAM, and
+then it will try to page out the remaining of them to disk. For this
+second paging to happen, the amount of messages that has to be paged
+to disk must be greater than <code>msg_store_io_batch_size</code>. The bigger
+this number is, the more message positions RabbitMQ will keep in RAM,
+so again, depending on your particular workload, you need to tune this
+parameter as well.</p>
+<p>Another thing we improved significantly in 3.5.5 is the performance of
+paging queue index contents to disk. If your messages are generally
+smaller than <code>queue_index_embed_msgs_below</code>, then you'll see the
+benefit of these changes. These changes also affect how message
+positions are paged out to disk, so you should see improvements in
+this area as well. So while having a low <code>msg_store_io_batch_size</code>
+might mean the queue index will have more work paging to disk, keep in
+mind this process has been optimized.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=queue-mirroring>Queue Mirroring<a href=#queue-mirroring class=hash-link aria-label="Direct link to Queue Mirroring" title="Direct link to Queue Mirroring" translate=no>​</a></h2>
+<p>To keep the descriptions above a bit simpler, we avoided bringing queue
+mirroring into the picture. Credit flows also affects mirroring from a
+channel point of view. When a channel delivers AMQP messages to
+queues, it sends the message to each mirror, consuming one credit from
+each mirror process. If any of the mirrors is slow processing the
+message then that particular mirror might be responsible for the
+channel being blocked. If the channel is being blocked by a mirror,
+and that queue mirror gets partitioned from the network, then the
+channel will be unblocked only after RabbitMQ detects the mirror
+death.</p>
+<p>Credit flow also takes part when synchronising mirrored queues, but
+this is something you shouldn't care too much about, mostly because
+there's nothing you could do about it, since mirror synchronisation is
+handled entirely by RabbitMQ.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=conclusion>Conclusion<a href=#conclusion class=hash-link aria-label="Direct link to Conclusion" title="Direct link to Conclusion" translate=no>​</a></h2>
+<p>In any case, we hope this blog post has been informative and helps you
+with your RabbitMQ tuning. If you have comments or questions about the
+new credit flow settings, don't hesitate to contact us at the RabbitMQ
+mailing list:
+<a href=https://groups.google.com/forum/#!forum/rabbitmq-users target=_blank rel="noopener noreferrer" class="">rabbitmq-users</a>.</p>
+<!-- -->
+<section data-footnotes=true class=footnotes><h2 class="anchor anchorTargetStickyNavbar_Vzrq sr-only" id=footnote-label>Footnotes<a href=#footnote-label class=hash-link aria-label="Direct link to Footnotes" title="Direct link to Footnotes" translate=no>​</a></h2>
+<ol>
+<li class=anchorTargetStickyNavbar_Vzrq id=user-content-fn-1-8d30a2>
+<p>A message can be delivered to more than one queue process. <a href=#user-content-fnref-1-8d30a2 data-footnote-backref="" aria-label="Back to reference 1" class=data-footnote-backref>↩</a></p>
+</li>
+<li class=anchorTargetStickyNavbar_Vzrq id=user-content-fn-2-8d30a2>
+<p>There are two message stores, one for transient messages and one for persistent messages. <a href=#user-content-fnref-2-8d30a2 data-footnote-backref="" aria-label="Back to reference 2" class=data-footnote-backref>↩</a></p>
+</li>
+<li class=anchorTargetStickyNavbar_Vzrq id=user-content-fn-3-8d30a2>
+<p>RabbitMQ will call fsync every 200 ms. <a href=#user-content-fnref-3-8d30a2 data-footnote-backref="" aria-label="Back to reference 3" class=data-footnote-backref>↩</a></p>
+</li>
+</ol>
+</section></div><footer class=docusaurus-mt-lg><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class=col><b>Tags:</b><ul class="tags_jXut padding--none margin-left--sm"><li class=tag_QGVx><a rel=tag class="tag_zVej tagRegular_sFm0" href=/blog/tags/performance>Performance</a></ul></div></div><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href=https://github.com/rabbitmq/rabbitmq-website/tree/main/blog/2015-10-06-new-credit-flow-settings-on-rabbitmq-3-5-5/index.md target=_blank rel="noopener noreferrer" class=theme-edit-this-page><svg fill=currentColor height=20 width=20 viewBox="0 0 40 40" class=iconEdit_Z9Sw aria-hidden=true><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"/></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Blog post page navigation"><a class="pagination-nav__link pagination-nav__link--prev" href=/blog/2015/12/28/whats-new-in-rabbitmq-3-6-0><div class=pagination-nav__sublabel>Newer post</div><div class=pagination-nav__label>What's new in RabbitMQ 3.6.0</div></a><a class="pagination-nav__link pagination-nav__link--next" href=/blog/2015/04/16/scheduling-messages-with-rabbitmq><div class=pagination-nav__sublabel>Older post</div><div class=pagination-nav__label>Scheduling Messages with RabbitMQ</div></a></nav></main><div class="col col--2"><div class="tableOfContents_bqdL thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href=#message-publishing class="table-of-contents__link toc-highlight">Message Publishing</a><li><a href=#message-paging class="table-of-contents__link toc-highlight">Message Paging</a><li><a href=#queue-mirroring class="table-of-contents__link toc-highlight">Queue Mirroring</a><li><a href=#conclusion class="table-of-contents__link toc-highlight">Conclusion</a></ul></div></div></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Learn about RabbitMQ</div><ul class="footer__items clean-list"><li class=footer__item><a class=footer__link-item href=/tutorials>Getting Started</a><li class=footer__item><a class=footer__link-item href=/docs>Documentation</a><li class=footer__item><a class=footer__link-item href=/blog>Blog</a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Reach out to the RabbitMQ team</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://github.com/rabbitmq target=_blank rel="noopener noreferrer" class=footer__link-item>GitHub<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://github.com/rabbitmq/rabbitmq-server/discussions target=_blank rel="noopener noreferrer" class=footer__link-item>GitHub Discussions<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class=footer__link-item href="/contact?utm_source=rmq_release-information_tableheader&utm_medium=rmq_website&utm_campaign=tanzu">Long Term Commercial Support</a><li class=footer__item><a class=footer__link-item href=/contact>Contact Us</a><li class=footer__item><a href=https://www.rabbitmq.com/discord target=_blank rel="noopener noreferrer" class=footer__link-item>Discord<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Broadcom</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://tanzu.vmware.com/ target=_blank rel="noopener noreferrer" class=footer__link-item>VMware Tanzu<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://www.vmware.com/help/legal.html target=_blank rel="noopener noreferrer" class=footer__link-item>Terms of Use<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://www.vmware.com/help/privacy.html target=_blank rel="noopener noreferrer" class=footer__link-item>Privacy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class=footer__link-item href=/trademark-guidelines>Trademark Guidelines</a><li class=footer__item><a href=https://www.vmware.com/help/privacy/california-privacy-rights.html target=_blank rel="noopener noreferrer" class=footer__link-item>Your California Privacy Rights<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class="footer__link-item ot-sdk-show-settings">Cookie Settings</a></ul></div></div><div class="footer__bottom text--center"><div class=footer__copyright>Copyright © 2005-2026 Broadcom. All Rights Reserved. The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.</div></div></div></footer></div></body>

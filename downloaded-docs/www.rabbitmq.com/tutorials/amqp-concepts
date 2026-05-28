@@ -1,0 +1,475 @@
+<!doctype html><html lang=en dir=ltr class="docs-wrapper plugin-docs plugin-id-tutorials docs-version-current docs-doc-page docs-doc-id-amqp-concepts/index" data-has-hydrated=false><head><meta charset=UTF-8><meta name=generator content="Docusaurus v3.10.1"><title data-rh=true>AMQP 0-9-1 Model Explained | RabbitMQ</title><meta data-rh=true name=viewport content="width=device-width, initial-scale=1.0"/><meta data-rh=true name=twitter:card content=summary_large_image /><meta data-rh=true property=og:image content=https://www.rabbitmq.com/img/rabbitmq-social-media-card.svg /><meta data-rh=true name=twitter:image content=https://www.rabbitmq.com/img/rabbitmq-social-media-card.svg /><meta data-rh=true property=og:url content=https://www.rabbitmq.com/tutorials/amqp-concepts /><meta data-rh=true property=og:locale content=en /><meta data-rh=true name=docusaurus_locale content=en /><meta data-rh=true name=docsearch:language content=en /><meta data-rh=true name=docusaurus_version content=current /><meta data-rh=true name=docusaurus_tag content=docs-tutorials-current /><meta data-rh=true name=docsearch:version content=current /><meta data-rh=true name=docsearch:docusaurus_tag content=docs-tutorials-current /><meta data-rh=true property=og:title content="AMQP 0-9-1 Model Explained | RabbitMQ"/><meta data-rh=true name=description content="<!--"/><meta data-rh=true property=og:description content="<!--"/><link data-rh=true rel=icon href=/img/rabbitmq-logo.svg /><link data-rh=true rel=canonical href=https://www.rabbitmq.com/tutorials/amqp-concepts /><link data-rh=true rel=alternate href=https://www.rabbitmq.com/tutorials/amqp-concepts hreflang=en /><link data-rh=true rel=alternate href=https://www.rabbitmq.com/tutorials/amqp-concepts hreflang=x-default /><link data-rh=true rel=preconnect href=https://H10VQIW16Y-dsn.algolia.net crossorigin=anonymous /><script data-rh=true type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[]}</script><link rel=alternate type=application/rss+xml href=/blog/rss.xml title="RabbitMQ RSS Feed"><link rel=alternate type=application/atom+xml href=/blog/atom.xml title="RabbitMQ Atom Feed"><link rel=search type=application/opensearchdescription+xml title=RabbitMQ href=/opensearch.xml><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Raleway:400,700"><script src=https://cdn.cookielaw.org/scripttemplates/otSDKStub.js data-domain-script=018ee308-473e-754f-b0c2-cbe82d25512f></script><script>var timer;function OptanonWrapper(){}function setGTM(e,t,n,o,r){e[o]=e[o]||[],e[o].push({"gtm.start":new Date().getTime(),event:"gtm.js"});var a=t.getElementsByTagName(n)[0],i=t.createElement(n);i.async=!0,i.src="https://www.googletagmanager.com/gtm.js?id="+r+("dataLayer"!=o?"&l="+o:""),a.parentNode.insertBefore(i,a)}function waitForOnetrustActiveGroups(){document.cookie.indexOf("OptanonConsent")>-1&&document.cookie.indexOf("groups=")>-1?(clearTimeout(timer),setGTM(window,document,"script","dataLayer","GTM-TT84L8K")):timer=setTimeout(waitForOnetrustActiveGroups,250)}document.cookie.indexOf("OptanonConsent")>-1&&document.cookie.indexOf("groups=")>-1?setGTM(window,document,"script","dataLayer","GTM-TT84L8K"):waitForOnetrustActiveGroups()</script><link rel=stylesheet href=/assets/css/styles.55f09c4d.css /><script src=/assets/js/runtime~main.f0ac4473.js defer></script><script src=/assets/js/main.ca0eb4cf.js defer></script></head><body><svg style="display: none;"><defs>
+<symbol id=theme-svg-external-link viewBox="0 0 24 24"><path fill=currentColor d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme-5b4")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{for(var[t,e]of new URLSearchParams(window.location.search).entries())if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}(),document.documentElement.setAttribute("data-announcement-bar-initially-dismissed",function(){try{return"true"===localStorage.getItem("docusaurus.announcement.dismiss-5b4")}catch(t){}return!1}())</script><div id=__docusaurus><div role=region aria-label="Skip to main content"><a class=skipToContent_fXgn href=#__docusaurus_skipToContent_fallback>Skip to main content</a></div><div class="theme-announcement-bar announcementBar_mb4j" style=background-color:var(--ifm-color-primary-contrast-background);color:var(--ifm-font-color-base) role=banner><div class=announcementBarPlaceholder_vyr4></div><div class="content_knG7 announcementBarContent_xLdY"><div style="font-size: var(--ifm-h4-font-size);">🎉️ <a href=/blog/2026/04/23/rabbitmq-4.3-release><strong>RabbitMQ 4.3</strong> is out!</a> 🥳️</div></div><button type=button aria-label=Close class="clean-btn close closeButton_CVFx announcementBarClose_gvF7"><svg viewBox="0 0 15 15" width=14 height=14><g stroke=currentColor stroke-width=3.1><path d="M.75.75l13.5 13.5M14.25.75L.75 14.25"/></g></svg></button></div><nav aria-label=Main class="theme-layout-navbar navbar navbar--fixed-top"><div class=navbar__inner><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded=false class="navbar__toggle clean-btn" type=button><svg width=30 height=30 viewBox="0 0 30 30" aria-hidden=true><path stroke=currentColor stroke-linecap=round stroke-miterlimit=10 stroke-width=2 d="M4 7h22M4 15h22M4 23h22"/></svg></button><a class=navbar__brand href=/><div class=navbar__logo><img src=/img/rabbitmq-logo-by-tanzu.svg alt=RabbitMQ class="themedComponent_mlkZ themedComponent--light_NVdE"/><img src=/img/rabbitmq-logo-by-tanzu.svg alt=RabbitMQ class="themedComponent_mlkZ themedComponent--dark_xIcU"/></div></a><a aria-current=page class="navbar__item navbar__link navbar__link--active" href=/tutorials>Getting Started</a><a class="navbar__item navbar__link" href=/docs>Docs</a><a class="navbar__item navbar__link" href=/blog>Blog</a><a class="navbar__item navbar__link" href=/contact>Support</a><a class="navbar__item navbar__link" href=/commercial-features>Commercial Features</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><div class="navbar__item dropdown dropdown--hoverable dropdown--right"><a class=navbar__link aria-haspopup=true aria-expanded=false role=button href=/docs>4.3</a><ul class=dropdown__menu><li class=""><strong>Release series</strong><li><a class=dropdown__link href=/docs/next>Next</a><li><a class=dropdown__link href=/docs>4.3</a><li><a class=dropdown__link href=/docs/4.2>4.2</a><li><a class=dropdown__link href=/docs/4.1>4.1</a><li><a class=dropdown__link href=/docs/4.0>4.0</a><li><a class=dropdown__link href=/docs/3.13>3.13</a></ul></div><a href=https://github.com/rabbitmq/rabbitmq-website target=_blank rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><div class="toggle_vylO colorModeToggle_DEke"><button class="clean-btn toggleButton_gllP toggleButtonDisabled_aARS" type=button disabled title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP lightToggleIcon_pyhR"><path fill=currentColor d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"/></svg><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP darkToggleIcon_wfgR"><path fill=currentColor d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"/></svg><svg viewBox="0 0 24 24" width=24 height=24 aria-hidden=true class="toggleIcon_g3eP systemToggleIcon_QzmC"><path fill=currentColor d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"/></svg></button></div><div class=navbarSearchContainer_Bca1><button type=button class="DocSearch DocSearch-Button" aria-label="Search (Meta+k)" aria-keyshortcuts=Meta+k><span class=DocSearch-Button-Container><svg width=20 height=20 class=DocSearch-Search-Icon viewBox="0 0 24 24" aria-hidden=true><circle cx=11 cy=11 r=8 stroke=currentColor fill=none stroke-width=1.4 /><path d="m21 21-4.3-4.3" stroke=currentColor fill=none stroke-linecap=round stroke-linejoin=round /></svg><span class=DocSearch-Button-Placeholder>Search</span></span><span class=DocSearch-Button-Keys></span></button></div></div></div><div role=presentation class=navbar-sidebar__backdrop></div></nav><div id=__docusaurus_skipToContent_fallback class="theme-layout-main main-wrapper mainWrapper_z2l0"><div class=docsWrapper_hBAB><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_sjWU" type=button></button><div class=docRoot_UBD9><aside class="theme-doc-sidebar-container docSidebarContainer_YfHR"><div class=sidebarViewport_aRkj><div class=sidebar_njMd><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_SIkG menuWithAnnouncementBar_GW3s"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class=menu__link href=/tutorials><span title="Get Started" class=linkLabel_WmDU>Get Started</span></a><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-python><span title=Python class=categoryLinkLabel_W154>Python</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-java><span title=Java class=categoryLinkLabel_W154>Java</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-java-amqp10><span title="Java (AMQP 1.0)" class=categoryLinkLabel_W154>Java (AMQP 1.0)</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-kotlin><span title=Kotlin class=categoryLinkLabel_W154>Kotlin</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-ruby><span title=Ruby class=categoryLinkLabel_W154>Ruby</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-php><span title=PHP class=categoryLinkLabel_W154>PHP</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-dotnet><span title=.NET class=categoryLinkLabel_W154>.NET</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-dotnet-amqp10><span title=".NET (AMQP 1.0)" class=categoryLinkLabel_W154>.NET (AMQP 1.0)</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-javascript><span title=JavaScript class=categoryLinkLabel_W154>JavaScript</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-go><span title=Go class=categoryLinkLabel_W154>Go</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-go-amqp10><span title="Go (AMQP 1.0)" class=categoryLinkLabel_W154>Go (AMQP 1.0)</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-elixir><span title=Elixir class=categoryLinkLabel_W154>Elixir</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-swift><span title=Swift class=categoryLinkLabel_W154>Swift</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-spring-amqp><span title="Spring AMQP" class=categoryLinkLabel_W154>Spring AMQP</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-java-stream><span title="Java Stream" class=categoryLinkLabel_W154>Java Stream</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-dotnet-stream><span title=".NET Stream" class=categoryLinkLabel_W154>.NET Stream</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-go-stream><span title="Go Stream" class=categoryLinkLabel_W154>Go Stream</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-rust-stream><span title="Rust Stream" class=categoryLinkLabel_W154>Rust Stream</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-python-stream><span title="Python Stream" class=categoryLinkLabel_W154>Python Stream</span></a></div><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class=menu__list-item-collapsible><a class="categoryLink_byQd menu__link menu__link--sublist menu__link--sublist-caret" role=button aria-expanded=false href=/tutorials/tutorial-one-javascript-stream><span title="Node.js Stream" class=categoryLinkLabel_W154>Node.js Stream</span></a></div></ul></nav></div></div></aside><main class=docMainContainer_TBSr><div class="container padding-top--md padding-bottom--lg"><div class=row><div class="col docItemCol_VOVn"><div class=docItemContainer_Djhp><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Z_bl" aria-label=Breadcrumbs><ul class=breadcrumbs><li class=breadcrumbs__item><a aria-label="Home page" class=breadcrumbs__link href=/><svg viewBox="0 0 24 24" class=breadcrumbHomeIcon_YNFT><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill=currentColor /></svg></a></ul></nav><div class="tocCollapsible_ETCw theme-doc-toc-mobile tocMobile_ITEo"><button type=button class="clean-btn tocCollapsibleButton_TO0P">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>AMQP 0-9-1 Model Explained</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=overview>Overview<a href=#overview class=hash-link aria-label="Direct link to Overview" title="Direct link to Overview" translate=no>​</a></h2>
+<p>This guide provides an overview of the AMQP 0-9-1 protocol, one of the protocols
+supported by RabbitMQ.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=highlevel-overview>High-level Overview of AMQP 0-9-1 and the AMQP Model<a href=#highlevel-overview class=hash-link aria-label="Direct link to High-level Overview of AMQP 0-9-1 and the AMQP Model" title="Direct link to High-level Overview of AMQP 0-9-1 and the AMQP Model" translate=no>​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=what-is-amqp>What is AMQP 0-9-1?<a href=#what-is-amqp class=hash-link aria-label="Direct link to What is AMQP 0-9-1?" title="Direct link to What is AMQP 0-9-1?" translate=no>​</a></h3>
+<p>AMQP 0-9-1 (Advanced Message Queuing Protocol) is a messaging
+protocol that enables conforming client applications to
+communicate with conforming messaging middleware brokers.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=brokers-role>Brokers and Their Role<a href=#brokers-role class=hash-link aria-label="Direct link to Brokers and Their Role" title="Direct link to Brokers and Their Role" translate=no>​</a></h3>
+<p>Messaging brokers receive messages from <em><a class="" href=/docs/publishers>publishers</a></em>
+(applications that publish them, also known as producers) and route them to
+<em><a class="" href=/docs/consumers>consumers</a></em> (applications that process them).</p>
+<p>Since it is a network protocol, the publishers,
+consumers and the broker can all reside on
+different machines.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=amqp-model>AMQP 0-9-1 Model in Brief<a href=#amqp-model class=hash-link aria-label="Direct link to AMQP 0-9-1 Model in Brief" title="Direct link to AMQP 0-9-1 Model in Brief" translate=no>​</a></h3>
+<p>The AMQP 0-9-1 Model has the following view of the world:
+messages are published to <em>exchanges</em>,
+which are often compared to post offices or mailboxes. Exchanges then
+distribute message copies to <em>queues</em> using rules called
+<em>bindings</em>. Then the broker either delivers messages to
+consumers subscribed to queues, or consumers
+fetch/pull messages from queues on demand.</p>
+<p><img decoding=async loading=lazy alt="Publish path from publisher to consumer via exchange and queue" src=/assets/images/hello-world-example-routing-cbe9a872b37956a4072a5e13f9d76e7b.png width=700 height=328 class=img_ev3q /></p>
+<p>When publishing a message, publishers may specify various
+<em>message attributes</em> (message meta-data). Some of this
+meta-data may be used by the broker, however, the rest of it
+is completely opaque to the broker and is only used by
+applications that receive the message.</p>
+<p>Networks are unreliable and applications may fail to process
+messages therefore the AMQP 0-9-1 model has a notion of
+<em>message acknowledgements</em>: when a message is delivered
+to a consumer the consumer <em>notifies the broker</em>,
+either automatically or as soon as the application
+developer chooses to do so. When message acknowledgements
+are in use, a broker will only completely remove a message
+from a queue when it receives a notification for that message
+(or group of messages).</p>
+<p>In certain situations, for example, when a message cannot
+be routed, messages may be <em>returned</em> to publishers,
+dropped, or, if the broker implements an extension,
+placed into a so-called "dead letter queue". Publishers choose
+how to handle situations like this by publishing messages
+using certain parameters.</p>
+<p>Queues, exchanges and bindings are collectively referred to as <em>AMQP entities</em>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=programmable-protocol>AMQP 0-9-1 is a Programmable Protocol<a href=#programmable-protocol class=hash-link aria-label="Direct link to AMQP 0-9-1 is a Programmable Protocol" title="Direct link to AMQP 0-9-1 is a Programmable Protocol" translate=no>​</a></h3>
+<p>AMQP 0-9-1 is a programmable protocol in the sense that AMQP 0-9-1
+entities and routing schemes are primarily defined by applications
+themselves, not a broker administrator. Accordingly,
+provision is made for protocol operations that declare
+queues and exchanges, define bindings between them,
+subscribe to <a class="" href=/docs/queues>queues</a> and so on.</p>
+<p>This gives application developers a lot of freedom but
+also requires them to be aware of potential definition
+conflicts. In practice, definition conflicts are rare and
+often indicate a misconfiguration.</p>
+<p>Applications declare the AMQP 0-9-1 entities that they need,
+define necessary routing schemes and may choose to delete
+AMQP 0-9-1 entities when they are no longer used.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=exchanges>Exchanges and Exchange Types<a href=#exchanges class=hash-link aria-label="Direct link to Exchanges and Exchange Types" title="Direct link to Exchanges and Exchange Types" translate=no>​</a></h2>
+<p><em>Exchanges</em> are AMQP 0-9-1 entities where messages are
+sent to. Exchanges take a message and route it into zero or
+more queues. The routing algorithm used depends on the
+<em>exchange type</em> and rules called <em>bindings</em>.
+AMQP 0-9-1 brokers provide four exchange types:</p>
+<table><thead><tr><th>Exchange type<th>Default pre-declared names<tbody><tr><td>Direct exchange<td>(Empty string) and amq.direct<tr><td>Fanout exchange<td>amq.fanout<tr><td>Topic exchange<td>amq.topic<tr><td>Headers exchange<td>amq.match (and amq.headers in RabbitMQ)</table>
+<p>Besides the exchange type, exchanges are declared with a number of
+attributes, the most important of which are:</p>
+<ul>
+<li class="">Name</li>
+<li class="">Durability (exchanges survive broker restart)</li>
+<li class="">Auto-delete (exchange is deleted when last queue is unbound from it)</li>
+<li class="">Arguments (optional, used by plugins and broker-specific features)</li>
+</ul>
+<p>Exchanges can be durable or transient. Durable
+exchanges survive broker restart whereas transient
+exchanges do not (they have to be redeclared
+when broker comes back online). Not all scenarios
+and use cases require exchanges to be durable.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=exchange-default>Default Exchange<a href=#exchange-default class=hash-link aria-label="Direct link to Default Exchange" title="Direct link to Default Exchange" translate=no>​</a></h3>
+<p>The default exchange is a direct exchange with no name
+(empty string) pre-declared by the broker. It has one special
+property that makes it very useful for simple applications:
+every queue that is created is automatically bound to it with
+a routing key which is the same as the queue name.</p>
+<p>For example, when you declare a queue with the name of
+"search-indexing-online", the AMQP 0-9-1 broker will bind it
+to the default exchange using "search-indexing-online" as
+the routing key (in this context sometimes referred to as the binding key).
+Therefore, a message published to the default
+exchange with the routing key "search-indexing-online"
+will be routed to the queue "search-indexing-online". In
+other words, the default exchange makes it seem like it
+is possible to deliver messages directly to queues, even
+though that is not technically what is happening.</p>
+<p>The default exchange, in RabbitMQ, does not allow bind/unbind operations.
+Binding operations to the default exchange will result in an error.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=exchange-direct>Direct Exchange<a href=#exchange-direct class=hash-link aria-label="Direct link to Direct Exchange" title="Direct link to Direct Exchange" translate=no>​</a></h3>
+<p>A direct exchange delivers messages to queues based on the
+message routing key. A direct exchange is ideal for the unicast
+routing of messages. They can be used for multicast
+routing as well.</p>
+<p>Here is how it works:</p>
+<ul>
+<li class="">A queue binds to the exchange with a routing key K</li>
+<li class="">When a new message with routing key R arrives at the
+direct exchange, the exchange routes it to the queue if K = R</li>
+<li class="">If multiple queues are bound to a direct exchange with the same
+routing key K, the exchange will route the message to all queues
+for which K = R</li>
+</ul>
+<p>A direct exchange can be represented graphically as follows:</p>
+<p><img decoding=async loading=lazy alt="exchange delivering messages to  queues based on routing key" src=/assets/images/exchange-direct-a7628306f367d189dac98aabc4865085.png width=698 height=526 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=exchange-fanout>Fanout Exchange<a href=#exchange-fanout class=hash-link aria-label="Direct link to Fanout Exchange" title="Direct link to Fanout Exchange" translate=no>​</a></h3>
+<p>A fanout exchange routes messages to all of the queues
+that are bound to it and the routing key is ignored. If N
+queues are bound to a fanout exchange, when a new message
+is published to that exchange a copy of the message is
+delivered to all N queues. Fanout exchanges are ideal for
+the broadcast routing of messages.</p>
+<p>Because a fanout exchange delivers a copy of a message to
+every queue bound to it, its use cases are quite similar:</p>
+<ul>
+<li class="">Massively multi-player online (MMO) games can use it
+for leaderboard updates or other global events</li>
+<li class="">Sport news sites can use fanout exchanges for
+distributing score updates to mobile clients in near
+real-time</li>
+<li class="">Distributed systems can broadcast various state and
+configuration updates</li>
+<li class="">Group chats can distribute messages between participants
+using a fanout exchange (although AMQP does not have a
+built-in concept of presence, so XMPP may be a better choice)</li>
+</ul>
+<p>A fanout exchange can be represented graphically as follows:</p>
+<p><img decoding=async loading=lazy alt="exchange delivering messages to three queues" src=/assets/images/exchange-fanout-7155e1fd567292ac471a6b60711c4fc4.png width=698 height=463 class=img_ev3q /></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=exchange-topic>Topic Exchange<a href=#exchange-topic class=hash-link aria-label="Direct link to Topic Exchange" title="Direct link to Topic Exchange" translate=no>​</a></h3>
+<p>Topic exchanges route messages to one or many queues
+based on matching between a message routing key and the
+pattern that was used to bind a queue to an exchange. The
+topic exchange type is often used to implement various
+publish/subscribe pattern variations. Topic exchanges are
+commonly used for the multicast routing of messages.</p>
+<p>Topic exchanges have a very broad set of use cases. Whenever
+a problem involves multiple consumers/applications that
+selectively choose which type of messages they want to
+receive, the use of topic exchanges should be considered.</p>
+<p>Example uses:</p>
+<ul>
+<li class="">Distributing data relevant to specific geographic
+location, for example, points of sale</li>
+<li class="">Background task processing done by multiple workers,
+each capable of handling specific set of tasks</li>
+<li class="">Stocks price updates (and updates on other kinds of financial data)</li>
+<li class="">News updates that involve categorization or tagging
+(for example, only for a particular sport or team)</li>
+<li class="">Orchestration of services of different kinds in the cloud</li>
+<li class="">Distributed architecture/OS-specific software builds or
+packaging where each builder can handle only one architecture or OS</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=exchange-headers>Headers Exchange<a href=#exchange-headers class=hash-link aria-label="Direct link to Headers Exchange" title="Direct link to Headers Exchange" translate=no>​</a></h3>
+<p>A headers exchange is designed for routing on multiple
+attributes that are more easily expressed as message
+headers than a routing key. Headers exchanges ignore the
+routing key attribute. Instead, the attributes used for
+routing are taken from the headers attribute. A message is
+considered matching if the value of the header equals the
+value specified upon binding.</p>
+<p>It is possible to bind a queue to a headers exchange using
+more than one header for matching. In this case, the broker
+needs one more piece of information from the application
+developer, namely, should it consider messages with any
+of the headers matching, or all of them? This is what the
+"x-match" binding argument is for. When the "x-match"
+argument is set to "any", just one matching header value
+is sufficient. Alternatively, setting "x-match" to "all"
+mandates that all the values must match.</p>
+<p>For "any" and "all", headers beginning with the string <code>x-</code>
+will not be used to evaluate matches.
+Setting "x-match" to "any-with-x" or "all-with-x" will also use headers
+beginning with the string <code>x-</code> to evaluate matches.</p>
+<p>Headers exchanges can be looked upon as "direct exchanges
+on steroids". Because they route based on header values,
+they can be used as direct exchanges where the routing key
+does not have to be a string; it could be an integer or a
+hash (dictionary) for example.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=queues>Queues<a href=#queues class=hash-link aria-label="Direct link to Queues" title="Direct link to Queues" translate=no>​</a></h2>
+<p><a class="" href=/docs/queues>Queues</a> in the AMQP 0-9-1 model are very similar to queues in
+other message- and task-queueing systems: they store
+messages that are consumed by applications. Queues share
+some properties with exchanges, but also have some additional
+properties:</p>
+<ul>
+<li class="">Name</li>
+<li class="">Durable (the queue will survive a broker restart)</li>
+<li class="">Exclusive (used by only one connection and the queue will be deleted when that connection closes)</li>
+<li class="">Auto-delete (queue that has had at least one consumer is deleted when last consumer unsubscribes)</li>
+<li class="">Arguments (optional; used by plugins and broker-specific features such as message TTL, queue length limit, etc)</li>
+</ul>
+<p>Before a queue can be used it has to be declared. Declaring
+a queue will cause it to be created if it does not already
+exist. The declaration will have no effect if the queue does
+already exist and its attributes are the same as those in the
+declaration. When the existing queue attributes are not the
+same as those in the declaration a channel-level exception
+with code 406 (<code>PRECONDITION_FAILED</code>) will be  raised.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=queue-names>Queue Names<a href=#queue-names class=hash-link aria-label="Direct link to Queue Names" title="Direct link to Queue Names" translate=no>​</a></h3>
+<p>Applications may pick queue names or ask the broker to generate
+a name for them.  Queue names may be up to 255 bytes of UTF-8
+characters. An AMQP 0-9-1 broker can generate a unique queue
+name on behalf of an app. To use this feature, pass an empty
+string as the queue name argument. The generated name will be returned
+to the client with queue declaration response.</p>
+<p>Queue names starting with "amq." are reserved for internal
+use by the broker. Attempts to declare a queue with a name that
+violates this rule will result in a channel-level exception
+with reply code 403 (<code>ACCESS_REFUSED</code>).</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=queue-durability>Queue Durability<a href=#queue-durability class=hash-link aria-label="Direct link to Queue Durability" title="Direct link to Queue Durability" translate=no>​</a></h3>
+<p>In AMQP 0-9-1, queues can be declared as durable or transient.
+Metadata of a durable queue is stored on disk, while metadata of a transient queue is
+stored in memory when possible.</p>
+<p>The same distinction is made for <a class="" href=/docs/publishers#message-properties>messages at publishing time</a>.</p>
+<p>In environments and use cases where durability is important, applications
+must use durable queues <em>and</em> make sure that publishers mark published messages as persisted.</p>
+<p>This topic is covered in more detailed in the <a class="" href=/docs/queues#durability>Queues guide</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=bindings>Bindings<a href=#bindings class=hash-link aria-label="Direct link to Bindings" title="Direct link to Bindings" translate=no>​</a></h2>
+<p>Bindings are rules that exchanges use (among other things)
+to route messages to queues. To instruct an exchange E to
+route messages to a queue Q,
+Q has to be <em>bound</em> to E. Bindings may have an optional
+<em>routing key</em> attribute used by some exchange types. The
+purpose of the routing key is to select certain messages published
+to an exchange to be routed to the bound queue. In other words,
+the routing key acts like a filter.</p>
+<p>To draw an analogy:</p>
+<ul>
+<li class="">Queue is like your destination in New York city</li>
+<li class="">Exchange is like JFK airport</li>
+<li class="">Bindings are routes from JFK to your destination. There can be zero or many ways to reach it</li>
+</ul>
+<p>Having this layer of indirection enables routing scenarios
+that are impossible or very hard to implement using publishing
+directly to queues and also eliminates certain amount of
+duplicated work application developers have to do.</p>
+<p>If a message cannot be routed to any queue (for example,
+because there are no bindings for the exchange it was published
+to) it is either <a class="" href=/docs/publishers#unroutable>dropped or returned to the publisher</a>,
+depending on message attributes the publisher has set.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=consumers>Consumers<a href=#consumers class=hash-link aria-label="Direct link to Consumers" title="Direct link to Consumers" translate=no>​</a></h2>
+<p>Storing messages in queues is useless unless applications
+can <em><a class="" href=/docs/consumers>consume</a></em> them. In the AMQP 0-9-1 Model, there
+are two ways for applications to do this:</p>
+<ul>
+<li class="">Subscribe to have messages delivered to them ("push API"): this is the recommended option</li>
+<li class="">Polling ("pull API"): this way is <strong>highly inefficient</strong> and <strong>should be avoided</strong> in most cases</li>
+</ul>
+<p>With the "push API", applications have to indicate interest in
+consuming messages from a particular queue. When they do so,
+we say that they <em>register a consumer</em>
+or, simply put, <em>subscribe to a queue</em>. It is possible
+to have more than one consumer per queue or to register an
+<em>exclusive consumer</em> (excludes all other consumers from
+the queue while it is consuming).</p>
+<p>Each consumer (subscription) has an identifier called a
+<em>consumer tag</em>. It can be used to unsubscribe from
+messages. Consumer tags are just strings.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=consumer-acknowledgements>Message Acknowledgements<a href=#consumer-acknowledgements class=hash-link aria-label="Direct link to Message Acknowledgements" title="Direct link to Message Acknowledgements" translate=no>​</a></h3>
+<p><a class="" href=/docs/consumers>Consumer applications</a> – that is, applications that receive and process
+messages – may occasionally fail to process individual
+messages, lose connection to the server or fail in many other ways.</p>
+<p>There is also the possibility
+of network issues causing problems. This raises a question:
+when should the broker remove messages from queues? The
+AMQP 0-9-1 specification gives consumers control over this. There are
+two <a class="" href=/docs/confirms>acknowledgement modes</a>:</p>
+<ul>
+<li class="">After broker sends a message to an application (using either <code>basic.deliver</code> or <code>basic.get-ok</code> method).</li>
+<li class="">After the application sends back an acknowledgement (using the <code>basic.ack</code> method).</li>
+</ul>
+<p>The former choice is called the automatic acknowledgement
+model, while the latter is called the explicit acknowledgement
+model. With the explicit model the application chooses when
+it is time to send an acknowledgement. It can be right after
+receiving a message, or after persisting it to a data store
+before processing, or after fully processing the message
+(for example, successfully fetching a Web page, processing
+and storing it into some persistent data store).</p>
+<p>If a consumer dies without sending an acknowledgement,
+the broker will redeliver it to another consumer or,
+if none are available at the time, the broker will wait until
+at least one consumer is registered for the same queue before
+attempting redelivery.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=messages-reject>Rejecting Messages<a href=#messages-reject class=hash-link aria-label="Direct link to Rejecting Messages" title="Direct link to Rejecting Messages" translate=no>​</a></h3>
+<p>When a consumer application receives a message, processing
+of that message may or may not succeed. An application can
+indicate to the broker that message processing has failed
+(or cannot be accomplished at the time) by rejecting a
+message. When rejecting a message, an application can ask
+the broker to discard or requeue it. When there is only one
+consumer on a queue, make sure you do not create infinite
+message delivery loops by rejecting and requeueing a message
+from the same consumer over and over again.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=messages-nack>Negative Acknowledgements<a href=#messages-nack class=hash-link aria-label="Direct link to Negative Acknowledgements" title="Direct link to Negative Acknowledgements" translate=no>​</a></h3>
+<p>Messages are rejected with the <code>basic.reject</code> method.
+There is one limitation that <code>basic.reject</code> has:
+there is no way to reject multiple messages as you can do
+with acknowledgements. However, if you are using RabbitMQ,
+then there is a solution. RabbitMQ provides an AMQP 0-9-1
+extension known as <em>negative acknowledgements</em> or <em>nacks</em>. For
+more information, please refer to the <a class="" href=/docs/confirms>Confirmations</a>
+and <a class="" href=/docs/nack>basic.nack extension</a> guides.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id=messages-prefetch>Prefetching Messages<a href=#messages-prefetch class=hash-link aria-label="Direct link to Prefetching Messages" title="Direct link to Prefetching Messages" translate=no>​</a></h3>
+<p>For cases when multiple consumers share a queue, it is useful
+to be able to specify how many messages each consumer can be
+sent at once before sending the next acknowledgement. This can
+be used as a simple load balancing technique or to improve
+throughput if messages tend to be published in batches. For
+example, if a producing application sends messages every
+minute because of the nature of the work it is doing.</p>
+<p>Note that RabbitMQ only supports channel-level prefetch-count,
+not connection or size based prefetching.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=messages>Message Attributes and Payload<a href=#messages class=hash-link aria-label="Direct link to Message Attributes and Payload" title="Direct link to Message Attributes and Payload" translate=no>​</a></h2>
+<p>Messages in the AMQP 0-9-1 model have <em>attributes</em>. Some
+attributes are so common that the AMQP 0-9-1 specification
+defines them and application developers do not have to think
+about the exact attribute name. Some examples are</p>
+<ul>
+<li class="">Content type</li>
+<li class="">Content encoding</li>
+<li class="">Routing key</li>
+<li class="">Delivery mode (persistent or not)</li>
+<li class="">Message priority</li>
+<li class="">Message publishing timestamp</li>
+<li class="">Expiration period</li>
+<li class="">Publisher application id</li>
+</ul>
+<p>Some attributes are used by AMQP brokers, but most are open
+to interpretation by applications that receive them. Some
+attributes are optional and known
+as <em>headers</em>. They are similar to X-Headers in
+HTTP. Message attributes are set when a message is published.</p>
+<p>Messages also have a <em>payload</em> (the data that
+they carry), which AMQP brokers treat as an opaque byte array.
+The broker will not inspect or modify the payload. It is possible
+for messages to contain only attributes and no payload. It
+is common to use serialisation formats like JSON, Thrift,
+Protocol Buffers and MessagePack to serialize structured data
+in order to publish it as the message payload. Protocol peers
+typically use the "content-type" and "content-encoding" fields to
+communicate this information,  but this is by convention only.</p>
+<p>Messages may be published as persistent, which makes the broker persist them to disk.
+If the server is restarted the system ensures that received persistent messages are not
+lost. Simply publishing a message to a durable exchange or the
+fact that the queue(s) it is routed to are durable doesn't make
+a message persistent: it all depends on persistence mode of the
+message itself. Publishing messages as persistent affects
+performance (just like with data stores, durability comes at a
+certain cost in performance).</p>
+<p>Learn more in the <a class="" href=/docs/publishers>Publishers guide</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=amqp-methods>AMQP 0-9-1 Methods<a href=#amqp-methods class=hash-link aria-label="Direct link to AMQP 0-9-1 Methods" title="Direct link to AMQP 0-9-1 Methods" translate=no>​</a></h2>
+<p>AMQP 0-9-1 is structured as a number of
+<em>methods</em>. Methods are operations (like HTTP methods)
+and have nothing in common with methods in object-oriented
+programming languages. Protocol methods in AMQP 0-9-1 are grouped into
+<em>classes</em>. Classes are just logical groupings of AMQP 0-9-1
+methods. The <a href=https://github.com/rabbitmq/amqp-0.9.1-spec/blob/main/pdf/amqp-xml-doc0-9-1.pdf target=_blank rel="noopener noreferrer" class="">AMQP 0-9-1 reference</a> has full details of all the AMQP 0-9-1 methods (protocol operations).</p>
+<p>Let us take a look at the <em>exchange</em> class, a group
+of methods related to operations on exchanges. It includes
+the following operations:</p>
+<ul>
+<li class=""><code>exchange.declare</code></li>
+<li class=""><code>exchange.declare-ok</code></li>
+<li class=""><code>exchange.delete</code></li>
+<li class=""><code>exchange.delete-ok</code></li>
+</ul>
+<p>(note that the RabbitMQ site reference also includes
+RabbitMQ-specific extensions to the exchange class that we
+will not discuss in this guide).</p>
+<p>The operations above form logical pairs:
+<code>exchange.declare</code> and
+<code>exchange.declare-ok</code>,
+<code>exchange.delete</code> and
+<code>exchange.delete-ok</code>. These operations are
+"requests" (sent by clients) and "responses" (sent by
+brokers in response to the aforementioned "requests").</p>
+<p>As an example, the client asks the broker to declare a new
+exchange using the <code>exchange.declare</code> method:</p>
+<p><img decoding=async loading=lazy alt=exchange.declare src=/assets/images/exchange-declare-2a32937cd96e9dea014e3ed576313124.png width=551 height=155 class=img_ev3q /></p>
+<p>As shown on the diagram above,
+<code>exchange.declare</code> carries several
+<em>parameters</em>. They enable the client to specify
+exchange name, type, durability flag and so on.</p>
+<p>If the operation succeeds, the broker responds with the <code>exchange.declare-ok</code> method:</p>
+<p><img decoding=async loading=lazy alt=exchange.declare-ok src=/assets/images/exchange-declare-ok-c3fc53d9b3d1f338b21d41751be43d23.png width=551 height=155 class=img_ev3q /></p>
+<p><code>exchange.declare-ok</code> does not carry any
+parameters except for the channel number (channels will be
+described later in this guide).</p>
+<p>The sequence of events is very similar for another
+method pair on the AMQP 0-9-1 <em>queue</em> method class: <code>queue.declare</code> and
+<code>queue.declare-ok</code>:</p>
+<p><img decoding=async loading=lazy alt=queue.declare src=/assets/images/queue-declare-036e7ad8978c66ae521632767601ef0c.png width=551 height=155 class=img_ev3q /></p>
+<p><img decoding=async loading=lazy alt=queue.declare-ok src=/assets/images/queue-declare-ok-49316b1ecebe2ba9168ee314c84af907.png width=551 height=155 class=img_ev3q /></p>
+<p>Not all AMQP 0-9-1 methods have counterparts. Some
+(<code>basic.publish</code> being the most widely used one)
+do not have corresponding "response" methods
+and some others (<code>basic.get</code>, for example)
+have more than one possible "response".</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=amqp-connections>Connections<a href=#amqp-connections class=hash-link aria-label="Direct link to Connections" title="Direct link to Connections" translate=no>​</a></h2>
+<p>AMQP 0-9-1 connections are typically long-lived. AMQP 0-9-1 is an
+application level protocol that uses TCP for reliable
+delivery. Connections use authentication and can be
+protected using TLS. When an application no longer needs
+to be connected to the server, it should gracefully close
+its AMQP 0-9-1 connection instead of abruptly closing the underlying TCP connection.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=amqp-channels>Channels<a href=#amqp-channels class=hash-link aria-label="Direct link to Channels" title="Direct link to Channels" translate=no>​</a></h2>
+<p>Some applications need multiple connections to the
+broker. However, it is undesirable to keep many TCP
+connections open at the same time because doing so consumes
+system resources and makes it more difficult to configure
+firewalls. AMQP 0-9-1 connections are multiplexed with
+<em><a class="" href=/docs/channels>channels</a></em> that can be thought of as "lightweight
+connections that share a single TCP connection".</p>
+<p>Every protocol operation performed by a client happens on a channel.
+Communication on a particular channel is completely separate
+from communication on another channel, therefore every protocol
+method also carries a channel ID (a.k.a. channel number), an integer
+that both the broker and clients use to figure out which channel the method is for.</p>
+<p>A channel only exists in the context of a connection and never on its own.
+When a connection is closed, so are all channels on it.</p>
+<p>For applications that use multiple threads/processes for
+processing, it is very common to open a new channel per thread/process
+and not share channels between them.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=amqp-vhosts>Virtual Hosts<a href=#amqp-vhosts class=hash-link aria-label="Direct link to Virtual Hosts" title="Direct link to Virtual Hosts" translate=no>​</a></h2>
+<p>To make it possible for a single broker to host multiple
+isolated "environments" (groups of users, exchanges,
+queues and so on), AMQP 0-9-1 includes the concept of <em><a class="" href=/docs/vhosts>virtual hosts</a></em> (vhosts).
+They are similar to virtual hosts used by many popular Web servers and provide completely isolated
+environments in which AMQP entities live. Protocol clients
+specify what vhosts they want to use during connection negotiation.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=amqp-extensibility>AMQP is Extensible<a href=#amqp-extensibility class=hash-link aria-label="Direct link to AMQP is Extensible" title="Direct link to AMQP is Extensible" translate=no>​</a></h2>
+<p>AMQP 0-9-1 has several extension points:</p>
+<ul>
+<li class=""><a class="" href=/client-libraries/devtools#miscellaneous>Custom exchange types</a> let developers
+implement routing schemes that exchange types provided out-of-the-box do
+not cover well, for example, geodata-based routing.</li>
+<li class="">Declaration of exchanges and queues can include additional attributes that the broker
+can use. For example, <a class="" href=/docs/ttl>per-queue message TTL</a> in RabbitMQ is implemented this way.</li>
+<li class="">Broker-specific extensions to the protocol. See, for example,
+<a class="" href=/docs/extensions>extensions that RabbitMQ implements</a>.</li>
+<li class="">Every now and then, new AMQP 0-9-1 method classes can be introduced for specific cases such
+as <a class="" href=/docs/oauth2>OAuth 2</a> (JWT) token refresh.</li>
+<li class="">Brokers can be extended with <a class="" href=/docs/plugins>additional plugins</a>,
+for example, the <a class="" href=/docs/management>RabbitMQ management</a>
+frontend and HTTP API are implemented as a plugin.</li>
+</ul>
+<p>These features make the AMQP 0-9-1 Model even more flexible
+and applicable to a very broad range of problems.</p>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id=amqp-clients>AMQP 0-9-1 Clients Ecosystem<a href=#amqp-clients class=hash-link aria-label="Direct link to AMQP 0-9-1 Clients Ecosystem" title="Direct link to AMQP 0-9-1 Clients Ecosystem" translate=no>​</a></h2>
+<p>There are <a class="" href=/client-libraries/devtools>many AMQP 0-9-1 clients</a> for many
+popular programming languages and platforms. Some of them follow AMQP terminology
+closely and only provide implementation of AMQP methods. Some
+others have additional features, convenience methods
+and abstractions. Some of the clients are asynchronous
+(non-blocking), some are synchronous (blocking), some support
+both models. Some clients support vendor-specific extensions
+(for example, RabbitMQ-specific extensions).</p>
+<p>Because one of the main AMQP goals is interoperability, it is
+a good idea for developers to understand protocol operations
+and not limit themselves to terminology of a particular client
+library. This way communicating with developers using different
+libraries will be significantly easier.</div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_WFHX"><a href=https://github.com/rabbitmq/rabbitmq-website/tree/main/tutorials/amqp-concepts/index.md target=_blank rel="noopener noreferrer" class=theme-edit-this-page><svg fill=currentColor height=20 width=20 viewBox="0 0 40 40" class=iconEdit_Z9Sw aria-hidden=true><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"/></g></svg>Edit this page</a></div><div class="col lastUpdated_JAkA"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"></nav></div></div><div class="col col--3"><div class="tableOfContents_bqdL thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href=#overview class="table-of-contents__link toc-highlight">Overview</a><li><a href=#highlevel-overview class="table-of-contents__link toc-highlight">High-level Overview of AMQP 0-9-1 and the AMQP Model</a><ul><li><a href=#what-is-amqp class="table-of-contents__link toc-highlight">What is AMQP 0-9-1?</a><li><a href=#brokers-role class="table-of-contents__link toc-highlight">Brokers and Their Role</a><li><a href=#amqp-model class="table-of-contents__link toc-highlight">AMQP 0-9-1 Model in Brief</a><li><a href=#programmable-protocol class="table-of-contents__link toc-highlight">AMQP 0-9-1 is a Programmable Protocol</a></ul><li><a href=#exchanges class="table-of-contents__link toc-highlight">Exchanges and Exchange Types</a><ul><li><a href=#exchange-default class="table-of-contents__link toc-highlight">Default Exchange</a><li><a href=#exchange-direct class="table-of-contents__link toc-highlight">Direct Exchange</a><li><a href=#exchange-fanout class="table-of-contents__link toc-highlight">Fanout Exchange</a><li><a href=#exchange-topic class="table-of-contents__link toc-highlight">Topic Exchange</a><li><a href=#exchange-headers class="table-of-contents__link toc-highlight">Headers Exchange</a></ul><li><a href=#queues class="table-of-contents__link toc-highlight">Queues</a><ul><li><a href=#queue-names class="table-of-contents__link toc-highlight">Queue Names</a><li><a href=#queue-durability class="table-of-contents__link toc-highlight">Queue Durability</a></ul><li><a href=#bindings class="table-of-contents__link toc-highlight">Bindings</a><li><a href=#consumers class="table-of-contents__link toc-highlight">Consumers</a><ul><li><a href=#consumer-acknowledgements class="table-of-contents__link toc-highlight">Message Acknowledgements</a><li><a href=#messages-reject class="table-of-contents__link toc-highlight">Rejecting Messages</a><li><a href=#messages-nack class="table-of-contents__link toc-highlight">Negative Acknowledgements</a><li><a href=#messages-prefetch class="table-of-contents__link toc-highlight">Prefetching Messages</a></ul><li><a href=#messages class="table-of-contents__link toc-highlight">Message Attributes and Payload</a><li><a href=#amqp-methods class="table-of-contents__link toc-highlight">AMQP 0-9-1 Methods</a><li><a href=#amqp-connections class="table-of-contents__link toc-highlight">Connections</a><li><a href=#amqp-channels class="table-of-contents__link toc-highlight">Channels</a><li><a href=#amqp-vhosts class="table-of-contents__link toc-highlight">Virtual Hosts</a><li><a href=#amqp-extensibility class="table-of-contents__link toc-highlight">AMQP is Extensible</a><li><a href=#amqp-clients class="table-of-contents__link toc-highlight">AMQP 0-9-1 Clients Ecosystem</a></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Learn about RabbitMQ</div><ul class="footer__items clean-list"><li class=footer__item><a class=footer__link-item href=/tutorials>Getting Started</a><li class=footer__item><a class=footer__link-item href=/docs>Documentation</a><li class=footer__item><a class=footer__link-item href=/blog>Blog</a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Reach out to the RabbitMQ team</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://github.com/rabbitmq target=_blank rel="noopener noreferrer" class=footer__link-item>GitHub<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://github.com/rabbitmq/rabbitmq-server/discussions target=_blank rel="noopener noreferrer" class=footer__link-item>GitHub Discussions<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class=footer__link-item href="/contact?utm_source=rmq_release-information_tableheader&utm_medium=rmq_website&utm_campaign=tanzu">Long Term Commercial Support</a><li class=footer__item><a class=footer__link-item href=/contact>Contact Us</a><li class=footer__item><a href=https://www.rabbitmq.com/discord target=_blank rel="noopener noreferrer" class=footer__link-item>Discord<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a></ul></div><div class="theme-layout-footer-column col footer__col"><div class=footer__title>Broadcom</div><ul class="footer__items clean-list"><li class=footer__item><a href=https://tanzu.vmware.com/ target=_blank rel="noopener noreferrer" class=footer__link-item>VMware Tanzu<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://www.vmware.com/help/legal.html target=_blank rel="noopener noreferrer" class=footer__link-item>Terms of Use<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a href=https://www.vmware.com/help/privacy.html target=_blank rel="noopener noreferrer" class=footer__link-item>Privacy<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class=footer__link-item href=/trademark-guidelines>Trademark Guidelines</a><li class=footer__item><a href=https://www.vmware.com/help/privacy/california-privacy-rights.html target=_blank rel="noopener noreferrer" class=footer__link-item>Your California Privacy Rights<svg width=13.5 height=13.5 aria-label="(opens in new tab)" class=iconExternalLink_nPIU><use href=#theme-svg-external-link /></svg></a><li class=footer__item><a class="footer__link-item ot-sdk-show-settings">Cookie Settings</a></ul></div></div><div class="footer__bottom text--center"><div class=footer__copyright>Copyright © 2005-2026 Broadcom. All Rights Reserved. The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.</div></div></div></footer></div></body>
