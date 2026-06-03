@@ -1,0 +1,40 @@
+> This page location: Community > Community hub
+> Full Neon documentation index: https://neon.com/docs/llms.txt
+
+> Summary: Covers how to contribute to the Neon community through documentation, community guides, code contributions, and engagement on platforms like Discord and YouTube.
+
+# Neon community
+
+Learn how to get involved in the Neon community
+
+Neon is [open source](https://neon.com/docs/get-started/why-neon#neon-is-open-source) and has an enthusiastic user community worldwide. Here's how you can get involved:
+
+## Contribute
+
+There are many ways to contribute to the Neon community:
+
+- **Neon Docs**: Share suggestions, contribute content, or write new guides to help others working with Neon. Check out our [Documentation Contribution Guide](https://neon.com/docs/community/contribution-guide) to get started. You can also create visual diagrams using our [Mermaid Diagrams Guide](https://neon.com/docs/community/mermaid-diagrams). If you want to consume our docs as markdown (e.g. for LLMs or APIs), see [Using Neon docs as markdown](https://neon.com/docs/community/llms-markdown-guide).
+- **Community Guides**: Share your knowledge by writing a guide about Neon or Postgres. These guides can help developers learn new technologies, techniques, and best practices. Submit your guide to our [Community Guides](https://neon.com/guides) page by forking the [Neon website repository](https://github.com/neondatabase/website) and creating a PR to add it to the [/content/guides](https://github.com/neondatabase/website/tree/main/content/guides) directory.
+- **Examples and applications**: Share examples and applications that demonstrate how to integrate Neon with different tools and platforms. Post your examples on our [Discord Server](https://discord.gg/92vNTzKDGp) or contribute to the [Neon examples repository](https://github.com/neondatabase/examples).
+- **Code contributions**: Contribute to Neon's development by fixing bugs, proposing new features, or submitting code to [Neon's GitHub repositories](https://github.com/neondatabase). It's also a good way to dig into how Neon is built.
+
+## Join the Discussion
+
+Join us on Discord and X (Twitter), and subscribe to the Neon YouTube channel for videos and presentations.
+
+- [Neon Discord Server](https://discord.gg/92vNTzKDGp)
+- [X (Twitter)](https://twitter.com/neondatabase)
+- [Neon YouTube](https://www.youtube.com/@neondatabase)
+
+---
+
+## Related docs (Community)
+
+- [Docs contribution guide](https://neon.com/docs/community/contribution-guide)
+- [Using Mermaid diagrams](https://neon.com/docs/community/mermaid-diagrams)
+- [Component guide](https://neon.com/docs/community/component-guide)
+- [Component specialized guide](https://neon.com/docs/community/component-specialized)
+- [Component icon guide](https://neon.com/docs/community/component-icon-guide)
+- [Component architecture](https://neon.com/docs/community/component-architecture)
+- [AI tools for documentation](https://neon.com/docs/community/ai-tools)
+- [Using docs as Markdown (LLMs)](https://neon.com/docs/community/llms-markdown-guide)

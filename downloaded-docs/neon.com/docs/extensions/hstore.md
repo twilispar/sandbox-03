@@ -1,0 +1,307 @@
+> This page location: Extensions > hstore
+> Full Neon documentation index: https://neon.com/docs/llms.txt
+
+> Summary: Covers the setup and usage of the `hstore` extension in Postgres for managing key-value pairs, including enabling the extension, storing, querying, and performing operations on hstore data.
+
+# The hstore extension
+
+Manage key-value pairs in Postgres using hstore
+
+The `hstore` extension is a flexible way to store and manipulate sets of key-value pairs within a single Postgres value. It works well for semi-structured data or data without a rigid schema.
+
+> **Try it on Neon!**
+>
+> Neon is Serverless Postgres built for the cloud. Explore Postgres features and functions in our user-friendly SQL editor. Sign up for a free account to get started.
+>
+> [Sign Up](https://console.neon.tech/signup)
+
+This guide covers the basics of the `hstore` extension - how to enable it, how to store and query key-value pairs, and perform operations on hstore data with examples. `hstore` is valuable in scenarios where schema-less data needs to be stored efficiently, such as in configurations, application settings, or any situation where the data structure may evolve over time.
+
+**Note:** `hstore` is an open-source extension for Postgres that can be installed on any compatible Postgres instance. Detailed installation instructions and compatibility information can be found at [PostgreSQL Extensions](https://www.postgresql.org/docs/current/contrib.html).
+
+**Version availability**
+
+Please refer to the [list of all extensions](https://neon.com/docs/extensions/pg-extensions) available in Neon for up-to-date information.
+
+## Enable the `hstore` extension
+
+Enable the extension by running the following SQL statement in your Postgres client:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS hstore;
+```
+
+For information about using the Neon SQL Editor, see [Query with Neon's SQL Editor](https://neon.com/docs/get-started/query-with-neon-sql-editor). For information about using the `psql` client with Neon, see [Connect with psql](https://neon.com/docs/connect/query-with-psql-editor).
+
+## Example usage
+
+**Creating a table with hstore column**
+
+Consider a table that stores the product catalog for an electronics shop. Each product has a name and a set of attributes that describe it. The attributes for each product are not fixed and may change over time. This makes `hstore` a good choice for storing this data.
+
+```sql
+CREATE TABLE product (
+   id SERIAL PRIMARY KEY,
+   name VARCHAR(255),
+   attributes HSTORE
+);
+```
+
+**Inserting data**
+
+Inserting data into an `hstore` column is done by providing a string containing key-value pairs into the column.
+
+```sql
+INSERT INTO product (name, attributes)
+VALUES
+    ('Desktop', 'brand => HP, price => 900, processor => "Intel Core i5", storage => "1TB HDD"'),
+    ('Tablet', 'brand => Apple, price => 500, os => iOS, screen_size => 10.5'),
+    ('Smartwatch', 'brand => Garmin, price => 250, water_resistant => true, battery_life => "7 days"'),
+    ('Camera', 'brand => Nikon, price => 1200, megapixels => 24, video_resolution => "4K"'),
+    ('Laptop', 'brand => Dell, price => 1200, screen_size => 15.6'),
+    ('Smartphone', 'brand => Samsung, price => 800, os => Android'),
+    ('Headphones', 'brand => Sony, price => 150, wireless => true, color => "Black"');
+```
+
+`hstore` stores both keys and values for each record as strings (values can be nulls). For numeric attributes like price and megapixels, they are cast to strings when inserted into the table.
+
+**Querying `hstore` data**
+
+`hstore` columns can be referenced as regular columns in a query. To access the attributes in an `hstore` column, we use the `->` operator.
+
+For example, to retrieve the name and brand for all products with price less than 1000, we can run the following query:
+
+```sql
+SELECT name, attributes->'brand' AS brand
+FROM product
+WHERE (attributes->'price')::INT < 1000;
+```
+
+Since the `price` attribute is stored as a string, we need to cast it to an integer before comparing it to 1000. This query returns the following:
+
+```text
+| name       | brand   |
+|------------|---------|
+| Desktop    | HP      |
+| Tablet     | Apple   |
+| Smartwatch | Garmin  |
+| Smartphone | Samsung |
+| Headphones | Sony    |
+```
+
+## Operators for `hstore` data
+
+`hstore` offers a variety of operators for manipulating and querying key-value pairs. We go over some examples below.
+
+**Check if a key exists**
+
+The `?` operator is used to check if an `hstore` contains a specific key.
+
+```sql
+SELECT id, name
+FROM product
+WHERE attributes ? 'os';
+```
+
+This query returns the following:
+
+```text
+| id | name       |
+|----|------------|
+| 2  | Tablet     |
+| 6  | Smartphone |
+```
+
+**Check if an hstore contains another hstore**
+
+The `@>` operator is used to check if the `hstore` on the left contains the right operand. For example, the query below looks for products that have a `brand` attribute of `Apple`.
+
+```sql
+SELECT id, name
+FROM product
+WHERE attributes @> 'brand => "Apple"';
+```
+
+This query returns the following:
+
+```text
+| id | name   |
+|----|--------|
+| 2  | Tablet |
+```
+
+**Concatenating two hstore values**
+
+The `||` operator is used to concatenate two `hstore` values. For example, the query below updates the attributes for the product with name `Laptop`.
+
+```sql
+UPDATE product
+SET attributes = attributes || 'weight => 2.5'
+WHERE name = 'Laptop' AND attributes -> 'brand' = 'Dell';
+```
+
+To verify, we can run the query below.
+
+```sql
+SELECT id, name, attributes -> 'weight' AS weight
+FROM product
+WHERE name = 'Laptop' AND attributes -> 'brand' = 'Dell';
+```
+
+This query returns the following:
+
+```text
+| id | name   | weight |
+|----|--------|--------|
+|  5 | Laptop | 2.5    |
+```
+
+**Check if a hstore contains any of the specified keys**
+
+The `?|` operator is used to check if an `hstore` contains any of the keys specified in the right operand. For example, the query below returns all products that have either a `screen_size` or `megapixels` attribute.
+
+```sql
+SELECT id, name
+FROM product
+WHERE attributes ?| ARRAY['screen_size', 'megapixels'];
+```
+
+This query returns the following:
+
+```text
+| id | name   |
+|----|--------|
+| 2  | Tablet |
+| 4  | Camera |
+| 5  | Laptop |
+```
+
+## `Hstore` functions
+
+The `hstore` extension also adds functions to manipulate the `hstore` data. We go over some examples below.
+
+**Retrieve all keys**
+
+The `akeys` function returns an array of all the keys in an `hstore` value. For example, the query below returns all the keys for Dell laptop products.
+
+```sql
+SELECT id, name, akeys(attributes) AS keys
+FROM product
+WHERE name = 'Laptop' AND attributes -> 'brand' = 'Dell';
+```
+
+This query returns the following:
+
+```text
+| id | name   | keys                             |
+|----|--------|----------------------------------|
+| 1  | Laptop | {brand,price,weight,screen_size} |
+```
+
+**Convert hstore to JSON**
+
+The `hstore_to_json` function converts an `hstore` value to `JSON`. For example, the query below converts the `attributes` column to `JSON` for all products with a `brand` attribute of `Apple`.
+
+```sql
+SELECT hstore_to_json(attributes) AS attributes
+FROM product
+WHERE attributes -> 'brand' = 'Apple';
+```
+
+**Extract all keys and values**
+
+The `each` function returns the set of key-value pairs for an `hstore` value. For example, the query below returns each attribute of the Nikon Camera as a separate row.
+
+```sql
+SELECT id, (each(attributes)).*
+FROM product
+WHERE name = 'Camera' AND attributes -> 'brand' = 'Nikon';
+```
+
+This query returns the following:
+
+```text
+| id | key              | value |
+|----|------------------|-------|
+| 1  | brand            | Nikon |
+| 2  | price            | 1200  |
+| 3  | megapixels       | 24    |
+| 4  | video_resolution | 4K    |
+```
+
+## Comparing `hstore` with `JSON`
+
+The `hstore` and `JSON` data types can be both used to store semi-structured data. `Hstore` has a flat data model; both keys and values must be strings. This makes it more efficient for simple key-value data.
+
+In contrast, `JSON` supports a variety of data types, and can also store nested data structures. This makes it more flexible, but trades off some performance.
+
+## Indexing and performance
+
+Indexing can improve the performance of queries involving `hstore` data, particularly for large datasets.
+
+`Hstore` supports the regular `btree` and `hash` indexes. However, this is only useful for equality comparisons of the entire `hstore` value, since these indexes have no knowledge of its substructure.
+
+```sql
+CREATE INDEX btree_idx_attributes ON product USING hash (attributes);
+```
+
+For queries that involve key-level filtering, like the `@>` or the `?` operators, the `GIN` and `GIST` indexes are more useful. The indexes can be created as shown in this example:
+
+```sql
+CREATE INDEX gin_idx_attributes ON product USING gin (attributes);
+```
+
+## Conclusion
+
+The `hstore` extension is a flexible option for semi-structured data in Postgres. This guide covers creating records, querying on attributes, and the common operators and functions available for `hstore` data.
+
+## Resources
+
+- [PostgreSQL hstore documentation](https://www.postgresql.org/docs/current/hstore.html)
+
+---
+
+## Related docs (Extensions)
+
+- [Extension explorer](https://neon.com/docs/extensions/extension-explorer)
+- [anon](https://neon.com/docs/extensions/postgresql-anonymizer)
+- [btree_gin](https://neon.com/docs/extensions/btree_gin)
+- [btree_gist](https://neon.com/docs/extensions/btree_gist)
+- [citext](https://neon.com/docs/extensions/citext)
+- [cube](https://neon.com/docs/extensions/cube)
+- [dblink](https://neon.com/docs/extensions/dblink)
+- [dict_int](https://neon.com/docs/extensions/dict_int)
+- [earthdistance](https://neon.com/docs/extensions/earthdistance)
+- [fuzzystrmatch](https://neon.com/docs/extensions/fuzzystrmatch)
+- [intarray](https://neon.com/docs/extensions/intarray)
+- [ltree](https://neon.com/docs/extensions/ltree)
+- [neon](https://neon.com/docs/extensions/neon)
+- [neon_utils](https://neon.com/docs/extensions/neon-utils)
+- [online_advisor](https://neon.com/docs/extensions/online_advisor)
+- [pgcrypto](https://neon.com/docs/extensions/pgcrypto)
+- [pgvector](https://neon.com/docs/extensions/pgvector)
+- [pgrag](https://neon.com/docs/extensions/pgrag)
+- [pg_cron](https://neon.com/docs/extensions/pg_cron)
+- [pg_graphql](https://neon.com/docs/extensions/pg_graphql)
+- [pg_mooncake](https://neon.com/docs/extensions/pg_mooncake)
+- [pg_partman](https://neon.com/docs/extensions/pg_partman)
+- [pg_prewarm](https://neon.com/docs/extensions/pg_prewarm)
+- [pg_session_jwt](https://neon.com/docs/extensions/pg_session_jwt)
+- [pg_stat_statements](https://neon.com/docs/extensions/pg_stat_statements)
+- [pg_repack](https://neon.com/docs/extensions/pg_repack)
+- [pg_search](https://neon.com/docs/extensions/pg_search)
+- [pg_tiktoken](https://neon.com/docs/extensions/pg_tiktoken)
+- [pg_trgm](https://neon.com/docs/extensions/pg_trgm)
+- [pg_uuidv7](https://neon.com/docs/extensions/pg_uuidv7)
+- [pgrowlocks](https://neon.com/docs/extensions/pgrowlocks)
+- [pgstattuple](https://neon.com/docs/extensions/pgstattuple)
+- [plv8](https://neon.com/docs/extensions/plv8)
+- [postgis](https://neon.com/docs/extensions/postgis)
+- [postgis-related](https://neon.com/docs/extensions/postgis-related-extensions)
+- [postgres_fdw](https://neon.com/docs/extensions/postgres_fdw)
+- [tablefunc](https://neon.com/docs/extensions/tablefunc)
+- [timescaledb](https://neon.com/docs/extensions/timescaledb)
+- [unaccent](https://neon.com/docs/extensions/unaccent)
+- [uuid-ossp](https://neon.com/docs/extensions/uuid-ossp)
+- [wal2json](https://neon.com/docs/extensions/wal2json)
+- [xml2](https://neon.com/docs/extensions/xml2)

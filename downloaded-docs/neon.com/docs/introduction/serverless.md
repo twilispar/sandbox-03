@@ -1,0 +1,55 @@
+> This page location: Architecture > Serverless
+> Full Neon documentation index: https://neon.com/docs/llms.txt
+
+> Summary: Covers the setup of serverless Postgres on Neon, detailing features like instant provisioning, automatic scaling, and usage-based billing, enabling efficient management of multiple databases without server maintenance.
+
+# Serverless
+
+Postgres with instant provisioning, no server management, and pay-per-usage billing
+
+Neon takes the world's most loved database, Postgres, and makes it serverless. As part of the Neon backend, Neon Postgres helps teams ship reliable and scalable applications faster.
+
+Enabling serverless Postgres begins with Neon's [lakebase architecture](https://neon.com/docs/introduction/architecture-overview), which natively decouples storage and compute. By separating these components, Neon can dynamically scale up during periods of high activity and down to zero when idle. Developers can be hands-off instead of sizing infrastructure manually.
+
+This serverless character also makes Neon databases highly agile and well-suited for use cases that require automatic creation, management, and deletion of a high number of Postgres databases, like [database-per-user architectures with thousands of tenants](https://neon.com/use-cases/database-per-tenant), as well as [database branching workflows](https://neon.com/branching) that accelerate development by enabling the management of dev/testing databases via CI/CD.
+
+![Multi-tenant storage](https://neon.com/docs/introduction/neon_architecture_5.jpg)
+
+Read our [lakebase architecture](https://neon.com/docs/introduction/architecture-overview) section for more information on how Neon is built.
+
+## What "serverless" means to us
+
+At Neon, we interpret "serverless" not only as the absence of servers to manage but as a set of principles and features designed to streamline your development process and optimize operational efficiency for your database.
+
+To us, serverless means:
+
+- **Instant provisioning**: Neon allows you to spin up Postgres databases in seconds, eliminating the long setup times traditionally associated with database provisioning.
+- **No server management**: You don't have to deal with the complexities of provisioning, maintaining, and administering servers. Neon handles it all, so you can focus on your application.
+- **Autoscaling**: Compute resources automatically scale up or down based on real-time demand, ensuring optimal performance without manual intervention. No restarts are required.
+- **Usage-based pricing**: Your costs are directly tied to the resources your workload consumes (both compute and storage). There's no need to over-provision or pay for idle capacity.
+- **Built-in availability and fault tolerance**: We've designed our architecture for high availability and resilience, ensuring your data is safe and your applications are always accessible.
+- **Focus on business logic**: With the heavy lifting of infrastructure management handled by Neon, you can dedicate your time and effort to writing code and delivering value to your users.
+
+## To us, serverless does not mean…
+
+_That Neon only works with serverless architectures_. Neon is fully compatible with the entire PostgreSQL ecosystem. Whether you're using [Django](https://neon.com/docs/guides/django), [Rails](https://neon.com/docs/guides/ruby-on-rails), or even a bash script in your basement, if it works with Postgres, it works with Neon.
+
+_That you have to pay per query_. Your charges are based on compute and storage usage, not the number of queries. For example, you could run billions of queries for as little as $19 per month if they fit within the resources allotted in the [Launch plan](https://neon.com/docs/introduction/plans#launch). The CPU allowance is ample for running sites 24/7 with low CPU requirements.
+
+_That you'll get unpredictable costs due to traffic spikes_. We provide transparency in your potential costs. You always set a maximum autoscaling limit to avoid unpredictable bills, and you can always [check your consumption](https://neon.com/docs/introduction/monitor-usage). We send you notifications if your storage usage grows quickly.
+
+## Learn more
+
+- [Autoscaling](https://neon.com/docs/introduction/autoscaling)
+- [Scale to Zero](https://neon.com/docs/introduction/scale-to-zero)
+- [Plans and billing](https://neon.com/docs/introduction/about-billing)
+- [Database-per-tenant use cases](https://neon.com/use-cases/database-per-tenant)
+- [Variable workload use cases](https://neon.com/variable-load)
+- [Postgres for SaaS use cases](https://neon.com/use-cases/postgres-for-saas)
+
+---
+
+## Related docs (Architecture)
+
+- [Architecture overview](https://neon.com/docs/introduction/architecture-overview)
+- [Compute lifecycle](https://neon.com/docs/introduction/compute-lifecycle)

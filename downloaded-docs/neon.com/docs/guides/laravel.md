@@ -1,0 +1,82 @@
+> This page location: Frontend & Frameworks > ORMs > Laravel (Eloquent)
+> Full Neon documentation index: https://neon.com/docs/llms.txt
+
+> Summary: Step-by-step guide for creating a Neon project and configuring a Laravel application to connect to Neon Postgres, including troubleshooting connection issues with older Postgres clients.
+
+# Connect from Laravel to Neon
+
+Set up a Neon project in seconds and connect from a Laravel application
+
+Pre-built prompt for connecting Laravel to Neon Postgres [View prompt](https://neon.com/prompts/laravel-prompt.md)
+
+Laravel is a web application framework with expressive, elegant syntax. Connecting to Neon from Laravel is the same as connecting to a standalone Postgres installation from Laravel. Only the connection details differ.
+
+To connect to Neon from Laravel:
+
+## Create a Neon project
+
+If you do not have one already, create a Neon project. Save your connection details including your password. They are required when defining connection settings.
+
+1. Navigate to the [Projects](https://console.neon.tech/app/projects) page in the Neon Console.
+2. Click **New Project**.
+3. Specify your project settings and click **Create Project**.
+
+## Configure the connection
+
+Open the `.env` file in your Laravel app, and replace all the database credentials.
+
+```shell
+DB_CONNECTION=pgsql
+DB_HOST=[neon_hostname]
+DB_PORT=5432
+DB_DATABASE=[dbname]
+DB_USERNAME=[user]
+DB_PASSWORD=[password]
+```
+
+You can find your database connection details by clicking the **Connect** button on your **Project Dashboard**. For more information, see [Connect from any application](https://neon.com/docs/connect/connect-from-any-app).
+
+## Connection issues
+
+With older Postgres clients/drivers, including older PDO_PGSQL drivers, you may receive the following error when attempting to connect to Neon:
+
+```txt
+ERROR: The endpoint ID is not specified. Either upgrade the Postgres client library (libpq) for SNI support or pass the endpoint ID (the first part of the domain name) as a parameter: '&options=endpoint%3D'. See [https://neon.com/sni](https://neon.com/sni) for more information.
+```
+
+If you run into this error, please see the following documentation for an explanation of the issue and workarounds: [The endpoint ID is not specified](https://neon.com/docs/connect/connection-errors#the-endpoint-id-is-not-specified).
+
+- If using a connection string to connect to your database, try [Workaround A. Pass the endpoint ID as an option](https://neon.com/docs/connect/connection-errors#a-pass-the-endpoint-id-as-an-option). For example:
+
+  ```text
+  postgresql://[user]:[password]@[neon_hostname]/[dbname]?options=endpoint%3D[endpoint-id]
+  ```
+
+  Replace `[endpoint_id]` with your compute's endpoint ID, which you can find in your Neon connection string. It looks similar to this: `ep-cool-darkness-123456`.
+
+- If using database connection parameters, as shown above, try [Workaround D. Specify the endpoint ID in the password field](https://neon.com/docs/connect/connection-errors#d-specify-the-endpoint-id-in-the-password-field). For example:
+
+  ```text
+  DB_PASSWORD=endpoint=<endpoint_id>$<password>
+  ```
+
+## Schema migration with Laravel
+
+For schema migration with Laravel, see our guide:
+
+- [Laravel Migrations](https://neon.com/docs/guides/laravel-migrations): Schema migration with Neon Postgres and Laravel
+
+---
+
+## Related docs (ORMs)
+
+- [Django (Django ORM)](https://neon.com/docs/guides/django)
+- [Drizzle](https://neon.com/docs/guides/drizzle)
+- [Elixir Ecto](https://neon.com/docs/guides/elixir-ecto)
+- [Kysely](https://neon.com/docs/guides/kysely)
+- [Knex](https://neon.com/docs/guides/knex)
+- [Prisma](https://neon.com/docs/guides/prisma)
+- [Ruby on Rails (ActiveRecord)](https://neon.com/docs/guides/ruby-on-rails)
+- [SQLAlchemy](https://neon.com/docs/guides/sqlalchemy)
+- [Tortoise ORM](https://neon.com/docs/guides/tortoise-orm)
+- [TypeORM](https://neon.com/docs/guides/typeorm)
