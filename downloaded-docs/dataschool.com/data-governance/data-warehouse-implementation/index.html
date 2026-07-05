@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>How to Create a Data Warehouse</title>
+  <meta name="description" content="Learn how to setup a Data Warehouse. Model and transform data to make it easy to analyze.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/data-governance/data-warehouse-implementation/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Data Warehouse Implementation"/>
+  <meta name="twitter:description" content="Learn how to setup a Data Warehouse. Model and transform data to make it easy to analyze."/>
+  <meta name="twitter:url" content="https://dataschool.com/data-governance/data-warehouse-implementation/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/data-governance/data-warehouse-implementation/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Data Warehouse Implementation"
+  <meta property="og:description" content="Learn how to setup a Data Warehouse. Model and transform data to make it easy to analyze." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/ImplementationCover.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/data-governance/data-warehouse-implementation/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "How to Create a Data Warehouse",
+    "image": "/assets/images/ImplementationCover.png",
+    "author": {
+        "@type": "Person",
+        "name": "Tim Miller"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/data-governance/data-warehouse-implementation/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-10-25 15:23:26 -0700",
+    "description": "Learn how to setup a Data Warehouse. Model and transform data to make it easy to analyze."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/data-governance/" class="smallbook-link hover-link">
+        <img src="/assets/images/cloud-data-management@thumbnail.png" alt="Cover of Cloud Data Management" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/data-governance/" class="book-title">Cloud Data Management</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Introduction" aria-expanded="true" data-target="#Introduction"  class="dropdown-toggle"  data-toggle="collapse" >Introduction</a>
+                  <ul class="list-unstyled collapse " id="Introduction">
+            
+            <li >
+              <a href="/data-governance/introduction-to-modern-data-governance/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/about-this-book/">
+                About this Book
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/what-stage-are-you-at/">
+                What Stage are You at?
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage1-Source" aria-expanded="true" data-target="#Stage1-Source"  class="dropdown-toggle"  data-toggle="collapse" >Stage 1 - source</a>
+                  <ul class="list-unstyled collapse " id="Stage1-Source">
+            
+            <li >
+              <a href="/data-governance/source-data-tools/">
+                Starting with Source Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/source-data-architecture/">
+                Source Data Connections
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/source-data-best-practices/">
+                Source Data Best Practices
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage2-Lake" aria-expanded="true" data-target="#Stage2-Lake"  class="dropdown-toggle"  data-toggle="collapse" >Stage 2 - lake</a>
+                  <ul class="list-unstyled collapse " id="Stage2-Lake">
+            
+            <li >
+              <a href="/data-governance/why-build-a-data-lake/">
+                Why Build a Data Lake
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/what-warehouse-to-use/">
+                Choosing an Engine
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/extract-and-loading-a-lake/">
+                Extract and Load
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-lake-security/">
+                Data Lake Security
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-lake-maintenance/">
+                Data Lake Maintenance
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage3-Warehouse" aria-expanded="true" data-target="#Stage3-Warehouse"  class="dropdown-toggle"  data-toggle="collapse" >Stage 3 - warehouse</a>
+                  <ul class="list-unstyled collapse show" id="Stage3-Warehouse">
+            
+            <li >
+              <a href="/data-governance/why-build-a-data-warehouse/">
+                Why Build a Warehouse
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/single-source-of-truth/">
+                Warehouse Architecture
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-security/">
+                Warehouse Security
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/defining-a-data-govenor/">
+                The Data Governor
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/data-governance/data-warehouse-implementation/">
+                Implementing
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-maintenance/">
+                Maintaining
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage4-Mart" aria-expanded="true" data-target="#Stage4-Mart"  class="dropdown-toggle"  data-toggle="collapse" >Stage 4 - mart</a>
+                  <ul class="list-unstyled collapse " id="Stage4-Mart">
+            
+            <li >
+              <a href="/data-governance/democratized-or-centralized/">
+                Democratized or Centralized
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/why-build-data-marts/">
+                Why build marts
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-mart-implementation/">
+                Data Mart Implementation
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-mart-maintenance/">
+                Data Mart Maintenance
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Extras" aria-expanded="true" data-target="#Extras"  class="dropdown-toggle"  data-toggle="collapse" >Extras</a>
+                  <ul class="list-unstyled collapse " id="Extras">
+            
+            <li >
+              <a href="/data-governance/evaluating-data-stack-technologies/">
+                Evaluating Stack Tech
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/etl-vs-elt/">
+                ETL vs ELT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/doing-more-with-your-data-mart/">
+                Doing more with your Data Mart
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/aknowledgements/">
+                Acknowledgements
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/data-governance/data-warehouse-implementation/&title=Data Warehouse Implementation&summary=Learn+how+to+setup+a+Data+Warehouse.+Model+and+transform+data+to+make+it+easy+to+analyze.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/data-governance/data-warehouse-implementation/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/data-governance/data-warehouse-implementation/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Data Warehouse Implementation</h1>
+    <p>
+      <em>Last modified: October 25, 2019</em>
+      
+        <em> • Reading Time: 5 minutes</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>Now that we’ve established what changes we want to make and decided on what engine to use for our Data Warehouse, let’s go through the process of getting data from the Lake into the Warehouse. While this sounds complicated, it’s only comprised of using SQL to create Views.</p>
+
+<h2 id="why-sql">Why SQL</h2>
+
+<p>We recommend using SQL to perform all transformations. It’s the standard language for relational database management systems (which is what a Data Warehouse should be) and it’s the environment you are probably using for your Data Lake. Working in a SQL-based model is ideal because a variety of tools and platforms already exist to write and execute queries. Also, data engineers, analysts, and some business users already understand how to use it.</p>
+
+<h2 id="why-views">Why Views</h2>
+
+<p>Views allow us to quickly reformat what the data looks like without needing to build a new Data Warehouse or incurring costs from storing any additional data. Unless you are dealing with massive amounts of data there are not significant performance gains in creating new tables or materializing the views.</p>
+
+<h3 id="use-a-modeling-tool-dbt">Use a Modeling tool: dbt</h3>
+
+<p>Instead of writing the views directly on the database (which is an option) we recommend using <a href="https://www.getdbt.com/">dbt</a> for creating your SQL views. dbt provides many features to help you keep a clean Data Warehouse such as version control, logging, and much more.</p>
+
+<h2 id="data-lake-to-data-warehouse-view-examples">Data Lake to Data Warehouse View Examples</h2>
+
+<p>Here is an example of applying a transformation to move from a Data Lake to a Data Warehouse. First, we build a query to combine a couple of Salesforce objects into a single table. For example, using information about an individual and their role within a client company can give you more insight into how you may want to interact with that person.</p>
+
+<p>So, getting information on that person’s role into the same table as his/her contact along with some basic demographic information, will save the end user some time in querying the Data Warehouse.</p>
+
+<p>That query might look like this:</p>
+
+<p><img src="/assets/images/LakeToWarehouseQuery.png" alt="Build wider Salesforce table" title="Combine data" /></p>
+
+<p>We are choosing a subset of the total possible columns and rolling up/denormalizing the table a bit to make it easier for others to query. To make this code into SQL that builds our Data Warehouse, we need to add CREATE VIEW. So the query would actually be:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">VIEW</span> <span class="n">salesforce_user</span> <span class="k">AS</span>
+<span class="k">SELECT</span>
+	<span class="n">u</span><span class="p">.</span><span class="n">id</span>
+	<span class="p">,</span><span class="n">u</span><span class="p">.</span><span class="n">name</span>
+	<span class="p">,</span><span class="n">u</span><span class="p">.</span><span class="n">email</span>
+	<span class="p">,</span><span class="n">u</span><span class="p">.</span><span class="n">department</span>
+	<span class="p">,</span><span class="n">u</span><span class="p">.</span><span class="n">phone</span>
+	<span class="p">,</span><span class="n">u</span><span class="p">.</span><span class="n">phone</span>
+	<span class="p">,</span><span class="n">u</span><span class="p">.</span><span class="n">created_date</span>
+	<span class="p">,</span><span class="n">u</span><span class="p">.</span><span class="n">is_active</span>
+	<span class="p">,</span><span class="n">u</span><span class="p">.</span><span class="n">last_modified_date</span>
+	<span class="p">,</span><span class="n">ur</span><span class="p">.</span><span class="n">name</span> <span class="k">as</span> <span class="n">role_name</span>
+	<span class="p">,</span><span class="n">ur</span><span class="p">.</span><span class="n">rollup_description</span> <span class="k">as</span> <span class="n">role_rollup</span>
+<span class="k">FROM</span>
+	<span class="n">salesforce</span><span class="p">.</span><span class="k">user</span> <span class="k">as</span> <span class="n">u</span>
+	<span class="k">left</span> <span class="k">join</span> <span class="n">salesforce</span><span class="p">.</span><span class="n">user_role</span> <span class="k">as</span> <span class="n">ur</span> <span class="k">on</span> <span class="n">u</span><span class="p">.</span><span class="n">user_role_id</span> <span class="o">=</span> <span class="n">ur</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>If we go back to the example first introduced in the <a href="https://dataschool.com/data-governance/why-build-a-data-warehouse/">Why Build a Data Warehouse</a> article we can walk through all of the transformations described in one SQL query. So let’s look at that messy table with all of the hard to understand/query fields.</p>
+
+<p><img src="/assets/images/LakeTableIssues.png" alt="Issues with Data Lake data" title="Data Lake Table" /></p>
+
+<p>We then want to make all of the following changes:</p>
+
+<p><img src="/assets/images/WarehouseTableFixes.png" alt="Fixing data for Warehouse" title="Data Warehouse Table" /></p>
+
+<p>We can create this as a series of SQL statements in a dbt file of common table expressions with a final CREATE VIEW query at the bottom:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- drop unused column External_id</span>
+<span class="k">WITH</span> <span class="n">t1</span> <span class="k">AS</span> <span class="p">(</span>
+	<span class="k">SELECT</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Display</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Email</span><span class="p">,</span> <span class="k">Location</span><span class="p">,</span> <span class="k">Type</span><span class="p">,</span> <span class="n">Info</span><span class="p">,</span> <span class="n">Status</span>
+	<span class="k">FROM</span> <span class="n">dl_table</span>
+<span class="p">),</span>
+
+<span class="c1">-- Add consistent column Email</span>
+<span class="n">t2</span> <span class="k">AS</span> <span class="p">(</span>
+	<span class="k">SELECT</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Display</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Email</span><span class="p">,</span> <span class="k">Location</span><span class="p">,</span> <span class="k">Type</span><span class="p">,</span> <span class="n">Info</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">is_deleted</span>
+	<span class="k">FROM</span> <span class="n">t1</span>
+	<span class="k">JOIN</span> <span class="n">dl_email</span>
+	<span class="k">ON</span> <span class="n">t1</span><span class="p">.</span><span class="n">Id</span> <span class="o">=</span> <span class="n">dl_email</span><span class="p">.</span><span class="n">Id</span>
+<span class="p">),</span>
+
+<span class="c1">--Standardize Location column</span>
+<span class="n">t3</span> <span class="k">AS</span> <span class="p">(</span>
+	<span class="k">SELECT</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Display</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Email</span><span class="p">,</span>
+	<span class="k">CASE</span> <span class="k">WHEN</span> <span class="k">Location</span> <span class="o">=</span> <span class="nv">"US"</span> <span class="k">THEN</span> <span class="nv">"USA"</span>
+		<span class="k">WHEN</span> <span class="k">Location</span> <span class="o">=</span> <span class="nv">"Texas"</span> <span class="k">THEN</span> <span class="nv">"USA"</span>
+		<span class="k">WHEN</span> <span class="k">Location</span> <span class="o">=</span> <span class="nv">"Sao Paulo"</span> <span class="k">THEN</span> <span class="nv">"Brazil"</span>
+		<span class="k">ELSE</span> <span class="k">Location</span>
+		<span class="k">END</span> <span class="k">AS</span> <span class="nv">"Location"</span><span class="p">,</span>
+        <span class="k">Type</span><span class="p">,</span> <span class="n">Info</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">is_deleted</span>
+	<span class="k">FROM</span> <span class="n">t2</span>
+<span class="p">)</span>
+
+<span class="c1">--Make column names and values descriptive for Type</span>
+<span class="n">t4</span> <span class="k">as</span> <span class="p">(</span>
+	<span class="k">SELECT</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Display</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Email</span><span class="p">,</span> <span class="k">Location</span><span class="p">,</span>
+	<span class="k">CASE</span> <span class="k">WHEN</span> <span class="k">Type</span> <span class="o">=</span> <span class="nv">"1"</span> <span class="k">THEN</span> <span class="nv">"Can view"</span>
+		<span class="k">WHEN</span> <span class="k">Type</span> <span class="o">=</span> <span class="nv">"2"</span> <span class="k">THEN</span> <span class="nv">"Can edit"</span>
+		<span class="k">WHEN</span> <span class="k">Type</span> <span class="o">=</span> <span class="nv">"3"</span> <span class="k">THEN</span> <span class="nv">"Can admin"</span>
+		<span class="k">END</span> <span class="k">AS</span> <span class="nv">"Access Level"</span><span class="p">,</span>
+        <span class="n">Info</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">is_deleted</span>
+<span class="k">FROM</span> <span class="n">t3</span>
+<span class="p">)</span>
+
+<span class="c1">--Parse relevant fields, drop original column for Info</span>
+<span class="n">t5</span> <span class="k">as</span> <span class="p">(</span>
+	<span class="k">SELECT</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Display</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Email</span><span class="p">,</span> <span class="k">Location</span><span class="p">,</span> <span class="k">Access</span> <span class="k">Level</span><span class="p">,</span>
+		<span class="k">CASE</span> <span class="k">WHEN</span> <span class="n">Info</span> <span class="o">=</span> <span class="nv">"%active"</span> <span class="k">THEN</span> <span class="nv">"active"</span>
+			<span class="k">WHEN</span> <span class="n">Info</span> <span class="o">=</span> <span class="nv">"%inactive"</span> <span class="k">THEN</span> <span class="nv">"inactive"</span>
+			<span class="k">END</span> <span class="k">AS</span> <span class="nv">"Status"</span><span class="p">,</span>
+		<span class="n">is_deleted</span>
+<span class="k">FROM</span> <span class="n">t4</span>
+<span class="p">)</span>
+
+<span class="c1">-- filter row that was deprecated from is_deleted, and drop column</span>
+<span class="n">t6</span> <span class="k">as</span> <span class="p">(</span>
+	<span class="k">SELECT</span> <span class="n">Id</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Display</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Email</span><span class="p">,</span> <span class="k">Location</span><span class="p">,</span> <span class="k">Access</span> <span class="k">Level</span><span class="p">,</span> <span class="n">Status</span>
+	<span class="k">FROM</span> <span class="n">t5</span>
+	<span class="k">WHERE</span> <span class="n">is_deleted</span> <span class="o">!=</span> <span class="k">True</span>
+<span class="p">)</span>
+
+<span class="c1">-- create view for Data Warehouse</span>
+<span class="k">CREATE</span> <span class="k">VIEW</span> <span class="n">dw_table</span> <span class="k">AS</span>
+	<span class="k">SELECT</span> <span class="o">*</span>
+	<span class="k">FROM</span> <span class="n">t6</span>
+</code></pre></div></div>
+
+<p>For a given table we suggest managing all transformations step by step in common table expressions with notes describing what is happening at each step.</p>
+
+<p>We now have a clean view of the original data</p>
+
+<p><img src="/assets/images/CleanTableWarehouse.png" alt="" /></p>
+
+<p>A Data Warehouse may still have a few issues in the data but the vast majority should be handled with obvious work arounds.</p>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>Create Views for your Data Warehouse</li>
+  <li>Lightly clean and denormalize your data so that it is easier to query</li>
+  <li>Use a modeling tool such as dbt to manage these transformations</li>
+</ul>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/tim/">Tim Miller</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1Mh3IHBXXR2JPdBpgw0SvXFkSiJHKF0wqH3u5t0VfOhQ/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/data-governance/defining-a-data-govenor/">Prev – Defining a Data Governor</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/data-governance/data-warehouse-maintenance/">Next – Data Warehouse Maintenance</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

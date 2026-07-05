@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>How to Maintain a Data Warehouse</title>
+  <meta name="description" content="Learn the best practices to maintain a Data Warehouse. Learn how to add new data, remove deprecated data, and optimize for performance..">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/data-governance/data-warehouse-maintenance/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Data Warehouse Maintenance"/>
+  <meta name="twitter:description" content="Learn the best practices to maintain a Data Warehouse. Learn how to add new data, remove deprecated data, and optimize for performance.."/>
+  <meta name="twitter:url" content="https://dataschool.com/data-governance/data-warehouse-maintenance/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/data-governance/data-warehouse-maintenance/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Data Warehouse Maintenance"
+  <meta property="og:description" content="Learn the best practices to maintain a Data Warehouse. Learn how to add new data, remove deprecated data, and optimize for performance.." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/WarehouseMaintenance-1.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/data-governance/data-warehouse-maintenance/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "How to Maintain a Data Warehouse",
+    "image": "/assets/images/WarehouseMaintenance-1.png",
+    "author": {
+        "@type": "Person",
+        "name": "Jaime Flores-Lovo"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/data-governance/data-warehouse-maintenance/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-10-30 15:28:08 -0700",
+    "description": "Learn the best practices to maintain a Data Warehouse. Learn how to add new data, remove deprecated data, and optimize for performance.."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/data-governance/" class="smallbook-link hover-link">
+        <img src="/assets/images/cloud-data-management@thumbnail.png" alt="Cover of Cloud Data Management" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/data-governance/" class="book-title">Cloud Data Management</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Introduction" aria-expanded="true" data-target="#Introduction"  class="dropdown-toggle"  data-toggle="collapse" >Introduction</a>
+                  <ul class="list-unstyled collapse " id="Introduction">
+            
+            <li >
+              <a href="/data-governance/introduction-to-modern-data-governance/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/about-this-book/">
+                About this Book
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/what-stage-are-you-at/">
+                What Stage are You at?
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage1-Source" aria-expanded="true" data-target="#Stage1-Source"  class="dropdown-toggle"  data-toggle="collapse" >Stage 1 - source</a>
+                  <ul class="list-unstyled collapse " id="Stage1-Source">
+            
+            <li >
+              <a href="/data-governance/source-data-tools/">
+                Starting with Source Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/source-data-architecture/">
+                Source Data Connections
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/source-data-best-practices/">
+                Source Data Best Practices
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage2-Lake" aria-expanded="true" data-target="#Stage2-Lake"  class="dropdown-toggle"  data-toggle="collapse" >Stage 2 - lake</a>
+                  <ul class="list-unstyled collapse " id="Stage2-Lake">
+            
+            <li >
+              <a href="/data-governance/why-build-a-data-lake/">
+                Why Build a Data Lake
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/what-warehouse-to-use/">
+                Choosing an Engine
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/extract-and-loading-a-lake/">
+                Extract and Load
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-lake-security/">
+                Data Lake Security
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-lake-maintenance/">
+                Data Lake Maintenance
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage3-Warehouse" aria-expanded="true" data-target="#Stage3-Warehouse"  class="dropdown-toggle"  data-toggle="collapse" >Stage 3 - warehouse</a>
+                  <ul class="list-unstyled collapse show" id="Stage3-Warehouse">
+            
+            <li >
+              <a href="/data-governance/why-build-a-data-warehouse/">
+                Why Build a Warehouse
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/single-source-of-truth/">
+                Warehouse Architecture
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-security/">
+                Warehouse Security
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/defining-a-data-govenor/">
+                The Data Governor
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-implementation/">
+                Implementing
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/data-governance/data-warehouse-maintenance/">
+                Maintaining
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage4-Mart" aria-expanded="true" data-target="#Stage4-Mart"  class="dropdown-toggle"  data-toggle="collapse" >Stage 4 - mart</a>
+                  <ul class="list-unstyled collapse " id="Stage4-Mart">
+            
+            <li >
+              <a href="/data-governance/democratized-or-centralized/">
+                Democratized or Centralized
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/why-build-data-marts/">
+                Why build marts
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-mart-implementation/">
+                Data Mart Implementation
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-mart-maintenance/">
+                Data Mart Maintenance
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Extras" aria-expanded="true" data-target="#Extras"  class="dropdown-toggle"  data-toggle="collapse" >Extras</a>
+                  <ul class="list-unstyled collapse " id="Extras">
+            
+            <li >
+              <a href="/data-governance/evaluating-data-stack-technologies/">
+                Evaluating Stack Tech
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/etl-vs-elt/">
+                ETL vs ELT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/doing-more-with-your-data-mart/">
+                Doing more with your Data Mart
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/aknowledgements/">
+                Acknowledgements
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/data-governance/data-warehouse-maintenance/&title=Data Warehouse Maintenance&summary=Learn+the+best+practices+to+maintain+a+Data+Warehouse.+Learn+how+to+add+new+data%2C+remove+deprecated+data%2C+and+optimize+for+performance..&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/data-governance/data-warehouse-maintenance/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/data-governance/data-warehouse-maintenance/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Data Warehouse Maintenance</h1>
+    <p>
+      <em>Last modified: October 30, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>Now that you’ve setup a Data Warehouse, the next and ongoing step is maintenance. This involves making sure the Data Warehouse objects; columns, tables, views, and schemas are accurate and up-to-date. Maintaining your Data Warehouse is integral for users in your organization to easily and accurately gain insights into your data. If it is not maintained people will query the wrong data and get conflicting results.</p>
+
+<p>As a company’s Data Warehouse ages:</p>
+
+<ul>
+  <li>New Metrics need to be tracked</li>
+  <li>Some old Metrics are no longer needed</li>
+  <li>You will need to grant and remove permissions (more than you’d think)</li>
+  <li>Modeling will become un-optimized</li>
+</ul>
+
+<p>These inevitable problems make it difficult for your company to conduct analyses. To prevent these issues, you’ll need a data engineer familiar with the Data Warehouse, and how users are querying the source. This article will go in-depth on these issues and how to address them with routine maintenance.</p>
+
+<h2 id="track-new-metrics">Track New Metrics</h2>
+
+<h3 id="why-do-new-metrics-matter">Why do new metrics matter?</h3>
+
+<p>The way we need to measure our business will change over time. We will launch new products, look into different user behaviors, or try to create a predictive model. We need to track new metrics for these different efforts.  Sometimes this means creating a new calculated field or a new column, view, or table.</p>
+
+<p>We may add a new field to track our customer information in Salesforce that is inline with our new company objectives, say, tracking account activities through the services we provide. From here, we can see what services are most popular with our customers, then, offer special promotions on these services during seasonal trends where we see a fall in purchases in order to increase sales.</p>
+
+<h3 id="why-do-new-metrics-cause-issues-in-a-data-warehouse">Why do new metrics cause issues in a Data Warehouse?</h3>
+
+<p>When engineers or analysts create new tables, columns, or views to track metrics they do not always follow the naming convention set out for the Data Warehouse. This makes interpretation difficult by an analyst unfamiliar with the new metrics.</p>
+
+<p>This can also create duplicate work – say you created a view for your support team but the view along with the pertinent information inside it do not distinguish exactly what this view is for. Users looking to query this view may not know it exists, so they may recreate this view.</p>
+
+<h3 id="how-to-add-new-metrics-correctly">How to add new metrics correctly.</h3>
+
+<p>When adding new metrics we need to consider:</p>
+
+<ul>
+  <li>How to add to the Schema</li>
+  <li>Backfilling data</li>
+  <li>Naming Conventions</li>
+</ul>
+
+<h4 id="how-to-add-to-the-schema">How to add to the Schema</h4>
+
+<p>Do we only need to add the data to an existing table or should we add to a view or create a whole new view? Let’s review what reasons we would do each:</p>
+
+<p>Existing Table</p>
+
+<ul>
+  <li>The new metric can be understood and queried easily without complex joins or being aggregated.</li>
+</ul>
+
+<p>Existing View*</p>
+
+<ul>
+  <li>A view that exists that is relevant to the new metric.</li>
+  <li>That view is aggregated in a way that fits this data and its dependent metrics.</li>
+  <li>Complex join paths would make it difficult for people to query the new data accurately without the view.</li>
+</ul>
+
+<p>New View*</p>
+
+<ul>
+  <li>No view that exists that is relevant to the new metric.</li>
+  <li>No view that is relevant is aggregated in a way that fits how this metric should be aggregated without the view.</li>
+  <li>Complex join paths would make it difficult for people to query the new metric accurately.</li>
+</ul>
+
+<p>*Typically it will be added to an existing table as well but it will be queried from the View</p>
+
+<h4 id="backfilling-data">Backfilling Data</h4>
+
+<p>It is advisable to backfill data whenever we can determine what the values should be.</p>
+
+<p>In a dimension table we might be able to determine the value based off of other columns or there is an obvious default value to plug in. If we are not able to determine or have no obvious default value leave the value as null. However, do consider the impact of nulls, such as in <a href="https://dataschool.com/how-to-teach-people-sql/how-sql-aggregations-work/">aggregation</a>. If this will impact your query try determining a stand in value to indicate you could not backfill it.</p>
+
+<p>In a measures table the same principles hold, so if it can be determined backfill it. Since measures are more often aggregated the impact of nulls can be even greater. The other negative of nulls in a measures table that has time-based data is that it limits your analysis to when you added the new column. Sometimes this issue can be overcome by bringing in data from previous data sources or by inputting values based on overall statistics or dimensions of each row.</p>
+
+<h4 id="naming-conventions">Naming Conventions</h4>
+
+<p>We also need to ensure these views, tables and columns follow the Data Warehouse’s naming conventions. At Chartio, we follow a naming convention when adding new metrics or updating metrics and making sure the name captures the purpose of the updated metrics (<a href="https://dataschool.com/data-governance/single-source-of-truth/">Naming Convention and Style Guide</a>). We recommend publishing your style guide and distributing it among your employees as familiarity with the process keeps the naming convention intact.</p>
+
+<h2 id="deprecate-old-metrics">Deprecate Old Metrics</h2>
+
+<h3 id="why-do-old-metrics-matter">Why do old metrics matter?</h3>
+
+<p>Metrics may become inaccurate or no longer worth analyzing. We want to prevent that data from being queried so others do reach false conclusions.</p>
+
+<h3 id="why-do-old-metrics-issues-happen">Why do old metrics issues happen?</h3>
+
+<p>As companies grow the tools they use to get and move data change. This leads to multiple places where the same type of data can be queried. Since the analyst might not be aware of which source to use they may query the wrong data.</p>
+
+<p>Also business objectives may change. This can affect what data is appropriate for analysis as well. Features or products may have been deprecated as a result and therefore their associated metrics might be misleading if the analyst was unaware of this.</p>
+
+<h3 id="how-to-deprecate-old-metrics-correctly">How to deprecate old metrics correctly?</h3>
+
+<p>If you’re not going to remove columns, tables, or views from user’s access right away, we recommend updating the names for these objects to _deprecated, or, _do_not_use. This makes it clear when browsing or querying that they should not be used.</p>
+
+<p><img src="/assets/images/WarehouseMaintenance.png" alt="" /></p>
+
+<p>This style for old metrics should be incorporated into your company’s naming convention style guide. It’s also worth letting users know that these metrics are no longer useful through email or with your BI Tool so they’re not caught off guard. Again, naming conventions play an integral role in how we keep users from querying data warehouse objects incorrectly.</p>
+
+<h2 id="handle-permissions">Handle Permissions</h2>
+
+<h3 id="why-do-permissions-matter">Why do permissions matter?</h3>
+
+<p>Not being granted access to the data you need completely halts analysis. Similarly, not removing someone’s access can be a legal liability. Having the right permissions is a line that should be carefully considered, but caution should be taken to ensure that it doesn’t become a bottleneck.</p>
+
+<p>Consider a scenario where you have users working on multiple BigQuery projects and you’re worried about query costs. In order to prevent users from abusing queries and raising the cost, you’ll want to create a custom quota. As the BigQuery documentation outlines, a <a href="https://cloud.google.com/bigquery/docs/custom-quotas">custom quota</a> will manage costs by specifying a limit on the amount of query data processed per day. This can be set at the project-level, or, at the user-level. This type of permissioning is aimed at price reduction, but we can also have permissionings aimed at keeping data intact, or, for privacy concerns.</p>
+
+<p>Oracle offers the ability to recover a dropped table, but, some data warehouses do not have this ability. If you drop a table in PostgreSQL, you won’t be able to restore this table unless you restore from a backup. If you can’t restore from a backup, there will be no way to recover the dropped table. To avoid this, make sure the proper individuals have the right permissioning on the right Data Warehouse objects.</p>
+
+<h3 id="why-do-permission-issues-happen">Why do permission issues happen?</h3>
+
+<p>Permission issues happen when the BI Tool or Data Warehouse access does not mirror employee status. This happens when:</p>
+
+<ul>
+  <li>New employees need to query the Data Warehouse</li>
+  <li>Employees change roles</li>
+  <li>Employees leave</li>
+  <li>Special permission</li>
+  <li>Account sharing</li>
+</ul>
+
+<p>When you hire analysts, or an individual’s role changes which requires more access to the Data Warehouse, you will want to make sure they have the appropriate permissions to analyze metrics in the warehouse. If they lack the proper permissions, this will create a barrier in completing their tasks. Or, if there are no restrictions in what objects they can access in place, those unfamiliar with the Data Warehouse might alter or drop an object.</p>
+
+<p>When employees leave sometimes not all of their accounts are deactivated. You may turn off their email but this would not prevent them from logging into the BI Tool. Their account can remain active which is a security concern.</p>
+
+<p>Sometimes an employee is granted special permission to temporarily gain access to more data. The problem occurs when their temporary access is not revoked after they no longer need it. Lastly, employees often share accounts to get the access they want for a particular analysis. This is a bad practice as it does not leave a trace as to who is looking at what data.</p>
+
+<h3 id="how-to-handle-permissions-correctly">How to handle permissions correctly.</h3>
+
+<p>Making sure your BI Tools access levels mirror the employment status of your employees helps you track users and prevent security issues. The main priority of granting permission is to prevent users from being able to access sensitive information, or, from accidentally deleting data that can’t be recovered.</p>
+
+<p>We recommend setting user permissions at a team level because as you scale up your usage and add more users, it’s easier to track. Tracking individuals in a small company is trivial since you know everyone by name and when new people are hired and when people leave. In large companies you don’t know the vast majority of the people you work with and do not know when their roles or employment status changes.</p>
+
+<p>Sharing accounts is an unfortunate practice that you need to keep an eye on. Sharing accounts makes it impossible to hold users responsible to what action they’ve carried out. If there needs to be an answer as to why a user dropped a table or updated a column, you might have to ask multiple people to figure it out. This can also be a potential breach of an agreement you may have with your customer and their expectations of how you handle their data. We recommend giving each user a separate account. This ensures security compliance and accountability in the event of an error.</p>
+
+<p>We recommend programmatically adding and removing users to avoid employees from being blocked and to ensure they do not maintain access to data they should not have. If you decide to manually add, remove, or change privileges for users, you’ll need to be vigilant in completely removing/updating the permissions.</p>
+
+<h2 id="tuning-to-optimize">Tuning to Optimize</h2>
+
+<h3 id="why-does-ongoing-modeling-matter">Why does ongoing modeling matter?</h3>
+
+<p>The amount of data you have will grow as your business grows and your objectives change and you begin to track new metrics. As the data grows, you will need to consider if the way you designed the Data Warehouse objects; schemas, tables, views, and columns still makes sense based on the way users query it.</p>
+
+<p>An indicative sign of needing to revisit Data Warehouse objects or when you should consider remodeling the objects is performance. Performance matters to users, if non-complex queries take too long to run they will stop querying data or start filing tickets to engineering.</p>
+
+<h3 id="why-do-warehouses-need-ongoing-optimization">Why do warehouses need ongoing optimization?</h3>
+
+<p>As your company grows the data that is queried changes too. New data, new analysts, and new business objectives will shift what data is being queried. The original structure of Data Warehouse objects may need to be reconfigured to optimize usage and performance based on how it is queried.</p>
+
+<h3 id="how-to-continually-optimize-your-warehouse">How to continually optimize your warehouse?</h3>
+
+<p>Different data warehouses will have options to check performance, but most offer ways to:</p>
+
+<ul>
+  <li>Identify slow queries and add indexes</li>
+  <li>Identify common queries and create views</li>
+</ul>
+
+<h4 id="identify-slow-queries-and-add-indexes">Identify slow queries and add indexes</h4>
+
+<p>PostgreSQL has a “slow query” log that lets you set a threshold of an amount of time, if a query takes longer than this threshold a line is sent to the slow query log. From here, the data engineer can determine how to best optimize the most efficient way to run the query, such as, examining the <a href="https://dataschool.com/sql-optimization/what-is-a-query-plan/">query plan</a> to see how a query is executing and adjust the query to be more efficient.</p>
+
+<p>We can deploy the <a href="https://dataschool.com/sql-optimization/optimization-using-explain/">EXPLAIN command and the EXPLAIN ANALYZE command</a>. The <em>EXPLAIN</em> command shows the generated query plan but does not run the query. To see the results of actually executing the query, you can use the <em>EXPLAIN ANALYZE</em> command. Based on the output, you can decide to create an index to speed up the query time. To learn more about indexing and the various types, read <a href="https://dataschool.com/sql-optimization/how-indexing-works/">indexing</a>.</p>
+
+<h4 id="identify-common-queries-and-create-views">Identify common queries and create views</h4>
+
+<p>In PostgreSQL you can use `<a href="https://www.citusdata.com/blog/2019/02/08/the-most-useful-postgres-extension-pg-stat-statements/">pg_stat_statements</a>` to group identical queries and find optimization opportunities. The `<a href="https://www.cybertec-postgresql.com/en/pg_stat_statements-the-way-i-like-it/">pg_stat_statements</a>` directive stores queries that are run against your PostgreSQL instance. It saves the query, the execution time, the underlying reads and writes, and the variables. This information allows you to determine what type of data users want so you can optimize frequently used queries.</p>
+
+<p>Creating a view can help users unfamiliar with the structure of the data warehouse by consolidating what they need to query to a single place. For example, you can grant users from a specific department access to a view that reflects all the departmental information they need to query.</p>
+
+<p>In addition, you can get performance benefits if you <a href="https://www.geeksforgeeks.org/differences-between-views-and-materialized-views-in-sql/">materialize the view</a> or create a new table. Most of the improvements here will be seen if the query is heavily filtered or if it is aggregated. Users can then query the materialized view or table. You can get an even bigger bump in performance if you add an index to this new materialized view or table.</p>
+
+<p>To learn more about the pg_stat_statements, I recommend reading the following articles; <a href="https://www.citusdata.com/blog/2019/02/08/the-most-useful-postgres-extension-pg-stat-statements/">The most useful Postgres extension: pg_stat_statements</a> and <a href="https://www.cybertec-postgresql.com/en/pg_stat_statements-the-way-i-like-it/">pg_stat_statements: The Way I Like It</a>.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>A Single Source of Truth Data Warehouse is a worthwhile investment. However, without maintenance it will fall into disarray and lose its value.</p>
+
+<ul>
+  <li>As metrics are added, make sure they’re named properly.</li>
+  <li>As metrics are deemed no longer useful, make sure they’re removed to avoid confusion.</li>
+  <li>As you vet your metrics and find that some need to be updated/pre-aggregated, make sure they’re named properly.</li>
+  <li>Keeping user permissions appropriate and accurate will free up database admins to focus on important projects as well as avoid data being removed accidentally.</li>
+  <li>Considering the restructuring of Data Warehouse objects will help create a suitable structure for analysis and complex querying along with cutting down performance cost.</li>
+  <li>The worthwhile investment of a data engineer to perform said maintenance tasks will remove the bottleneck of incorrect analytics from a neglected warehouse.</li>
+</ul>
+
+<p>References:</p>
+
+<ul>
+  <li>Claire Carroll - Fishtown Analytics: <a href="https://blog.fishtownanalytics.com/five-principles-that-will-keep-your-data-warehouse-organized-9c3d29caf6ce">Five principles that will keep your data warehouse organized</a></li>
+  <li>Claire Carroll: <a href="https://discourse.getdbt.com/t/the-difference-between-users-groups-and-roles-on-postgres-redshift-and-snowflake/429">The difference between users, groups, and roles on Postgres, Redshift and Snowflake</a></li>
+  <li>Don Jones: <a href="https://searchsqlserver.techtarget.com/feature/Three-data-warehouse-maintenance-tips-for-DBAs">Three data warehouse maintenance tips for DBAs</a></li>
+  <li>BigQuery Documentation: <a href="https://cloud.google.com/bigquery/docs/custom-quotas">Creating custom cost controls</a></li>
+  <li>Stack Over Flow: <a href="https://stackoverflow.com/questions/12472318/can-i-rollback-a-transaction-ive-already-committed-data-loss/12472582#12472582">Can I rollback a transaction I’ve already committed? (data loss)</a></li>
+  <li>CYBERTEC: <a href="https://www.cybertec-postgresql.com/en/3-ways-to-detect-slow-queries-in-postgresql/">3 Ways to Detect Slow Queries in PostgreSQL</a></li>
+  <li>CYBERTEC: <a href="https://www.cybertec-postgresql.com/en/pg_stat_statements-the-way-i-like-it/">pg_stat_statements: The Way I Like It</a></li>
+  <li>Citusdata: <a href="https://www.citusdata.com/blog/2019/02/08/the-most-useful-postgres-extension-pg-stat-statements/">The most useful Postgres extension: pg_stat_statements</a></li>
+</ul>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/jaime-flores-lovo/">Jaime Flores-Lovo</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1lmeLsqom8CzXhm8i3EneukLjiOdT8V82-aeT5tErD0k/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/data-governance/data-warehouse-implementation/">Prev – Data Warehouse Implementation</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/data-governance/democratized-or-centralized/">Next – Democratized or Centralized - choosing your workflow</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

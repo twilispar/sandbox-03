@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>How to choose an engine for your Data Lake and Warehouse</title>
+  <meta name="description" content="Learn the pros and cons of the modern database options like Snowflake, Redshift and BigQuery to build your Data Warehouse on.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/data-governance/what-warehouse-to-use/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="What Engine to Use For a Data Lake"/>
+  <meta name="twitter:description" content="Learn the pros and cons of the modern database options like Snowflake, Redshift and BigQuery to build your Data Warehouse on."/>
+  <meta name="twitter:url" content="https://dataschool.com/data-governance/what-warehouse-to-use/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/data-governance/what-warehouse-to-use/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="What Engine to Use For a Data Lake"
+  <meta property="og:description" content="Learn the pros and cons of the modern database options like Snowflake, Redshift and BigQuery to build your Data Warehouse on." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/SnowflakeCover.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/data-governance/what-warehouse-to-use/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "How to choose an engine for your Data Lake and Warehouse",
+    "image": "/assets/images/SnowflakeCover.png",
+    "author": {
+        "@type": "Person",
+        "name": "Tracy Chow"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/data-governance/what-warehouse-to-use/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-11-05 09:59:50 -0800",
+    "description": "Learn the pros and cons of the modern database options like Snowflake, Redshift and BigQuery to build your Data Warehouse on."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/data-governance/" class="smallbook-link hover-link">
+        <img src="/assets/images/cloud-data-management@thumbnail.png" alt="Cover of Cloud Data Management" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/data-governance/" class="book-title">Cloud Data Management</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Introduction" aria-expanded="true" data-target="#Introduction"  class="dropdown-toggle"  data-toggle="collapse" >Introduction</a>
+                  <ul class="list-unstyled collapse " id="Introduction">
+            
+            <li >
+              <a href="/data-governance/introduction-to-modern-data-governance/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/about-this-book/">
+                About this Book
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/what-stage-are-you-at/">
+                What Stage are You at?
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage1-Source" aria-expanded="true" data-target="#Stage1-Source"  class="dropdown-toggle"  data-toggle="collapse" >Stage 1 - source</a>
+                  <ul class="list-unstyled collapse " id="Stage1-Source">
+            
+            <li >
+              <a href="/data-governance/source-data-tools/">
+                Starting with Source Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/source-data-architecture/">
+                Source Data Connections
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/source-data-best-practices/">
+                Source Data Best Practices
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage2-Lake" aria-expanded="true" data-target="#Stage2-Lake"  class="dropdown-toggle"  data-toggle="collapse" >Stage 2 - lake</a>
+                  <ul class="list-unstyled collapse show" id="Stage2-Lake">
+            
+            <li >
+              <a href="/data-governance/why-build-a-data-lake/">
+                Why Build a Data Lake
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/data-governance/what-warehouse-to-use/">
+                Choosing an Engine
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/extract-and-loading-a-lake/">
+                Extract and Load
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-lake-security/">
+                Data Lake Security
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-lake-maintenance/">
+                Data Lake Maintenance
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage3-Warehouse" aria-expanded="true" data-target="#Stage3-Warehouse"  class="dropdown-toggle"  data-toggle="collapse" >Stage 3 - warehouse</a>
+                  <ul class="list-unstyled collapse " id="Stage3-Warehouse">
+            
+            <li >
+              <a href="/data-governance/why-build-a-data-warehouse/">
+                Why Build a Warehouse
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/single-source-of-truth/">
+                Warehouse Architecture
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-security/">
+                Warehouse Security
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/defining-a-data-govenor/">
+                The Data Governor
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-implementation/">
+                Implementing
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-maintenance/">
+                Maintaining
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage4-Mart" aria-expanded="true" data-target="#Stage4-Mart"  class="dropdown-toggle"  data-toggle="collapse" >Stage 4 - mart</a>
+                  <ul class="list-unstyled collapse " id="Stage4-Mart">
+            
+            <li >
+              <a href="/data-governance/democratized-or-centralized/">
+                Democratized or Centralized
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/why-build-data-marts/">
+                Why build marts
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-mart-implementation/">
+                Data Mart Implementation
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-mart-maintenance/">
+                Data Mart Maintenance
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Extras" aria-expanded="true" data-target="#Extras"  class="dropdown-toggle"  data-toggle="collapse" >Extras</a>
+                  <ul class="list-unstyled collapse " id="Extras">
+            
+            <li >
+              <a href="/data-governance/evaluating-data-stack-technologies/">
+                Evaluating Stack Tech
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/etl-vs-elt/">
+                ETL vs ELT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/doing-more-with-your-data-mart/">
+                Doing more with your Data Mart
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/aknowledgements/">
+                Acknowledgements
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/data-governance/what-warehouse-to-use/&title=What Engine to Use For a Data Lake&summary=Learn+the+pros+and+cons+of+the+modern+database+options+like+Snowflake%2C+Redshift+and+BigQuery+to+build+your+Data+Warehouse+on.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/data-governance/what-warehouse-to-use/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/data-governance/what-warehouse-to-use/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">What Engine to Use For a Data Lake</h1>
+    <p>
+      <em>Last modified: November 05, 2019</em>
+      
+        <em> • Reading Time: 5 minutes</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>In order to build a Data Lake, we need to choose a database to host it on.  Historically, and still today at massive (&gt; 100GB/day) scale, the Lake was stored in a file system like S3 buckets.</p>
+
+<p>Today, with storage being so cheap and warehouses being so scalable, we recommend putting your lake data directly into what is called a Warehouse Engine.  This will make creating the Data Warehouse much simpler as we’ll cover once we get to that next stage.</p>
+
+<h2 id="what-is-a-warehouse-engine">What is a Warehouse Engine?</h2>
+
+<p>In 2005 a combined group from Brown University, Brandeis University, and MIT released a ground breaking paper know as the <a href="http://people.brandeis.edu/~nga/papers/VLDB05.pdf">C-Store paper</a> introducing a new <a href="/data-modeling-101/row-vs-column-oriented-databases/">column store architecture</a>.  The many developments in that paper led to a new class of cloud based databases that can very powerfully handle large sets of data.</p>
+
+<p>These engines are geared toward analytic workloads that require larger, but less frequent queries than their transactional counterparts.  Transactional databases like PostgreSQL are optimized to do quick reads and writes at incredibly high volumes in order to run the applications that they serve. Analytic use cases query data way less frequently, but their queries are usually more complex and over larger sets of data.</p>
+
+<!-- TODO: Would be a great visual here I think - draw a semi and a scooter and maybe list "fast, many trips, low payload" vs "slow, few trips, heavy payload"   -->
+
+<p>If these are vehicles, transactional databases are motorcycles capable of many quick trips while warehouse engines are semis doing fewer trips but hauling large loads.</p>
+
+<h2 id="deciding-factors">Deciding factors</h2>
+
+<p>The biggest decision to make when moving from production to a lake is what database you will use. Most people consider:</p>
+
+<ul>
+  <li>Pricing</li>
+  <li>Ecosystem</li>
+  <li>Performance/Scale</li>
+  <li>Maintenance</li>
+</ul>
+
+<p>There are a variety of database pricing models, from being based on storage to being based on the amount of data queried. If your company is strictly using Amazon or Google as your software vendors, this can dictate your vendor choice as well.</p>
+
+<p>The architecture of the Data Lake has implications on how it’ll help your operations scale. Differences in the many types of lakes entail columnar vs. row-oriented storage, and having storage and compute together or separated. If there are requirements for ongoing maintenance of your Data Lake you will want to know that as well.</p>
+
+<p>When selecting the right data engine for your organization, you may also consider whether you want an on-premise or cloud solution. More and more businesses are moving to cloud solutions to take advantage of the “as a service” model and save on hardware costs so, we’ll focus on cloud databases in this section.</p>
+
+<h2 id="modern-warehouse-engine-products">Modern Warehouse Engine Products</h2>
+
+<p>Today, there are three dominant choices for cloud based data warehouse engines: <a href="#amazon-redshift">Amazon Redshift</a>, <a href="#google-bigquery">Google BigQuery</a> and <a href="#snowflake">Snowflake</a>.  Note - <a href="https://dataschool.com/data-modeling-101/row-vs-column-oriented-databases/">all of these are similar and based on the C-Store paper.</a></p>
+
+<h3 id="amazon-redshift">Amazon Redshift</h3>
+
+<p><img src="/assets/images/AmazonRedshiftLogo.png" alt="Logo for Amazon Redshift" title="Amazon Redshift" /></p>
+
+<h4 id="pros">Pros</h4>
+
+<p>Redshift has the benefits of ease of use, speed, and cost. Being a part of AWS, there is full service integration for the wide range of AWS services such as S3 for storage and CloudWatch for infrastructure monitoring. Redshift is generally cheaper than Snowflake or BigQuery, with a couple of pricing options such as paying hourly per node or paying by number of bytes scanned with Redshift Spectrum. It’s simple to set up and scale by adding nodes to your cluster and increasing storage and performance.</p>
+
+<p>Redshift is probably the most popular, although it is losing ground to Snowflake. It benefits from being similar in connection and SQL syntax to PostgreSQL.</p>
+
+<h4 id="cons">Cons</h4>
+
+<p>Users can often run into concurrency issues with Redshift if it isn’t set up properly or if there are high volumes of queries from many users accessing the database. Ongoing maintenance may be required with Redshift to resize clusters, define sort keys, and vacuum data.</p>
+
+<p>Like many AWS services there are ways to customize your configuration with workload management, compression, and partitioning. But these advanced features are not very out of the box. So although Redshift is powerful it may require a dedicated resource from your data engineering team.</p>
+
+<h3 id="google-bigquery">Google BigQuery</h3>
+
+<p><img src="/assets/images/GoogleBigQueryLogo.png" alt="Logo for Google BigQuery" title="Google BigQuery" /></p>
+
+<h4 id="pros-1">Pros</h4>
+
+<p>BigQuery is not bound by cluster capacity of storage or compute resources, so it scales and performs very well with increasing demands for concurrency (e.g. more users and queries accessing the database). As a fully managed database, BigQuery handles vacuums and resizing on its own which can save time for your data engineers and makes it easy to use and maintain. For businesses using Google products, BigQuery integrates well with Google Drive and Google Analytics.</p>
+
+<h4 id="cons-1">Cons</h4>
+
+<p>Cost is determined per query byte, making it difficult to budget or regulate if you have users running ad hoc queries against the Data Lake. To work around this, you can leverage BigQuery’s cost controls, but it can still restrict the amount of analysis you can perform because it limits the queries you can run.</p>
+
+<h3 id="snowflake">Snowflake</h3>
+
+<p><img src="/assets/images/SnowflakeLogo.png" alt="" /></p>
+
+<h4 id="pros-2">Pros</h4>
+
+<p>Like BigQuery, Snowflake has an architecture that separates the compute query engine from data storage. As a result, it is highly scalable at any amount of volume and concurrency. Pricing is based on the storage and compute used on a time-basis with their virtual databases instead of per bytes scanned. Tuning, indexes, and distribution keys aren’t required for queries to be optimized and performant. Because of these reasons, it can be said that Snowflake has many of the benefits of both Redshift and Big Query.</p>
+
+<h4 id="cons-2">Cons</h4>
+
+<p>Snowflake is a relatively new database in the market, so if you are familiar with SQL functions supported by databases like Redshift or Postgres you may find some inconsistencies in the SQL syntax. Snowflake is also generally more expensive.</p>
+
+<h2 id="database-engines">Database Engines</h2>
+
+<h3 id="postgresql">PostgreSQL</h3>
+
+<p><img src="/assets/images/PostgreSQLLogo.png" alt="Logo for PostgreSQL" title="PostgreSQL" /></p>
+
+<h4 id="pros-3">Pros</h4>
+
+<p>Unlike the options above, PostgreSQL is an open source database that is free to download. It can easily be spun up on your local server or hosted on various cloud services such as AWS. Postgres also has an ANSI compliant SQL library and supports an extensive library of third-party and user-defined functions. As it’s a transactional database, it has very fast writes and also has fast reads below ~100M rows.</p>
+
+<h4 id="cons-3">Cons</h4>
+
+<p>Postgres is a straightforward, flexible solution that’s different from Snowflake, Redshift, and BigQuery because it is a row-oriented database more suited for processing transactional data over analytical queries. It’s a single database connection not architected for parallel processing, so it generally doesn’t perform as well if you have a data volume of over 1 TB. Consequently, Postgres is great as a database, but is not a good choice for a Data Lake if you have a high volume of data (&gt;1TB).</p>
+
+<h3 id="recommendation">Recommendation</h3>
+
+<p>Selecting a Data Warehouse can be dependent on a number of factors that should be considered before making the investment. If you prefer a cheap, straightforward Data Warehouse you may be tempted to go with PostgreSQL, however it will have trouble scaling as a Data Warehouse.</p>
+
+<p>Redshift is a good choice as a standard cloud Data Warehouse if you have the capacity for a dedicated DBA. BigQuery and Snowflake are both highly scalable solutions considering their architecture. However, if cost or concurrency limits will be an issue for you then Snowflake would be more suitable for your organization.</p>
+
+<p>Remember all of these data warehouses are built on the same C-Store architecture so the differences will not be severe in performance. If you’d like a full benchmarking (though the same final recommendation) do checkout Fivetran’s awesome <a href="https://fivetran.com/blog/warehouse-benchmark">warehouse benchmark</a>.</p>
+
+<!-- ## Selecting an ETL/ELT Process
+
+Once you have selected your data warehouse solution, you will need to decide how to set up your ETL or ELT to load data from your data lake into your data warehouse and convert the raw data into something meaningful. ETL has been the traditional method for data warehouses, however ELT has been growing in popularity due to its compatibility with cloud systems. -->
+
+<!-- ### View and dbt
+
+![Logo for dbt](/assets/images/dbtLogo (1).png "dbt")
+
+Doing an ETL/ELT in the same place, such as if you are using Redshift for both your database and data warehouse, simplifies your process and keeps your data stack lean. This is desirable because you will have less environments and tools to manage and your data will be housed in one location. You can do it without having to extract and load. Transform only! -->
+
+<!--
+
+These are handled in other sections already
+
+### Performance
+
+In an ETL process the data is typically extracted and first put into a staging area, as opposed to an ELT approach which has all the raw data loaded in your system from the get go. In ELT, because the data is already loaded, users don’t need to wait for the entire process to finish before they can access the data.
+
+In addition to the benefit of accessing the raw data faster, with the transformation performed at query runtime, a query can be run concurrently with other queries. With cloud systems that make it easy to scale storage and processing power, ELT also allows for greater flexibility and lower maintenance. Resources can be added as needed for intensive transformation tasks. And because the data is always available, the ETL process does not need to be modified to make changes to your warehouse.
+
+### Access
+
+Another thing to consider when choosing between ETL and ELT is seeing who should have access to the data warehouse. If there are non-technical users who will also be accessing the data warehouse, then having them exposed to raw data may not be ideal. In that scenario it would be preferable to have the data engineers or data team do the data manipulation in creating summary tables or materialized views. -->
+
+<!--- TODO: We need to explain file based options for the lake - like S3.  --->
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/tracy-chow/">Tracy Chow</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1mP-e7OMtS0AjbjAeo1od5U8NdO8Td94fXwoAacCLf2w/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/data-governance/why-build-a-data-lake/">Prev – Why Build a Data Lake</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/data-governance/extract-and-loading-a-lake/">Next – Extract and Load a Lake</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

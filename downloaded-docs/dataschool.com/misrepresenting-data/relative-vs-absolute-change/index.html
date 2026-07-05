@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Relative vs Absolute Change - Analysis Mistakes</title>
+  <meta name="description" content="Relative and Absolute changes can bias your interpretation of data you are analyzing. Learn to interpret them correctly.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/misrepresenting-data/relative-vs-absolute-change/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Relative vs Absolute Change"/>
+  <meta name="twitter:description" content="Relative and Absolute changes can bias your interpretation of data you are analyzing. Learn to interpret them correctly."/>
+  <meta name="twitter:url" content="https://dataschool.com/misrepresenting-data/relative-vs-absolute-change/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/misrepresenting-data/relative-vs-absolute-change/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Relative vs Absolute Change"
+  <meta property="og:description" content="Relative and Absolute changes can bias your interpretation of data you are analyzing. Learn to interpret them correctly." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/Frame 2.6.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/misrepresenting-data/relative-vs-absolute-change/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Relative vs Absolute Change - Analysis Mistakes",
+    "image": "/assets/images/Frame 2.6.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matt David"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/misrepresenting-data/relative-vs-absolute-change/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-19 16:39:08 -0800",
+    "description": "Relative and Absolute changes can bias your interpretation of data you are analyzing. Learn to interpret them correctly."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/misrepresenting-data/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/misrepresenting-data@thumbnail.png" alt="Cover of Avoid Misrepresenting Data" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/misrepresenting-data/" class="book-title">Avoid Misrepresenting Data</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#CognitiveBiases" aria-expanded="true" data-target="#CognitiveBiases"  class="dropdown-toggle"  data-toggle="collapse" >Cognitive biases</a>
+                  <ul class="list-unstyled collapse " id="CognitiveBiases">
+            
+            <li >
+              <a href="/misrepresenting-data/confirmation-bias/">
+                Confirmation Bias
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/misrepresenting-data/selection-bias/">
+                Selection Bias
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/misrepresenting-data/survivorship-bias/">
+                Survivorship Bias
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#AnalysisMistakes" aria-expanded="true" data-target="#AnalysisMistakes"  class="dropdown-toggle"  data-toggle="collapse" >Analysis mistakes</a>
+                  <ul class="list-unstyled collapse show" id="AnalysisMistakes">
+            
+            <li >
+              <a href="/misrepresenting-data/statistic-vs-distribution/">
+                Statistic vs Distribution
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/misrepresenting-data/overall-vs-groups/">
+                Overall vs Groups
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/misrepresenting-data/metric-vs-metrics/">
+                Metric vs Metrics
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/misrepresenting-data/trends/">
+                Trends
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/misrepresenting-data/comparing-to-historical-averages/">
+                Comparing to Historical Averages
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/misrepresenting-data/relative-vs-absolute-change/">
+                Relative vs Absolute Change
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ExperimentDesign" aria-expanded="true" data-target="#ExperimentDesign"  class="dropdown-toggle"  data-toggle="collapse" >Experiment design</a>
+                  <ul class="list-unstyled collapse " id="ExperimentDesign">
+            
+            <li >
+              <a href="/misrepresenting-data/predicting-outcomes/">
+                Predicting Outcomes
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/misrepresenting-data/define-experiment-parameters/">
+                Define Experiment Parameters
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/misrepresenting-data/review-outcomes/">
+                Review Outcomes
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Extras" aria-expanded="true" data-target="#Extras"  class="dropdown-toggle"  data-toggle="collapse" >Extras</a>
+                  <ul class="list-unstyled collapse " id="Extras">
+            
+            <li >
+              <a href="/misrepresenting-data/increase-ecommerce-sales-with-metrics/">
+                Increase Ecommerce Sales with Metrics
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/misrepresenting-data/relative-vs-absolute-change/&title=Relative vs Absolute Change&summary=Relative+and+Absolute+changes+can+bias+your+interpretation+of+data+you+are+analyzing.+Learn+to+interpret+them+correctly.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/misrepresenting-data/relative-vs-absolute-change/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/misrepresenting-data/relative-vs-absolute-change/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Relative vs Absolute Change</h1>
+    <p>
+      <em>Last modified: December 19, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p><img src="/assets/images/Frame (57).png" alt="" /></p>
+
+<h2 id="the-problem-with-relative-vs-absolute-changes">The problem with Relative vs Absolute changes</h2>
+
+<p>When numbers change people can report how big that change was in relative or absolute terms.</p>
+
+<ul>
+  <li>Relative change - By what percentage (larger or smaller) did the number change from the original number?</li>
+  <li>Absolute change - What is the difference between the original number and the new one?</li>
+</ul>
+
+<p>While these two statements do not sound that different, let’s explore how they can each be misleading.</p>
+
+<h3 id="relative-changes">Relative changes</h3>
+
+<p>Relative changes on small numbers can appear to be more significant than they are. This is because a small absolute change in the number can result in a large percentage change.</p>
+
+<p>So if I got a $50 return on my $10 investment, my relative change was a 400% increase.</p>
+
+<p><img src="/assets/images/misrepresenting-data/relVsAbsChange/relVsAbsChange_0.png" alt="4 Blocks as a 400% increase in size" /></p>
+
+<p>There is also some variation in how relative changes are reported. Here we have a 400% increase which is also the same as saying five times as much. This becomes more confusing when a relative change is negative. Something that is five times as small is an 80% decrease from the original amount.</p>
+
+<p>Relative changes on big numbers can appear less significant. This is because any absolute change in the number needs to be large to show a large relative change. Even when the absolute change is large, if it is a change on a larger number the relative change can be small. Let’s say that the national deficit increased by 5%. This may seem small, but the actual increase or absolute change to the $20,000,000,000,000 budget is $1 trillion.</p>
+
+<p><img src="/assets/images/misrepresenting-data/relVsAbsChange/relVsAbsChange_1.png" alt="4 blocks as a 6.25% increase" /></p>
+
+<h3 id="absolute-changes">Absolute changes</h3>
+
+<p>Absolute changes work the other way:</p>
+
+<ul>
+  <li>Absolute changes on small numbers can look small even if their relative changes are large. To allude to the example used earlier, I earned $40 on my investment.</li>
+  <li>Absolute changes on big numbers can look big even if their relative changes are small. The deficit has increased by $1 trillion.</li>
+</ul>
+
+<h2 id="when-to-use-relative-vs-absolute-change">When to use Relative vs Absolute change</h2>
+
+<h3 id="use-both">Use Both</h3>
+
+<p>When choosing between reporting a relative change or absolute change, take a second to think about whether you are choosing the type of change that best represents what is actually happening. Or, are you simply selecting the more sensational number? The best practice is to provide both numbers. Personally, I recommend putting the less sensational number first so people have context and are not distrusting when you reveal the less significant number.</p>
+
+<h3 id="context-matters">Context Matters</h3>
+
+<p>When numbers change, we want to know the reason. Sometimes the context completely changes the story. If home prices increased by 20% over the past ten years we might be concerned about this trend. However, if you factor in inflation which also increased by 20% over the past ten years, then the relative value of homes has stayed constant. Even if the change in home prices was put in absolute terms, there was no actual change in the value of the homes. For any chart focused on tracking a monetary value over a time period, you will always need to adjust for inflation.</p>
+
+<h3 id="compare">Compare</h3>
+
+<p>To get a clearer idea of whether an absolute or relative change is significant, compare it to other changes that are related to it. For example, if sharks kill 16 people per year, and this year they killed 20, that is a 25% increase of sharks killing people. If you compare this to heart disease killing approximately 600,000 people per year, the total number and the relative change of shark-related deaths don’t sound so significant. Even if heart disease declined 25% in the same year, it should still help us better understand the lack of significance to shark-related deaths.</p>
+
+<h2 id="interpreting-relative-vs-absolute-change">Interpreting Relative vs Absolute change</h2>
+
+<p>Let’s look at an example of changes in share price to demonstrate how the change in price could be represented in different ways.</p>
+
+<p><img src="/assets/images/misrepresenting-data/relVsAbsChange/relVsAbsChange_2.png" alt="fluctuating share prices" /></p>
+
+<p>Here we can see the absolute change in price everyday. There is a lot of variance which can distract from the relative and absolute returns of the investment. If we bought the stock on May 1st we could look at the return per share in absolute terms.</p>
+
+<p><img src="/assets/images/misrepresenting-data/relVsAbsChange/relVsAbsChange_3.png" alt="Gain in share price" /></p>
+
+<p>Now this may not look like that much money but when we look at the relative change from our starting positions we can see we got a high relative return on our money.</p>
+
+<p><img src="/assets/images/misrepresenting-data/relVsAbsChange/relVsAbsChange_4.png" alt="percent change in share price" /></p>
+
+<p>Next time we would want to put more money in so that the absolute return would be bigger.</p>
+
+<h3 id="summary">Summary:</h3>
+
+<ul>
+  <li>Relative changes on small numbers often look big.</li>
+  <li>Relative changes on big numbers often look small.</li>
+  <li>Absolute changes on small numbers often look small.</li>
+  <li>Absolute changes on big numbers often look big.</li>
+  <li>Explore both types of changes when looking at data</li>
+</ul>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matt/">Matt David</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/twange-kasoma/">Twange Kasoma</a>
+        ,
+      
+        
+        
+        <a href="/people/matthew-layne/">Matthew Layne</a>
+        ,
+      
+        
+        
+        <a href="/people/blake/">Blake Barnhill</a>
+        ,
+      
+        
+        
+        <a href="/people/mike-yi/">Mike Yi</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/19CxIad3qImMHu8T9Yjn2nOr8K_x9y8jhLXex_7ixGcs/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/misrepresenting-data/comparing-to-historical-averages/">Prev – Comparing to Historical Averages</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/misrepresenting-data/predicting-outcomes/">Next – Predicting Outcomes</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

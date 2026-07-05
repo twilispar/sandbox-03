@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Create Views in SQL</title>
+  <meta name="description" content="SQL VIEWs allow you to create temporary or permanent references to data. This is a common database optimization technique. Learn more.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/sql-optimization/views/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Views"/>
+  <meta name="twitter:description" content="SQL VIEWs allow you to create temporary or permanent references to data. This is a common database optimization technique. Learn more."/>
+  <meta name="twitter:url" content="https://dataschool.com/sql-optimization/views/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/sql-optimization/views/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Views"
+  <meta property="og:description" content="SQL VIEWs allow you to create temporary or permanent references to data. This is a common database optimization technique. Learn more." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/sql-optimization/views/views_2.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/sql-optimization/views/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Create Views in SQL",
+    "image": "/assets/images/sql-optimization/views/views_2.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matthew Layne"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/sql-optimization/views/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 16:55:50 -0800",
+    "description": "SQL VIEWs allow you to create temporary or permanent references to data. This is a common database optimization technique. Learn more."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/sql-optimization/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/sql-optimization@thumbnail.png" alt="Cover of SQL Optimization" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/sql-optimization/" class="book-title">SQL Optimization</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#QueryOptimizations" aria-expanded="true" data-target="#QueryOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Query optimizations</a>
+                  <ul class="list-unstyled collapse " id="QueryOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/what-is-a-query-plan/">
+                What is a Query Plan
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/order-of-a-sql-query/">
+                Order of a SQL Query
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/optimize-your-sql-query/">
+                Optimize your SQL Query
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ColumnandTableOptimizations" aria-expanded="true" data-target="#ColumnandTableOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Column and table optimizations</a>
+                  <ul class="list-unstyled collapse " id="ColumnandTableOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/optimization-using-explain/">
+                Optimization with EXPLAIN ANALYZE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/how-indexing-works/">
+                How Indexing Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/partial-indexes/">
+                Partial Indexes
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/multicolumn-indexes/">
+                Multicolumn Indexes
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ModelingData" aria-expanded="true" data-target="#ModelingData"  class="dropdown-toggle"  data-toggle="collapse" >Modeling data</a>
+                  <ul class="list-unstyled collapse show" id="ModelingData">
+            
+            <li >
+              <a href="/sql-optimization/start-modeling-data/">
+                Start Modeling Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/scheduling-dbt/">
+                Scheduling Modeling
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/sql-optimization/views/">
+                Views
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Databases" aria-expanded="true" data-target="#Databases"  class="dropdown-toggle"  data-toggle="collapse" >Databases</a>
+                  <ul class="list-unstyled collapse " id="Databases">
+            
+            <li >
+              <a href="/sql-optimization/optimizing-data-queries-with-redshift/">
+                Redshift Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/bigquery-optimization/">
+                BigQuery Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/snowflake/">
+                Snowflake Optimization
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/sql-optimization/views/&title=Views&summary=SQL+VIEWs+allow+you+to+create+temporary+or+permanent+references+to+data.+This+is+a+common+database+optimization+technique.+Learn+more.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/sql-optimization/views/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/sql-optimization/views/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article class="img-border-on-default">
+  <header class="mb-4">
+    <h1 class="title">Views</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <h2 id="what-is-a-view">What is a view?</h2>
+
+<p>Views are a way to store a long query for easier access. When a view is created, it stores a query as a keyword, which can be used later instead of typing out the entire query. Long and complicated queries can be stored under a single name which allows them to be used easily.</p>
+
+<p>For example, instead of typing:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">state</span><span class="p">,</span> <span class="n">vehicletype</span><span class="p">,</span> <span class="nb">year</span><span class="p">,</span> <span class="n">make</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">color</span> <span class="k">FROM</span> <span class="n">traffic</span>
+<span class="k">WHERE</span> <span class="k">state</span><span class="o">=</span><span class="s1">'MD'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Every time that details about a vehicle are needed, you can create a view:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">VIEW</span> <span class="n">vehicle_details</span> <span class="k">AS</span>
+<span class="k">SELECT</span> <span class="k">state</span><span class="p">,</span> <span class="n">vehicletype</span><span class="p">,</span> <span class="nb">year</span><span class="p">,</span> <span class="n">make</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">color</span> <span class="k">FROM</span> <span class="n">traffic</span>
+<span class="k">WHERE</span> <span class="k">state</span><span class="o">=</span><span class="s1">'MD'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Once a view is created, the details about the vehicle can be accessed through the view:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">vehicle_details</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/sql-optimization/views/views_0.png" alt="This image compares a query that uses a view with a query that does the same operation without using a view. The view makes the query significantly shorter." /></p>
+
+<p>As we can see, the two queries return the same result. The only difference between the two queries is the length of the queries in terms of characters.</p>
+
+<h2 id="creating-a-view">Creating a view</h2>
+
+<p>Creating a view follows this form:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">VIEW</span> <span class="p">[</span><span class="k">view</span> <span class="n">name</span><span class="p">]</span> <span class="k">AS</span> <span class="p">[</span><span class="k">SELECT</span> <span class="k">statement</span><span class="o">/</span><span class="n">Query</span> <span class="k">to</span> <span class="n">store</span><span class="p">]</span>
+<span class="p">[(</span><span class="n">optional</span><span class="p">)</span> <span class="k">WHERE</span> <span class="p">[</span><span class="n">condition</span><span class="p">]];</span>
+</code></pre></div></div>
+
+<p>In the first example, a view was created on the details of a vehicle. For this view, the name vehicle_details was used and the query used to create the view was:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">state</span><span class="p">,</span> <span class="n">vehicletype</span><span class="p">,</span> <span class="nb">year</span><span class="p">,</span> <span class="n">make</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">color</span> <span class="k">FROM</span> <span class="n">traffic</span>
+<span class="k">WHERE</span> <span class="k">state</span><span class="o">=</span><span class="s1">'MD'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>The view will store the query above. This means that when the view is used, the query that is stored in the view will be accessed and run. In other words running a standard view is no different from running the query it was created on in terms of execution. The only difference is the length of the query that needs to be written by the user. As such, creating views is mainly for simplifying the writing of queries, not the running of queries.</p>
+
+<p>They can also be used to allow users or groups access to only specific sections of a table or database without allowing access to the entire thing. Limiting columns in a view will produce some performance improvements on SELECT * queries since the amount of table being pulled is less. However this is not justification for creating views of every column combination so that SELECT * can always be used. In fact it is a better practice to discourage the use of SELECT * and have people query specifically for the columns they care about because then the least amount of data is being pulled on every query.</p>
+
+<h2 id="using-views">Using Views</h2>
+
+<p>Views can be used in a variety of ways and with several optional parameters:</p>
+
+<h3 id="temptemporary">TEMP/TEMPORARY</h3>
+
+<p>Adding TEMP or TEMPORARY to the creation of a view creates a view that is automatically dropped at the end of the user’s session.</p>
+
+<p>Example:</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TEMP</span> <span class="k">VIEW</span> <span class="n">myView</span> <span class="k">AS</span> <span class="k">SELECT</span> <span class="n">serial_id</span> <span class="k">FROM</span> <span class="n">traffic</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="with-check-option">WITH CHECK OPTION</h3>
+
+<p>Adding ‘WITH CHECK OPTION’ to the end of a CREATE VIEW statement ensures that, if the view is updated, the update does not conflict with the view. For example, if a column is created on a view where dlstate must be ‘MD’, then the user cannot INSERT a row into the view where the dlstate is ‘VA.’</p>
+
+<p>It will return an error :</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ERROR</span><span class="p">:</span> <span class="k">new</span> <span class="k">row</span> <span class="n">violates</span> <span class="k">check</span> <span class="k">option</span> <span class="k">for</span> <span class="k">view</span> <span class="p">[</span><span class="n">name</span> <span class="k">of</span> <span class="k">view</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Example: <img src="/assets/images/sql-optimization/views/views_1.png" alt="Shows the creation of a view using the 'WITH CHECK OPTION' parameter. It is followed by an example of an insert into the view failing due to said parameter." /></p>
+
+<h3 id="local-and-cascaded">LOCAL and CASCADED</h3>
+
+<p>Adding LOCAL or CASCADED to CHECK OPTION will designate the scope for the CHECK OPTION. If LOCAL is added, the CHECK only applies to that specific view. CASCADED on the other hand, applies the CHECK to all views that the current view is dependent on.</p>
+
+<p>Example:</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">VIEW</span> <span class="n">myView</span> <span class="k">AS</span> <span class="k">SELECT</span> <span class="n">serial_id</span> <span class="k">FROM</span> <span class="n">traffic</span>
+<span class="k">WITH</span> <span class="k">LOCAL</span> <span class="k">CHECK</span> <span class="k">OPTION</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="view-definition">VIEW definition</h3>
+
+<p>To see the definition (underlying query) of a view, you can use:</p>
+
+<pre><code class="language-code">\d+ [view name]
+</code></pre>
+<p><img src="/assets/images/sql-optimization/views/views_2.png" alt="Shows the execution of \d+ vehicle_details and where to view the definition" /></p>
+
+<h2 id="updating-views">Updating Views</h2>
+
+<p>Views can be updated by using the following syntax:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">UPDATE</span> <span class="p">[</span><span class="n">Name</span> <span class="k">of</span> <span class="k">View</span><span class="p">]</span>
+<span class="k">SET</span> <span class="p">[</span><span class="k">Column</span> <span class="n">Name</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="n">Value</span> <span class="k">to</span> <span class="k">set</span> <span class="k">to</span><span class="p">],</span> <span class="p">[</span><span class="k">Column</span> <span class="n">Name</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="n">Value</span> <span class="k">to</span> <span class="k">set</span> <span class="k">to</span><span class="p">],</span> <span class="n">etc</span>
+<span class="k">WHERE</span> <span class="p">[</span><span class="n">condition</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>Views can only be updated if they follow these criteria:</p>
+
+<ul>
+  <li>The view must not be created with an aggregate as a column</li>
+  <li>The view must not contain: DISTINCT, GROUP BY, or HAVING in its definition</li>
+  <li>The view must be on only one table</li>
+  <li>If the view is built on another view, that view must the criteria above</li>
+</ul>
+
+<h2 id="materialized-views">Materialized Views</h2>
+
+<p>Materialized views are similar to standard views, however they store the result of the query in a physical table taking up memory in your database. This means that a query run on a materialized view will be faster than standard view because the underlying query does not need to be rerun each time the view is called. The query is run on the new Materialized view:</p>
+
+<p><img src="/assets/images/sql-optimization/views/views_3.png" alt="Image showing the creation of a materialized view, followed by comparison of a query with and without using the materialized view" /></p>
+
+<p>This query plan shows the materialized view being used as a table and being scanned. It also shows a significant difference in speed between the two methods.</p>
+
+<p>Materialized views are generally most effective on computation-intensive views. Materializing a view has several benefits but also several drawbacks.</p>
+
+<p>Pros:</p>
+
+<ul>
+  <li>Faster - Aggregations and Joins are run beforehand</li>
+  <li>Can be Indexed for even greater speed</li>
+  <li>Does not update after each run: saves server’s time by preventing unnecessary refreshing</li>
+</ul>
+
+<p>Cons:</p>
+
+<ul>
+  <li>Takes more memory</li>
+  <li>Does not update after each run: Must be refreshed so data may not be completely up to date</li>
+  <li>Must be refreshed one of two ways:
+    <ul>
+      <li>Manually:
+        <ul>
+          <li>Completely Recalculate entire view (possibly expensive)</li>
+          <li>Supports all SQL</li>
+        </ul>
+      </li>
+      <li>Incrementally:
+        <ul>
+          <li>Does not support some functions and outer joins</li>
+          <li>Only update specific rows</li>
+          <li>Note: Not all SQL types support this. (e.g. can be done in <a href="https://docs.oracle.com/database/121/DWHSG/refresh.htm">Oracle</a> and <a href="https://docs.getdbt.com/docs/configuring-incremental-models">DBT</a>, but not PostgreSQL.)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>To create a materialized view, add the MATERIALIZED keyword:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="n">myView</span> <span class="k">AS</span> <span class="p">[</span><span class="n">Query</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>To refresh the view manually use the following command:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">REFRESH</span> <span class="n">MATERIALIZED</span> <span class="k">VIEW</span> <span class="p">[</span><span class="k">view</span> <span class="n">name</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>Standard Views
+    <ul>
+      <li>Store a query that can be referenced by the name of the view</li>
+      <li>Mostly for ease of use, but can also be used for security/permissions purposes</li>
+      <li>Has Options:
+        <ul>
+          <li>TEMP/TEMPORARY</li>
+          <li>WITH CHECK OPTION</li>
+          <li>CASCADED/LOCAL</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Materialized Views
+    <ul>
+      <li>Like standard views but store results in a table.</li>
+      <li>Can be indexed</li>
+      <li>Must be refreshed
+        <ul>
+          <li>Manual Full refresh: Refreshes all values</li>
+          <li>Incremental Refresh: Only refreshes modified values</li>
+        </ul>
+      </li>
+      <li>Requires more memory</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="references">References</h3>
+
+<p><a href="http://www.postgresqltutorial.com/postgresql-views-with-check-option/" title="http://www.postgresqltutorial.com/postgresql-views-with-check-option/">http://www.postgresqltutorial.com/postgresql-views-with-check-option/</a></p>
+
+<p><a href="https://www.percona.com/blog/2011/03/23/using-flexviews-part-one-introduction-to-materialized-views/" title="https://www.percona.com/blog/2011/03/23/using-flexviews-part-one-introduction-to-materialized-views/">https://www.percona.com/blog/2011/03/23/using-flexviews-part-one-introduction-to-materialized-views/</a></p>
+
+<p><a href="https://www.tutorialspoint.com/sql/sql-using-views.htm" title="https://www.tutorialspoint.com/sql/sql-using-views.htm">https://www.tutorialspoint.com/sql/sql-using-views.htm</a></p>
+
+<p><a href="https://www.postgresql.org/docs/9.2/sql-createview.html" title="https://www.postgresql.org/docs/9.2/sql-createview.html">https://www.postgresql.org/docs/9.2/sql-createview.html</a></p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matthew-layne/">Matthew Layne</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        ,
+      
+        
+        
+        <a href="/people/blake/">Blake Barnhill</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1r0fyo8QHWhe_ADc-XruJBRtlIjQjJ3kjwM6xcjmbhhs/edit" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/scheduling-dbt/">Prev – Scheduling Modeling</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/optimizing-data-queries-with-redshift/">Next – Redshift Optimization</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Start Modeling Data with dbt</title>
+  <meta name="description" content="Quick introduction on using to dbt and BigQuery to model data. Modeling data can have significance performance impacts on your database.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/sql-optimization/start-modeling-data/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Start Modeling Data"/>
+  <meta name="twitter:description" content="Quick introduction on using to dbt and BigQuery to model data. Modeling data can have significance performance impacts on your database."/>
+  <meta name="twitter:url" content="https://dataschool.com/sql-optimization/start-modeling-data/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/sql-optimization/start-modeling-data/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Start Modeling Data"
+  <meta property="og:description" content="Quick introduction on using to dbt and BigQuery to model data. Modeling data can have significance performance impacts on your database." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/sql-optimization/start_modeling_data/data1.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/sql-optimization/start-modeling-data/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Start Modeling Data with dbt",
+    "image": "/assets/images/sql-optimization/start_modeling_data/data1.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matt David"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/sql-optimization/start-modeling-data/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2020-08-24 09:29:33 -0700",
+    "description": "Quick introduction on using to dbt and BigQuery to model data. Modeling data can have significance performance impacts on your database."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/sql-optimization/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/sql-optimization@thumbnail.png" alt="Cover of SQL Optimization" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/sql-optimization/" class="book-title">SQL Optimization</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#QueryOptimizations" aria-expanded="true" data-target="#QueryOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Query optimizations</a>
+                  <ul class="list-unstyled collapse " id="QueryOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/what-is-a-query-plan/">
+                What is a Query Plan
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/order-of-a-sql-query/">
+                Order of a SQL Query
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/optimize-your-sql-query/">
+                Optimize your SQL Query
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ColumnandTableOptimizations" aria-expanded="true" data-target="#ColumnandTableOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Column and table optimizations</a>
+                  <ul class="list-unstyled collapse " id="ColumnandTableOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/optimization-using-explain/">
+                Optimization with EXPLAIN ANALYZE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/how-indexing-works/">
+                How Indexing Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/partial-indexes/">
+                Partial Indexes
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/multicolumn-indexes/">
+                Multicolumn Indexes
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ModelingData" aria-expanded="true" data-target="#ModelingData"  class="dropdown-toggle"  data-toggle="collapse" >Modeling data</a>
+                  <ul class="list-unstyled collapse show" id="ModelingData">
+            
+            <li class="active">
+              <a href="/sql-optimization/start-modeling-data/">
+                Start Modeling Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/scheduling-dbt/">
+                Scheduling Modeling
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/views/">
+                Views
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Databases" aria-expanded="true" data-target="#Databases"  class="dropdown-toggle"  data-toggle="collapse" >Databases</a>
+                  <ul class="list-unstyled collapse " id="Databases">
+            
+            <li >
+              <a href="/sql-optimization/optimizing-data-queries-with-redshift/">
+                Redshift Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/bigquery-optimization/">
+                BigQuery Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/snowflake/">
+                Snowflake Optimization
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/sql-optimization/start-modeling-data/&title=Start Modeling Data&summary=Quick+introduction+on+using+to+dbt+and+BigQuery+to+model+data.+Modeling+data+can+have+significance+performance+impacts+on+your+database.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/sql-optimization/start-modeling-data/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/sql-optimization/start-modeling-data/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Start Modeling Data</h1>
+    <p>
+      <em>Last modified: August 24, 2020</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>Data Modeling sounds really scary, like a big chore and months of work.</p>
+
+<p>But it is not so bad and you can get started in less than 10 minutes.</p>
+
+<p>For this example we use BigQuery and dbt. BigQuery is one of Google’s cloud database offerings. dbt which stands for Data Build Tool is a data modeling tool created by Fishtown Analytics.</p>
+
+<p><img src="/assets/images/sql-optimization/start_modeling_data/data1.png" alt="Image result for big query logo" /></p>
+
+<p><a href="https://cloud.google.com/bigquery/" title="https://cloud.google.com/bigquery/">https://cloud.google.com/bigquery/</a></p>
+
+<p>BigQuery comes with a set of public data sets that are great for practicing data modeling on. I will be using the Stack Overflow data set they have.</p>
+
+<p>You can start using Google Cloud’s various services for free but you will need to upgrade the billing so that you can connect dbt to Google Cloud. If you have not signed up for Google Cloud platform services before they will give you a $300 credit (which is more than enough to run this test thousands of times) so don’t worry about the costs in trying this out.</p>
+
+<h2 id="installing-dbt">Installing dbt</h2>
+
+<p><img src="/assets/images/sql-optimization/start_modeling_data/data2.png" alt="The logo for dbt" /></p>
+
+<p>To install you can visit their documentation page here:</p>
+
+<p><a href="https://docs.getdbt.com/docs/macos" title="https://docs.getdbt.com/docs/macos">https://docs.getdbt.com/docs/macos</a></p>
+
+<p>Or you can follow along below, most of what is here is straight from their docs anyways.</p>
+
+<p>I suggest using homebrew to install dbt, it makes it extremely easy. If you do not have homebrew open your terminal on your Mac and put in the following command.</p>
+
+<pre><code class="language-code">/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+</code></pre>
+
+<p>After it installs put the following commands into terminal.</p>
+
+<pre><code class="language-code">brew update
+brew tap fishtown-analytics/dbt
+brew install dbt
+</code></pre>
+
+<p>You will also need git:</p>
+
+<pre><code class="language-code">brew install git
+</code></pre>
+
+<p>Create a folder on your computer (I named my dbt Projects). We are going to populate it with all the files and subfolders dbt needs to get started. We do this by navigating into that folder through the terminal.</p>
+
+<p>Then we run the following inside of terminal.</p>
+
+<pre><code class="language-code">dbt init [name of project]
+</code></pre>
+
+<p>I called mine BQSO, so my terminal command looked like this:</p>
+
+<pre><code class="language-code">dbt init BQSO
+</code></pre>
+
+<p>Navigate inside the folder to see all the folders and files dbt created for us</p>
+
+<pre><code class="language-code">cd BQSO
+</code></pre>
+
+<p><img src="/assets/images/sql-optimization/start_modeling_data/data3.png" alt="Image displaying the contents of the directory: BQSO" /></p>
+
+<h2 id="configuring-bigquery">Configuring BigQuery</h2>
+
+<p>To get dbt to work with BigQuery we need to give it permission. The way to do this is by setting up profile (think account) with login information. Basically you have to create a profile in dbt’s folder and then you will link that profile to this specific DBT project that you just created.</p>
+
+<p>Go to dbt’s profiles (a sample profiles.yml file was created when we ran the dbt init command)</p>
+
+<pre><code class="language-code">open /Users/[your username]/.dbt
+</code></pre>
+
+<p>This will pop open a file called profiles.yml which is the most challenging part of this tutorial. Configuring the profiles yml file. As a starter you can copy paste the code below to replace what is in the file, replacing one field with your own information.</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">my-bigquery-db</span><span class="pi">:</span>
+  <span class="na">target</span><span class="pi">:</span> <span class="s">dev</span>
+  <span class="na">outputs</span><span class="pi">:</span>
+    <span class="na">dev</span><span class="pi">:</span>
+      <span class="na">type</span><span class="pi">:</span> <span class="s">bigquery</span>
+      <span class="na">method</span><span class="pi">:</span> <span class="s">service-account</span>
+      <span class="na">project</span><span class="pi">:</span> <span class="s">happy-vegetable-211094</span>
+      <span class="na">dataset</span><span class="pi">:</span> <span class="s">soCleaned</span>
+      <span class="na">threads</span><span class="pi">:</span> <span class="m">1</span>
+      <span class="na">keyfile</span><span class="pi">:</span> <span class="s">/users/matt/BigQuerykeyfile.json</span>
+      <span class="na">timeout_seconds</span><span class="pi">:</span> <span class="m">300</span>
+</code></pre></div></div>
+
+<p>Now I will mark where you will need to update with your own info with <strong>bold</strong>.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">my-bigquery-db:</code>
+    <ul>
+      <li>This is the name which will be used to link the profile (account details/login info) to the project.</li>
+      <li>I think this name makes sense but feel free to change it to whatever name you would like.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">type: bigquery</code>
+    <ul>
+      <li>The type of database, no surprises here.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">method: service-account</code>
+    <ul>
+      <li>How you will connect. This is specific to the database chosen, for bigquery this is how you do it.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">project: healthy-terrain-239904</code>
+    <ul>
+      <li><strong>update with your own info</strong></li>
+      <li>This is the project name, it will be a weirdly named thing inside of BigQuery on the left. <img src="/assets/images/sql-optimization/start_modeling_data/data4.png" alt="Image showing big query's interface and the project name" /></li>
+      <li>Replace <strong>healthy-terrain-239904</strong> with your project name.</li>
+      <li>You may need to create a new project in BigQuery but there should be a default one which is fine to use for this example</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">dataset: soCleaned</code>
+    <ul>
+      <li><strong>update with your own info</strong></li>
+      <li>The name of Schema (Schema are called datasets in BigQuery) you will be putting the modeled data in <img src="/assets/images/sql-optimization/start_modeling_data/data5.png" alt="Image showing the creation of a dataset in big query" /></li>
+      <li>Inside of BigQuery click on your project (healthy-terrain-239904)</li>
+      <li>On the right you will see Create Data Set, click that</li>
+      <li>The Dataset ID will be the name of the schema</li>
+      <li>Replace <strong>soCleaned</strong> with your schema name that you put in the Dataset ID</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">keyfile: /users/matt/BigQuerykeyfile.json</code>
+    <ul>
+      <li><strong>update with your own info</strong></li>
+      <li>You do this by going to IAM &amp; admin in BigQuery (hidden in the hamburger menu on the left) <img src="/assets/images/sql-optimization/start_modeling_data/data6.png" alt="Image showing the contents of IAM &amp; admin &gt; Service Accounts" /></li>
+      <li>Click Service Accounts</li>
+      <li>Click Create Service Account</li>
+      <li>Create a name for it (a name like dbt)</li>
+      <li>Select Role - BigQuery Admin</li>
+      <li>Create key - JSON</li>
+      <li>This will download the key to your computer</li>
+      <li>You will need to put the file path in the yml file so place it somewhere that makes sense to you</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Once you update all of those fields in your dbt profile (profiles.yml) you now need to link that profile to the project we created.</p>
+
+<p>Go to the project folder we had created earlier (BQSO in my case) and open the yml file inside of it.</p>
+
+<p><em>dbt_project.yml</em></p>
+
+<p>Now you only need to update one thing in this file, you need to se the profile to the name we just created:</p>
+
+<pre><code class="language-code">profile: 'my-bigquery-db'
+</code></pre>
+
+<p>This is the link to the profile we just created, so if you changed that name to something else replace ‘my-bigquery-db’ with whatever you created. It does need the single quotes around the name of the profile.</p>
+
+<h2 id="creating-a-new-table-with-modeled-data">Creating a New Table with Modeled Data</h2>
+
+<p>Go to the models folder in your project and create a new .sql file. In that .sql file you can write a SQL statement that’s output will be modeled data. Try adding this text to the .sql file and save it:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">{{</span> <span class="n">config</span><span class="p">(</span><span class="n">materialized</span><span class="o">=</span><span class="s1">'table'</span><span class="p">)</span> <span class="err">}}</span>
+<span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="s1">'bigquery-public-data.stackoverflow.posts_questions'</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">view_count</span> <span class="k">DESC</span>
+<span class="k">LIMIT</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>Whatever you named the .sql file will be the name of the table in the schema (dataset) In my case I saved it as firstModel.sql</p>
+
+<h2 id="running-your-models">Running your Models</h2>
+
+<p>Go to terminal, make sure you are in the project folder of the dbt project and type</p>
+
+<pre><code class="language-code">dbt run
+</code></pre>
+
+<p>Boom, refresh BigQuery and see the new table. You can query it with a simple.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">soCleaned</span><span class="p">.</span><span class="n">firstModel</span>
+</code></pre></div></div>
+
+<p>Can you believe the most viewed post is about git? Classic.</p>
+
+<p>You have now modeled data and queried modeled data. Not so scary right?</p>
+
+<h3 id="why-did-we-did-we-model-this-in-the-first-place">Why did we did we model this in the first place?</h3>
+
+<p>Well querying this modeled data took 0.2 seconds and processed 473bytes (granted this is just a single row with 20 columns)</p>
+
+<p>When I do this query on the full Stack Overflow data set it took 20.3 seconds and processed 26.64 GB</p>
+
+<p>How did this happen? We moved the larger query which operated on the full Stack Overflow data set to occur when we typed dbt run. dbt created a table with the results of that query which has one row of data. We then can query this new table which is much smaller through big query and get our result much faster. In fact we can query it as many times as we want without incurring the cost of the large query again.</p>
+
+<p>Note: We will have to do dbt run again if we want to load the latest data into the modeled table. dbt run is often done on a schedule (typically at night) so that users know how up to date the data is they are dealing with.</p>
+
+<p>There are many other things we can do with modeling and dbt such as cleaning up data, simplifying the schema, or find other ways to get more performance out of a query. Stay tuned for more!</p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matt/">Matt David</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/drew-banin/">Drew Banin</a>
+        ,
+      
+        
+        
+        <a href="/people/dave/">Dave Fowler</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1v_F2P6da3SOwy1W5K13tR-unTba-vh2U-3iEQjGSUTs/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/multicolumn-indexes/">Prev – Multicolumn Indexes</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/scheduling-dbt/">Next – Scheduling Modeling</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>How CASE WHEN works in SQL with animated Gifs</title>
+  <meta name="description" content="CASE WHEN is a SQL function that works a lot like IF THEN in other programming languages. Learn to use CASE WHEN in SQL.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/how-to-teach-people-sql/how-case-when-works/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How CASE WHEN Works"/>
+  <meta name="twitter:description" content="CASE WHEN is a SQL function that works a lot like IF THEN in other programming languages. Learn to use CASE WHEN in SQL."/>
+  <meta name="twitter:url" content="https://dataschool.com/how-to-teach-people-sql/how-case-when-works/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/how-to-teach-people-sql/how-case-when-works/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How CASE WHEN Works"
+  <meta property="og:description" content="CASE WHEN is a SQL function that works a lot like IF THEN in other programming languages. Learn to use CASE WHEN in SQL." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/Frame - 2019-09-30T123134.565.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/how-to-teach-people-sql/how-case-when-works/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "How CASE WHEN works in SQL with animated Gifs",
+    "image": "/assets/images/Frame - 2019-09-30T123134.565.png",
+    "author": {
+        "@type": "Person",
+        "name": "Blake Barnhill"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/how-to-teach-people-sql/how-case-when-works/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 16:55:50 -0800",
+    "description": "CASE WHEN is a SQL function that works a lot like IF THEN in other programming languages. Learn to use CASE WHEN in SQL."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/how-to-teach-people-sql/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/how-to-teach-people-sql@thumbnail.png" alt="Cover of How to Teach People SQL" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/how-to-teach-people-sql/" class="book-title">How to Teach People SQL</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Introduction" aria-expanded="true" data-target="#Introduction"  class="dropdown-toggle"  data-toggle="collapse" >Introduction</a>
+                  <ul class="list-unstyled collapse " id="Introduction">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/introduction/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/why-databases/">
+                Why Databases?
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/accessing-data/">
+                Accessing Data
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#JOINs" aria-expanded="true" data-target="#JOINs"  class="dropdown-toggle"  data-toggle="collapse" >Joins</a>
+                  <ul class="list-unstyled collapse " id="JOINs">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/sql-join-types-explained-visually/">
+                SQL Join Types Explained Visually
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/inner-join-animated/">
+                Inner Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/left-right-join-animated/">
+                Left & Right Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/full-outer-join-animated/">
+                Full Outer Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/union-animated/">
+                Union - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/cross-join-animated/">
+                Cross Join - Animated
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Debugging" aria-expanded="true" data-target="#Debugging"  class="dropdown-toggle"  data-toggle="collapse" >Debugging</a>
+                  <ul class="list-unstyled collapse " id="Debugging">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/debugging-sql-syntax-errors/">
+                Syntax Errors
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/debugging-sql-0-rows-returned/">
+                0 Rows Returned
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Advanced" aria-expanded="true" data-target="#Advanced"  class="dropdown-toggle"  data-toggle="collapse" >Advanced</a>
+                  <ul class="list-unstyled collapse show" id="Advanced">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-sql-aggregations-work/">
+                How Aggregations Work
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-sql-subqueries-work/">
+                How Subqueries Work
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/how-to-teach-people-sql/how-case-when-works/">
+                How CASE WHEN Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-window-functions-work/">
+                How Window Functions Work
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Appendix" aria-expanded="true" data-target="#Appendix"  class="dropdown-toggle"  data-toggle="collapse" >Appendix</a>
+                  <ul class="list-unstyled collapse " id="Appendix">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/difference-between-where-and-on-in-sql/">
+                Difference between WHERE and ON in SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-to-find-outliers-with-sql/">
+                How to Find Outliers with SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-regex-works-in-sql/">
+                How Regex Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/syntax-conventions/">
+                Syntax Conventions
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/third-normal-form/">
+                Third Normal Form
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/how-to-teach-people-sql/how-case-when-works/&title=How CASE WHEN Works&summary=CASE+WHEN+is+a+SQL+function+that+works+a+lot+like+IF+THEN+in+other+programming+languages.+Learn+to+use+CASE+WHEN+in+SQL.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/how-to-teach-people-sql/how-case-when-works/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/how-to-teach-people-sql/how-case-when-works/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article class="img-border-on-default">
+  <header class="mb-4">
+    <h1 class="title">How CASE WHEN Works</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>CASE WHEN takes in values, checks them against a condition and THEN outputs values into a new column based on if it satisfies the condition.</p>
+
+<p>CASE WHEN in SQL operates very similarly to “if then” statements in other programming languages. Replace the “if” with CASE WHEN and “else if” with WHEN, and the rest matches:</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen1.png" alt="comparison between 'if' logic in other languages to 'CASE WHEN' logic in SQL" /></p>
+
+<p>Note: CASE WHEN statements will always output new values to a new column which is different than “if then” which can replace values in the same column.</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen2.png" alt="How if then works: replaces values" /></p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen3.png" alt="How case when works: adds value to new column" /></p>
+
+<p>Now let’s see what the full query would have looked like for that CASE WHEN statement, notice the title of the output column at the end of the CASE WHEN statement.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">City</span><span class="p">,</span>
+<span class="k">CASE</span> <span class="k">WHEN</span> <span class="n">City</span> <span class="o">=</span> <span class="nv">"SF"</span> <span class="k">THEN</span> <span class="nv">"San Francisco"</span>
+<span class="k">ELSE</span> <span class="n">City</span>
+<span class="k">END</span> <span class="k">AS</span> <span class="nv">"Updated City"</span>  
+<span class="k">FROM</span> <span class="n">friends</span>
+</code></pre></div></div>
+
+<p>Let’s break down each component of the CASE WHEN statement:</p>
+
+<ul>
+  <li><strong>CASE</strong>: indicates a condition loop has been started and that the conditions will follow.</li>
+  <li><strong>WHEN</strong>: indicates the start of a condition that should be checked by the query.</li>
+  <li><strong>THEN</strong>: executed when the condition is true, determines the output for the true condition.
+    <ul>
+      <li>After THEN is executed, CASE will return to the top of the loop and begin checking the next entry.</li>
+      <li>If the condition is false, the next WHEN statement will be evaluated.</li>
+    </ul>
+  </li>
+  <li><strong>ELSE</strong>: catches all of the entries that were not true for any of the WHEN conditions.
+    <ul>
+      <li>If no ELSE statement is present and all WHEN conditions are false, the returned value will be NULL.</li>
+    </ul>
+  </li>
+  <li><strong>END</strong>: Indicates the end of the CASE loop.</li>
+  <li><strong>AS</strong>: Used to set a specific name for the returned CASE column.</li>
+</ul>
+
+<p>NOTE: If you put the column name after THEN or ELSE it will put the value from the original column into the newly created column. In the example we see this done with ELSE City which puts LA unchanged in the new column</p>
+
+<h2 id="syntax"><strong>Syntax</strong></h2>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="p">(</span><span class="n">optional</span><span class="p">:</span> <span class="k">any</span> <span class="n">desired</span> <span class="n">columns</span><span class="p">),</span>
+<span class="k">CASE</span> <span class="k">WHEN</span> <span class="p">(</span><span class="n">condition</span><span class="p">)</span> <span class="k">THEN</span> <span class="p">(</span><span class="n">desired</span> <span class="k">output</span><span class="p">)</span>
+<span class="k">WHEN</span> <span class="p">(</span><span class="n">other</span> <span class="n">condition</span><span class="p">)</span> <span class="k">THEN</span> <span class="p">(</span><span class="n">desired</span> <span class="k">output</span><span class="p">)</span>
+<span class="k">ELSE</span> <span class="p">(</span><span class="n">desired</span> <span class="k">output</span><span class="p">)</span>
+<span class="k">END</span> <span class="k">AS</span> <span class="p">(</span><span class="n">descriptive</span> <span class="n">header</span> <span class="k">for</span> <span class="n">the</span> <span class="k">output</span> <span class="k">column</span><span class="p">)</span>
+<span class="k">FROM</span> <span class="p">(</span><span class="n">appropriate</span> <span class="k">table</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><em>Note: you do not have to show all of the columns, or any columns besides the CASE column in the output.</em></p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen4.png" alt="Image showing how the query results look with and without an additional column selected" /></p>
+
+<h2 id="case-when-issues"><strong>CASE WHEN Issues</strong></h2>
+
+<h3 id="query-time">Query Time</h3>
+
+<p>Time to complete a query can be a problem. There is no defined maximum for the number of WHEN conditions you can have within a CASE WHEN statement. CASE WHEN queries can become very slow because the query has to check each condition for every row until it finds a case where it satisfies the condition. This can dramatically increase the query time.</p>
+
+<p>If queries are taking a long time to finish, consider finding ways to optimize your query. More on <a href="https://dataschool.com/sql-optimization/optimize-your-sql-query/">optimizing queries from Data School here</a>.</p>
+
+<h3 id="data-types">Data Types</h3>
+
+<p>Make sure that you are comparing the correct data types in your queries. If you try to compare incompatible types SQL will return an “Invalid Input Syntax” error.</p>
+
+<h4 id="same-data-type"><strong>Same Data Type</strong></h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span><span class="p">,</span>
+<span class="k">CASE</span> <span class="k">WHEN</span> <span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">Name</span> <span class="o">=</span> <span class="s1">'40'</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Rock'</span>
+<span class="k">END</span> <span class="k">AS</span> <span class="n">Genre</span> <span class="k">FROM</span> <span class="n">Track</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span> <span class="k">ASC</span> <span class="k">LIMIT</span> <span class="mi">10</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen5.png" alt="Showing results from the query and how rock is added in an additional column" /></p>
+
+<p>The <strong>Name</strong> field is a VARCHAR and we compare it to the characters “40”.</p>
+
+<h4 id="different-data-type"><strong>Different Data Type</strong></h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span><span class="p">,</span>
+<span class="k">CASE</span> <span class="k">WHEN</span> <span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">Name</span> <span class="o">=</span> <span class="mi">40</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Rock'</span>
+<span class="k">END</span> <span class="k">AS</span> <span class="n">Genre</span> <span class="k">FROM</span> <span class="n">Track</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span> <span class="k">ASC</span> <span class="k">LIMIT</span> <span class="mi">10</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen6.png" alt="Error caused by wrong data types" /></p>
+
+<p>The <strong>Name</strong> field is a VARCHAR and cannot be compared to an INTEGER.</p>
+
+<p>Remember you can cast any of your values in order to make the data types match. More on casting from <a href="https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_cast">intersystems here</a>. To determine what data type is used in a column you can use the “\d (Table name)” command and look for the “Type” column:</p>
+
+<pre><code class="language-code">\d "Track"
+</code></pre>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen7.png" alt="details on the column types using \d &quot;Track&quot;" /></p>
+
+<h2 id="in-depth-example"><strong>In Depth Example</strong></h2>
+
+<p>This example uses the Chinook database with PostgreSQL 11. The “Track” table in the Chinook database is a large, informational table on many different songs by many different artists.</p>
+
+<p>The “TrackId” in the table below is unique for each entry. However, the “GenreId” column is a reference to another table that links each id number to a genre of music. Let’s say you lost the “Genre” table (indicated with the red X through it). Now you could not JOIN in Genre Names, How could we replace the GenreId in the Track table?</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen8.png" alt="Showing lost table" /></p>
+
+<p>CASE WHEN allows you to assign the genres yourself. Looking at the first few songs, you can see they all have the same GenreId and we know that 1 corresponded to the “Rock” genre. We can use CASE WHEN to check if there is a 1 in the GenreId Column and then put “Rock” into a newly created GenreType column:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span><span class="p">,</span>
+<span class="k">CASE</span> <span class="k">WHEN</span> <span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Rock'</span>
+<span class="k">END</span> <span class="k">AS</span> <span class="s1">'GenreType'</span>
+<span class="k">FROM</span> <span class="n">Track</span> <span class="k">LIMIT</span> <span class="mi">10</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen9.png" alt="Using CASE WHEN to fill in certain Genres" /></p>
+
+<p>There are more than just 1 genre of music in the track table. Order the entries alphabetically to see some examples of songs that do not have a “GenreId” of 1. In the GenreType column <strong>null</strong> is returned for any values that did not satisfy the conditions of the CASE WHEN statement:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span><span class="p">,</span>
+<span class="k">CASE</span> <span class="k">WHEN</span> <span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Rock'</span>
+<span class="k">END</span> <span class="k">AS</span> <span class="s1">'GenreType'</span>
+<span class="k">FROM</span> <span class="n">Track</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span> <span class="k">ASC</span>
+<span class="k">LIMIT</span> <span class="mi">10</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen10.png" alt="Showing ordering the output from the query" /></p>
+
+<p>Note: <strong>Null</strong> values are sometimes not printed in the output, other times they will be greyed out or italicized like this <em>Null</em></p>
+
+<p>All of the null entries in GenreType column are not “Rock” songs, so you can use CASE WHEN to label them as “Not Rock”. This can be done using the ELSE keyword:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span><span class="p">,</span>
+<span class="k">CASE</span> <span class="k">WHEN</span> <span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Rock'</span>
+<span class="k">ELSE</span> <span class="s1">'Not Rock'</span>
+<span class="k">END</span> <span class="k">AS</span> <span class="s1">'GenreType'</span>
+<span class="k">FROM</span> <span class="n">Track</span> <span class="k">LIMIT</span> <span class="mi">10</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen11.png" alt="Adding an ELSE to the CASE WHEN clause" /></p>
+
+<p>Alternatively the WHEN keyword can be used several times to create multiple conditions:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span><span class="p">,</span>
+<span class="k">CASE</span> <span class="k">WHEN</span> <span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Rock'</span>
+<span class="k">WHEN</span> <span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Jazz'</span>
+<span class="k">WHEN</span> <span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Metal'</span>
+<span class="k">WHEN</span> <span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Alternative &amp; Punk'</span>
+<span class="k">ELSE</span> <span class="s1">'Unknown'</span>
+<span class="k">END</span> <span class="k">AS</span> <span class="s1">'GenreType'</span>
+<span class="k">FROM</span> <span class="n">Track</span> <span class="k">LIMIT</span> <span class="mi">10</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/case_when/caseWhen12.png" alt="Adding multiple additional WHEN subclauses to the query in order to fill in multiple genres (not just rock and not rock)" /></p>
+
+<h3 id="summary"><strong>Summary:</strong></h3>
+
+<ul>
+  <li>CASE WHEN is used to determine conditional statements in SQL
+    <ul>
+      <li>CASE declares the start of the conditions</li>
+      <li>WHEN declares a condition</li>
+      <li>THEN declares the return of a true condition</li>
+      <li>ELSE catches any entries that do not trigger a conditional check</li>
+      <li>END declares the end of the CASE checks</li>
+    </ul>
+  </li>
+  <li>You can have a multitude of WHEN statements</li>
+  <li>AS can be used to create a header for the return data, otherwise it is given the header “case”</li>
+</ul>
+
+<h3 id="references"><strong>References:</strong></h3>
+
+<p><a href="https://www.w3schools.com/sql/sql_case.asp" title="https://www.w3schools.com/sql/sql_case.asp">https://www.w3schools.com/sql/sql_case.asp</a></p>
+
+<p><a href="https://www.postgresql.org/docs/7.4/functions-conditional.html" title="https://www.postgresql.org/docs/7.4/functions-conditional.html">https://www.postgresql.org/docs/7.4/functions-conditional.html</a></p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/blake/">Blake Barnhill</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        ,
+      
+        
+        
+        <a href="/people/matthew-layne/">Matthew Layne</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1iMFvldJoRh7Uay5e_AW7sy9lKbyR5n24yeJbuuyAmsk/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/how-to-teach-people-sql/how-sql-subqueries-work/">Prev – How Subqueries Work</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/how-to-teach-people-sql/how-window-functions-work/">Next – How Window Functions Work</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

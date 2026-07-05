@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>How to Extract and Load data into a Data Lake</title>
+  <meta name="description" content="Learn how to extract and load data sources like SalesForce, Hubspot, Marketo, etc into a single source.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/data-governance/extract-and-loading-a-lake/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Extract and Load a Lake"/>
+  <meta name="twitter:description" content="Learn how to extract and load data sources like SalesForce, Hubspot, Marketo, etc into a single source."/>
+  <meta name="twitter:url" content="https://dataschool.com/data-governance/extract-and-loading-a-lake/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/data-governance/extract-and-loading-a-lake/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Extract and Load a Lake"
+  <meta property="og:description" content="Learn how to extract and load data sources like SalesForce, Hubspot, Marketo, etc into a single source." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/ETLvsELTCover (1).png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/data-governance/extract-and-loading-a-lake/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "How to Extract and Load data into a Data Lake",
+    "image": "/assets/images/ETLvsELTCover (1).png",
+    "author": {
+        "@type": "Person",
+        "name": "Kostas Pardalis"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/data-governance/extract-and-loading-a-lake/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-30 21:18:14 -0800",
+    "description": "Learn how to extract and load data sources like SalesForce, Hubspot, Marketo, etc into a single source."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/data-governance/" class="smallbook-link hover-link">
+        <img src="/assets/images/cloud-data-management@thumbnail.png" alt="Cover of Cloud Data Management" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/data-governance/" class="book-title">Cloud Data Management</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Introduction" aria-expanded="true" data-target="#Introduction"  class="dropdown-toggle"  data-toggle="collapse" >Introduction</a>
+                  <ul class="list-unstyled collapse " id="Introduction">
+            
+            <li >
+              <a href="/data-governance/introduction-to-modern-data-governance/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/about-this-book/">
+                About this Book
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/what-stage-are-you-at/">
+                What Stage are You at?
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage1-Source" aria-expanded="true" data-target="#Stage1-Source"  class="dropdown-toggle"  data-toggle="collapse" >Stage 1 - source</a>
+                  <ul class="list-unstyled collapse " id="Stage1-Source">
+            
+            <li >
+              <a href="/data-governance/source-data-tools/">
+                Starting with Source Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/source-data-architecture/">
+                Source Data Connections
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/source-data-best-practices/">
+                Source Data Best Practices
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage2-Lake" aria-expanded="true" data-target="#Stage2-Lake"  class="dropdown-toggle"  data-toggle="collapse" >Stage 2 - lake</a>
+                  <ul class="list-unstyled collapse show" id="Stage2-Lake">
+            
+            <li >
+              <a href="/data-governance/why-build-a-data-lake/">
+                Why Build a Data Lake
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/what-warehouse-to-use/">
+                Choosing an Engine
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/data-governance/extract-and-loading-a-lake/">
+                Extract and Load
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-lake-security/">
+                Data Lake Security
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-lake-maintenance/">
+                Data Lake Maintenance
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage3-Warehouse" aria-expanded="true" data-target="#Stage3-Warehouse"  class="dropdown-toggle"  data-toggle="collapse" >Stage 3 - warehouse</a>
+                  <ul class="list-unstyled collapse " id="Stage3-Warehouse">
+            
+            <li >
+              <a href="/data-governance/why-build-a-data-warehouse/">
+                Why Build a Warehouse
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/single-source-of-truth/">
+                Warehouse Architecture
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-security/">
+                Warehouse Security
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/defining-a-data-govenor/">
+                The Data Governor
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-implementation/">
+                Implementing
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-maintenance/">
+                Maintaining
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage4-Mart" aria-expanded="true" data-target="#Stage4-Mart"  class="dropdown-toggle"  data-toggle="collapse" >Stage 4 - mart</a>
+                  <ul class="list-unstyled collapse " id="Stage4-Mart">
+            
+            <li >
+              <a href="/data-governance/democratized-or-centralized/">
+                Democratized or Centralized
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/why-build-data-marts/">
+                Why build marts
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-mart-implementation/">
+                Data Mart Implementation
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-mart-maintenance/">
+                Data Mart Maintenance
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Extras" aria-expanded="true" data-target="#Extras"  class="dropdown-toggle"  data-toggle="collapse" >Extras</a>
+                  <ul class="list-unstyled collapse " id="Extras">
+            
+            <li >
+              <a href="/data-governance/evaluating-data-stack-technologies/">
+                Evaluating Stack Tech
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/etl-vs-elt/">
+                ETL vs ELT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/doing-more-with-your-data-mart/">
+                Doing more with your Data Mart
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/aknowledgements/">
+                Acknowledgements
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/data-governance/extract-and-loading-a-lake/&title=Extract and Load a Lake&summary=Learn+how+to+extract+and+load+data+sources+like+SalesForce%2C+Hubspot%2C+Marketo%2C+etc+into+a+single+source.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/data-governance/extract-and-loading-a-lake/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/data-governance/extract-and-loading-a-lake/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Extract and Load a Lake</h1>
+    <p>
+      <em>Last modified: December 30, 2019</em>
+      
+        <em> • Reading Time: 7 minutes</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>To get data into your Data Lake you will first need to <strong>Extract</strong> the data from the source through SQL or some API, and then <strong>Load</strong> it into the lake.  This process is called Extract and Load - or “EL” for short.</p>
+
+<!--- TODO: Matt - Could use a nice diagram here of the source to lake image with Extract and Load visuals drawn in --->
+
+<p>There are a number of great modern EL vendors (sometimes called ELT vendors) such as <a href="https://fivetran.com/">Fivetran</a>, <a href="https://stitchdata.com">Stitch Data</a> or <a href="https://www.blendo.co">Blendo</a>.</p>
+
+<!--- TODO: Matt - would be great to put the company logos here --->
+
+<p>These EL providers built detailed Extract scripts for the most popular API’s and offer a simple experience for extracting and loading your data into your data lake. The process usually involves the setup of a pipeline where credentials are given for both the destination and the data source and some configuration where light transformation is performed, e.g. selecting what tables and fields to sync, hiding some values for privacy reasons, etc.</p>
+
+<p>The setup can be performed with minimal engineering effort in most cases.</p>
+
+<h2 id="extract-options">Extract Options</h2>
+
+<p>Extraction is the phase of pulling data from a data source, through APIs or SQL. We can do a complete extraction of all data available, or we can do an incremental extraction every time we run a sync. A complete extraction will extract all the data from the data source. An incremental extraction will only extract updated records from the data source.</p>
+
+<h3 id="complete-extraction">Complete Extraction</h3>
+
+<p>A complete extraction is the easiest way since no configuration is required but it has two big disadvantages.</p>
+
+<ol>
+  <li>You end up with a lot of duplicate data in your data lake</li>
+  <li>You increase the complexity of the next steps in your analytics stack</li>
+</ol>
+
+<p>You will have to figure out what data you actually need in the data lake, so it will require more complex logic to do it and more processing.</p>
+
+<h3 id="incremental-extraction">Incremental Extraction</h3>
+
+<p>The preferred alternative is to do incremental extractions. This is more challenging since you need to check for new or updated rows and account for changing schemas. However, it is typically preferred because much less data being processed and fewer updates will need to be made in the data lake. All cloud ELT vendors support incremental extractions from your sources.</p>
+
+<p>The main downside to incremental extraction is deletions in a data source. It’s not easy to detect and implement deletions in the general case. ELT providers do not guarantee consistency under deletions in most cases, in some cases it can be done or it is implemented by the source, e.g. data is never deleted but flagged as <code class="language-plaintext highlighter-rouge">is_deleted</code> instead.</p>
+
+<p>A complete dump would guarantee that you have always an exact replica of the source state. Keep in mind that in analytics this is not important in the general case, but keeping the deleted records might also be something that is required.</p>
+
+<h2 id="load-options">Load Options</h2>
+
+<p>However you extract data from your data sources, you need to decide how these changes will be reflected on your destination. You can push changes through to existing data in the data lake or you can store this new data separate from existing data.</p>
+
+<h3 id="push-changes">Push Changes</h3>
+
+<p>If you are using a database system as a data lake, then you can update the data with the pushed changes. This will end up having a close replica of the data from the source system to your Data Lake and it optimizes storage.</p>
+
+<h3 id="store-separate">Store Separate</h3>
+
+<p>The other way is to save the changes without updating the records. This is pretty much the only way you can do it if you use a file system and don’t want to add a lot of complexity on your data lake. The benefit of doing this is that you have a history of all the changes that happened on your data.</p>
+
+<h2 id="multiple-schemas">Multiple schemas</h2>
+
+<p>Most EL vendors will insert each source into the lake as a new schema or folder if you’re on a file system.  This is ideal as your data will still be organized by source and there is no chance of commonly named tables overwriting each other.</p>
+
+<p>It will mean that when querying across these schemas you’ll need to remember to specify the schema names in addition to the table names.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> 
+<span class="k">FROM</span> <span class="nv">"salesforce"</span><span class="p">.</span><span class="nv">"_user"</span> <span class="k">AS</span> <span class="nv">"SFuser"</span> 
+<span class="k">JOIN</span> <span class="nv">"zendesk"</span><span class="p">.</span><span class="nv">"user"</span> <span class="k">AS</span> <span class="nv">"ZDuser"</span> 
+	<span class="k">ON</span> <span class="nv">"SFuser"</span><span class="p">.</span><span class="nv">"email"</span> <span class="o">==</span> <span class="nv">"ZDuser"</span><span class="p">.</span><span class="nv">"email"</span>
+</code></pre></div></div>
+
+<!--- TODO: Can we draw the source and lake image with some slices (schemas) of the new sources stored inside the lake -->
+
+<h2 id="other-extract-and-load-routes">Other Extract and Load routes</h2>
+
+<h3 id="traditional-etl">Traditional ETL</h3>
+
+<p>For the reasons we’ve outlined <a href="/data-governance/etl-vs-elt/">here we recommend ELT over ETL</a>.  But if you still want to do things the traditional way, with Transformations happening before things are loaded into the Lake you can use products like  <a href="https://www.xplenty.com/">Xplenty</a> or <a href="https://aws.amazon.com/glue/">Amazon Glue</a>.</p>
+
+<!-- TODO: add xplenty and glue logos here -->
+
+<p>If you do this, you’re essentially doing the Lake and Warehouse stages all in one jump and skipping the Lake piece of the recommended stack.  That might sound like a great thing, but it’s important to note that it won’t save you any money or time - in fact it will likely cost more.</p>
+
+<h3 id="diy">DIY</h3>
+
+<p>If you value your time, money, sanity and data integrity don’t DIY your own EL scripts.  If you DIY you will dedicate precious engineering resources to something that can be done at a fraction of the cost and time using a cloud solution. Your data engineers can work on more important data projects related to your overall data infrastructure and product.</p>
+
+<p>Sometimes, you may need to create custom code for a source that’s not widely supported.  If you do need to, please at least use a framework like <a href="https://airflow.apache.org/">Apache AirFlow</a>. The last thing you want is a mess of scripts and cron jobs deployed haphazardly.</p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/kostas-pardalis/">Kostas Pardalis</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/dave/">Dave Fowler</a>
+        ,
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1OTGslZaat0-XI74tzWy6kVDyZ21-4kUVzRLqYH-1nQ4/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/data-governance/what-warehouse-to-use/">Prev – What Engine to Use For a Data Lake</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/data-governance/data-lake-security/">Next – Data Lake Security</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Debugging SQL: Syntax Errors animated with Gifs</title>
+  <meta name="description" content="Learn the most common reasons for SQL errors due to syntax. Spelling errors, Quotation marks, Capitalization, Data Types, and more.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/how-to-teach-people-sql/debugging-sql-syntax-errors/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Syntax Errors"/>
+  <meta name="twitter:description" content="Learn the most common reasons for SQL errors due to syntax. Spelling errors, Quotation marks, Capitalization, Data Types, and more."/>
+  <meta name="twitter:url" content="https://dataschool.com/how-to-teach-people-sql/debugging-sql-syntax-errors/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/how-to-teach-people-sql/debugging-sql-syntax-errors/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Syntax Errors"
+  <meta property="og:description" content="Learn the most common reasons for SQL errors due to syntax. Spelling errors, Quotation marks, Capitalization, Data Types, and more." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/Frame - 2019-09-30T122614.131.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/how-to-teach-people-sql/debugging-sql-syntax-errors/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Debugging SQL: Syntax Errors animated with Gifs",
+    "image": "/assets/images/Frame - 2019-09-30T122614.131.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matt David"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/how-to-teach-people-sql/debugging-sql-syntax-errors/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 16:55:50 -0800",
+    "description": "Learn the most common reasons for SQL errors due to syntax. Spelling errors, Quotation marks, Capitalization, Data Types, and more."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/how-to-teach-people-sql/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/how-to-teach-people-sql@thumbnail.png" alt="Cover of How to Teach People SQL" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/how-to-teach-people-sql/" class="book-title">How to Teach People SQL</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Introduction" aria-expanded="true" data-target="#Introduction"  class="dropdown-toggle"  data-toggle="collapse" >Introduction</a>
+                  <ul class="list-unstyled collapse " id="Introduction">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/introduction/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/why-databases/">
+                Why Databases?
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/accessing-data/">
+                Accessing Data
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#JOINs" aria-expanded="true" data-target="#JOINs"  class="dropdown-toggle"  data-toggle="collapse" >Joins</a>
+                  <ul class="list-unstyled collapse " id="JOINs">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/sql-join-types-explained-visually/">
+                SQL Join Types Explained Visually
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/inner-join-animated/">
+                Inner Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/left-right-join-animated/">
+                Left & Right Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/full-outer-join-animated/">
+                Full Outer Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/union-animated/">
+                Union - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/cross-join-animated/">
+                Cross Join - Animated
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Debugging" aria-expanded="true" data-target="#Debugging"  class="dropdown-toggle"  data-toggle="collapse" >Debugging</a>
+                  <ul class="list-unstyled collapse show" id="Debugging">
+            
+            <li class="active">
+              <a href="/how-to-teach-people-sql/debugging-sql-syntax-errors/">
+                Syntax Errors
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/debugging-sql-0-rows-returned/">
+                0 Rows Returned
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Advanced" aria-expanded="true" data-target="#Advanced"  class="dropdown-toggle"  data-toggle="collapse" >Advanced</a>
+                  <ul class="list-unstyled collapse " id="Advanced">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-sql-aggregations-work/">
+                How Aggregations Work
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-sql-subqueries-work/">
+                How Subqueries Work
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-case-when-works/">
+                How CASE WHEN Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-window-functions-work/">
+                How Window Functions Work
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Appendix" aria-expanded="true" data-target="#Appendix"  class="dropdown-toggle"  data-toggle="collapse" >Appendix</a>
+                  <ul class="list-unstyled collapse " id="Appendix">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/difference-between-where-and-on-in-sql/">
+                Difference between WHERE and ON in SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-to-find-outliers-with-sql/">
+                How to Find Outliers with SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-regex-works-in-sql/">
+                How Regex Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/syntax-conventions/">
+                Syntax Conventions
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/third-normal-form/">
+                Third Normal Form
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/how-to-teach-people-sql/debugging-sql-syntax-errors/&title=Syntax Errors&summary=Learn+the+most+common+reasons+for+SQL+errors+due+to+syntax.+Spelling+errors%2C+Quotation+marks%2C+Capitalization%2C+Data+Types%2C+and+more.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/how-to-teach-people-sql/debugging-sql-syntax-errors/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/how-to-teach-people-sql/debugging-sql-syntax-errors/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Syntax Errors</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>When writing SQL queries there are many places where a small mistype can cause you to receive an error. We will review some of the most common errors due to syntax mistakes. Note: this article will cover how common syntax errors affect Postgresql, if you are using a different type of SQL please check the documentation for these scenarios.</p>
+
+<h2 id="spelling">Spelling</h2>
+
+<p>Misspellings are the most common cause for error in SQL. Unfortunately, SQL will not autocorrect mistyped keywords, tables, columns, or values.</p>
+
+<ul>
+  <li>Check keyword spelling by referring to the documentation for the type of SQL you are using.</li>
+  <li>Check table spelling by referring to the database schema.</li>
+  <li>Check column spelling by referring to the database schema or doing SELECT * FROM the table you are trying to check the column name on. NOTE: putting limit 1 on that query will make it run quickly.</li>
+  <li>Check value spelling by doing SELECT * FROM table GROUP BY the column where the value is in. Then look through this column to find the value you were trying to match.</li>
+</ul>
+
+<h2 id="single-vs-double-quotes">Single vs. double quotes</h2>
+
+<p>A very common, yet not so obvious syntax error you can make is to use the wrong type of quotation marks in your query. This can change the meaning of what you are referencing inside the quotes.</p>
+
+<p>Examine the following two examples:</p>
+
+<p>Single quotes indicate you are referencing that text string</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_1.png" alt="table for query filtered by name='Matt'" /></p>
+
+<p>Double quotes indicate you are referencing a table name or a field.</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_2.png" alt="table for a similar but Unfiltered query" /></p>
+
+<p>Different types of SQL handle a single quote ‘ and a double quote “ differently so if you get an error such as “ERROR: column “age” does not exist,” try switching to using the other type of quotation around the text and if that does not work consult the documentation for that specific type of SQL.</p>
+
+<h2 id="capitalization">Capitalization</h2>
+
+<p>If you reference a column or table and put it in quotes and the capitalization does not match what it is in the database, you will get an error since that table or column does not exist in the database. If you do not use quotes to reference the column or table it will run as expected.</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_3.png" alt="image of the table used for this example" /></p>
+
+<p>For the table above the keyword select, the table facebook, and the column name without quotes can be written as:</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_4.png" alt="Image demonstrating that sql is not picky about capitalization unless &quot; characters are used" /></p>
+
+<p>You can get the same result with whatever use of upper and lower case letter:</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_5.png" alt="Table showing that mismatched capitalization is not an error" /></p>
+
+<p>Table and column with quotes must be written lowercase since that is how they are in the table above:</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_6.png" alt="Example using &quot; characters making capitalization matter" /></p>
+
+<p>There are some capitalization conventions that should be followed though they are not required. The main one being that the keywords for clauses should be written out in all caps. This helps with the readability of the query.</p>
+
+<p>While this capitalization of Select and From will work:</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_7.png" alt="Only first letters of Select and From are capitalized" /></p>
+
+<p>This is all capitalization of SELECT and FROM is preferred:</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_8.png" alt="SELECT and FROM are both completely capitalized. This is best practice." /></p>
+
+<h2 id="data-types">Data Types</h2>
+
+<p>A common syntax error is not using the correct data type when comparing a value in a field with some constant in your query. Sometimes when a number is stored in a database it is stored as a string. This would cause the following query to error.</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_9.png" alt="table with the column data types listed" /></p>
+
+<p>The query below will produce an error because the data type of 27 in the WHERE clause is numeric but the field age is a text data type:</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_10.png" alt="query that will fail due to missing quotation marks around 27" /></p>
+
+<p>To get the answer we expect we must put 27 in single quotes ‘27’</p>
+
+<p><img src="/assets/images/syntax_11-2.png" alt="" /></p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_12.png" alt="output of the query above" /></p>
+
+<h2 id="clause-order">Clause Order</h2>
+
+<p>When writing a SQL query you have to place the clauses you use in this order.</p>
+
+<ol>
+  <li>SELECT</li>
+  <li>FROM</li>
+  <li>JOIN</li>
+  <li>WHERE</li>
+  <li>GROUP BY</li>
+  <li>HAVING</li>
+  <li>ORDER BY</li>
+  <li>LIMIT</li>
+</ol>
+
+<p>You do not need to include all of these clauses in a SQL query but you do need at least the first two. The most common mistake is placing the HAVING clause ahead of the GROUP BY clause. Or placing the WHERE clause after the GROUP BY.</p>
+
+<p>WHERE filters rows before they are grouped.</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_13.png" alt="table being filtered by where clause" /></p>
+
+<p>HAVING filters the newly grouped rows.</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/debugging-syntax/syntax_14.png" alt="table being filtered by having clause" /></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Be careful when writing a SQL query. If you get an error first check for these common syntax errors before delving more deeply into what might be the cause.</p>
+
+<ul>
+  <li>Spelling errors</li>
+  <li>Single vs Double quotes</li>
+  <li>Capitalization</li>
+  <li>Data Types</li>
+  <li>Clause Order</li>
+</ul>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matt/">Matt David</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1gviTDfo7zo2KOm2IlgH4kaa2RB7iE17oOdwIzOdhHKE/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/how-to-teach-people-sql/cross-join-animated/">Prev – Cross Join - Animated</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/how-to-teach-people-sql/debugging-sql-0-rows-returned/">Next – 0 Rows Returned</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

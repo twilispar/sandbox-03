@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Generate Series' in PostgreSQL</title>
+  <meta name="description" content="This article outlines how to use PostgreSQL's Generate_Series() function">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/learn-sql/generate-series/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="PostgreSQL Generate_Series"/>
+  <meta name="twitter:description" content="This article outlines how to use PostgreSQL's Generate_Series() function"/>
+  <meta name="twitter:url" content="https://dataschool.com/learn-sql/generate-series/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/learn-sql/generate-series/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="PostgreSQL Generate_Series"
+  <meta property="og:description" content="This article outlines how to use PostgreSQL's Generate_Series() function" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/learn-sql/extras/genSeries/genSeries_thumbNail.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/learn-sql/generate-series/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Generate Series' in PostgreSQL",
+    "image": "/assets/images/learn-sql/extras/genSeries/genSeries_thumbNail.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matthew Layne"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/learn-sql/generate-series/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 17:07:51 -0800",
+    "description": "This article outlines how to use PostgreSQL's Generate_Series() function"
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/learn-sql/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/learn-sql@thumbnail.png" alt="Cover of Learn SQL" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/learn-sql/" class="book-title">Learn SQL</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#BasicSQL" aria-expanded="true" data-target="#BasicSQL"  class="dropdown-toggle"  data-toggle="collapse" >Basic sql</a>
+                  <ul class="list-unstyled collapse " id="BasicSQL">
+            
+            <li >
+              <a href="/learn-sql/introduction/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/select/">
+                SELECT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/from/">
+                FROM
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/order-by/">
+                ORDER BY
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/limit/">
+                LIMIT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/schema-browsing/">
+                SCHEMA
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/basic-practice/">
+                Practice
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Mid-LevelSQL" aria-expanded="true" data-target="#Mid-LevelSQL"  class="dropdown-toggle"  data-toggle="collapse" >Mid-level sql</a>
+                  <ul class="list-unstyled collapse " id="Mid-LevelSQL">
+            
+            <li >
+              <a href="/learn-sql/where/">
+                WHERE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/operators/">
+                Operators
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/aggregate/">
+                Aggregate
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/group-by/">
+                GROUP BY
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/joins/">
+                JOINs
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/dates/">
+                DATEs
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/mid-level-practice/">
+                Practice
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Extras" aria-expanded="true" data-target="#Extras"  class="dropdown-toggle"  data-toggle="collapse" >Extras</a>
+                  <ul class="list-unstyled collapse show" id="Extras">
+            
+            <li >
+              <a href="/learn-sql/what-is-the-difference-between-union-and-union-all/">
+                What is the difference between UNION and UNION ALL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/exclude-a-column/">
+                Exclude a Column
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/additional-practice/">
+                Additional Practice
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-create-a-copy-of-a-database-in-postgresql/">
+                How to Create a Copy of a Database in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-export-data-to-csv-or-excel/">
+                Export CSV
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-replace-nulls-with-0s/">
+                How to Replace Nulls with 0s in SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-start-a-postgresql-server-on-mac-os-x/">
+                How to Start a PostgreSQL Server on Mac OS X
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/importing-data-from-csv-in-postgresql/">
+                Importing Data from CSV in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/insert-multiple-rows/">
+                Insert multiple rows
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/list-the-tables-in-sqlite-opened-with-attach/">
+                List the tables in SQLite opened with ATTACH
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/meta-commands-in-psql/">
+                Meta commands in PSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/outputting-query-results-to-files-with-o/">
+                Outputting Query Results to Files with \o
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/random-sequences/">
+                Random Sequences
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/show-tables-in-postgres/">
+                Show Tables in Postgres
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/sql-cheat-sheet/">
+                SQL Cheat Sheet
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/update-with-join-in-sql/">
+                UPDATE with JOIN in SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/using-alter-in-postgresql/">
+                Using ALTER in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/5-redshift-sql-shortcuts/">
+                5 Redshift SQL shortcuts
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/and-or-boolean-logic/">
+                AND OR Boolean Logic
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/conditional-logic/">
+                Conditional Logic
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/copying-data-between-tables/">
+                Copying Data Between Tables
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/drop-all-tables-postgres/">
+                Drop all tables Postgres
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/export-to-csv-from-psql/">
+                Export to CSV with \copy
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/find-duplicates/">
+                Find Duplicates
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/learn-sql/generate-series/">
+                PostgreSQL Generate_Series
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/hierarchical-data-in-sql/">
+                Hierarchical data in SQL
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/learn-sql/generate-series/&title=PostgreSQL Generate_Series&summary=This+article+outlines+how+to+use+PostgreSQL%27s+Generate_Series%28%29+function&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/learn-sql/generate-series/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/learn-sql/generate-series/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">PostgreSQL Generate_Series</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <h1 id="generate-a-series-in-postgres">Generate a Series in Postgres</h1>
+
+<pre><code class="language-code">generate_series([start], [stop], [{optional}step/interval]);
+</code></pre>
+
+<p>Generate a series of numbers in postgres by using the <code class="language-plaintext highlighter-rouge">generate_series</code> function.</p>
+
+<p>The function requires either 2 or 3 inputs. The first input, [start], is the starting point for generating your series. [stop] is the value that the series will stop at. The series will stop once the values pass the [stop] value. The third value determines how much the series will increment for each step the default it 1 for number series</p>
+
+<p>For example:</p>
+
+<sqlbox initial="SELECT * FROM generate_series(1,10);"></sqlbox>
+
+<p>Will output the rows: 1,2,3,4,5,6,7,8,9,10</p>
+
+<p>Let’s look at what happens when we start with a number that has a decimal value:</p>
+
+<sqlbox initial="SELECT * FROM generate_series(0.5, 5);"></sqlbox>
+
+<p>Will output the rows: 0.5,1.5,2.5,3.5,4.5</p>
+
+<p>Note that the value starts at 0.5, but still increments by 1. In order to change the increment, we have to state explicitly how much to increment by as a third option in the function:</p>
+
+<sqlbox initial="SELECT * FROM generate_series(1,10,2);"></sqlbox>
+
+<p>This will output the rows: 1,3,5,7,9</p>
+
+<h2 id="timestamps">Timestamps</h2>
+
+<p>Generate_series() will also work on the timestamp datatype. This may need an explicit cast to work.</p>
+
+<p>For example, to create a list of timestamps from <code class="language-plaintext highlighter-rouge">2018-04-07 00:00</code> to <code class="language-plaintext highlighter-rouge">2018-04-10 12:00</code> with one timestamp every 6 hours, the following SQL query can be run:</p>
+
+<sqlbox initial="SELECT * FROM generate_series(
+
+'2008-04-07 00:00'::timestamp,
+
+'2008-04-10 12:00',
+
+'6 hours');"></sqlbox>
+
+<p>Note the <code class="language-plaintext highlighter-rouge">::timestamp</code>. This is an explicit cast to the timestamp data type. The reason for this is because without the cast the data type is too ambiguous. This results in an error being thrown when the query is run:</p>
+
+<p><img src="/assets/images/learn-sql/extras/genSeries/genSeries_1.png" alt="This image shows the failure of the query due to an ambiguous type" /></p>
+
+<p>This error can be avoided by adding the typecast. This will only happen on certain inputs which are ambiguous in terms of data type.</p>
+
+<h2 id="interval-format">Interval Format</h2>
+
+<p>Notice the use of ‘6 hours’ for the third option in the image above. When generating a time series there are additional options for how you define the way the series increments.</p>
+
+<p>The 3rd input, the interval, follows the format of <code class="language-plaintext highlighter-rouge">[quantity] [type] [{optional} direction]</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">[quantity]</code> =&gt; 6</p>
+
+<p><code class="language-plaintext highlighter-rouge">[type]</code> =&gt; hours</p>
+
+<p><code class="language-plaintext highlighter-rouge">[{optional}direction]</code> =&gt; We didn’t put anything here because the default is positive.</p>
+
+<p>In the case of <code class="language-plaintext highlighter-rouge">6 hours</code>, the quantity is 6, the type is hours, and the direction is omitted so it defaults to positive. If you want the same list but opposite order you can change the interval to ‘6 hours ago’.</p>
+
+<p>Adding <code class="language-plaintext highlighter-rouge">ago</code> specifies that you want the timestamps to change by 6 hours in the <strong>negative</strong> direction. This will however return 0 rows unless you reorder your start and stop values.</p>
+
+<p>The interval can also be created using a shorthand form. Some of the time types can be abbreviated as shown by this table:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Type</th>
+      <th style="text-align: left">Abbreviations</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Millennium</td>
+      <td style="text-align: left">-</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Century</td>
+      <td style="text-align: left">-</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Decade</td>
+      <td style="text-align: left">-</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Year</td>
+      <td style="text-align: left">Y</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Month</td>
+      <td style="text-align: left">M</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Week</td>
+      <td style="text-align: left">W</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Day</td>
+      <td style="text-align: left">D</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Hour</td>
+      <td style="text-align: left">H</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Minute</td>
+      <td style="text-align: left">M</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Second</td>
+      <td style="text-align: left">S</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Millisecond</td>
+      <td style="text-align: left">-</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Microsecond</td>
+      <td style="text-align: left">-</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In order to use the abbreviations we can create the interval using a shorthand notation. This follows the following format:</p>
+
+<p><code class="language-plaintext highlighter-rouge">P [Quantity] [date unit] ... T [quantity] [time unit] … ;</code></p>
+
+<p>The P is used to show that the interval is starting and the T indicates that the date (year/month/day) portion of the interval is over and this is now the time (hours/minutes/seconds) portion of the interval</p>
+
+<p>Using this format, an interval of 5 days and 3 hours would be:</p>
+
+<p><code class="language-plaintext highlighter-rouge">P5DT3H</code></p>
+
+<p>An interval of 9 years 8 months 7 days 6 hours 5 minutes and 4 seconds would be:</p>
+
+<p><code class="language-plaintext highlighter-rouge">P9Y8M7DT6H5M4S</code></p>
+
+<p>To write an interval of just 6 hours use:</p>
+
+<p><code class="language-plaintext highlighter-rouge">PT6H</code></p>
+
+<p>While this shorthand is much faster to write, it does sacrifice some of its readability to achieve this.</p>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>Standard form: <code class="language-plaintext highlighter-rouge">generate_series([start], [stop], [{optional}step/interval]);</code></li>
+  <li>generate_series() can take several different sets of inputs
+    <ul>
+      <li>Can be Numeric or Timestamp data types</li>
+      <li>If start/stop are timestamps:
+        <ul>
+          <li>Use an explicit type cast</li>
+          <li>Use an interval (e.g. 6 hours or 1 week ago)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Step defaults to 1 for numeric unless otherwise specified.</li>
+  <li>Time interval can be written in shorthand:
+    <ul>
+      <li>Format: P [quantity] [unit] … T [quantity] [unit] …;</li>
+      <li>P5DT6H7M = 5 days 6 hours 7 minutes</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="resources">Resources</h3>
+
+<p><a href="http://www.postgresqltutorial.com/postgresql-interval/" title="http://www.postgresqltutorial.com/postgresql-interval/">http://www.postgresqltutorial.com/postgresql-interval/</a></p>
+
+<p><a href="https://www.postgresql.org/docs/current/functions-srf.html" title="https://www.postgresql.org/docs/current/functions-srf.html">https://www.postgresql.org/docs/current/functions-srf.html</a></p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matthew-layne/">Matthew Layne</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1EQcE8NYHvWubJ7bO0b75ng_BogFkCkKqOs3E2EFduPs/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/learn-sql/find-duplicates/">Prev – Find Duplicates</a> -->
+      
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+  <!-- Needed for SQLBox - Man, there's just a lot needed here. -->
+  <link rel="stylesheet" href="/assets/sqlbox/codemirror/codemirror.css">
+  <link rel="stylesheet" href="/assets/sqlbox/codemirror/midnight.css">
+
+  <script src="/assets/sqlbox/codemirror/codemirror.js"></script>
+  <script src="/assets/sqlbox/codemirror/codemirror-mode-sql.js"></script>
+  <script src="/assets/sqlbox/jquery.form.min.js"></script>
+
+  <script type="text/javascript">
+    // Data needed for sqlbox.js to work
+    $.sqlboxSettings = {
+      dbType: 'PostgreSQL',
+      dbName: 'herokuchinook',
+      action: 'https://sqlbox.herokuapp.com/'
+    };
+  </script>
+  <script type="text/javascript" src="/assets/sqlbox/sqlbox.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+  <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+  <!-- End for SQLBox -->
+
+</body>
+</html>

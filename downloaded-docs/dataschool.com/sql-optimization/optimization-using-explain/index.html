@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Optimization using EXPLAIN ANALYZE in Postgres</title>
+  <meta name="description" content="The EXPLAIN shows the query plan for SQL queries in Postgres. Learn how to interpret the results from EXPLAIN and use it to optimize your SQL queries. ">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/sql-optimization/optimization-using-explain/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Optimization with EXPLAIN ANALYZE"/>
+  <meta name="twitter:description" content="The EXPLAIN shows the query plan for SQL queries in Postgres. Learn how to interpret the results from EXPLAIN and use it to optimize your SQL queries. "/>
+  <meta name="twitter:url" content="https://dataschool.com/sql-optimization/optimization-using-explain/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/sql-optimization/optimization-using-explain/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Optimization with EXPLAIN ANALYZE"
+  <meta property="og:description" content="The EXPLAIN shows the query plan for SQL queries in Postgres. Learn how to interpret the results from EXPLAIN and use it to optimize your SQL queries. " />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_4.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/sql-optimization/optimization-using-explain/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Optimization using EXPLAIN ANALYZE in Postgres",
+    "image": "/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_4.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matthew Layne"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/sql-optimization/optimization-using-explain/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-07-17 13:01:56 -0700",
+    "description": "The EXPLAIN shows the query plan for SQL queries in Postgres. Learn how to interpret the results from EXPLAIN and use it to optimize your SQL queries. "
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/sql-optimization/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/sql-optimization@thumbnail.png" alt="Cover of SQL Optimization" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/sql-optimization/" class="book-title">SQL Optimization</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#QueryOptimizations" aria-expanded="true" data-target="#QueryOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Query optimizations</a>
+                  <ul class="list-unstyled collapse " id="QueryOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/what-is-a-query-plan/">
+                What is a Query Plan
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/order-of-a-sql-query/">
+                Order of a SQL Query
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/optimize-your-sql-query/">
+                Optimize your SQL Query
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ColumnandTableOptimizations" aria-expanded="true" data-target="#ColumnandTableOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Column and table optimizations</a>
+                  <ul class="list-unstyled collapse show" id="ColumnandTableOptimizations">
+            
+            <li class="active">
+              <a href="/sql-optimization/optimization-using-explain/">
+                Optimization with EXPLAIN ANALYZE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/how-indexing-works/">
+                How Indexing Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/partial-indexes/">
+                Partial Indexes
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/multicolumn-indexes/">
+                Multicolumn Indexes
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ModelingData" aria-expanded="true" data-target="#ModelingData"  class="dropdown-toggle"  data-toggle="collapse" >Modeling data</a>
+                  <ul class="list-unstyled collapse " id="ModelingData">
+            
+            <li >
+              <a href="/sql-optimization/start-modeling-data/">
+                Start Modeling Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/scheduling-dbt/">
+                Scheduling Modeling
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/views/">
+                Views
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Databases" aria-expanded="true" data-target="#Databases"  class="dropdown-toggle"  data-toggle="collapse" >Databases</a>
+                  <ul class="list-unstyled collapse " id="Databases">
+            
+            <li >
+              <a href="/sql-optimization/optimizing-data-queries-with-redshift/">
+                Redshift Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/bigquery-optimization/">
+                BigQuery Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/snowflake/">
+                Snowflake Optimization
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/sql-optimization/optimization-using-explain/&title=Optimization with EXPLAIN ANALYZE&summary=The+EXPLAIN+shows+the+query+plan+for+SQL+queries+in+Postgres.+Learn+how+to+interpret+the+results+from+EXPLAIN+and+use+it+to+optimize+your+SQL+queries.+&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/sql-optimization/optimization-using-explain/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/sql-optimization/optimization-using-explain/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article class="img-border-on-default">
+  <header class="mb-4">
+    <h1 class="title">Optimization with EXPLAIN ANALYZE</h1>
+    <p>
+      <em>Last modified: July 17, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>Querying postgres databases, when done properly, can result in extremely efficient results and provide powerful insights. Sometimes however, queries are written in less than optimal ways, causing slow response times. Because of this, it is important to be able to analyze how queries execute and find the most optimized ways to run them.</p>
+
+<p>One method for optimizing queries is to examine the <a href="https://dataschool.com/learn/what-is-a-query-plan">query plan</a> to see how a query is executing and adjust the query to be more efficient. Using the query plan can provide many insights into why a query is running inefficiently.</p>
+
+<h2 id="explain-and-explain-analyze">Explain and Explain Analyze</h2>
+
+<p>In postgreSQL, the query plan can be examined using the <strong><em>EXPLAIN</em></strong> command:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">EXPLAIN</span> <span class="k">SELECT</span> <span class="n">seqid</span> <span class="k">FROM</span> <span class="n">traffic</span> <span class="k">WHERE</span> <span class="n">serial_id</span><span class="o">&lt;</span><span class="mi">21</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_1.png" alt="Image showing an example query plan using explain" /></p>
+
+<p>This command shows the generated query plan but does not run the query. In order to see the results of actually executing the query, you can use the <strong><em>EXPLAIN ANALYZE</em></strong> command:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">EXPLAIN</span> <span class="k">ANALYZE</span> <span class="k">SELECT</span> <span class="n">seqid</span> <span class="k">FROM</span> <span class="n">traffic</span> <span class="k">WHERE</span> <span class="n">serial_id</span><span class="o">&lt;</span><span class="mi">21</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_2.png" alt="Image showing an example query plan using explain analyze" /></p>
+
+<p><strong>Warning:</strong> Adding <strong><em>ANALYZE</em></strong> to <strong><em>EXPLAIN</em></strong> will both run the query and provide statistics. This means that if you use <strong><em>EXPLAIN ANALYZE</em></strong> on a <strong><em>DROP</em></strong> command (Such as EXPLAIN ANALYZE DROP TABLE table), the specified values will be dropped after the query executes.</p>
+
+<h2 id="the-data-used">The Data Used</h2>
+
+<p>The data that is being used to demonstrate optimization is a table of data regarding traffic violations which can be found <a href="https://catalog.data.gov/dataset/traffic-violations-56dda">here</a>. It was <a href="https://dataschool.com/learn/importing-from-csv-psql">imported</a> from the csv file available for download and <a href="https://dataschool.com/learn/alter-in-postgresql">altered</a> to have a SERIAL row named serial_id. The details of the table are shown here:</p>
+
+<p>\d+ traffic
+<img src="/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_3.png" alt="Shows a table of all columns, types, and rules for the table used" /></p>
+
+<h2 id="indexes">Indexes</h2>
+
+<p><a href="https://dataschool.com/learn/how-indexing-works">Indexes</a> are vital to efficiency in SQL. They can dramatically improve query speed because it changes the query plan to a much faster method of search. It is important to use them for heavily queried columns.</p>
+
+<p>For example, an index on the serial_id column in the sample data can make a large difference in execution time. Before adding an index, executing the following query would take up to 13 seconds as shown below:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">EXPLAIN</span> <span class="k">ANALYZE</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">traffic</span> <span class="k">WHERE</span> <span class="n">serial_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_4.png" alt="shows a query plan and highlights the cost, execution time, and the method used" /></p>
+
+<p>13 seconds to return a single row on a database of this size is definitely a suboptimal result. In the query plan we can see that the query is running a parallel sequential scan on the <em>entire</em> table which is inefficient. This operation has a high start up time (1000ms) and execution time (13024ms).</p>
+
+<p>A parallel sequential scan can be avoided by creating an index and analyzing it as shown:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_serial_id</span> <span class="k">ON</span> <span class="n">traffic</span><span class="p">(</span><span class="n">serial_id</span><span class="p">);</span>
+<span class="k">ANALYZE</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_5.png" alt="Shows creating and analyzing an index as well as its impact on execution time" /></p>
+
+<p>This shows that when using an index, the execution time drops from 13024.774 ms to 0.587 ms (that is a 99.99549<strong>%</strong> decrease in time). This is a dramatic decrease in execution time. The planning time does rise by 3.72 ms because the query planner needs to access the index and decide if using it would be efficient before it can start the execution. However the rise in planning time is negligible compared to the change in execution time.</p>
+
+<p>Not all indexes will have the same amount of impact on queries. It is important to use explain analyze before and after implementing an Index to see what the impact was. Read Blake Barnhill’s <a href="https://dataschool.com/learn/how-indexing-works">article on indexing</a> for more information.</p>
+
+<p>Indexes are not always the answer. There will be times when a sequential scan is better than an index scan. This is the case for small tables, large data types, or tables that already have enough indexes to the specified query.</p>
+
+<h3 id="partial-indexes">Partial Indexes</h3>
+
+<p>Sometimes it is best to use a partial index as opposed to a full index. A partial index is an index that stores ordered data on the results of a query rather than a column. Partial indexes are best for when you want a specific filter to operate quickly. For example, in this table, there are many types of vehicles that are recorded:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="n">vehicletype</span> <span class="k">FROM</span> <span class="n">traffic</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">vehicletype</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_6.png" alt="table of all distinct vehicle types" /></p>
+
+<p>Many studies are done on motorcycle safety. For these studies, it would be wise to use a partial index on only motorcycles as opposed to an index which also includes unneeded information about other vehicle types. To create a partial index that only indexes rows involving motorcycles, the following query can be run:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">INDEX</span> <span class="n">idx_motorcycle</span> <span class="k">ON</span> <span class="n">traffic</span><span class="p">(</span><span class="n">vehicletype</span><span class="p">)</span>
+<span class="k">WHERE</span> <span class="n">vehicle</span> <span class="o">=</span> <span class="s1">'01 - Motorcycle'</span><span class="p">;</span>
+<span class="k">ANALYZE</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_7.png" alt="shows the query above being run" /></p>
+
+<p>This index will only store data relating to motorcycle violations, which will be much faster to search through than searching through the entire table.</p>
+
+<p>Here are a few final tips about indexing:</p>
+
+<ol>
+  <li>Remember to <strong><em>ANALYZE</em></strong>: it is important to run <strong><em>ANALYZE;</em></strong> after creating an index in order to update the statistics on the index. This lets the query planner make the most informed decision on when to use an index)</li>
+  <li>Remember to <strong><em>VACUUM</em></strong>: It is important to run <strong><em>VACUUM ANALYZE</em></strong> after significant modifications to the table. This command will clean up the index’s statistics, throwing away old values and adding new values. This command will run automatically periodically, however it is useful to run this command after heavy modifications for quicker results.</li>
+  <li>Make sure your query can use the index: avoid using <a href="https://dataschool.com/learn/how-regex-in-sql-works">Regex patterns</a> with a wild card at the beginning such as <strong><em>LIKE ‘%[pattern]%’</em></strong> this makes the query planner unable to use an index. You can use Regex patterns with wildcards at the end such as <strong><em>LIKE ‘[pattern]%’</em></strong>.</li>
+</ol>
+
+<h2 id="data-types">Data Types</h2>
+
+<p>Another important aspect of efficiency is the data types being used. Data types can have a large impact on performance.</p>
+
+<p>Different data types can have drastically different storage sizes as shown by this table from the postgreSQL documentation on <strong>numeric types</strong>:</p>
+
+<p><img src="/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_8.png" alt="table of different numeric data types in postgreSQL" /></p>
+
+<p>The dataset of traffic violations contains 1,521,919 rows in it (found using the <strong>COUNT</strong> <a href="https://chartio.com/learn/sql/aggregate/">aggregation</a>). We need to consider the data type that requires the least amount of space that can store the data we want. We added a serial column to the data, which starts at 0 and increments by one each row. Since the data is 1,521,919 rows long we need a data type that can store at least that amount of data:</p>
+
+<ul>
+  <li><strong>smallserial</strong> is the best choice If the numbers of rows is under 32768 rows.</li>
+  <li><strong>serial</strong> is the best choice if the number of rows is more than small serial’s max or less than bigserials minimum.</li>
+  <li><strong>bigserial</strong> is the appropriate choice if there are more than 2,147,483,647 rows.</li>
+</ul>
+
+<p>1,521,919 is greater than the <strong>smallserial</strong> limit (32,768) and less than the limit for <strong>serial</strong> (2,147,483,647), so <strong>serial</strong> should be used.</p>
+
+<p>If we chose <strong>bigserial</strong> for the column, it would use twice the amount of memory needed to store each value because every value that is bigserial is stored as 8 bytes instead of 4 bytes for serial. While this is not terribly significant for very small tables on tables at the size of <em>traffic</em> or larger, this can make a large difference. In the traffic data set this would be an extra 6,087,676 bytes (6MB). While this is not too significant, it does impact efficiency of scans and inserts. The same principle applies to larger data types as well such as char(n), text data types, date/time types etc.</p>
+
+<p>An example of this is, if a copy of traffic is created where <strong>serial</strong> is replaced with <strong>bigserial</strong>, then scan times rise. We can see this by comparing EXPLAIN ANALYZE results:</p>
+
+<p>Results from Original Table:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">EXPLAIN</span> <span class="k">ANALYZE</span> <span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">traffic</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_9.png" alt="shows query plan on traffic aggregate" /></p>
+
+<p>Results from Copy:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">EXPLAIN</span> <span class="k">ANALYZE</span> <span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">traffic2</span><span class="p">;</span>
+</code></pre></div></div>
+<p><img src="/assets/images/sql-optimization/optimizationUsingExplainAnalyze/optimizeUsingExplain_10.png" alt="shows query plan on traffic2 aggregate" /></p>
+
+<p>As we can see from the images above, the time to aggregate on the original table is 197 ms or 0.2 seconds. The time to aggregate on the inefficient copy is 1139 ms or 1.1 seconds (5.5 times slower). This example clearly shows that data types can make a large impact on efficiency.</p>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>EXPLAIN ANALYZE is a way to see exactly how your query is performing.</li>
+  <li>Indexes
+    <ul>
+      <li>Best when created on unique ordered values</li>
+      <li>Remember to ANALYZE after creating</li>
+      <li>Remember to VACUUM ANALYZE</li>
+      <li>Remember to write queries so that indexes can be used (e.g. use: LIKE ‘string%’ Don’t use: LIKE ‘%string%’)</li>
+    </ul>
+  </li>
+  <li>Partial Indexes
+    <ul>
+      <li>Can be used for frequently queried subsections of a table</li>
+    </ul>
+  </li>
+  <li>Data Types
+    <ul>
+      <li>Ensure that the smallest data type is used
+        <ul>
+          <li>Be careful of this on tables with high throughput. Tables may grow past the data type’s size which will cause an error.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="references">References:</h3>
+
+<ol>
+  <li><a href="https://thoughtbot.com/blog/postgresql-performance-considerations" title="https://thoughtbot.com/blog/postgresql-performance-considerations">https://thoughtbot.com/blog/postgresql-performance-considerations</a></li>
+  <li><a href="https://statsbot.co/blog/postgresql-query-optimization/" title="https://statsbot.co/blog/postgresql-query-optimization/">https://statsbot.co/blog/postgresql-query-optimization/</a></li>
+  <li><a href="https://www.sentryone.com/white-papers/data-type-choice-affects-database-performance" title="https://www.sentryone.com/white-papers/data-type-choice-affects-database-performance">https://www.sentryone.com/white-papers/data-type-choice-affects-database-performance</a></li>
+</ol>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matthew-layne/">Matthew Layne</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        ,
+      
+        
+        
+        <a href="/people/blake/">Blake Barnhill</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1nWKtuIgW_cjeYTvKDv8QabP9IFaWR46hK5ELYFCwM90/edit#heading=h.odjivoxapqnt" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/optimize-your-sql-query/">Prev – Optimize your SQL Query</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/how-indexing-works/">Next – Indexing</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>How to Maintain a Data Mart</title>
+  <meta name="description" content="Learn Best Practices for Maintaining a a Data Mart, such as handling errors and incorporating new data sources.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/data-governance/data-mart-maintenance/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Data Mart Maintenance"/>
+  <meta name="twitter:description" content="Learn Best Practices for Maintaining a a Data Mart, such as handling errors and incorporating new data sources."/>
+  <meta name="twitter:url" content="https://dataschool.com/data-governance/data-mart-maintenance/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/data-governance/data-mart-maintenance/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Data Mart Maintenance"
+  <meta property="og:description" content="Learn Best Practices for Maintaining a a Data Mart, such as handling errors and incorporating new data sources." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/OutlierDataMaintenance.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/data-governance/data-mart-maintenance/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "How to Maintain a Data Mart",
+    "image": "/assets/images/OutlierDataMaintenance.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matt David"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/data-governance/data-mart-maintenance/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-10-29 14:00:24 -0700",
+    "description": "Learn Best Practices for Maintaining a a Data Mart, such as handling errors and incorporating new data sources."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/data-governance/" class="smallbook-link hover-link">
+        <img src="/assets/images/cloud-data-management@thumbnail.png" alt="Cover of Cloud Data Management" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/data-governance/" class="book-title">Cloud Data Management</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Introduction" aria-expanded="true" data-target="#Introduction"  class="dropdown-toggle"  data-toggle="collapse" >Introduction</a>
+                  <ul class="list-unstyled collapse " id="Introduction">
+            
+            <li >
+              <a href="/data-governance/introduction-to-modern-data-governance/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/about-this-book/">
+                About this Book
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/what-stage-are-you-at/">
+                What Stage are You at?
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage1-Source" aria-expanded="true" data-target="#Stage1-Source"  class="dropdown-toggle"  data-toggle="collapse" >Stage 1 - source</a>
+                  <ul class="list-unstyled collapse " id="Stage1-Source">
+            
+            <li >
+              <a href="/data-governance/source-data-tools/">
+                Starting with Source Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/source-data-architecture/">
+                Source Data Connections
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/source-data-best-practices/">
+                Source Data Best Practices
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage2-Lake" aria-expanded="true" data-target="#Stage2-Lake"  class="dropdown-toggle"  data-toggle="collapse" >Stage 2 - lake</a>
+                  <ul class="list-unstyled collapse " id="Stage2-Lake">
+            
+            <li >
+              <a href="/data-governance/why-build-a-data-lake/">
+                Why Build a Data Lake
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/what-warehouse-to-use/">
+                Choosing an Engine
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/extract-and-loading-a-lake/">
+                Extract and Load
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-lake-security/">
+                Data Lake Security
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-lake-maintenance/">
+                Data Lake Maintenance
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage3-Warehouse" aria-expanded="true" data-target="#Stage3-Warehouse"  class="dropdown-toggle"  data-toggle="collapse" >Stage 3 - warehouse</a>
+                  <ul class="list-unstyled collapse " id="Stage3-Warehouse">
+            
+            <li >
+              <a href="/data-governance/why-build-a-data-warehouse/">
+                Why Build a Warehouse
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/single-source-of-truth/">
+                Warehouse Architecture
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-security/">
+                Warehouse Security
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/defining-a-data-govenor/">
+                The Data Governor
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-implementation/">
+                Implementing
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-warehouse-maintenance/">
+                Maintaining
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Stage4-Mart" aria-expanded="true" data-target="#Stage4-Mart"  class="dropdown-toggle"  data-toggle="collapse" >Stage 4 - mart</a>
+                  <ul class="list-unstyled collapse show" id="Stage4-Mart">
+            
+            <li >
+              <a href="/data-governance/democratized-or-centralized/">
+                Democratized or Centralized
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/why-build-data-marts/">
+                Why build marts
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/data-mart-implementation/">
+                Data Mart Implementation
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/data-governance/data-mart-maintenance/">
+                Data Mart Maintenance
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Extras" aria-expanded="true" data-target="#Extras"  class="dropdown-toggle"  data-toggle="collapse" >Extras</a>
+                  <ul class="list-unstyled collapse " id="Extras">
+            
+            <li >
+              <a href="/data-governance/evaluating-data-stack-technologies/">
+                Evaluating Stack Tech
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/etl-vs-elt/">
+                ETL vs ELT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/doing-more-with-your-data-mart/">
+                Doing more with your Data Mart
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-governance/aknowledgements/">
+                Acknowledgements
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/data-governance/data-mart-maintenance/&title=Data Mart Maintenance&summary=Learn+Best+Practices+for+Maintaining+a+a+Data+Mart%2C+such+as+handling+errors+and+incorporating+new+data+sources.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/data-governance/data-mart-maintenance/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/data-governance/data-mart-maintenance/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Data Mart Maintenance</h1>
+    <p>
+      <em>Last modified: October 29, 2019</em>
+      
+        <em> • Reading Time: 6 minutes</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>Now that you have Data Marts set up, you will need ongoing maintenance to get the most out of your data. The first step is to establish a mayor per mart that will be responsible for carrying out the maintenance tasks for their mart:</p>
+
+<ul>
+  <li>Communicate and educate the team</li>
+  <li>Identify issues</li>
+  <li>Identify new needs</li>
+</ul>
+
+<h2 id="establish-mart-mayors">Establish Mart Mayors</h2>
+
+<p>This role is similar to the Data Governor for the Data Warehouse. Data Governors delegate down to Mayors, who in turn, take care of Governor tasks at the mart level. Mayors, therefore, communicate with and educate the team using their mart. They are responsible for identifying issues in the data that exist in their mart. They also should be the ones creating requests to get more data sources or tables added to their mart.</p>
+
+<h2 id="an-ideal-mayor">An Ideal Mayor</h2>
+
+<h3 id="communicate-and-educate-team">Communicate and educate team</h3>
+
+<p>Different teams have different needs, but some common threads include teaching SQL skills or how to use your BI tool. Mayors should document and share data quirks that show up in common queries. Note, however, that you should try to address these quirks with modeling at the Data Warehouse stage.</p>
+
+<p>We wrote a book on <a href="https://dataschool.com/how-to-teach-people-sql/">how to teach SQL</a> if you need assistance in <a href="https://dataschool.com/how-to-teach-people-sql/sql-join-types-explained-visually/">explaining how JOINs</a>, <a href="https://dataschool.com/how-to-teach-people-sql/how-sql-aggregations-work/">Aggregations</a>, or <a href="https://dataschool.com/how-to-teach-people-sql/how-sql-subqueries-work/">subqueries work</a>.</p>
+
+<h3 id="identify-issues">Identify issues</h3>
+
+<p>There are two types of issues you will need to investigate as a Mayor of a Data Mart.</p>
+
+<ul>
+  <li>Data that doesn’t make sense</li>
+  <li>Common data errors</li>
+</ul>
+
+<h4 id="data-that-doesnt-make-sense">Data that doesn’t make sense</h4>
+
+<h5 id="spike">Spike</h5>
+
+<p>Something to pay attention to are numbers that are much different from the day before, but not caused by any changes on your end. If traffic to your website doubles in a day, it is likely caused by something and is not just a fluke. The spike may have been caused by a new marketing campaign, a bug, or potentially a Google search algorithm update. You should explore these possibilities in that order.</p>
+
+<p><img src="/assets/images/OutlierDataMaintenanceSignal.png" alt="" /></p>
+
+<h5 id="no-spike">No Spike</h5>
+
+<p>Another point of interest are numbers that are not changing even though changes have been made. If you launched a new marketing campaign and the numbers are not going up, that could be due to a bug or poor campaign performance. They should be investigated in that order. Often the tracking was not set up correctly or the link in the advertisement was going to the wrong place.</p>
+
+<p><img src="/assets/images/AnnotationMaintenance.png" alt="DAta Mart Maintenance Annotation" title="Annotate data" /></p>
+
+<h5 id="conflicting-numbers">Conflicting numbers</h5>
+
+<p>Sometimes metrics can be showing conflicting numbers even though they are measuring the same thing. If you see the number of new trials in HubSpot and your production database are different, the rule of thumb is to trust the data source closest to the event that is being tracked. In this case, it would be production.</p>
+
+<p><img src="/assets/images/ConflictingMetrics.png" alt="Metrics that are different from different people" title="Conflicting Metrics" /></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">COUNT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="k">USER</span>
+<span class="k">WHERE</span> <span class="n">Trial_Start</span> <span class="o">&gt;</span> <span class="n">NOW</span><span class="p">()::</span><span class="nb">date</span> <span class="o">-</span> <span class="mi">7</span> 
+	<span class="k">AND</span> <span class="n">Email</span> <span class="o">!=</span> <span class="err">“</span><span class="o">%</span><span class="n">chartio</span><span class="p">.</span><span class="n">com</span><span class="err">”</span>
+</code></pre></div></div>
+
+<p>vs.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">COUNT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="k">USER</span>
+<span class="k">WHERE</span> <span class="n">Trial_Start</span> <span class="o">&gt;</span> <span class="n">NOW</span><span class="p">()::</span><span class="nb">date</span> <span class="o">-</span> <span class="mi">7</span>
+</code></pre></div></div>
+
+<p>Oftentimes people’s calculation of a metric will differ because of the following reasons: They are calculating it based on a different formula, the data source they are using is different, the data is being filtered differently, or there is an error in their calculation.</p>
+
+<h4 id="common-data-errors">Common data errors</h4>
+
+<ul>
+  <li>New field or value not cleaned (nulls, encoded, wrong format, etc.)</li>
+  <li>No new data</li>
+  <li>All queries on a data source erroring out</li>
+  <li>Performance</li>
+</ul>
+
+<h5 id="new-field-or-value-not-cleaned">New field or value not cleaned</h5>
+
+<p>You will likely notice when there is a new column in one of your views that is not very clear. You should raise this to the Data Governor so that they can apply the necessary cleaning to it at the Data Warehouse stage. Avoid doing additional cleaning at the Mart level because others may need this field as well. Having a single version of it helps to make sure analyses are consistent.</p>
+
+<p><img src="/assets/images/NewField.png" alt="Bad naming for new field" title="New Field" /></p>
+
+<p>This can also happen when a new option is added to a field and it is encoded in an unreadable way. Follow the same process to get it updated at the Data Warehouse level.</p>
+
+<h5 id="no-new-data">No new data</h5>
+
+<p>If your query stops producing data after a specific date, you will need to investigate. This can be caused by a bug, a field being renamed, or the data source changing. This is more common than you would think. For instance, if you update a URL the data associated with the previous name will cut off. You can work around this within your SQL query.</p>
+
+<p><img src="/assets/images/NoNewData.png" alt="" /></p>
+
+<p>For example, when Chartio moved its URL from Chart.io to Chartio.com we needed to use:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span>
+<span class="k">CASE</span> <span class="k">WHEN</span> <span class="n">page_tracking</span><span class="p">.</span><span class="n">url</span> <span class="k">LIKE</span> <span class="s1">'www.chart.io'</span> 
+	<span class="k">THEN</span> <span class="s1">'www.chartio.com'</span>
+    <span class="k">ELSE</span> <span class="n">page_tracking</span><span class="p">.</span><span class="n">url</span> 
+    <span class="k">END</span> <span class="k">AS</span> <span class="err">“</span><span class="n">Page</span><span class="err">”</span><span class="p">,</span>
+<span class="n">to_char</span><span class="p">(</span><span class="n">page_tracking</span><span class="p">.</span><span class="n">viewed_at_date</span><span class="p">,</span> <span class="err">‘</span><span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="err">’</span><span class="p">)</span> <span class="k">AS</span> <span class="err">“</span><span class="k">Month</span><span class="err">”</span><span class="p">,</span>
+<span class="k">COUNT</span><span class="p">(</span><span class="k">distinct</span> <span class="n">page_tracking</span><span class="p">.</span><span class="n">view_id</span><span class="p">)</span> <span class="k">as</span> <span class="err">“</span><span class="n">Views</span><span class="err">”</span>
+<span class="k">FROM</span> <span class="n">page_tracking</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="mi">1</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="mi">2</span> <span class="k">ASC</span>
+</code></pre></div></div>
+
+<p>You can also implement this as a more permanent fix at the Data Warehouse stage. One note of warning here is that sometimes you want to preserve this cut off to remember the name was changed, so think through the implications before making this modeling decision. If you aren’t sure why the data cut off, consult the Data Governor or your engineers to find out what is going on.</p>
+
+<h5 id="all-queries-on-a-data-source-are-erroring-out">All queries on a data source are erroring out</h5>
+
+<p>This happens for a few reasons: the source has been deprecated, the source had an update changing its data structure, or a bug. This is something to communicate out to your team quickly as it can prevent a ton of data from being used.</p>
+
+<h5 id="performance">Performance</h5>
+
+<p>If queries by you or your team start to take over a minute to run, you should investigate. Can the queries be optimized? Do we need to spin up more clusters? Or, do we need to do some pre-aggregation?</p>
+
+<p>These are all fairly advanced solutions. To learn how to optimize the SQL, read our book titled <em>SQL Optimization</em>. To spin up more clusters you will need to consult with your engineering team and the Data Governor. To do pre-aggregation you should consult with the Data Governor and create a new view at the Data Warehouse level so others can use this newly formed view.</p>
+
+<h3 id="identify-new-needs">Identify new needs</h3>
+
+<p>Data is never a static thing. As new features roll out, new tools get used, objectives are set, and new data needs will emerge for your team. Do not assume that your mart will be updated when any of these changes happen. You need to proactively advocate to make sure your mart is updated in a timely manner.</p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matt/">Matt David</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/dave/">Dave Fowler</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1ebtNF2czS1lsUkoNQVPZphOcvgY8SeL9egcPxrVNNp0/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/data-governance/data-mart-implementation/">Prev – Data Mart Implementation</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/data-governance/evaluating-data-stack-technologies/">Next – Evaluating Data Stack Technologies</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

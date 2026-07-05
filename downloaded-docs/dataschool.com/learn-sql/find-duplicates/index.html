@@ -1,0 +1,1138 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Find Duplicate values in SQL</title>
+  <meta name="description" content="Learn how to find duplicate values in your database using SQL.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/learn-sql/find-duplicates/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Find Duplicates"/>
+  <meta name="twitter:description" content="Learn how to find duplicate values in your database using SQL."/>
+  <meta name="twitter:url" content="https://dataschool.com/learn-sql/find-duplicates/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/learn-sql/find-duplicates/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Find Duplicates"
+  <meta property="og:description" content="Learn how to find duplicate values in your database using SQL." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/learn-sql/find-duplicates/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Find Duplicate values in SQL",
+    "image": "",
+    "author": {
+        "@type": "Person",
+        "name": "Katherine Chiodo"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/learn-sql/find-duplicates/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2021-01-14 07:46:33 -0800",
+    "description": "Learn how to find duplicate values in your database using SQL."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/learn-sql/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/learn-sql@thumbnail.png" alt="Cover of Learn SQL" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/learn-sql/" class="book-title">Learn SQL</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#BasicSQL" aria-expanded="true" data-target="#BasicSQL"  class="dropdown-toggle"  data-toggle="collapse" >Basic sql</a>
+                  <ul class="list-unstyled collapse " id="BasicSQL">
+            
+            <li >
+              <a href="/learn-sql/introduction/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/select/">
+                SELECT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/from/">
+                FROM
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/order-by/">
+                ORDER BY
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/limit/">
+                LIMIT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/schema-browsing/">
+                SCHEMA
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/basic-practice/">
+                Practice
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Mid-LevelSQL" aria-expanded="true" data-target="#Mid-LevelSQL"  class="dropdown-toggle"  data-toggle="collapse" >Mid-level sql</a>
+                  <ul class="list-unstyled collapse " id="Mid-LevelSQL">
+            
+            <li >
+              <a href="/learn-sql/where/">
+                WHERE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/operators/">
+                Operators
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/aggregate/">
+                Aggregate
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/group-by/">
+                GROUP BY
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/joins/">
+                JOINs
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/dates/">
+                DATEs
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/mid-level-practice/">
+                Practice
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Extras" aria-expanded="true" data-target="#Extras"  class="dropdown-toggle"  data-toggle="collapse" >Extras</a>
+                  <ul class="list-unstyled collapse show" id="Extras">
+            
+            <li >
+              <a href="/learn-sql/what-is-the-difference-between-union-and-union-all/">
+                What is the difference between UNION and UNION ALL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/exclude-a-column/">
+                Exclude a Column
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/additional-practice/">
+                Additional Practice
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-create-a-copy-of-a-database-in-postgresql/">
+                How to Create a Copy of a Database in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-export-data-to-csv-or-excel/">
+                Export CSV
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-replace-nulls-with-0s/">
+                How to Replace Nulls with 0s in SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-start-a-postgresql-server-on-mac-os-x/">
+                How to Start a PostgreSQL Server on Mac OS X
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/importing-data-from-csv-in-postgresql/">
+                Importing Data from CSV in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/insert-multiple-rows/">
+                Insert multiple rows
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/list-the-tables-in-sqlite-opened-with-attach/">
+                List the tables in SQLite opened with ATTACH
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/meta-commands-in-psql/">
+                Meta commands in PSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/outputting-query-results-to-files-with-o/">
+                Outputting Query Results to Files with \o
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/random-sequences/">
+                Random Sequences
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/show-tables-in-postgres/">
+                Show Tables in Postgres
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/sql-cheat-sheet/">
+                SQL Cheat Sheet
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/update-with-join-in-sql/">
+                UPDATE with JOIN in SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/using-alter-in-postgresql/">
+                Using ALTER in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/5-redshift-sql-shortcuts/">
+                5 Redshift SQL shortcuts
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/and-or-boolean-logic/">
+                AND OR Boolean Logic
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/conditional-logic/">
+                Conditional Logic
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/copying-data-between-tables/">
+                Copying Data Between Tables
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/drop-all-tables-postgres/">
+                Drop all tables Postgres
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/export-to-csv-from-psql/">
+                Export to CSV with \copy
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/learn-sql/find-duplicates/">
+                Find Duplicates
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/generate-series/">
+                PostgreSQL Generate_Series
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/hierarchical-data-in-sql/">
+                Hierarchical data in SQL
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/learn-sql/find-duplicates/&title=Find Duplicates&summary=Learn+how+to+find+duplicate+values+in+your+database+using+SQL.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/learn-sql/find-duplicates/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/learn-sql/find-duplicates/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Find Duplicates</h1>
+    <p>
+      <em>Last modified: January 14, 2021</em>
+      
+        <em> • Reading Time: 5 minutes</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>To find duplicate values in SQL, you must first define your criteria for duplicates and then write the query to support the search.</p>
+
+<p>Our sample table, called users, shows our Facebook friends and their relevant information. This information includes first and last names, gender and the date when the friend request was accepted. Here are a few sample rows:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>user_id</td>
+      <td>first_name</td>
+      <td>last_name</td>
+      <td>gender</td>
+      <td>accepted_at</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Carlo</td>
+      <td>Thomas</td>
+      <td>male</td>
+      <td>2020-04-17</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Dom</td>
+      <td>Scallion</td>
+      <td>male</td>
+      <td>2011-01-30</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Tania</td>
+      <td>Lopes</td>
+      <td>female</td>
+      <td>2020-01-03</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Carlo</td>
+      <td>Thomas</td>
+      <td>male</td>
+      <td>2001-05-06</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Samantha</td>
+      <td>Fargo</td>
+      <td>female</td>
+      <td>2019-03-25</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Finding Duplicate Values within a Single Field</strong></p>
+
+<p>If we wanted to understand how many of our current Facebook friends had the same first name, we could do so by executing the following SQL query:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT 
+	first_name, 
+	COUNT(*)
+FROM 
+	users
+GROUP BY 
+	first_name
+</code></pre></div></div>
+
+<p>In order to see how many of these names appear more often than others, you could add an additional ORDER BY statement to the end of the query and order by DESC.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>first_name</td>
+      <td>count</td>
+    </tr>
+    <tr>
+      <td>Tania</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Carlo</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Dom</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Samantha</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Additionally, you could add an additional HAVING clause to the above query like so:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT 
+	first_name, 
+	COUNT(*)
+FROM 
+	users
+GROUP BY 
+	first_name
+HAVING 
+	COUNT (first_name) &gt; 1
+</code></pre></div></div>
+
+<p>With the following sample <em>users</em> table, we can see that the <em>first_name</em> Carlo appears more than once and therefore you have more than one friend named Carlo on your Facebook friends list. The HAVING clause in this query deliberately selects instances where the field in the SELECT statement appears more than once and anything that appears in the result is a duplicate value in the table.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>first_name</td>
+      <td>count</td>
+    </tr>
+    <tr>
+      <td>Carlo</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Finding Duplicate Values Across 2 or More Fields</strong></p>
+
+<p>Similarly, if you wanted to understand how many Facebook friends have created more than one account, you could run the following query:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT 
+	first_name, 
+	last_name, 
+	COUNT(*)
+FROM 
+	users
+GROUP BY 
+	first_name, 
+	last_name
+HAVING 
+	COUNT(*) &gt; 1
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td>user_id</td>
+      <td>first_name</td>
+      <td>last_name</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Carlo</td>
+      <td>Thomas</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Carlo</td>
+      <td>Thomas</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>By executing this query we see that your friend Carlo Thomas has created two Facebook accounts causing you to have duplicate accounts in your friends list. The advantage of these methods is that we get to easily determine how many users in your account show up more than once in your friends list by first and/or last name.</p>
+
+<p><strong>Row Number Approach</strong></p>
+
+<p>Another way to search for duplicate values is to use the ROW_NUMBER window function. We can use this function to number each row in the table where the parameters for the ranking are determined by the partition by. This method is most useful when there are parameters included with ranking the duplicate records. For more information on how window functions work see <a href="https://dataschool.com/how-to-teach-people-sql/how-window-functions-work/">here</a>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>WITH
+facebook_friends_deduped AS (
+	SELECT
+		first_name,
+		last_name,
+		ROW_NUMBER() OVER (PARTITION BY 
+        	first_name, last_name ORDER BY accepted_at ASC)
+ 			AS occurrence
+	FROM
+		users
+	)
+SELECT
+	*
+FROM
+	facebook_friends_deduped
+WHERE
+	rank &gt; 1
+</code></pre></div></div>
+
+<p>The output of this query would look something like this:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>user_id</td>
+      <td>first_name</td>
+      <td>last_name</td>
+      <td>accepted_at</td>
+      <td>occurrence</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Carlo</td>
+      <td>Thomas</td>
+      <td>2020-04-17</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The above query determined that Carlo Thomas was your duplicate Facebook friend. The ROW_NUMBER function determines which Carlo Thomas account was accepted first (the earliest date value). The first instance of Carlo Thomas in our Facebook friends list is in 2001 and therefore when we added him again in 2020, he became a duplicate record in our list of Facebook friends.</p>
+
+<p><strong>Using CASE statements</strong></p>
+
+<p>Utilizing the Row Number technique from above, we can additionally use a CASE statement to insert a new boolean field into the table that describes whether the row is duplicated or not. See how CASE WHEN works <a href="https://dataschool.com/how-to-teach-people-sql/how-case-when-works/">here</a>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT
+	*,
+	CASE 
+		WHEN ROW NUMBER() OVER (PARTITION BY 
+ 			first_name, last_name &gt; 1 THEN TRUE 
+			ELSE FALSE
+	END AS is_duplicated
+FROM
+	users
+</code></pre></div></div>
+
+<p>This method would return the following result:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>user_id</td>
+      <td>first_name</td>
+      <td>last_name</td>
+      <td>gender</td>
+      <td>accepted_at</td>
+      <td>is_duplicated</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Carlo</td>
+      <td>Thomas</td>
+      <td>male</td>
+      <td>2020-04-17</td>
+      <td>TRUE</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Dom</td>
+      <td>Scallion</td>
+      <td>male</td>
+      <td>2011-01-30</td>
+      <td>FALSE</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Tania</td>
+      <td>Lopes</td>
+      <td>female</td>
+      <td>2020-01-03</td>
+      <td>FALSE</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Carlo</td>
+      <td>Thomas</td>
+      <td>male</td>
+      <td>2001-05-06</td>
+      <td>TRUE</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Samantha</td>
+      <td>Fargo</td>
+      <td>female</td>
+      <td>2019-03-25</td>
+      <td>FALSE</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Here, we can see that Carlo Thomas has a TRUE value in the is_duplicated field created by the CASE statement in the query above. The drawback of using this method is that we can not easily identify which user record was created in the database first.</p>
+
+<p>Overall, all of these methods are important and can be used to locate duplicate records. Depending on the size of your table, the level of granularity you need to provide and what the business decision is after you’ve located the duplicate records, each of these techniques may be used over another in different contexts. Similarly, if your work also includes deleting duplicate rows there are additional CTEs (common table expressions) that can execute that body of work.</p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/katherine-chiodo/">Katherine Chiodo</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/learn-sql/export-to-csv-from-psql/">Prev – Export to CSV with \copy</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/learn-sql/generate-series/">Next – PostgreSQL Generate_Series</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+  <!-- Needed for SQLBox - Man, there's just a lot needed here. -->
+  <link rel="stylesheet" href="/assets/sqlbox/codemirror/codemirror.css">
+  <link rel="stylesheet" href="/assets/sqlbox/codemirror/midnight.css">
+
+  <script src="/assets/sqlbox/codemirror/codemirror.js"></script>
+  <script src="/assets/sqlbox/codemirror/codemirror-mode-sql.js"></script>
+  <script src="/assets/sqlbox/jquery.form.min.js"></script>
+
+  <script type="text/javascript">
+    // Data needed for sqlbox.js to work
+    $.sqlboxSettings = {
+      dbType: 'PostgreSQL',
+      dbName: 'herokuchinook',
+      action: 'https://sqlbox.herokuapp.com/'
+    };
+  </script>
+  <script type="text/javascript" src="/assets/sqlbox/sqlbox.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+  <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+  <!-- End for SQLBox -->
+
+</body>
+</html>

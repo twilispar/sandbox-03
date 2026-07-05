@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>SQL - Aggregate Functions</title>
+  <meta name="description" content="Learn about the COUNT function in SQL. The COUNT command is used to returns the count of how many rows there are. This interactive SQL tutorial will teach yo...">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/learn-sql/aggregate/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Aggregate Functions"/>
+  <meta name="twitter:description" content="Learn about the COUNT function in SQL. The COUNT command is used to returns the count of how many rows there are. This interactive SQL tutorial will teach yo..."/>
+  <meta name="twitter:url" content="https://dataschool.com/learn-sql/aggregate/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/learn-sql/aggregate/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Aggregate Functions"
+  <meta property="og:description" content="Learn about the COUNT function in SQL. The COUNT command is used to returns the count of how many rows there are. This interactive SQL tutorial will teach yo..." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/book-covers/learn-sql.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/learn-sql/aggregate/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "SQL - Aggregate Functions",
+    "image": "/assets/images/book-covers/learn-sql.png",
+    "author": {
+        "@type": "Person",
+        "name": "Dave Fowler"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/learn-sql/aggregate/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 17:07:51 -0800",
+    "description": "Learn about the COUNT function in SQL. The COUNT command is used to returns the count of how many rows there are. This interactive SQL tutorial will teach you how to COUNT."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/learn-sql/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/learn-sql@thumbnail.png" alt="Cover of Learn SQL" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/learn-sql/" class="book-title">Learn SQL</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#BasicSQL" aria-expanded="true" data-target="#BasicSQL"  class="dropdown-toggle"  data-toggle="collapse" >Basic sql</a>
+                  <ul class="list-unstyled collapse " id="BasicSQL">
+            
+            <li >
+              <a href="/learn-sql/introduction/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/select/">
+                SELECT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/from/">
+                FROM
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/order-by/">
+                ORDER BY
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/limit/">
+                LIMIT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/schema-browsing/">
+                SCHEMA
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/basic-practice/">
+                Practice
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Mid-LevelSQL" aria-expanded="true" data-target="#Mid-LevelSQL"  class="dropdown-toggle"  data-toggle="collapse" >Mid-level sql</a>
+                  <ul class="list-unstyled collapse show" id="Mid-LevelSQL">
+            
+            <li >
+              <a href="/learn-sql/where/">
+                WHERE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/operators/">
+                Operators
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/learn-sql/aggregate/">
+                Aggregate
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/group-by/">
+                GROUP BY
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/joins/">
+                JOINs
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/dates/">
+                DATEs
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/mid-level-practice/">
+                Practice
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Extras" aria-expanded="true" data-target="#Extras"  class="dropdown-toggle"  data-toggle="collapse" >Extras</a>
+                  <ul class="list-unstyled collapse " id="Extras">
+            
+            <li >
+              <a href="/learn-sql/what-is-the-difference-between-union-and-union-all/">
+                What is the difference between UNION and UNION ALL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/exclude-a-column/">
+                Exclude a Column
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/additional-practice/">
+                Additional Practice
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-create-a-copy-of-a-database-in-postgresql/">
+                How to Create a Copy of a Database in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-export-data-to-csv-or-excel/">
+                Export CSV
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-replace-nulls-with-0s/">
+                How to Replace Nulls with 0s in SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-start-a-postgresql-server-on-mac-os-x/">
+                How to Start a PostgreSQL Server on Mac OS X
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/importing-data-from-csv-in-postgresql/">
+                Importing Data from CSV in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/insert-multiple-rows/">
+                Insert multiple rows
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/list-the-tables-in-sqlite-opened-with-attach/">
+                List the tables in SQLite opened with ATTACH
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/meta-commands-in-psql/">
+                Meta commands in PSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/outputting-query-results-to-files-with-o/">
+                Outputting Query Results to Files with \o
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/random-sequences/">
+                Random Sequences
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/show-tables-in-postgres/">
+                Show Tables in Postgres
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/sql-cheat-sheet/">
+                SQL Cheat Sheet
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/update-with-join-in-sql/">
+                UPDATE with JOIN in SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/using-alter-in-postgresql/">
+                Using ALTER in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/5-redshift-sql-shortcuts/">
+                5 Redshift SQL shortcuts
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/and-or-boolean-logic/">
+                AND OR Boolean Logic
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/conditional-logic/">
+                Conditional Logic
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/copying-data-between-tables/">
+                Copying Data Between Tables
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/drop-all-tables-postgres/">
+                Drop all tables Postgres
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/export-to-csv-from-psql/">
+                Export to CSV with \copy
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/find-duplicates/">
+                Find Duplicates
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/generate-series/">
+                PostgreSQL Generate_Series
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/hierarchical-data-in-sql/">
+                Hierarchical data in SQL
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/learn-sql/aggregate/&title=Aggregate Functions&summary=Learn+about+the+COUNT+function+in+SQL.+The+COUNT+command+is+used+to+returns+the+count+of+how+many+rows+there+are.+This+interactive+SQL+tutorial+will+teach+you+how+to+COUNT.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/learn-sql/aggregate/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/learn-sql/aggregate/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Aggregate Functions</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>Fetching the raw data is nice and all, but now we’re going to start actually doing some aggregations and transformations to it!  The first and probably most commonly used aggregation function we are going to learn is COUNT.  The COUNT function takes whatever you give it and returns the count of how many there are.</p>
+
+<p>The following SQL will count how many albums are in our database. Put another way, we’re going to query for a count of the number of rows are in the <em>ablums</em> table.  Play around yourself and find how many are in the <em>artists</em> and <em>tracks</em> tables as well.</p>
+
+<sqlbox initial="SELECT COUNT(*) FROM albums;" answer="SELECT COUNT(*) FROM tracks;" correct_message="Great.  Notice that there are more tracks than there are albums and artists.  That makes sense." hint="get a count of the tracks table instead of albums"></sqlbox>
+
+<h2 id="count-of-specific-columns">COUNT of specific columns</h2>
+
+<p>As the COUNT goes over the data results it only increments its tally if the data is not NULL (NULL means empty in SQL jargon).  Doing a <code class="language-plaintext highlighter-rouge">COUNT(*)</code> will always return the full count of the number of rows that exist in the table as the splat (<code class="language-plaintext highlighter-rouge">*</code>) represents each column and there’s no way that all the columns in the row would be NULL.  If you specify a specific column however, you’re returning the COUNT of the number of rows where that column is not NULL.  So doing a count of the composer column:</p>
+
+<sqlbox initial="SELECT COUNT(composer) FROM tracks;" autorun="true"></sqlbox>
+
+<p>Will be less than the COUNT(*)</p>
+
+<sqlbox initial="SELECT COUNT(*) FROM tracks;" autorun="true"></sqlbox>
+
+<p>because the composer column has some NULL values (aka. it’s empty sometimes).</p>
+
+<h3 id="count-distinct">COUNT DISTINCT</h3>
+
+<p>A commonly used clause with the count function is DISTINCT.  The DISTINCT clause changes the count to only tally the number of unique values in the data.  Above we fetched how many <em>tracks</em> had composers listed.  If we actually wanted to see how many unique composers were in our <em>tracks</em> table we could use the COUNT with the DISTINCT clause as shown here:</p>
+
+<sqlbox initial="SELECT COUNT(DISTINCT composer) FROM tracks;" autorun="true" answer="SELECT COUNT(DISTINCT genre_id) FROM tracks;" correct_message="Yes!  Wow, there are a lot of musical genres."></sqlbox>
+
+<p>Can you modify the query above to find how many different <em>genre_id</em>s are the <em>tracks</em> table?</p>
+
+<h2 id="aliases">Aliases</h2>
+
+<p>A quick aside here:  Notice that the column headers on the above datasets weren’t all that clear.  SQL does a okay job of finding a name for what you’re fetching but often, especially as we start making more complex functions, you’ll want to use your own alias for the data.  You can do so with the AS key word following your selections:</p>
+
+<sqlbox initial="SELECT COUNT(*) AS &quot;# of Tracks&quot;, COUNT(composer) AS &quot;Non-Empty Composers&quot;, COUNT(*) - COUNT(composer) AS &quot;Empty/Null Composers&quot; FROM tracks;"></sqlbox>
+
+<p>Be sure to use double quotes (“) around your Aliases as double quotes are used for column titles.</p>
+
+<h2 id="functions">Functions</h2>
+
+<p>The following is a list of the most commonly used functions in SQL.  They work similar to COUNT but perform different calculations on the data.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Function</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MAX</td>
+      <td>returns the largest (maximum) number in a sets</td>
+    </tr>
+    <tr>
+      <td>MIN</td>
+      <td>described</td>
+    </tr>
+    <tr>
+      <td>COUNT</td>
+      <td>returns a count of the # of values in a set</td>
+    </tr>
+    <tr>
+      <td>COUNT DISTINCT</td>
+      <td>returns a count of the # of unique (distinct) values in a set</td>
+    </tr>
+    <tr>
+      <td>EVERY</td>
+      <td>returns true if all data inside is true (same as bool_and)</td>
+    </tr>
+    <tr>
+      <td>AVG</td>
+      <td>returns the average (mean) of the set of numbers</td>
+    </tr>
+    <tr>
+      <td>SUM</td>
+      <td>returns the sum of all the values in the set</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The following example gives the range and average prices of the <em>tracks</em> using the <em>MIN</em>, <em>MAX</em> and <em>AVG</em> functions.</p>
+
+<sqlbox initial="SELECT MAX(unit_price), MIN(unit_price), AVG(unit_price) FROM tracks;" answer="SELECT SUM(unit_price) FROM tracks;" hint="Take the SUM of the unit_price.  Return just one column." correct_message="This makes Spotify seem like a bargain." autorun="true"></sqlbox>
+
+<p>Can you modify the above query to return how much it would cost to buy one of every track in the database?</p>
+
+<p>We only covered the most commonly used aggregation functions here.  If you’d like to see more checkout the full list of <a href="https://www.postgresql.org/docs/9.0/static/functions.html">PostgreSQL Functions</a></p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/dave/">Dave Fowler</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/learn-sql/operators/">Prev – Operators</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/learn-sql/group-by/">Next – GROUP BY</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+  <!-- Needed for SQLBox - Man, there's just a lot needed here. -->
+  <link rel="stylesheet" href="/assets/sqlbox/codemirror/codemirror.css">
+  <link rel="stylesheet" href="/assets/sqlbox/codemirror/midnight.css">
+
+  <script src="/assets/sqlbox/codemirror/codemirror.js"></script>
+  <script src="/assets/sqlbox/codemirror/codemirror-mode-sql.js"></script>
+  <script src="/assets/sqlbox/jquery.form.min.js"></script>
+
+  <script type="text/javascript">
+    // Data needed for sqlbox.js to work
+    $.sqlboxSettings = {
+      dbType: 'PostgreSQL',
+      dbName: 'herokuchinook',
+      action: 'https://sqlbox.herokuapp.com/'
+    };
+  </script>
+  <script type="text/javascript" src="/assets/sqlbox/sqlbox.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+  <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+  <!-- End for SQLBox -->
+
+</body>
+</html>

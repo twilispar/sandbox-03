@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>ALTER in PostgreSQL</title>
+  <meta name="description" content="Learn the different potential uses of the ALTER command in PSQL. Add and drop columns from tables. Rename and change schemas and more.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/learn-sql/using-alter-in-postgresql/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Using ALTER in PostgreSQL"/>
+  <meta name="twitter:description" content="Learn the different potential uses of the ALTER command in PSQL. Add and drop columns from tables. Rename and change schemas and more."/>
+  <meta name="twitter:url" content="https://dataschool.com/learn-sql/using-alter-in-postgresql/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/learn-sql/using-alter-in-postgresql/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Using ALTER in PostgreSQL"
+  <meta property="og:description" content="Learn the different potential uses of the ALTER command in PSQL. Add and drop columns from tables. Rename and change schemas and more." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/book-covers/learn-sql.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/learn-sql/using-alter-in-postgresql/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "ALTER in PostgreSQL",
+    "image": "/assets/images/book-covers/learn-sql.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matthew Layne"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/learn-sql/using-alter-in-postgresql/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 17:07:51 -0800",
+    "description": "Learn the different potential uses of the ALTER command in PSQL. Add and drop columns from tables. Rename and change schemas and more."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/learn-sql/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/learn-sql@thumbnail.png" alt="Cover of Learn SQL" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/learn-sql/" class="book-title">Learn SQL</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#BasicSQL" aria-expanded="true" data-target="#BasicSQL"  class="dropdown-toggle"  data-toggle="collapse" >Basic sql</a>
+                  <ul class="list-unstyled collapse " id="BasicSQL">
+            
+            <li >
+              <a href="/learn-sql/introduction/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/select/">
+                SELECT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/from/">
+                FROM
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/order-by/">
+                ORDER BY
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/limit/">
+                LIMIT
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/schema-browsing/">
+                SCHEMA
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/basic-practice/">
+                Practice
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Mid-LevelSQL" aria-expanded="true" data-target="#Mid-LevelSQL"  class="dropdown-toggle"  data-toggle="collapse" >Mid-level sql</a>
+                  <ul class="list-unstyled collapse " id="Mid-LevelSQL">
+            
+            <li >
+              <a href="/learn-sql/where/">
+                WHERE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/operators/">
+                Operators
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/aggregate/">
+                Aggregate
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/group-by/">
+                GROUP BY
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/joins/">
+                JOINs
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/dates/">
+                DATEs
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/mid-level-practice/">
+                Practice
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Extras" aria-expanded="true" data-target="#Extras"  class="dropdown-toggle"  data-toggle="collapse" >Extras</a>
+                  <ul class="list-unstyled collapse show" id="Extras">
+            
+            <li >
+              <a href="/learn-sql/what-is-the-difference-between-union-and-union-all/">
+                What is the difference between UNION and UNION ALL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/exclude-a-column/">
+                Exclude a Column
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/additional-practice/">
+                Additional Practice
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-create-a-copy-of-a-database-in-postgresql/">
+                How to Create a Copy of a Database in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-export-data-to-csv-or-excel/">
+                Export CSV
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-replace-nulls-with-0s/">
+                How to Replace Nulls with 0s in SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/how-to-start-a-postgresql-server-on-mac-os-x/">
+                How to Start a PostgreSQL Server on Mac OS X
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/importing-data-from-csv-in-postgresql/">
+                Importing Data from CSV in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/insert-multiple-rows/">
+                Insert multiple rows
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/list-the-tables-in-sqlite-opened-with-attach/">
+                List the tables in SQLite opened with ATTACH
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/meta-commands-in-psql/">
+                Meta commands in PSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/outputting-query-results-to-files-with-o/">
+                Outputting Query Results to Files with \o
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/random-sequences/">
+                Random Sequences
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/show-tables-in-postgres/">
+                Show Tables in Postgres
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/sql-cheat-sheet/">
+                SQL Cheat Sheet
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/update-with-join-in-sql/">
+                UPDATE with JOIN in SQL
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/learn-sql/using-alter-in-postgresql/">
+                Using ALTER in PostgreSQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/5-redshift-sql-shortcuts/">
+                5 Redshift SQL shortcuts
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/and-or-boolean-logic/">
+                AND OR Boolean Logic
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/conditional-logic/">
+                Conditional Logic
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/copying-data-between-tables/">
+                Copying Data Between Tables
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/drop-all-tables-postgres/">
+                Drop all tables Postgres
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/export-to-csv-from-psql/">
+                Export to CSV with \copy
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/find-duplicates/">
+                Find Duplicates
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/generate-series/">
+                PostgreSQL Generate_Series
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/learn-sql/hierarchical-data-in-sql/">
+                Hierarchical data in SQL
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/learn-sql/using-alter-in-postgresql/&title=Using ALTER in PostgreSQL&summary=Learn+the+different+potential+uses+of+the+ALTER+command+in+PSQL.+Add+and+drop+columns+from+tables.+Rename+and+change+schemas+and+more.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/learn-sql/using-alter-in-postgresql/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/learn-sql/using-alter-in-postgresql/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Using ALTER in PostgreSQL</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>In SQL, tables, databases, schemas, groups, indexes, servers, and more can be modified using the <strong><em>ALTER</em></strong> command. This command enables the user to modify a specific aspect of the table, database, group, etc. while leaving the rest of the data untouched.</p>
+
+<p>There are many alterable things in postgreSQL heavily discussed in the PostgreSQL <a href="https://www.postgresql.org/docs/11/sql-altertable.html">Documentation</a>. This article will only focus on a few main uses of ALTER (ALTER TABLE and ALTER DATABASE.) For a comprehensive list, check the documentation <a href="https://www.postgresql.org/docs/11/sql-altertable.html">here</a>.</p>
+
+<p><strong>Warning:</strong> Altering tables and databases alters critical parts of their structure. As such, queries that ran on tables/databases that were altered may no longer work and may need to be rewritten.</p>
+
+<h2 id="video">Video</h2>
+<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/BrSDzg_QFwE?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+
+<h2 id="alter-table">ALTER TABLE</h2>
+
+<p>Altering tables is a very common use of ALTER. Using ALTER TABLE is very useful for adding, removing, and editing columns:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">traffic</span>
+<span class="k">ADD</span> <span class="k">COLUMN</span> <span class="n">nameofdriver</span> <span class="nb">VARCHAR</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>This query will <strong>add a column</strong> called ‘nameofdriver’.</p>
+
+<p>This column can be <strong>dropped</strong> by using ALTER as well. To do this:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">traffic</span>
+<span class="k">DROP</span> <span class="k">COLUMN</span> <span class="n">nameofdriver</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>ALTER can also be used to <strong>change the datatype</strong> of a pre-existing column. For example, you can change a boolean to a char:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">traffic</span>
+<span class="k">ALTER</span> <span class="k">COLUMN</span> <span class="n">belts</span>
+<span class="k">TYPE</span> <span class="nb">char</span> <span class="k">USING</span> <span class="n">belts</span><span class="p">::</span><span class="nb">char</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>This usage of ALTER takes a column and converts it into a different type using a specified method for this (in this case the cast: belts::char).</p>
+
+<h3 id="table-constraints">Table Constraints</h3>
+
+<p>Another usage of ALTER TABLE is to <strong>add table constraints</strong>. For example, if a column should be unique:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">traffic</span>
+<span class="k">ADD</span> <span class="k">CONSTRAINT</span> <span class="n">unique_seqid</span> <span class="k">UNIQUE</span> <span class="p">(</span><span class="n">seqid</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>This command can also be used to add a constraint to the whole table.</p>
+
+<p>NOTE: An error will be thrown if a constraint is added to a column that already breaks that constraint (e.g. adding the UNIQUE constraint to a non-unique column will throw an error).</p>
+
+<p>Common constraints include: <strong><em>NOT NULL</em></strong>, <strong><em>PRIMARY KEY</em></strong>, and <strong><em>UNIQUE</em></strong> (full list included in the <a href="https://www.postgresql.org/docs/11/ddl-constraints.html">documation</a>). The constraint can also be dropped using the same command with the <strong><em>DROP</em></strong> <strong><em>CONSTRAINT</em></strong> command instead:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">traffic</span>
+<span class="k">DROP</span> <span class="k">CONSTRAINT</span> <span class="n">unique_seqid</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="renaming-and-changing-schemas">Renaming and Changing Schemas</h3>
+
+<p>ALTER TABLE can also be used to rename the table or column that is being accessed. To do this, use the rename command:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">traffic</span>
+<span class="k">RENAME</span> <span class="k">TO</span> <span class="n">violations</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Or</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">traffic</span>
+<span class="k">RENAME</span> <span class="k">COLUMN</span> <span class="n">dateofstop</span> <span class="k">TO</span> <span class="nb">date</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>The <strong>schema</strong> that a table is using can be changed by using:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="k">public</span><span class="p">.</span><span class="n">traffic</span>
+<span class="k">SET</span> <span class="k">SCHEMA</span> <span class="n">mySchema</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="alter-database">ALTER DATABASE</h2>
+
+<p>Databases can also be modified using the ALTER command. There are fewer things that can be modified in a Database, however they have very serious effects. As such they often have required permissions to execute them. The things that can be changed using ALTER DATABASE are:</p>
+
+<ul>
+  <li><strong>Name:</strong> The database can be renamed.</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="p">[</span><span class="k">database</span> <span class="n">name</span><span class="p">]</span>
+<span class="k">RENAME</span> <span class="k">TO</span> <span class="p">[</span><span class="k">new</span> <span class="n">name</span><span class="p">];</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Allow Connections:</strong> Whether the database allows connections to itself. <strong>NOTE:</strong> this will block all connections when true, even connections from localhost. It will need to be set to false before it can be connected to again.</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="p">[</span><span class="k">database</span> <span class="n">name</span><span class="p">]</span>
+<span class="k">WITH</span> <span class="n">ALLOW_CONNECTIONS</span> <span class="p">[</span><span class="k">true</span><span class="o">/</span><span class="k">false</span><span class="p">];</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Connection Limit:</strong> Limit the number of simultaneous connections. Set to -1 for unlimited connections.</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="p">[</span><span class="k">database</span> <span class="n">name</span><span class="p">]</span>
+<span class="k">WITH</span> <span class="n">CONNECTION_LIMIT</span> <span class="p">[</span><span class="n">number</span> <span class="k">of</span> <span class="n">connections</span><span class="p">];</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Template:</strong> Can set the database to be or not to be a template. A template is a designation that some tables get which allows the database to be copied by a user with lower privileges so that they can have a pre-structured database and fill it out with their own data.</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="p">[</span><span class="k">database</span> <span class="n">name</span><span class="p">]</span>
+<span class="k">WITH</span> <span class="n">IS_TEMPLATE</span> <span class="p">[</span><span class="k">true</span><span class="o">/</span><span class="k">false</span><span class="p">];</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Owner:</strong> Can set the owner of the database. Only the current database owner and <a href="https://www.postgresql.org/docs/11/app-createuser.html">superusers</a> can change the owner.</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="p">[</span><span class="k">database</span> <span class="n">name</span><span class="p">]</span>
+<span class="k">OWNER</span> <span class="k">TO</span> <span class="p">[</span><span class="n">username</span><span class="p">];</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Tablespace:</strong> Can set which default tablespace is used. A tablespace is a way to logically separate databases on the disk so that they can handle more throughput. See the <a href="https://www.postgresql.org/docs/11/manage-ag-tablespaces.html">documentation</a> for more.</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="p">[</span><span class="k">database</span> <span class="n">name</span><span class="p">]</span>
+<span class="k">SET</span> <span class="n">TABLESPACE</span> <span class="p">[</span><span class="k">new</span> <span class="n">tablespace</span><span class="p">];</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Configuration Parameters:</strong> Can be used to override system preferences on an individual basis. Some possible parameters that can be edited are: enable_indexscan, enable_bitmapscan, statement_timeout, and more.</li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="p">[</span><span class="k">database</span> <span class="n">name</span><span class="p">]</span>
+<span class="k">SET</span> <span class="p">[</span><span class="n">configuration</span> <span class="k">parameter</span><span class="p">]</span> <span class="k">TO</span> <span class="p">[</span><span class="n">value</span><span class="p">];</span>
+</code></pre></div></div>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="p">[</span><span class="k">database</span> <span class="n">name</span><span class="p">]</span>
+<span class="k">RESET</span> <span class="p">[</span><span class="n">configuration</span> <span class="k">parameter</span><span class="p">];</span>
+</code></pre></div></div>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">DATABASE</span> <span class="p">[</span><span class="k">database</span> <span class="n">name</span><span class="p">]</span>
+<span class="k">RESET</span> <span class="k">ALL</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Example:</strong></li>
+</ul>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">traffic</span> <span class="k">SET</span> <span class="n">enable_indexscan</span> <span class="k">TO</span> <span class="k">OFF</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>This will disable index scans on the specified database</li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://www.postgresql.org/docs/11/sql-alterdatabase.html" title="https://www.postgresql.org/docs/11/sql-alterdatabase.html">https://www.postgresql.org/docs/11/sql-alterdatabase.html</a></li>
+  <li><a href="https://www.postgresql.org/docs/11/sql-alterdatabase.html" title="https://www.postgresql.org/docs/11/sql-alterdatabase.html">https://www.postgresql.org/docs/11/ddl-constraints.html</a></li>
+  <li><a href="https://www.postgresql.org/docs/11/sql-alterdatabase.html" title="https://www.postgresql.org/docs/11/sql-alterdatabase.html">https://www.postgresql.org/docs/11/sql-altertable.html</a></li>
+</ul>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matthew-layne/">Matthew Layne</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        ,
+      
+        
+        
+        <a href="/people/blake/">Blake Barnhill</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1CEOlXDZAoDMGhhwFmZ2q4aStSulRmmIWLjqBBvcZU0U/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/learn-sql/update-with-join-in-sql/">Prev – UPDATE with JOIN in SQL</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/learn-sql/conditional-logic/">Next – Conditional Logic</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+  <!-- Needed for SQLBox - Man, there's just a lot needed here. -->
+  <link rel="stylesheet" href="/assets/sqlbox/codemirror/codemirror.css">
+  <link rel="stylesheet" href="/assets/sqlbox/codemirror/midnight.css">
+
+  <script src="/assets/sqlbox/codemirror/codemirror.js"></script>
+  <script src="/assets/sqlbox/codemirror/codemirror-mode-sql.js"></script>
+  <script src="/assets/sqlbox/jquery.form.min.js"></script>
+
+  <script type="text/javascript">
+    // Data needed for sqlbox.js to work
+    $.sqlboxSettings = {
+      dbType: 'PostgreSQL',
+      dbName: 'herokuchinook',
+      action: 'https://sqlbox.herokuapp.com/'
+    };
+  </script>
+  <script type="text/javascript" src="/assets/sqlbox/sqlbox.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.css">
+  <script src="https://unpkg.com/bootstrap-table@1.14.2/dist/bootstrap-table.min.js"></script>
+  <!-- End for SQLBox -->
+
+</body>
+</html>

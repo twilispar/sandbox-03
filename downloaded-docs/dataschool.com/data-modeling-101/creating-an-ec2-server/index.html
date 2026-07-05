@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>EC2-server</title>
+  <meta name="description" content="Learn how to quickly set up an EC2 server on AWS. Follow along with screenshots and instructions.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/data-modeling-101/creating-an-ec2-server/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Creating an EC2 Server"/>
+  <meta name="twitter:description" content="Learn how to quickly set up an EC2 server on AWS. Follow along with screenshots and instructions."/>
+  <meta name="twitter:url" content="https://dataschool.com/data-modeling-101/creating-an-ec2-server/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/data-modeling-101/creating-an-ec2-server/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Creating an EC2 Server"
+  <meta property="og:description" content="Learn how to quickly set up an EC2 server on AWS. Follow along with screenshots and instructions." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/data-modeling-101/ec2_article/EC2.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/data-modeling-101/creating-an-ec2-server/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "EC2-server",
+    "image": "/assets/images/data-modeling-101/ec2_article/EC2.png",
+    "author": {
+        "@type": "Person",
+        "name": "Blake Barnhill"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/data-modeling-101/creating-an-ec2-server/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-07-19 07:17:14 -0700",
+    "description": "Learn how to quickly set up an EC2 server on AWS. Follow along with screenshots and instructions."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="" class="smallbook-link hover-link">
+        <img src="" alt="Cover of " class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="" class="book-title"></a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#book" aria-expanded="true" class="d-none">Book</a>
+                  <ul class="list-unstyled " id="book">
+            
+            <li >
+              <a href="/data-modeling-101/row-vs-column-oriented-databases/">
+                Row vs Column Oriented Databases
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/data-modeling-101/creating-an-ec2-server/">
+                Creating an EC2 Server
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/">
+                Running Jupyter Notebook on an EC2 Server
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-modeling-101/using-jupyter-notebooks/">
+                Using Jupyter Notebooks
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/data-modeling-101/creating-an-ec2-server/&title=Creating an EC2 Server&summary=Learn+how+to+quickly+set+up+an+EC2+server+on+AWS.+Follow+along+with+screenshots+and+instructions.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/data-modeling-101/creating-an-ec2-server/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/data-modeling-101/creating-an-ec2-server/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Creating an EC2 Server</h1>
+    <p>
+      <em>Last modified: July 19, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <h2 id="what-is-an-ec2-server">What is an EC2 Server?</h2>
+
+<p>EC2 provides a variety of operating systems and hardware levels for a wide variety of uses that can be easily scaled in the cloud. Whether you are an individual looking to host some small projects on the web or a large company trying to host and automate large databases or websites, EC2 can support you.</p>
+
+<p>EC2 servers are a service provided by <a href="https://aws.amazon.com/">AWS</a>(Amazon Web Services). These are Amazons way of providing a way to run servers without having to spend the upfront cost of buying the hardware components to host a server. Amazon provides these servers for a low monthly cost, some of them free in your first year of using AWS.</p>
+
+<h2 id="creating-your-ec2">Creating your EC2</h2>
+
+<h3 id="step-1-create-an-aws-account">Step 1: Create an AWS account</h3>
+
+<p>If you do not have an AWS account, you will need one for the rest of the steps. If you already have an AWS account, login and navigate to the product page.</p>
+
+<h3 id="step-2-creating-an-ec2-instance">Step 2: Creating an EC2 Instance</h3>
+
+<p>On the product page, find the section labeled “Compute” and click on “EC2”:</p>
+
+<p><img src="/assets/images/data-modeling-101/ec2_article/EC2.png" alt="Location on AWS of the &quot;EC2&quot; Button" /></p>
+
+<p>From there click “Launch Instance” to begin creating an EC2 server:</p>
+
+<p><img src="/assets/images/data-modeling-101/ec2_article/launchInstance.png" alt="Location on AWS of the &quot;Launch Instance&quot; Button" /></p>
+
+<h3 id="step-3-picking-an-operating-system">Step 3: Picking an operating system</h3>
+
+<p>EC2 has a large variety of operating system available and you are free to pick whichever works best for your needs. The main differences between the operating systems are whether they are based on Windows or Linux. Windows based OS are designed to run several Windows specific programs, while Linux OS’s are designed to be minimal and fast. More information on the specific <a href="https://aws.amazon.com/marketplace/b/2649367011">operating systems provided by AWS here</a>.</p>
+
+<p>For the purpose of this tutorial we will using Ubuntu Server 18.04:</p>
+
+<p><img src="/assets/images/data-modeling-101/ec2_article/ubuntu.png" alt="How to select the server's OS" /></p>
+
+<h3 id="step-4-choosing-an-instance-type">Step 4: Choosing an instance type</h3>
+
+<p>The instance type of your server will determine how much hardware is dedicated to your server. The more vCPUs and Memory, the faster your server will process requests. For this example we will be using the free “t2.micro” tier, providing 750 hours (which are the number of hours in a month) of uptime per month for your first year using AWS:</p>
+
+<p><img src="/assets/images/data-modeling-101/ec2_article/microInstance.png" alt="Selection of Instance Type (how much computational power it has)" /></p>
+
+<h3 id="step-5-review-and-launch">Step 5: Review and Launch</h3>
+
+<p>Unless you want to increase the capabilities of your EC2 server or provide more functionality, your basic EC2 instance is ready to launch:</p>
+
+<p><img src="/assets/images/data-modeling-101/ec2_article/reviewInstance.png" alt="Review and Launch page on AWS" /></p>
+
+<p>On this page you will notice that you can edit things:</p>
+
+<ul>
+  <li>Security Groups - will allow you to determine who can access your server</li>
+  <li>Storage - will determine how much data you can store on your server.</li>
+</ul>
+
+<p>Once you have changed those to suit your needs click “Launch” on the bottom right hand corner of your browser.</p>
+
+<h3 id="step-6-creating-an-ssh-key">Step 6: Creating an SSH key</h3>
+
+<p><img src="/assets/images/data-modeling-101/ec2_article/existingPair.png" alt="&quot;Choose existing key pair&quot; Button" /></p>
+
+<p>When prompted to create an SSH key, you must “Create a new key pair” and download the pair to finish creating your EC2 instance:</p>
+
+<p><img src="/assets/images/data-modeling-101/ec2_article/newPair.png" alt="&quot;Create new Key Pair&quot; Button" /></p>
+
+<p>This SSH key pair will allow you to connect remotely to your server from the command line. In order to do this you may have to change the permissions for your key file. This can be done with:</p>
+
+<p><code class="language-plaintext highlighter-rouge">Sudo chmod 400 /Path/Yourkey.pem</code></p>
+
+<!---
+Potential uses:
+(article on running jupyter on EC2)
+(any other articles using EC2)
+\-->
+
+<h2 id="references">References:</h2>
+
+<p><a href="https://docs.aws.amazon.com/efs/latest/ug/gs-step-one-create-ec2-resources.html" title="https://docs.aws.amazon.com/efs/latest/ug/gs-step-one-create-ec2-resources.html">https://docs.aws.amazon.com/efs/latest/ug/gs-step-one-create-ec2-resources.html</a></p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/blake/">Blake Barnhill</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1rZJjWr3QnktTxRBUCdS6FIEoh9f8HBaTiUS9ybJtlFk/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/data-modeling-101/row-vs-column-oriented-databases/">Prev – Row vs Column Oriented Databases</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/">Next – Running Jupyter Notebook on an EC2 Server</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

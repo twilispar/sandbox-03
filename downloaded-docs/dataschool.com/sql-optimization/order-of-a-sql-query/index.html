@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Learn the Order of a SQL Query</title>
+  <meta name="description" content="Learn the order of the SQL query to understand where you can optimize a query. Learn to prioritize FROM, JOIN, and WHERE.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/sql-optimization/order-of-a-sql-query/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Order of a SQL Query"/>
+  <meta name="twitter:description" content="Learn the order of the SQL query to understand where you can optimize a query. Learn to prioritize FROM, JOIN, and WHERE."/>
+  <meta name="twitter:url" content="https://dataschool.com/sql-optimization/order-of-a-sql-query/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/sql-optimization/order-of-a-sql-query/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Order of a SQL Query"
+  <meta property="og:description" content="Learn the order of the SQL query to understand where you can optimize a query. Learn to prioritize FROM, JOIN, and WHERE." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/book-covers/sql-optimization.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/sql-optimization/order-of-a-sql-query/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Learn the Order of a SQL Query",
+    "image": "/assets/images/book-covers/sql-optimization.png",
+    "author": {
+        "@type": "Person",
+        "name": "Rohan Joseph"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/sql-optimization/order-of-a-sql-query/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 16:55:50 -0800",
+    "description": "Learn the order of the SQL query to understand where you can optimize a query. Learn to prioritize FROM, JOIN, and WHERE."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/sql-optimization/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/sql-optimization@thumbnail.png" alt="Cover of SQL Optimization" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/sql-optimization/" class="book-title">SQL Optimization</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#QueryOptimizations" aria-expanded="true" data-target="#QueryOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Query optimizations</a>
+                  <ul class="list-unstyled collapse show" id="QueryOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/what-is-a-query-plan/">
+                What is a Query Plan
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/sql-optimization/order-of-a-sql-query/">
+                Order of a SQL Query
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/optimize-your-sql-query/">
+                Optimize your SQL Query
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ColumnandTableOptimizations" aria-expanded="true" data-target="#ColumnandTableOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Column and table optimizations</a>
+                  <ul class="list-unstyled collapse " id="ColumnandTableOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/optimization-using-explain/">
+                Optimization with EXPLAIN ANALYZE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/how-indexing-works/">
+                How Indexing Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/partial-indexes/">
+                Partial Indexes
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/multicolumn-indexes/">
+                Multicolumn Indexes
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ModelingData" aria-expanded="true" data-target="#ModelingData"  class="dropdown-toggle"  data-toggle="collapse" >Modeling data</a>
+                  <ul class="list-unstyled collapse " id="ModelingData">
+            
+            <li >
+              <a href="/sql-optimization/start-modeling-data/">
+                Start Modeling Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/scheduling-dbt/">
+                Scheduling Modeling
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/views/">
+                Views
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Databases" aria-expanded="true" data-target="#Databases"  class="dropdown-toggle"  data-toggle="collapse" >Databases</a>
+                  <ul class="list-unstyled collapse " id="Databases">
+            
+            <li >
+              <a href="/sql-optimization/optimizing-data-queries-with-redshift/">
+                Redshift Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/bigquery-optimization/">
+                BigQuery Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/snowflake/">
+                Snowflake Optimization
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/sql-optimization/order-of-a-sql-query/&title=Order of a SQL Query&summary=Learn+the+order+of+the+SQL+query+to+understand+where+you+can+optimize+a+query.+Learn+to+prioritize+FROM%2C+JOIN%2C+and+WHERE.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/sql-optimization/order-of-a-sql-query/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/sql-optimization/order-of-a-sql-query/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Order of a SQL Query</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>The way to make a query run faster is to reduce the number of calculations that the software must perform. To do this, you’ll need some understanding of how SQL executes a query.</p>
+
+<p>Let’s take a look at a sample SQL query :</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT DISTINCT column, AGGREGATE(column)
+FROM table1
+JOIN table2
+ON table1.column = table2.column
+WHERE constraint_expression
+GROUP BY column
+HAVING constraint_expression
+ORDER BY column ASC/DESC
+LIMIT count;
+</code></pre></div></div>
+
+<p>Each part of the query is executed sequentially, so it’s important to understand the order of execution :</p>
+
+<ol>
+  <li><strong>FROM and JOIN:</strong> The FROM clause, and subsequent JOINs are first executed to determine the total working set of data that is being queried</li>
+  <li><strong>WHERE:</strong> Once we have the total working set of data, the WHERE constraints are applied to the individual rows, and rows that do not satisfy the constraint are discarded.</li>
+  <li><strong>GROUP BY:</strong> The remaining rows after the WHERE constraints are applied are then grouped based on common values in the column specified in the GROUP BY clause.</li>
+  <li><strong>HAVING:</strong> If the query has a GROUP BY clause, then the constraints in the HAVING clause are applied to the grouped rows, and the grouped rows that don’t satisfy the constraint are discarded.</li>
+  <li><strong>SELECT:</strong> Any expressions in the SELECT part of the query are finally computed.</li>
+  <li><strong>DISTINCT:</strong> Of the remaining rows, rows with duplicate values in the column marked as DISTINCT will be discarded.</li>
+  <li><strong>ORDER BY:</strong> If an order is specified by the ORDER BY clause, the rows are then sorted by the specified data in either ascending or descending order.</li>
+  <li><strong>LIMIT:</strong> Finally, the rows that fall outside the range specified by the LIMIT are discarded, leaving the final set of rows to be returned from the query.</li>
+</ol>
+
+<p>Now that we understand the basic structure and order of a SQL query, we can take a look at the tips to optimize them for faster processing in the next chapter.</p>
+
+<h2 id="resources">Resources</h2>
+
+<ol>
+  <li><a href="https://sqlbolt.com/lesson/select_queries_order_of_execution" title="https://sqlbolt.com/lesson/select_queries_order_of_execution">https://sqlbolt.com/lesson/select_queries_order_of_execution</a></li>
+  <li><a href="https://www.sisense.com/blog/8-ways-fine-tune-sql-queries-production-databases/" title="https://www.sisense.com/blog/8-ways-fine-tune-sql-queries-production-databases/">https://www.sisense.com/blog/8-ways-fine-tune-sql-queries-production-databases/</a></li>
+</ol>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/rohan-joseph/">Rohan Joseph</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/what-is-a-query-plan/">Prev – What is a Query Plan</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/optimize-your-sql-query/">Next – Optimize your SQL Query</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

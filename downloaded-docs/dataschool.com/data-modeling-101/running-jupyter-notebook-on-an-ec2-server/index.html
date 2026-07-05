@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Running Jupyter Notebook on an EC2 Server</title>
+  <meta name="description" content="Learn how to run a Jupyter Notebook on an AWS EC2 Server and the advantages of this.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Running Jupyter Notebook on an EC2 Server"/>
+  <meta name="twitter:description" content="Learn how to run a Jupyter Notebook on an AWS EC2 Server and the advantages of this."/>
+  <meta name="twitter:url" content="https://dataschool.com/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Running Jupyter Notebook on an EC2 Server"
+  <meta property="og:description" content="Learn how to run a Jupyter Notebook on an AWS EC2 Server and the advantages of this." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/data-modeling-101/jupyter_article/jupyterLoggedIn.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Running Jupyter Notebook on an EC2 Server",
+    "image": "/assets/images/data-modeling-101/jupyter_article/jupyterLoggedIn.png",
+    "author": {
+        "@type": "Person",
+        "name": "Blake Barnhill"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2020-12-02 06:44:48 -0800",
+    "description": "Learn how to run a Jupyter Notebook on an AWS EC2 Server and the advantages of this."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="" class="smallbook-link hover-link">
+        <img src="" alt="Cover of " class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="" class="book-title"></a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#book" aria-expanded="true" class="d-none">Book</a>
+                  <ul class="list-unstyled " id="book">
+            
+            <li >
+              <a href="/data-modeling-101/row-vs-column-oriented-databases/">
+                Row vs Column Oriented Databases
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-modeling-101/creating-an-ec2-server/">
+                Creating an EC2 Server
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/">
+                Running Jupyter Notebook on an EC2 Server
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/data-modeling-101/using-jupyter-notebooks/">
+                Using Jupyter Notebooks
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/&title=Running Jupyter Notebook on an EC2 Server&summary=Learn+how+to+run+a+Jupyter+Notebook+on+an+AWS+EC2+Server+and+the+advantages+of+this.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/data-modeling-101/running-jupyter-notebook-on-an-ec2-server/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Running Jupyter Notebook on an EC2 Server</h1>
+    <p>
+      <em>Last modified: December 02, 2020</em>
+      
+     </p>
+  </header>
+  
+  
+  <h2 id="what-is-jupyter">What is Jupyter?</h2>
+
+<p><a href="https://jupyter.org/">Jupyter</a> is an open-source application that allows you to create and share documents that contain live code, equations, visualizations and text. Jupyter can produce a variety of outputs, such as:</p>
+
+<ul>
+  <li>HTML</li>
+  <li>Images</li>
+  <li>Videos</li>
+  <li><a href="https://www.latex-project.org/">LaTeX</a></li>
+  <li><a href="https://whatis.techtarget.com/definition/MIME-Multi-Purpose-Internet-Mail-Extensions">MIME(Multi-purpose Internet Mail Extensions)</a></li>
+</ul>
+
+<p>Jupyter can be used to leverage big data tools and works with over 40 different languages.</p>
+
+<h3 id="how-to-use-jupyter"><strong>How to use Jupyter</strong></h3>
+
+<p>There are two ways to use Jupyter on your own computer:</p>
+
+<ul>
+  <li>In the browser at <a href="https://jupyter.org/">Jupyter.org</a></li>
+  <li>On your computer</li>
+  <li>Two ways to install Jupyter to your computer, both can be found <a href="https://jupyter.org/install">here</a>.</li>
+</ul>
+
+<p>These options work just fine for personal use but you can also install Jupyter onto an AWS server so that it can run be accessed from anywhere. To do so requires a little more work on the front end but allows you to access your Jupyter Notebook from any computer as long as you have a network connection.</p>
+
+<h4 id="step-1-create-an-ec2-instance">Step 1: Create an EC2 Instance</h4>
+
+<p><a href="https://dataschool.com/data-modeling-101/creating-an-ec2-server/">Click here for our tutorial on creating an EC2 Server</a></p>
+
+<h4 id="step-2-customize-your-ec2-server-for-jupyter">Step 2: Customize your EC2 server for Jupyter</h4>
+
+<p>To run your Jupyter Notebook on your EC2 server, you are going to need to add a new security group. On the EC2 instance page go to the “Security Groups” section:</p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/createSecurityGroup.png" alt="Image showing how to begin creating a security group" /></p>
+
+<p>Here you need to create a new security group by clicking “Create Security Group” on the top of the page.</p>
+
+<p>From there you need to give the group three properties:</p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/securityGroups.png" alt="Image showing how to modify security groups" /></p>
+
+<p>Use “Add Rule” to add new Security Group rules. You will need three new rules:</p>
+
+<ul>
+  <li>The SSH rule will allow us to connect to the server via SSH.</li>
+  <li>The HTTPS rule will allow us to connect the EC2 to a website.</li>
+  <li>The Custom TCP rule determines which port to run the website on.</li>
+</ul>
+
+<p>Setting the source to anywhere will allow you to access your Jupyter Notebook from any IP address. You can limit access by entering a custom IP into the source.</p>
+
+<p>Once you have all of that set “Create” this new security group.</p>
+
+<p>Next go back to the “Instances” tab:</p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/navToInstances.png" alt="Image showing how to navigate to instances" /></p>
+
+<p>Select the EC2 instance you are going to be using for your Jupyter Notebook, go into “Actions”, “Networking” and click “Change Security Groups”:</p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/navToSecurityGroups.png" alt="Image showing how to change security groups" /></p>
+
+<p>In this menu, select the security group that you just created and then click “Assign Security Group”:</p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/securityGroups.png" alt="Image showing how to assign a security group" /></p>
+
+<h4 id="step-3-connecting-to-your-ec2">Step 3: Connecting to your EC2</h4>
+
+<p>Before you begin, make sure you followed “Step 6” of the “Creating an EC2 Instance” article and changed the permissions for your <code class="language-plaintext highlighter-rouge">.pem</code> file.</p>
+
+<p><code class="language-plaintext highlighter-rouge">sudo chmod 400 /path/YourKey.pem</code></p>
+
+<p>By clicking “Connect” at the top of the instances page, Amazon will provide a list of instructions on connecting to your EC2 server:</p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/connect.png" alt="Image showing how to connect to an instance" /></p>
+
+<p><em>Note: you will need to have an SSH client on your computer. All Macbooks come with SSH, Window users may have to install an SSH client. On you command line you can check if you have an SSH client by typing “SSH” and hitting enter and checking if your terminal recognizes the command.</em></p>
+
+<p>You should be able to connect to your instance by copying the “Example” from the “Connect” tab. If you get an error about not being able to find the Permission File you may have to specify the path to the file. Move information on connect VIA SSH can be found <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstances.html?icmpid=docs_ec2_console">here on Amazon’s help site.</a></p>
+
+<p>You should be greeted with a message:</p>
+
+<p>“<code class="language-plaintext highlighter-rouge">Welcome to Ubuntu 18.04.2 LTS</code>” or whatever Operating System you installed.</p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/welcomeUbuntu.png" alt="Image showing welcome message once the instance is connected to" /></p>
+
+<h4 id="step-4-installing-jupyter-notebook">Step 4: Installing Jupyter Notebook</h4>
+
+<p>Once you are connected to your EC2, you now need to install Jupyter. The easiest way to do this is to download the <a href="https://www.anaconda.com/distribution/">Anaconda distribution</a> that matches your Operating System (if you are following along using Ubuntu, this is the Linux version).</p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/anaconda.png" alt="How to download Anocanda" /></p>
+
+<p>To download the Anaconda distribution to your EC2, copy the “installer” link and run:</p>
+
+<p><code class="language-plaintext highlighter-rouge">wget https://repo.anaconda.com/archive/Anaconda3-2019.03-Linux-x86_64.sh</code></p>
+
+<p>(this is the latest version as of writing this article)</p>
+
+<p>Once the file is downloaded run <code class="language-plaintext highlighter-rouge">bash</code> on the file that was downloaded to install it:</p>
+
+<p><code class="language-plaintext highlighter-rouge">bash Anaconda3-2019.03-Linux-x86_64.sh</code></p>
+
+<h4 id="step-5-configuring-jupyter-notebooks-path">Step 5: Configuring Jupyter Notebook’s Path</h4>
+
+<p>First, we need to add Jupyter to the system’s path (you can check if it is already on the path by running: <code class="language-plaintext highlighter-rouge">which python</code>, if no path is returned you need to add the path) To add Jupyter functionality to your terminal, add the following line of code to your <code class="language-plaintext highlighter-rouge">.bashrc</code> file:</p>
+
+<p><code class="language-plaintext highlighter-rouge">export PATH=/home/ubuntu/anaconda3/bin:$PATH</code></p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/path.png" alt="Image showing the added line " /></p>
+
+<p>After saving this change, you now need to run:</p>
+
+<p><code class="language-plaintext highlighter-rouge">source .bashrc</code></p>
+
+<p>To cause these changes to take effect. Now running <code class="language-plaintext highlighter-rouge">which python</code> should return the path to the python folder in Anaconda.</p>
+
+<h4 id="step-6-configuring-jupyter-notebook-settings">Step 6: Configuring Jupyter Notebook settings</h4>
+
+<p>First, you need to create our Jupyter configuration file. In order to create that file, you need to run:</p>
+
+<p><code class="language-plaintext highlighter-rouge">jupyter notebook --generate-config</code></p>
+
+<p>After creating your configuration file, you will need to generate a password for your Jupyter Notebook using ipython:</p>
+
+<p>Enter the IPython command line:</p>
+
+<p><code class="language-plaintext highlighter-rouge">ipython</code></p>
+
+<p>Now follow these steps to generate your password:</p>
+
+<p><code class="language-plaintext highlighter-rouge">from IPython.lib import passwd</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">passwd()</code></p>
+
+<p>You will be prompted to enter and re-enter your password. IPython will then generate a hash output, <strong>COPY THIS AND SAVE IT FOR LATER</strong>. We will need this for our configuration file.</p>
+
+<p>Next go into your jupyter config file:</p>
+
+<p><code class="language-plaintext highlighter-rouge">cd .jupyter</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">vim jupyter_notebook_config.py_</code></p>
+
+<p>Note: You may need first to run “exit” in order to exit IPython otherwise the vim command may not be recognized by the terminal.</p>
+
+<p>And add the following code:</p>
+
+<pre><code class="language-code">conf = get_config()
+
+conf.NotebookApp.ip = '0.0.0.0'
+conf.NotebookApp.password = u'YOUR PASSWORD HASH'
+conf.NotebookApp.port = 8888
+</code></pre>
+
+<p>Note: this code below should be put at the beginning of the document.</p>
+
+<p>Tips:</p>
+
+<p>- press “i” for insert mode</p>
+
+<p>- press “esc” to escape</p>
+
+<p>- press “shift+ z” to exit doc</p>
+
+<h4 id="step-7-create-a-directory-for-your-notebooks">Step 7: Create a directory for your notebooks</h4>
+
+<p>This step is easy. In order to make a folder to store all of your Jupyter Notebooks simply run:</p>
+
+<p><code class="language-plaintext highlighter-rouge">mkdir MyNotebooks</code></p>
+
+<p>You can call this folder anything, for this example we call it “MyNotebooks”</p>
+
+<h4 id="step-8-connecting-to-your-ec2-jupyter-server">Step 8: Connecting to your EC2 Jupyter Server</h4>
+
+<p>After Step 7, you should be ready to run your notebook and access your EC2 server. To run your Notebook simply run the command:</p>
+
+<p><code class="language-plaintext highlighter-rouge">jupyter notebook</code></p>
+
+<p>From there you should be able to access your server by going to:</p>
+
+<p><code class="language-plaintext highlighter-rouge">https://(your AWS public dns):8888/</code></p>
+
+<p>For example it should look like:</p>
+
+<p><code class="language-plaintext highlighter-rouge">http://ec2-18-222-233-183.us-east-2.compute.amazonaws.com:8888/</code></p>
+
+<p>You should be brought to a page like this:</p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/jupyterLogin.png" alt="Jupyter log in page" /></p>
+
+<p>Enter the password you created and you should be greeted with your full Jupyter Notebook system:</p>
+
+<p><img src="/assets/images/data-modeling-101/jupyter_article/jupyterLoggedIn.png" alt="Jupyter page once logged in" /></p>
+
+<h2 id="references">References:</h2>
+
+<p><a href="https://jupyter.org/" title="https://jupyter.org/">https://jupyter.org/</a>
+<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstances.html?icmpid=docs_ec2_console" title="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstances.html?icmpid=docs_ec2_console">https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstances.html?icmpid=docs_ec2_console</a></p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/blake/">Blake Barnhill</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matthew-layne/">Matthew Layne</a>
+        ,
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1HpR9gGG7l7Jgr6FjFEWOogD17pAewG0pE5_KesFoNQA/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/data-modeling-101/creating-an-ec2-server/">Prev – Creating an EC2 Server</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/data-modeling-101/using-jupyter-notebooks/">Next – Using Jupyter Notebooks</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

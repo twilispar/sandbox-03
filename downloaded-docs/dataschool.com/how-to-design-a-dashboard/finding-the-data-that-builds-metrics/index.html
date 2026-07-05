@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Use SQL to Find Data to Builds Metrics</title>
+  <meta name="description" content="Learn to collaborate with your data team to discover what data can be used within a dashboard. Use SQL to find and assess columns to use.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/how-to-design-a-dashboard/finding-the-data-that-builds-metrics/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Finding the Data That Builds Metrics"/>
+  <meta name="twitter:description" content="Learn to collaborate with your data team to discover what data can be used within a dashboard. Use SQL to find and assess columns to use."/>
+  <meta name="twitter:url" content="https://dataschool.com/how-to-design-a-dashboard/finding-the-data-that-builds-metrics/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/how-to-design-a-dashboard/finding-the-data-that-builds-metrics/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Finding the Data That Builds Metrics"
+  <meta property="og:description" content="Learn to collaborate with your data team to discover what data can be used within a dashboard. Use SQL to find and assess columns to use." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/how-to-design-a-dashboard/finding_the_data_that_builds_metrics/findingData.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/how-to-design-a-dashboard/finding-the-data-that-builds-metrics/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Use SQL to Find Data to Builds Metrics",
+    "image": "/assets/images/how-to-design-a-dashboard/finding_the_data_that_builds_metrics/findingData.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matt David"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/how-to-design-a-dashboard/finding-the-data-that-builds-metrics/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2020-02-15 18:05:35 -0800",
+    "description": "Learn to collaborate with your data team to discover what data can be used within a dashboard. Use SQL to find and assess columns to use."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/how-to-design-a-dashboard/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/how-to-design-a-dashboard@thumbnail.png" alt="Cover of How to Design a Dashboard" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/how-to-design-a-dashboard/" class="book-title">How to Design a Dashboard</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Introduction" aria-expanded="true" data-target="#Introduction"  class="dropdown-toggle"  data-toggle="collapse" >Introduction</a>
+                  <ul class="list-unstyled collapse " id="Introduction">
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/introduction/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/what-is-a-dashboard/">
+                What is a Dashboard?
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/what-makes-a-great-dashboard-aces/">
+                What Makes a Great Dashboard (ACES)
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/dashboard-design-process/">
+                Dashboard Design Process
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Define" aria-expanded="true" data-target="#Define"  class="dropdown-toggle"  data-toggle="collapse" >Define</a>
+                  <ul class="list-unstyled collapse " id="Define">
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/identifying-key-roles/">
+                Identifying Key Roles
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/determine-the-metrics-to-monitor/">
+                Determine the Metrics to Monitor
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Prototype" aria-expanded="true" data-target="#Prototype"  class="dropdown-toggle"  data-toggle="collapse" >Prototype</a>
+                  <ul class="list-unstyled collapse " id="Prototype">
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/find-the-best-visualizations-for-your-metrics/">
+                Find the Best Visualizations for Your Metrics
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/arranging-your-charts-as-a-dashboard/">
+                Arranging Your Charts as a Dashboard
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/dashboard-prototyping-and-feedback/">
+                Dashboard Prototyping and Feedback
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Build" aria-expanded="true" data-target="#Build"  class="dropdown-toggle"  data-toggle="collapse" >Build</a>
+                  <ul class="list-unstyled collapse show" id="Build">
+            
+            <li class="active">
+              <a href="/how-to-design-a-dashboard/finding-the-data-that-builds-metrics/">
+                Finding the Data That Builds Metrics
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/build-the-metrics/">
+                Build the Metrics
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Deploy" aria-expanded="true" data-target="#Deploy"  class="dropdown-toggle"  data-toggle="collapse" >Deploy</a>
+                  <ul class="list-unstyled collapse " id="Deploy">
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/sharing-the-dashboard-distribution-strategies/">
+                Sharing the Dashboard – Distribution Strategies
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/scaling-dashboards/">
+                Scaling Dashboards
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/making-sure-your-dashboard-always-gets-better/">
+                Making Sure Your Dashboard Always Gets Better
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Conclusion" aria-expanded="true" data-target="#Conclusion"  class="dropdown-toggle"  data-toggle="collapse" >Conclusion</a>
+                  <ul class="list-unstyled collapse " id="Conclusion">
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/conclusion/">
+                Conclusion
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-design-a-dashboard/design-a-dashboard-example/">
+                Design a Dashboard Example
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/how-to-design-a-dashboard/finding-the-data-that-builds-metrics/&title=Finding the Data That Builds Metrics&summary=Learn+to+collaborate+with+your+data+team+to+discover+what+data+can+be+used+within+a+dashboard.+Use+SQL+to+find+and+assess+columns+to+use.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/how-to-design-a-dashboard/finding-the-data-that-builds-metrics/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/how-to-design-a-dashboard/finding-the-data-that-builds-metrics/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Finding the Data That Builds Metrics</h1>
+    <p>
+      <em>Last modified: February 15, 2020</em>
+      
+     </p>
+  </header>
+  
+  
+  <p><img src="/assets/images/how-to-design-a-dashboard/finding_the_data_that_builds_metrics/findingData.png" alt="Finding data icon" /></p>
+
+<p>From the previous chapters, we established a foundation for building a dashboard, answering the questions of:</p>
+
+<ul>
+  <li>What decisions will this dashboard support?</li>
+  <li>What metrics will inform those decisions?</li>
+  <li>Which visualizations best showcase those metrics?</li>
+</ul>
+
+<p>However, the biggest challenge in dashboard design can be the “How”, as in how we get the data to build each of the visualizations.</p>
+
+<p>The three data scenarios you will encounter finding the data are:</p>
+
+<ul>
+  <li>You have clean data</li>
+  <li>You have messy data (most common)</li>
+  <li>You have no data</li>
+</ul>
+
+<p>If you have the data this will be an easy step of the process. If the data is messy or it does not exist things will get much more challenging.</p>
+
+<h2 id="when-you-have-the-data">When you have the data</h2>
+
+<p><img src="/assets/images/clean data.png" alt="" /></p>
+
+<p>Finding where the data that you need is can be the hardest part of the process. Often, data is not well documented and what you need could be spread across multiple databases. First, search for tables that have keywords from your Metrics Spreadsheet.</p>
+
+<p>Review the <a href="https://dataschool.com/how-to-teach-people-sql/accessing-data/">schemas of the databases</a> you have access to. Some BI tools provide you with visual Entity Relationship Diagrams to help you explore:</p>
+
+<p><img src="/assets/images/how-to-design-a-dashboard/finding_the_data_that_builds_metrics/schema.png" alt="available schemas" /></p>
+
+<p>Some products such as <a href="https://chartio.com/product/visual-sql/">Chartio</a> also allow you to search to find relevant columns and tables with autocomplete:</p>
+
+<p><img src="/assets/images/autocomplete.png" alt="" /></p>
+
+<p>When you find something promising such as a table with the same keyword you searched for, or one that contains a field that matches your keyword, run a quick query:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">operations</span>
+<span class="k">LIMIT</span> <span class="mi">3</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-design-a-dashboard/finding_the_data_that_builds_metrics/fromOperations3.png" alt="check for relevant info with limit" /></p>
+
+<p>Once you get the results, you can quickly see if it has relevant information. In this case, we can see that the table has a department column that looks appropriate, and the amount column may be the cost data we are looking for. If a table such as this one looks relevant to one of the metrics, write it down or put it directly in the <a href="https://dataschool.com/how-to-design-a-dashboard/determine-the-metrics-to-monitor/">Metrics Spreadsheet</a>.</p>
+
+<p>Your next step will be to determine what data you cannot find yourself. If you find a table, but are unsure if it is the correct data, put the name of the table in with a ? at the end. If you cannot find any relevant tables for a metric put three ? in the Metrics Spreadsheet.</p>
+
+<p><img src="/assets/images/how-to-design-a-dashboard/finding_the_data_that_builds_metrics/metricsSpreadsheetFull.png" alt="Full metric spreadsheet" /></p>
+
+<p>If you have any questions about the tables or columns you have found, it is time to consult the Data Gatekeeper. I’d highly recommend going to the Data Gatekeeper with the list of tables and fields you have questions about, using the Metrics Spreadsheet as a convenient way to structure the conversation.</p>
+
+<p>Go through each metric with the Data Gatekeeper, and explain what tables and fields you think you should be using and which ones you have questions about.</p>
+
+<p><img src="/assets/images/how-to-design-a-dashboard/finding_the_data_that_builds_metrics/highlightedSchema.png" alt="table structure with desired tables highlighted" /></p>
+
+<p>The Data Gatekeeper will confirm the tables and fields you have selected so far or will help you locate the tables and fields you need. You might not be able to access some of the data you need due to access permissions. The Data Gatekeeper may grant you access, help create the query, or will provide feedback about how to work around this limitation. After locating the relevant tables, update the Metrics Spreadsheet.</p>
+
+<p><img src="/assets/images/how-to-design-a-dashboard/finding_the_data_that_builds_metrics/metricsSpreadsheetDatasource.png" alt="Metrics spreadsheet with datasources highlighted" /></p>
+
+<p>We also need to specify the fields within the tables that will be used to make creating the SQL queries easy. Place the field names in parentheses below your grouping categories in the Content column. Notice ‘Total’ does not have a column associated with it because it is aggregating the full table.</p>
+
+<p><img src="/assets/images/how-to-design-a-dashboard/finding_the_data_that_builds_metrics/metricsSpreadsheetFormula.png" alt="Metrics spreadsheet with the formulae highlighted" /></p>
+
+<h2 id="when-you-have-messy-data">When you have messy data</h2>
+
+<p><img src="/assets/images/messy data.png" alt="messy data" /></p>
+
+<p>Most data is messy data. It may have obvious issues such as missing values. It may have more mysterious issues, such as obvious typos from manual input, or worse, ambiguous values. Whatever the cause, all these issues need to be addressed or documented before being used in a visualization.</p>
+
+<h3 id="missing-values">Missing values</h3>
+
+<p>On any column that you will be using in a metric calculation, you should check for Nulls and blank records. Here is an example query to get the total number of Nulls:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="k">FROM</span> <span class="k">table</span>
+<span class="k">WHERE</span> <span class="n">field</span> <span class="k">is</span> <span class="k">null</span>
+</code></pre></div></div>
+
+<p>To check for blank values we can use:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="k">FROM</span> <span class="k">table</span>
+<span class="k">WHERE</span> <span class="n">field</span> <span class="o">=</span> <span class="s1">''</span> <span class="k">or</span> <span class="n">field</span> <span class="o">=</span> <span class="s1">' '</span>
+</code></pre></div></div>
+
+<p>You need to evaluate how to treat missing values.</p>
+
+<h4 id="ignore---leave-the-values-as-they-are">Ignore - leave the values as they are</h4>
+
+<ul>
+  <li>This is the most common approach to dealing with missing data. Note the amount of missing values that exist and move on.</li>
+  <li>If there are high amounts of missing data in a field it is not recommended to use it in a calculation since it may no longer be representative of that field.</li>
+</ul>
+
+<h4 id="delete---remove-any-records-with-missing-data">Delete - remove any records with missing data</h4>
+
+<ul>
+  <li>Deletion is only recommended if the records are a very small minority of the data set so their removal does not skew the data.</li>
+  <li>One legitimate reason for removing a record due to a missing value is if it has missing values in multiple fields.</li>
+</ul>
+
+<h4 id="impute---replace-the-missing-value-with-a-value">Impute - replace the missing value with a value</h4>
+
+<ul>
+  <li>If the data is relatively normally distributed, replacing the value with the average or median can be done if there are only a few records missing the value. This will bias the distribution more towards the center so be cautious.</li>
+  <li>In some cases it is clear that leaving a field blank might indicate that the true value is 0. In these cases it is appropriate to impute with a 0.</li>
+</ul>
+
+<p>Regardless of which option you choose, be sure to have the decision documented so others can reproduce the calculation and understand if they should take the data they are seeing to be 100% accurate or not.</p>
+
+<h3 id="obviously-wrong-values">Obviously Wrong Values</h3>
+
+<p>On any column that you will be using in a metric calculation, you should also check for bizarre values. Do a quick check for the highest and lowest values of any of the fields that will be used. You can do this using the ORDER BY clause.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="k">table</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">field</span> <span class="k">DESC</span>
+</code></pre></div></div>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="k">table</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">field</span> <span class="k">ASC</span>
+</code></pre></div></div>
+
+<p>This will quickly surface values that are way off from others in the field.</p>
+
+<p>In text fields this is obviously wrong values are difficult to detect since the mistakes may not show at the beginning or end of an ordered list. However there are a few common things to check for:</p>
+
+<h4 id="phone-number">Phone Number</h4>
+
+<ul>
+  <li>Common fake numbers: 123-456-7890, 000-000-0000, and 999-999-9999</li>
+</ul>
+
+<h4 id="name">Name</h4>
+
+<ul>
+  <li>Common fake names: John Doe, Jane Doe,</li>
+  <li>Repetitive letters such as ‘aa’,’bb’</li>
+</ul>
+
+<h4 id="birthday">Birthday</h4>
+
+<ul>
+  <li>Too old: Over 100 years ago</li>
+  <li>Too young: Less than 13 years ago</li>
+</ul>
+
+<h3 id="potentially-wrong-values">Potentially Wrong Values</h3>
+
+<p>While the previous method dealt with obviously wrong values there can be more subtle <a href="https://dataschool.com/fundamentals-of-analysis/what-is-an-outlier/">outliers</a> and potentially wrong values that you may want to address.</p>
+
+<p>For instance we will demonstrate one method of determining outliers using the interquartile range method. First we need to establish quartiles within the data. Quartiles split a quantitative variable up into four equal sections. The interquartile range (IQR) is the difference between the upper quartile (Q3) and the lower quartile (Q1), which cover the central 50% of the data. If a value is far enough from the middle, we might consider that an outlier.</p>
+
+<p><img src="/assets/images/interquartile range.png" alt="" /></p>
+
+<p>A commonly accepted definition of an outlier is 1.5 * IQR + Q3 or Q1 - 1.5 * IQR. In essence, if a data point is 1.5 times the IQR larger than the upper quartile, or 1.5 times the IQR smaller than the lower quartile, it is an outlier value.</p>
+
+<p>Here is an example query applying this formula to <a href="https://dataschool.com/how-to-teach-people-sql/how-to-find-outliers-with-sql/">find outliers using IQR</a>.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">WITH</span> <span class="n">orderedlist</span>
+     <span class="k">AS</span> <span class="p">(</span><span class="k">SELECT</span> <span class="n">Row_number</span><span class="p">()</span>
+                  <span class="n">OVER</span><span class="p">(</span>
+                    <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">amount</span><span class="p">)</span><span class="k">AS</span> <span class="n">num</span><span class="p">,</span>
+                <span class="n">quantity</span>
+         <span class="k">FROM</span>   <span class="k">table</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">num</span><span class="p">,</span>
+       <span class="n">quantity</span>
+<span class="k">FROM</span>   <span class="n">orderedlist</span>
+<span class="k">WHERE</span>  <span class="n">num</span> <span class="o">&gt;</span> <span class="n">Floor</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">Count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="k">c</span>
+                    <span class="k">FROM</span>   <span class="k">table</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">75</span> <span class="o">+</span> <span class="p">(</span> <span class="n">Floor</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">Count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="k">c</span>
+                                                    <span class="k">FROM</span>   <span class="k">table</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">75</span><span class="p">)</span>
+                                             <span class="o">-</span> <span class="n">Floor</span><span class="p">(</span>
+                                             <span class="p">(</span><span class="k">SELECT</span> <span class="k">Count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="k">c</span>
+                                              <span class="k">FROM</span>   <span class="k">table</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">25</span><span class="p">)</span> <span class="p">))</span>
+        <span class="k">OR</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="n">Floor</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">Count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="k">c</span>
+                        <span class="k">FROM</span>   <span class="k">table</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">25</span> <span class="o">-</span> <span class="p">(</span> <span class="n">Floor</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">Count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="k">c</span>
+                                                        <span class="k">FROM</span>   <span class="k">table</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">75</span><span class="p">)</span>
+                                                 <span class="o">-</span> <span class="n">Floor</span><span class="p">(</span>
+                                                 <span class="p">(</span><span class="k">SELECT</span> <span class="k">Count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="k">c</span>
+                                                  <span class="k">FROM</span>   <span class="k">table</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">25</span><span class="p">)</span> <span class="p">))</span>
+</code></pre></div></div>
+
+<p>In text fields, potentially wrong values are more difficult to detect. Watch out for the following:</p>
+
+<h4 id="misspellings">Misspellings</h4>
+
+<ul>
+  <li>Slight errors will affect a query’s grouping or filtering: ‘Hamburger’, ‘Hamburdr’, ‘Hanburger’</li>
+</ul>
+
+<h4 id="various-capitalization">Various capitalization</h4>
+
+<ul>
+  <li>Any difference could affect a query’s grouping or filtering: ‘Hamburger’, ‘HamBurger’, ‘hamburger’’</li>
+</ul>
+
+<p>SQL will treat each of these variations as unique. One way to detect these is by grouping by the column the text values are in and reviewing any groups with very few records in them. These will most likely be misspelled versions of bigger categories.</p>
+
+<h2 id="when-you-have-no-data">When you have no data</h2>
+
+<p><img src="/assets/images/no data.png" alt="" /></p>
+
+<p>Sometimes you do not have the data in your database for your metric. This can be a huge roadblock but there are a few ways forward. First, we need to know:</p>
+
+<ul>
+  <li>Do we care about historical data?</li>
+  <li>Is the metric actually trackable?</li>
+  <li>How much data is needed for this metric to be valuable?</li>
+</ul>
+
+<p>With these answers we can solve the problem in a few different ways.</p>
+
+<h3 id="instrumenting-new-data-points">Instrumenting new data points</h3>
+
+<p>If historical data is of no concern, consider working with the Data Gatekeeper to start to tracking the data for the metrics you want. This might involve engineering to implement the new tracking. Based on the engineering resources available to help, this may delay completion of the dashboarding project.</p>
+
+<p>If the metric desired here is for a statistical test, talk with the Data Gatekeeper about how much data will be necessary to do the test properly. Factor in how much time it will take to get that data and let the Point Person know. Often times, people will want to draw conclusions as quickly as possible, before there has been enough data to be confident in the results. Do not let your dashboard get used incorrectly like this. Set time expectations up front when instrumenting new data points and perhaps even note on the dashboard when conclusions can be drawn.</p>
+
+<h3 id="proxy-metrics">Proxy Metrics</h3>
+
+<p>If we want historical data but we do not have the data for the metric we wanted, we can use proxy metrics. Proxy metrics are metrics that give us the same or similar information to what we wanted, when we can’t directly measure the desired metric.</p>
+
+<p><strong>Example:</strong></p>
+
+<p>The Point Person wants to know what customers think of the product.</p>
+
+<p>Desired Metric: NPS</p>
+
+<ul>
+  <li>This has not been implemented yet and is reliant on people filling out a form so there might not be a lot of data to draw conclusions from.</li>
+</ul>
+
+<p>Proxy Metric: Return Visitors</p>
+
+<ul>
+  <li>We could look at how often customers use the product as a proxy metric. In this case, we equivocate regular usage with our customers liking the product.</li>
+</ul>
+
+<p>While proxy metrics are not exact, they can give us a good estimation. Be careful when using proxy metrics, however, since they may be measuring things you do not expect and can lead you to make bad decisions.</p>
+
+<h4 id="proxy-metric-example">Proxy Metric example</h4>
+
+<p>Consider a company who has to wait a long time to see if their product was valuable to the consumer such as an education company. They provide a lot of knowledge to students, but if their ultimate goal is job placement they have to wait several months to know if their education was effective.</p>
+
+<p>How can they measure if they are doing a good job before their desired metric event happens?</p>
+
+<p>You could introduce surveys to measure how confident students are in their job prospects, you could measure graduation rates, or you could measure the amount of inbound interest in your students from outside employers. Each one of these Proxy Metrics which you might be able to assess sooner than the “did they get a job” metric will lead you to focus on different activities.</p>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>Finding where the data is located can be challenging.</li>
+  <li>Most likely you will need to involve the Data Gatekeeper in your search. Be prepared with what data you are looking for before engaging with them.</li>
+  <li>Sometimes you will not be able to find data due to your level of access and will need to consult with the Data Gatekeeper.</li>
+  <li>Fill out your metric architecture to know which tables and fields will be necessary for each metric.</li>
+  <li>Determine how messy your data is and clean it appropriately</li>
+  <li>If you do not have the data for a metric, work with the Data Gatekeeper to instrument new data points or use a proxy metric.</li>
+</ul>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matt/">Matt David</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/mike-yi/">Mike Yi</a>
+        ,
+      
+        
+        
+        <a href="/people/dave/">Dave Fowler</a>
+        ,
+      
+        
+        
+        <a href="/people/tim/">Tim Miller</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1AjcnERWqKWWREjniCZ-WZwbBQ_IT4n2FcMAFWyO4iy0/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/how-to-design-a-dashboard/dashboard-prototyping-and-feedback/">Prev – Dashboard Prototyping and Feedback</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/how-to-design-a-dashboard/build-the-metrics/">Next – Build the Metrics</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

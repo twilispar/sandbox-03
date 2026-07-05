@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>What is the Interquartile Range (IQR)</title>
+  <meta name="description" content="Learn what the Interquartile Range (IQR) is and how to use it to determine outliers.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/fundamentals-of-analysis/what-is-the-interquartile-range/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="What is the Interquartile Range?"/>
+  <meta name="twitter:description" content="Learn what the Interquartile Range (IQR) is and how to use it to determine outliers."/>
+  <meta name="twitter:url" content="https://dataschool.com/fundamentals-of-analysis/what-is-the-interquartile-range/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/fundamentals-of-analysis/what-is-the-interquartile-range/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="What is the Interquartile Range?"
+  <meta property="og:description" content="Learn what the Interquartile Range (IQR) is and how to use it to determine outliers." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/IQR.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/fundamentals-of-analysis/what-is-the-interquartile-range/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "What is the Interquartile Range (IQR)",
+    "image": "/assets/images/IQR.png",
+    "author": {
+        "@type": "Person",
+        "name": "Rebecca Barnes"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/fundamentals-of-analysis/what-is-the-interquartile-range/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-08-26 15:30:44 -0700",
+    "description": "Learn what the Interquartile Range (IQR) is and how to use it to determine outliers."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/fundamentals-of-analysis/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/fundamentals-of-analysis@thumbnail.png" alt="Cover of Fundamentals of Analysis" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/fundamentals-of-analysis/" class="book-title">Fundamentals of Analysis</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#book" aria-expanded="true" class="d-none">Book</a>
+                  <ul class="list-unstyled " id="book">
+            
+            <li >
+              <a href="/fundamentals-of-analysis/choosing-metrics-for-product-launch/">
+                Choosing Metrics for Product Launch
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/fundamentals-of-analysis/what-is-data-and-why-should-i-care/">
+                What is Data and Why Should I Care
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/fundamentals-of-analysis/types-of-data-analysis/">
+                Types of Data Analysis
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/fundamentals-of-analysis/how-to-explore-data/">
+                How to Explore Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/fundamentals-of-analysis/what-is-an-outlier/">
+                What is an Outlier?
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/fundamentals-of-analysis/what-is-the-interquartile-range/">
+                What is the Interquartile Range?
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/fundamentals-of-analysis/correlation-and-p-value/">
+                Correlation and P value
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/fundamentals-of-analysis/what-is-the-interquartile-range/&title=What is the Interquartile Range?&summary=Learn+what+the+Interquartile+Range+%28IQR%29+is+and+how+to+use+it+to+determine+outliers.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/fundamentals-of-analysis/what-is-the-interquartile-range/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/fundamentals-of-analysis/what-is-the-interquartile-range/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">What is the Interquartile Range?</h1>
+    <p>
+      <em>Last modified: August 26, 2019</em>
+      
+        <em> • Reading Time: 6 minutes</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>The interquartile range is a widely accepted method to find outliers in data. When using the interquartile range, or IQR, the full dataset is split into four equal segments, or quartiles. The distances between the quartiles is what is used to determine the IQR.</p>
+
+<p>Here’s how it works. Let’s say that we had a pretty diverse group of 15 friends with the following ages: 31, 21, 26, 30, 31, 45, 47, 32, 53, 54, 55, 38, 43, 57, 64. If we wanted to find the IQR, we would do the following:</p>
+
+<ol>
+  <li>Order the ages from smallest to largest</li>
+  <li>Find the middle value and create a group above and below this</li>
+  <li>Find the middle value for each group that was created</li>
+  <li>Find the difference between the middle of the top and bottom groups</li>
+</ol>
+
+<p>Let’s work through that. First we start off will all of our ages unordered.</p>
+
+<p><img src="https://lh5.googleusercontent.com/nDeSsBmZJjhl61DJiAmG9d7av5-CG35ZvfidMForh9VkUGuCksKm0usTtMFqulMUHp1JkZhaOkEDGGcdiH1JWVeIvclpceL9HWLtkUWR1oyreNOw4V7yxc6C__bjRT3gxJS9Y5ig" alt="" /></p>
+
+<ol>
+  <li>Once we’ve ordered them from smallest to largest, they’ll look like this. You can also see their position below each number.</li>
+</ol>
+
+<p><img src="https://lh6.googleusercontent.com/l2ws87Y1rbu3d-Z6asVILaNuumv_cGuBr6934-DtQ3P2OEr-QRwPJrCAJ7wYNvDbENe2KHIm2o-_4cOGRI5NuB0s9JEkJmh_vcTp486fCIxkc4UDaI6UWJtQEqZtpTzOYsJ2tPal" alt="" /></p>
+
+<ol>
+  <li>If we have 15 ages, the middle age will be at the 8th position. As we can see, the age 43 is in the 8th position.</li>
+</ol>
+
+<p>We can use the median to split our two groups. All ages between 21 and 38 are in the bottom group, and all of our ages between 45 and 64 are in the top group.</p>
+
+<ol>
+  <li>Each group now has seven ages in it. So the middle value for each group will be in the 4th position.</li>
+</ol>
+
+<p><img src="https://lh5.googleusercontent.com/pN-65MSvmvzOIcfIDTqb62YJcdy5T8Ix9Ea938FTeHOREF1Go8wu4dTgQVGfHMY9mEZ3kLJFgJyIGMDt-5hQn1wremrmVesLpWjUUl7IIqb98cyQTzWhkTHOvZG2m2OlnJdsxdcP" alt="" /></p>
+
+<ol>
+  <li>We calculate the interquartile range by first finding the value in the middle of the top group, which is 54 in this case. We then find the middle value in the bottom group, which is 31 in our example. The IQR is the difference between these two values. That is, 54 - 31, or, 23.</li>
+</ol>
+
+<p><img src="https://lh3.googleusercontent.com/2LjjyI8BSlgHMxs9K-orraPJKDKE2UtfMW1taTakM8Wq3T1MPpfYOAYK8SyHD8NC0_8Xfgod8jWEAbVUgkPcVnsxHj5wmK6zkA1hokEd-osj0WZrm8AGBXxl4RslGdbbJS9IT5rz" alt="" /></p>
+
+<p>This method of breaking the groups in half, finding the middle number and repeating this for each half works perfectly with a collection of 15 ages. But we can still work out the interquartile range if we had an even number of ages and couldn’t find middle values. Let’s say we had these 12 ages, instead of our original 15.</p>
+
+<p>With it ordered, it would look like this.</p>
+
+<p><img src="https://lh4.googleusercontent.com/FugAjUamvQ5IdlnCYK1uPe-mBM9o4NPxGOEvpyNCFEbmP_C0g5Cx0nYQnsRR4HLEUwTXFfQHIsmloligxW72V3vbV41iuxbj00qZNSLASnAs_YnUZoAqFeOqCBDygK4v8N4dyZzN" alt="" /></p>
+
+<p>As we can see, because the total number is even, there isn’t a number that falls in the middle of the groups. And, if we split the groups in half, there also isn’t a number that falls in the middle of either half.</p>
+
+<p>Instead of finding the middle number, we can break the ages in half, and then in half again.</p>
+
+<p><img src="https://lh3.googleusercontent.com/brdWyRjuqIyr8zJ615NddnivW0HWrVZl5x1sWyASpoV5VxhQmVlpK14YhhKthNYqQoE2ZUDECrUgS7gjR5RiPsizRepJMGTwCl0ExAjty81LNo6BPLuYwlJhyRZkkiQcD4x7r7us" alt="" /></p>
+
+<p>In this case, the “middle” value, between each of the groups, is the average of the values on either side of the line:</p>
+
+<p>(30 + 31)/2 = 31.5 (38 + 45)/2 = 41.5 (53 + 55)/2 = 54</p>
+
+<p><img src="https://lh6.googleusercontent.com/tGgANYECd6DTSJvQ7oyUDHy26NteGCGiJgwpx9dMmuquFbkp_YCt2U9bXAoSRNemkRsG0VdgJ_oxwK4yPcIkaS64Gan-X1B1I5Ll9SLU9VYLX5jlubqZDfuMLOtV3Zu02auo88Pd" alt="" /></p>
+
+<p>This means that the interquartile range would be 54 - 31.5, or 22.5.</p>
+
+<p>We can also refer to these values in the following way. For the above example:</p>
+
+<p>The Q1 value is 31.5. This is also the 25th percentile. <br />
+That is, 25% of values are equal to or lower than 31.5.</p>
+
+<p>The Q2 value is 41.5. This is also the 50th percentile or median. <br />
+That is, 50% of values are equal to or lower than 41.5.</p>
+
+<p>The Q3 value is 54. This is also the 75th percentile. <br />
+That is, 75% of values are equal to or lower than 54.</p>
+
+<p>The interquartile range, or IQR, is 22.5</p>
+
+<h2 id="finding-outliers-with-the-iqr">Finding Outliers with the IQR</h2>
+
+<h3 id="minor-outliers-iqr-x-15">Minor Outliers (IQR x 1.5)</h3>
+
+<p>Now that we know how to find the interquartile range, we can use it to define our outliers. The <a href="https://math.stackexchange.com/questions/966331/why-john-tukey-set-1-5-iqr-to-detect-outliers-instead-of-1-or-2">most common method</a> of finding outliers with the IQR is to define outliers as values that fall outside of 1.5 x IQR below Q1 or 1.5 x IQR above Q3.</p>
+
+<p>Let’s break that down using our original example.</p>
+
+<p><img src="https://lh6.googleusercontent.com/GqSCvBR6_u2e3GM-bGS8aJRtMdkk3xwPD1t9SvmIn4Vs9xIZPe8BjvJf_2IG1M4Tx_GEBctQKEja8zz9YYPkLAwjH0p84OoAO0Y4FjYLuGlv9jAoddwOuCjDquPZJkG5N0zRY2U7" alt="" /></p>
+
+<p>Our IQR was 23. If we multiply this by 1.5, we get 34.5. This means that we would consider any ages that are below -3.5 or above 88.5 to be outliers.</p>
+
+<p>Notice that the thresholds for the outliers are simply defined by the data we use. Even though it’s not possible to have a negative age, our outlier calculation only considers the numerical values. In our case, because we are using ages, this means that no matter how young our friend may be, we would not consider them an outlier. We’d also need a friend who was 89 years or older to consider them an outlier.</p>
+
+<p>In the case above, we have a pretty broad range of ages for our friends. What would happen if the range of ages for our friends was much smaller?</p>
+
+<p><img src="https://lh5.googleusercontent.com/jHYaC0UYHOf3oYnaUf7T48CVRvpsUuLHwwgwXtq0MBO0KtQajzboLEcXKrthOXe2AhVuhP0KNy1wk6lr-Ss__Bfmtd_i4_NJ4axYIsDRz_dn-CdwdM13NN4d2C4p5HnSeBgJWYjn" alt="" /></p>
+
+<p>In this case, our Q1 value is 31 and our Q3 value is 35. This means that our IQR is only 4. Now, 1.5 times IQR is 6. Any values below 25, or higher than 41 will be considered outliers.</p>
+
+<p>Now, our friends with the ages 21, 57, and 64 are considered outliers.</p>
+
+<h3 id="major-outliers-iqr-x-3">Major Outliers (IQR x 3)</h3>
+
+<p>This brings us to a second, less common threshold for assessing outliers. If we have a very small IQR, not all outliers are created equal. In the case above, while 21 and 64 are both outliers, 21 is only 10 years lower than our Q1 value of 31. But 64 is 30 years older than our Q3 value. How do we distinguish between “regular” outliers and “extreme” outliers.</p>
+
+<p>A major outlier is defined as values that fall outside of 3 times IQR below Q1 or 3 times IQR above Q3.</p>
+
+<p><img src="https://lh5.googleusercontent.com/ecIV8lZI_dnLMGVtGLBjU8_TV3d-xGPN6Ae8FasG46emwHFjMK21cY8YnMtNTr3-9SNe3z2iGjFTK5PPAzCddXXHJTsRd7OJNK06-sxfP6qZmXXjUom_lnhnMGnyGqUuYtIvp1i3" alt="" /></p>
+
+<p>If we go back to the previous example, 4 x 3 = 12. Major outliers will be those that are less than 19 and more 47.</p>
+
+<p>This allows us to indicate some difference between 21 and the other two outliers. An age of 21 is not considered a major outlier, but 57 and 64 are major outliers.</p>
+
+<p>Now that we know how to calculate our IQR and identify outliers, let’s look at how we can use SQL to find outliers using the IQR.</p>
+
+<p><a href="https://dataschool.com/how-to-teach-people-sql/how-to-find-outliers-with-sql/">Finding Outliers With SQL</a></p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/rebecca-barnes/">Rebecca Barnes</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1IzGKmQzUnI2rxbJxTfESTe-HFiRwuwNLyicJoKPNaCg/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/fundamentals-of-analysis/what-is-an-outlier/">Prev – What is an Outlier?</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/fundamentals-of-analysis/correlation-and-p-value/">Next – Correlation and P value</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Optimize a Redshift Database</title>
+  <meta name="description" content="Learn how Redshift manages optimization for your cloud data warehouse. Learn when to manually tune the database further for more performance for SQL queries.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/sql-optimization/optimizing-data-queries-with-redshift/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Redshift Optimization"/>
+  <meta name="twitter:description" content="Learn how Redshift manages optimization for your cloud data warehouse. Learn when to manually tune the database further for more performance for SQL queries."/>
+  <meta name="twitter:url" content="https://dataschool.com/sql-optimization/optimizing-data-queries-with-redshift/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/sql-optimization/optimizing-data-queries-with-redshift/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Redshift Optimization"
+  <meta property="og:description" content="Learn how Redshift manages optimization for your cloud data warehouse. Learn when to manually tune the database further for more performance for SQL queries." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/sql-optimization/redshift/nodeRelations.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/sql-optimization/optimizing-data-queries-with-redshift/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Optimize a Redshift Database",
+    "image": "/assets/images/sql-optimization/redshift/nodeRelations.png",
+    "author": {
+        "@type": "Person",
+        "name": "Blake Barnhill"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/sql-optimization/optimizing-data-queries-with-redshift/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 16:55:50 -0800",
+    "description": "Learn how Redshift manages optimization for your cloud data warehouse. Learn when to manually tune the database further for more performance for SQL queries."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/sql-optimization/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/sql-optimization@thumbnail.png" alt="Cover of SQL Optimization" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/sql-optimization/" class="book-title">SQL Optimization</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#QueryOptimizations" aria-expanded="true" data-target="#QueryOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Query optimizations</a>
+                  <ul class="list-unstyled collapse " id="QueryOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/what-is-a-query-plan/">
+                What is a Query Plan
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/order-of-a-sql-query/">
+                Order of a SQL Query
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/optimize-your-sql-query/">
+                Optimize your SQL Query
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ColumnandTableOptimizations" aria-expanded="true" data-target="#ColumnandTableOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Column and table optimizations</a>
+                  <ul class="list-unstyled collapse " id="ColumnandTableOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/optimization-using-explain/">
+                Optimization with EXPLAIN ANALYZE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/how-indexing-works/">
+                How Indexing Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/partial-indexes/">
+                Partial Indexes
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/multicolumn-indexes/">
+                Multicolumn Indexes
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ModelingData" aria-expanded="true" data-target="#ModelingData"  class="dropdown-toggle"  data-toggle="collapse" >Modeling data</a>
+                  <ul class="list-unstyled collapse " id="ModelingData">
+            
+            <li >
+              <a href="/sql-optimization/start-modeling-data/">
+                Start Modeling Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/scheduling-dbt/">
+                Scheduling Modeling
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/views/">
+                Views
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Databases" aria-expanded="true" data-target="#Databases"  class="dropdown-toggle"  data-toggle="collapse" >Databases</a>
+                  <ul class="list-unstyled collapse show" id="Databases">
+            
+            <li class="active">
+              <a href="/sql-optimization/optimizing-data-queries-with-redshift/">
+                Redshift Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/bigquery-optimization/">
+                BigQuery Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/snowflake/">
+                Snowflake Optimization
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/sql-optimization/optimizing-data-queries-with-redshift/&title=Redshift Optimization&summary=Learn+how+Redshift+manages+optimization+for+your+cloud+data+warehouse.+Learn+when+to+manually+tune+the+database+further+for+more+performance+for+SQL+queries.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/sql-optimization/optimizing-data-queries-with-redshift/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/sql-optimization/optimizing-data-queries-with-redshift/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Redshift Optimization</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <h2 id="what-is-redshift">What is Redshift?</h2>
+
+<p>Redshift is a fully managed, <a href="https://dataschool.com/data-modeling-101/row-vs-column-oriented-databases/">columnar store</a> data warehouse in the cloud hosted by <a href="https://aws.amazon.com/">Amazon Web Services(AWS)</a>. Redshift can handle petabytes of data and is accessible 24/7 for their customers.</p>
+
+<p>Redshift has many advantages for companies looking to consolidate their data all in one place. It is fully managed, very fast, highly scalable and is a part of the high used AWS platform.</p>
+
+<h3 id="fully-managed">Fully Managed</h3>
+
+<p>Amazon Redshift is fully managed, meaning that Redshift does all of the backend work for their customers. This includes setting up, managing, and scaling up the database. This means that Redshift will monitor and back up your data clusters, download and install Redshift updates, and other minor upkeep tasks.</p>
+
+<p>This means data analytics experts don’t have to spend time monitoring databases and continuously looking for ways to optimize their query performance. However, data analysts do have the option of fully controlling Redshift, this just means they have to spend the time to learn all of Redshift’s functionality and how to use it optimally for themselves.</p>
+
+<h3 id="very-fast">Very Fast</h3>
+
+<p>Redshift databases are very fast. Redshift databases are designed around the idea of grouping processing nodes known as clusters. Clusters are broken into two parts: a single leader node and a group of computer nodes.</p>
+
+<p><strong>The Leader Node</strong> is responsible for<strong>:</strong></p>
+
+<ul>
+  <li>Developing query plans</li>
+  <li>Assigning tasks to processing nodes to optimize performance.</li>
+  <li>Receiving and compiling all of the data returned by the processing nodes.</li>
+</ul>
+
+<p><strong>Processing nodes</strong> are responsible for:</p>
+
+<ul>
+  <li>Performing the queries that are assigned to it by leader node.</li>
+</ul>
+
+<p>There are two types of processing nodes:</p>
+
+<ul>
+  <li><strong>Dense Store(DS)</strong>- Dense stores nodes are stored on large Hard Disk Drives(HDDs), which are cheaper and have a higher capacity, but are slower than <strong>DC</strong> nodes.</li>
+  <li><strong>Dense Compute(DC)</strong>- Dense compute nodes are stored on Solid State Drives(SSDs) which give them the advantage of being a lot faster, depending on the task and drive types SSDs can be anywhere from 4 to 100 times faster than HDDs, but they are also more expensive and smaller capacity than <strong>DS</strong> nodes.</li>
+</ul>
+
+<p>There are several tiers of processing nodes that have varying levels of storage and memory capacities. As databases grow or become more heavily queried, Redshift will upgrade the node tiers to maintain performance levels. More information on <a href="https://aws.amazon.com/redshift/pricing/">node type and pricing can be found here.</a></p>
+
+<p>Data is stored across processing nodes in smaller subsections of a processing node which are known as <strong>slices</strong>. Slices are assigned a portion of the processing node’s memory, the quick access store used to hold data while it is in use, and storage, the long term storage location for the database, to manage queries on.</p>
+
+<p>Data is assigned to the processing node’s slices by the leader node and is stored evenly across all of the processing nodes in the database.</p>
+
+<p>Following this structure, Redshift has had to optimize their queries to be run across multiple nodes concurrently. Query plans generated in Redshift are designed to split up the workload between the processing nodes to fully leverage hardware used to store database, greatly reducing processing time when compared to single processed workloads.</p>
+
+<p>Below is an image provided by <a href="https://docs.aws.amazon.com/redshift/latest/dg/c_high_level_system_architecture.html">AWS</a> to explain their cluster interface:</p>
+
+<p><img src="/assets/images/sql-optimization/redshift/nodeRelations.png" alt="Image showing the cluster architecture of redshift's compute nodes" />
+Source: <a href="https://docs.aws.amazon.com/redshift/latest/dg/c_high_level_system_architecture.html">https://docs.aws.amazon.com/redshift/latest/dg/c_high_level_system_architecture.html</a></p>
+
+<p>Redshift is one of the fastest databases for data analytics and ad hoc queries. Redshift is built to handle petabyte sized databases while maintaining relatively fast queries of these databases.</p>
+
+<h3 id="data-compression">Data Compression</h3>
+
+<p>Redshift uses a column oriented database, which allows the data to be compressed in ways it could not otherwise be compressed. This allows queries to perform faster because:</p>
+
+<ul>
+  <li>Data takes up less space in memory</li>
+  <li>Compression reduces the cost on the CPU</li>
+  <li>Can provide optimizations for certain queries that cannot be performed on decompressed data</li>
+</ul>
+
+<p>Data compressions allows for increased performance of the database at the cost of more complex query plans. For the end user, this complication of query plans has no effect and is one of the reasons it is so heavily used.</p>
+
+<h3 id="highly-scalable">Highly Scalable</h3>
+
+<p>Being stored with the cluster system explained above means that Redshift is highly scalable. As your database grows and expands past what your current configuration can handle, all that needs to be done to reduce query times and add storage is add another processing node to your system. This makes scaling your database over time very easy.</p>
+
+<p>While query execution time is decreased when another node is added, it is not decreased to a set execution time. As processing nodes are added, query plans take longer to form and transferring from many nodes takes greater time.</p>
+
+<p>If your database become more heavily queried over time you may also have to upgrade the node types you are using to store your database. Redshift will do this automatically to maintain a high level of performance.</p>
+
+<h3 id="query-optimization">Query Optimization</h3>
+
+<p>As databases grow, the settings used to create the database initially may no longer be the most efficient settings to run your database. To address this, Amazon created the “Schema Conversion Tool” that allows you to easily migrate an existing database into a new database with new, more optimized settings. A guide on <a href="https://www.dbbest.com/blog/amazon-redshift-performance-tuning-tips/">migrating your slow database can be found here.</a></p>
+
+<h3 id="aws-platform">AWS Platform</h3>
+
+<p>AWS is an ever expanding cloud platform provided by Amazon. AWS is widely used in the business space to host websites, run virtual servers, and much more. Redshift is a part of Amazon’s ecosystem which means it can be easily linked with other Amazon services like: S3, DynamoDB, and Amazon EMR using Multiple Parallel Processing(MPP). MPP is the process of using multiple process nodes to speed up the transfer of data. When all of your services are on AWS you can optimize more than just your data queries by improving transfer times to other databases or buckets on your AWS account.</p>
+
+<p>Another benefit of being on the AWS platform is the security. AWS allows you to grant very specific security clearances to their AWS instances and the same goes for Redshift. You can create a variety of “Security Groups” and “<a href="https://aws.amazon.com/iam/">IAM”(Identity and Access Management)</a> settings to lock down your data and keep it safe from outside groups. This optimizes time savings by freeing users from having to maintain third party security settings.</p>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>Redshift is fully managed by AWS and does not require maintenance by the customer</li>
+  <li>Redshift is very fast thanks to their cluster system of dividing work between processing nodes.
+    <ul>
+      <li>These nodes are divided further into slices where the data is actually stored and queried</li>
+    </ul>
+  </li>
+  <li>Redshift is highly scalable because of the cluster system, expanding is as easy as adding another node and redistributing data.</li>
+  <li>Redshift benefits from being a member of the AWS family and can be used seamlessly with several other AWS products.
+    <ul>
+      <li>AWS also provides a layer of security for Redshift</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="references">References:</h3>
+
+<p><a href="https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html" title="https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html">https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html</a>
+<a href="http://db.csail.mit.edu/madden/html/theses/ferreira.pdf" title="http://db.csail.mit.edu/madden/html/theses/ferreira.pdf">http://db.csail.mit.edu/madden/html/theses/ferreira.pdf</a>
+<a href="https://hevodata.com/blog/amazon-redshift-pros-and-cons/" title="https://hevodata.com/blog/amazon-redshift-pros-and-cons/">https://hevodata.com/blog/amazon-redshift-pros-and-cons/</a></p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/blake/">Blake Barnhill</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matthew-layne/">Matthew Layne</a>
+        ,
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1rl45BatWGUEr5roDcABjmPH3e9QWNJFDlpH9oGT4oeE/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/views/">Prev – Views</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/bigquery-optimization/">Next – BigQuery Optimization</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

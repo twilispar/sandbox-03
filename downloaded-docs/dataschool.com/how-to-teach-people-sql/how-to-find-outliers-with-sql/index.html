@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Find Outliers with SQL</title>
+  <meta name="description" content="Find Outliers quickly with SQL. Detect outliers using simple ORDER BY techniques and using inter quartile range. Learn more.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/how-to-teach-people-sql/how-to-find-outliers-with-sql/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Find Outliers with SQL"/>
+  <meta name="twitter:description" content="Find Outliers quickly with SQL. Detect outliers using simple ORDER BY techniques and using inter quartile range. Learn more."/>
+  <meta name="twitter:url" content="https://dataschool.com/how-to-teach-people-sql/how-to-find-outliers-with-sql/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/how-to-teach-people-sql/how-to-find-outliers-with-sql/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How to Find Outliers with SQL"
+  <meta property="og:description" content="Find Outliers quickly with SQL. Detect outliers using simple ORDER BY techniques and using inter quartile range. Learn more." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/how-to-teach-people-sql/appendix/outliers/outliers_1.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/how-to-teach-people-sql/how-to-find-outliers-with-sql/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Find Outliers with SQL",
+    "image": "/assets/images/how-to-teach-people-sql/appendix/outliers/outliers_1.png",
+    "author": {
+        "@type": "Person",
+        "name": "Rebecca Barnes"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/how-to-teach-people-sql/how-to-find-outliers-with-sql/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 17:07:51 -0800",
+    "description": "Find Outliers quickly with SQL. Detect outliers using simple ORDER BY techniques and using inter quartile range. Learn more."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/how-to-teach-people-sql/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/how-to-teach-people-sql@thumbnail.png" alt="Cover of How to Teach People SQL" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/how-to-teach-people-sql/" class="book-title">How to Teach People SQL</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Introduction" aria-expanded="true" data-target="#Introduction"  class="dropdown-toggle"  data-toggle="collapse" >Introduction</a>
+                  <ul class="list-unstyled collapse " id="Introduction">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/introduction/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/why-databases/">
+                Why Databases?
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/accessing-data/">
+                Accessing Data
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#JOINs" aria-expanded="true" data-target="#JOINs"  class="dropdown-toggle"  data-toggle="collapse" >Joins</a>
+                  <ul class="list-unstyled collapse " id="JOINs">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/sql-join-types-explained-visually/">
+                SQL Join Types Explained Visually
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/inner-join-animated/">
+                Inner Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/left-right-join-animated/">
+                Left & Right Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/full-outer-join-animated/">
+                Full Outer Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/union-animated/">
+                Union - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/cross-join-animated/">
+                Cross Join - Animated
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Debugging" aria-expanded="true" data-target="#Debugging"  class="dropdown-toggle"  data-toggle="collapse" >Debugging</a>
+                  <ul class="list-unstyled collapse " id="Debugging">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/debugging-sql-syntax-errors/">
+                Syntax Errors
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/debugging-sql-0-rows-returned/">
+                0 Rows Returned
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Advanced" aria-expanded="true" data-target="#Advanced"  class="dropdown-toggle"  data-toggle="collapse" >Advanced</a>
+                  <ul class="list-unstyled collapse " id="Advanced">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-sql-aggregations-work/">
+                How Aggregations Work
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-sql-subqueries-work/">
+                How Subqueries Work
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-case-when-works/">
+                How CASE WHEN Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-window-functions-work/">
+                How Window Functions Work
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Appendix" aria-expanded="true" data-target="#Appendix"  class="dropdown-toggle"  data-toggle="collapse" >Appendix</a>
+                  <ul class="list-unstyled collapse show" id="Appendix">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/difference-between-where-and-on-in-sql/">
+                Difference between WHERE and ON in SQL
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/how-to-teach-people-sql/how-to-find-outliers-with-sql/">
+                How to Find Outliers with SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-regex-works-in-sql/">
+                How Regex Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/syntax-conventions/">
+                Syntax Conventions
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/third-normal-form/">
+                Third Normal Form
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/how-to-teach-people-sql/how-to-find-outliers-with-sql/&title=How to Find Outliers with SQL&summary=Find+Outliers+quickly+with+SQL.+Detect+outliers+using+simple+ORDER+BY+techniques+and+using+inter+quartile+range.+Learn+more.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/how-to-teach-people-sql/how-to-find-outliers-with-sql/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/how-to-teach-people-sql/how-to-find-outliers-with-sql/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">How to Find Outliers with SQL</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <h2 id="use-order-by-to-find-outliers">Use ORDER BY to find Outliers</h2>
+
+<p>A fast way to identify outliers is to sort the relevant values in both ascending and descending order. This allows you to quickly skim through the highest and lowest values. If you have a sense of what you are expecting from your data, this can help you quickly identify any unexpected values.</p>
+
+<p>If we were looking at the ages of friends, we’d expect to see values that fall into the range of ages for adults. Let’s take a look at what we see in the example below.</p>
+
+<p>To sort our values, we could use the following query.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">full_name</span><span class="p">,</span>
+<span class="n">age</span>
+<span class="k">FROM</span> <span class="n">friends</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">age</span>
+</code></pre></div></div>
+
+<p>Here’s what a sample output could look like.</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/outliers/outliers_1.png" alt="Sample of query sorted by age" /></p>
+
+<p>By sorting we can easily identify anomalies within the data. We don’t expect any of our friends to have an age of 1 or 999, so these outliers are likely an error. Because this is a small dataset, we can also view the final lines in our results.</p>
+
+<p>If we had a larger dataset but wanted to quickly view the end of our data, we could do so by adding DESC to our ORDER BY statement.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">full_name</span><span class="p">,</span>
+<span class="n">age</span>
+<span class="k">FROM</span> <span class="n">friends</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">age</span> <span class="k">DESC</span>
+</code></pre></div></div>
+
+<p>This method can be great for identifying obvious outliers that quickly stand out. However, it may miss some other details in the data. For example, if we have less knowledge of the expected values in our dataset, there may be enough outliers that they don’t stand out with just a quick look at the high and low values.</p>
+
+<p>It’s often helpful to be able to use a more statistical method for identifying outliers.</p>
+
+<h2 id="using-ntile-to-find-outliers">Using NTILE to find Outliers</h2>
+
+<p>One statistical method of identifying outliers is through the use of the interquartile range, or IQR. When we find values that fall outside of 1.5 times the range between our first and third quartiles, we typically consider these to be outliers.</p>
+
+<p>SQL has a function that allows us to easily separate our values into our four quartiles. When we use NTILES() we separate our data into the same number of groups as the value inside the brackets. Therefore, if we want to separate our data into quartiles we would use NTILE(4).</p>
+
+<p>NTILE is used in conjunction with a <a href="https://dataschool.com/how-to-teach-people-sql/how-window-functions-work/">window function</a>. If we use a similar example of friends’ ages, this is what the syntax would look like this:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span>
+	<span class="n">full_name</span><span class="p">,</span>
+	<span class="n">age</span><span class="p">,</span>
+	<span class="n">NTILE</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">age</span><span class="p">)</span> <span class="k">AS</span> <span class="n">age_quartile</span>
+<span class="k">FROM</span> <span class="n">friends</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/outliers/outliers_2.png" alt="Showing how to make a quartile using ntile(4)" /></p>
+
+<p>When using NTILE() in SQL, if we have an odd number of values in each of our quartiles, the maximum value in the first quartile will be the Q1 value, and the maximum value in the third quartile will be the Q3 value.</p>
+
+<p>In our case, the Q1 value is 31, and the Q2 value is 35. We can easily identify these values using a subquery.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span>
+	<span class="n">age_quartile</span><span class="p">,</span>
+	<span class="k">MAX</span><span class="p">(</span><span class="n">age</span><span class="p">)</span> <span class="k">AS</span> <span class="n">quartile_break</span>
+<span class="k">FROM</span><span class="p">(</span>
+	<span class="k">SELECT</span>
+    	<span class="n">full_name</span><span class="p">,</span>
+		<span class="n">age</span><span class="p">,</span>
+		<span class="n">NTILE</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">age</span><span class="p">)</span> <span class="k">AS</span> <span class="n">age_quartile</span>
+	<span class="k">FROM</span> <span class="n">friends</span><span class="p">)</span> <span class="k">AS</span> <span class="n">quartiles</span>
+<span class="k">WHERE</span> <span class="n">age_quartile</span> <span class="k">IN</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="n">age_quartile</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/outliers/outliers_3.png" alt="Results from the sql written above" /></p>
+
+<p>This gives us an IQR of 4, and 1.5 x 4 is 6.</p>
+
+<p>To find the lower threshold for our outliers we subtract from our Q1 value:</p>
+
+<p>31 - 6 = 25</p>
+
+<p>To find the upper threshold for our outliers we add to our Q3 value:</p>
+
+<p>35 + 6 = 41</p>
+
+<p>We can then use WHERE to filter values that are above or below the threshold.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">full_name</span><span class="p">,</span>
+<span class="n">age</span>
+<span class="k">FROM</span> <span class="n">friends</span>
+<span class="k">WHERE</span> <span class="n">age</span> <span class="o">&lt;</span> <span class="mi">25</span> <span class="k">OR</span> <span class="n">age</span> <span class="o">&gt;</span> <span class="mi">41</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/outliers/outliers_4.png" alt="Values returned by the sql written above" /></p>
+
+<h2 id="full-query">Full Query</h2>
+
+<p>While the above is great for explaining what we’re doing when finding outliers, it does have some issues. It works if the number of values in each half are odd, but we would need to make adjustments if it was even. Also, it requires us to write two different queries to get our results.</p>
+
+<p>It can be helpful to be able to run a single query that pulls the results. Here’s one way to do that:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="n">orderedList</span> <span class="k">AS</span> <span class="p">(</span>
+<span class="k">SELECT</span>
+	<span class="n">full_name</span><span class="p">,</span>
+	<span class="n">age</span><span class="p">,</span>
+	<span class="n">ROW_NUMBER</span><span class="p">()</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">age</span><span class="p">)</span> <span class="k">AS</span> <span class="n">row_n</span>
+<span class="k">FROM</span> <span class="n">friends</span>
+<span class="p">),</span>
+<span class="n">iqr</span> <span class="k">AS</span> <span class="p">(</span>
+<span class="k">SELECT</span>
+	<span class="n">age</span><span class="p">,</span>
+    <span class="n">full_name</span><span class="p">,</span>
+	<span class="p">(</span>
+		<span class="k">SELECT</span> <span class="n">age</span> <span class="k">AS</span> <span class="n">quartile_break</span>
+		<span class="k">FROM</span> <span class="n">orderedList</span>
+		<span class="k">WHERE</span> <span class="n">row_n</span> <span class="o">=</span> <span class="n">FLOOR</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+			<span class="k">FROM</span> <span class="n">friends</span><span class="p">)</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">75</span><span class="p">)</span>
+			<span class="p">)</span> <span class="k">AS</span> <span class="n">q_three</span><span class="p">,</span>
+	<span class="p">(</span>
+		<span class="k">SELECT</span> <span class="n">age</span> <span class="k">AS</span> <span class="n">quartile_break</span>
+		<span class="k">FROM</span> <span class="n">orderedList</span>
+		<span class="k">WHERE</span> <span class="n">row_n</span> <span class="o">=</span> <span class="n">FLOOR</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+			<span class="k">FROM</span> <span class="n">friends</span><span class="p">)</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">25</span><span class="p">)</span>
+			<span class="p">)</span> <span class="k">AS</span> <span class="n">q_one</span><span class="p">,</span>
+	<span class="mi">1</span><span class="p">.</span><span class="mi">5</span> <span class="o">*</span> <span class="p">((</span>
+		<span class="k">SELECT</span> <span class="n">age</span> <span class="k">AS</span> <span class="n">quartile_break</span>
+		<span class="k">FROM</span> <span class="n">orderedList</span>
+		<span class="k">WHERE</span> <span class="n">row_n</span> <span class="o">=</span> <span class="n">FLOOR</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+			<span class="k">FROM</span> <span class="n">friends</span><span class="p">)</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">75</span><span class="p">)</span>
+			<span class="p">)</span> <span class="o">-</span> <span class="p">(</span>
+			<span class="k">SELECT</span> <span class="n">age</span> <span class="k">AS</span> <span class="n">quartile_break</span>
+			<span class="k">FROM</span> <span class="n">orderedList</span>
+			<span class="k">WHERE</span> <span class="n">row_n</span> <span class="o">=</span> <span class="n">FLOOR</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+				<span class="k">FROM</span> <span class="n">friends</span><span class="p">)</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">25</span><span class="p">)</span>
+			<span class="p">))</span> <span class="k">AS</span> <span class="n">outlier_range</span>
+	<span class="k">FROM</span> <span class="n">orderedList</span>
+<span class="p">)</span>
+
+<span class="k">SELECT</span> <span class="n">full_name</span><span class="p">,</span> <span class="n">age</span>
+<span class="k">FROM</span> <span class="n">iqr</span>
+<span class="k">WHERE</span> <span class="n">age</span> <span class="o">&gt;=</span> <span class="p">((</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_three</span><span class="p">)</span>
+	<span class="k">FROM</span> <span class="n">iqr</span><span class="p">)</span> <span class="o">+</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">outlier_range</span><span class="p">)</span>
+		<span class="k">FROM</span> <span class="n">iqr</span><span class="p">))</span> <span class="k">OR</span>
+		<span class="n">age</span> <span class="o">&lt;=</span> <span class="p">((</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_one</span><span class="p">)</span>
+	<span class="k">FROM</span> <span class="n">iqr</span><span class="p">)</span> <span class="o">-</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">outlier_range</span><span class="p">)</span>
+		<span class="k">FROM</span> <span class="n">iqr</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>This query uses ROW_NUMBER and FLOOR (always rounds down) to find the Q1 (at the row 25% of the way through) and Q3 (at the row 75% of the way through) values. From there, we can calculate the IQR x 1.5 and used these as reference for our outliers.</p>
+
+<h3 id="technical-note">Technical Note</h3>
+
+<p>The above query will be 100% accurate if each half of our data has an odd number of values. To check this, we would count the total number of rows and divide this count in half. If the result end in .5, we would round down. From there, we can determine if there are an odd or even number of values in each half.</p>
+
+<p>For example, if I have a total of 55 values, half of this is 27.5. If I round down, I have 27, which is odd and therefore the query will be entirely accurate.</p>
+
+<p>If the value is even, for example, I had 26 values in each half instead of 27, then I would need to adjust the query to be entirely accurate. In this case I would need the average of the 13th and the 14th values to find Q1 and similarly for Q3.</p>
+
+<p>To do this, the above query can be adjusted as follows:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="n">orderedList</span> <span class="k">AS</span> <span class="p">(</span>
+<span class="k">SELECT</span>
+	<span class="n">full_name</span><span class="p">,</span>
+	<span class="n">age</span><span class="p">,</span>
+	<span class="n">ROW_NUMBER</span><span class="p">()</span> <span class="n">OVER</span> <span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">age</span><span class="p">)</span> <span class="k">AS</span> <span class="n">row_n</span>
+<span class="k">FROM</span> <span class="n">friends</span>
+<span class="p">),</span>
+
+<span class="n">quartile_breaks</span> <span class="k">AS</span> <span class="p">(</span>
+<span class="k">SELECT</span>
+	<span class="n">age</span><span class="p">,</span>
+    <span class="n">full_name</span><span class="p">,</span>
+	<span class="p">(</span>
+	<span class="k">SELECT</span> <span class="n">age</span> <span class="k">AS</span> <span class="n">quartile_break</span>
+	<span class="k">FROM</span> <span class="n">orderedList</span>
+	<span class="k">WHERE</span> <span class="n">row_n</span> <span class="o">=</span> <span class="n">FLOOR</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">friends</span><span class="p">)</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">75</span><span class="p">)</span>
+	<span class="p">)</span> <span class="k">AS</span> <span class="n">q_three_lower</span><span class="p">,</span>
+	<span class="p">(</span>
+	<span class="k">SELECT</span> <span class="n">age</span> <span class="k">AS</span> <span class="n">quartile_break</span>
+	<span class="k">FROM</span> <span class="n">orderedList</span>
+	<span class="k">WHERE</span> <span class="n">row_n</span> <span class="o">=</span> <span class="n">FLOOR</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">friends</span><span class="p">)</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">75</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+	<span class="p">)</span> <span class="k">AS</span> <span class="n">q_three_upper</span><span class="p">,</span>
+	<span class="p">(</span>
+	<span class="k">SELECT</span> <span class="n">age</span> <span class="k">AS</span> <span class="n">quartile_break</span>
+	<span class="k">FROM</span> <span class="n">orderedList</span>
+	<span class="k">WHERE</span> <span class="n">row_n</span> <span class="o">=</span> <span class="n">FLOOR</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">friends</span><span class="p">)</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">25</span><span class="p">)</span>
+	<span class="p">)</span> <span class="k">AS</span> <span class="n">q_one_lower</span><span class="p">,</span>
+	<span class="p">(</span>
+	<span class="k">SELECT</span> <span class="n">age</span> <span class="k">AS</span> <span class="n">quartile_break</span>
+	<span class="k">FROM</span> <span class="n">orderedList</span>
+	<span class="k">WHERE</span> <span class="n">row_n</span> <span class="o">=</span> <span class="n">FLOOR</span><span class="p">((</span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">FROM</span> <span class="n">friends</span><span class="p">)</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">25</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+	<span class="p">)</span> <span class="k">AS</span> <span class="n">q_one_upper</span>
+	<span class="k">FROM</span> <span class="n">orderedList</span>
+	<span class="p">),</span>
+
+<span class="n">iqr</span> <span class="k">AS</span> <span class="p">(</span>
+<span class="k">SELECT</span>
+	<span class="n">age</span><span class="p">,</span>
+    <span class="n">full_name</span><span class="p">,</span>
+	<span class="p">(</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_three_lower</span><span class="p">)</span>
+    	<span class="k">FROM</span> <span class="n">quartile_breaks</span><span class="p">)</span> <span class="o">+</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_three_upper</span><span class="p">)</span>
+    	<span class="k">FROM</span> <span class="n">quartile_breaks</span><span class="p">)</span>
+	<span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="k">AS</span> <span class="n">q_three</span><span class="p">,</span>
+	<span class="p">(</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_one_lower</span><span class="p">)</span>
+    	<span class="k">FROM</span> <span class="n">quartile_breaks</span><span class="p">)</span> <span class="o">+</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_one_upper</span><span class="p">)</span>
+    	<span class="k">FROM</span> <span class="n">quartile_breaks</span><span class="p">)</span>
+	<span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="k">AS</span> <span class="n">q_one</span><span class="p">,</span>
+	<span class="mi">1</span><span class="p">.</span><span class="mi">5</span> <span class="o">*</span> <span class="p">((</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_three_lower</span><span class="p">)</span>
+    	<span class="k">FROM</span> <span class="n">quartile_breaks</span><span class="p">)</span> <span class="o">+</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_three_upper</span><span class="p">)</span>
+    	<span class="k">FROM</span> <span class="n">quartile_breaks</span><span class="p">)</span>
+	<span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_one_lower</span><span class="p">)</span>
+    	<span class="k">FROM</span> <span class="n">quartile_breaks</span><span class="p">)</span> <span class="o">+</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_one_upper</span><span class="p">)</span>
+    	<span class="k">FROM</span> <span class="n">quartile_breaks</span><span class="p">)</span>
+	<span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="k">AS</span> <span class="n">outlier_range</span>
+<span class="k">FROM</span> <span class="n">quartile_breaks</span>
+<span class="p">)</span>
+
+<span class="k">SELECT</span>
+	<span class="n">full_name</span><span class="p">,</span>
+    <span class="n">age</span>
+<span class="k">FROM</span> <span class="n">iqr</span>
+<span class="k">WHERE</span> <span class="n">age</span> <span class="o">&gt;=</span>
+	<span class="p">((</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_three</span><span class="p">)</span>
+		<span class="k">FROM</span> <span class="n">iqr</span><span class="p">)</span> <span class="o">+</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">outlier_range</span><span class="p">)</span>
+		<span class="k">FROM</span> <span class="n">iqr</span><span class="p">))</span>
+ <span class="k">OR</span> <span class="n">age</span> <span class="o">&lt;=</span>
+ 	<span class="p">((</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">q_one</span><span class="p">)</span>
+		<span class="k">FROM</span> <span class="n">iqr</span><span class="p">)</span> <span class="o">-</span>
+	<span class="p">(</span><span class="k">SELECT</span> <span class="k">MAX</span><span class="p">(</span><span class="n">outlier_range</span><span class="p">)</span>
+		<span class="k">FROM</span> <span class="n">iqr</span><span class="p">))</span>
+</code></pre></div></div>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/rebecca-barnes/">Rebecca Barnes</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/how-to-teach-people-sql/difference-between-where-and-on-in-sql/">Prev – Difference between WHERE and ON in SQL</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/how-to-teach-people-sql/how-regex-works-in-sql/">Next – How Regex in SQL Works</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

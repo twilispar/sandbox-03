@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Learn what a Query Plan is</title>
+  <meta name="description" content="Query Plan's are the code that SQL runs on your database. Learn how the query plan works and how to optimize your SQL queries. Learn more">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/sql-optimization/what-is-a-query-plan/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="What is a Query Plan"/>
+  <meta name="twitter:description" content="Query Plan's are the code that SQL runs on your database. Learn how the query plan works and how to optimize your SQL queries. Learn more"/>
+  <meta name="twitter:url" content="https://dataschool.com/sql-optimization/what-is-a-query-plan/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/sql-optimization/what-is-a-query-plan/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="What is a Query Plan"
+  <meta property="og:description" content="Query Plan's are the code that SQL runs on your database. Learn how the query plan works and how to optimize your SQL queries. Learn more" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/sql-optimization/whatsQueryPlan/whatsQueryPlan_2.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/sql-optimization/what-is-a-query-plan/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Learn what a Query Plan is",
+    "image": "/assets/images/sql-optimization/whatsQueryPlan/whatsQueryPlan_2.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matthew Layne"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/sql-optimization/what-is-a-query-plan/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 16:55:50 -0800",
+    "description": "Query Plan's are the code that SQL runs on your database. Learn how the query plan works and how to optimize your SQL queries. Learn more"
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/sql-optimization/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/sql-optimization@thumbnail.png" alt="Cover of SQL Optimization" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/sql-optimization/" class="book-title">SQL Optimization</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#QueryOptimizations" aria-expanded="true" data-target="#QueryOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Query optimizations</a>
+                  <ul class="list-unstyled collapse show" id="QueryOptimizations">
+            
+            <li class="active">
+              <a href="/sql-optimization/what-is-a-query-plan/">
+                What is a Query Plan
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/order-of-a-sql-query/">
+                Order of a SQL Query
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/optimize-your-sql-query/">
+                Optimize your SQL Query
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ColumnandTableOptimizations" aria-expanded="true" data-target="#ColumnandTableOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Column and table optimizations</a>
+                  <ul class="list-unstyled collapse " id="ColumnandTableOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/optimization-using-explain/">
+                Optimization with EXPLAIN ANALYZE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/how-indexing-works/">
+                How Indexing Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/partial-indexes/">
+                Partial Indexes
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/multicolumn-indexes/">
+                Multicolumn Indexes
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ModelingData" aria-expanded="true" data-target="#ModelingData"  class="dropdown-toggle"  data-toggle="collapse" >Modeling data</a>
+                  <ul class="list-unstyled collapse " id="ModelingData">
+            
+            <li >
+              <a href="/sql-optimization/start-modeling-data/">
+                Start Modeling Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/scheduling-dbt/">
+                Scheduling Modeling
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/views/">
+                Views
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Databases" aria-expanded="true" data-target="#Databases"  class="dropdown-toggle"  data-toggle="collapse" >Databases</a>
+                  <ul class="list-unstyled collapse " id="Databases">
+            
+            <li >
+              <a href="/sql-optimization/optimizing-data-queries-with-redshift/">
+                Redshift Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/bigquery-optimization/">
+                BigQuery Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/snowflake/">
+                Snowflake Optimization
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/sql-optimization/what-is-a-query-plan/&title=What is a Query Plan&summary=Query+Plan%27s+are+the+code+that+SQL+runs+on+your+database.+Learn+how+the+query+plan+works+and+how+to+optimize+your+SQL+queries.+Learn+more&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/sql-optimization/what-is-a-query-plan/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/sql-optimization/what-is-a-query-plan/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">What is a Query Plan</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>A Query plan is a list of instructions that the database needs to follow in order to execute a query on the data.</p>
+
+<p>Below is an example query plan for a given query:</p>
+
+<p><img src="/assets/images/sql-optimization/whatsQueryPlan/whatsQueryPlan_1.png" alt="Shows a query plan and points out the key parts: costs, rows, data size, and the method being used" /></p>
+
+<p>This query plan shows the particular steps taken to execute the given command. It also specifies the expected cost for each section.</p>
+
+<h2 id="video">Video</h2>
+<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/1qVp8ePIMjs?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+
+<h2 id="the-query-optimizer">The Query Optimizer</h2>
+
+<p>SQL is a declarative language. This means that SQL queries describe what the user wants and then the query is transformed into executable commands by the Query Optimizer. Those executable commands are known as Query Plans.</p>
+
+<p>The Query Optimizer generates multiple Query Plans for a single query and determines the most efficient plan to run.</p>
+
+<p><img src="/assets/images/sql-optimization/whatsQueryPlan/whatsQueryPlan_2.png" alt="Graphic showing how the query optimizer creates query plans and selects the best plan" /></p>
+
+<p>There are often many different ways to search a database. Take for example the following database of tools that has five entries. Each entry has a unique ID number and a non-unique name.</p>
+
+<p><img src="/assets/images/sql-optimization/whatsQueryPlan/whatsQueryPlan_3.png" alt="Table containing an ID column and a Name column. the IDs are the numbers 1-5. The names are: Callipers, Hammer, Screwdriver, Wrench, and Hammer." /></p>
+
+<p>In order to find a particular tool, there are several possible queries that could be run. For example, the query:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">tools</span>
+<span class="k">WHERE</span> <span class="n">name</span><span class="o">=</span><span class="s1">'Screwdriver'</span><span class="p">;</span>
+</code></pre></div></div>
+<p>Will return the same thing as the query:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">tools</span>
+<span class="k">WHERE</span> <span class="n">id</span><span class="o">=</span><span class="mi">3</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="scan-vs-seek">Scan Vs. Seek</h3>
+
+<p>These queries will return the same results, but may have different final query plans. The first query will have a query plan that uses a sequential scan. This means that all five rows of the database will be checked to see if the name is screwdriver and, when run, would look like the following table:</p>
+
+<p><img src="/assets/images/sql-optimization/whatsQueryPlan/whatsQueryPlan_4.png" alt="table showing that the correct entry is at slot 3 in the table, but in a scan, the last two values must be checked anyways" /></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>(green = match)</td>
+      <td>(red = miss)</td>
+      <td>(white = not checked)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The second query will use a query plan which implements a sequential seek since the second query handles unique values. Like a scan, a seek will go through each entry and check to see if the condition is met. However unlike a scan, a seek will stop once a matching entry has been found. A seek for ID = 3 would look like the following figure:</p>
+
+<p><img src="/assets/images/sql-optimization/whatsQueryPlan/whatsQueryPlan_5.png" alt="Table showing that with a seek, the last two values of the table can be ignored." /></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>(green = match)</td>
+      <td>(red = miss)</td>
+      <td>(white = not checked)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This seek only needs to check three rows in order to return the result unlike a scan which must check the entire database.</p>
+
+<p>For more complicated queries there may be situations in which one query plan implements a seek while the other implements a scan. In this case, the query optimizer will choose the query plan that implements a seek, since seeks are more efficient than scans. There are also different types of scans that have different efficiencies in different situations.</p>
+
+<p><strong>Summary</strong></p>
+
+<ul>
+  <li>Query plans are a set of instructions generated by the Query Optimizer.</li>
+  <li>They generate estimates of query efficiency</li>
+  <li>The Query Optimizer generates multiple query plans and determines which plan is most efficient for a given query.</li>
+  <li>Scan Vs. Seek</li>
+  <li>Scans search the whole database for matches</li>
+  <li>Seeks search the database for a single match and stop once they have found it</li>
+</ul>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matthew-layne/">Matthew Layne</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/blake/">Blake Barnhill</a>
+        ,
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1UcOvqq_7wwxeztReW9WIBY8cJpvCapQtqYfe54JzDmc/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/snowflake/">Prev – Snowflake Optimization</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/order-of-a-sql-query/">Next – Order of a SQL Query</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

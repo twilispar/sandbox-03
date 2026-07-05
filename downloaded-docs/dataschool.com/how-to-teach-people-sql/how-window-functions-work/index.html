@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>How Window Functions work in SQL with animated Gifs</title>
+  <meta name="description" content="Learn how window functions work by looking at gifs that show the process in slow motion. See every step in SQL animated in slow motion. Learn more.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/how-to-teach-people-sql/how-window-functions-work/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How Window Functions Work"/>
+  <meta name="twitter:description" content="Learn how window functions work by looking at gifs that show the process in slow motion. See every step in SQL animated in slow motion. Learn more."/>
+  <meta name="twitter:url" content="https://dataschool.com/how-to-teach-people-sql/how-window-functions-work/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/how-to-teach-people-sql/how-window-functions-work/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How Window Functions Work"
+  <meta property="og:description" content="Learn how window functions work by looking at gifs that show the process in slow motion. See every step in SQL animated in slow motion. Learn more." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/RunningAVGGif.gif" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/how-to-teach-people-sql/how-window-functions-work/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "How Window Functions work in SQL with animated Gifs",
+    "image": "/assets/images/RunningAVGGif.gif",
+    "author": {
+        "@type": "Person",
+        "name": "Blake Barnhill"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/how-to-teach-people-sql/how-window-functions-work/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2021-03-22 13:01:15 -0700",
+    "description": "Learn how window functions work by looking at gifs that show the process in slow motion. See every step in SQL animated in slow motion. Learn more."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/how-to-teach-people-sql/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/how-to-teach-people-sql@thumbnail.png" alt="Cover of How to Teach People SQL" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/how-to-teach-people-sql/" class="book-title">How to Teach People SQL</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Introduction" aria-expanded="true" data-target="#Introduction"  class="dropdown-toggle"  data-toggle="collapse" >Introduction</a>
+                  <ul class="list-unstyled collapse " id="Introduction">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/introduction/">
+                Introduction
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/why-databases/">
+                Why Databases?
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/accessing-data/">
+                Accessing Data
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#JOINs" aria-expanded="true" data-target="#JOINs"  class="dropdown-toggle"  data-toggle="collapse" >Joins</a>
+                  <ul class="list-unstyled collapse " id="JOINs">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/sql-join-types-explained-visually/">
+                SQL Join Types Explained Visually
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/inner-join-animated/">
+                Inner Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/left-right-join-animated/">
+                Left & Right Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/full-outer-join-animated/">
+                Full Outer Join - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/union-animated/">
+                Union - Animated
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/cross-join-animated/">
+                Cross Join - Animated
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Debugging" aria-expanded="true" data-target="#Debugging"  class="dropdown-toggle"  data-toggle="collapse" >Debugging</a>
+                  <ul class="list-unstyled collapse " id="Debugging">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/debugging-sql-syntax-errors/">
+                Syntax Errors
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/debugging-sql-0-rows-returned/">
+                0 Rows Returned
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Advanced" aria-expanded="true" data-target="#Advanced"  class="dropdown-toggle"  data-toggle="collapse" >Advanced</a>
+                  <ul class="list-unstyled collapse show" id="Advanced">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-sql-aggregations-work/">
+                How Aggregations Work
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-sql-subqueries-work/">
+                How Subqueries Work
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-case-when-works/">
+                How CASE WHEN Works
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/how-to-teach-people-sql/how-window-functions-work/">
+                How Window Functions Work
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Appendix" aria-expanded="true" data-target="#Appendix"  class="dropdown-toggle"  data-toggle="collapse" >Appendix</a>
+                  <ul class="list-unstyled collapse " id="Appendix">
+            
+            <li >
+              <a href="/how-to-teach-people-sql/difference-between-where-and-on-in-sql/">
+                Difference between WHERE and ON in SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-to-find-outliers-with-sql/">
+                How to Find Outliers with SQL
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/how-regex-works-in-sql/">
+                How Regex Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/syntax-conventions/">
+                Syntax Conventions
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/how-to-teach-people-sql/third-normal-form/">
+                Third Normal Form
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/how-to-teach-people-sql/how-window-functions-work/&title=How Window Functions Work&summary=Learn+how+window+functions+work+by+looking+at+gifs+that+show+the+process+in+slow+motion.+See+every+step+in+SQL+animated+in+slow+motion.+Learn+more.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/how-to-teach-people-sql/how-window-functions-work/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/how-to-teach-people-sql/how-window-functions-work/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article class="img-border-on-default">
+  <header class="mb-4">
+    <h1 class="title">How Window Functions Work</h1>
+    <p>
+      <em>Last modified: March 22, 2021</em>
+      
+     </p>
+  </header>
+  
+  
+  <h2 id="what-are-window-functions">What are Window Functions?</h2>
+
+<p>Window functions create a new column based on calculations performed on a subset or “<strong>window</strong>” of the data. This window starts at the first row on a particular column and increases in size unless you constrain the size of the window.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'Day'</span><span class="p">,</span> <span class="s1">'Mile Driving'</span><span class="p">,</span>
+<span class="k">SUM</span><span class="p">(</span><span class="s1">'Miles Driving'</span><span class="p">)</span> <span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="s1">'Day'</span><span class="p">)</span> <span class="k">AS</span> <span class="s1">'Running Total'</span>
+<span class="k">FROM</span> <span class="s1">'Running total mileage visual'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/RunningTotalGif.gif" alt="Visualization of a running total" /></p>
+
+<p>Here we can see it perform an aggregation of what is in side of the window. The window grows each row and so it aggregates more and more of the data giving you a running aggregation, in this case a running total.</p>
+
+<p>If we constrain the window to be 3 rows tall we can get a 3 day running average.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'Day'</span><span class="p">,</span> <span class="s1">'Daily Revenue'</span><span class="p">,</span>
+<span class="k">AVG</span><span class="p">(</span><span class="s1">'Daily Revenue'</span><span class="p">)</span> <span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="s1">'Day'</span> <span class="k">ROWS</span> <span class="mi">2</span> <span class="n">PRECEDING</span><span class="p">)</span>
+<span class="k">AS</span> <span class="s1">'3 Day Average'</span> <span class="k">FROM</span> <span class="s1">'Running Average Example'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/RunningAVGGif.gif" alt="Visualization of a running average" /></p>
+
+<p>The window still starts as a single row, then it grows to its fixed size and then the whole window shifts along with it.</p>
+
+<p>Window functions also work on partitioned data (grouped data). It first sorts the data then applies the aggregate function on those groups, putting the result in the new column for each row in that group.</p>
+
+<p>Below, you can see an example of this calculating the total revenue a business makes on the weekend vs the rest of the week.</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'Day'</span><span class="p">,</span> <span class="s1">'Weekend'</span><span class="p">,</span> <span class="s1">'Daily Revenue'</span><span class="p">,</span>
+<span class="k">SUM</span><span class="p">(</span><span class="s1">'Daily Revenue'</span><span class="p">)</span> <span class="n">OVER</span><span class="p">(</span><span class="n">PARTITION</span> <span class="k">BY</span> <span class="s1">'Weekend'</span><span class="p">)</span> <span class="k">AS</span> <span class="s1">'Total'</span>
+<span class="k">FROM</span> <span class="s1">'Partitioned Total Example'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/WindowPartitionedGif.gif" alt="Visualization of a window partition" /></p>
+
+<p>Window functions are very similar to aggregation functions, in fact every window function applies an aggregation within it. The difference are:</p>
+
+<p><strong>Output:</strong></p>
+
+<ul>
+  <li>Aggregations produce a single row of output for rows the aggregation was applied to</li>
+  <li>Window functions produce a new column of data that is the same number of rows as the data it was applied to.</li>
+</ul>
+
+<p><strong>Subsetting the data:</strong></p>
+
+<ul>
+  <li>Aggregations are applied to data that is grouped categorically or across the whole data set.</li>
+  <li>Window functions are applied to the data within a window. The window can scale in size with each row, be constrained to a specific amount of rows, or can fit groups.</li>
+</ul>
+
+<p>Let’s look at the first example above if we applied an aggregation instead of a window function to it.</p>
+
+<p>Window Function:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'Day'</span><span class="p">,</span> <span class="s1">'Mile Driving'</span><span class="p">,</span>
+<span class="k">SUM</span><span class="p">(</span><span class="s1">'Miles Driving'</span><span class="p">)</span> <span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="s1">'Day'</span><span class="p">)</span> <span class="k">AS</span> <span class="s1">'Running Total'</span>
+<span class="k">FROM</span> <span class="s1">'Running total mileage visual'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Aggregate:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">SUM</span><span class="p">(</span><span class="s1">'Miles Driving'</span><span class="p">)</span> <span class="k">AS</span> <span class="s1">'Sum of Miles Driving'</span>
+<span class="k">FROM</span> <span class="s1">'Running total mileage visual'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/CompareWindowToAgg.png" alt="Comparing the output of a window function and an aggregate function" /></p>
+
+<p>Window Functions can be used to create running totals, moving averages and much more. The three main keywords to create a Window Function are:</p>
+
+<ul>
+  <li>OVER</li>
+  <li>PARTITION BY</li>
+  <li>ORDER BY</li>
+</ul>
+
+<p>OVER - Indicates the beginning of a Window Function, this causes the results of the aggregation to be added as a column to the output table.</p>
+
+<p>PARTITION BY - Creates groups of data in the table, that the aggregation will be performed on.</p>
+
+<p>ORDER BY - Sorts the data based on the given column.</p>
+
+<p>Now, let’s look at these keywords within a full query.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'(Optional: The data you want to select)'</span><span class="p">,</span>
+<span class="p">[</span><span class="k">aggregate</span> <span class="k">function</span><span class="p">]</span><span class="s1">'(The column to perform the aggregate function on)'</span>
+<span class="n">OVER</span><span class="p">(</span><span class="n">Optional</span><span class="p">:</span> <span class="n">PARTITION</span> <span class="k">BY</span> <span class="k">and</span><span class="o">/</span><span class="k">or</span> <span class="k">ORDER</span> <span class="k">BY</span><span class="p">)</span>
+<span class="k">AS</span> <span class="s1">'(Descriptive name)'</span> <span class="k">FROM</span> <span class="s1">'(corresponding table)'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Going back to the first example the query would look like:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'Date'</span><span class="p">,</span> <span class="s1">'Miles Driving'</span><span class="p">,</span>
+<span class="k">SUM</span><span class="p">(</span><span class="s1">'Miles Driving'</span><span class="p">)</span> <span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="nb">Date</span><span class="p">)</span> <span class="k">AS</span> <span class="s1">'Running Total'</span>
+<span class="k">FROM</span> <span class="s1">'Running Total Mileage'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>The SUM keyword shows that the query is looking for the SUM of the “Miles Driving” column, shown OVER the whole table, ORDERed BY the date the mileage will occur.</p>
+
+<h4 id="example">Example</h4>
+
+<p>The example below uses the Chinook database with PostgreSQL 11. The “Track” table in the Chinook database is a large, informational table on many different songs by many different artists:</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/chinookDB.png" alt="The first few rows of the Chinook Database" /></p>
+
+<p>If you wanted to create a column displaying the average song length you can do so like:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">Track</span><span class="p">.</span><span class="n">Milliseconds</span>
+<span class="k">AVG</span><span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">Milliseconds</span><span class="p">)</span> <span class="n">OVER</span><span class="p">()</span> <span class="k">AS</span> <span class="s1">'AverageSongLength'</span>
+<span class="k">FROM</span> <span class="s1">'Track'</span> <span class="k">LIMIT</span> <span class="mi">20</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/avgMilliseconds.png" alt="Average of all song lengths" /></p>
+
+<p>You can see the “AverageSongLength” is stored in the last column and is the same for every row. This can help you visualize and compare songs that are longer or shorter than the “AverageSongLength”.</p>
+
+<h2 id="organizing-with-window-functions">Organizing with Window Functions</h2>
+
+<h3 id="using-rows">Using ROWS</h3>
+
+<p>The window can also be given specific size dimensions using the ROWS keyword. You can specify the number or rows you want the window to be with the keywords:</p>
+
+<p>PRECEDING - define the number of rows before the current row to include
+FOLLOWING - define the number of rows after the current row to include</p>
+
+<h4 id="syntax-1">Syntax</h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'(The data you want to select)'</span><span class="p">,</span>
+<span class="p">[</span><span class="k">aggregate</span> <span class="k">function</span><span class="p">]</span><span class="s1">'(The column to perform the aggregate function on)'</span>
+<span class="n">OVER</span><span class="p">(</span><span class="k">ROWS</span> <span class="p">[</span><span class="o">#</span> <span class="k">of</span> <span class="k">rows</span> <span class="n">you</span> <span class="n">want</span> <span class="k">to</span> <span class="k">aggregate</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="n">PRECEDING</span><span class="o">/</span><span class="n">FOLLOWING</span><span class="p">)</span>
+<span class="k">AS</span> <span class="s1">'(descriptive name)'</span>
+<span class="k">FROM</span> <span class="s1">'(appropriate table)'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h4 id="example-1">Example</h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span><span class="p">,</span>
+<span class="k">AVG</span><span class="p">(</span><span class="s1">'Daily Revenue'</span><span class="p">)</span>
+<span class="n">OVER</span><span class="p">(</span><span class="k">ROWS</span> <span class="mi">2</span> <span class="n">PRECEDING</span><span class="p">)</span>
+<span class="k">AS</span> <span class="s1">'3 Day Average'</span>
+<span class="k">FROM</span> <span class="s1">'Running Average Example'</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/rowsPreceding.png" alt="Example of Rows Preceding" /></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span><span class="p">,</span>
+<span class="k">AVG</span><span class="p">(</span><span class="s1">'Daily Revenue'</span><span class="p">)</span>
+<span class="n">OVER</span><span class="p">(</span><span class="k">ROWS</span> <span class="mi">2</span> <span class="n">FOLLOWING</span><span class="p">)</span>
+<span class="k">AS</span> <span class="s1">'3 Day Average'</span>
+<span class="k">FROM</span> <span class="s1">'Running Average Example'</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/rowsFollowing.png" alt="Example of Rows Following" /></p>
+
+<p>You use one less than the days you would like to average because the query executes the aggregate function of the current row and the number of specified preceding or following rows. This allows you to create moving averages, which are great for showing more general trends in data.</p>
+
+<h3 id="using-partition-by">Using PARTITION BY</h3>
+
+<p>PARTITION BY is used to group the data before performing an aggregate function so that the aggregation runs on each category independently.</p>
+
+<h4 id="syntax-2">Syntax</h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'(The data you want to select)'</span><span class="p">,</span>
+<span class="p">[</span><span class="k">aggregate</span> <span class="k">function</span><span class="p">]</span><span class="s1">'(The column to perform the aggregate function on)'</span>
+<span class="n">OVER</span><span class="p">(</span><span class="n">PARTITION</span> <span class="k">BY</span> <span class="p">[</span><span class="n">category</span> <span class="k">to</span> <span class="k">group</span> <span class="k">by</span><span class="p">])</span> <span class="k">AS</span> <span class="s1">'(descriptive name)'</span>
+<span class="k">FROM</span> <span class="s1">'(appropriate table)'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h4 id="example-2"><strong>Example</strong></h4>
+
+<p>If you wanted to compare the average length of a song by the genre of the song, you can run the same query as above just adding the partition:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">Track</span><span class="p">.</span><span class="n">Milliseconds</span>
+<span class="k">AVG</span><span class="p">(</span><span class="n">Track</span><span class="p">.</span><span class="n">Milliseconds</span><span class="p">)</span> <span class="n">OVER</span><span class="p">(</span><span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">Track</span><span class="p">.</span><span class="n">GenreId</span><span class="p">)</span>
+<span class="k">AS</span> <span class="s1">'AverageSongLength'</span>
+<span class="k">FROM</span> <span class="s1">'Track'</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">Track</span><span class="p">.</span><span class="n">Name</span> <span class="k">ASC</span> <span class="k">LIMIT</span> <span class="mi">20</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/partitionById.png" alt="Example of Partitioning by Genre ID" /></p>
+
+<p>You can see that the average song length from the first example is not the same average song length for all songs grouped by their genres.</p>
+
+<h3 id="using-order-by">Using ORDER BY</h3>
+
+<p>Traditionally, ORDER BY is called on the whole table(as seen above) and will sort the table by the given column. There are two circumstances ORDER BY can be used in:</p>
+
+<ol>
+  <li><strong>Without <code class="language-plaintext highlighter-rouge">PARTITION BY</code>:</strong> ORDER BY will sort like the traditional ORDER BY while also causing the aggregate function to be applied incrementally, providing a new, recalculated value for every row in the table.(first example below)</li>
+  <li><strong>With <code class="language-plaintext highlighter-rouge">PARTITION BY</code>:</strong> ORDER BY will sort each partition individually by the given column and cause the aggregate function to be applied incrementally for each partition.</li>
+</ol>
+
+<h4 id="example-3">Example</h4>
+
+<p>If you had the data for the daily steps taken by an individual:</p>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/StepsTakenTable.png" alt="A table of steps taken on different days" /></p>
+
+<p>You could begin to find the average number of steps someone has taken in a week to determine their weekly activity levels:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'Date'</span><span class="p">,</span> <span class="s1">'Steps Taken'</span><span class="p">,</span>
+<span class="k">AVG</span><span class="p">(</span><span class="s1">'Steps Taken'</span><span class="p">)</span> <span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="nb">Date</span><span class="p">)</span>
+<span class="k">AS</span> <span class="s1">'Average Steps Taken'</span>
+<span class="k">FROM</span> <span class="s1">'Steps Taken Daily'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/how-to-teach-people-sql/appendix/window_functions/StepsTakenRunningAvg.png" alt="A steps taken running average table" /></p>
+
+<p>You should notice that, since ORDER BY was used, the AVG function is taken as the “running average”. So the AVG is recalculated in every row.</p>
+
+<p>We could also use PARTITION BY with ORDER BY, implementing a weekend indicator, to separate the weekday running average from weekend running average:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="s1">'Date'</span><span class="p">,</span> <span class="s1">'Weekend'</span><span class="p">,</span> <span class="s1">'Steps Taken'</span><span class="p">,</span>
+<span class="k">AVG</span><span class="p">(</span><span class="s1">'Steps Taken'</span><span class="p">)</span> <span class="n">OVER</span><span class="p">(</span><span class="n">PARTITION</span> <span class="k">BY</span> <span class="s1">'Weekend'</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="nb">Date</span><span class="p">)</span>
+<span class="k">AS</span> <span class="s1">'Average Steps Taken'</span> <span class="k">FROM</span> <span class="s1">'Steps Taken Daily'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><img src="https://p-0mfbvn.t4.n0.cdn.getcloudapp.com/items/WnuYR927/32d905a5-40ea-489a-948e-92097969b1cf.png" alt="Partitioning the steps taken running average table by weekend or weekday" /></p>
+
+<p>Looking at the data above, you can see that when used with PARTITION BY, ORDER BY still creates a “running average”. Again, note that Window Functions do not return two new rows just displaying the average steps from during the week and on the weekend, the running average is displayed as a new column on the end of the data.</p>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>A window function does not cause rows to become grouped into a single output row, it creates a whole output column.</li>
+  <li>A window function can be broken into groups and organized easily with keywords like: PARTITION BY and ORDER BY.
+    <ul>
+      <li>PARTITION BY- Divides the aggregate function results between different groupings of data.</li>
+      <li>ORDER BY- Organize the data being worked on by the aggregate functions and create running calculations</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<p><a href="https://mode.com/sql-tutorial/sql-window-functions/" title="https://mode.com/sql-tutorial/sql-window-functions/">https://mode.com/sql-tutorial/sql-window-functions/</a></p>
+
+<p><a href="https://www.postgresql.org/docs/9.1/tutorial-window.html" title="https://www.postgresql.org/docs/9.1/tutorial-window.html">https://www.postgresql.org/docs/9.1/tutorial-window.html</a></p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/blake/">Blake Barnhill</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        ,
+      
+        
+        
+        <a href="/people/matthew-layne/">Matthew Layne</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/1-baqTQWPYoOB_IFykR9DZcqiAXA0B6SGE_51UhMOyOI/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/how-to-teach-people-sql/how-case-when-works/">Prev – How CASE WHEN Works</a> -->
+      <a class="btn btn-primary next-chapter-btn" href="/how-to-teach-people-sql/difference-between-where-and-on-in-sql/">Next – Difference between WHERE and ON in SQL</a>
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

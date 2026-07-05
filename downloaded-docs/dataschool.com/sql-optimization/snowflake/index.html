@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>Snowflake Database Optimization </title>
+  <meta name="description" content="Snowflake is a powerful cloud database. Learn how it optimizes your database automatically, and hot to increase performance manually.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/sql-optimization/snowflake/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Snowflake Optimization"/>
+  <meta name="twitter:description" content="Snowflake is a powerful cloud database. Learn how it optimizes your database automatically, and hot to increase performance manually."/>
+  <meta name="twitter:url" content="https://dataschool.com/sql-optimization/snowflake/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/sql-optimization/snowflake/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Snowflake Optimization"
+  <meta property="og:description" content="Snowflake is a powerful cloud database. Learn how it optimizes your database automatically, and hot to increase performance manually." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/sql-optimization/snowflake/snowflake_0.png" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/sql-optimization/snowflake/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "Snowflake Database Optimization ",
+    "image": "/assets/images/sql-optimization/snowflake/snowflake_0.png",
+    "author": {
+        "@type": "Person",
+        "name": "Matthew Layne"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/sql-optimization/snowflake/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 16:55:50 -0800",
+    "description": "Snowflake is a powerful cloud database. Learn how it optimizes your database automatically, and hot to increase performance manually."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/sql-optimization/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/sql-optimization@thumbnail.png" alt="Cover of SQL Optimization" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/sql-optimization/" class="book-title">SQL Optimization</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#QueryOptimizations" aria-expanded="true" data-target="#QueryOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Query optimizations</a>
+                  <ul class="list-unstyled collapse " id="QueryOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/what-is-a-query-plan/">
+                What is a Query Plan
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/order-of-a-sql-query/">
+                Order of a SQL Query
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/optimize-your-sql-query/">
+                Optimize your SQL Query
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ColumnandTableOptimizations" aria-expanded="true" data-target="#ColumnandTableOptimizations"  class="dropdown-toggle"  data-toggle="collapse" >Column and table optimizations</a>
+                  <ul class="list-unstyled collapse " id="ColumnandTableOptimizations">
+            
+            <li >
+              <a href="/sql-optimization/optimization-using-explain/">
+                Optimization with EXPLAIN ANALYZE
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/how-indexing-works/">
+                How Indexing Works
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/partial-indexes/">
+                Partial Indexes
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/multicolumn-indexes/">
+                Multicolumn Indexes
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#ModelingData" aria-expanded="true" data-target="#ModelingData"  class="dropdown-toggle"  data-toggle="collapse" >Modeling data</a>
+                  <ul class="list-unstyled collapse " id="ModelingData">
+            
+            <li >
+              <a href="/sql-optimization/start-modeling-data/">
+                Start Modeling Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/scheduling-dbt/">
+                Scheduling Modeling
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/views/">
+                Views
+              </a>
+            </li>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#Databases" aria-expanded="true" data-target="#Databases"  class="dropdown-toggle"  data-toggle="collapse" >Databases</a>
+                  <ul class="list-unstyled collapse show" id="Databases">
+            
+            <li >
+              <a href="/sql-optimization/optimizing-data-queries-with-redshift/">
+                Redshift Optimization
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/sql-optimization/bigquery-optimization/">
+                BigQuery Optimization
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/sql-optimization/snowflake/">
+                Snowflake Optimization
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/sql-optimization/snowflake/&title=Snowflake Optimization&summary=Snowflake+is+a+powerful+cloud+database.+Learn+how+it+optimizes+your+database+automatically%2C+and+hot+to+increase+performance+manually.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/sql-optimization/snowflake/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/sql-optimization/snowflake/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article class="img-border-on-default">
+  <header class="mb-4">
+    <h1 class="title">Snowflake Optimization</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>Snowflake is a cloud-based elastic data warehouse or Relational Database Management System (RDBMS). It is a run using Amazon Amazon Simple Storage Service (S3) for storage and is optimized for high speed on data of any size.</p>
+
+<p>The amount of computation you have access to is also completely modifiable meaning that, if you want to run a computationally intense set of queries, you can upgrade the amount of resources you have access to, run the queries, and lower the amount of resources you have access to after. The amount of money that you are charged is dependent on what you use. It has many features to help deliver the best product for a low price.</p>
+
+<h2 id="what-is-snowflake-and-how-does-it-work">What is Snowflake and how does it Work?</h2>
+
+<p>In SQL there are two main database types:</p>
+
+<ul>
+  <li>Databases for <strong>Online Transaction Processing</strong> (OLTP):
+    <ul>
+      <li>These are optimized for retrieving a single row or small amount of rows.</li>
+      <li>Uses <a href="https://dataschool.com/data-modeling-101/row-vs-column-oriented-databases/">Row Store</a></li>
+    </ul>
+  </li>
+  <li>Databases for <strong>Online Analytical Processing</strong> (OLAP):
+    <ul>
+      <li>These are optimized for the performance of analyses like aggregations.</li>
+      <li>Uses <a href="https://dataschool.com/data-modeling-101/row-vs-column-oriented-databases/">Column Store</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Snowflake is designed to be an OLAP database system. One of snowflake’s signature features is its separation of storage and processing:</p>
+
+<ul>
+  <li>Storage is handled by Amazon S3. The data is stored in Amazon servers that are then accessed and used for analytics by processing nodes.</li>
+  <li>Processing nodes are nodes that take in a problem and return the solution. These nodes are grouped into clusters.</li>
+</ul>
+
+<p>The cluster uses MPP (massively parallel processing) to compute any task that it is given. MPP is where the task is given to the cluster’s lead node, which divides the task up into many smaller tasks which are then sent out to processing nodes. The nodes each solve their portion of the task. These portions are then pulled together by the lead node to create the full solution:</p>
+
+<p><img src="/assets/images/sql-optimization/snowflake/snowflake_0.png" alt="This image shows how a task is divided between processing nodes and reassembled" /></p>
+
+<p>Since the data is stored in S3, snowflake will have slightly longer initial query times. This will speed up as the data warehouse is used however due to caching and updated statistics.</p>
+
+<h2 id="snowflakes-architecture">Snowflake’s Architecture</h2>
+
+<p>Snowflake has a specialized <a href="https://www.snowflake.com/product/architecture/">architecture</a> that is divided into three layers: storage, compute, and services.<img src="/assets/images/sql-optimization/snowflake/snowflake_1.png" alt="Graphic showing the three layers in the snowflake architecture" /></p>
+
+<p>The Storage Layer:</p>
+
+<ul>
+  <li>Elasticity: As mentioned before, storage is separated from the compute later. This allows for independent scaling of storage size and computer resources.</li>
+  <li>Fully Managed: Snowflake data warehouses optimizations are fully managed by snowflake. Indexing, Views, and other optimization techniques are all managed by snowflake. The consumer can focus on using the data rather than structuring it.</li>
+  <li>Micro-partitions: One optimization that Snowflake uses is micro-partitioning. This means that snowflake will set many small partitions on the data, which are then column stored and encrypted.</li>
+  <li>Pruning: Micro-partitions increase efficiency through pruning. Pruning is done by storing data on each micro-partition and then, when a certain massive table needs to be searched, entire blocks of rows can be ignored based on the micro-partitions. This means that only pages which contain results will be read.</li>
+</ul>
+
+<p>The Compute Layer:</p>
+
+<ul>
+  <li>Caching: Snowflake will temporarily cache results from the storage layer in the compute layer. This will allow similar queries to run much faster once the database has been “warmed up.”</li>
+  <li>ACID Compliance: Snowflake is <a href="https://www.lifewire.com/the-acid-model-1019731">ACID compliant</a>. This means that it follows a set of standards to ensure that their databases have:
+    <ul>
+      <li><strong>Atomicity:</strong> If a part of a transaction fails, the whole transaction fails.</li>
+      <li><strong>Consistency:</strong> Data can not be written to the database if it breaks the databases’ rules.</li>
+      <li><strong>Isolation:</strong> Multiple Transaction blocks can not interfere with each other and be run concurrently.</li>
+      <li><strong>Durability:</strong> Ensures that data from completed transactions will not be lost in transmission.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The Services Layer:</p>
+
+<ul>
+  <li>DML and DDL: There are <a href="https://www.w3schools.in/dbms/database-languages/">4 sub-languages</a> in SQL:
+    <ul>
+      <li><strong>Data Definition Language</strong> (DDL): DDL is the sub-language that handles defining and describing structures in sql.
+        <ul>
+          <li>Common Examples of DDL Commands: <strong>CREATE</strong>, <strong>RENAME</strong>, <strong>ALTER</strong>.</li>
+        </ul>
+      </li>
+      <li><strong>Data Manipulation Language</strong> (DML): DML handles manipulating data in structures defined by DDL.
+        <ul>
+          <li>Common Examples of DML Commands: <strong>SELECT</strong>, <strong>INSERT</strong>, <strong>DELETE</strong>.</li>
+        </ul>
+      </li>
+      <li><strong>Data Control Language</strong> (DCL): DCL handles controlling access and privileges.
+        <ul>
+          <li>Common Examples of DCL Commands: <strong>GRANT</strong>, <strong>REVOKE</strong>.</li>
+        </ul>
+      </li>
+      <li><strong>Transaction Control Language</strong> (TCL): TCL handles control of transaction blocks.
+        <ul>
+          <li>Common Examples of TCL Commands: <strong>START</strong>, <strong>ROLLBACK</strong>.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Of these 4 sub-languages, Snowflake adds DDL and DML functions at the service layer. DCL and TCL are mostly handled by through the Snowflake GUI or automatically.</p>
+
+<ul>
+  <li>Meta-data: Snowflake controls how meta-data is stored through the services layer, allowing it to be used to create micro-partitions and further optimizing the structure of the database.</li>
+  <li>Security: <a href="https://www.youtube.com/embed/Qzge2Mt84rs?autoplay=1">Security</a> is handled at the security layer. Snowflake does many things to increase security including: multi-factor authentication, encryption (at rest or in transit).</li>
+</ul>
+
+<h2 id="how-is-it-priced">How is it Priced?</h2>
+
+<p>Snowflake has a variety of factors that impact the price of using their data warehouse. The first is what type of data you store.</p>
+
+<h3 id="warehouse-type">Warehouse Type</h3>
+
+<p><img src="/assets/images/sql-optimization/snowflake/snowflake_2.png" alt="Graphic showing the different warehouse data types and there corresponding $/token costs" /></p>
+
+<p>These different tiers decide what level of security, speed, and support are needed. They have corresponding costs as well. The basic package costs $2.00 per credit used. Credits are how snowflake measures the computations done.</p>
+
+<h3 id="warehouse-size">Warehouse Size</h3>
+
+<p>While many data warehouse companies have a cost based on the maximum processing power that your database might need, snowflake is priced based on the amount of processing that is used. When you turn on your database, you can set what amount of processing power you want. The size of the warehouse can range from X-Small to 3X-Large. These sizes directly relate to how much computational power you can access and correspondingly how expensive the warehouse is. Here is a table from the snowflake documentation regarding the costs of three different sizes:</p>
+
+<p><img src="/assets/images/sql-optimization/snowflake/snowflake_3.png" alt="Table showing three of the Warehouse sizes" /></p>
+
+<p>(Full list of sizes: X-Small, Small, Medium, Large, X-Large, 2X-Large, 3X-Large)</p>
+
+<p>As the table shows the cost (in credits) is based on the size of the warehouse and the amount of time it is run for. For example, if you run a medium data warehouse, but need to run some intense queries for an hour, you can upgrade to a X-Large box for an hour. You can set this upgrade to automatically revert to medium after an hour as well to ensure you only pay for what you need.</p>
+
+<p>Another Important detail about snowflake that we can determine from the table above is that snowflake has near linear scalability. An X-small warehouse costs 1 credit/hour (Note: this is per cluster. Multi-cluster warehouses will be charged based on the number of clusters). This price doubles for each tier that the warehouse goes up, as does the computational power.</p>
+
+<p>Snowflake is designed for ease-of-use and easy hands-off optimization. Perhaps the best feature of snowflake is how easy it is to use. It is very simple once acclimated to, and can save you or your staff a lot of time and hardship handling technical details that even other RDBMS will not. As such it is a great tool for optimizing your database and optimizing your time.</p>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>Snowflake is a RDBMS designed for OLAP usage</li>
+  <li>Uses Amazon S3 for storage
+    <ul>
+      <li>Separated storage leads to increased initial query times, but much better elasticity.</li>
+      <li>Has near linear scaling in compute time (E.g. 2x the compute power = ½ the time)</li>
+    </ul>
+  </li>
+  <li>Has Architecture built for high speed under high load</li>
+  <li>Extremely flexible pricing.
+    <ul>
+      <li>Pricing by second used.</li>
+      <li>Scheduled downgrading</li>
+      <li>Tiers of data storage</li>
+      <li>Linear pricing (2x the compute power = 2x the price)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="resources">Resources:</h3>
+
+<p><a href="https://www.snowflake.com/" title="https://www.snowflake.com/">https://www.snowflake.com/</a></p>
+
+<p><a href="https://aptitive.com/blog/what-is-snowflake-and-how-is-it-different/">https://aptitive.com/blog/what-is-snowflake-and-how-is-it-different/</a></p>
+
+<p><a href="https://youtu.be/XpaN-PqSczM">https://youtu.be/XpaN-PqSczM</a></p>
+
+<p><a href="https://www.lifewire.com/the-acid-model-1019731">https://www.lifewire.com/the-acid-model-1019731</a></p>
+
+<p><a href="https://www.w3schools.in/dbms/database-languages/">https://www.w3schools.in/dbms/database-languages/</a></p>
+
+<p><a href="https://www.youtube.com/embed/Qzge2Mt84rs?autoplay=1">https://www.youtube.com/embed/Qzge2Mt84rs?autoplay=1</a></p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/matthew-layne/">Matthew Layne</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+        
+        
+        <a href="/people/matt/">Matt David</a>
+        
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="https://docs.google.com/document/d/12zEPe3-HWfnSlKeizN5xqFcdXZrkfha4ge9e9vRjuK8/edit?usp=sharing" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/sql-optimization/bigquery-optimization/">Prev – BigQuery Optimization</a> -->
+      
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>

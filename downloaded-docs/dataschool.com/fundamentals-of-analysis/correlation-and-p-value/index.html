@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en"><head>
+  
+  <meta charset="utf-8">
+  <meta name="google" content="notranslate"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- make it responsive-able -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- favicon -->
+  <link rel="icon" type="image/png" href="/data-school-favicon.png">
+  <!-- title, description -->
+  <title>What is the difference between Correlation and P value</title>
+  <meta name="description" content="Understand how correlation and P-value are related to each other within data analytics.">
+  <!-- SEO -->
+  <link rel="canonical" href="https://dataschool.com/fundamentals-of-analysis/correlation-and-p-value/"/>
+  <!-- css -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"><link type="application/atom+xml" rel="alternate" href="https://dataschool.com/feed.xml" title="DataSchool" /><!-- TWITTER STUFF -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Correlation and P value"/>
+  <meta name="twitter:description" content="Understand how correlation and P-value are related to each other within data analytics."/>
+  <meta name="twitter:url" content="https://dataschool.com/fundamentals-of-analysis/correlation-and-p-value/"/>
+  <!-- FACEBOOK STUFF -->
+  <meta property="og:url" content="https://dataschool.com/fundamentals-of-analysis/correlation-and-p-value/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Correlation and P value"
+  <meta property="og:description" content="Understand how correlation and P-value are related to each other within data analytics." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:site_name" content="The Data School" />
+  <meta property="og:image" content="https://dataschool.com/assets/images/fundamentals-of-analysis/correlation_p_value/correlations2.jpeg" />
+  <!-- JSON-LD STUFF -->
+  <script type="application/ld+json">
+    {
+     "@context": "https://schema.org/",
+     "@type": "WebPage",
+     "name": "The Data School",
+     "speakable":
+     {
+      "@type": "SpeakableSpecification",
+      "xpath": [
+        "/html/head/title",
+        "/html/head/meta[@name='description']/@content"
+        ]
+      },
+     "url": "https://dataschool.com/fundamentals-of-analysis/correlation-and-p-value/"
+     }
+  </script>
+  
+  <script type="application/ld+json">
+    { "@context": "http://schema.org",
+    "@type": "Article",
+    "headline": "What is the difference between Correlation and P value",
+    "image": "/assets/images/fundamentals-of-analysis/correlation_p_value/correlations2.jpeg",
+    "author": {
+        "@type": "Person",
+        "name": "Rohan Joseph"
+    },
+     "publisher": {
+      "@type": "Organization",
+      "name": "The Data School",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "/assets/images/chartio-data-school-logo.png"
+      }
+    },
+    "url": "https://dataschool.com/fundamentals-of-analysis/correlation-and-p-value/",
+    "datePublished": "2023-04-10 10:39:32 -0700",
+    "dateCreated": "2023-04-10 10:39:32 -0700",
+    "dateModified": "2019-12-09 17:12:29 -0800",
+    "description": "Understand how correlation and P-value are related to each other within data analytics."
+    }
+  </script>
+  <script src="/assets/javascript/bootstrap/jquery.min.js"></script>
+  <script src="/assets/javascript/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- GOOGLE TAG MANAGER - GTM -->
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5X8Q2FN');</script>
+<!-- End Google Tag Manager -->
+
+</head>
+<body>
+    <div class="wrapper ">
+  <!-- Nav Sidebar -->
+  <nav class="sidebar">
+  <!-- Main nav elements, always include in sidebar -->
+  <a class="sidebar-logo" href="/">
+    <img src="/assets/images/chartio-data-school-logo.svg" alt="Data School's Logo"/>
+  </a>
+  <ul class="list-unstyled main-nav components">
+    <li ><a href="/books/">Web Books</a></li>
+    <li ><a href="/learn-sql/">Learn SQL</a></li>
+    <li ><a href="/contribute/">Contribute</a></li>
+    <li ><a href="/people/">Contributors</a></li>
+  </ul>
+  <!-- showing current book -->
+  
+    
+    
+    <div class="book-title-links">
+      <a href="/fundamentals-of-analysis/" class="smallbook-link hover-link">
+        <img src="/assets/images/book-covers/fundamentals-of-analysis@thumbnail.png" alt="Cover of Fundamentals of Analysis" class="smallbook hover-img">
+      </a>
+      <div>
+        <a href="/fundamentals-of-analysis/" class="book-title">Fundamentals of Analysis</a>
+      </div>
+    </div>
+
+
+
+
+  
+  <!-- building the chapter list -->
+  
+    
+    <ul class="list-unstyled components">
+      <li class="d-none">
+        <ul>
+          
+            
+              
+                </ul>
+                </li>
+                <li class="book-section ">
+                  <a href="#book" aria-expanded="true" class="d-none">Book</a>
+                  <ul class="list-unstyled " id="book">
+            
+            <li >
+              <a href="/fundamentals-of-analysis/choosing-metrics-for-product-launch/">
+                Choosing Metrics for Product Launch
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/fundamentals-of-analysis/what-is-data-and-why-should-i-care/">
+                What is Data and Why Should I Care
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/fundamentals-of-analysis/types-of-data-analysis/">
+                Types of Data Analysis
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/fundamentals-of-analysis/how-to-explore-data/">
+                How to Explore Data
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/fundamentals-of-analysis/what-is-an-outlier/">
+                What is an Outlier?
+              </a>
+            </li>
+          
+            
+            <li >
+              <a href="/fundamentals-of-analysis/what-is-the-interquartile-range/">
+                What is the Interquartile Range?
+              </a>
+            </li>
+          
+            
+            <li class="active">
+              <a href="/fundamentals-of-analysis/correlation-and-p-value/">
+                Correlation and P value
+              </a>
+            </li>
+          
+        </ul>
+      </li>
+    </ul>
+  
+</nav>
+
+  <!-- End Nav Sidebar -->
+  <!-- Page Content -->
+  <div class="content">
+    <button type="button" id="sidebar-collapse" class="btn">
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-bars"></i>
+      </span>
+    </button>
+    <div class="social-btn-group">
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dataschool.com/fundamentals-of-analysis/correlation-and-p-value/&title=Correlation and P value&summary=Understand+how+correlation+and+P-value+are+related+to+each+other+within+data+analytics.&source=The%20Data%20School" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20interesting%20read%20at%20Data%20School%20https://dataschool.com/fundamentals-of-analysis/correlation-and-p-value/" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https://dataschool.com/fundamentals-of-analysis/correlation-and-p-value/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <!-- <a href="#"><i class="fas fa-print"></i></a> -->
+    </div>
+    <div class="content-wrapper">
+      <div class="container">
+  <section class="page">
+    <article >
+  <header class="mb-4">
+    <h1 class="title">Correlation and P value</h1>
+    <p>
+      <em>Last modified: December 09, 2019</em>
+      
+     </p>
+  </header>
+  
+  
+  <p>The two most commonly used statistical tests for establishing relationship between variables are correlation and p-value. Correlation is a way to test if two variables have any kind of relationship, whereas p-value tells us if the result of an experiment is statistically significant. In this tutorial, we will be taking a look at how they are calculated and how to interpret the numbers obtained.</p>
+
+<h2 id="what-is-correlation"><strong>What is correlation?</strong></h2>
+
+<p>Correlation coefficient is used in statistics to measure how strong a relationship is between two variables. There are several types of correlation coefficients (e.g. Pearson, Kendall, Spearman), but the most commonly used is the Pearson’s correlation coefficient. This coefficient is calculated as a number between -1 and 1 with 1 being the strongest possible positive correlation and -1 being the strongest possible negative correlation.</p>
+
+<p><img src="/assets/images/fundamentals-of-analysis/correlation_p_value/correlations1.jpeg" alt="Correlation Bounds" /></p>
+
+<p>A positive correlation means that as one number increases the second number will also increase. A negative correlation means that as one number increases the second number decreases. However, correlation does not always imply causation — correlation does not tell us whether change in one number is directly caused by the other number, only that they typically move together. Learn more about the Pearson correlation formula, and how to implement it in SQL <a href="https://chartio.com/learn/postgresql/correlation-coefficient-pearson/">here</a>. To understand how correlation works, let’s look at a chart of height vs weight.</p>
+
+<p><img src="/assets/images/fundamentals-of-analysis/correlation_p_value/correlations2.jpeg" alt="Height and Weight Correlation" /></p>
+
+<p>We can observe that with increase in weight, the height also increases – which indicates they are positively correlated. Also, the correlation coefficient in this case is 0.88, which supports our finding. Learn more about correlation and how to implement it in Excel <a href="/fundamentals-of-analysis/correlation-and-p-value/">here</a>.</p>
+
+<h2 id="what-is-a-p-value"><strong>What is a p-value?</strong></h2>
+
+<p>P-value evaluates how well your data rejects the <a href="http://www.statisticshowto.com/probability-and-statistics/null-hypothesis/">null hypothesis</a>, which states that there is no relationship between two compared groups. Successfully rejecting this hypothesis tells you that your results may be statistically significant. In academic research, p-value is defined as <strong>the probability of obtaining results ‘as extreme’ or ‘more extreme’, given that the null hypothesis is true —</strong> essentially, how likely it is that you would receive the results (or more dramatic results) you did assuming that there is no correlation or relationship (e.g. the thing that you’re testing) among the subjects. To understand what this means, let us look at an example.</p>
+
+<p>We are going to conduct an experiment to check if a coin is biased or not. To do this, let’s flip a coin 10 times. Intuitively, we can say that the probability of getting <strong>5 heads and 5 tails</strong> is highest, followed by <strong>6 heads and 4 tails</strong> or <strong>6 tails and 4 heads,</strong> and so on. So first, let’s state the null and alternate hypothesis. Since the assumption is that the coin is fair, our null hypothesis is <strong>“The coin is unbiased with equal probability of heads and tails”.</strong> We are conducting the experiment to prove/disprove the claim, so our alternative hypothesis is <strong>“The coin is biased with unequal probability of heads and tails”</strong></p>
+
+<p>Assuming the null hypothesis is true (the coin is fair), let’s calculate the probabilities of the various possible outputs i.e 0 heads &amp; 10 tails, 1 head &amp; 9 tails, 2 heads &amp; 8 tails, and so on.</p>
+
+<p>The probabilities are calculated using the probability of a <a href="http://www.statisticshowto.com/probability-and-statistics/binomial-theorem/binomial-distribution-formula/">binomial distribution</a>, which gives the probability of r successes in n trials using the formula :</p>
+
+<p><strong><em>nCr * (p)r * (1-p)n-r</em></strong></p>
+
+<p><em>Where,</em><br />
+<em>n = no. of trials = 10</em><br />
+<em>r = no. of successes (heads)</em><br />
+<em>p = probability of a success = 1/2</em><br />
+<em>1-p = probability of a failure = 1/2</em></p>
+
+<p>Let’s consider a ‘success’ to be when heads appears in the coin toss. Also, it won’t make a difference if ‘success’ is considered to be heads or tails. Let’s first calculate the probability of obtaining 5 heads and 5 tails in 10 coin flips.</p>
+
+<p>P(5 heads and 5 tails) = 10C5 * (½)5 * (½)5 = 0.24609375</p>
+
+<p>Similarly, let’s generate the probabilities of all other possible combinations of heads and tails:</p>
+
+<p><img src="/assets/images/fundamentals-of-analysis/correlation_p_value/correlations3.png" alt="Probabilities of heads and tails" /></p>
+
+<p>Let’s plot the probabilities to understand the intuition behind the above calculation:</p>
+
+<p><img src="/assets/images/fundamentals-of-analysis/correlation_p_value/correlations4.jpeg" alt="Probability Chart" /></p>
+
+<p>We can observe from the chart that the probability of getting 5 heads is the highest, and the probability of getting 0 heads or 0 tails is the lowest. Now, let’s assume we get the output of this experiment as <strong>“9 heads and 1 tail”</strong>.</p>
+
+<p>Let us calculate the p-value of the experiment. To reiterate the definition – <strong>“p value is the probability of obtaining results as extreme or more extreme, given the null hypothesis is true”.</strong></p>
+
+<p>Now, we add the probabilities of all the possible outputs of the experiment which are <strong>as probable</strong> as ‘9 heads and 1 tail’ and <strong>less probable</strong> than ‘9 heads and 1 tail’.</p>
+
+<p>P-value = P(9 heads and 1 tail) + P(10 heads and 0 tail) + P(9 tails and 1 head) + P(10 tails and 0 heads)</p>
+
+<p>= 0.009765625 + 0.000976563 + 0.009765625 + 0.000976563 = 0.02148437 = 0.02 (approx.)</p>
+
+<p>Now, we need to check whether the p-value is significant or not. This is done by specifying a significance cutoff, known as the <a href="http://blog.minitab.com/blog/michelle-paret/alphas-p-values-confidence-intervals-oh-my">alpha value</a>. Alpha is usually set to 0.05, meaning the probability of achieving the same or more extreme results assuming the null hypothesis is 5%. If the p-value is less than the specified alpha value, then we reject the null hypothesis. Hence, we reject the hypothesis that “<strong>“The coin is fair with equal probability of heads and tails”</strong> and conclude that the coin is biased.</p>
+
+<h2 id="conclusion"><strong>Conclusion</strong></h2>
+
+<p>Though correlation and p-value provides us with the relationship between variables, care should be taken to interpret them correctly. Correlation tells us whether two variables have any sort of relationship and it does not imply causation. If two variables A and B are highly correlated, there are several possible explanations: (a) A influences B; (b) B influences A; (c) A and B are influenced by one or more additional variables; (d) the relationship observed between A and B was a chance error. Similarly, p-value should not be misused to produce a statistically significant result. If analysis is done by exhaustively searching various combinations of variables for correlation, then it is known as <a href="/fundamentals-of-analysis/correlation-and-p-value/">p-hacking</a>.</p>
+
+  <p class="mt-4 mb-5">
+    Written by:
+    
+      
+      
+      <a href="/people/rohan-joseph/">Rohan Joseph</a>
+    
+    <br>
+    
+      Reviewed by:
+      
+    
+  </p>
+</article>
+<div class="chapter-followup">
+  
+    <a class="btn btn-default give-feedback-btn" href="" target="_blank">Give Feedback on our Google Doc</a>
+  
+
+  
+  
+  
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+  
+    
+    
+    <!-- logic could be used for side links -->
+    <!--  -->
+    
+      <!-- <a class="btn btn-primary next-chapter-btn" href="/fundamentals-of-analysis/what-is-the-interquartile-range/">Prev – What is the Interquartile Range?</a> -->
+      
+    
+  
+</div>
+
+    <div class="row mt-5">
+      <div class="col">
+        <ul class="list-unstyled mb-0">
+          <li><a href="/">Home</a></li>
+          <li><a href="/books/">Web Books</a></li>
+          <li><a href="/people/">Contributors</a></li>
+          <li><a href="/mission/">Mission</a></li>
+          <li><a href="/contribute/">Contribute</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <span>Our Web Books</span>
+        
+        <ul class="list-unstyled mb-0">
+        
+          
+              <li><a href="/data-conversations/">Data Conversations</a></li>
+          
+        
+          
+              <li><a href="/data-governance/">Cloud Data Management</a></li>
+          
+        
+          
+              <li><a href="/how-to-design-a-dashboard/">How to Design a Dashboard</a></li>
+          
+        
+          
+              <li><a href="/how-to-teach-people-sql/">How to Teach People SQL</a></li>
+          
+        
+          
+              <li><a href="/learn-sql/">Learn SQL</a></li>
+          
+        
+          
+              <li><a href="/misrepresenting-data/">Avoid Misrepresenting Data</a></li>
+          
+        
+          
+              <li><a href="/sql-optimization/">SQL Optimization</a></li>
+          
+        
+          
+              <li><a href="/fundamentals-of-analysis/">Fundamentals of Analysis</a></li>
+          
+        
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col centered">
+        <div class="footer-links">
+          <h4>Created by</h4>
+          <img src="/assets/images/chartio-logo-black-tbg.svg" alt="Chartio logo" class="height-3">
+          <p class="small-font">©2019 All Rights Reserved • <a href="https://chartio.com/about/legal/">Terms</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Optional JavaScript for Bootstrap TODO: Remove some of this later -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+<!-- sidebar behavior -->
+<script type="text/javascript">
+  // Code for toggling the side menu
+  $(document).ready(function () {
+    $('#sidebar-collapse').on('click', function () {
+      $('.wrapper').toggleClass('with-sidebar without-sidebar');
+    });
+  });
+</script>
+
+  <script type="text/javascript">
+    if($(window).width() > 768){
+      $('.wrapper').addClass('with-sidebar');
+    } else {
+      $('.wrapper').addClass('without-sidebar');
+    }
+  </script>
+
+
+
+</body>
+</html>
