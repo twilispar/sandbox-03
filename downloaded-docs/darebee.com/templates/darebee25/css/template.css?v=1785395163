@@ -1,0 +1,738 @@
+/* ============================================================
+   DAREBEE — Main Stylesheet
+   Sections:
+   1. Custom Properties
+   2. Reset & Base
+   3. Layout Wrappers
+   4. Header & Navigation
+   5. Main Content
+   6. Blog Grid
+   7. Homepage Grid
+   8. User Links
+   9. Footer & Bottom Modules
+   10. Ad Slots
+   11. Download Hide Utility
+   12. Responsive — ≤1300px
+   13. Responsive — ≤1024px
+   14. Responsive — ≤901px
+   15. Responsive — ≤768px
+   ============================================================ */
+
+
+/* ============================================================
+   1. CUSTOM PROPERTIES
+   ============================================================ */
+
+:root {
+  --red:         #CC0000;
+  --red-hot:     #FF0000;
+  --gray-dark:   #141414;
+  --gray-mid:    #333333;
+  --gray-light:  #e5e5e5;
+  --gray-border: #CCCCCC;
+  --gray-muted:  #a4a4a4;
+  --white:       #FFFFFF;
+  --max-width:   1320px;
+}
+
+
+/* ============================================================
+   2. RESET & BASE
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--gray-light);
+  color: var(--gray-mid);
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+/* ============================================================
+   3. LAYOUT WRAPPERS
+   ============================================================ */
+
+.header-inner,
+.bottom-wrapper,
+.bottom-modules,
+.homepage-grid,
+.homereviews,
+.atop,
+.abottom {
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 20px;
+  background: var(--white);
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ============================================================
+   4. HEADER & NAVIGATION
+   ============================================================ */
+
+.header-inner {
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+/* Logo */
+
+.logo img {
+  height: 50px;
+  width: auto;
+  display: block;
+}
+
+/* Top menu container */
+
+.topmenu {
+  flex-grow: 1;
+  display: flex;
+  position: relative;
+  justify-content: flex-end;
+}
+
+/* Hamburger — hidden on desktop */
+
+.mobile-toggle {
+  display: none;
+  font-size: 1.8em;
+  cursor: pointer;
+  padding: 10px;
+}
+
+/* Menu list */
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.menu * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.menu a {
+  font-family: 'Pathway Gothic One', Arial, sans-serif;
+  font-size: 1.4em;
+  padding: 0 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Donate button */
+
+.menu a.donate {
+  border: 3px solid var(--gray-muted);
+  font-size: 1.1em;
+  background: var(--gray-muted);
+  color: var(--white);
+}
+
+.menu a.donate:hover,
+.menu a.donate:active {
+  border-color: var(--red-hot);
+  background: var(--red-hot);
+  color: var(--white);
+}
+
+/* Bookmark button */
+
+.menu a.bookit {
+  border: 3px solid var(--gray-border);
+  font-size: 1em;
+  background: var(--gray-light);
+  padding: 2px 10px;
+  margin-right: 25px;
+}
+
+.menu a.bookit:hover,
+.menu a.bookit:active {
+  border-color: var(--gray-dark);
+  background: var(--gray-light);
+}
+
+/* User icon links — desktop only (hidden on mobile, shown via .user-links) */
+
+.menu a.link-bookmarks,
+.menu a.link-dashboard {
+  display: none;
+}
+
+#quiz-menu-link:not(.quiz-done) {
+  color: var(--red);
+  font-weight: bold;
+}
+
+
+/* ============================================================
+   5. MAIN CONTENT
+   ============================================================ */
+
+/* (base main styles in section 3) */
+
+
+/* ============================================================
+   6. BLOG GRID
+   ============================================================ */
+
+.blog-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+/* 4-column */
+
+.blog-items.columns-4 > div {
+  flex: 1 1 calc(25% - 20px);
+}
+
+.blog-items.columns-4 > div:nth-last-child(1):nth-child(4n + 1) {
+  flex-basis: calc(25% - 20px);
+  max-width: calc(25% - 20px);
+}
+
+/* 3-column */
+
+.blog-items.columns-3 > div {
+  flex: 1 1 calc(33.333% - 20px);
+}
+
+.blog-items.columns-3 > div:nth-last-child(1):nth-child(3n + 1) {
+  flex-basis: calc(33.333% - 20px);
+  max-width: calc(33.333% - 20px);
+}
+
+/* 2-column */
+
+.blog-items.columns-2 > div {
+  flex: 1 1 calc(50% - 20px);
+}
+
+.blog-items.columns-2 > div:nth-last-child(1):nth-child(2n + 1) {
+  flex-basis: calc(50% - 20px);
+  max-width: calc(50% - 20px);
+}
+
+
+/* ============================================================
+   7. HOMEPAGE GRID
+   ============================================================ */
+
+.homepage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 0;
+}
+
+#exercise  { grid-column: 1 / 2; grid-row: 1 / 3; }
+#wod       { grid-column: 2 / 3; grid-row: 1 / 2; }
+#challenge { grid-column: 2 / 3; grid-row: 2 / 3; }
+#promo     { grid-column: 1 / 2; grid-row: 3 / 4; }
+#community { grid-column: 2 / 3; grid-row: 3 / 4; }
+
+.homereviews { margin-top: 10px; }
+
+#exercise {
+  background-image: url('../images/bg-exercise.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+
+/* ============================================================
+   8. USER LINKS (inline below header, desktop)
+   ============================================================ */
+
+
+
+a.link-bookmarks::before,
+a.link-dashboard::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: #888;
+  flex-shrink: 0;
+  margin-right: 10px!important;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-size: contain;
+          mask-size: contain;
+}
+
+
+/* Dashboard icon */
+
+.link-dashboard::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='0' y='8' width='4' height='8' fill='black'/%3E%3Crect x='6' y='3' width='4' height='13' fill='black'/%3E%3Crect x='12' y='0' width='4' height='13' fill='black'/%3E%3Cline x1='0' y1='16' x2='16' y2='16' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='0' y='8' width='4' height='8' fill='black'/%3E%3Crect x='6' y='3' width='4' height='13' fill='black'/%3E%3Crect x='12' y='0' width='4' height='13' fill='black'/%3E%3Cline x1='0' y1='16' x2='16' y2='16' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E");
+}
+
+/* Bookmarks icon */
+
+.link-bookmarks::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 0 L14 0 L14 16 L8 12 L2 16 Z' fill='none' stroke='black' stroke-width='1.8' stroke-linejoin='round'/%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 0 L14 0 L14 16 L8 12 L2 16 Z' fill='none' stroke='black' stroke-width='1.8' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Prime layout (sidebar + content) */
+
+.prime-layout {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 30px;
+}
+
+.prime-content {
+  flex: 1 1 auto;
+  max-width: 100%;
+  padding-bottom: 40px;
+}
+
+
+/* ============================================================
+   9. FOOTER & BOTTOM MODULES
+   ============================================================ */
+
+footer {
+  background: #222;
+  color: var(--white);
+  padding: 20px 0;
+  text-align: center;
+}
+
+.bottom-wrapper {
+  padding: 40px 20px;
+  font-size: 14px;
+  color: var(--gray-mid);
+  background: var(--gray-light);
+}
+
+.bottom-wrapper .social ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 0;
+  list-style: none;
+}
+
+.bottom-wrapper .social img {
+  height: 30px;
+  width: auto;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 40px;
+}
+
+/* Bottom module grid */
+
+.bottom-modules {
+  margin: 10px auto;
+  background: var(--white);
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bottom-modules > .banner-slot {
+  flex: 1 1 22%;
+  display: flex;
+}
+
+.bottom-modules .moduletable {
+  flex: 1 1 100%;
+  background: #eeeeee;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: flex-start;
+}
+
+/* Module: generic */
+
+.moduletable {
+  display: block;
+  vertical-align: top;
+  color: #141414;
+}
+
+.moduletable ul {
+  padding: 20px;
+  list-style: none;
+  margin: 0;
+}
+
+.moduletable ul li {
+  position: relative;
+  line-height: 2.7em;
+}
+
+.moduletable ul li a {
+  color: #141414;
+  position: relative;
+  padding-left: 20px;
+  line-height: 2.7em;
+  font-size: 0.9em;
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* Module: bottom nav */
+
+.moduletable.bottom ul li a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: 2px solid var(--gray-border);
+  height: 1.2em;
+  transition: all 0.2s linear;
+}
+
+.moduletable.bottom ul li a:hover        { color: var(--red); }
+.moduletable.bottom ul li a:hover::before { border-color: var(--red); }
+
+.moduletable.bottom ul li.parent { background: #f6f6f6; }
+.moduletable.bottom ul li strong { display: block; }
+.moduletable.bottom ul li li     { padding-left: 10px; }
+
+.moduletable.bottom ul li li a {
+  color: #757575;
+  font-weight: normal;
+  font-size: 0.85em;
+}
+
+/* Module: heading */
+
+.moduletable h3 {
+  font-size: 45px;
+  line-height: 45px;
+  text-transform: uppercase;
+  font-family: 'Roboto Slab', Arial, sans-serif;
+  font-weight: bold;
+  padding: 30px 0 10px 20px;
+  text-align: left;
+  max-width: 240px;
+  float: none;
+}
+
+.moduletable.bottom,
+.moduletable.started {
+  padding: 20px;
+}
+
+/* Module: started */
+
+.moduletable.started ul {
+  padding: 0 0 20px 20px;
+  list-style: none;
+  margin: 0;
+}
+
+.moduletable.started h3 {padding-bottom: 30px}
+
+.moduletable.started {
+  background: #eeeeee;
+  color: #141414;
+}
+
+.moduletable.started strong {
+  padding: 0 0 0 25px;
+  color: #000000;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-family: 'Roboto Slab', Arial, sans-serif;
+  
+}
+
+.moduletable.started ul { list-style: none; }
+
+.moduletable.started ul li a {
+  color: var(--gray-mid);
+  margin: 0;
+  padding: 0 0 0 5px;
+  width: 100%;
+}
+
+.moduletable.started ul li {
+  border-bottom: 1px solid #bfbfbf;
+}
+.moduletable.started ul li:last-child {
+  border-bottom: none;
+}
+
+.moduletable.started a:hover,
+.moduletable.started a:active,
+.moduletable.started a:focus {
+  color: var(--gray-dark);
+  background: #e6e6e6;
+}
+
+
+
+/* Module: support */
+
+.moduletable.support {
+  background: #eeeeee;
+  text-align: center;
+  font-family: 'Pathway Gothic One', Arial, sans-serif;
+  font-size: 20px;
+  color: var(--gray-dark);
+  padding: 0 0 20px 0;
+}
+
+.moduletable.support p      { padding: 10px 0; line-height: 24px; letter-spacing: 1; }
+.moduletable.support strong { font-size: 26px; font-family: 'Roboto Slab', Arial, sans-serif; font-weight: normal; letter-spacing: 1; }
+
+
+/* ============================================================
+   10. AD SLOTS
+   ============================================================ */
+
+.atop,
+.abottom {
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.atop   {  z-index: 1; }
+.abottom { margin: 10px auto; }
+
+.atop img,
+.abottom img {
+  max-height: 120px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.atop:empty,
+.abottom:empty { display: none; }
+
+
+/* ============================================================
+   11. DOWNLOAD HIDE UTILITY
+   ============================================================ */
+
+.infodownload          { display: none !important; }
+.infomore              { width: 100% !important; }
+a:has(img[alt="Download"]) { display: none !important; }
+
+
+/* ============================================================
+   12. RESPONSIVE — ≤1300px  (mobile nav)
+   ============================================================ */
+
+@media (max-width: 1300px) {
+
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5px 0 0 0;
+  }
+
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .logo img { height: 33px; }
+
+  .mobile-toggle {
+    display: block;
+    font-size: 1.8em;
+    padding: 10px;
+    cursor: pointer;
+    line-height: 1;
+    height: auto;
+    margin: 0;
+    background: none;
+    border: none;
+    outline: none;
+    vertical-align: middle;
+  }
+
+  .topmenu { width: 100%; position: relative; }
+
+  /* Dropdown panel */
+  .menu {
+    display: none;
+    flex-direction: column;
+    background: var(--white);
+    position: absolute;
+    left: 0;
+    top: 54px;
+    width: 200px;
+    z-index: 999;
+    padding: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+
+  .menu.open { display: flex; }
+
+  .menu a {
+    display: block;
+    width: 200px;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  /* Flatten donate/bookit inside the dropdown */
+  .menu a.donate,
+  .menu a.donate:hover,
+  .menu a.donate:active,
+  .menu a.bookit,
+  .menu a.bookit:hover,
+  .menu a.bookit:active {
+    background: var(--white);
+    border: none;
+    border-bottom: 1px solid #ccc;
+    color: var(--gray-dark);
+    font-size: 1.3em;
+    padding: 15px;
+  }
+
+  /* User icon links appear in mobile dropdown */
+  .menu a.link-bookmarks,
+  .menu a.link-dashboard {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 17px;
+  }
+
+  .menu a.link-bookmarks::before,
+  .menu a.link-dashboard::before {
+    width: 16px;
+    height: 16px;
+    padding-right: 10px;
+  }
+
+  main,
+  main .blog { padding: 10px; }
+}
+
+
+/* ============================================================
+   13. RESPONSIVE — ≤1024px
+   ============================================================ */
+
+@media (max-width: 1024px) {
+
+  /* Bottom modules: 2 per row */
+  .bottom-modules > .banner-slot { flex: 1 1 48%; }
+
+  /* Blog grids: 2 per row */
+  .blog-items.columns-4 > div,
+  .blog-items.columns-3 > div {
+    flex: 1 1 calc(50% - 5px);
+    max-width: calc(50% - 5px);
+  }
+
+  /* Homepage grid */
+  .homepage-grid { grid-template-columns: 1fr 1fr; }
+
+  #exercise {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+
+  #wod, #challenge, #promo, #community {
+    grid-column: span 1;
+    grid-row: auto;
+  }
+}
+
+
+/* ============================================================
+   14. RESPONSIVE — ≤901px
+   ============================================================ */
+
+@media (max-width: 901px) {
+  main,
+  main .blog { padding: 3px; }
+}
+
+
+/* ============================================================
+   15. RESPONSIVE — ≤768px
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+  /* Bottom modules: 1 per row, reordered: My Darebee, The Project, Support, Featured Book */
+  .bottom-modules > .banner-slot { flex: 1 1 100%; }
+  .bottom-modules > .slot-4 { order: 1; }
+  .bottom-modules > .slot-3 { order: 2; }
+  .bottom-modules > .slot-1 { order: 3; }
+  .bottom-modules > .slot-2 { order: 4; }
+
+  /* Blog grid: 1 per row */
+  .blog-items > div {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .blog-items { gap: 10px; }
+
+  .blog-items > div:only-child,
+  .blog-items > div:nth-last-child(1):nth-child(odd) {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Homepage grid: single column */
+  .homepage-grid { display: block; }
+
+  .homepage-grid > div {
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}

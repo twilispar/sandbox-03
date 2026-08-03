@@ -1,0 +1,2485 @@
+/**
+ * Age of Pandora — v3.2
+ * Build: 2026-04-10 12:26
+ * Deploy: replace Pandora.js on server with this file (mind the capital P).
+ * Changes from v3:
+ *  - Interactive elements vanish/appear immediately on interaction (no page reload)
+ *  - refreshUI() is the single source of truth for all element visibility
+ *  - Inventory panel: map item links to map, items update live after trades
+ *  - Chapter pages: scraps/items/people divs hide on collect, show on sell
+ *  - Auction house: items appear when you own them, hide when sold
+ *  - All shops, jobs, hunting grounds, fighting pits sync with save state
+ *
+ * VERSION SYSTEM
+ *  Bump CODE_VERSION on every deploy (e.g. '3.2' → '3.3').
+ *  On load, if the stored version doesn't match, the page reloads once
+ *  with a cache-busting query param — forcing fresh JS/CSS from the server.
+ *  Player save data is completely unaffected.
+ */
+
+(() => {
+  'use strict';
+
+  /* ─────────────────────────────────────────
+     VERSION — bump this on every deploy
+     Format: '3.2', '3.3', '3.4' …
+  ───────────────────────────────────────── */
+  const CODE_VERSION = '2.3.6';
+  const VER_KEY      = 'darebee_pandora_ver';
+
+  (function checkVersion() {
+    const stored = localStorage.getItem(VER_KEY);
+    if (stored === CODE_VERSION) return;           // already up to date
+
+    localStorage.setItem(VER_KEY, CODE_VERSION);  // record new version first
+
+    // Guard against infinite reload loops (e.g. server not updated yet)
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('_v') === CODE_VERSION) return;
+
+    url.searchParams.set('_v', CODE_VERSION);
+    window.location.replace(url.toString());       // reload with cache-bust param
+    // ↑ execution stops here; everything below runs only after the fresh load
+  })();
+
+  /* ─────────────────────────────────────────
+     DEV MODE
+     Set to false before shipping.
+  ───────────────────────────────────────── */
+  /* ─────────────────────────────────────────
+     STATIC GAME DATA
+  ───────────────────────────────────────── */
+
+  const LOCKED_LOCATIONS = new Set([
+    'TheArc', 'Mines', 'TheLabs', 'ResistanceCamp', 'MountainCave',
+    'Lighthouse', 'Swamps', 'MountainMen', 'DreamersTemple', 'Bridge',
+    'Bunker17', 'Bunker42', 'CampKera', 'NoManForest'
+  ]);
+
+  const UNLOCK_CONDITIONS = [
+    { chapter: 8,  location: 'Lighthouse'      },
+    { chapter: 9,  location: 'Mines'           },
+    { chapter: 9,  location: 'ResistanceCamp'  },
+    { chapter: 10, location: 'MountainCave'    },
+    { chapter: 11, location: 'DreamersTemple'  },
+    { chapter: 11, location: 'DreamersPits'    },
+    { chapter: 16, location: 'MountainMen'     },
+    { chapter: 18, location: 'Swamps'          },
+    { chapter: 21, location: 'TheArc'          },
+    { chapter: 28, location: 'Bridge'          },
+    { chapter: 28, location: 'Bunker17'        },
+    { chapter: 28, location: 'Bunker42'        },
+    { chapter: 28, location: 'CampKera'        },
+    { chapter: 28, location: 'NoManForest'     },
+  ];
+
+  const ACCESS_CONDITIONS = [
+    { location: 'Forest', itemRequired: 'Bow'        },
+    { location: 'Sea',    itemRequired: 'FishingRod' },
+  ];
+
+  /*
+   * FORK DATA — ORDER MUST NEVER CHANGE
+   *
+   * Ending B threshold: score >= 6 (max possible ~12)
+   *
+   *  0: Ch.12  Save girl/Alana (B=2) vs walk away (A=0)
+   *  1: Ch.18  Win fight/Mountain Men (A=1) vs lose (B=0)
+   *  2: Ch.19  Attack brutes (A=0) vs negotiate (B=0) — neutral
+   *  3: Ch.22  Kill android (A=0) vs reason with it (B=1)
+   *  4: Ch.30  Cryosleep/quit (A=0) vs continue journey (B=3) — biggest fork
+   *  5: Ch.32  Let Betas attack (A=0) vs warn Mountain Men (B=1)
+   *  6: Ch.34  Auto: Dicer alive=B(1), dead=A(0)
+   *  7: Ch.38  Destroy building (A=0) vs save architects (B=1)
+   *  8: Ch.43  Save Daria/girl (A=1) vs save Glen/boy (B=0)
+   *  9: Ch.49  Leave Serina (A=0) vs grab her/public trial (B=1)
+   * 10: Ch.57  Kill Bersen (A=0) vs banish (B=1)
+   * 11: Ch.60  Morse plan (A=0) vs Hella plan (B=1)
+   */
+  const FORKS = [
+    { chapter: 12, spread: 1, endA: 0, endB: 2, auto: 0 },
+    { chapter: 18, spread: 0, endA: 1, endB: 0, auto: 0 },
+    { chapter: 19, spread: 0, endA: 0, endB: 0, auto: 0 },
+    { chapter: 22, spread: 0, endA: 0, endB: 1, auto: 0 },
+    { chapter: 30, spread: 0, endA: 0, endB: 3, auto: 0 },
+    { chapter: 32, spread: 1, endA: 0, endB: 1, auto: 0 },
+    { chapter: 34, spread: 1, endA: 0, endB: 0, auto: 1, peopleB: 'Dicer' },
+    { chapter: 38, spread: 1, endA: 0, endB: 1, auto: 0 },
+    { chapter: 43, spread: 1, endA: 0, endB: 1, auto: 0 },
+    { chapter: 49, spread: 1, endA: 0, endB: 1, auto: 0 },
+    { chapter: 57, spread: 0, endA: 0, endB: 1, auto: 0 },
+    { chapter: 60, spread: 0, endA: 0, endB: 1, auto: 0 },
+  ];
+
+  // 3+ B choices from the user → Ending B (Pandora saved). Fewer → Ending A (Pandora falls).
+  const ENDING_B_THRESHOLD = 3;
+
+  const HARD_GATES = [
+    {
+      chapter: 40,
+      scrapsRequired: 10000,
+      reason: "Morse needs 10,000 scraps to pay the Builders for the war machine schematics he found in the Factory."
+    },
+    {
+      chapter: 48,
+      itemRequired: 'Cape',
+      reason: "You need a hooded cape as a disguise before entering the Dreamers' Temple. Buy one at Agora Canis."
+    }
+  ];
+
+  /*
+   * ITEM REGISTRY
+   * Defines every obtainable item: how it's acquired, display info,
+   * and whether it has special behaviour (Map links to map screen).
+   *
+   * source: 'chapter' | 'shop' | 'start' | 'quest'
+   * special: 'map' | null
+   */
+  /*
+   * ITEMS registry — labels, food flag, special behaviour
+   * food:true → item belongs in Food tab
+   * special:'map' → clicking opens map screen instead of modal
+   * Descriptions live in Inventory.html data-description attributes.
+   */
+  const ITEMS = {
+    DogTags:     { label: 'Dog Tags',          special: null },
+    Map:         { label: 'Map of Pandora',    special: 'map' },
+    Knife:       { label: 'Knife',             special: null },
+    Club:        { label: 'Club',              special: null },
+    Bow:         { label: 'Bow',               special: null },
+    FishingRod:  { label: 'Fishing Rod',       special: null },
+    Hoodie:      { label: 'Hoodie',            special: null },
+    Mask:        { label: 'Gas Mask',          special: null },
+    Cape:        { label: 'Cape',              special: null },
+    Boots:       { label: 'Heavy Boots',       special: null },
+    Gloves:      { label: "Builder's Gloves",  special: null },
+    Shades:      { label: 'Shades',            special: null },
+    MedKit:      { label: 'Med Kit',           special: null },
+    SleepingBag: { label: 'Sleeping Bag',      special: null },
+    Bottle:      { label: 'Water Bottle',      special: null },
+    Paper:       { label: 'Toilet Paper',      special: null },
+    Rope:        { label: 'Rope',              special: null },
+    // Food items — live in Food tab
+    Barru:       { label: 'Barru',      food: true, special: null },
+    Shraams:     { label: 'Shraams',    food: true, special: null },
+    Chickensa:   { label: 'Chickensa',  food: true, special: null },
+    Cocrach:     { label: 'Cocrach',    food: true, special: null },
+    Fraggur:     { label: 'Fraggur',    food: true, special: null },
+    Mincer:      { label: 'Mincer',     food: true, special: null },
+    Ratsan:      { label: 'Ratsan',     food: true, special: null },
+    Stingtail:   { label: 'Stingtail', food: true, special: null },
+    Wormonger:   { label: 'Wormonger', food: true, special: null },
+    Brish:       { label: 'Brish',      food: true, special: null },
+    Toofer:      { label: 'Toofer',     food: true, special: null },
+    Crabra:      { label: 'Crabra',     food: true, special: null },
+    Arwag:       { label: 'Arwag',      food: true, special: null },
+    Ignis:       { label: 'Ignis',      food: true, special: null },
+    Kelp:        { label: 'Kelp',       food: true, special: null },
+    Wiper:       { label: 'Wiper',      food: true, special: null },
+    Carabin:     { label: 'Carabin',    food: true, special: null },
+    Shellk:      { label: 'Shellk',     food: true, special: null },
+  }
+  const LS_KEY   = 'darebee_pandora_v3';
+  const BASE_URL = 'https://darebee.com/toolbox/index/pandora2/';
+
+  /* ─────────────────────────────────────────
+     SAVE STATE
+  ───────────────────────────────────────── */
+
+  const DEFAULT_SAVE = () => ({
+    name:             '',
+    chapter:          0,
+    currency:         0,
+    inventory:        ['DogTags'],
+    people:           [],
+    lootedIds:        [],
+    forks:            new Array(FORKS.length).fill(''),
+    lastLocation:     'Somewhere',
+    visitedLocations: [],
+    perks:            [],
+    entryLogs:        [],
+    gameOver:         false,
+    campLevel:        1,
+    difficulty:       'normal', // 'easy' | 'normal' | 'hard'
+    stolenScraps:     0,        // ch.45 thief: holds scraps until Loot45-1 is collected
+  });
+
+  let save = null;
+
+  function loadSave() {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) { migrateLegacy(); return; }
+      save = JSON.parse(raw);
+      while (save.forks.length < FORKS.length) save.forks.push('');
+      if (!save.perks)            save.perks = [];
+      if (!save.entryLogs)        save.entryLogs = [];
+      if (!save.visitedLocations) save.visitedLocations = [];
+      if (save.gameOver === undefined) save.gameOver = false;
+      if (!save.campLevel) save.campLevel = 1;
+      if (!save.difficulty) save.difficulty = 'normal';
+      if (save.stolenScraps === undefined) save.stolenScraps = 0;
+      if (!save.savedAt) save.savedAt = null;
+      // Strip any invalid item ids that crept into inventory from chapter tracking divs
+      save.inventory = save.inventory.filter(id =>
+        id.startsWith('EntryLog') || id.startsWith('Perk') || VALID_ITEMS.has(id)
+      );
+    } catch (e) { save = null; }
+  }
+
+  function writeSave() {
+    try {
+      save.savedAt = new Date().toISOString();
+      localStorage.setItem(LS_KEY, JSON.stringify(save));
+    } catch (e) {}
+  }
+
+  function clearAllSaves() {
+    ['darebee_pandora_v3','darebee_pandora_v2','darebee_pandora_v1'].forEach(k => {
+      try { localStorage.removeItem(k); } catch(e) {}
+    });
+    save = null;
+  }
+
+  function migrateLegacy() {
+    try {
+      const v2 = localStorage.getItem('darebee_pandora_v2');
+      if (v2) {
+        save = JSON.parse(v2);
+        save.perks     = save.perks     || [];
+        save.entryLogs = save.entryLogs || [];
+        while (save.forks.length < FORKS.length) save.forks.push('');
+        writeSave();
+        localStorage.removeItem('darebee_pandora_v2');
+        return;
+      }
+    } catch(e) {}
+    try {
+      const v1 = localStorage.getItem('darebee_pandora_v1');
+      if (!v1) return;
+      const slots = v1.split('|').filter(Boolean);
+      let best = null;
+      slots.forEach(s => {
+        const parts = s.split('&');
+        const day   = parseInt(parts[1]) || 0;
+        if (!best || day > best.chapter) {
+          const forks = new Array(FORKS.length).fill('');
+          (parts[6]||'').split('%').filter(Boolean).forEach((v,i) => { if(i<forks.length) forks[i]=v; });
+          best = {
+            name: parts[0]||'Survivor', chapter: day,
+            currency: parseInt(parts[2])||0,
+            inventory: (parts[4]||'').split('%').filter(Boolean)||['DogTags'],
+            people: (parts[5]||'').split('%').filter(Boolean),
+            lootedIds: (parts[3]||'').split('%').filter(Boolean),
+            forks, lastLocation: parts[7]||'Somewhere',
+            visitedLocations:[], perks:[], entryLogs:[],
+          };
+        }
+      });
+      if (best) { save = best; writeSave(); localStorage.removeItem('darebee_pandora_v1'); }
+    } catch(e) {}
+  }
+
+  /* ─────────────────────────────────────────
+     RUNTIME STATE
+  ───────────────────────────────────────── */
+
+  let activeLockedLocations = new Set(LOCKED_LOCATIONS);
+  let isEnding    = false;
+  let isPreEnding = false;
+  let hardGate    = null;
+
+  /* ─────────────────────────────────────────
+     DOM HELPERS
+  ───────────────────────────────────────── */
+
+  const $    = id  => document.getElementById(id);
+  const show = el  => el && el.classList.remove('pnd-hidden');
+  const hide = el  => el && el.classList.add('pnd-hidden');
+  const fadeOut = el => {
+    if (!el) return;
+    // Freeze current size so collapse animation works
+    const w = el.offsetWidth;
+    const h = el.offsetHeight;
+    el.style.width    = w + 'px';
+    el.style.height   = h + 'px';
+    el.style.overflow = 'hidden';
+    el.style.transition = 'opacity 0.3s, transform 0.3s, width 0.35s 0.25s, height 0.35s 0.25s, margin 0.35s 0.25s, padding 0.35s 0.25s';
+    el.style.opacity   = '0';
+    el.style.transform = 'scale(0.9)';
+    setTimeout(() => {
+      // Collapse dimensions so siblings flow in
+      el.style.width   = '0';
+      el.style.height  = '0';
+      el.style.margin  = '0';
+      el.style.padding = '0';
+      setTimeout(() => el.classList.add('pnd-hidden'), 360);
+    }, 280);
+  };
+  const fadeIn = el => {
+    if (!el) return;
+    el.classList.remove('pnd-hidden');
+    el.style.transition = 'opacity 0.3s, transform 0.3s';
+    el.style.opacity    = '0';
+    el.style.transform  = 'scale(0.9)';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.style.opacity   = '1';
+        el.style.transform = 'scale(1)';
+      });
+    });
+  };
+
+  /* ─────────────────────────────────────────
+     NAV BUTTON HELPERS
+     Always swap NEXT / BACK TO CHAPTER together.
+     Only one should ever be visible at a time.
+  ───────────────────────────────────────── */
+  function showNext() {
+    show($('pnd-next-btn'));
+    show($('pnd-bottom-bar'));
+    hide($('pnd-leave-btn'));
+  }
+  function showLeave() {
+    hide($('pnd-next-btn'));
+    hide($('pnd-bottom-bar'));
+    show($('pnd-leave-btn'));
+  }
+
+  /* ─────────────────────────────────────────
+     UNIVERSAL UI REFRESH
+     Call after any save state change.
+     Scans current DOM for known data-* elements
+     and shows/hides them based on save state.
+     Works in chapter pages, location overlays,
+     inventory, everywhere.
+  ───────────────────────────────────────── */
+
+  /*
+   * refreshUI — syncs named market/shop containers with save state.
+   * ONLY operates on known container IDs: agoraJobs, agoraShop,
+   * agoraFoodShop, forestHunt, agoraAuctionHouse.
+   *
+   * Does NOT scan arbitrary [data-giveitem] elements — those are
+   * handled per-element via fadeOut() at the point of interaction.
+   * This prevents chapter page items (which start hidden in HTML)
+   * from being incorrectly revealed.
+   *
+   * Call after any trade, loot, or sell action.
+   */
+  function refreshUI(root) {
+    function findIn(id) {
+      return (root && root !== document && root.querySelector && root.querySelector('#' + id))
+          || document.getElementById(id);
+    }
+
+    function revealEl(el, cls) {
+      // Never reveal an element that has been looted
+      if (save && save.lootedIds && save.lootedIds.includes(el.id)) return;
+      el.classList.remove('pnd-hidden', 'hidden');
+      el.style.removeProperty('display');
+      el.className = cls;
+    }
+    function concealEl(el) {
+      if (!el.classList.contains('pnd-hidden')) fadeOut(el);
+    }
+
+    // ── Job board: hide completed jobs, show available ones ──
+    const jobs = findIn('agoraJobs');
+    if (jobs) {
+      jobs.querySelectorAll('[id]').forEach(el => {
+        if (save.lootedIds.includes(el.id)) {
+          el.style.cssText = '';
+          el.classList.add('pnd-hidden');
+        } else if (!el.classList.contains('pnd-hidden')) {
+          revealEl(el, 'agoraJobsItems');
+        }
+      });
+    }
+
+    // ── Chapter page jobs: permanently hide collected scraps divs ──
+    if (root && root.querySelectorAll) {
+      root.querySelectorAll('[data-scraps][id]').forEach(el => {
+        if (save.lootedIds.includes(el.id)) {
+          el.style.cssText = '';
+          el.classList.add('pnd-hidden');
+        }
+      });
+    }
+
+    // ── Shop: hide purchased items ──
+    const shop = findIn('agoraShop');
+    if (shop) {
+      shop.querySelectorAll('[id]').forEach(el => {
+        if (save.inventory.includes(el.id)) concealEl(el);
+        else revealEl(el, 'agoraShopItems');
+      });
+    }
+
+    // ── Food shop: hide purchased food ──
+    const foodShop = findIn('agoraFoodShop');
+    if (foodShop) {
+      foodShop.querySelectorAll('[id]').forEach(el => {
+        if (save.inventory.includes(el.id)) concealEl(el);
+        else revealEl(el, 'agoraFoodShopItems');
+      });
+    }
+
+    // ── Hunting ground: hide caught prey ──
+    const hunt = findIn('forestHunt');
+    if (hunt) {
+      hunt.querySelectorAll('[id]').forEach(el => {
+        const caught = save.inventory.includes(el.id) || save.lootedIds.includes(el.id);
+        if (caught) concealEl(el);
+        else revealEl(el, 'forestHuntItems');
+      });
+    }
+
+    // ── Auction house: dynamically build sell list from inventory ──
+    const auction = findIn('agoraAuctionHouse');
+    if (auction) {
+      const UNSELLABLE = new Set(['DogTags', 'Map']);
+
+      // Food items (Images/Food/), everything else (Images/Items/)
+      const FOOD_ITEMS = new Set([
+        'Barru','Shraams','Chickensa','Cocrach','Fraggur','Mincer','Ratsan',
+        'Stingtail','Wormonger','Brish','Toofer','Crabra','Arwag','Ignis',
+        'Kelp','Wiper','Carabin','Shellk'
+      ]);
+
+      const SELL_PRICES = {
+        // Food
+        Barru:10, Shraams:10, Chickensa:10, Cocrach:10, Fraggur:10,
+        Mincer:55, Ratsan:35, Stingtail:35, Wormonger:35,
+        Brish:10, Toofer:10, Crabra:10, Arwag:10, Ignis:10,
+        Kelp:35, Wiper:35, Carabin:35, Shellk:5,
+        // Gear & weapons (roughly 50% of buy price)
+        Knife:400, Club:750, Bow:1000, Boots:350, Hoodie:500,
+        FishingRod:1000, Gloves:250, Shades:250, MedKit:250,
+        Mask:500, Cape:400, SleepingBag:300, Bottle:50,
+        Paper:25, Rope:250,
+      };
+
+      // Sellable = inventory minus unsellable, logs, perks
+      const logIds  = save.entryLogs.map(n => `EntryLog${n}`);
+      const perkIds = save.perks.map(p => `Perk${p}`);
+      const sellable = save.inventory.filter(id =>
+        !UNSELLABLE.has(id) && !logIds.includes(id) && !perkIds.includes(id)
+      );
+
+      auction.innerHTML = '';
+
+      if (sellable.length === 0) {
+        auction.innerHTML = '<p style="padding:20px;color:#888;font-style:italic;">Nothing to sell.</p>';
+      } else {
+        sellable.forEach(itemId => {
+          const price = SELL_PRICES[itemId] ?? 10;
+          const folder = FOOD_ITEMS.has(itemId) ? 'Food' : 'Items';
+
+          const div = document.createElement('div');
+          div.id                  = `sell-${itemId}`;
+          div.dataset.scraps      = price;
+          div.dataset.sellitem    = itemId;
+          div.style.display       = 'inline-block';
+          div.style.cursor        = 'pointer';
+
+          const img = document.createElement('img');
+          img.src       = `${BASE_URL}Images/${folder}/${itemId}.png`;
+          img.alt       = itemId;
+          img.className = 'agoraFoodShopItems';
+
+          div.appendChild(img);
+          auction.appendChild(div);
+        });
+      }
+
+      bindAreaButtons(auction);
+    }
+  }
+
+  // Legacy alias — keep for any code that calls refreshAllShops
+  function refreshAllShops() { refreshUI(); }
+
+  /* ─────────────────────────────────────────
+     MODAL
+  ───────────────────────────────────────── */
+
+  let modalResolve = null;
+
+  function modal({ title='', text='', image='', input=false,
+                   confirmText='OK', cancelText=null, danger=false, companion=false, dark=false, html=false, log=false }) {
+    return new Promise(resolve => {
+      modalResolve = resolve;
+      const overlay    = $('pnd-modal-overlay');
+      $('pnd-modal-title').textContent = title;
+      if (html) {
+        $('pnd-modal-text').innerHTML = text || '';
+      } else {
+        $('pnd-modal-text').textContent = text || '';
+      }
+      $('pnd-modal-error').textContent = '';
+
+      const imgEl = $('pnd-modal-img');
+      if (image) { imgEl.src = image; show(imgEl); } else { hide(imgEl); }
+
+      const inputEl = $('pnd-modal-input');
+      if (input) { inputEl.value = ''; show(inputEl); setTimeout(() => inputEl.focus(), 50); }
+      else { hide(inputEl); }
+
+      const confirmBtn = $('pnd-modal-confirm');
+      confirmBtn.textContent = confirmText;
+      confirmBtn.className   = 'pnd-btn' + (danger ? ' pnd-btn-danger' : '');
+      const box = $('pnd-modal-box');
+      box.classList.toggle('pnd-modal-companion', companion);
+      box.classList.toggle('pnd-modal-dark', dark);
+      box.classList.toggle('pnd-modal-log', log);
+
+      const cancelBtn = $('pnd-modal-cancel');
+      if (cancelText) { cancelBtn.textContent = cancelText; show(cancelBtn); }
+      else { hide(cancelBtn); }
+
+      show(overlay);
+    });
+  }
+
+  function closeModal(result) {
+    hide($('pnd-modal-overlay'));
+    if (modalResolve) { modalResolve(result); modalResolve = null; }
+  }
+
+  function initModal() {
+    $('pnd-modal-confirm').addEventListener('click', () => {
+      const inputEl = $('pnd-modal-input');
+      if (!inputEl.classList.contains('pnd-hidden')) {
+        const val = inputEl.value.trim();
+        if (!val)          { $('pnd-modal-error').textContent = 'Please enter a name.'; return; }
+        if (/[|&%]/.test(val)) { $('pnd-modal-error').textContent = 'Name cannot contain | & %'; return; }
+        closeModal({ confirmed: true, value: val });
+      } else { closeModal({ confirmed: true }); }
+    });
+    $('pnd-modal-cancel').addEventListener('click', () => closeModal({ confirmed: false }));
+    $('pnd-modal-overlay').addEventListener('click', e => {
+      if (e.target === $('pnd-modal-overlay')) closeModal({ confirmed: false });
+    });
+  }
+
+  /* ─────────────────────────────────────────
+     CONTENT LOADER
+  ───────────────────────────────────────── */
+
+  async function loadContent(url, afterFn) {
+    const space = $('pnd-main-space');
+    space.innerHTML = '<div class="pnd-loading">Loading\u2026</div>';
+    try {
+      const res  = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const html = await res.text();
+      const parser = new DOMParser();
+      const doc  = parser.parseFromString(html, 'text/html');
+
+      document.querySelectorAll('style[data-pnd-injected]').forEach(s => s.remove());
+      doc.querySelectorAll('style').forEach(s => {
+        const clone = document.createElement('style');
+        clone.setAttribute('data-pnd-injected', '1');
+        clone.textContent = s.textContent;
+        document.head.appendChild(clone);
+      });
+
+      space.innerHTML = '';
+      space.style.background = '#f6f6f6';
+      Array.from(doc.body.children).forEach(child =>
+        space.appendChild(document.importNode(child, true))
+      );
+      space.querySelectorAll('script').forEach(oldScript => {
+        const s = document.createElement('script');
+        if (oldScript.src) s.src = oldScript.src;
+        else s.textContent = oldScript.textContent;
+        oldScript.parentNode.replaceChild(s, oldScript);
+      });
+    } catch (e) {
+      space.innerHTML = '<div class="pnd-loading pnd-error">Could not load content. Please check your connection.</div>';
+      return;
+    }
+    // Before any afterFn runs, permanently hide already-looted job divs
+    if (save && save.lootedIds) {
+      space.querySelectorAll('[data-scraps][id], #agoraJobs [id]').forEach(el => {
+        if (el.id && save.lootedIds.includes(el.id)) {
+          el.style.display = 'none';
+          el.style.visibility = 'hidden';
+          el.style.opacity = '0';
+          el.style.pointerEvents = 'none';
+          el.classList.add('pnd-hidden');
+        }
+      });
+      // Collapse the entire agoraJobs container if all jobs are looted
+      const jobsContainer = space.querySelector('#agoraJobs');
+      if (jobsContainer) {
+        const allLooted = [...jobsContainer.querySelectorAll('[id]')].every(el =>
+          save.lootedIds.includes(el.id)
+        );
+        if (allLooted) {
+          jobsContainer.style.display = 'none';
+          jobsContainer.style.margin = '0';
+          jobsContainer.style.padding = '0';
+        }
+      }
+    }
+    if (typeof afterFn === 'function') afterFn();
+  }
+
+  /* ─────────────────────────────────────────
+     URL BUILDER
+  ───────────────────────────────────────── */
+
+  function buildDayUrl(chapterNum) {
+    for (let i = 0; i < FORKS.length; i++) {
+      const fStart = FORKS[i].chapter;
+      const fEnd   = fStart + FORKS[i].spread;
+      if (chapterNum >= fStart && chapterNum <= fEnd && save.forks[i] !== '') {
+        return `${BASE_URL}Days/Day${chapterNum}${save.forks[i]}.html`;
+      }
+    }
+    return `${BASE_URL}Days/Day${chapterNum}.html`;
+  }
+
+  function calcEndingUrl() {
+    let scoreB = 0;
+    save.forks.forEach((choice, i) => {
+      if (FORKS[i].chapter <= 30) return; // only post-ch.30 forks affect ending
+      if (!choice) return;
+      scoreB += choice === 'B' ? FORKS[i].endB : FORKS[i].endA;
+    });
+    // threshold → Ending B (Pandora saved); below → Ending A (Pandora falls)
+    const ending = scoreB >= ENDING_B_THRESHOLD ? 'B' : 'A';
+    return `${BASE_URL}Days/Day61${ending}.html`;
+  }
+
+  /* ─────────────────────────────────────────
+     TOP BAR
+  ───────────────────────────────────────── */
+
+  // Location key → human label for topbar display
+  const LOCATION_LABELS = {
+    TheArc: 'The ARC', TheLabs: 'The LABS', NoManForest: 'No-Man Forest',
+    CampKera: 'Camp Kera', Bunker17: 'Bunker #17', Bunker42: 'Bunker #42',
+    ResistanceCamp: 'Resistance Camp', MountainCave: 'Mountain Cave',
+    CampRaza: 'Camp Raza', Bunker6: 'Bunker #6', FishermenVillage: "Fishermen's Village",
+    AgoraCanis: 'Agora Canis', AgoraEquos: 'Agora Equos', Bunker4: 'Bunker #4',
+    DreamersPits: "Dreamers' Pits", DreamersTemple: "Dreamers' Temple",
+    TheLastGarden: 'The Last Garden', CityPits: 'City Pits', CityRuins: 'City Ruins',
+    Bunker7: 'Bunker #7', CampMira: 'Camp Mira', Bunker22: 'Bunker #22',
+    Bunker201: 'Bunker #201', MountainMen: 'Mountain Men', MountainPits: 'Mountain Pits',
+    Hunters: 'Hunters', Shipwreck: 'Ship Wreck', Lighthouse: 'Lighthouse',
+    Mines: 'Mines', Bridge: 'Bridge', Sea: 'Sea', Forest: 'Unnamed Forest',
+    Camp: 'Camp', Swamps: 'Swamps',
+  };
+
+  function updateTopBar() {
+    $('pnd-currency').textContent = `${save.currency.toLocaleString()} scraps`;
+    const loc = save.lastLocation;
+    $('pnd-location').textContent = LOCATION_LABELS[loc] || loc;
+  }
+
+  /* ─────────────────────────────────────────
+     UNLOCKS AND GATES
+  ───────────────────────────────────────── */
+
+  function applyUnlocks(upToChapter) {
+    activeLockedLocations = new Set(LOCKED_LOCATIONS);
+    UNLOCK_CONDITIONS.forEach(u => {
+      if (u.chapter <= upToChapter) activeLockedLocations.delete(u.location);
+    });
+  }
+
+  function checkHardGate(chapterNum) {
+    hardGate = null;
+    for (const g of HARD_GATES) {
+      if (g.chapter === chapterNum) {
+        hardGate = g.scrapsRequired !== undefined
+          ? { type: 'scraps', value: g.scrapsRequired, reason: g.reason }
+          : { type: 'item',   value: g.itemRequired,   reason: g.reason };
+        break;
+      }
+    }
+  }
+
+  /* ─────────────────────────────────────────
+     CHAPTER GRANTS
+     Auto-grant entry logs and companions at
+     the chapters where they become available.
+     Called after every chapter advance.
+  ───────────────────────────────────────── */
+
+  // Chapters that trigger a camp upgrade (must match REINFORCE YOUR CAMP in story)
+  // ch.6 → level 2, ch.12 → level 3, ch.15 → level 4
+  // ch.36B (Dicer in camp) → level 5 (fork-specific, see below)
+  const CAMP_UPGRADE_CHAPTERS = [6, 12, 15];
+
+  // Fork-specific camp upgrades: { forkIndex, choice, chapter, level }
+  // ch.35B — Dicer is in your camp, builds the fence → level 5
+  // ch.35A — Dicer went back to City Pits and died → no upgrade
+  const CAMP_UPGRADE_FORKS = [
+    { forkIndex: 6, choice: 'B', chapter: 36, level: 5 },
+  ];
+
+  // Whitelist of valid inventory item ids — anything else is a chapter tracking id
+  const VALID_ITEMS = new Set([
+    // Starting item
+    'DogTags',
+    // Weapons & gear
+    'Knife','Club','Bow','Boots','Hoodie','FishingRod','Gloves',
+    'Shades','MedKit','Mask','Cape','SleepingBag','Bottle','Paper','Rope',
+    // Map
+    'Map',
+    // Sword (story reward)
+    'Sword',
+    // Food
+    'Barru','Shraams','Chickensa','Cocrach','Fraggur','Mincer','Ratsan',
+    'Stingtail','Wormonger','Brish','Toofer','Crabra','Arwag','Ignis',
+    'Kelp','Wiper','Carabin','Shellk',
+  ]);
+
+  /* ─────────────────────────────────────────
+     COMPANION PROMPTS
+     Before leaving a chapter, ask player if they want a companion.
+     Only shown once — skipped if already in save.people.
+     chapter: the chapter the player is LEAVING (i.e. current save.chapter)
+     person:  the id stored in save.people
+     name:    display name shown in the modal
+     fork:    optional — only prompt if save.forks[forkIndex] === forkChoice
+  ───────────────────────────────────────── */
+  const COMPANION_PROMPTS = [
+    { chapter: 13, person: 'Alana', name: 'Alana',  fork: { index: 0, choice: 'B' } },
+    { chapter: 24, person: 'Dicer', name: 'Dicer',  fork: null },
+    { chapter: 24, person: 'Morse', name: 'Morse',  fork: null },
+  ];
+
+  async function checkCompanionPrompts() {
+    // save.chapter is the internal counter; displayed chapter is save.chapter + 1.
+    // We want prompts to fire when leaving the displayed chapter (e.g. 13B → 14).
+    const ch = save.chapter + 1;
+    for (const prompt of COMPANION_PROMPTS) {
+      if (prompt.chapter !== ch) continue;
+      if (save.people.includes(prompt.person)) continue;
+      if (prompt.fork && save.forks[prompt.fork.index] !== prompt.fork.choice) continue;
+      const res = await modal({
+        title:       `Invite ${prompt.name} to join your camp?`,
+        confirmText: 'Yes',
+        cancelText:  'No',
+        companion:   true,
+      });
+      if (res.confirmed) {
+        save.people.push(prompt.person);
+        writeSave();
+      }
+    }
+  }
+
+  function checkChapterGrants(currentChapter) {
+    // Entry Log #1 — granted the moment player enters chapter 8
+    if (currentChapter >= 8 && !save.entryLogs.includes(1)) {
+      save.entryLogs.push(1);
+      writeSave();
+    }
+    // Entry Log #2 — granted the moment player enters chapter 13 (covers 13A and 13B)
+    if (currentChapter >= 13 && !save.entryLogs.includes(2)) {
+      save.entryLogs.push(2);
+      writeSave();
+    }
+    // Camp upgrade — level increases each time a reinforcement chapter is reached
+    // campLevel 1 = camp1.png (start), 2 = camp2.png (after ch.6), 3 = ch.12, 4 = ch.15, 5 = ch.36B only
+    const expectedLevel = 1 + CAMP_UPGRADE_CHAPTERS.filter(ch => currentChapter >= ch).length;
+    if (expectedLevel > save.campLevel) {
+      save.campLevel = expectedLevel;
+      writeSave();
+    }
+    // Fork-specific camp upgrades (e.g. ch.35B only)
+    CAMP_UPGRADE_FORKS.forEach(u => {
+      if (currentChapter >= u.chapter &&
+          save.forks[u.forkIndex] === u.choice &&
+          save.campLevel < u.level) {
+        save.campLevel = u.level;
+        writeSave();
+      }
+    });
+    // Mountain Men Perk — granted when player lands on ch.18A (fork A chosen)
+    if (currentChapter >= 18 && currentChapter <= 22 && save.forks[1] === 'A' && !save.perks.includes('MountainMen')) {
+      save.perks.push('MountainMen');
+      writeSave();
+    }
+    // Mountain Men Perk expires at ch.23 — Ivan and Drago return to the mountains
+    if (currentChapter >= 23) {
+      const idx = save.perks.indexOf('MountainMen');
+      if (idx !== -1) {
+        save.perks.splice(idx, 1);
+        writeSave();
+      }
+    }
+    // Chickensa — granted when player enters chapter 35
+    if (currentChapter >= 35 && !save.inventory.includes('Chickensa')) {
+      save.inventory.push('Chickensa');
+      writeSave();
+    }
+    // Ch.45 thief — steal all scraps on entry; restore when Loot45-1 is collected
+    if (currentChapter === 45 && !save.lootedIds.includes('Loot45-1')) {
+      if (save.stolenScraps === 0 && save.currency > 0) {
+        save.stolenScraps = save.currency;
+        save.currency = 0;
+        writeSave();
+        updateTopBar();
+      }
+    }
+    // Once Loot45-1 is collected, clear stolenScraps
+    if (currentChapter > 45 && save.stolenScraps > 0) {
+      save.stolenScraps = 0;
+      writeSave();
+    }
+  }
+
+  
+
+  async function startGame() {
+    isEnding = false; isPreEnding = false; hardGate = null;
+    showScreen('pnd-game-screen');
+    // Always restore topbar elements that openInfoPage may have hidden
+    show($('pnd-inventory-btn'));
+    // Location visible from Ch.5, scraps visible from Ch.6
+    const ch = Math.min(save.chapter + 1, 61);
+    if (ch >= 5) show($('pnd-location-display')); else hide($('pnd-location-display'));
+    if (ch >= 5) show($('pnd-currency-display')); else hide($('pnd-currency-display'));
+    updateTopBar();
+
+    const nextChapter = Math.min(save.chapter + 1, 61);
+    applyUnlocks(nextChapter);
+    checkHardGate(nextChapter);
+    checkChapterGrants(nextChapter); // auto-grant logs when entering the chapter
+
+    if (nextChapter >= 5) show($('pnd-map-btn')); else hide($('pnd-map-btn'));
+
+    // If the player chose cryosleep (ch.30A), game is over — show epilogue, lock NEXT
+    if (save.gameOver) {
+      hide($('pnd-next-btn')); if ($('pnd-bottom-bar')) hide($('pnd-bottom-bar')); // game over — no next
+      const url = buildDayUrl(30); // shows ch.30 with the epilogue
+      await loadContent(url, bindAreaButtons);
+      return;
+    }
+
+    if (nextChapter === 61)      { isEnding = true;    isPreEnding = false; }
+    else if (nextChapter === 60) { isPreEnding = true; }
+
+    const url = nextChapter === 61 ? calcEndingUrl() : buildDayUrl(nextChapter);
+    showNext();
+    await loadContent(url, isPreEnding ? bindPreEnding : isEnding ? bindEnding : bindAreaButtons);
+
+    if (nextChapter === 4 && save.lastLocation === 'Somewhere') {
+      save.lastLocation = 'TheArc';
+      writeSave();
+      updateTopBar();
+    }
+  }
+
+  /* ─────────────────────────────────────────
+     INTERACTION HANDLER
+     After every successful action:
+       1. Update save
+       2. Update top bar
+       3. refreshUI() — handles all show/hide with fade animations
+  ───────────────────────────────────────── */
+
+  /*
+   * lockChoiceGroup — called when a player picks from a data-choice-group pair.
+   * Highlights the chosen element, greys out all others in the group,
+   * disables all pointer events so the choice can't be changed.
+   */
+  function lockChoiceGroup(chosenEl) {
+    const group = chosenEl.dataset.choiceGroup;
+    if (!group) return;
+    document.querySelectorAll(`[data-choice-group="${group}"]`).forEach(el => {
+      if (el === chosenEl) {
+        el.style.outline = '4px solid #CC0000';
+        el.style.opacity = '1';
+      } else {
+        el.style.opacity = '0.3';
+        el.style.filter  = 'grayscale(100%)';
+      }
+      el.style.pointerEvents = 'none';
+    });
+  }
+
+  async function handleInteraction(e) {
+    const el = e.currentTarget;
+    e.preventDefault();
+
+    // ── Sell item ──
+    if (el.dataset.sellitem) {
+      const itemId = el.dataset.sellitem;
+      const price  = parseInt(el.dataset.scraps) || 0;
+      const idx    = save.inventory.indexOf(itemId);
+      if (idx === -1) { await modal({ title: "You can't sell what you don't have." }); return; }
+
+      // Show confirm modal with sell price
+      const result = await modal({
+        title:       itemId,
+        text:        `Sell for ${price} scraps?`,
+        confirmText: 'Sell',
+        cancelText:  'Keep',
+      });
+      if (!result.confirmed) return;
+
+      save.inventory.splice(idx, 1);
+      save.currency += price;
+      writeSave(); updateTopBar();
+      refreshUI();
+      return;
+    }
+
+    // ── Collect scraps ──
+    if (el.dataset.scraps && !el.dataset.spendscraps && !el.dataset.sellitem) {
+      if (save.lootedIds.includes(el.id)) {
+        fadeOut(el); return;
+      }
+      // Confirm before collecting jobs and fights (inside #agoraJobs)
+      if (!el.dataset.choiceGroup && el.closest('#agoraJobs')) {
+        const isFight = el.closest('[id="CityPits"], [id="DreamersPits"], [id="MountainPits"]') ||
+                        (el.id && el.id.startsWith('FightingJob'));
+        const confirmMsg = isFight
+          ? 'Are you done with the match?'
+          : 'Have you completed this job?';
+        const conf = await modal({ title: confirmMsg, confirmText: 'Yes', cancelText: 'Not yet' });
+        if (!conf.confirmed) return;
+      }
+      if (el.id) save.lootedIds.push(el.id);
+      save.currency += parseInt(el.dataset.scraps);
+      // Ch.45 — thief purse recovered: clear the stolen amount
+      if (el.id === 'Loot45-1') save.stolenScraps = 0;
+      writeSave(); updateTopBar();
+      // If part of a choice group, lock all siblings
+      if (el.dataset.choiceGroup) { lockChoiceGroup(el); ungateChoices(el); }
+      else fadeOut(el);
+      return;
+    }
+
+    // ── Collect Entry Log ──
+    if (el.dataset.entrylog) {
+      const logNum = parseInt(el.dataset.entrylog);
+      if (!save.entryLogs.includes(logNum)) {
+        save.entryLogs.push(logNum);
+        writeSave();
+        fadeOut(el.closest('[id]') || el);
+        await modal({
+          title:       `Entry Log #${logNum} acquired`,
+          text:        'Added to your inventory. Read it any time.',
+          confirmText: 'OK'
+        });
+      }
+      return;
+    }
+
+    // ── Acquire perk ──
+    if (el.dataset.perk) {
+      if (!save.perks.includes(el.dataset.perk)) {
+        save.perks.push(el.dataset.perk);
+        writeSave();
+        fadeOut(el.closest('[id]') || el);
+      }
+      return;
+    }
+
+    // ── Buy with scraps ──
+    if (el.dataset.spendscraps) {
+      const price = parseInt(el.dataset.spendscraps);
+      if (save.currency < price) { await modal({ title: 'Not enough scraps.' }); return; }
+
+      // ── Confirmation pop-up for Agora shop purchases ──
+      if (el.closest('#agoraShop, #agoraFoodShop')) {
+        const itemId   = el.dataset.giveitem || '';
+        const info     = ITEMS[itemId];
+        const label    = info ? info.label : (el.querySelector('img')?.alt || itemId || 'this item');
+        const imgEl    = el.querySelector('img');
+        const imgSrc   = imgEl ? imgEl.src : '';
+        const confirmed = await modal({
+          title:       `Buy ${label}?`,
+          text:        `Cost: ${price} scraps`,
+          image:       imgSrc,
+          confirmText: 'Buy',
+          cancelText:  'Cancel',
+        });
+        if (!confirmed?.confirmed) return;
+      }
+
+      if (el.dataset.people) {
+        if (save.people.includes(el.dataset.people)) {
+          await modal({ title: 'Already in your camp.' }); return;
+        }
+        save.people.push(el.dataset.people);
+      }
+      if (el.dataset.giveitem) {
+        if (save.inventory.includes(el.dataset.giveitem)) {
+          await modal({ title: 'You already own this.' }); return;
+        }
+        save.inventory.push(el.dataset.giveitem);
+      }
+      save.currency -= price;
+      writeSave(); updateTopBar();
+      // If part of a choice group, lock siblings; otherwise refresh shops
+      if (el.dataset.choiceGroup) { lockChoiceGroup(el); ungateChoices(el); }
+      else refreshUI();
+      // If no item given and not in a shop context, fade the element out (e.g. ch.51 payment)
+      if (!el.dataset.giveitem && !el.closest('#agoraShop, #agoraFoodShop')) {
+        fadeOut(el.closest('[id]') || el);
+      }
+      return;
+    }
+
+    // ── Free recruit ──
+    if (el.dataset.people && !el.dataset.pathfork) {
+      const personId = el.dataset.people;
+      if (save.people.includes(personId)) {
+        await modal({ title: 'Already in your camp.' }); return;
+      }
+      save.people.push(personId);
+      writeSave();
+      // Dim the element in-place — no page reload, no black screen
+      const target = el.closest('[data-people]') || el;
+      target.style.transition = 'opacity 0.4s';
+      target.style.opacity = '0.3';
+      target.style.pointerEvents = 'none';
+      await modal({ title: `${personId} joined your camp!`, confirmText: 'OK' });
+      return;
+    }
+
+    // ── Free item ──
+    if (el.dataset.giveitem && !el.dataset.pathfork) {
+      const itemId = el.dataset.giveitem;
+      // Ignore internal chapter tracking ids (not real inventory items)
+      if (!VALID_ITEMS.has(itemId)) { fadeOut(el.closest('[id]') || el); return; }
+      if (save.inventory.includes(itemId)) {
+        await modal({ title: 'You already have this.' }); return;
+      }
+      if (el.closest('#seaFish')) {
+        const conf = await modal({ title: 'Have you completed the workout?', confirmText: 'Yes', cancelText: 'Not yet' });
+        if (!conf.confirmed) return;
+      }
+      if (el.closest('#forestHunt')) {
+        const info  = ITEMS[itemId];
+        const label = info ? info.label : itemId;
+        const imgSrc = el.querySelector('img')?.src || '';
+        const conf  = await modal({
+          title:       `Hunt ${label}?`,
+          text:        'Have you completed the workout?',
+          image:       imgSrc,
+          confirmText: 'Yes',
+          cancelText:  'Not yet',
+        });
+        if (!conf.confirmed) return;
+      }
+      save.inventory.push(itemId);
+      writeSave();
+      fadeOut(el.closest('[id]') || el);
+      return;
+    }
+
+    // ── Story fork choice ──
+    if (el.dataset.pathfork) {
+      const choice      = el.dataset.pathfork;
+      const nextChapter = save.chapter + 1;
+
+      // Chapter 30A = cryosleep = end of journey — warn the player first
+      if (nextChapter === 30 && choice === 'A') {
+        const warn = await modal({
+          title:       '⚠️ This is the end of your journey.',
+          text:        'Choosing to return to cryosleep will end your story here. You can still explore the map, but there will be no next chapter. This cannot be undone.',
+          confirmText: 'Step into the pod',
+          cancelText:  'Wait — let me think',
+          danger:      true,
+        });
+        if (!warn.confirmed) return;
+      }
+
+      if (el.dataset.itemRequired) {
+        const reqIdx = save.inventory.indexOf(el.dataset.itemRequired);
+        if (reqIdx === -1) {
+          const ITEM_NAMES = { FishingRod: 'Fishing Rod' };
+          const itemName = ITEM_NAMES[el.dataset.itemRequired] || el.dataset.itemRequired;
+          await modal({ title: `You need a ${itemName} to travel here.` }); return;
+        }
+        save.inventory.splice(reqIdx, 1);
+      }
+      if (el.dataset.peopleRequired) {
+        const reqIdx = save.people.indexOf(el.dataset.peopleRequired);
+        if (reqIdx === -1) { await modal({ title: `You need ${el.dataset.peopleRequired} to do that.` }); return; }
+        save.people.splice(reqIdx, 1);
+      }
+      if (el.dataset.scrapsRequired) {
+        const cost = parseInt(el.dataset.scrapsRequired);
+        if (save.currency < cost) { await modal({ title: 'Not enough scraps.' }); return; }
+        save.currency -= cost;
+      }
+
+      for (let i = 0; i < FORKS.length; i++) {
+        const fStart = FORKS[i].chapter, fEnd = fStart + FORKS[i].spread;
+        if (nextChapter >= fStart && nextChapter <= fEnd && save.forks[i] === '') {
+          save.forks[i] = choice;
+        }
+      }
+      writeSave();
+
+      // Ch.30A = cryosleep epilogue — lock NEXT, stay on current chapter content
+      if (nextChapter === 30 && choice === 'A') {
+        save.gameOver = true;
+        writeSave();
+        hide($('pnd-next-btn')); if ($('pnd-bottom-bar')) hide($('pnd-bottom-bar'));
+        hide($('pnd-leave-btn')); // game over — neither button
+        // Load the ch.30A epilogue content inline
+        const url = `${BASE_URL}Days/Day30A.html`;
+        await loadContent(url, bindAreaButtons);
+        return;
+      }
+
+      // Determine correct bind function (same logic as handleNextChapter)
+      if (nextChapter === 61)      { isEnding = true;  isPreEnding = false; }
+      else if (nextChapter === 60) { isPreEnding = true; isEnding = false; }
+      else                         { isEnding = false; isPreEnding = false; }
+
+      const url = nextChapter === 61 ? calcEndingUrl() : buildDayUrl(nextChapter);
+      showNext();
+      await loadContent(url, isPreEnding ? bindPreEnding : isEnding ? bindEnding : bindAreaButtons);
+      // Run chapter grants after pathfork loads (covers fork-based perks like ch.18A)
+      checkChapterGrants(nextChapter);
+    }
+  }
+
+  /* ─────────────────────────────────────────
+     BIND HELPERS
+  ───────────────────────────────────────── */
+
+  const INTERACTIVE_SELECTORS =
+    'area, [data-scraps], [data-giveitem], [data-people], [data-pathfork], ' +
+    '[data-spendscraps], [data-sellitem], [data-entrylog], [data-perk]';
+
+  function bindIn(container, includeAreas, doRefresh) {
+    const sel = includeAreas ? INTERACTIVE_SELECTORS : INTERACTIVE_SELECTORS.replace('area, ', '');
+    container.querySelectorAll(sel).forEach(el => {
+      el.removeEventListener('click', handleInteraction);
+      el.addEventListener('click', handleInteraction);
+    });
+    // Only refresh named market containers — never scan the whole chapter page
+    // as it would incorrectly reveal items that start hidden in HTML
+    if (doRefresh) refreshUI(container);
+  }
+
+  // Chapter pages: bind but do NOT refresh (items start correctly hidden in HTML)
+  function bindAreaButtons() {
+    bindIn($('pnd-main-space'), true, false);
+    restoreChoiceGroups($('pnd-main-space'));
+    // Gate Next button if page has unresolved .choices groups
+    gateChoices($('pnd-main-space'));
+    bindSetCounters($('pnd-main-space'));
+    bindWorkoutTimers($('pnd-main-space'));
+    bindMountainMenExpiry($('pnd-main-space'));
+    // Permanently hide any previously looted job divs (chapter page & agoraJobs)
+    if (save && save.lootedIds) {
+      const space = $('pnd-main-space');
+      space.querySelectorAll('[data-scraps][id], #agoraJobs [id]').forEach(el => {
+        if (el.id && save.lootedIds.includes(el.id)) {
+          el.style.display = 'none';
+          el.style.visibility = 'hidden';
+          el.style.opacity = '0';
+          el.style.pointerEvents = 'none';
+          el.classList.add('pnd-hidden');
+        }
+      });
+      // Collapse agoraJobs container if all jobs are looted
+      const jobsContainer = space.querySelector('#agoraJobs');
+      if (jobsContainer) {
+        const allLooted = [...jobsContainer.querySelectorAll('[id]')].every(el =>
+          save.lootedIds.includes(el.id)
+        );
+        if (allLooted) {
+          jobsContainer.style.display = 'none';
+          jobsContainer.style.margin = '0';
+          jobsContainer.style.padding = '0';
+        }
+      }
+    }
+    // Ch.45 — patch Loot45-1 to return the exact scraps stolen from the player
+    const loot45 = $('pnd-main-space')?.querySelector('#Loot45-1');
+    if (loot45) {
+      // If stolenScraps wasn't set yet (legacy save), steal now
+      if (save.stolenScraps === 0 && save.currency > 0) {
+        save.stolenScraps = save.currency;
+        save.currency = 0;
+        writeSave();
+        updateTopBar();
+      }
+      loot45.dataset.scraps = save.stolenScraps;
+    }
+  }
+
+  /* ─────────────────────────────────────────
+     SET COUNTER
+     HTML: <div data-set-counter data-image="nest.png"></div>
+     Set count is fixed by difficulty:
+       easy   → 3 sets
+       normal → 5 sets
+       hard   → 7 sets
+     Each rendered image div, when clicked, fades out (set completed).
+     data-image: filename inside BASE_URL + 'Images/Sets/'
+  ───────────────────────────────────────── */
+  const SETS_BY_DIFFICULTY = { easy: 3, normal: 5, hard: 7 };
+
+  function bindSetCounters(container) {
+    const root = container || $('pnd-main-space');
+    if (!root) return;
+
+    root.querySelectorAll('[data-set-counter]').forEach(wrapper => {
+      // Clear any previous init so MMP is always re-evaluated fresh
+      delete wrapper.dataset.scInit;
+      wrapper.dataset.scInit = '1';
+
+      const img       = wrapper.dataset.image || '';
+      const diff      = save ? (save.difficulty || 'normal') : 'normal';
+      const chapter   = wrapper.dataset.chapter || '';
+      const MMP_CHAPTERS = ['19A', '22'];
+      // Check both perks array AND the fork directly (fork[1]==='A' means Ch.18A was chosen)
+      const hasMMP    = save && MMP_CHAPTERS.includes(chapter) &&
+                        (save.perks.includes('MountainMen') || save.forks[1] === 'A');
+      const baseCount = SETS_BY_DIFFICULTY[diff] || 5;
+      const count     = hasMMP ? Math.max(1, baseCount - 1) : baseCount;
+
+      // Build/rebuild the counter (also used by reset)
+      function render() {
+        wrapper.innerHTML = '';
+        wrapper.style.cssText = 'text-align:center;padding-bottom:30px;';
+
+        // Top rule
+        const hrTop = document.createElement('hr');
+        hrTop.style.cssText = `
+          border:none;border-top:1px solid #ccc;
+          box-shadow:0 2px 4px rgba(0,0,0,0.08) inset, 0 -1px 3px rgba(0,0,0,0.06);
+          margin:0 0 18px 0;
+        `;
+        wrapper.appendChild(hrTop);
+
+        // "Set Counter:" label
+        const label = document.createElement('div');
+        label.style.cssText = `
+          font-family:'Century Gothic','Futura',sans-serif;
+          font-size:13px;letter-spacing:1px;text-transform:uppercase;
+          color:#141414;margin-bottom:10px;
+        `;
+        label.textContent = 'Set Counter:';
+        wrapper.appendChild(label);
+
+        const grid = document.createElement('div');
+        grid.style.cssText = `display:grid;grid-template-columns:repeat(${count},auto);gap:8px;justify-content:center;justify-items:center;`;
+
+        let remaining = count;
+
+        function checkComplete() {
+          if (remaining <= 0) return; // stale timeout — already completed
+          remaining--;
+          if (remaining > 0) return;
+          // All sets done — replace content
+          wrapper.innerHTML = '';
+          wrapper.style.cssText = 'text-align:center;padding-bottom:30px;';
+
+          const hrTopC = document.createElement('hr');
+          hrTopC.style.cssText = `
+            border:none;border-top:1px solid #ccc;
+            box-shadow:0 2px 4px rgba(0,0,0,0.08) inset, 0 -1px 3px rgba(0,0,0,0.06);
+            margin:0 0 18px 0;
+          `;
+          wrapper.appendChild(hrTopC);
+
+          const doneLabel = document.createElement('div');
+          doneLabel.style.cssText = `
+            font-family:'Century Gothic','Futura',sans-serif;
+            font-size:13px;letter-spacing:1px;text-transform:uppercase;
+            color:#141414;margin-bottom:6px;
+          `;
+          doneLabel.textContent = 'Workout Completed!';
+          wrapper.appendChild(doneLabel);
+
+          const resetBtn = document.createElement('button');
+          resetBtn.textContent = 'Reset';
+          resetBtn.style.cssText = `
+            font-family:'Century Gothic','Futura',sans-serif;
+            font-size:12px;letter-spacing:1px;text-transform:uppercase;
+            background:none;border:1px solid #ccc;color:#888;
+            padding:4px 14px;cursor:pointer;margin-top:2px;
+          `;
+          resetBtn.addEventListener('click', render);
+          wrapper.appendChild(resetBtn);
+
+          const hrBotC = document.createElement('hr');
+          hrBotC.style.cssText = `
+            border:none;border-top:1px solid #ccc;
+            box-shadow:0 2px 4px rgba(0,0,0,0.08), 0 -1px 3px rgba(0,0,0,0.06) inset;
+            margin:18px 0 0 0;
+          `;
+          wrapper.appendChild(hrBotC);
+        }
+
+        for (let i = 0; i < count; i++) {
+          const item = document.createElement('div');
+          item.style.cssText = 'display:inline-block;cursor:pointer;transition:opacity 0.3s,transform 0.3s;';
+          item.title = `Click when done — set ${i + 1} of ${count}`;
+
+          const image = document.createElement('img');
+          image.src   = `${BASE_URL}Images/Sets/${img}`;
+          image.alt   = `Set ${i + 1}`;
+          image.style.cssText = 'display:block;width:auto;height:auto;max-width:52px;max-height:52px;';
+
+          item.appendChild(image);
+          item.addEventListener('click', () => {
+            if (item.dataset.clicked) return;
+            item.dataset.clicked = '1';
+            item.style.pointerEvents = 'none';
+            fadeOut(item);
+            setTimeout(checkComplete, 380); // after fadeOut collapses
+          });
+          grid.appendChild(item);
+        }
+
+        wrapper.appendChild(grid);
+
+        // Rest timer — duration depends on difficulty
+        const REST_SECONDS = { easy: 120, normal: 60, hard: 30 };
+        const restSecs = REST_SECONDS[diff] || 60;
+        const restLabel = { easy: '2 min', normal: '60 sec', hard: '30 sec' }[diff] || '60 sec';
+
+        const timerWrap = document.createElement('div');
+        timerWrap.style.cssText = 'margin-top:14px;';
+
+        const timerBtn = document.createElement('button');
+        timerBtn.textContent = `Rest: ${restLabel}`;
+        timerBtn.style.cssText = `
+          font-family:'Century Gothic','Futura',sans-serif;
+          font-size:16px;letter-spacing:1px;text-transform:uppercase;
+          background:none;border:1px solid #ccc;color:#888;
+          padding:4px 14px;cursor:pointer;
+        `;
+
+        let timerInterval = null;
+        let timerRunning  = false;
+        let secsLeft      = restSecs;
+
+        // Buzzer audio — created once per counter, reused each ring
+        const buzzer = document.createElement('audio');
+        buzzer.preload = 'none';
+        buzzer.innerHTML = `
+          <source src="https://darebee.com/audio/buzzer.ogg" type="audio/ogg">
+          <source src="https://darebee.com/audio/buzzer.mp3" type="audio/mpeg">
+        `;
+
+        function formatTime(s) {
+          const m = Math.floor(s / 60);
+          const sec = s % 60;
+          return m > 0 ? `${m}:${sec.toString().padStart(2,'0')}` : `${sec}s`;
+        }
+
+        timerBtn.addEventListener('click', () => {
+          if (timerRunning) {
+            // Cancel
+            clearInterval(timerInterval);
+            timerRunning = false;
+            secsLeft = restSecs;
+            timerBtn.textContent = `Rest: ${restLabel}`;
+            timerBtn.style.color = '#888';
+            timerBtn.style.borderColor = '#ccc';
+          } else {
+            // Start countdown
+            timerRunning = true;
+            timerBtn.style.color = '#CC0000';
+            timerBtn.style.borderColor = '#CC0000';
+            buzzer.currentTime = 0;
+            buzzer.play().catch(() => {});
+            timerInterval = setInterval(() => {
+              secsLeft--;
+              if (secsLeft <= 0) {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                secsLeft = restSecs;
+                timerBtn.textContent = `Go! — Rest: ${restLabel}`;
+                timerBtn.style.color = '#888';
+                timerBtn.style.borderColor = '#ccc';
+                buzzer.currentTime = 0;
+                buzzer.play().catch(() => {});
+              } else {
+                timerBtn.textContent = `Rest: ${formatTime(secsLeft)}`;
+              }
+            }, 1000);
+          }
+        });
+
+        timerWrap.appendChild(timerBtn);
+        wrapper.appendChild(timerWrap);
+
+        // Bottom rule
+        const hrBot = document.createElement('hr');
+        hrBot.style.cssText = `
+          border:none;border-top:1px solid #ccc;
+          box-shadow:0 2px 4px rgba(0,0,0,0.08), 0 -1px 3px rgba(0,0,0,0.06) inset;
+          margin:18px 0 0 0;
+        `;
+        wrapper.appendChild(hrBot);
+      }
+
+      render();
+    });
+  }
+  /* ─────────────────────────────────────────
+     WORKOUT TIMER
+     HTML: <div data-workout-timer data-duration="90"></div>
+     data-duration: countdown in seconds (required)
+     Start sound: buzzer (same as rest timer).
+     End sound:   buzzer again.
+  ───────────────────────────────────────── */
+  function bindWorkoutTimers(container) {
+    const root = container || $('pnd-main-space');
+    if (!root) return;
+
+    root.querySelectorAll('[data-workout-timer]').forEach(wrapper => {
+      if (wrapper.dataset.wtInit) return;
+      wrapper.dataset.wtInit = '1';
+
+      const totalSecs = parseInt(wrapper.dataset.duration, 10) || 60;
+
+      // Sounds — start beep and end beep
+      function makeAudio() {
+        const a = document.createElement('audio');
+        a.preload = 'none';
+        a.innerHTML = `
+          <source src="https://darebee.com/audio/buzzer.ogg" type="audio/ogg">
+          <source src="https://darebee.com/audio/buzzer.mp3" type="audio/mpeg">
+        `;
+        return a;
+      }
+      const startSound = makeAudio();
+      const endSound   = makeAudio();
+
+      function formatTime(s) {
+        const m   = Math.floor(s / 60);
+        const sec = s % 60;
+        return m > 0 ? `${m}:${sec.toString().padStart(2,'0')}` : `${sec}s`;
+      }
+
+      function render() {
+        wrapper.innerHTML = '';
+        wrapper.style.cssText = 'text-align:center;padding-bottom:30px;';
+
+        // Top rule
+        const hrTop = document.createElement('hr');
+        hrTop.style.cssText = `
+          border:none;border-top:1px solid #ccc;
+          box-shadow:0 2px 4px rgba(0,0,0,0.08) inset, 0 -1px 3px rgba(0,0,0,0.06);
+          margin:0 0 18px 0;
+        `;
+        wrapper.appendChild(hrTop);
+
+        // Timer button — acts as display + start/stop control
+        let secsLeft     = totalSecs;
+        let timerRunning = false;
+        let timerInterval = null;
+        let completed    = false;
+
+        const timerBtn = document.createElement('button');
+        timerBtn.textContent = formatTime(totalSecs);
+        timerBtn.style.cssText = `
+          font-family:'Century Gothic','Futura',sans-serif;
+          font-size:22px;letter-spacing:2px;
+          background:none;border:2px solid #ccc;color:#555;
+          padding:8px 28px;cursor:pointer;display:block;margin:0 auto;
+          transition:color 0.2s,border-color 0.2s;
+        `;
+
+        timerBtn.addEventListener('click', () => {
+          if (completed) {
+            // Reset after completion
+            completed    = false;
+            secsLeft     = totalSecs;
+            timerRunning = false;
+            timerBtn.textContent   = formatTime(totalSecs);
+            timerBtn.style.color       = '#555';
+            timerBtn.style.borderColor = '#ccc';
+            timerBtn.title = '';
+            return;
+          }
+
+          if (timerRunning) {
+            // Cancel / pause → reset
+            clearInterval(timerInterval);
+            timerRunning = false;
+            secsLeft     = totalSecs;
+            timerBtn.textContent   = formatTime(totalSecs);
+            timerBtn.style.color       = '#555';
+            timerBtn.style.borderColor = '#ccc';
+          } else {
+            // Start countdown
+            timerRunning = true;
+            timerBtn.style.color       = '#CC0000';
+            timerBtn.style.borderColor = '#CC0000';
+            startSound.currentTime = 0;
+            startSound.play().catch(() => {});
+            timerInterval = setInterval(() => {
+              secsLeft--;
+              if (secsLeft <= 0) {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                completed    = true;
+                timerBtn.textContent   = 'Done!';
+                timerBtn.style.color       = '#888';
+                timerBtn.style.borderColor = '#ccc';
+                timerBtn.title = 'Click to reset';
+                endSound.currentTime = 0;
+                endSound.play().catch(() => {});
+              } else {
+                timerBtn.textContent = formatTime(secsLeft);
+              }
+            }, 1000);
+          }
+        });
+
+        wrapper.appendChild(timerBtn);
+
+        // Hint text
+        const hint = document.createElement('div');
+        hint.textContent = 'Tap to start · tap again to reset';
+        hint.style.cssText = `
+          font-family:'Century Gothic','Futura',sans-serif;
+          font-size:11px;letter-spacing:1px;color:#aaa;margin-top:8px;
+        `;
+        wrapper.appendChild(hint);
+
+        // Bottom rule
+        const hrBot = document.createElement('hr');
+        hrBot.style.cssText = `
+          border:none;border-top:1px solid #ccc;
+          box-shadow:0 2px 4px rgba(0,0,0,0.08), 0 -1px 3px rgba(0,0,0,0.06) inset;
+          margin:18px 0 0 0;
+        `;
+        wrapper.appendChild(hrBot);
+      }
+
+      render();
+    });
+  }
+
+  /* ─────────────────────────────────────────
+     MOUNTAIN MEN PERK EXPIRY
+     In chapter 23, show the .mmp div only if the player earned
+     the MountainMen perk (forks[1] === 'A'). Hide it otherwise.
+     The perk is removed from save.perks at ch.23 load, so we
+     use the fork record as the permanent indicator.
+  ───────────────────────────────────────── */
+  function bindMountainMenExpiry(container) {
+    const root = container || $('pnd-main-space');
+    if (!root) return;
+    const mmpDiv = root.querySelector('.mmp');
+    if (!mmpDiv) return;
+    const hadPerk = save && save.forks[1] === 'A';
+    if (!hadPerk) mmpDiv.classList.add('pnd-hidden');
+  }
+
+  // Market/location overlays: bind AND refresh (need to sync with save state)
+  function bindAreaButtonsIn(c) { bindIn(c, true,  true); }
+  function bindDivButtonsIn(c)  { bindIn(c, false, true); }
+
+  /*
+   * gateChoices — if the loaded page contains a .choices container with an
+   * unresolved group, hide the Next button until the player picks.
+   * Called from bindAreaButtons after restoreChoiceGroups.
+   */
+  function ungateChoices(chosenEl) {
+    const container = $('pnd-main-space');
+    if (!container) return;
+    const choicesEl = container.querySelector('.choices');
+    if (!choicesEl) return;
+    const groups = new Set();
+    choicesEl.querySelectorAll('[data-choice-group]').forEach(el => groups.add(el.dataset.choiceGroup));
+    const allResolved = [...groups].every(g => {
+      const els = choicesEl.querySelectorAll(`[data-choice-group="${g}"]`);
+      return isChoiceResolved(els);
+    });
+    if (allResolved) {
+      delete $('pnd-next-btn').dataset.choiceGate;
+      showNext();
+    }
+  }
+
+  function isChoiceResolved(els) {
+    // A choice group is resolved if any member is looted, has item in inventory,
+    // or has been locked (pointer-events:none means it was chosen)
+    return [...els].some(el =>
+      (el.id && save.lootedIds.includes(el.id)) ||
+      (el.dataset.giveitem && save.inventory.includes(el.dataset.giveitem)) ||
+      el.style.pointerEvents === 'none'
+    );
+  }
+
+  function gateChoices(container) {
+    if (!container) return;
+    const choicesEl = container.querySelector('.choices');
+    if (!choicesEl) return;
+    const groups = new Set();
+    choicesEl.querySelectorAll('[data-choice-group]').forEach(el => groups.add(el.dataset.choiceGroup));
+    const unresolved = [...groups].some(g => {
+      const els = choicesEl.querySelectorAll(`[data-choice-group="${g}"]`);
+      return !isChoiceResolved(els);
+    });
+    // Keep Next visible but intercept click with warning if unresolved
+    if (unresolved) {
+      $('pnd-next-btn').dataset.choiceGate = '1';
+    } else {
+      delete $('pnd-next-btn').dataset.choiceGate;
+    }
+  }
+
+  /*
+   * restoreChoiceGroups — after page load, if any choice-group items were
+   * already looted/bought, re-apply the lock visual so state is preserved.
+   */
+  function restoreChoiceGroups(container) {
+    if (!container) return;
+    const groups = new Map();
+    container.querySelectorAll('[data-choice-group]').forEach(el => {
+      const g = el.dataset.choiceGroup;
+      if (!groups.has(g)) groups.set(g, []);
+      groups.get(g).push(el);
+    });
+    groups.forEach((els) => {
+      const chosen = els.find(el =>
+        save.lootedIds.includes(el.id) || save.inventory.includes(el.dataset.giveitem)
+      );
+      if (chosen) lockChoiceGroup(chosen);
+    });
+  }
+
+  function bindPreEnding() {
+    FORKS.forEach((f, i) => {
+      const choice = save.forks[i]; if (!choice) return;
+      const div = document.getElementById(`Chapter${f.chapter}${choice}`);
+      if (div) {
+        div.classList.remove('pnd-hidden');
+        div.classList.remove('hidden');
+        div.style.removeProperty('display');
+      }
+    });
+    bindAreaButtons();
+  }
+
+  function bindEnding() {
+    FORKS.forEach((f, i) => {
+      const choice = save.forks[i]; if (!choice) return;
+      const div = document.getElementById(`Chapter${f.chapter}${choice}Ending`);
+      if (div) {
+        div.classList.remove('pnd-hidden');
+        div.classList.remove('hidden');
+        div.style.removeProperty('display');
+      }
+    });
+    hide($('pnd-next-btn')); if ($('pnd-bottom-bar')) hide($('pnd-bottom-bar')); // ending — no next
+  }
+
+  /* ─────────────────────────────────────────
+     INVENTORY PANEL
+     Shows items, entry logs, perks.
+     Map item opens the map screen directly.
+  ───────────────────────────────────────── */
+
+  async function openInventory() {
+    showLeave();
+    await loadContent(`${BASE_URL}Inventory.html`, () => {
+
+      // ── Step 1: Hide every item div (both old .hidden and .pnd-hidden) ──
+      // This is the safety net: nothing shows unless it's in save.inventory.
+      document.querySelectorAll(
+        '#tab-items [id], #tab-food [id], #tab-logs [id], #tab-perks [id]'
+      ).forEach(el => {
+        el.classList.add('hidden');
+        el.classList.add('pnd-hidden');
+      });
+
+      // ── Step 2: Reveal items actually in save.inventory ──
+      save.inventory.forEach(itemId => {
+        const el = document.getElementById(itemId);
+        if (!el) return;
+        el.classList.remove('hidden');
+        el.classList.remove('pnd-hidden');
+        el.className = 'inventoryMenuLayout';
+
+        const info = ITEMS[itemId];
+        el.addEventListener('click', () => {
+          if (info && info.special === 'map') {
+            // Map item opens the map screen directly
+            openMap();
+            return;
+          }
+          modal({
+            title:       info ? info.label       : (el.dataset.label       || itemId),
+            text:        info ? info.description : (el.dataset.description || ''),
+            image:       `${BASE_URL}Images/Items/${itemId}.png`,
+            confirmText: 'Close',
+          });
+        });
+      });
+
+      // ── Step 3: Reveal food items ──
+      save.inventory.forEach(itemId => {
+        const el = document.getElementById(itemId);
+        if (!el) return;
+        if (el.closest('#tab-food')) {
+          el.classList.remove('hidden');
+          el.classList.remove('pnd-hidden');
+          el.className = 'inventoryFoodLayout';
+          el.addEventListener('click', () => modal({
+            title:       el.dataset.label       || itemId,
+            text:        el.dataset.description || '',
+            image:       `${BASE_URL}Images/Food/${itemId}.png`,
+            confirmText: 'Close',
+          }));
+        }
+      });
+
+      // ── Step 4: Reveal entry logs ──
+      save.entryLogs.forEach(logNum => {
+        const el = document.getElementById(`EntryLog${logNum}`);
+        if (!el) return;
+        el.classList.remove('hidden');
+        el.classList.remove('pnd-hidden');
+        el.className = 'inventoryMenuLayout';
+        const logTexts = {
+          1: `It was a brilliant stroke of innovation. Fusion cells to power the shield wall. Then trickle power to maintain the cryopods stable. We thought that if we wired the solar panels as secondary units and made the fusion cell the primary one we'd be able to circumvent any power-damp issues. This way stability would be guaranteed. The system would be self-rectifying. Even after we have passed, it will keep on carrying on, and on and on. That's the beauty of it. Eternal life, of a sort.
+
+No guarantees of course. We talked for hours. Ran scenarios. Computer simulations of what will happen, can happen, might happen. Must have burnt through a hundred computing cycles before the system showed signs of overheating. In theory this should work. Well, let's face facts — it has to work. It's not like we have many options left here.`,
+          2: `There really is no choice. There is only one way to save the world and that is to make sure the Awakening happens at the right time. Through the time of the cryosleep the world will fill with all kinds of horrors some of which we can't even imagine. We need to be patient. Time is on our side.
+
+The Sleep will see all those who are chosen safely through the bad times. Each one was carefully selected. Skillset profiles and abilities, complementing the group. The few that were picked out at the beginning grew into a mighty horde (of sorts) as word spread. More volunteers coming in each day.
+
+They all knew the score. At the appointed hour, they will be called forth. Awakened so they can take their rightful place and reclaim the world. Men and women. All were taken in. Once they understood the threat they became convinced — that the only way to survive was to Sleep until Awakened. We planned everything, down to the final detail.
+
+The Big Sleep has begun. Site A is complete, all those who believed in the Plan deeply asleep, waiting to be Woken. Site B has, of course, a different plan — but that is immaterial to us.
+
+Now, we just need to hope that the Awakening happens exactly when it should. The world then will be truly theirs. Ours. We will have reclaimed it!`,
+        };
+        const logHtml = {
+          1: `<div style="font-family:'Courier New',monospace;font-size:13px;line-height:1.7;color:#2a2a2a;">
+<p>It was a brilliant stroke of innovation. Fusion cells to power the shield wall. Then trickle power to maintain the cryopods stable. We thought that if we wired the solar panels as secondary units and made the fusion cell the primary one we'd be able to circumvent any power-damp issues. This way stability would be guaranteed. The system would be self-rectifying.</p>
+<p>Even after we have passed, it will keep on carrying on, and on and on. That's the beauty of it. Eternal life, of a sort.</p>
+<p>No guarantees of course. We talked for hours. Ran scenarios. Computer simulations of what will happen, can happen, might happen. Must have burnt through a hundred computing cycles before the system showed signs of overheating. In theory this should work.</p>
+<p>Well, let's face facts — it has to work. It's not like we have many options left here.</p>
+</div>`,
+          2: `<div style="font-family:'Courier New',monospace;font-size:13px;line-height:1.7;color:#2a2a2a;">
+<p>There really is no choice. There is only one way to save the world and that is to make sure the Awakening happens at the right time. Through the time of the cryosleep the world will fill with all kinds of horrors some of which we can't even imagine. We need to be patient. Time is on our side.</p>
+<p>The Sleep will see all those who are chosen safely through the bad times. Each one was carefully selected. Skillset profiles and abilities, complementing the group. The few that were picked out at the beginning grew into a mighty horde (of sorts) as word spread. More volunteers coming in each day.</p>
+<p>They all knew the score. At the appointed hour, they will be called forth. Awakened so they can take their rightful place and reclaim the world. Men and women. All were taken in. Once they understood the threat they became convinced — the only way to survive was to Sleep until Awakened. We planned everything, down to the final detail.</p>
+<p>The Big Sleep has begun. Site A is complete, all those who believed in the Plan deeply asleep, waiting to be Woken. Site B has, of course, a different plan — but that is immaterial to us.</p>
+<p>Now, we just need to hope that the Awakening happens exactly when it should. The world then will be truly theirs. Ours. We will have reclaimed it!</p>
+</div>`,
+        };
+        el.addEventListener('click', () => modal({
+          title:       el.dataset.label || `Entry Log #${logNum}`,
+          text:        logHtml[logNum] || logTexts[logNum] || el.dataset.description || '',
+          html:        true,
+          log:         true,
+          confirmText: '✕  Close Log',
+        }));
+      });
+
+      // ── Step 5: Reveal perks ──
+      save.perks.forEach(perkId => {
+        const el = document.getElementById(`Perk${perkId}`);
+        if (!el) return;
+        el.classList.remove('hidden');
+        el.classList.remove('pnd-hidden');
+        el.className = 'inventoryMenuLayout';
+        el.addEventListener('click', () => modal({
+          title:       el.dataset.label       || perkId,
+          text:        el.dataset.description || '',
+          image:       `${BASE_URL}Images/Items/Perk${perkId}.png`,
+          confirmText: 'Close',
+        }));
+      });
+
+      // ── Step 6: Tab switching ──
+      // Replaces the jQuery version. Matches new Inventory.html tab structure.
+      const tabLinks  = document.querySelectorAll('.tabs a');
+      const tabGroups = document.querySelectorAll('.tabgroup > div');
+
+      function activateTab(href) {
+        // Hide all tab content
+        tabGroups.forEach(d => {
+          d.classList.remove('tab-active');
+          d.style.display = 'none';
+        });
+        // Show target tab
+        const target = document.querySelector(href);
+        if (target) {
+          target.classList.add('tab-active');
+          target.style.display = 'block';
+        }
+        // Update active link styling
+        tabLinks.forEach(t => t.classList.remove('active'));
+        const activeLink = document.querySelector(`.tabs a[href="${href}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      }
+
+      tabLinks.forEach(tab => {
+        tab.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          activateTab(tab.getAttribute('href'));
+        });
+      });
+
+      // Show Items tab by default
+      activateTab('#tab-items');
+
+      // ── Step 7: Empty state messages per tab ──
+      const hasItems = save.inventory.some(id => ITEMS[id] && !ITEMS[id].food);
+      const hasFood  = save.inventory.some(id => ITEMS[id] && ITEMS[id].food);
+      const hasLogs  = save.entryLogs.length > 0;
+      const hasPerks = save.perks.length > 0;
+
+      if (!hasItems && !hasLogs) {
+        const menu = document.querySelector('#tab-items .inventoryMenu');
+        if (menu) menu.insertAdjacentHTML('afterbegin',
+          '<p class="inv-empty">Nothing yet. The only thing you woke up with is around your neck.</p>'
+        );
+      }
+      if (!hasFood) {
+        const menu = document.querySelector('#tab-food .inventoryFood');
+        if (menu) menu.insertAdjacentHTML('afterbegin',
+          '<p class="inv-empty">No food. Hunt something or buy from the Agora food shop.</p>'
+        );
+      }
+      if (!hasLogs) {
+        const menu = document.querySelector('#tab-logs .inventoryMenu');
+        if (menu) menu.insertAdjacentHTML('afterbegin',
+          '<p class="inv-empty">No entry logs found yet. Keep exploring.</p>'
+        );
+      }
+      if (!hasPerks) {
+        const menu = document.querySelector('#tab-perks .inventoryMenu');
+        if (menu) menu.insertAdjacentHTML('afterbegin',
+          `<p class="inv-empty">You currently don't have any active perks.</p>`
+        );
+      }
+    });
+  }
+
+
+  async function openCamp(inOverlay) {
+    if (!inOverlay) showLeave();
+    const targetEl = inOverlay || $('pnd-main-space');
+
+    try {
+      const res  = await fetch(`${BASE_URL}Camp.html`);
+      const html = await res.text();
+      const parser = new DOMParser();
+      const doc  = parser.parseFromString(html, 'text/html');
+      targetEl.innerHTML = '';
+      Array.from(doc.body.children).forEach(child =>
+        targetEl.appendChild(document.importNode(child, true))
+      );
+
+      // Set camp background image based on current camp level
+      const campBg = targetEl.querySelector('#camp-bg');
+      if (campBg) {
+        campBg.src = `${BASE_URL}Images/camp${save.campLevel || 1}.jpg`;
+      }
+
+      // Ensure the scene container is position:relative so overlays work
+      const scene = targetEl.querySelector('#camp-scene');
+      if (scene) {
+        scene.style.setProperty('position', 'relative', 'important');
+        scene.style.setProperty('display', 'block', 'important');
+        scene.style.setProperty('line-height', '0', 'important');
+      }
+
+      // Hide ALL companions first
+      ['Alana','Dicer','Morse'].forEach(id => {
+        const el = targetEl.querySelector('#' + id);
+        if (el) {
+          el.style.setProperty('display', 'none', 'important');
+          el.classList.add('pnd-hidden');
+        }
+      });
+
+      // Reveal only companions in save.people — enforce absolute positioning via JS
+      save.people.forEach(personId => {
+        const el = targetEl.querySelector('#' + personId);
+        if (!el) return;
+        el.classList.remove('pnd-hidden', 'hidden');
+        el.style.setProperty('display', 'block', 'important');
+        el.style.setProperty('position', 'absolute', 'important');
+        el.addEventListener('click', () => modal({
+          title:       el.dataset.description || personId,
+          text:        '',
+          image:       `${BASE_URL}Images/People/${personId}.png`,
+          confirmText: 'Close',
+        }));
+      });
+
+
+    } catch(e) {
+      targetEl.innerHTML = '<div class="pnd-loading pnd-error">Could not load camp.</div>';
+    }
+  }
+
+  /* ─────────────────────────────────────────
+     LOCATION PAGES
+     All locations load as full pages inside
+     #pnd-main-space. "Back to Map" via leave-btn.
+  ───────────────────────────────────────── */
+
+  /* Tab switching for location pages (Agoras, Pits etc).
+     Tabs use class="tab-active" to show. No jQuery needed. */
+  function initLocationTabs(container) {
+    const tabLinks = container.querySelectorAll('.tabs a');
+    if (!tabLinks.length) return;
+
+    // All tab content divs within this container — hide all on init
+    const allTabDivs = container.querySelectorAll('.tabgroup > div');
+    allTabDivs.forEach(d => { d.style.display = 'none'; });
+
+    function activateTab(href) {
+      // Hide all tabs first
+      allTabDivs.forEach(d => {
+        d.classList.remove('tab-active');
+        d.style.display = 'none';
+      });
+      tabLinks.forEach(l => l.classList.remove('active'));
+      // Show selected tab
+      const id = href.replace(/^#/, '');
+      const target = container.querySelector('#' + id);
+      const link   = container.querySelector('.tabs a[href="' + href + '"]');
+      if (target) {
+        target.classList.add('tab-active');
+        target.style.display = 'block';
+        refreshUI(target);
+      }
+      if (link) link.classList.add('active');
+    }
+
+    tabLinks.forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        activateTab(a.getAttribute('href'));
+      });
+    });
+
+    // Show first tab on load
+    const firstLink = container.querySelector('.tabs a.active') || tabLinks[0];
+    if (firstLink) activateTab(firstLink.getAttribute('href'));
+  }
+
+  async function openLocation(file, locationName) {
+    if (save.chapter >= 5) show($('pnd-map-btn'));
+    showLeave();
+
+    const space = $('pnd-main-space');
+    space.style.background = '#eeeeee';
+    space.innerHTML = '<div class="pnd-loading">Loading\u2026</div>';
+
+    try {
+      const res  = await fetch(file);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const html = await res.text();
+      const parser = new DOMParser();
+      const doc  = parser.parseFromString(html, 'text/html');
+
+      document.querySelectorAll('style[data-pnd-loc-injected]').forEach(s => s.remove());
+      doc.querySelectorAll('style').forEach(s => {
+        const clone = document.createElement('style');
+        clone.setAttribute('data-pnd-loc-injected', '1');
+        clone.textContent = s.textContent;
+        document.head.appendChild(clone);
+      });
+
+      space.innerHTML = '';
+
+      // Location header
+      const header = document.createElement('div');
+      header.className = 'pnd-loc-page-header';
+      header.innerHTML = `<span class="pnd-loc-page-title">${locationName || ''}</span>`;
+      space.appendChild(header);
+
+      // Content wrapper
+      const wrap = document.createElement('div');
+      wrap.className = 'pnd-loc-page-body';
+      Array.from(doc.body.children).forEach(child =>
+        wrap.appendChild(document.importNode(child, true))
+      );
+      space.appendChild(wrap);
+
+      wrap.querySelectorAll('script').forEach(oldScript => {
+        const s = document.createElement('script');
+        if (oldScript.src) s.src = oldScript.src;
+        else s.textContent = oldScript.textContent;
+        oldScript.parentNode.replaceChild(s, oldScript);
+      });
+
+      const hasAgora = !!wrap.querySelector('#agoraShop,#agoraJobs,#agoraFoodShop,#agoraAuctionHouse');
+      if (hasAgora || wrap.querySelector('#forestHunt')) {
+        bindDivButtonsIn(wrap);
+      } else {
+        bindAreaButtonsIn(wrap);
+      }
+      refreshUI(wrap);
+      initLocationTabs(wrap);
+
+// Sea: three-per-row float layout (two on mobile), images at their natural sizes
+      if (file.includes('Sea')) {
+        bindDivButtonsIn(wrap);
+        wrap.querySelectorAll('#seaFish img').forEach(img => {
+          img.style.setProperty('max-width', '100%', 'important');
+          img.style.setProperty('height', 'auto', 'important');
+          img.style.setProperty('margin', '0', 'important');
+          // width is NOT set here — the inline style="width:Xpx" on each img must win
+        });
+        const isMobile = window.matchMedia('(max-width: 600px)').matches;
+        const colWidth = isMobile ? '50%' : '33.333%';
+        wrap.querySelectorAll('#seaFish > div').forEach(div => {
+          div.style.setProperty('float', 'left', 'important');
+          div.style.setProperty('display', 'block', 'important');
+          div.style.setProperty('width', colWidth, 'important');
+          div.style.setProperty('box-sizing', 'border-box', 'important');
+          div.style.setProperty('padding', '8px', 'important');
+        });
+      }
+
+      // Swap TheLabs background image after Chapter 21 (save.chapter >= 21 = displayed ch.22+)
+      if (file.includes('TheLabs')) {
+        const locBg = wrap.querySelector('.loc-bg');
+        if (locBg && save.chapter >= 21) {
+          locBg.style.backgroundImage =
+            'url(toolbox/index/pandora2/LocationsDesc/TheLabs2.jpg)';
+        }
+      }
+
+      // Swap ResistanceCamp background image based on chapter progress
+      // ch.27+ → ResistanceCamp2.jpg, ch.59+ → ResistanceCamp3.jpg
+      if (file.includes('ResistanceCamp')) {
+        const locBg = wrap.querySelector('.loc-bg');
+        if (locBg && save.chapter >= 26) {
+          const img = save.chapter >= 58 ? 'ResistanceCamp3' : 'ResistanceCamp2';
+          locBg.style.backgroundImage =
+            'url(toolbox/index/pandora2/LocationsDesc/' + img + '.jpg)';
+        }
+      }
+
+    } catch(e) {
+      space.innerHTML = '<div class="pnd-loading pnd-error">Could not load location.</div>';
+    }
+  }
+
+  async function openCampPage() {
+    if (save.chapter >= 5) show($('pnd-map-btn'));
+    showLeave();
+    const space = $('pnd-main-space');
+    space.style.background = '#eeeeee';
+    space.innerHTML = '';
+
+    const header = document.createElement('div');
+    header.className = 'pnd-loc-page-header';
+    header.innerHTML = '<span class="pnd-loc-page-title">Camp</span>';
+    space.appendChild(header);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'pnd-loc-page-body';
+    wrap.style.padding = '0';  // no side gutters — camp image fills full width
+    space.appendChild(wrap);
+    await openCamp(wrap);
+  }
+
+  // Aliases so existing callers keep working
+  function openLocationOverlay(file, locationName) { openLocation(file, locationName); }
+  function openCampOverlay() { openCampPage(); }
+  function closeLocationOverlay() {
+    document.querySelectorAll('style[data-pnd-loc-injected]').forEach(s => s.remove());
+  }
+
+  /* ─────────────────────────────────────────
+     MAP PANEL
+  ───────────────────────────────────────── */
+
+  async function openMap() {
+    showLeave();
+    if (save.chapter >= 5) show($('pnd-map-btn'));
+    await loadContent(`${BASE_URL}Map.html`);
+
+    function onNavigate(e) {
+      const { file, locationId, locationName } = e.detail;
+      try {
+        const fresh = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+        if (fresh) {
+          save.lastLocation     = fresh.lastLocation;
+          save.visitedLocations = fresh.visitedLocations || save.visitedLocations;
+        }
+      } catch(err) {}
+      updateTopBar();
+      if (locationId === 'Camp') { openCampPage(); return; }
+      openLocation(file, locationName || locationId);
+    }
+
+    window.removeEventListener('pandora:navigate', window._pandoraNavHandler);
+    window._pandoraNavHandler = onNavigate;
+    window.addEventListener('pandora:navigate', onNavigate);
+  }
+
+  /* ─────────────────────────────────────────
+     NEXT CHAPTER
+  ───────────────────────────────────────── */
+
+  async function handleNextChapter() {
+    const nextChapter = save.chapter + 1;
+
+    // Warn if a choice hasn't been made yet
+    if ($('pnd-next-btn').dataset.choiceGate) {
+      await modal({ title: 'Make a choice first.', confirmText: 'OK' });
+      return;
+    }
+
+    // Journey already ended (chose cryosleep)
+    if (save.gameOver) {
+      await modal({ title: 'Your journey has ended.', text: 'You chose to return to cryosleep. Start a new journey to play again.', confirmText: 'OK' });
+      return;
+    }
+
+    // Ask player about companions before leaving current chapter
+    await checkCompanionPrompts();
+
+    if (hardGate) {
+      if (hardGate.type === 'scraps') {
+        if (save.currency < hardGate.value) {
+          await modal({ title: `${hardGate.value.toLocaleString()} scraps required`, text: hardGate.reason||'', confirmText:'OK' });
+          return;
+        }
+        const res = await modal({
+          title: `Pay ${hardGate.value.toLocaleString()} scraps to proceed?`,
+          text: hardGate.reason||'', confirmText:'Pay & continue', cancelText:'Not yet', danger:true
+        });
+        if (!res.confirmed) return;
+        save.currency -= hardGate.value;
+        hardGate = null; save.chapter++; writeSave(); startGame(); return;
+      } else {
+        if (!save.inventory.includes(hardGate.value)) {
+          await modal({ title: `${hardGate.value} required`, text: hardGate.reason||'', confirmText:'OK' });
+          return;
+        }
+        const res = await modal({
+          title: `Use your ${hardGate.value} to proceed?`,
+          text: hardGate.reason||'', confirmText:'Yes, continue', cancelText:'Not yet', danger:true
+        });
+        if (!res.confirmed) return;
+        save.inventory.splice(save.inventory.indexOf(hardGate.value), 1);
+        hardGate = null; save.chapter++; writeSave(); startGame(); return;
+      }
+    }
+
+    for (let i = 0; i < FORKS.length; i++) {
+      if (nextChapter === FORKS[i].chapter && save.forks[i] === '') {
+        if (FORKS[i].auto === 1) {
+          save.forks[i] = (FORKS[i].peopleB && save.people.includes(FORKS[i].peopleB)) ? 'B' : 'A';
+        } else {
+          await modal({ title:'A choice must be made first.', text:"Complete the choice in this chapter before moving on.", confirmText:'OK' });
+          return;
+        }
+      }
+    }
+
+    const res = await modal({
+      title: 'Move to the next chapter?',
+      text:  "Make sure you've completed today's workout first.",
+      confirmText: 'Next chapter', cancelText: 'Stay'
+    });
+    if (!res.confirmed) return;
+
+    // Big Bertha pays 400 scraps when leaving Ch.39A (fork 7 = 'A') → Ch.40
+    if (save.chapter === 38 && save.forks[7] === 'A') {
+      const berthaRes = await modal({
+        title: 'Big Bertha paid you 400 scraps.',
+        confirmText: 'Accept', cancelText: 'Reject', dark: true
+      });
+      if (berthaRes.confirmed) {
+        save.currency += 400;
+        writeSave(); updateTopBar();
+      }
+    }
+
+    save.chapter++; writeSave(); startGame();
+  }
+
+  /* ─────────────────────────────────────────
+     SCREEN SWITCHER
+  ───────────────────────────────────────── */
+
+  function showScreen(id) {
+    ['pnd-title-screen','pnd-game-screen'].forEach(sid => {
+      const el = $(sid);
+      if (el) el.classList.toggle('pnd-hidden', el.id !== id);
+    });
+  }
+
+  /* ─────────────────────────────────────────
+     INFO PAGE LOADER  (Instructions / About)
+     Switches to the game screen, hides all
+     game-specific controls, loads the page,
+     and wires EXIT to go back to title.
+  ───────────────────────────────────────── */
+  async function openInfoPage(url) {
+    const wasInGame = !$('pnd-game-screen').classList.contains('pnd-hidden');
+    showScreen('pnd-game-screen');
+    ['pnd-next-btn','pnd-inventory-btn','pnd-map-btn','pnd-leave-btn'].forEach(id => hide($(id)));
+    if (!wasInGame) {
+      hide($('pnd-location-display'));
+      hide($('pnd-currency-display'));
+    }
+    show($('pnd-back-to-title-btn'));
+    $('pnd-back-to-title-btn').dataset.infoPage = wasInGame ? 'game' : 'title';
+    await loadContent(url);
+  }
+
+  /* ─────────────────────────────────────────
+     TITLE SCREEN
+  ───────────────────────────────────────── */
+
+  function runEyeAnimation(callback) {
+    const lidT = document.querySelector('.pnd-lid-top');
+    const lidB = document.querySelector('.pnd-lid-bottom');
+    if (!lidT || !lidB) { callback(); return; }
+    lidT.classList.add('pnd-blink'); lidB.classList.add('pnd-blink');
+    setTimeout(() => {
+      lidT.classList.add('pnd-open'); lidB.classList.add('pnd-open');
+      setTimeout(callback, 700);
+    }, 1400);
+  }
+
+  function renderTitleMenu() {
+    const hasSave = !!save;
+    if (hasSave) show($('pnd-continue-btn')); else hide($('pnd-continue-btn'));
+    show($('pnd-new-btn')); show($('pnd-help-btn')); show($('pnd-about-btn'));
+
+    const saveInfo = $('pnd-save-info');
+    const tagline  = $('pnd-no-save-tagline');
+    if (hasSave && save.name) {
+      const diffLabel = { easy: 'Easy', normal: 'Normal', hard: 'Hard' }[save.difficulty] || 'Normal';
+      saveInfo.textContent = save.chapter > 0
+        ? `${save.name} \u2014 Chapter ${save.chapter} of 60 \u2014 ${diffLabel}`
+        : `${save.name} \u2014 just starting out \u2014 ${diffLabel}`;
+      show(saveInfo);
+      if (tagline) hide(tagline);
+    } else {
+      hide(saveInfo);
+      if (tagline) show(tagline);
+    }
+    show($('pnd-title-menu'));
+
+    // Version stamp — injected once into the title screen, bottom-right corner
+    const titleScreen = $('pnd-title-screen');
+    if (titleScreen && !$('pnd-version-stamp')) {
+      const stamp = document.createElement('div');
+      stamp.id = 'pnd-version-stamp';
+      stamp.textContent = 'v ' + CODE_VERSION;
+      Object.assign(stamp.style, {
+        position:      'absolute',
+        bottom:        '10px',
+        right:         '14px',
+        fontSize:      '11px',
+        color:         '#bbb',
+        fontFamily:    'sans-serif',
+        userSelect:    'none',
+        pointerEvents: 'none',
+      });
+      titleScreen.style.position = titleScreen.style.position || 'relative';
+      titleScreen.appendChild(stamp);
+    }
+  }
+
+  async function handleNewGame() {
+    if (save) {
+      const res = await modal({
+        title: 'Start a new journey?',
+        text:  `This will erase ${save.name}'s progress permanently.`,
+        confirmText: 'Erase and restart', cancelText: 'Keep my save', danger: true
+      });
+      if (!res.confirmed) return;
+    }
+    const nameRes = await modal({
+      title: 'What is your name?', text: 'Pandora will remember you.',
+      input: true, confirmText: 'Next'
+    });
+    if (!nameRes.confirmed) return;
+
+    // Difficulty selection
+    const diffRes = await difficultyModal();
+    if (!diffRes.confirmed) return;
+
+    save = DEFAULT_SAVE();
+    save.name       = nameRes.value;
+    save.difficulty = diffRes.difficulty;
+    writeSave();
+    startGame();
+  }
+
+  /* ─────────────────────────────────────────
+     DIFFICULTY MODAL
+     Shows a three-option card picker.
+  ───────────────────────────────────────── */
+  function difficultyModal() {
+    return new Promise(resolve => {
+      const overlay = $('pnd-modal-overlay');
+      $('pnd-modal-title').textContent = 'Choose your difficulty';
+      $('pnd-modal-text').textContent  = 'This affects workout sets in chapters and travel point requirements on the map.';
+      $('pnd-modal-error').textContent = '';
+      hide($('pnd-modal-input'));
+      hide($('pnd-modal-img'));
+      hide($('pnd-modal-cancel'));
+
+      const confirmBtn = $('pnd-modal-confirm');
+      confirmBtn.textContent = 'Begin';
+      confirmBtn.className   = 'pnd-btn';
+      confirmBtn.disabled    = true;
+
+      // Build difficulty cards inside the modal text area
+      const DIFF_OPTIONS = [
+        { id: 'easy',   label: 'Easy',   desc: '−30% travel points. Fewer sets per workout.' },
+        { id: 'normal', label: 'Normal', desc: 'Standard travel points and workout sets.'    },
+        { id: 'hard',   label: 'Hard',   desc: '+30% travel points. More sets per workout.'  },
+      ];
+
+      const cards = document.createElement('div');
+      cards.style.cssText = 'display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;';
+      let chosen = null;
+
+      DIFF_OPTIONS.forEach(opt => {
+        const card = document.createElement('div');
+        card.style.cssText = `
+          flex:1;min-width:90px;padding:14px 10px;border:2px solid #ccc;
+          cursor:pointer;text-align:center;transition:border-color 0.15s,background 0.15s;
+          background:#fff;font-family:'Century Gothic','Futura',sans-serif;
+        `;
+        card.innerHTML = `<div style="font-size:15px;font-weight:bold;margin-bottom:6px;">${opt.label}</div>
+          <div style="font-size:11px;color:#666;line-height:1.5;">${opt.desc}</div>`;
+
+        card.addEventListener('click', () => {
+          chosen = opt.id;
+          cards.querySelectorAll('[data-diff]').forEach(c => {
+            c.style.borderColor = '#ccc';
+            c.style.background  = '#fff';
+          });
+          card.style.borderColor = '#CC0000';
+          card.style.background  = '#fff5f5';
+          confirmBtn.disabled = false;
+        });
+        card.setAttribute('data-diff', opt.id);
+        cards.appendChild(card);
+      });
+
+      $('pnd-modal-text').appendChild(cards);
+      show(overlay);
+
+      // Temporarily override confirm button click
+      const origResolve = modalResolve;
+      modalResolve = null;
+
+      function onConfirm() {
+        if (!chosen) return;
+        confirmBtn.removeEventListener('click', onConfirm);
+        hide(overlay);
+        // Clean up the cards from the text element
+        $('pnd-modal-text').textContent = '';
+        confirmBtn.disabled = false;
+        resolve({ confirmed: true, difficulty: chosen });
+      }
+      function onCancel() {
+        confirmBtn.removeEventListener('click', onConfirm);
+        hide(overlay);
+        $('pnd-modal-text').textContent = '';
+        confirmBtn.disabled = false;
+        resolve({ confirmed: false });
+      }
+
+      confirmBtn.addEventListener('click', onConfirm);
+      // No cancel button in this modal
+    });
+  }
+
+
+
+  /* ─────────────────────────────────────────
+     INIT
+  ───────────────────────────────────────── */
+
+  function init() {
+    loadSave();
+    initModal();
+
+    // Show title menu immediately — no animation delay
+    hide($('pnd-enter-btn'));
+    renderTitleMenu();
+
+    $('pnd-new-btn')     ?.addEventListener('click', handleNewGame);
+    $('pnd-continue-btn')?.addEventListener('click', startGame);
+    $('pnd-help-btn')    ?.addEventListener('click', () => openInfoPage(`${BASE_URL}help.html`));
+    $('pnd-about-btn')   ?.addEventListener('click', () => openInfoPage(`${BASE_URL}about.html`));
+
+    $('pnd-next-btn')     ?.addEventListener('click', handleNextChapter);
+    $('pnd-bottom-next-btn')?.addEventListener('click', handleNextChapter);
+    $('pnd-inventory-btn')?.addEventListener('click', openInventory);
+    $('pnd-loc-close')?.addEventListener('click', closeLocationOverlay);
+    $('pnd-loc-overlay')?.addEventListener('click', e => {
+      if (e.target === $('pnd-loc-overlay')) closeLocationOverlay();
+    });
+
+    $('pnd-leave-btn')?.addEventListener('click', async () => {
+      showNext();
+      closeLocationOverlay();
+      // leave-btn = "Back to Chapter" from inventory/camp
+      const nextChapter = save.chapter + 1;
+      const url = nextChapter === 61 ? calcEndingUrl() : buildDayUrl(nextChapter);
+      await loadContent(url, isPreEnding ? bindPreEnding : isEnding ? bindEnding : bindAreaButtons);
+    });
+
+    // map-btn = "Map" OR "Back to Map" from a location page
+    // Re-wire map-btn to also handle going back to map from locations
+    $('pnd-map-btn')?.addEventListener('click', openMap);
+
+    $('pnd-back-to-title-btn')?.addEventListener('click', async () => {
+      const btn = $('pnd-back-to-title-btn');
+      const infoFlag = btn.dataset.infoPage;
+
+      if (infoFlag === 'game') {
+        delete btn.dataset.infoPage;
+        startGame();
+        return;
+      }
+
+      if (infoFlag === 'title') {
+        delete btn.dataset.infoPage;
+        closeLocationOverlay();
+        showScreen('pnd-title-screen');
+        renderTitleMenu();
+        return;
+      }
+
+      const res = await modal({
+        title: 'Leave Pandora?', text: 'Your progress is saved.',
+        confirmText: 'Yes, leave', cancelText: 'Stay'
+      });
+      if (res.confirmed) {
+        closeLocationOverlay();
+        showScreen('pnd-title-screen');
+        renderTitleMenu();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else { init(); }
+
+})();

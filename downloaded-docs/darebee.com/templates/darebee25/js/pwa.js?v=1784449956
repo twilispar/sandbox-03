@@ -1,0 +1,37 @@
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+
+var installPrompt = null;
+
+function darebeeInstallLink() {
+  return document.getElementById('pwa-install');
+}
+
+window.addEventListener('beforeinstallprompt', function (e) {
+  e.preventDefault();
+  installPrompt = e;
+  var link = darebeeInstallLink();
+  if (link) link.hidden = false;
+});
+
+window.addEventListener('appinstalled', function () {
+  var link = darebeeInstallLink();
+  if (link) link.hidden = true;
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  var link = darebeeInstallLink();
+  if (!link) return;
+  link.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    installPrompt.userChoice.then(function () {
+      installPrompt = null;
+      link.hidden = true;
+    });
+  });
+});

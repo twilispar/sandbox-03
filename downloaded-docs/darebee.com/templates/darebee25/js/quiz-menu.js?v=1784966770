@@ -1,0 +1,43 @@
+(function () {
+  'use strict';
+
+  function quizState() {
+    var bestKey = null, bestV = -1;
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        var m = k && k.match(/^darebee-quiz-v(\d+)$/);
+        if (m && +m[1] > bestV) { bestV = +m[1]; bestKey = k; }
+      }
+      return bestKey ? JSON.parse(localStorage.getItem(bestKey)) : null;
+    } catch (e) { return null; }
+  }
+
+  function init() {
+    var link = document.getElementById('quiz-menu-link');
+    if (!link) {
+      var candidates = document.querySelectorAll('a[href$="quiz.html"]');
+      for (var i = 0; i < candidates.length; i++) {
+        if (candidates[i].textContent.indexOf('START HERE!') !== -1) {
+          link = candidates[i];
+          break;
+        }
+      }
+    }
+    if (!link) return;
+
+    var s = quizState();
+    var done = s && s.structure !== undefined &&
+      (s.structure !== null || s.stage === 'pregnant' || s.stage === 'post' || s.stage === 'glp1');
+    if (done) {
+      link.innerHTML = 'My recommended setup';
+      link.classList.add('quiz-done');
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

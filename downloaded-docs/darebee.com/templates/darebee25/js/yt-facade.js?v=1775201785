@@ -1,0 +1,69 @@
+(function(){
+  document.addEventListener('DOMContentLoaded', function(){
+
+    document.querySelectorAll('.responsive-video iframe').forEach(function(iframe){
+
+      // Extract video ID from src
+      var src = iframe.getAttribute('src') || '';
+      var match = src.match(/embed\/([a-zA-Z0-9_-]{11})/);
+      if(!match) return;
+      var videoId = match[1];
+
+      // Preserve any extra params from original src (controls, rel, etc)
+      var paramStr = '';
+      var qmark = src.indexOf('?');
+      if(qmark !== -1){
+        paramStr = src.substring(qmark) + '&autoplay=1';
+      } else {
+        paramStr = '?controls=1&showinfo=0&rel=0&autoplay=1';
+      }
+
+      // Build facade
+      var facade = document.createElement('div');
+      facade.className = 'yt-facade';
+      facade.setAttribute('data-videoid', videoId);
+      facade.setAttribute('data-params', paramStr);
+      facade.setAttribute('role', 'button');
+      facade.setAttribute('tabindex', '0');
+      facade.setAttribute('aria-label', 'Play video');
+
+      var img = document.createElement('img');
+      img.setAttribute('loading', 'lazy');
+      img.setAttribute('alt', 'Play video');
+
+      // Try maxresdefault, fall back to hqdefault if it fails
+      img.src = 'https://i.ytimg.com/vi/' + videoId + '/maxresdefault.jpg';
+      img.onerror = function(){
+        this.src = 'https://i.ytimg.com/vi/' + videoId + '/hqdefault.jpg';
+        this.onerror = null;
+      };
+
+      var play = document.createElement('div');
+      play.className = 'yt-play';
+
+      facade.appendChild(img);
+      facade.appendChild(play);
+
+      // Replace iframe with facade
+      iframe.parentNode.replaceChild(facade, iframe);
+
+      // Click to load real iframe
+      function loadVideo(){
+        var id = facade.getAttribute('data-videoid');
+        var params = facade.getAttribute('data-params');
+        var newIframe = document.createElement('iframe');
+        newIframe.src = 'https://www.youtube.com/embed/' + id + params;
+        newIframe.setAttribute('frameborder', '0');
+        newIframe.setAttribute('allowfullscreen', 'allowfullscreen');
+        newIframe.setAttribute('allow', 'autoplay');
+        facade.parentNode.replaceChild(newIframe, facade);
+      }
+
+      facade.addEventListener('click', loadVideo);
+      facade.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); loadVideo(); }
+      });
+    });
+
+  });
+})();

@@ -1,0 +1,1177 @@
+/* ═══════════════════════════════════════════════════════
+   Age of Pandora — CSS (rebuilt)
+   All classes prefixed pnd- to avoid Joomla conflicts.
+   Drop this in your Joomla template's css folder and
+   reference it from your Custom HTML module or template.
+═══════════════════════════════════════════════════════ */
+
+/* ── Reset & scope ──────────────────────────────────── */
+#pnd-wrapper,
+#pnd-wrapper * {
+  box-sizing: border-box;
+}
+
+#pnd-wrapper {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  --red:     #CC0000;
+  --red-dk:  #990000;
+  --dark:    #141414;
+  --mid:     #2a2a2a;
+  --panel:   #f0f0f0;
+  --border:  #cccccc;
+  --text:    #1a1a1a;
+  --muted:   #666;
+  --white:   #ffffff;
+  --bar-h:   70px;
+
+  font-family: Georgia, 'Times New Roman', serif;
+  color: var(--text);
+  position: relative;
+  width: 100%;
+  min-height: 600px;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+/* ── Utility ────────────────────────────────────────── */
+.pnd-hidden { display: none !important; }
+
+/* ── Joomla list-style isolation ───────────────────── */
+/* Joomla forces bullets/circles on ul li globally.
+   Override everything inside the game wrapper. */
+#pnd-wrapper ul,
+#pnd-wrapper ol {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#pnd-wrapper li {
+  list-style: none !important;
+  list-style-type: none !important;
+  background-image: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+#pnd-wrapper li::before,
+#pnd-wrapper li::marker {
+  content: none !important;
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TITLE SCREEN
+═══════════════════════════════════════════════════════ */
+#pnd-title-screen {
+  position: relative;
+  width: 2240px;
+  height: 800px;
+  max-width: 100%;
+  background: #141414 url('https://darebee.com/toolbox/index/pandora2/Images/start.jpg') no-repeat center center / cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 140px;
+}
+
+/* Eye lids — removed, not used */
+.pnd-lid-top,
+.pnd-lid-bottom { display: none !important; }
+
+/* Enter button (shown before animation) */
+#pnd-enter-btn {
+  position: relative;
+  z-index: 20;
+  padding: 18px 48px;
+  background: var(--red);
+  color: var(--white);
+  font-family: 'Century Gothic', 'Futura', sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+#pnd-enter-btn:hover { background: var(--red-dk); }
+
+/* Enter button — hidden, menu shows directly on load */
+#pnd-enter-btn { display: none !important; }
+
+/* Title menu buttons */
+.pnd-title-menu {
+  position: relative;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 50px 20px;
+  background: transparent;
+}
+
+#pnd-save-info {
+  color: #ffffff;
+  font-size: 13px;
+  opacity: 0.85;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+#pnd-no-save-tagline {
+  color: #ffffff;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 15px;
+  font-style: italic;
+  opacity: 0.75;
+  text-align: center;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+  line-height: 1.6;
+}
+
+.pnd-menu-btn {
+  display: block;
+  width: 320px;
+  padding: 16px 20px;
+  background: var(--red);
+  color: var(--white);
+  font-family: 'Century Gothic', 'Futura', sans-serif;
+  font-size: 17px;
+  text-align: center;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, transform 0.1s;
+}
+.pnd-menu-btn:hover  { background: var(--red-dk); transform: translateY(-1px); }
+.pnd-menu-btn:active { transform: translateY(0); }
+.pnd-menu-btn.pnd-dark { background: var(--mid); }
+.pnd-menu-btn.pnd-dark:hover { background: #111; }
+
+/* ═══════════════════════════════════════════════════════
+   GAME SCREEN
+═══════════════════════════════════════════════════════ */
+#pnd-game-screen {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 600px;
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Top bar ────────────────────────────────────────── */
+#pnd-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  height: var(--bar-h);
+  background: #eeeeee;
+  border-bottom: 2px solid #CC0000;
+  gap: 0;
+}
+
+.pnd-tb-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  min-width: 90px;
+  cursor: pointer;
+  border-right: 1px solid #cccccc;
+  transition: background 0.15s;
+}
+.pnd-tb-item:hover { background: #CC0000; }
+.pnd-tb-item:hover .pnd-tb-btn { color: #ffffff; }
+
+.pnd-tb-btn {
+  color: #141414;
+  font-family: 'Century Gothic', 'Futura', sans-serif;
+  font-size: 15px;
+  text-align: center;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* Location display (not clickable) */
+#pnd-location-display {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 6px;
+  color: #555555;
+  font-size: 14px;
+  font-family: Georgia, serif;
+  border-right: 1px solid #cccccc;
+  min-width: 120px;
+}
+#pnd-location-display::before {
+  content: '◉';
+  color: #CC0000;
+  font-size: 10px;
+}
+
+/* Currency display */
+#pnd-currency-display {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  color: #885500;
+  font-size: 15px;
+  font-family: Georgia, serif;
+  border-right: 1px solid #cccccc;
+  min-width: 110px;
+}
+
+/* Right-side items */
+.pnd-tb-right {
+  margin-left: auto;
+  border-left: 1px solid #cccccc;
+  border-right: none;
+}
+.pnd-tb-right .pnd-tb-btn { color: #141414; }
+.pnd-tb-right:hover { background: #CC0000; }
+.pnd-tb-right:hover .pnd-tb-btn { color: #ffffff; }
+
+/* ── Main content area ──────────────────────────────── */
+#pnd-main-space {
+  flex: 1;
+  width: 100%;
+  background: #f5f5f5;
+  padding: 0;
+  margin: 0;
+  /* Day pages inject their own backgrounds via inline styles or classes */
+}
+
+.pnd-loading {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+  font-style: italic;
+}
+.pnd-error { color: var(--red); }
+
+/* ═══════════════════════════════════════════════════════
+   MODAL  (replaces SweetAlert)
+═══════════════════════════════════════════════════════ */
+#pnd-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+#pnd-modal-box {
+  background: var(--white);
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 28px 24px;
+  position: relative;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+
+#pnd-modal-title {
+  font-family: 'Century Gothic', 'Futura', sans-serif;
+  font-size: 18px;
+  color: #1a1a1a;
+  margin: 0 0 10px;
+  line-height: 1.3;
+}
+
+#pnd-modal-text {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+#pnd-modal-img {
+  display: block;
+  max-width: 120px;
+  max-height: 120px;
+  margin: 0 auto 16px;
+  object-fit: contain;
+}
+
+#pnd-modal-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--border);
+  font-size: 15px;
+  font-family: Georgia, serif;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+#pnd-modal-input:focus { border-color: var(--red); }
+
+#pnd-modal-error {
+  color: var(--red);
+  font-size: 12px;
+  min-height: 16px;
+  margin-bottom: 10px;
+}
+
+.pnd-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.pnd-btn {
+  padding: 10px 24px;
+  font-family: 'Century Gothic', 'Futura', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border: none;
+  background: #141414;
+  color: var(--white);
+  transition: background 0.2s;
+}
+.pnd-btn:hover { background: #333; }
+.pnd-btn-danger { background: var(--red); }
+.pnd-btn-danger:hover { background: var(--red-dk); }
+.pnd-btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.pnd-btn-ghost:hover { background: var(--panel); color: var(--text); }
+
+/* ═══════════════════════════════════════════════════════
+   INVENTORY & CAMP PANELS
+   (used inside pnd-main-space when loaded)
+═══════════════════════════════════════════════════════ */
+.inventoryMenu,
+.inventoryFood {
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 400px;
+}
+
+.inventoryMenuLayout,
+.inventoryFoodLayout {
+  display: inline-block;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.inventoryMenuLayout:hover,
+.inventoryFoodLayout:hover { transform: scale(1.05); opacity: 0.85; }
+
+.inventoryMenuLayout img,
+.inventoryFoodLayout img {
+  display: block;
+  max-width: 100px;
+  height: auto;
+}
+
+/* Tabs (inside inventory) */
+.pnd-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 12px 20px 0;
+  background: #f5f5f5;
+}
+.pnd-tab {
+  padding: 8px 20px;
+  background: #bbb;
+  color: #333;
+  font-size: 12px;
+  font-family: 'Century Gothic', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+.pnd-tab.active,
+.pnd-tab:hover { background: #999 !important; color: #fff !important; }
+
+/* Legacy tab classes from old Inventory.html — keep working */
+.dareTABS { font-family: sans-serif; font-size: 14px; }
+ul.tabs { list-style: none; padding: 0; margin: 0; display: flex; gap: 4px; padding: 12px 20px 0; background: #f5f5f5; }
+ul.tabs li a {
+  display: block;
+  background: #bbb;
+  color: #333;
+  padding: 8px 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+ul.tabs li a.active,
+ul.tabs li a:hover { background: #999 !important; color: #fff !important; }
+.tabgroup > div { padding: 20px; background: #f5f5f5; }
+
+/* ═══════════════════════════════════════════════════════
+   DAY / LOCATION PAGES
+   (these load inside #pnd-main-space via fetch)
+   Keep legacy class names so existing Day HTML files
+   continue to work without modification.
+═══════════════════════════════════════════════════════ */
+
+/* Shops & hunt boards */
+.agoraJobsItems,
+.agoraShopItems,
+.forestHuntItems,
+.agoraFoodShopItems {
+  display: inline-block;
+  padding: 8px;
+  cursor: pointer;
+  transition: transform 0.15s;
+  vertical-align: top;
+}
+.agoraJobsItems:hover,
+.agoraShopItems:hover,
+.forestHuntItems:hover,
+.agoraFoodShopItems:hover { transform: scale(1.04); }
+
+
+
+/* Generic border block used in some day pages */
+.border {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  background: #f5f5f5;
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 860px;
+  border: 2px solid #bbb;
+}
+
+/* Map page */
+#pnd-main-space img[usemap] {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════ */
+@media (max-width: 700px) {
+  :root { --bar-h: 56px; }
+
+  .pnd-tb-item { padding: 0 8px; min-width: 60px; }
+  .pnd-tb-btn  { font-size: 11px; }
+  #pnd-location-display { display: none; }
+
+  .pnd-menu-btn { width: 90vw; max-width: 320px; font-size: 15px; }
+
+  #pnd-modal-box { padding: 24px 18px 18px; }
+}
+
+@media (max-width: 420px) {
+  .pnd-tb-btn { font-size: 10px; letter-spacing: 0; }
+  .pnd-tb-item { min-width: 48px; padding: 0 4px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   LOCATION OVERLAY — disabled
+   Locations now load as full pages in #pnd-main-space
+═══════════════════════════════════════════════════════ */
+#pnd-loc-overlay { display: none !important; }
+
+/* ═══════════════════════════════════════════════════════
+   LOCATION FULL PAGES
+═══════════════════════════════════════════════════════ */
+.pnd-loc-page-header {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  height: 56px;
+  background: #eeeeee;
+  border-bottom: 1px solid #cccccc;
+  flex-shrink: 0;
+}
+.pnd-loc-page-title {
+  font-family: 'Century Gothic', 'Futura', sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  color: #1a1a1a;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.pnd-loc-page-body {
+  background: #eeeeee;
+  padding: 0;
+  min-height: 400px;
+}
+
+/* Items flow in 3-column grid in location pages */
+.pnd-loc-page-body #agoraJobs,
+.pnd-loc-page-body #agoraShop,
+.pnd-loc-page-body #agoraFoodShop,
+.pnd-loc-page-body #forestHunt,
+.pnd-loc-page-body #agoraAuctionHouse,
+.pnd-loc-page-body .inventoryMenu,
+.pnd-loc-page-body .inventoryFood {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px;
+  padding: 16px;
+  background: #eeeeee;
+  min-height: unset;
+}
+
+@media (max-width: 600px) {
+  .pnd-loc-page-body #agoraJobs,
+  .pnd-loc-page-body #agoraShop,
+  .pnd-loc-page-body #agoraFoodShop,
+  .pnd-loc-page-body #forestHunt,
+  .pnd-loc-page-body #agoraAuctionHouse,
+  .pnd-loc-page-body .inventoryMenu,
+  .pnd-loc-page-body .inventoryFood {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Tab bar inside location pages */
+.pnd-loc-page-body ul.tabs {
+  background: #e8e8e8 !important;
+  padding: 0 16px !important;
+  gap: 4px !important;
+  flex-wrap: wrap !important;
+  border-bottom: 1px solid #cccccc !important;
+  border-top: none !important;
+  list-style: none !important;
+  display: flex !important;
+  align-items: stretch !important;
+  margin: 0 !important;
+  min-height: 44px !important;
+}
+.pnd-loc-page-body ul.tabs li {
+  display: flex !important;
+  align-items: stretch !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.pnd-loc-page-body ul.tabs li a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #cccccc !important;
+  color: #333 !important;
+  font-family: 'Century Gothic', 'Futura', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  padding: 0 20px !important;
+  letter-spacing: 0.5px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+.pnd-loc-page-body ul.tabs li a.active,
+.pnd-loc-page-body ul.tabs li a:hover {
+  background: #999999 !important;
+  color: #ffffff !important;
+}
+.pnd-loc-page-body .tabgroup > div { background: #eeeeee; }
+
+/* .border blocks in location pages */
+.pnd-loc-page-body .border {
+  max-width: 860px;
+  margin: 20px auto;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHOICE GROUPS (Ch.16 — mutually exclusive options)
+═══════════════════════════════════════════════════════ */
+.pnd-choice {
+  border: 3px solid transparent;
+  transition: border-color 0.2s, opacity 0.3s, filter 0.3s;
+}
+.pnd-choice:hover { border-color: #CC0000; }
+
+
+
+/* ═══════════════════════════════════════════════════════
+   INTERACTIVE ELEMENT TRANSITIONS
+   Elements fade in/out when collected/bought/sold.
+   Applied by fadeIn() / fadeOut() in pandora.js.
+═══════════════════════════════════════════════════════ */
+.agoraJobsItems,
+.agoraShopItems,
+.agoraFoodShopItems,
+.forestHuntItems,
+.inventoryMenuLayout,
+.inventoryFoodLayout {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHAPTER IMAGE RULES
+   - Max 930px wide, centered, never stretched on desktop
+   - Responsive (shrink to fit) on smaller screens
+   - All collectable divs inline-block, never column
+═══════════════════════════════════════════════════════ */
+
+/* All images in chapter pages: cap at 930px, center, never enlarge */
+#pnd-main-space img {
+  max-width: min(930px, 100%) !important;
+  width: auto !important;
+  height: auto !important;
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Centered wrapper divs — constrain to 930px */
+#pnd-main-space div[style*="text-align:center"],
+#pnd-main-space div[style*="text-align: center"] {
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Fork image wrappers already have inline max-width — honour it but cap at 930px */
+#pnd-main-space div[style*="display:inline-block"][style*="max-width"],
+#pnd-main-space div[style*="display: inline-block"][style*="max-width"] {
+  max-width: min(1200px, 100%) !important;
+}
+
+/* Old table-based layouts: constrain width, never overflow */
+#pnd-main-space table {
+  max-width: 860px !important;
+  width: 100% !important;
+  table-layout: fixed;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Collectable grids — always inline, constrained to 930px */
+#pnd-main-space #agoraJobs,
+#pnd-main-space #agoraShop,
+#pnd-main-space #agoraFoodShop {
+  max-width: 860px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+#pnd-main-space .agoraJobsItems,
+#pnd-main-space .agoraShopItems,
+#pnd-main-space .agoraFoodShopItems,
+#pnd-main-space .forestHuntItems {
+  display: inline-block !important;
+  float: none !important;
+  vertical-align: top;
+}
+
+/* Choice pairs (Ch16, Ch35A etc) — side by side, centered */
+#pnd-main-space div[style*="justify-content:center"],
+#pnd-main-space div[style*="justify-content: center"] {
+  max-width: 860px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* ── MOBILE (< 600px) ── */
+@media (max-width: 600px) {
+  /* Images fill screen but never overflow */
+  #pnd-main-space img {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  /* Grids: 3-col → 2-col, 10-col → 5-col on small screens */
+  #pnd-main-space #agoraJobs[style*="repeat(3"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  #pnd-main-space #agoraJobs[style*="repeat(10"] {
+    grid-template-columns: repeat(5, 1fr) !important;
+  }
+  /* Choice pairs stack vertically on very small screens */
+  #pnd-main-space div[style*="justify-content:center"],
+  #pnd-main-space div[style*="justify-content: center"] {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
+/* ── Camp full-bleed ─────────────────────────────────
+   When camp is open, #camp-scene must fill the full
+   width of pnd-main-space with zero padding/margin.
+   The .pnd-loc-page-body wrapper and any injected
+   padding are removed here with high specificity.
+──────────────────────────────────────────────────── */
+#pnd-main-space .pnd-loc-page-body:has(#camp-scene),
+#pnd-main-space .pnd-loc-page-body:has(#camp-bg) {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#pnd-main-space #camp-scene {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#pnd-main-space #camp-bg {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ── Break pnd-wrapper out of Joomla article max-width ──
+   Joomla article columns constrain width. When camp is
+   fullbleed we need the wrapper to ignore that.
+   This uses a viewport-width trick scoped to the wrapper.
+──────────────────────────────────────────────────────── */
+#pnd-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   INNER CHAPTER PAGES — Story text & workout image layout
+   .pext  → story/narrative paragraphs
+   .istyle → workout image wrappers
+   ═══════════════════════════════════════════════════════ */
+
+#pnd-main-space .pext {
+  font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #1a1a1a;
+  max-width: 860px;
+  margin: 0 auto 24px auto;
+  padding: 0 20px;
+  text-align: left;
+}
+
+#pnd-main-space .istyle {
+  text-align: center;
+  margin: 28px auto;
+  padding: 0 20px;
+}
+
+#pnd-main-space .istyle img {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TRAVEL INSTRUCTION BOX
+   Usage: <div class="travel">Travel to the Agora</div>
+   Renders: compass icon left + bold text right, centered row
+   ═══════════════════════════════════════════════════════ */
+
+#pnd-main-space .travel {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  max-width: 860px;
+  margin: 28px auto;
+  padding: 0 20px;
+  font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  color: #1a1a1a;
+  line-height: 1.4;
+}
+
+#pnd-main-space .travel::before {
+  content: '';
+  display: block;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52'%3E%3Ccircle cx='26' cy='26' r='23' fill='none' stroke='%231a1a1a' stroke-width='2'/%3E%3Ccircle cx='26' cy='26' r='2.5' fill='%231a1a1a'/%3E%3Cpolygon points='26,5 29.5,23.5 26,20.5 22.5,23.5' fill='%231a1a1a'/%3E%3Cpolygon points='26,47 22.5,28.5 26,31.5 29.5,28.5' fill='%23aaaaaa'/%3E%3Cpolygon points='47,26 28.5,22.5 31.5,26 28.5,29.5' fill='%231a1a1a'/%3E%3Cpolygon points='5,26 23.5,29.5 20.5,26 23.5,22.5' fill='%23aaaaaa'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+/* ═══════════════════════════════════════════════════════
+   AGORA JOBS GRID
+   Usage:
+   <div id="agoraJobs">
+     <div id="Chapter06-1" data-scraps="100" class="agoraJobsItems"><img src="..."></div>
+     <div id="Chapter06-2" data-scraps="80"  class="agoraJobsItems"><img src="..."></div>
+     <div id="Chapter06-3" data-scraps="200" class="agoraJobsItems"><img src="..."></div>
+   </div>
+   ═══════════════════════════════════════════════════════ */
+
+#pnd-main-space #agoraJobs,
+#pnd-loc-body #agoraJobs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 960px;
+  margin: 20px auto;
+  padding: 0 10px;
+}
+
+#pnd-main-space #agoraJobs > strong,
+#pnd-loc-body #agoraJobs > strong {
+  grid-column: 1 / -1;
+  text-align: center;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  #pnd-main-space #agoraJobs,
+  #pnd-loc-body #agoraJobs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+#pnd-main-space .agoraJobsItems img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════════════
+   STORY FORK — two images side by side, each clickable
+   Usage:
+   <div class="forks">
+     <div data-pathfork="A"><img src="https://darebee.com/toolbox/index/pandora2/Inner/Forks/chapter12A.jpg"></div>
+     <div data-pathfork="B"><img src="https://darebee.com/toolbox/index/pandora2/Inner/Forks/chapter12B.jpg"></div>
+   </div>
+   ═══════════════════════════════════════════════════════ */
+
+#pnd-main-space .forks {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 28px auto;
+  padding: 0 10px;
+  max-width: 100%;
+}
+
+#pnd-main-space .forks [data-pathfork] {
+  flex: 1;
+  cursor: pointer;
+  line-height: 0;
+}
+
+#pnd-main-space .forks [data-pathfork] img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHAPTER CHOICES — two images side by side, one selectable
+   Selected: red outline. Unchosen: greyed out.
+   Usage:
+   <div class="choices">
+     <div id="Chapter16-1" data-scraps="0" data-choice-group="ch16"><img src="..."></div>
+     <div id="Chapter16-2" data-spendscraps="400" data-giveitem="X" data-choice-group="ch16"><img src="..."></div>
+   </div>
+   ═══════════════════════════════════════════════════════ */
+
+#pnd-main-space .choices {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 28px auto;
+  padding: 0 10px;
+  max-width: 100%;
+}
+
+#pnd-main-space .choices [data-choice-group] {
+  flex: 1;
+  cursor: pointer;
+  line-height: 0;
+  transition: opacity 0.3s, filter 0.3s;
+}
+
+#pnd-main-space .choices [data-choice-group] img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DIALOGUE
+   Usage:
+   <div class="dialogue">
+     <p><b>Ermis:</b> Long time ago...</p>
+     <p><b>You:</b> I see.</p>
+   </div>
+   ═══════════════════════════════════════════════════════ */
+
+#pnd-main-space .dialogue {
+  max-width: 860px;
+  margin: 20px auto 24px auto;
+  padding: 0 20px;
+  font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  color: #1a1a1a;
+}
+
+#pnd-main-space .dialogue p {
+  margin: 0 0 10px 0;
+  padding-left: 16px;
+  border-left: 2px solid #e0e0e0;
+}
+
+#pnd-main-space .dialogue p b {
+  color: #CC0000;
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+/* Section header inside dialogue e.g. "Ermis' Story" */
+#pnd-main-space .dialogue h4 {
+  font-family: 'Century Gothic', 'Futura', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #888;
+  margin: 20px 0;
+  padding: 0;
+  border: none;
+  font-weight: normal;
+}
+
+/* ═══════════════════════════════════════════════════════
+   DESKTOP: constrain forks & choices to 950px block
+   so they run inline with text rather than full-screen
+   ═══════════════════════════════════════════════════════ */
+
+@media (min-width: 768px) {
+  #pnd-main-space .forks,
+  #pnd-main-space .choices {
+    max-width: 1250px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #pnd-main-space .forks [data-pathfork],
+  #pnd-main-space .choices [data-choice-group] {
+    max-width: 460px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   COMPANION INVITE MODAL — red background, white text
+   ═══════════════════════════════════════════════════════ */
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-companion {
+  background: #CC0000;
+  color: #ffffff;
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-companion h2,
+#pnd-wrapper #pnd-modal-box.pnd-modal-companion p {
+  color: #ffffff;
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-companion .pnd-btn-ghost {
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.5);
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-companion .pnd-btn-ghost:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-companion #pnd-modal-confirm {
+  background: #ffffff;
+  color: #CC0000;
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-companion #pnd-modal-confirm:hover {
+  background: #f0f0f0;
+}
+
+/* ── Dark modal variant — black background, white text ── */
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-dark {
+  background: #0d0d0d;
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-dark h2,
+#pnd-wrapper #pnd-modal-box.pnd-modal-dark p {
+  color: #ffffff;
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-dark #pnd-modal-confirm {
+  background: #ffffff;
+  color: #0d0d0d;
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-dark #pnd-modal-confirm:hover {
+  background: #e0e0e0;
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-dark .pnd-btn-ghost {
+  color: #cccccc;
+  border-color: rgba(255,255,255,0.3);
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-dark .pnd-btn-ghost:hover {
+  background: rgba(255,255,255,0.1);
+  color: #ffffff;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ENTRY LOGS — in-chapter display (log1, log2 classes)
+   Styled as aged document / research notes
+   ═══════════════════════════════════════════════════════ */
+
+#pnd-main-space .log1,
+#pnd-main-space .log2 {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #2a2a2a;
+  background: #FFFFFF;
+  border-left: 4px solid #CC0000;
+  border-radius: 2px;
+  max-width: 950px;
+  margin: 28px auto;
+  padding: 24px 28px;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+#pnd-main-space .log1::before,
+#pnd-main-space .log2::before {
+  display: block;
+  font-family: 'Century Gothic', 'Futura', sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #CC0000;
+  margin-bottom: 14px;
+}
+
+#pnd-main-space .log1::before { content: '— Entry Log #1 —'; }
+#pnd-main-space .log2::before { content: '— Entry Log #2 —'; }
+
+#pnd-main-space .log1 p,
+#pnd-main-space .log2 p {
+  margin: 0 0 12px 0;
+}
+
+#pnd-main-space .log1 p:last-child,
+#pnd-main-space .log2 p:last-child {
+  margin-bottom: 0;
+}
+
+
+
+/* ═══════════════════════════════════════════════════════
+   BOTTOM NAVIGATION BAR — NEXT button only
+   Sticky at bottom of game screen, always in reach
+   ═══════════════════════════════════════════════════════ */
+
+#pnd-wrapper #pnd-bottom-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 20px;
+  background: #f0f0f0;
+  border-top: 1px solid #d8d8d8;
+  position: sticky;
+  bottom: 0;
+  z-index: 50;
+}
+
+#pnd-wrapper #pnd-bottom-bar.pnd-hidden,
+#pnd-wrapper #pnd-bottom-bar[style*="display: none"] {
+  display: none !important;
+}
+
+#pnd-wrapper #pnd-bottom-next-btn {
+  background: #1a1a1a;
+  color: #ffffff;
+  font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 12px 48px;
+  cursor: pointer;
+  border-radius: 2px;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+#pnd-wrapper #pnd-bottom-next-btn:hover {
+  background: #CC0000;
+}
+
+/* Modal log text — give it breathing room */
+#pnd-wrapper #pnd-modal-text div[style*="Courier"] p {
+  margin: 0 0 12px 0;
+}
+
+#pnd-wrapper #pnd-modal-text div[style*="Courier"] p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Log entry modal — scrollable, full-height on mobile ── */
+#pnd-wrapper #pnd-modal-box.pnd-modal-log {
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-log #pnd-modal-text {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 60vh;
+  padding-right: 6px;
+  color: #1a1a1a;
+}
+
+#pnd-wrapper #pnd-modal-box.pnd-modal-log #pnd-modal-confirm {
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+  #pnd-wrapper #pnd-modal-box.pnd-modal-log {
+    max-width: 100%;
+    max-height: 88vh;
+    padding: 20px 16px 16px;
+  }
+
+  #pnd-wrapper #pnd-modal-box.pnd-modal-log #pnd-modal-text {
+    max-height: 65vh;
+    font-size: 14px;
+  }
+}
+

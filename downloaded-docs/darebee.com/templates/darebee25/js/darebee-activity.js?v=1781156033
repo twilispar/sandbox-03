@@ -1,0 +1,86 @@
+/* DAREBEE Activity Tracker
+ * Add to the Joomla template so it loads on EVERY page, before other scripts
+ * (e.g. just before </head> or as the first script in the template index.php).
+ *
+ * What it does: whenever any DAREBEE tracking data is written to localStorage
+ * (workout done, challenge dot, program day, EOTD, Pandora, Labyrinth, Arcade,
+ * Daily Dips), it stamps today's LOCAL date into 'darebee_activity_v2'.
+ * The dashboard reads this to calculate streaks exactly - no guessing.
+ *
+ * Also exposes window.DB_logActivity() so any script can log activity
+ * explicitly if you ever want to.
+ */
+(function () {
+  'use strict';
+  if (window.DB_logActivity) return; // don't double-install
+
+  var KEY = 'darebee_activity_v2';
+
+  // Local calendar date, NOT UTC - this is the timezone fix.
+  function localDay() {
+    var d = new Date();
+    return d.getFullYear() + '-' +
+      ('0' + (d.getMonth() + 1)).slice(-2) + '-' +
+      ('0' + d.getDate()).slice(-2);
+  }
+
+  // Verify localStorage is usable at all (private mode lockdown etc.)
+  try {
+    localStorage.getItem(KEY);
+  } catch (e) {
+    window.DB_logActivity = function () {};
+    return;
+  }
+
+  // IMPORTANT: patch Storage.prototype, NOT localStorage.setItem directly.
+  // Assigning a property on a Storage *instance* does not replace the method
+  // (per spec it is treated as storing a data item named "setItem"), so an
+  // instance-level patch silently never installs.
+  var origSet = (window.Storage && Storage.prototype && Storage.prototype.setItem);
+
+  function logActivity() {
+    if (window.DB_SUPPRESS_ACTIVITY) return; // set by dashboard during backup restore
+    try {
+      var o = {};
+      var raw = localStorage.getItem(KEY);
+      if (raw) { try { o = JSON.parse(raw) || {}; } catch (e) { o = {}; } }
+      if (typeof o !== 'object' || Array.isArray(o)) o = {};
+      var day = localDay();
+      o[day] = (o[day] || 0) + 1;
+      if (origSet) origSet.call(localStorage, KEY, JSON.stringify(o));
+      else localStorage.setItem(KEY, JSON.stringify(o));
+    } catch (e) {}
+  }
+  window.DB_logActivity = logActivity;
+
+  if (typeof origSet !== 'function') return; // can't intercept; explicit calls still work
+
+  // Tracking key patterns that count as "the user did something today".
+  // Deliberately excludes :meta (written when starting, not exercising).
+  var PATTERNS = [
+    /^DB_WKT_\d+/,                   // workouts (incl. repeat logs DB_WKT_id_suffix)
+    /^DB_EOTD_\d+/,                  // exercise of the day
+    /^CH_LOG_/,                      // challenges - rich log
+    /^CH_DAYS_/,                     // challenges - day list
+    /^CH_PTX_/,                      // challenges - dot state
+    /^[a-z0-9]{2,24}:(\d+|log)$/,    // program day ticks + program logs
+    /^labyrinthProgress$/,           // Labyrinth
+    /^labyrinthKey$/,
+    /^darebee_pandora_v\d+$/,        // Pandora
+    /^darebee_arcade_counter/,       // The Arcade
+    /^darebee_daily_dips/            // Daily Dips
+  ];
+
+  Storage.prototype.setItem = function (k, v) {
+    origSet.call(this, k, String(v));
+    try {
+      // Only track writes to localStorage (not sessionStorage), and never
+      // while a backup restore is bulk-writing keys.
+      if (this !== window.localStorage) return;
+      if (window.DB_SUPPRESS_ACTIVITY) return;
+      for (var i = 0; i < PATTERNS.length; i++) {
+        if (PATTERNS[i].test(k)) { logActivity(); break; }
+      }
+    } catch (e) {}
+  };
+})();
